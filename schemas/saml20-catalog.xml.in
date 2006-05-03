@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE catalog PUBLIC "-//OASIS//DTD Entity Resolution XML Catalog V1.0//EN" "http://www.oasis-open.org/committees/entity/release/1.0/catalog.dtd">
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+    <uri name="http://schemas.xmlsoap.org/soap/envelope/" uri="@-PKGXMLDIR-@/soap-envelope.xsd"/>
+    <uri name="urn:oasis:names:tc:SAML:2.0:assertion" uri="@-PKGXMLDIR-@/saml-schema-assertion-2.0.xsd"/>
+    <uri name="urn:oasis:names:tc:SAML:2.0:protocol" uri="@-PKGXMLDIR-@/saml-schema-protocol-2.0.xsd"/>
+    <uri name="urn:oasis:names:tc:SAML:2.0:metadata" uri="@-PKGXMLDIR-@/saml-schema-metadata-2.0.xsd"/>
+    <uri name="urn:oasis:names:tc:SAML:2.0:ac" uri="@-PKGXMLDIR-@/saml-schema-authn-context-2.0.xsd"/>
+    <uri name="urn:oasis:names:tc:SAML:2.0:profiles:SSO:ecp" uri="@-PKGXMLDIR-@/saml-schema-ecp-2.0.xsd"/>
+    <uri name="urn:oasis:names:tc:SAML:2.0:profiles:attribute:DCE" uri="@-PKGXMLDIR-@/saml-schema-dce-2.0.xsd"/>
+    <uri name="urn:oasis:names:tc:SAML:2.0:profiles:attribute:X500" uri="@-PKGXMLDIR-@/saml-schema-x500-2.0.xsd"/>
+    <uri name="urn:oasis:names:tc:SAML:2.0:profiles:attribute:XACML" uri="@-PKGXMLDIR-@/saml-schema-xacml-2.0.xsd"/>
+</catalog>
