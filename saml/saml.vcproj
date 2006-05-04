@@ -62,7 +62,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="..\..\cpp-xmltooling\Debug\xmltooling_1D.lib"
+				AdditionalDependencies="..\..\cpp-xmltooling\Debug\xmltooling_1D.lib log4cppD.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_6D.dll"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
@@ -138,7 +138,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="..\..\cpp-xmltooling\Release\xmltooling_1.lib"
+				AdditionalDependencies="..\..\cpp-xmltooling\Release\xmltooling_1.lib log4cpp.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_6.dll"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
@@ -181,6 +181,10 @@
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
+			<File
+				RelativePath=".\SAMLConfig.cpp"
+				>
+			</File>
 			<Filter
 				Name="util"
 				>
@@ -188,6 +192,22 @@
 					RelativePath=".\util\XMLConstants.cpp"
 					>
 				</File>
+			</Filter>
+			<Filter
+				Name="saml1"
+				>
+				<Filter
+					Name="core"
+					>
+					<Filter
+						Name="impl"
+						>
+						<File
+							RelativePath=".\saml1\core\impl\AssertionsImpl.cpp"
+							>
+						</File>
+					</Filter>
+				</Filter>
 			</Filter>
 		</Filter>
 		<Filter
@@ -222,6 +242,18 @@
 					RelativePath=".\util\XMLConstants.h"
 					>
 				</File>
+			</Filter>
+			<Filter
+				Name="saml1"
+				>
+				<Filter
+					Name="core"
+					>
+					<File
+						RelativePath=".\saml1\core\Assertions.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
 		<Filter

@@ -4,9 +4,9 @@ lib_LTLIBRARIES = libsaml.la
 
 libsamlincludedir = $(includedir)/saml
 
-sigincludedir = $(includedir)/saml/signature
-
 utilincludedir = $(includedir)/saml/util
+
+saml1coreincludedir = $(includedir)/saml/saml1/core
 
 libsamlinclude_HEADERS = \
     base.h \
@@ -17,11 +17,15 @@ libsamlinclude_HEADERS = \
 utilinclude_HEADERS = \
     util/XMLConstants.h
 
+saml1coreinclude_HEADERS = \
+	saml1/core/Assertions.h
+
 noinst_HEADERS = \
     internal.h
 
 libsaml_la_SOURCES = \
     SAMLConfig.cpp \
+    saml1/core/impl/AssertionsImpl.cpp \
     util/XMLConstants.cpp
 
 # this is different from the project version

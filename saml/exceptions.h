@@ -23,6 +23,7 @@
 #ifndef __saml_exceptions_h__
 #define __saml_exceptions_h__
 
+#include <saml/base.h>
 #include <xmltooling/exceptions.h>
 
 namespace opensaml {

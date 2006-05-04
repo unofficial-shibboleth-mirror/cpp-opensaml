@@ -55,10 +55,15 @@
 <pathentry base-path="OpenSAML2-C" include="saml" kind="inc" path="" system="true"/>
 <pathentry base-path="XMLTooling-C" include="" kind="inc" path="" system="true"/>
 <pathentry include="C:/xerces-c2_7_0-win32/include" kind="inc" path="" system="true"/>
-<pathentry excluding="util/" kind="src" path="saml"/>
+<pathentry include="C:/log4cpp-0.3.5rc1/include" kind="inc" path="" system="true"/>
+<pathentry excluding="util/|saml1/core/|saml2/core/|saml2/metadata/|saml1/core/impl/" kind="src" path="saml"/>
 <pathentry kind="out" path=""/>
 <pathentry kind="con" path="org.eclipse.cdt.make.core.DISCOVERED_SCANNER_INFO"/>
 <pathentry kind="src" path="saml/util"/>
+<pathentry excluding="impl/" kind="src" path="saml/saml1/core"/>
+<pathentry kind="src" path="saml/saml2/core"/>
+<pathentry kind="src" path="saml/saml2/metadata"/>
+<pathentry kind="src" path="saml/saml1/core/impl"/>
 </item>
 </data>
 </cdtproject>

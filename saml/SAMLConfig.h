@@ -25,6 +25,10 @@
 
 #include <saml/base.h>
 
+/**
+ * @namespace opensaml
+ * Common classes for OpenSAML library
+ */
 namespace opensaml {
 
     /**
