@@ -1,0 +1,146 @@
+/*
+*  Copyright 2001-2006 Internet2
+ * 
+* Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * AssertionsSchemaValidators.cpp
+ * 
+ * Schema-based validators for SAML 1.x Assertions classes
+ */
+
+#include "internal.h"
+#include "exceptions.h"
+#include "saml1/core/Assertions.h"
+
+using namespace opensaml::saml1;
+using namespace opensaml;
+using namespace xmltooling;
+using namespace std;
+
+namespace opensaml {
+    namespace saml1 {
+    
+        XMLOBJECTVALIDATOR_SIMPLE(SAML_DLLLOCAL,AssertionIDReference);
+        XMLOBJECTVALIDATOR_SIMPLE(SAML_DLLLOCAL,Audience);
+        XMLOBJECTVALIDATOR_SIMPLE(SAML_DLLLOCAL,ConfirmationMethod);
+
+        BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,AudienceRestrictionCondition);
+            XMLOBJECTVALIDATOR_NONEMPTY(AudienceRestrictionCondition,Audience);
+        END_XMLOBJECTVALIDATOR;
+
+        BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,Conditions);
+            if (!ptr->hasChildren()) {
+                XMLOBJECTVALIDATOR_ONEOF(Conditions,NotBefore,NotOnOrAfter);
+            }
+        END_XMLOBJECTVALIDATOR;
+
+        BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,SubjectConfirmation);
+            XMLOBJECTVALIDATOR_NONEMPTY(SubjectConfirmation,ConfirmationMethod);
+        END_XMLOBJECTVALIDATOR;
+
+        BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,Subject);
+            XMLOBJECTVALIDATOR_ONEOF(Subject,NameIdentifier,SubjectConfirmation);
+        END_XMLOBJECTVALIDATOR;
+
+        BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,SubjectLocality);
+            XMLOBJECTVALIDATOR_ONEOF(SubjectLocality,IPAddress,DNSAddress);
+        END_XMLOBJECTVALIDATOR;
+
+        BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,AuthorityBinding);
+            XMLOBJECTVALIDATOR_REQUIRE(AuthorityBinding,AuthorityKind);
+            XMLOBJECTVALIDATOR_REQUIRE(AuthorityBinding,Location);
+            XMLOBJECTVALIDATOR_REQUIRE(AuthorityBinding,Binding);
+        END_XMLOBJECTVALIDATOR;
+
+        BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,AuthenticationStatement);
+            XMLOBJECTVALIDATOR_REQUIRE(AuthenticationStatement,AuthenticationMethod);
+            XMLOBJECTVALIDATOR_REQUIRE(AuthenticationStatement,AuthenticationInstant);
+            XMLOBJECTVALIDATOR_REQUIRE(AuthenticationStatement,Subject);
+        END_XMLOBJECTVALIDATOR;
+
+        BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,Assertion);
+            XMLOBJECTVALIDATOR_REQUIRE(Assertion,AssertionID);
+            XMLOBJECTVALIDATOR_REQUIRE(Assertion,Issuer);
+            XMLOBJECTVALIDATOR_REQUIRE(Assertion,IssueInstant);
+            if (ptr->getAuthenticationStatements().empty() &&
+                ptr->getSubjectStatements().empty() &&
+                ptr->getStatements().empty())
+                throw ValidationException("Assertion must have at least one statement.");
+        END_XMLOBJECTVALIDATOR;
+
+        class SAML_DLLLOCAL checkWildcardNS {
+        public:
+            void operator()(const XMLObject* xmlObject) const {
+                const XMLCh* ns=xmlObject->getElementQName().getNamespaceURI();
+                if (XMLString::equals(ns,SAMLConstants::SAML1_NS) || !ns || !*ns) {
+                    throw ValidationException(
+                        "Object contains an illegal extension child element ($1).",
+                        params(1,xmlObject->getElementQName().toString().c_str())
+                        );
+                }
+            }
+        };
+
+        BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,Advice);
+            const vector<XMLObject*>& anys=ptr->getOthers();
+            for_each(anys.begin(),anys.end(),checkWildcardNS());
+        END_XMLOBJECTVALIDATOR;
+
+    };
+};
+
+#define REGISTER_ELEMENT(cname) \
+    q=QName(SAMLConstants::SAML1_NS,cname::LOCAL_NAME); \
+    XMLObjectBuilder::registerBuilder(q,new cname##Builder()); \
+    Validator::registerValidator(q,new cname##SchemaValidator())
+    
+#define REGISTER_TYPE(cname) \
+    q=QName(SAMLConstants::SAML1_NS,cname::TYPE_NAME); \
+    XMLObjectBuilder::registerBuilder(q,new cname##Builder()); \
+    Validator::registerValidator(q,new cname##SchemaValidator())
+
+#define REGISTER_ELEMENT_NOVAL(cname) \
+    q=QName(SAMLConstants::SAML1_NS,cname::LOCAL_NAME); \
+    XMLObjectBuilder::registerBuilder(q,new cname##Builder());
+    
+#define REGISTER_TYPE_NOVAL(cname) \
+    q=QName(SAMLConstants::SAML1_NS,cname::TYPE_NAME); \
+    XMLObjectBuilder::registerBuilder(q,new cname##Builder());
+
+void opensaml::saml1::registerAssertionClasses() {
+    QName q;
+    REGISTER_ELEMENT(Advice);
+    REGISTER_ELEMENT(Assertion);
+    REGISTER_ELEMENT(AssertionIDReference);
+    REGISTER_ELEMENT(Audience);
+    REGISTER_ELEMENT(AudienceRestrictionCondition);
+    REGISTER_ELEMENT(AuthenticationStatement);
+    REGISTER_ELEMENT(AuthorityBinding);
+    REGISTER_ELEMENT(Conditions);
+    REGISTER_ELEMENT(ConfirmationMethod);
+    REGISTER_ELEMENT_NOVAL(DoNotCacheCondition);
+    REGISTER_ELEMENT(SubjectConfirmation);
+    REGISTER_ELEMENT_NOVAL(SubjectConfirmationData);
+    REGISTER_ELEMENT(SubjectLocality);
+    REGISTER_TYPE(Advice);
+    REGISTER_TYPE(Assertion);
+    REGISTER_TYPE(AudienceRestrictionCondition);
+    REGISTER_TYPE(AuthenticationStatement);
+    REGISTER_TYPE(AuthorityBinding);
+    REGISTER_TYPE(Conditions);
+    REGISTER_TYPE_NOVAL(DoNotCacheCondition);
+    REGISTER_TYPE(SubjectConfirmation);
+    REGISTER_TYPE(SubjectLocality);
+}

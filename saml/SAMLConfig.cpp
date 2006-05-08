@@ -26,27 +26,21 @@
 #include "exceptions.h"
 #include "SAMLConfig.h"
 #include "saml1/core/Assertions.h"
-#include "util/XMLConstants.h"
+#include "util/SAMLConstants.h"
 
-#include <log4cpp/Category.hh>
 #include <xmltooling/XMLToolingConfig.h>
+#include <xmltooling/signature/Signature.h>
 #include <xmltooling/util/NDC.h>
 
-using namespace opensaml::saml1;
+#include <log4cpp/Category.hh>
+#include <xsec/enc/XSECCryptoException.hpp>
+#include <xsec/utils/XSECPlatformUtils.hpp>
+
 using namespace opensaml;
+using namespace xmlsignature;
 using namespace xmltooling;
 using namespace log4cpp;
-
-#define REGISTER_ELEMENT(namespaceURI,cname) \
-    q=QName(namespaceURI,cname::LOCAL_NAME); \
-    XMLObjectBuilder::registerBuilder(q,new cname##Builder()); \
-    Validator::registerValidator(q,new cname##SchemaValidator())
-    
-#define REGISTER_TYPE(namespaceURI,cname) \
-    q=QName(namespaceURI,cname::TYPE_NAME); \
-    XMLObjectBuilder::registerBuilder(q,new cname##Builder()); \
-    Validator::registerValidator(q,new cname##SchemaValidator())
-
+using namespace std;
 
 //DECL_EXCEPTION_FACTORY(XMLParserException,xmltooling);
 
@@ -75,10 +69,7 @@ bool SAMLInternalConfig::init()
     XMLToolingConfig::getConfig().init();
     log.debug("XMLTooling library initialized");
 
-    QName q;
-    REGISTER_ELEMENT(XMLConstants::SAML1_NS,AssertionIDReference);
-    REGISTER_ELEMENT(XMLConstants::SAML1_NS,Audience);
-    REGISTER_ELEMENT(XMLConstants::SAML1_NS,ConfirmationMethod);
+    saml1::registerAssertionClasses();
 
     log.info("library initialization complete");
     return true;
@@ -91,4 +82,37 @@ void SAMLInternalConfig::term()
 #endif
     XMLToolingConfig::getConfig().term();
     Category::getInstance(SAML_LOGCAT".SAMLConfig").info("library shutdown complete");
+}
+
+void SAMLInternalConfig::generateRandomBytes(void* buf, unsigned int len)
+{
+    try {
+        if (XSECPlatformUtils::g_cryptoProvider->getRandom(reinterpret_cast<unsigned char*>(buf),len)<len)
+            throw XMLSecurityException("Unable to generate random data; was PRNG seeded?");
+    }
+    catch (XSECCryptoException& e) {
+        throw XMLSecurityException("Unable to generate random data: $1",params(1,e.getMsg()));
+    }
+}
+
+void SAMLInternalConfig::generateRandomBytes(std::string& buf, unsigned int len)
+{
+    buf.erase();
+    auto_ptr<unsigned char> hold(new unsigned char[len]);
+    generateRandomBytes(hold.get(),len);
+    for (unsigned int i=0; i<len; i++)
+        buf+=(hold.get())[i];
+}
+
+XMLCh* SAMLInternalConfig::generateIdentifier()
+{
+    unsigned char key[17];
+    generateRandomBytes(key,16);
+    
+    char hexform[34];
+    sprintf(hexform,"_%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x",
+            key[0],key[1],key[2],key[3],key[4],key[5],key[6],key[7],
+            key[8],key[9],key[10],key[11],key[12],key[13],key[14],key[15]);
+    hexform[33]=0;
+    return XMLString::transcode(hexform);
 }

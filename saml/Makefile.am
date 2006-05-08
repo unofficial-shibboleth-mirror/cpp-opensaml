@@ -15,7 +15,7 @@ libsamlinclude_HEADERS = \
     SAMLConfig.h
 
 utilinclude_HEADERS = \
-    util/XMLConstants.h
+    util/SAMLConstants.h
 
 saml1coreinclude_HEADERS = \
 	saml1/core/Assertions.h
@@ -26,7 +26,8 @@ noinst_HEADERS = \
 libsaml_la_SOURCES = \
     SAMLConfig.cpp \
     saml1/core/impl/AssertionsImpl.cpp \
-    util/XMLConstants.cpp
+    saml1/core/impl/AssertionsSchemaValidators.cpp \
+    util/SAMLConstants.cpp
 
 # this is different from the project version
 # http://sources.redhat.com/autobook/autobook/autobook_91.html

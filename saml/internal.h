@@ -55,6 +55,9 @@ namespace opensaml {
         bool init();
         void term();
 
+        void generateRandomBytes(void* buf, unsigned int len);
+        void generateRandomBytes(std::string& buf, unsigned int len);
+        XMLCh* generateIdentifier();
     private:
     };
     /// @endcond

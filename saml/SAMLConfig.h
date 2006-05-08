@@ -24,6 +24,8 @@
 #define __saml_config_h__
 
 #include <saml/base.h>
+#include <xmltooling/unicode.h>
+#include <string>
 
 /**
  * @namespace opensaml
@@ -64,6 +66,30 @@ namespace opensaml {
          * before terminating itself
          */
         virtual void term()=0;
+        
+        /**
+         * Generate random information using the underlying security library
+         * 
+         * @param buf   buffer for the information
+         * @param len   number of bytes to write into buffer
+         */
+        virtual void generateRandomBytes(void* buf, unsigned int len)=0;
+
+        /**
+         * Generate random information using the underlying security library
+         * 
+         * @param buf   string buffer for the information
+         * @param len   number of bytes to write into buffer
+         */
+        virtual void generateRandomBytes(std::string& buf, unsigned int len)=0;
+
+        /**
+         * Generate a valid XML identifier of the form _X{32} where X is a
+         * random hex character. The caller is responsible for freeing the result.
+         * 
+         * @return a valid null-terminated XML ID
+         */
+        virtual XMLCh* generateIdentifier()=0;
 
     protected:
         SAMLConfig() {}

@@ -30,7 +30,7 @@ namespace opensaml {
     /**
      * SAML related constants.
      */
-    struct SAML_API XMLConstants : public xmltooling::XMLConstants
+    struct SAML_API SAMLConstants : public xmltooling::XMLConstants
     {
         /**  SOAP 1.1 Envelope XML namespace ("http://schemas.xmlsoap.org/soap/envelope/") */
         static const XMLCh SOAP11ENV_NS[]; 
