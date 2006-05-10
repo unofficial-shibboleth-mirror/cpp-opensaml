@@ -76,6 +76,7 @@ protected:
 
     void assertEquals(DOMDocument* expectedDOM, XMLObject* xmlObject) {
         assertEquals("Marshalled DOM was not the same as the expected DOM", expectedDOM, xmlObject);
+        delete xmlObject;
     }
 
 public:

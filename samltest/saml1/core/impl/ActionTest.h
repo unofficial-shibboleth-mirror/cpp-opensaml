@@ -22,7 +22,6 @@ using namespace opensaml::saml1;
 class ActionTest : public CxxTest::TestSuite, public SAMLObjectBaseTestCase {
     XMLCh* expectedContents;
     XMLCh* expectedNamespace;
-    QName* qname;
 
 public:
     void setUp() {
@@ -30,12 +29,10 @@ public:
         singleElementOptionalAttributesFile  = data_path + "saml1/core/impl/singleActionAttributes.xml";    
         expectedContents = XMLString::transcode("Action Contents");
         expectedNamespace = XMLString::transcode("namespace");
-        qname = new QName(SAMLConstants::SAML1_NS, Action::LOCAL_NAME, SAMLConstants::SAML1_PREFIX);
         SAMLObjectBaseTestCase::setUp();
     }
     
     void tearDown() {
-        delete qname;
         XMLString::release(&expectedContents);
         XMLString::release(&expectedNamespace);
         SAMLObjectBaseTestCase::tearDown();
@@ -57,15 +54,14 @@ public:
     }
 
     void testSingleElementMarshall() {
-        auto_ptr<Action> action(ActionBuilder::buildAction());
-        assertEquals(expectedDOM, action.get());
+        assertEquals(expectedDOM, ActionBuilder::buildAction());
     }
 
     void testSingleElementOptionalAttributesMarshall() {
-        auto_ptr<Action> action(ActionBuilder::buildAction());
+        Action* action=ActionBuilder::buildAction();
         action->setNamespace(expectedNamespace);
         action->setValue(expectedContents);
-        assertEquals(expectedOptionalAttributesDOM, action.get());
+        assertEquals(expectedOptionalAttributesDOM, action);
     }
 
 };
