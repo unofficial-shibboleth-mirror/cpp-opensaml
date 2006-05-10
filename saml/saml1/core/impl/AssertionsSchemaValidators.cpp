@@ -108,6 +108,8 @@ namespace opensaml {
             XMLOBJECTVALIDATOR_REQUIRE(Assertion,Issuer);
             XMLOBJECTVALIDATOR_REQUIRE(Assertion,IssueInstant);
             if (ptr->getAuthenticationStatements().empty() &&
+                ptr->getAttributeStatements().empty() &&
+                ptr->getAuthorizationDecisionStatements().empty() &&
                 ptr->getSubjectStatements().empty() &&
                 ptr->getStatements().empty())
                 throw ValidationException("Assertion must have at least one statement.");

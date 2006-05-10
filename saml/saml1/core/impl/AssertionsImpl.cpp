@@ -372,6 +372,8 @@ namespace opensaml {
             public AbstractXMLObjectMarshaller,
             public AbstractXMLObjectUnmarshaller
         {
+        protected:
+            SubjectStatementImpl() {}
         public:
             virtual ~SubjectStatementImpl() {}
     
@@ -509,7 +511,7 @@ namespace opensaml {
             }
     
             AuthenticationStatementImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
-                : SubjectStatementImpl(nsURI, localName, prefix, schemaType) {
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
                 init();
             }
                 
@@ -664,7 +666,7 @@ namespace opensaml {
             }
     
             AuthorizationDecisionStatementImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
-                : SubjectStatementImpl(nsURI, localName, prefix, schemaType) {
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
                 init();
             }
                 
@@ -849,7 +851,7 @@ namespace opensaml {
             virtual ~AttributeStatementImpl() {}
     
             AttributeStatementImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
-                : SubjectStatementImpl(nsURI, localName, prefix, schemaType) {
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
                 init();
             }
                 
@@ -976,6 +978,18 @@ namespace opensaml {
                             getAuthenticationStatements().push_back(authst->cloneAuthenticationStatement());
                             continue;
                         }
+
+                        AttributeStatement* attst=dynamic_cast<AttributeStatement*>(*i);
+                        if (attst) {
+                            getAttributeStatements().push_back(attst->cloneAttributeStatement());
+                            continue;
+                        }
+
+                        AuthorizationDecisionStatement* authzst=dynamic_cast<AuthorizationDecisionStatement*>(*i);
+                        if (authzst) {
+                            getAuthorizationDecisionStatements().push_back(authzst->cloneAuthorizationDecisionStatement());
+                            continue;
+                        }
     
                         SubjectStatement* subst=dynamic_cast<SubjectStatement*>(*i);
                         if (subst) {
@@ -1021,6 +1035,8 @@ namespace opensaml {
             IMPL_TYPED_CHILDREN(Statement, m_pos_Signature);
             IMPL_TYPED_CHILDREN(SubjectStatement, m_pos_Signature);
             IMPL_TYPED_CHILDREN(AuthenticationStatement, m_pos_Signature);
+            IMPL_TYPED_CHILDREN(AttributeStatement, m_pos_Signature);
+            IMPL_TYPED_CHILDREN(AuthorizationDecisionStatement, m_pos_Signature);
     
         protected:
             void marshallAttributes(DOMElement* domElement) const {
@@ -1042,6 +1058,8 @@ namespace opensaml {
                 PROC_TYPED_CHILD(Advice,SAMLConstants::SAML1_NS,false);
                 PROC_TYPED_CHILD(Signature,XMLConstants::XMLSIG_NS,false);
                 PROC_TYPED_CHILDREN(AuthenticationStatement,SAMLConstants::SAML1_NS,false);
+                PROC_TYPED_CHILDREN(AttributeStatement,SAMLConstants::SAML1_NS,false);
+                PROC_TYPED_CHILDREN(AuthorizationDecisionStatement,SAMLConstants::SAML1_NS,false);
                 PROC_TYPED_CHILDREN(SubjectStatement,SAMLConstants::SAML1_NS,true);
                 PROC_TYPED_CHILDREN(Statement,SAMLConstants::SAML1_NS,true);
                 AbstractXMLObjectUnmarshaller::processChildElement(childXMLObject,root);

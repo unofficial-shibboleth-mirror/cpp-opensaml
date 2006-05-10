@@ -64,6 +64,7 @@ protected:
             return b->buildFromDocument(doc);
         }
         catch (XMLToolingException& e) {
+            TS_TRACE(typeid(e).name());
             TS_TRACE(e.what());
             throw;
         }

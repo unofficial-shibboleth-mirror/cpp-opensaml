@@ -58,7 +58,7 @@
 <pathentry include="C:/xml-security-c-1.2.0/include" kind="inc" path="" system="true"/>
 <pathentry include="C:/log4cpp-0.3.5rc1/include" kind="inc" path="" system="true"/>
 <pathentry include="C:/cxxtest" kind="inc" path="" system="true"/>
-<pathentry excluding="util/|saml1/core/|saml2/core/|saml2/metadata/|saml1/core/impl/" kind="src" path="saml"/>
+<pathentry excluding="util/|saml1/|saml1/core/|saml2/|saml2/core/|saml2/metadata/|saml1/core/impl/" kind="src" path="saml"/>
 <pathentry kind="out" path=""/>
 <pathentry kind="con" path="org.eclipse.cdt.make.core.DISCOVERED_SCANNER_INFO"/>
 <pathentry kind="src" path="saml/util"/>
