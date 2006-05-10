@@ -1,7 +1,7 @@
 AC_PREREQ([2.50])
 AC_INIT([opensaml], [2.0], [mace-opensaml-users@internet2.edu], [saml])
 AM_CONFIG_HEADER(config.h)
-AM_CONFIG_HEADER(saml/config_pub.h)
+#AM_CONFIG_HEADER(saml/config_pub.h)
 AM_INIT_AUTOMAKE([opensaml], [2.0])
 
 sinclude(doxygen.m4)
@@ -161,7 +161,7 @@ LIBS="-lxmltooling $LIBS"
 AC_CHECK_HEADER([xmltooling/XMLToolingConfig.h],,AC_MSG_ERROR([unable to find xmltooling header files]))
 AC_TRY_LINK(
     [#include <xmltooling/XMLToolingConfig.h>],
-    [XMLToolingConfig::getConfig().init()],
+    [xmltooling::XMLToolingConfig::getConfig().init()],
     [AC_DEFINE(HAVE_LIBXMLTOOLING,1,[Define if XML-Tooling library was found])],
     [AC_MSG_ERROR([unable to link with xmltooling library])]
     )
