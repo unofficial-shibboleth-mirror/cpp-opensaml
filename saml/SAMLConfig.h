@@ -25,6 +25,8 @@
 
 #include <saml/base.h>
 #include <xmltooling/unicode.h>
+#include <xmltooling/XMLToolingConfig.h>
+
 #include <string>
 
 /**

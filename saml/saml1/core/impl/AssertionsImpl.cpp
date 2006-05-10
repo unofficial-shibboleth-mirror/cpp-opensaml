@@ -28,6 +28,7 @@
 #include <xmltooling/AbstractComplexElement.h>
 #include <xmltooling/AbstractElementProxy.h>
 #include <xmltooling/AbstractSimpleElement.h>
+#include <xmltooling/impl/AnyElement.h>
 #include <xmltooling/io/AbstractXMLObjectMarshaller.h>
 #include <xmltooling/io/AbstractXMLObjectUnmarshaller.h>
 #include <xmltooling/util/XMLHelper.h>
@@ -201,7 +202,10 @@ namespace opensaml {
             public AbstractXMLObjectUnmarshaller
         {
         public:
-            virtual ~NameIdentifierImpl() {}
+            virtual ~NameIdentifierImpl() {
+                XMLString::release(&m_Format);
+                XMLString::release(&m_NameQualifier);
+            }
     
             NameIdentifierImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
                     : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
@@ -226,43 +230,32 @@ namespace opensaml {
             IMPL_XMLOBJECT_CONTENT;
     
         protected:
+            void marshallAttributes(DOMElement* domElement) const {
+                MARSHALL_STRING_ATTRIB(Format,FORMAT,NULL);
+                MARSHALL_STRING_ATTRIB(NameQualifier,NAMEQUALIFIER,NULL);
+            }
+
             void processAttribute(const DOMAttr* attribute) {
                 PROC_STRING_ATTRIB(Format,FORMAT,NULL);
                 PROC_STRING_ATTRIB(NameQualifier,NAMEQUALIFIER,NULL);
             }
         };
 
-        class SAML_DLLLOCAL SubjectConfirmationDataImpl : public virtual SubjectConfirmationData,
-            public AbstractDOMCachingXMLObject,
-            public AbstractElementProxy,
-            public AbstractValidatingXMLObject,
-            public AbstractXMLObjectMarshaller,
-            public AbstractXMLObjectUnmarshaller
+        class SAML_DLLLOCAL SubjectConfirmationDataImpl
+            : public virtual SubjectConfirmationData, public AnyElementImpl, public AbstractValidatingXMLObject
         {
         public:
             virtual ~SubjectConfirmationDataImpl() {}
     
             SubjectConfirmationDataImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
-                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
+                : AnyElementImpl(nsURI, localName, prefix, schemaType) {
             }
                 
             SubjectConfirmationDataImpl(const SubjectConfirmationDataImpl& src)
-                    : AbstractXMLObject(src), AbstractDOMCachingXMLObject(src), AbstractElementProxy(src),
-                        AbstractValidatingXMLObject(src) {
-                for (list<XMLObject*>::const_iterator i=src.m_children.begin(); i!=src.m_children.end(); i++) {
-                    if (*i) {
-                        getXMLObjects().push_back((*i)->clone());
-                    }
-                }
+                : AnyElementImpl(src), AbstractValidatingXMLObject(src) {
             }
             
             IMPL_XMLOBJECT_CLONE(SubjectConfirmationData);
-            IMPL_XMLOBJECT_CONTENT;
-    
-        protected:
-            void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                getXMLObjects().push_back(childXMLObject);
-            }
         };
 
         class SAML_DLLLOCAL SubjectConfirmationImpl : public virtual SubjectConfirmation,
@@ -411,75 +404,6 @@ namespace opensaml {
             }
         };
 
-        class SAML_DLLLOCAL AuthenticationStatementImpl : public virtual AuthenticationStatement, public SubjectStatementImpl
-        {
-        public:
-            virtual ~AuthenticationStatementImpl() {
-                XMLString::release(&m_AuthenticationMethod);
-                delete m_AuthenticationInstant;
-            }
-    
-            AuthenticationStatementImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
-                : SubjectStatementImpl(nsURI, localName, prefix, schemaType) {
-                init();
-            }
-                
-            AuthenticationStatementImpl(const AuthenticationStatementImpl& src) : SubjectStatementImpl(src) {
-                init();
-                setAuthenticationMethod(src.getAuthenticationMethod());
-                setAuthenticationInstant(src.getAuthenticationInstant());
-                if (src.getSubjectLocality())
-                    setSubjectLocality(src.getSubjectLocality()->cloneSubjectLocality());
-                VectorOf(AuthorityBinding) v=getAuthorityBindings();
-                for (vector<AuthorityBinding*>::const_iterator i=src.m_AuthorityBindings.begin(); i!=src.m_AuthorityBindings.end(); i++) {
-                    if (*i) {
-                        v.push_back((*i)->cloneAuthorityBinding());
-                    }
-                }
-            }
-            
-            void init() {
-                SubjectStatementImpl::init();
-                m_AuthenticationMethod=NULL;
-                m_AuthenticationInstant=NULL;
-                m_SubjectLocality=NULL;
-                m_children.push_back(NULL);
-                m_pos_SubjectLocality=m_pos_Subject;
-                m_pos_SubjectLocality++;
-            }
-            
-            IMPL_XMLOBJECT_CLONE(AuthenticationStatement);
-            SubjectStatement* cloneSubjectStatement() const {
-                return cloneAuthenticationStatement();
-            }
-            Statement* cloneStatement() const {
-                return cloneAuthenticationStatement();
-            }
-            IMPL_STRING_ATTRIB(AuthenticationMethod);
-            IMPL_DATETIME_ATTRIB(AuthenticationInstant);
-            IMPL_TYPED_CHILD(SubjectLocality);
-            IMPL_TYPED_CHILDREN(AuthorityBinding, m_children.end());
-    
-        protected:
-            void marshallAttributes(DOMElement* domElement) const {
-                MARSHALL_STRING_ATTRIB(AuthenticationMethod,AUTHENTICATIONMETHOD,NULL);
-                MARSHALL_DATETIME_ATTRIB(AuthenticationInstant,AUTHENTICATIONINSTANT,NULL);
-                SubjectStatementImpl::marshallAttributes(domElement);
-            }
-    
-            void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_CHILD(SubjectLocality,SAMLConstants::SAML1_NS,false);
-                PROC_TYPED_CHILDREN(AuthorityBinding,SAMLConstants::SAML1_NS,false);
-                SubjectStatementImpl::processChildElement(childXMLObject,root);
-            }
-    
-            void processAttribute(const DOMAttr* attribute) {
-                PROC_STRING_ATTRIB(AuthenticationMethod,AUTHENTICATIONMETHOD,NULL);
-                PROC_DATETIME_ATTRIB(AuthenticationInstant,AUTHENTICATIONINSTANT,NULL);
-                SubjectStatementImpl::processAttribute(attribute);
-            }
-        };
-
         class SAML_DLLLOCAL SubjectLocalityImpl : public virtual SubjectLocality,
             public AbstractChildlessElement,
             public AbstractDOMCachingXMLObject,
@@ -573,6 +497,384 @@ namespace opensaml {
                 PROC_QNAME_ATTRIB(AuthorityKind,AUTHORITYKIND,NULL);
                 PROC_STRING_ATTRIB(Location,LOCATION,NULL);
                 PROC_STRING_ATTRIB(Binding,BINDING,NULL);
+            }
+        };
+
+        class SAML_DLLLOCAL AuthenticationStatementImpl : public virtual AuthenticationStatement, public SubjectStatementImpl
+        {
+        public:
+            virtual ~AuthenticationStatementImpl() {
+                XMLString::release(&m_AuthenticationMethod);
+                delete m_AuthenticationInstant;
+            }
+    
+            AuthenticationStatementImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
+                : SubjectStatementImpl(nsURI, localName, prefix, schemaType) {
+                init();
+            }
+                
+            AuthenticationStatementImpl(const AuthenticationStatementImpl& src) : SubjectStatementImpl(src) {
+                init();
+                setAuthenticationMethod(src.getAuthenticationMethod());
+                setAuthenticationInstant(src.getAuthenticationInstant());
+                if (src.getSubjectLocality())
+                    setSubjectLocality(src.getSubjectLocality()->cloneSubjectLocality());
+                VectorOf(AuthorityBinding) v=getAuthorityBindings();
+                for (vector<AuthorityBinding*>::const_iterator i=src.m_AuthorityBindings.begin(); i!=src.m_AuthorityBindings.end(); i++) {
+                    if (*i) {
+                        v.push_back((*i)->cloneAuthorityBinding());
+                    }
+                }
+            }
+            
+            void init() {
+                SubjectStatementImpl::init();
+                m_AuthenticationMethod=NULL;
+                m_AuthenticationInstant=NULL;
+                m_SubjectLocality=NULL;
+                m_children.push_back(NULL);
+                m_pos_SubjectLocality=m_pos_Subject;
+                m_pos_SubjectLocality++;
+            }
+            
+            IMPL_XMLOBJECT_CLONE(AuthenticationStatement);
+            SubjectStatement* cloneSubjectStatement() const {
+                return cloneAuthenticationStatement();
+            }
+            Statement* cloneStatement() const {
+                return cloneAuthenticationStatement();
+            }
+            IMPL_STRING_ATTRIB(AuthenticationMethod);
+            IMPL_DATETIME_ATTRIB(AuthenticationInstant);
+            IMPL_TYPED_CHILD(SubjectLocality);
+            IMPL_TYPED_CHILDREN(AuthorityBinding, m_children.end());
+    
+        protected:
+            void marshallAttributes(DOMElement* domElement) const {
+                MARSHALL_STRING_ATTRIB(AuthenticationMethod,AUTHENTICATIONMETHOD,NULL);
+                MARSHALL_DATETIME_ATTRIB(AuthenticationInstant,AUTHENTICATIONINSTANT,NULL);
+                SubjectStatementImpl::marshallAttributes(domElement);
+            }
+    
+            void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
+                PROC_TYPED_CHILD(SubjectLocality,SAMLConstants::SAML1_NS,false);
+                PROC_TYPED_CHILDREN(AuthorityBinding,SAMLConstants::SAML1_NS,false);
+                SubjectStatementImpl::processChildElement(childXMLObject,root);
+            }
+    
+            void processAttribute(const DOMAttr* attribute) {
+                PROC_STRING_ATTRIB(AuthenticationMethod,AUTHENTICATIONMETHOD,NULL);
+                PROC_DATETIME_ATTRIB(AuthenticationInstant,AUTHENTICATIONINSTANT,NULL);
+                SubjectStatementImpl::processAttribute(attribute);
+            }
+        };
+
+        class SAML_DLLLOCAL ActionImpl : public virtual Action,
+            public AbstractSimpleElement,
+            public AbstractChildlessElement,
+            public AbstractDOMCachingXMLObject,
+            public AbstractValidatingXMLObject,
+            public AbstractXMLObjectMarshaller,
+            public AbstractXMLObjectUnmarshaller
+        {
+        public:
+            virtual ~ActionImpl() {
+                XMLString::release(&m_Namespace);
+            }
+    
+            ActionImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
+                    : AbstractXMLObject(nsURI, localName, prefix, schemaType), m_Namespace(NULL) {
+            }
+                
+            ActionImpl(const ActionImpl& src)
+                    : AbstractXMLObject(src), AbstractSimpleElement(src),
+                        AbstractDOMCachingXMLObject(src), AbstractValidatingXMLObject(src) {
+                setNamespace(src.getNamespace());
+            }
+            
+            IMPL_XMLOBJECT_CLONE(Action);
+            IMPL_STRING_ATTRIB(Namespace);
+            IMPL_XMLOBJECT_CONTENT;
+    
+        protected:
+            void marshallAttributes(DOMElement* domElement) const {
+                MARSHALL_STRING_ATTRIB(Namespace,NAMESPACE,NULL);
+            }
+
+            void processAttribute(const DOMAttr* attribute) {
+                PROC_STRING_ATTRIB(Namespace,NAMESPACE,NULL);
+            }
+        };
+
+        class SAML_DLLLOCAL EvidenceImpl : public virtual Evidence,
+            public AbstractComplexElement,
+            public AbstractDOMCachingXMLObject,
+            public AbstractValidatingXMLObject,
+            public AbstractXMLObjectMarshaller,
+            public AbstractXMLObjectUnmarshaller
+        {
+        public:
+            virtual ~EvidenceImpl() {}
+    
+            EvidenceImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
+            }
+                
+            EvidenceImpl(const EvidenceImpl& src)
+                    : AbstractXMLObject(src),
+                        AbstractDOMCachingXMLObject(src),
+                        AbstractValidatingXMLObject(src) {
+    
+                for (list<XMLObject*>::const_iterator i=src.m_children.begin(); i!=src.m_children.end(); i++) {
+                    if (*i) {
+                        AssertionIDReference* ref=dynamic_cast<AssertionIDReference*>(*i);
+                        if (ref) {
+                            getAssertionIDReferences().push_back(ref->cloneAssertionIDReference());
+                            continue;
+                        }
+    
+                        Assertion* assertion=dynamic_cast<Assertion*>(*i);
+                        if (assertion) {
+                            getAssertions().push_back(assertion->cloneAssertion());
+                            continue;
+                        }
+                    }
+                }
+            }
+            
+            IMPL_XMLOBJECT_CLONE(Evidence);
+            IMPL_TYPED_CHILDREN(AssertionIDReference,m_children.end());
+            IMPL_TYPED_CHILDREN(Assertion,m_children.end());
+    
+        protected:
+            void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
+                PROC_TYPED_CHILDREN(AssertionIDReference,SAMLConstants::SAML1_NS,false);
+                PROC_TYPED_CHILDREN(Assertion,SAMLConstants::SAML1_NS,true);
+                AbstractXMLObjectUnmarshaller::processChildElement(childXMLObject,root);
+            }
+        };
+
+        class SAML_DLLLOCAL AuthorizationDecisionStatementImpl
+            : public virtual AuthorizationDecisionStatement, public SubjectStatementImpl
+        {
+        public:
+            virtual ~AuthorizationDecisionStatementImpl() {
+                XMLString::release(&m_Resource);
+                XMLString::release(&m_Decision);
+            }
+    
+            AuthorizationDecisionStatementImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
+                : SubjectStatementImpl(nsURI, localName, prefix, schemaType) {
+                init();
+            }
+                
+            AuthorizationDecisionStatementImpl(const AuthorizationDecisionStatementImpl& src) : SubjectStatementImpl(src) {
+                init();
+                setResource(src.getResource());
+                setDecision(src.getDecision());
+                if (src.getEvidence())
+                    setEvidence(src.getEvidence()->cloneEvidence());
+                VectorOf(Action) v=getActions();
+                for (vector<Action*>::const_iterator i=src.m_Actions.begin(); i!=src.m_Actions.end(); i++) {
+                    if (*i) {
+                        v.push_back((*i)->cloneAction());
+                    }
+                }
+            }
+            
+            void init() {
+                SubjectStatementImpl::init();
+                m_Resource=NULL;
+                m_Decision=NULL;
+                m_Evidence=NULL;
+                m_children.push_back(NULL);
+                m_pos_Evidence=m_pos_Subject;
+                m_pos_Evidence++;
+            }
+            
+            IMPL_XMLOBJECT_CLONE(AuthorizationDecisionStatement);
+            SubjectStatement* cloneSubjectStatement() const {
+                return cloneAuthorizationDecisionStatement();
+            }
+            Statement* cloneStatement() const {
+                return cloneAuthorizationDecisionStatement();
+            }
+            IMPL_STRING_ATTRIB(Resource);
+            IMPL_STRING_ATTRIB(Decision);
+            IMPL_TYPED_CHILD(Evidence);
+            IMPL_TYPED_CHILDREN(Action, m_pos_Evidence);
+    
+        protected:
+            void marshallAttributes(DOMElement* domElement) const {
+                MARSHALL_STRING_ATTRIB(Resource,RESOURCE,NULL);
+                MARSHALL_STRING_ATTRIB(Decision,DECISION,NULL);
+                SubjectStatementImpl::marshallAttributes(domElement);
+            }
+    
+            void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
+                PROC_TYPED_CHILD(Evidence,SAMLConstants::SAML1_NS,false);
+                PROC_TYPED_CHILDREN(Action,SAMLConstants::SAML1_NS,false);
+                SubjectStatementImpl::processChildElement(childXMLObject,root);
+            }
+    
+            void processAttribute(const DOMAttr* attribute) {
+                PROC_STRING_ATTRIB(Resource,RESOURCE,NULL);
+                PROC_STRING_ATTRIB(Decision,DECISION,NULL);
+                SubjectStatementImpl::processAttribute(attribute);
+            }
+        };
+
+        class SAML_DLLLOCAL AttributeDesignatorImpl : public virtual AttributeDesignator,
+            public AbstractChildlessElement,
+            public AbstractDOMCachingXMLObject,
+            public AbstractValidatingXMLObject,
+            public AbstractXMLObjectMarshaller,
+            public AbstractXMLObjectUnmarshaller
+        {
+        public:
+            virtual ~AttributeDesignatorImpl() {
+                XMLString::release(&m_AttributeName);
+                XMLString::release(&m_AttributeNamespace);
+            }
+    
+            AttributeDesignatorImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
+                init();
+            }
+                
+            AttributeDesignatorImpl(const AttributeDesignatorImpl& src)
+                    : AbstractXMLObject(src), AbstractDOMCachingXMLObject(src), AbstractValidatingXMLObject(src) {
+                init();
+                setAttributeName(src.getAttributeName());
+                setAttributeNamespace(src.getAttributeNamespace());
+            }
+            
+            void init() {
+                m_AttributeName=m_AttributeNamespace=NULL;
+            }
+            
+            IMPL_XMLOBJECT_CLONE(AttributeDesignator);
+            IMPL_STRING_ATTRIB(AttributeName);
+            IMPL_STRING_ATTRIB(AttributeNamespace);
+    
+        protected:
+            void marshallAttributes(DOMElement* domElement) const {
+                MARSHALL_STRING_ATTRIB(AttributeName,ATTRIBUTENAME,NULL);
+                MARSHALL_STRING_ATTRIB(AttributeNamespace,ATTRIBUTENAMESPACE,NULL);
+            }
+    
+            void processAttribute(const DOMAttr* attribute) {
+                PROC_STRING_ATTRIB(AttributeName,ATTRIBUTENAME,NULL);
+                PROC_STRING_ATTRIB(AttributeNamespace,ATTRIBUTENAMESPACE,NULL);
+            }
+        };
+
+        class SAML_DLLLOCAL AttributeImpl : public virtual Attribute,
+            public AbstractComplexElement,
+            public AbstractDOMCachingXMLObject,
+            public AbstractValidatingXMLObject,
+            public AbstractXMLObjectMarshaller,
+            public AbstractXMLObjectUnmarshaller
+        {
+        public:
+            virtual ~AttributeImpl() {
+                XMLString::release(&m_AttributeName);
+                XMLString::release(&m_AttributeNamespace);
+            }
+    
+            AttributeImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
+                init();
+            }
+                
+            AttributeImpl(const AttributeImpl& src)
+                    : AbstractXMLObject(src), AbstractDOMCachingXMLObject(src), AbstractValidatingXMLObject(src) {
+                init();
+                setAttributeName(src.getAttributeName());
+                setAttributeNamespace(src.getAttributeNamespace());
+                VectorOf(XMLObject) v=getAttributeValues();
+                for (vector<XMLObject*>::const_iterator i=src.m_AttributeValues.begin(); i!=src.m_AttributeValues.end(); i++) {
+                    if (*i) {
+                        v.push_back((*i)->clone());
+                    }
+                }
+            }
+            
+            void init() {
+                m_AttributeName=m_AttributeNamespace=NULL;
+            }
+            
+            IMPL_XMLOBJECT_CLONE(Attribute);
+            AttributeDesignator* cloneAttributeDesignator() const {
+                return cloneAttribute();
+            }
+            IMPL_STRING_ATTRIB(AttributeName);
+            IMPL_STRING_ATTRIB(AttributeNamespace);
+            IMPL_XMLOBJECT_CHILDREN(AttributeValue,m_children.end());
+    
+        protected:
+            void marshallAttributes(DOMElement* domElement) const {
+                MARSHALL_STRING_ATTRIB(AttributeName,ATTRIBUTENAME,NULL);
+                MARSHALL_STRING_ATTRIB(AttributeNamespace,ATTRIBUTENAMESPACE,NULL);
+            }
+
+            void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
+                getAttributeValues().push_back(childXMLObject);
+            }
+
+            void processAttribute(const DOMAttr* attribute) {
+                PROC_STRING_ATTRIB(AttributeName,ATTRIBUTENAME,NULL);
+                PROC_STRING_ATTRIB(AttributeNamespace,ATTRIBUTENAMESPACE,NULL);
+            }
+        };
+
+        class SAML_DLLLOCAL AttributeValueImpl
+            : public virtual AttributeValue, public AnyElementImpl, public AbstractValidatingXMLObject
+        {
+        public:
+            virtual ~AttributeValueImpl() {}
+    
+            AttributeValueImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
+                : AnyElementImpl(nsURI, localName, prefix, schemaType) {
+            }
+                
+            AttributeValueImpl(const AttributeValueImpl& src) : AnyElementImpl(src), AbstractValidatingXMLObject(src) {}
+            
+            IMPL_XMLOBJECT_CLONE(AttributeValue);
+        };
+
+        class SAML_DLLLOCAL AttributeStatementImpl : public virtual AttributeStatement, public SubjectStatementImpl
+        {
+        public:
+            virtual ~AttributeStatementImpl() {}
+    
+            AttributeStatementImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
+                : SubjectStatementImpl(nsURI, localName, prefix, schemaType) {
+                init();
+            }
+                
+            AttributeStatementImpl(const AttributeStatementImpl& src) : SubjectStatementImpl(src) {
+                VectorOf(Attribute) v=getAttributes();
+                for (vector<Attribute*>::const_iterator i=src.m_Attributes.begin(); i!=src.m_Attributes.end(); i++) {
+                    if (*i) {
+                        v.push_back((*i)->cloneAttribute());
+                    }
+                }
+            }
+            
+            IMPL_XMLOBJECT_CLONE(AttributeStatement);
+            SubjectStatement* cloneSubjectStatement() const {
+                return cloneAttributeStatement();
+            }
+            Statement* cloneStatement() const {
+                return cloneAttributeStatement();
+            }
+            IMPL_TYPED_CHILDREN(Attribute, m_children.end());
+    
+        protected:
+            void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
+                PROC_TYPED_CHILDREN(Attribute,SAMLConstants::SAML1_NS,true);
+                SubjectStatementImpl::processChildElement(childXMLObject,root);
             }
         };
 
@@ -767,16 +1069,23 @@ namespace opensaml {
 
 // Builder Implementations
 
+IMPL_XMLOBJECTBUILDER(Action);
 IMPL_XMLOBJECTBUILDER(Advice);
 IMPL_XMLOBJECTBUILDER(Assertion);
 IMPL_XMLOBJECTBUILDER(AssertionIDReference);
+IMPL_XMLOBJECTBUILDER(Attribute);
+IMPL_XMLOBJECTBUILDER(AttributeDesignator);
+IMPL_XMLOBJECTBUILDER(AttributeStatement);
+IMPL_XMLOBJECTBUILDER(AttributeValue);
 IMPL_XMLOBJECTBUILDER(Audience);
 IMPL_XMLOBJECTBUILDER(AudienceRestrictionCondition);
 IMPL_XMLOBJECTBUILDER(AuthenticationStatement);
+IMPL_XMLOBJECTBUILDER(AuthorizationDecisionStatement);
 IMPL_XMLOBJECTBUILDER(AuthorityBinding);
 IMPL_XMLOBJECTBUILDER(Conditions);
 IMPL_XMLOBJECTBUILDER(ConfirmationMethod);
 IMPL_XMLOBJECTBUILDER(DoNotCacheCondition);
+IMPL_XMLOBJECTBUILDER(Evidence);
 IMPL_XMLOBJECTBUILDER(NameIdentifier);
 IMPL_XMLOBJECTBUILDER(Subject);
 IMPL_XMLOBJECTBUILDER(SubjectConfirmation);
@@ -784,6 +1093,9 @@ IMPL_XMLOBJECTBUILDER(SubjectConfirmationData);
 IMPL_XMLOBJECTBUILDER(SubjectLocality);
 
 // Unicode literals
+const XMLCh Action::LOCAL_NAME[] =                  UNICODE_LITERAL_6(A,c,t,i,o,n);
+const XMLCh Action::TYPE_NAME[] =                   UNICODE_LITERAL_10(A,c,t,i,o,n,T,y,p,e);
+const XMLCh Action::NAMESPACE_ATTRIB_NAME[] =       UNICODE_LITERAL_9(N,a,m,e,s,p,a,c,e);
 const XMLCh Advice::LOCAL_NAME[] =                  UNICODE_LITERAL_6(A,d,v,i,c,e);
 const XMLCh Advice::TYPE_NAME[] =                   UNICODE_LITERAL_10(A,d,v,i,c,e,T,y,p,e);
 const XMLCh Assertion::LOCAL_NAME[] =               UNICODE_LITERAL_9(A,s,s,e,r,t,i,o,n);
@@ -793,6 +1105,15 @@ const XMLCh Assertion::ASSERTIONID_ATTRIB_NAME[] =  UNICODE_LITERAL_11(A,s,s,e,r
 const XMLCh Assertion::ISSUER_ATTRIB_NAME[] =       UNICODE_LITERAL_6(I,s,s,u,e,r);
 const XMLCh Assertion::ISSUEINSTANT_ATTRIB_NAME[] = UNICODE_LITERAL_12(I,s,s,u,e,I,n,s,t,a,n,t);
 const XMLCh AssertionIDReference::LOCAL_NAME[] =    UNICODE_LITERAL_20(A,s,s,e,r,t,i,o,n,I,D,R,e,f,e,r,e,n,c,e);
+const XMLCh Attribute::LOCAL_NAME[] =               UNICODE_LITERAL_9(A,t,t,r,i,b,u,t,e);
+const XMLCh Attribute::TYPE_NAME[] =                UNICODE_LITERAL_13(A,t,t,r,i,b,u,t,e,T,y,p,e);
+const XMLCh AttributeDesignator::LOCAL_NAME[] =     UNICODE_LITERAL_19(A,t,t,r,i,b,u,t,e,D,e,s,i,g,n,a,t,o,r);
+const XMLCh AttributeDesignator::TYPE_NAME[] =      UNICODE_LITERAL_23(A,t,t,r,i,b,u,t,e,D,e,s,i,g,n,a,t,o,r,T,y,p,e);
+const XMLCh AttributeDesignator::ATTRIBUTENAME_ATTRIB_NAME[] =              UNICODE_LITERAL_13(A,t,t,r,i,b,u,t,e,N,a,m,e);
+const XMLCh AttributeDesignator::ATTRIBUTENAMESPACE_ATTRIB_NAME[] =         UNICODE_LITERAL_18(A,t,t,r,i,b,u,t,e,N,a,m,e,s,p,a,c,e);
+const XMLCh AttributeStatement::LOCAL_NAME[] =      UNICODE_LITERAL_18(A,t,t,r,i,b,u,t,e,S,t,a,t,e,m,e,n,t);
+const XMLCh AttributeStatement::TYPE_NAME[] =       UNICODE_LITERAL_22(A,t,t,r,i,b,u,t,e,S,t,a,t,e,m,e,n,t,T,y,p,e);
+const XMLCh AttributeValue::LOCAL_NAME[] =          UNICODE_LITERAL_14(A,t,t,r,i,b,u,t,e,V,a,l,u,e);
 const XMLCh Audience::LOCAL_NAME[] =                UNICODE_LITERAL_8(A,u,d,i,e,n,c,e);
 const XMLCh AudienceRestrictionCondition::LOCAL_NAME[] =    UNICODE_LITERAL_28(A,u,d,i,e,n,c,e,R,e,s,t,r,i,c,t,i,o,n,C,o,n,d,i,t,i,o,n);
 const XMLCh AudienceRestrictionCondition::TYPE_NAME[] =     UNICODE_LITERAL_32(A,u,d,i,e,n,c,e,R,e,s,t,r,i,c,t,i,o,n,C,o,n,d,i,t,i,o,n,T,y,p,e);
@@ -805,6 +1126,13 @@ const XMLCh AuthorityBinding::TYPE_NAME[] =         UNICODE_LITERAL_20(A,u,t,h,o
 const XMLCh AuthorityBinding::AUTHORITYKIND_ATTRIB_NAME[] = UNICODE_LITERAL_13(A,u,t,h,o,r,i,t,y,K,i,n,d);
 const XMLCh AuthorityBinding::LOCATION_ATTRIB_NAME[] =      UNICODE_LITERAL_8(L,o,c,a,t,i,o,n);
 const XMLCh AuthorityBinding::BINDING_ATTRIB_NAME[] =       UNICODE_LITERAL_7(B,i,n,d,i,n,g);
+const XMLCh AuthorizationDecisionStatement::LOCAL_NAME[] =  UNICODE_LITERAL_30(A,u,t,h,o,r,i,z,a,t,i,o,n,D,e,c,i,s,i,o,n,S,t,a,t,e,m,e,n,t);
+const XMLCh AuthorizationDecisionStatement::TYPE_NAME[] =   UNICODE_LITERAL_34(A,u,t,h,o,r,i,z,a,t,i,o,n,D,e,c,i,s,i,o,n,S,t,a,t,e,m,e,n,t,T,y,p,e);
+const XMLCh AuthorizationDecisionStatement::RESOURCE_ATTRIB_NAME[] =        UNICODE_LITERAL_8(R,e,s,o,u,r,c,e);
+const XMLCh AuthorizationDecisionStatement::DECISION_ATTRIB_NAME[] =        UNICODE_LITERAL_8(D,e,c,i,s,i,o,n);
+const XMLCh AuthorizationDecisionStatement::DECISION_PERMIT[] =             UNICODE_LITERAL_6(P,e,r,m,i,t);
+const XMLCh AuthorizationDecisionStatement::DECISION_DENY[] =               UNICODE_LITERAL_4(D,e,n,y);
+const XMLCh AuthorizationDecisionStatement::DECISION_INDETERMINATE[] =      UNICODE_LITERAL_13(I,n,d,e,t,e,r,m,i,n,a,t,e);
 const XMLCh Condition::LOCAL_NAME[] =               UNICODE_LITERAL_9(C,o,n,d,i,t,i,o,n);
 const XMLCh Conditions::LOCAL_NAME[] =              UNICODE_LITERAL_10(C,o,n,d,i,t,i,o,n,s);
 const XMLCh Conditions::TYPE_NAME[] =               UNICODE_LITERAL_14(C,o,n,d,i,t,i,o,n,s,T,y,p,e);
@@ -813,6 +1141,8 @@ const XMLCh Conditions::NOTONORAFTER_ATTRIB_NAME[] =UNICODE_LITERAL_12(N,o,t,O,n
 const XMLCh ConfirmationMethod::LOCAL_NAME[] =      UNICODE_LITERAL_18(C,o,n,f,i,r,m,a,t,i,o,n,M,e,t,h,o,d);
 const XMLCh DoNotCacheCondition::LOCAL_NAME[] =     UNICODE_LITERAL_19(D,o,N,o,t,C,a,c,h,e,C,o,n,d,i,t,i,o,n);
 const XMLCh DoNotCacheCondition::TYPE_NAME[] =      UNICODE_LITERAL_23(D,o,N,o,t,C,a,c,h,e,C,o,n,d,i,t,i,o,n,T,y,p,e);
+const XMLCh Evidence::LOCAL_NAME[] =                UNICODE_LITERAL_8(E,v,i,d,e,n,c,e);
+const XMLCh Evidence::TYPE_NAME[] =                 UNICODE_LITERAL_12(E,v,i,d,e,n,c,e,T,y,p,e);
 const XMLCh NameIdentifier::LOCAL_NAME[] =          UNICODE_LITERAL_14(N,a,m,e,I,d,e,n,t,i,f,i,e,r);
 const XMLCh NameIdentifier::TYPE_NAME[] =           UNICODE_LITERAL_18(N,a,m,e,I,d,e,n,t,i,f,i,e,r,T,y,p,e);
 const XMLCh NameIdentifier::NAMEQUALIFIER_ATTRIB_NAME[] =   UNICODE_LITERAL_13(N,a,m,e,Q,u,a,l,i,f,i,e,r);

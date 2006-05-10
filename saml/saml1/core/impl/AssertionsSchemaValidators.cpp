@@ -31,10 +31,12 @@ using namespace std;
 
 namespace opensaml {
     namespace saml1 {
-    
+        
+        XMLOBJECTVALIDATOR_SIMPLE(SAML_DLLLOCAL,Action);
         XMLOBJECTVALIDATOR_SIMPLE(SAML_DLLLOCAL,AssertionIDReference);
         XMLOBJECTVALIDATOR_SIMPLE(SAML_DLLLOCAL,Audience);
         XMLOBJECTVALIDATOR_SIMPLE(SAML_DLLLOCAL,ConfirmationMethod);
+        XMLOBJECTVALIDATOR_SIMPLE(SAML_DLLLOCAL,NameIdentifier);
 
         BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,AudienceRestrictionCondition);
             XMLOBJECTVALIDATOR_NONEMPTY(AudienceRestrictionCondition,Audience);
@@ -68,6 +70,37 @@ namespace opensaml {
             XMLOBJECTVALIDATOR_REQUIRE(AuthenticationStatement,AuthenticationMethod);
             XMLOBJECTVALIDATOR_REQUIRE(AuthenticationStatement,AuthenticationInstant);
             XMLOBJECTVALIDATOR_REQUIRE(AuthenticationStatement,Subject);
+        END_XMLOBJECTVALIDATOR;
+
+        BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,Evidence);
+            if (!ptr->hasChildren())
+                throw ValidationException("Evidence must have at least one child element.");
+        END_XMLOBJECTVALIDATOR;
+
+        BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,AuthorizationDecisionStatement);
+            XMLOBJECTVALIDATOR_REQUIRE(AuthorizationDecisionStatement,Resource);
+            XMLOBJECTVALIDATOR_REQUIRE(AuthorizationDecisionStatement,Decision);
+            if (!XMLString::equals(ptr->getDecision(),AuthorizationDecisionStatement::DECISION_PERMIT) &&
+                !XMLString::equals(ptr->getDecision(),AuthorizationDecisionStatement::DECISION_DENY) &&
+                !XMLString::equals(ptr->getDecision(),AuthorizationDecisionStatement::DECISION_INDETERMINATE))
+                throw ValidationException("Decision must be one of Deny, Permit, or Indeterminate.");
+            XMLOBJECTVALIDATOR_REQUIRE(AuthorizationDecisionStatement,Subject);
+            XMLOBJECTVALIDATOR_NONEMPTY(AuthorizationDecisionStatement,Action);
+        END_XMLOBJECTVALIDATOR;
+
+        BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,AttributeDesignator);
+            XMLOBJECTVALIDATOR_REQUIRE(AttributeDesignator,AttributeName);
+            XMLOBJECTVALIDATOR_REQUIRE(AttributeDesignator,AttributeNamespace);
+        END_XMLOBJECTVALIDATOR;
+
+        BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,Attribute);
+            XMLOBJECTVALIDATOR_REQUIRE(Attribute,AttributeName);
+            XMLOBJECTVALIDATOR_REQUIRE(Attribute,AttributeNamespace);
+            XMLOBJECTVALIDATOR_NONEMPTY(Attribute,AttributeValue);
+        END_XMLOBJECTVALIDATOR;
+
+        BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,AttributeStatement);
+            XMLOBJECTVALIDATOR_NONEMPTY(AttributeStatement,Attribute);
         END_XMLOBJECTVALIDATOR;
 
         BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,Assertion);
@@ -121,26 +154,43 @@ namespace opensaml {
 
 void opensaml::saml1::registerAssertionClasses() {
     QName q;
+    REGISTER_ELEMENT(Action);
     REGISTER_ELEMENT(Advice);
     REGISTER_ELEMENT(Assertion);
     REGISTER_ELEMENT(AssertionIDReference);
+    REGISTER_ELEMENT(Attribute);
+    REGISTER_ELEMENT(AttributeDesignator);
+    REGISTER_ELEMENT(AttributeStatement);
+    REGISTER_ELEMENT_NOVAL(AttributeValue);
     REGISTER_ELEMENT(Audience);
     REGISTER_ELEMENT(AudienceRestrictionCondition);
     REGISTER_ELEMENT(AuthenticationStatement);
     REGISTER_ELEMENT(AuthorityBinding);
+    REGISTER_ELEMENT(AuthorizationDecisionStatement);
     REGISTER_ELEMENT(Conditions);
     REGISTER_ELEMENT(ConfirmationMethod);
     REGISTER_ELEMENT_NOVAL(DoNotCacheCondition);
+    REGISTER_ELEMENT(Evidence);
+    REGISTER_ELEMENT(NameIdentifier);
+    REGISTER_ELEMENT(Subject);
     REGISTER_ELEMENT(SubjectConfirmation);
     REGISTER_ELEMENT_NOVAL(SubjectConfirmationData);
     REGISTER_ELEMENT(SubjectLocality);
+    REGISTER_TYPE(Action);
     REGISTER_TYPE(Advice);
     REGISTER_TYPE(Assertion);
+    REGISTER_TYPE(Attribute);
+    REGISTER_TYPE(AttributeDesignator);
+    REGISTER_TYPE(AttributeStatement);
     REGISTER_TYPE(AudienceRestrictionCondition);
     REGISTER_TYPE(AuthenticationStatement);
     REGISTER_TYPE(AuthorityBinding);
+    REGISTER_TYPE(AuthorizationDecisionStatement);
     REGISTER_TYPE(Conditions);
     REGISTER_TYPE_NOVAL(DoNotCacheCondition);
+    REGISTER_TYPE(Evidence);
+    REGISTER_TYPE(NameIdentifier);
+    REGISTER_TYPE(Subject);
     REGISTER_TYPE(SubjectConfirmation);
     REGISTER_TYPE(SubjectLocality);
 }
