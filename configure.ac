@@ -16,6 +16,7 @@ DX_XML_FEATURE(OFF)
 DX_PDF_FEATURE(OFF)
 DX_PS_FEATURE(OFF)
 DX_INIT_DOXYGEN(opensaml, doxygen.cfg, doc/api)
+DX_INCLUDE=
 
 AC_ARG_ENABLE(debug,
     AC_HELP_STRING(--enable-debug, [Have GCC compile with symbols (Default = no)]),
@@ -156,6 +157,7 @@ AC_ARG_WITH(xmltooling,
     [if test x_$with_xmltooling != x_/usr; then
         LDFLAGS="-L${with_xmltooling}/lib $LDFLAGS"
         CPPFLAGS="-I${with_xmltooling}/include $CPPFLAGS"
+        DX_INCLUDE="${with_xmltooling}/include"
     fi])
 LIBS="-lxmltooling $LIBS"
 AC_CHECK_HEADER([xmltooling/XMLToolingConfig.h],,AC_MSG_ERROR([unable to find xmltooling header files]))
@@ -191,6 +193,7 @@ AC_SUBST(CXXTEST)
 AC_SUBST(CXXTESTFLAGS)
 AM_CONDITIONAL(BUILD_UNITTEST,test -f ${CXXTEST})
 
+AC_SUBST(DX_INCLUDE)
 LIBTOOL="$LIBTOOL --silent"
 
 # output makefiles
