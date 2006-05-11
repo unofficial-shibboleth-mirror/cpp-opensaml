@@ -248,7 +248,7 @@ namespace opensaml {
             virtual ~SubjectConfirmationDataImpl() {}
     
             SubjectConfirmationDataImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
-                : AnyElementImpl(nsURI, localName, prefix, schemaType) {
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
             }
                 
             SubjectConfirmationDataImpl(const SubjectConfirmationDataImpl& src)
@@ -837,7 +837,7 @@ namespace opensaml {
             virtual ~AttributeValueImpl() {}
     
             AttributeValueImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
-                : AnyElementImpl(nsURI, localName, prefix, schemaType) {
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
             }
                 
             AttributeValueImpl(const AttributeValueImpl& src) : AnyElementImpl(src), AbstractValidatingXMLObject(src) {}
