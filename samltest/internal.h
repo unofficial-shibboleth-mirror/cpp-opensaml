@@ -72,7 +72,15 @@ protected:
 
     void assertEquals(const char* failMessage, DOMDocument* expectedDOM, XMLObject* xmlObject) {
         DOMElement* generatedDOM = xmlObject->marshall();
-        TSM_ASSERT(failMessage,generatedDOM->isEqualNode(expectedDOM->getDocumentElement()));
+        if (!generatedDOM->isEqualNode(expectedDOM->getDocumentElement())) {
+            string buf;
+            XMLHelper::serialize(generatedDOM, buf);
+            TS_TRACE(buf.c_str());
+            buf.erase();
+            XMLHelper::serialize(expectedDOM->getDocumentElement(), buf);
+            TS_TRACE(buf.c_str());
+            TSM_ASSERT(failMessage, false);
+        }
     }
 
     void assertEquals(DOMDocument* expectedDOM, XMLObject* xmlObject) {
