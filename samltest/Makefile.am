@@ -9,7 +9,16 @@ endif
 
 samltest_h = \
     samltest.h \
-    saml1/core/impl/ActionTest.h
+    saml1/core/impl/ActionTest.h \
+    saml1/core/impl/AdviceTest.h \
+    saml1/core/impl/AssertionIDReferenceTest.h \
+    saml1/core/impl/AssertionTest.h \
+    saml1/core/impl/AttributeDesignatorTest.h \
+    saml1/core/impl/AttributeStatementTest.h \
+    saml1/core/impl/AttributeTest.h \
+    saml1/core/impl/AudienceRestrictionConditionTest.h \
+    saml1/core/impl/AudienceTest.h \
+    saml1/core/impl/AuthenticationStatementTest.h
 
 noinst_HEADERS = \
     internal.h

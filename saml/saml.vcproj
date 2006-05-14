@@ -213,6 +213,18 @@
 					</Filter>
 				</Filter>
 			</Filter>
+			<Filter
+				Name="signature"
+				>
+				<File
+					RelativePath=".\signature\SigningContext.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\signature\VerifyingContext.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -258,6 +270,18 @@
 						>
 					</File>
 				</Filter>
+			</Filter>
+			<Filter
+				Name="signature"
+				>
+				<File
+					RelativePath=".\signature\SigningContext.h"
+					>
+				</File>
+				<File
+					RelativePath=".\signature\VerifyingContext.h"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<Filter

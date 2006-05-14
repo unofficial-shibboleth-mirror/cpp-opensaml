@@ -61,7 +61,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="..\..\cpp-xmltooling\Debug\xmltooling_1D.lib xerces-c_2D.lib xsec_1D.lib"
+				AdditionalDependencies="..\..\cpp-xmltooling\Debug\xmltooling_1D.lib xerces-c_2D.lib xsec_1D.lib libeay32_0_9_8D.lib"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -136,7 +136,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="..\..\cpp-xmltooling\Release\xmltooling_1.lib xerces-c_2.lib xsec_1.lib"
+				AdditionalDependencies="..\..\cpp-xmltooling\Release\xmltooling_1.lib xerces-c_2.lib xsec_1.lib libeay32_0_9_8.lib"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -219,8 +219,28 @@
 							RelativePath=".\saml1\core\impl\AttributeTest.cpp"
 							>
 						</File>
+						<File
+							RelativePath=".\saml1\core\impl\AudienceRestrictionConditionTest.cpp"
+							>
+						</File>
+						<File
+							RelativePath=".\saml1\core\impl\AudienceTest.cpp"
+							>
+						</File>
+						<File
+							RelativePath=".\saml1\core\impl\AuthenticationStatementTest.cpp"
+							>
+						</File>
 					</Filter>
 				</Filter>
+			</Filter>
+			<Filter
+				Name="signature"
+				>
+				<File
+					RelativePath=".\signature\SAML1AssertionTest.cpp"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<Filter
@@ -417,8 +437,100 @@
 								/>
 							</FileConfiguration>
 						</File>
+						<File
+							RelativePath=".\saml1\core\impl\AudienceRestrictionConditionTest.h"
+							>
+							<FileConfiguration
+								Name="Debug|Win32"
+								>
+								<Tool
+									Name="VCCustomBuildTool"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
+									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Release|Win32"
+								>
+								<Tool
+									Name="VCCustomBuildTool"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
+									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
+								/>
+							</FileConfiguration>
+						</File>
+						<File
+							RelativePath=".\saml1\core\impl\AudienceTest.h"
+							>
+							<FileConfiguration
+								Name="Debug|Win32"
+								>
+								<Tool
+									Name="VCCustomBuildTool"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
+									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Release|Win32"
+								>
+								<Tool
+									Name="VCCustomBuildTool"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
+									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
+								/>
+							</FileConfiguration>
+						</File>
+						<File
+							RelativePath=".\saml1\core\impl\AuthenticationStatementTest.h"
+							>
+							<FileConfiguration
+								Name="Debug|Win32"
+								>
+								<Tool
+									Name="VCCustomBuildTool"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
+									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Release|Win32"
+								>
+								<Tool
+									Name="VCCustomBuildTool"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
+									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
+								/>
+							</FileConfiguration>
+						</File>
 					</Filter>
 				</Filter>
+			</Filter>
+			<Filter
+				Name="signature"
+				>
+				<File
+					RelativePath=".\signature\SAML1AssertionTest.h"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+							Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+							Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
+						/>
+					</FileConfiguration>
+				</File>
 			</Filter>
 		</Filter>
 		<Filter
