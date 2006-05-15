@@ -29,24 +29,23 @@ using namespace opensaml::saml1;
 #include <xsec/enc/OpenSSL/OpenSSLCryptoKeyRSA.hpp>
 #include <xmltooling/signature/Signature.h>
 
-class TestContext : public VerifyingContext
+class TestContext : public virtual CredentialResolver, public SigningContext, public VerifyingContext
 {
-    SigningContext* m_signing;
     vector<XSECCryptoX509*> m_certs;
+    OpenSSLCryptoKeyRSA* m_key;
 public:
-    TestContext(const XMLCh* uri) : VerifyingContext(uri), m_signing(NULL) {
-        OpenSSLCryptoKeyRSA* key=NULL;
+    TestContext(const XMLCh* uri) : VerifyingContext(uri), SigningContext(uri,*this), m_key(NULL) {
         string keypath=data_path + "key.pem";
         BIO* in=BIO_new(BIO_s_file_internal());
         if (in && BIO_read_filename(in,keypath.c_str())>0) {
             EVP_PKEY* pkey=PEM_read_bio_PrivateKey(in, NULL, NULL, NULL);
             if (pkey) {
-                key=new OpenSSLCryptoKeyRSA(pkey);
+                m_key=new OpenSSLCryptoKeyRSA(pkey);
                 EVP_PKEY_free(pkey);
             }
         }
         if (in) BIO_free(in);
-        TS_ASSERT(key!=NULL);
+        TS_ASSERT(m_key!=NULL);
 
         string certpath=data_path + "cert.pem";
         in=BIO_new(BIO_s_file_internal());
@@ -59,15 +58,12 @@ public:
         }
         if (in) BIO_free(in);
         TS_ASSERT(m_certs.size()>0);
-        m_signing=new SigningContext(uri, key, &m_certs);
     }
     
     virtual ~TestContext() {
-        delete m_signing;
+        delete m_key;
         for_each(m_certs.begin(),m_certs.end(),xmltooling::cleanup<XSECCryptoX509>());
     }
-    
-    SigningContext* getSigningContext() { return m_signing; }
     
     void verifySignature(DSIGSignature* sig) const {
         VerifyingContext::verifySignature(sig);
@@ -76,6 +72,14 @@ public:
         sig->setKeyInfoResolver(&resolver);
         sig->verify();
     }
+
+    xmlsignature::KeyInfo* getKeyInfo() { return NULL; }
+    const char* getId() const { return "test"; }
+    const vector<XSECCryptoX509*>* getX509Certificates() { return &m_certs; }
+    XSECCryptoKey* getPublicKey() { return m_key; }
+    XSECCryptoKey* getPrivateKey() { return m_key; }
+    Lockable& lock() { return *this; }
+    void unlock() {}
 };
 
 class SAML1AssertionTest : public CxxTest::TestSuite, public SAMLObjectBaseTestCase {
@@ -118,7 +122,7 @@ public:
         
         // Signing context for the assertion.
         TestContext tc(id.get());
-        MarshallingContext mctx(sig,tc.getSigningContext());
+        MarshallingContext mctx(sig,&tc);
         DOMElement* rootElement = assertion->marshall((DOMDocument*)NULL,&mctx);
         
         string buf;

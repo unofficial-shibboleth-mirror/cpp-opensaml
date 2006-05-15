@@ -40,7 +40,7 @@ public:
     }
 };
 
-void SigningContext::createSignature(DSIGSignature* sig) const
+bool SigningContext::createSignature(DSIGSignature* sig)
 {
     DSIGReference* ref=NULL;
     XMLCh* buf=new XMLCh[XMLString::stringLen(m_id) + 2];
@@ -58,4 +58,6 @@ void SigningContext::createSignature(DSIGSignature* sig) const
     ref->appendEnvelopedSignatureTransform();
     DSIGTransformC14n* c14n=ref->appendCanonicalizationTransform(CANON_C14NE_NOC);
     for_each(m_prefixes.begin(), m_prefixes.end(), bind1st(_addprefix(),c14n));
+    
+    return false;
 }

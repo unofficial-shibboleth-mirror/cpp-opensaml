@@ -29,7 +29,7 @@
 namespace opensaml {
 
     /**
-     * Singleton object that manages library startup/shutdown.configuration.
+     * SAML-specific signature profile verification.
      */
     class SAML_API VerifyingContext : public virtual xmlsignature::VerifyingContext
     {
@@ -44,8 +44,12 @@ namespace opensaml {
         virtual ~VerifyingContext() {}
 
         /**
-         * Given a native signature, asks the context to verify the signature
-         * in accordance with the relying party's requirements.
+         * Given a native signature, verifies that the signature content
+         * is appropriate for the SAML assertion/message being verified.
+         * Does <strong>NOT</strong> perform actual cryptographic evaluation
+         * of the signature in the absence of policy. Subclasses should
+         * override this method with their policies, call the base class
+         * and then evaluate further.
          * 
          * @param sig   native signature object
          * 

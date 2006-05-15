@@ -29,7 +29,8 @@
 namespace opensaml {
 
     /**
-     * Singleton object that manages library startup/shutdown.configuration.
+     * SAML-specific signature profile context.
+     * This is not a synchronized implementation.
      */
     class SAML_API SigningContext : public virtual xmlsignature::SigningContext
     {
@@ -37,53 +38,36 @@ namespace opensaml {
         /**
          * Constructor.
          * 
-         * @param id    identifier of object being signed
-         * @param key   signing key to use, will be freed by context
-         * @param certs a certificate chain to embed, or NULL
+         * @param id            identifier of object being signed
+         * @param credentials   resolver to signing key/certs to use
+         * @param keyInfo       a complete KeyInfo object to attach, will be freed by context
          */
-        SigningContext(const XMLCh* id, XSECCryptoKey* key, const std::vector<XSECCryptoX509*>* certs=NULL)
-            : m_id(id), m_key(key), m_certs(certs), m_keyInfo(NULL) {
-        }
-        
-        /**
-         * Constructor.
-         * 
-         * @param id        identifier of object being signed
-         * @param key       signing key to use, will be freed by context
-         * @param keyInfo   a complete KeyInfo object to attach, will be freed by context
-         */
-        SigningContext(const XMLCh* id, XSECCryptoKey* key, xmlsignature::KeyInfo* keyInfo)
-            : m_id(id), m_key(key), m_certs(NULL), m_keyInfo(keyInfo) {
+        SigningContext(const XMLCh* id, xmltooling::CredentialResolver& creds, xmlsignature::KeyInfo* keyInfo=NULL)
+            : m_id(id), m_creds(creds), m_keyInfo(keyInfo) {
         }
     
         virtual ~SigningContext() {
-            delete m_key;
             delete m_keyInfo;
         }
 
         /**
-         * Given a "blank" native signature, asks the context to define the
-         * appropriate signature transforms, references, etc.
-         * This method MAY attach ds:KeyInfo information, or a set of X.509
-         * certificates can be returned from the SigningContext::getX509Certificates()
-         * method instead.
+         * Given a "blank" native signature, creates signature content
+         * appropriate for the SAML assertion or message being signed.
          * 
          * @param sig   native signature interface
+         * @return      indicator whether ds:KeyInfo was created by context 
          */
-        virtual void createSignature(DSIGSignature* sig) const;
-        
-        /**
-         * Gets a reference to a collection of certificates to append to
-         * the ds:KeyInfo element in a ds:X509Data chain.
-         * The certificate corresponding to the signing key SHOULD be
-         * first, followed by any additional intermediates to append. 
-         * 
-         * @return  an immutable collection of certificates to embed
-         */
-        virtual const std::vector<XSECCryptoX509*>* getX509Certificates() const {
-            return m_certs;
-        }
+        virtual bool createSignature(DSIGSignature* sig);
 
+        /**
+         * Gets a reference to the credential resolver supplied during construction.
+         * 
+         * @return  the resolver
+         */
+        virtual xmltooling::CredentialResolver& getCredentialResolver() {
+            return m_creds;
+        }
+        
         /**
          * Gets a KeyInfo structure to embed.
          * Ownership of the object MUST be transferred to the caller.
@@ -92,22 +76,9 @@ namespace opensaml {
          * 
          * @return  pointer to a KeyInfo structure, will be freed by caller
          */
-        virtual xmlsignature::KeyInfo* getKeyInfo() const {
+        virtual xmlsignature::KeyInfo* getKeyInfo() {
             xmlsignature::KeyInfo* ret=m_keyInfo;
             m_keyInfo=NULL;
-            return ret;
-        }
-        
-        /**
-         * Gets the signing key to use.
-         * Must be compatible with the intended signature algorithm. Ownership of the key
-         * MUST be transferred to the caller.
-         * 
-         * @return  pointer to a signing key, will be freed by caller
-         */
-        virtual XSECCryptoKey* getSigningKey() const {
-            XSECCryptoKey* ret=m_key;
-            m_key=NULL;
             return ret;
         }
         
@@ -119,11 +90,8 @@ namespace opensaml {
         /** Identifier of object to sign. */
         const XMLCh* m_id;
 
-        /** Signing key. */
-        mutable XSECCryptoKey* m_key;
-        
-        /** Optional pointer to certificate chain to embed. */
-        const std::vector<XSECCryptoX509*>* m_certs;
+        /** Reference to credentials to sign with. */
+        xmltooling::CredentialResolver& m_creds;
 
         /** Optional pointer to KeyInfo to embed. */
         mutable xmlsignature::KeyInfo* m_keyInfo;
