@@ -372,8 +372,15 @@ namespace opensaml {
             public AbstractXMLObjectMarshaller,
             public AbstractXMLObjectUnmarshaller
         {
+            void init() {
+                m_Subject=NULL;
+                m_children.push_back(NULL);
+                m_pos_Subject=m_children.begin();
+            }
         protected:
-            SubjectStatementImpl() {}
+            SubjectStatementImpl() {
+                init();
+            }
         public:
             virtual ~SubjectStatementImpl() {}
     
@@ -391,12 +398,6 @@ namespace opensaml {
                     setSubject(src.getSubject()->cloneSubject());
             }
             
-            void init() {
-                m_Subject=NULL;
-                m_children.push_back(NULL);
-                m_pos_Subject=m_children.begin();
-            }
-
             IMPL_TYPED_CHILD(Subject);
     
         protected:
@@ -515,7 +516,8 @@ namespace opensaml {
                 init();
             }
                 
-            AuthenticationStatementImpl(const AuthenticationStatementImpl& src) : SubjectStatementImpl(src) {
+            AuthenticationStatementImpl(const AuthenticationStatementImpl& src)
+                    : AbstractXMLObject(src), SubjectStatementImpl(src) {
                 init();
                 setAuthenticationMethod(src.getAuthenticationMethod());
                 setAuthenticationInstant(src.getAuthenticationInstant());
@@ -530,7 +532,6 @@ namespace opensaml {
             }
             
             void init() {
-                SubjectStatementImpl::init();
                 m_AuthenticationMethod=NULL;
                 m_AuthenticationInstant=NULL;
                 m_SubjectLocality=NULL;
@@ -670,7 +671,8 @@ namespace opensaml {
                 init();
             }
                 
-            AuthorizationDecisionStatementImpl(const AuthorizationDecisionStatementImpl& src) : SubjectStatementImpl(src) {
+            AuthorizationDecisionStatementImpl(const AuthorizationDecisionStatementImpl& src)
+                    : AbstractXMLObject(src), SubjectStatementImpl(src) {
                 init();
                 setResource(src.getResource());
                 setDecision(src.getDecision());
@@ -685,7 +687,6 @@ namespace opensaml {
             }
             
             void init() {
-                SubjectStatementImpl::init();
                 m_Resource=NULL;
                 m_Decision=NULL;
                 m_Evidence=NULL;
@@ -852,10 +853,10 @@ namespace opensaml {
     
             AttributeStatementImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
                 : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
-                init();
             }
                 
-            AttributeStatementImpl(const AttributeStatementImpl& src) : SubjectStatementImpl(src) {
+            AttributeStatementImpl(const AttributeStatementImpl& src)
+                    : AbstractXMLObject(src), SubjectStatementImpl(src) {
                 VectorOf(Attribute) v=getAttributes();
                 for (vector<Attribute*>::const_iterator i=src.m_Attributes.begin(); i!=src.m_Attributes.end(); i++) {
                     if (*i) {
@@ -1175,6 +1176,7 @@ const XMLCh SubjectLocality::LOCAL_NAME[] =         UNICODE_LITERAL_15(S,u,b,j,e
 const XMLCh SubjectLocality::TYPE_NAME[] =          UNICODE_LITERAL_19(S,u,b,j,e,c,t,L,o,c,a,l,i,t,y,T,y,p,e);
 const XMLCh SubjectLocality::IPADDRESS_ATTRIB_NAME[] =      UNICODE_LITERAL_9(I,P,A,d,d,r,e,s,s);
 const XMLCh SubjectLocality::DNSADDRESS_ATTRIB_NAME[] =     UNICODE_LITERAL_10(D,N,S,A,d,d,r,e,s,s);
+const XMLCh SubjectStatement::LOCAL_NAME[] =        UNICODE_LITERAL_16(S,u,b,j,e,c,t,S,t,a,t,e,m,e,n,t);
 
 #define XCH(ch) chLatin_##ch
 #define XNUM(d) chDigit_##d

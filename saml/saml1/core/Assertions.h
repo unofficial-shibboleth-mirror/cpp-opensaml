@@ -20,8 +20,8 @@
  * XMLObjects representing the SAML 1.x Assertions schema
  */
 
-#ifndef __saml_assertions_h__
-#define __saml_assertions_h__
+#ifndef __saml1_assertions_h__
+#define __saml1_assertions_h__
 
 #include <saml/exceptions.h>
 #include <saml/util/SAMLConstants.h>
@@ -263,4 +263,4 @@ namespace opensaml {
     };
 };
 
-#endif /* __saml_assertions_h__ */
+#endif /* __saml1_assertions_h__ */

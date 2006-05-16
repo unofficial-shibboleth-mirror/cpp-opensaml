@@ -210,6 +210,14 @@
 							RelativePath=".\saml1\core\impl\AssertionsSchemaValidators.cpp"
 							>
 						</File>
+						<File
+							RelativePath=".\saml1\core\impl\ProtocolsImpl.cpp"
+							>
+						</File>
+						<File
+							RelativePath=".\saml1\core\impl\ProtocolsSchemaValidators.cpp"
+							>
+						</File>
 					</Filter>
 				</Filter>
 			</Filter>
@@ -267,6 +275,10 @@
 					>
 					<File
 						RelativePath=".\saml1\core\Assertions.h"
+						>
+					</File>
+					<File
+						RelativePath=".\saml1\core\Protocols.h"
 						>
 					</File>
 				</Filter>
