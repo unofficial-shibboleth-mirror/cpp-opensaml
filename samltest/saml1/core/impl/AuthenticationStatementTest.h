@@ -60,7 +60,10 @@ public:
 
     void testChildElementsUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
-        AuthenticationStatement& as = dynamic_cast<AuthenticationStatement&>(*xo.get());
+        AuthenticationStatement& as1 = dynamic_cast<AuthenticationStatement&>(*xo.get());
+        as1.releaseThisAndChildrenDOM();
+        auto_ptr<AuthenticationStatement> as2(as1.cloneAuthenticationStatement());
+        AuthenticationStatement& as=*as2.get();
 
         TSM_ASSERT("Subject element", as.getSubject()!=NULL);
         TSM_ASSERT("SubjectLocality element", as.getSubjectLocality()!=NULL);
