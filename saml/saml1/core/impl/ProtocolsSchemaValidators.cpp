@@ -71,6 +71,20 @@ namespace opensaml {
         BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,StatusCode);
             XMLOBJECTVALIDATOR_REQUIRE(StatusCode,Value);
         END_XMLOBJECTVALIDATOR;
+
+        BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,Status);
+            XMLOBJECTVALIDATOR_REQUIRE(Status,StatusCode);
+            const QName* value=ptr->getStatusCode()->getValue();
+            if (!value || (*value!=StatusCode::SUCCESS && *value!=StatusCode::REQUESTER &&
+                *value!=StatusCode::RESPONDER && *value!=StatusCode::VERSIONMISMATCH))
+                throw ValidationException("Top-level status code not one of the allowable values."); 
+        END_XMLOBJECTVALIDATOR;
+
+        BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,Response);
+            XMLOBJECTVALIDATOR_REQUIRE(Response,ResponseID);
+            XMLOBJECTVALIDATOR_REQUIRE(Response,IssueInstant);
+            XMLOBJECTVALIDATOR_REQUIRE(Response,Status);
+        END_XMLOBJECTVALIDATOR;
     };
 };
 
@@ -100,6 +114,8 @@ void opensaml::saml1::registerProtocolClasses() {
     REGISTER_ELEMENT(AuthorizationDecisionQuery);
     REGISTER_ELEMENT(Request);
     REGISTER_ELEMENT(RespondWith);
+    REGISTER_ELEMENT(Response);
+    REGISTER_ELEMENT(Status);
     REGISTER_ELEMENT(StatusCode);
     REGISTER_ELEMENT_NOVAL(StatusDetail);
     REGISTER_ELEMENT(StatusMessage);
@@ -107,6 +123,8 @@ void opensaml::saml1::registerProtocolClasses() {
     REGISTER_TYPE(AuthenticationQuery);
     REGISTER_TYPE(AuthorizationDecisionQuery);
     REGISTER_TYPE(Request);
+    REGISTER_TYPE(Response);
+    REGISTER_TYPE(Status);
     REGISTER_TYPE(StatusCode);
     REGISTER_TYPE_NOVAL(StatusDetail);
 }

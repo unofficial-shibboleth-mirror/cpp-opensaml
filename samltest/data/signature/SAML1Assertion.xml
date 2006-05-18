@@ -18,9 +18,7 @@ AuthenticationMethod="method"
 <ds:SignatureValue>AA5098JC4gfdAf2bvPQRZ9Ld/VehXAB3uhp0r4js4i6fMB3hGMs4VnE9iEJEsPDD
 0Kj4cfewxHij/kHrWcxpKMMqIgGlqKYZhuQHfFt8GzDeeFIgu1R675jcN4uCOoWl
 3aRVd9hgPRsXzf7/RkMiXHIsU/NjUPRKf7GjNt2jNT0=</ds:SignatureValue>
-<ds:KeyInfo>
-<ds:X509Data>
-<ds:X509Certificate>MIICjzCCAfigAwIBAgIJAKk8t1hYcMkhMA0GCSqGSIb3DQEBBAUAMDoxCzAJBgNV
+<ds:KeyInfo><ds:X509Data><ds:X509Certificate>MIICjzCCAfigAwIBAgIJAKk8t1hYcMkhMA0GCSqGSIb3DQEBBAUAMDoxCzAJBgNV
 BAYTAlVTMRIwEAYDVQQKEwlJbnRlcm5ldDIxFzAVBgNVBAMTDnNwLmV4YW1wbGUu
 b3JnMB4XDTA1MDYyMDE1NDgzNFoXDTMyMTEwNTE1NDgzNFowOjELMAkGA1UEBhMC
 VVMxEjAQBgNVBAoTCUludGVybmV0MjEXMBUGA1UEAxMOc3AuZXhhbXBsZS5vcmcw
@@ -33,8 +31,4 @@ CQYDVQQGEwJVUzESMBAGA1UEChMJSW50ZXJuZXQyMRcwFQYDVQQDEw5zcC5leGFt
 cGxlLm9yZ4IJAKk8t1hYcMkhMAwGA1UdEwQFMAMBAf8wDQYJKoZIhvcNAQEEBQAD
 gYEAMFq/UeSQyngE0GpZueyD2UW0M358uhseYOgGEIfm+qXIFQF6MYwNoX7WFzhC
 LJZ2E6mEvZZFHCHUtl7mGDvsRwgZ85YCtRbvleEpqfgNQToto9pLYe+X6vvH9Z6p
-gmYsTmak+kxO93JprrOd9xp8aZPMEprL7VCdrhbZEfyYER0=
-</ds:X509Certificate>
-</ds:X509Data>
-</ds:KeyInfo>
-</ds:Signature></saml:Assertion>
+gmYsTmak+kxO93JprrOd9xp8aZPMEprL7VCdrhbZEfyYER0=</ds:X509Certificate></ds:X509Data></ds:KeyInfo></ds:Signature></saml:Assertion>

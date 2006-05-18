@@ -24,7 +24,9 @@
 #define __saml1_assertions_h__
 
 #include <saml/exceptions.h>
+#include <saml/signature/SignableObject.h>
 #include <saml/util/SAMLConstants.h>
+
 #include <xmltooling/AttributeExtensibleXMLObject.h>
 #include <xmltooling/ElementProxy.h>
 #include <xmltooling/SimpleElement.h>
@@ -216,7 +218,7 @@ namespace opensaml {
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
 
-        BEGIN_XMLOBJECT(SAML_API,Assertion,xmltooling::XMLObject,SAML 1.x Assertion element);
+        BEGIN_XMLOBJECT(SAML_API,Assertion,SignableObject,SAML 1.x Assertion element);
             DECL_INTEGER_ATTRIB(MinorVersion,MINORVERSION);
             DECL_STRING_ATTRIB(AssertionID,ASSERTIONID);
             DECL_STRING_ATTRIB(Issuer,ISSUER);

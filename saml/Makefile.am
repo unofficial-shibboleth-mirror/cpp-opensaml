@@ -15,8 +15,9 @@ libsamlinclude_HEADERS = \
     SAMLConfig.h
 
 siginclude_HEADERS = \
-    signature/SigningContext.h \
-    signature/VerifyingContext.h
+    signature/ContentReference.h \
+    signature/SignableObject.h \ 
+    signature/SignatureProfileValidator.h
 
 utilinclude_HEADERS = \
     util/SAMLConstants.h
@@ -34,8 +35,8 @@ libsaml_la_SOURCES = \
     saml1/core/impl/AssertionsSchemaValidators.cpp \
     saml1/core/impl/ProtocolsImpl.cpp \
     saml1/core/impl/ProtocolsSchemaValidators.cpp \
-    signature/SigningContext.cpp \
-    signature/VerifyingContext.cpp \
+    signature/ContentReference.cpp \
+    signature/SignatureProfileValidator.cpp \
     util/SAMLConstants.cpp
 
 # this is different from the project version

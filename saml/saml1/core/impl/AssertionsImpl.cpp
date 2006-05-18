@@ -945,6 +945,23 @@ namespace opensaml {
             public AbstractXMLObjectMarshaller,
             public AbstractXMLObjectUnmarshaller
         {
+            void init() {
+                m_MinorVersion=1;
+                m_AssertionID=NULL;
+                m_Issuer=NULL;
+                m_IssueInstant=NULL;
+                m_children.push_back(NULL);
+                m_children.push_back(NULL);
+                m_children.push_back(NULL);
+                m_Conditions=NULL;
+                m_Advice=NULL;
+                m_Signature=NULL;
+                m_pos_Conditions=m_children.begin();
+                m_pos_Advice=m_pos_Conditions;
+                m_pos_Advice++;
+                m_pos_Signature=m_pos_Advice;
+                m_pos_Signature++;
+            }
         public:
             virtual ~AssertionImpl() {
                 XMLString::release(&m_AssertionID);
@@ -1007,22 +1024,26 @@ namespace opensaml {
                 }
             }
             
-            void init() {
-                m_MinorVersion=1;
-                m_AssertionID=NULL;
-                m_Issuer=NULL;
-                m_IssueInstant=NULL;
-                m_children.push_back(NULL);
-                m_children.push_back(NULL);
-                m_children.push_back(NULL);
-                m_Conditions=NULL;
-                m_Advice=NULL;
-                m_Signature=NULL;
-                m_pos_Conditions=m_children.begin();
-                m_pos_Advice=m_pos_Conditions;
-                m_pos_Advice++;
-                m_pos_Signature=m_pos_Advice;
-                m_pos_Signature++;
+            const XMLCh* getId() const {
+                return getAssertionID();
+            }
+
+            //IMPL_TYPED_CHILD(Signature);
+            // Need customized setter.
+        protected:
+            Signature* m_Signature;
+            list<XMLObject*>::iterator m_pos_Signature;
+        public:
+            Signature* getSignature() const {
+                return m_Signature;
+            }
+            
+            void setSignature(Signature* sig) {
+                prepareForAssignment(m_Signature,sig);
+                *m_pos_Signature=m_Signature=sig;
+                // Sync content reference back up.
+                if (m_Signature)
+                    m_Signature->setContentReference(new opensaml::ContentReference(*this));
             }
             
             IMPL_XMLOBJECT_CLONE(Assertion);
@@ -1032,7 +1053,6 @@ namespace opensaml {
             IMPL_DATETIME_ATTRIB(IssueInstant);
             IMPL_TYPED_CHILD(Conditions);
             IMPL_TYPED_CHILD(Advice);
-            IMPL_TYPED_CHILD(Signature);
             IMPL_TYPED_CHILDREN(Statement, m_pos_Signature);
             IMPL_TYPED_CHILDREN(SubjectStatement, m_pos_Signature);
             IMPL_TYPED_CHILDREN(AuthenticationStatement, m_pos_Signature);

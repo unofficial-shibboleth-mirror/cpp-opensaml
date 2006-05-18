@@ -344,11 +344,32 @@ namespace opensaml {
                 }
             }
             
+            const XMLCh* getId() const {
+                return getRequestID();
+            }
+
+            //IMPL_TYPED_CHILD(Signature);
+            // Need customized setter.
+        protected:
+            Signature* m_Signature;
+            list<XMLObject*>::iterator m_pos_Signature;
+        public:
+            Signature* getSignature() const {
+                return m_Signature;
+            }
+            
+            void setSignature(Signature* sig) {
+                prepareForAssignment(m_Signature,sig);
+                *m_pos_Signature=m_Signature=sig;
+                // Sync content reference back up.
+                if (m_Signature)
+                    m_Signature->setContentReference(new opensaml::ContentReference(*this));
+            }
+
             IMPL_INTEGER_ATTRIB(MinorVersion);
             IMPL_STRING_ATTRIB(RequestID);
             IMPL_DATETIME_ATTRIB(IssueInstant);
             IMPL_TYPED_CHILDREN(RespondWith,m_pos_Signature);
-            IMPL_TYPED_CHILD(Signature);
     
         protected:
             void marshallAttributes(DOMElement* domElement) const {
@@ -544,6 +565,212 @@ namespace opensaml {
             }
         };
 
+        class SAML_DLLLOCAL StatusImpl : public virtual Status,
+            public AbstractComplexElement,
+            public AbstractDOMCachingXMLObject,
+            public AbstractValidatingXMLObject,
+            public AbstractXMLObjectMarshaller,
+            public AbstractXMLObjectUnmarshaller
+        {
+            void init() {
+                m_children.push_back(NULL);
+                m_children.push_back(NULL);
+                m_children.push_back(NULL);
+                m_StatusCode=NULL;
+                m_pos_StatusCode=m_children.begin();
+                m_StatusMessage=NULL;
+                m_pos_StatusMessage=m_pos_StatusCode;
+                m_pos_StatusMessage++;
+                m_StatusDetail=NULL;
+                m_pos_StatusDetail=m_pos_StatusMessage;
+                m_pos_StatusDetail++;
+            }
+        public:
+            virtual ~StatusImpl() {}
+    
+            StatusImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
+                init();
+            }
+                
+            StatusImpl(const StatusImpl& src)
+                    : AbstractXMLObject(src), AbstractDOMCachingXMLObject(src), AbstractValidatingXMLObject(src) {
+                init();
+                if (src.getStatusCode())
+                    setStatusCode(src.getStatusCode()->cloneStatusCode());
+                if (src.getStatusMessage())
+                    setStatusMessage(src.getStatusMessage()->cloneStatusMessage());
+                if (src.getStatusDetail())
+                    setStatusDetail(src.getStatusDetail()->cloneStatusDetail());
+            }
+            
+            IMPL_XMLOBJECT_CLONE(Status);
+            IMPL_TYPED_CHILD(StatusCode);
+            IMPL_TYPED_CHILD(StatusMessage);
+            IMPL_TYPED_CHILD(StatusDetail);
+    
+        protected:
+            void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
+                PROC_TYPED_CHILD(StatusCode,SAMLConstants::SAML1P_NS,false);
+                PROC_TYPED_CHILD(StatusMessage,SAMLConstants::SAML1P_NS,false);
+                PROC_TYPED_CHILD(StatusDetail,SAMLConstants::SAML1P_NS,false);
+                AbstractXMLObjectUnmarshaller::processChildElement(childXMLObject,root);
+            }
+        };
+
+        class SAML_DLLLOCAL AbstractResponseImpl : public virtual AbstractResponse,
+            public AbstractComplexElement,
+            public AbstractDOMCachingXMLObject,
+            public AbstractValidatingXMLObject,
+            public AbstractXMLObjectMarshaller,
+            public AbstractXMLObjectUnmarshaller
+        {
+            void init() {
+                m_MinorVersion=1;
+                m_ResponseID=NULL;
+                m_InResponseTo=NULL;
+                m_IssueInstant=NULL;
+                m_Recipient=NULL;
+                m_children.push_back(NULL);
+                m_Signature=NULL;
+                m_pos_Signature=m_children.begin();
+            }
+        protected:
+            AbstractResponseImpl() {}
+        public:
+            virtual ~AbstractResponseImpl() {
+                XMLString::release(&m_ResponseID);
+                XMLString::release(&m_InResponseTo);
+                XMLString::release(&m_Recipient);
+                delete m_IssueInstant;
+            }
+    
+            AbstractResponseImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
+                init();
+            }
+                
+            AbstractResponseImpl(const AbstractResponseImpl& src)
+                    : AbstractXMLObject(src),
+                        AbstractDOMCachingXMLObject(src),
+                        AbstractValidatingXMLObject(src) {
+                init();
+                setMinorVersion(src.getMinorVersion());
+                setResponseID(src.getResponseID());
+                setInResponseTo(src.getInResponseTo());
+                setIssueInstant(src.getIssueInstant());
+                setRecipient(src.getRecipient());
+                if (src.getSignature())
+                    setSignature(src.getSignature()->cloneSignature());
+            }
+
+            const XMLCh* getId() const {
+                return getResponseID();
+            }
+
+            //IMPL_TYPED_CHILD(Signature);
+            // Need customized setter.
+        protected:
+            Signature* m_Signature;
+            list<XMLObject*>::iterator m_pos_Signature;
+        public:
+            Signature* getSignature() const {
+                return m_Signature;
+            }
+            
+            void setSignature(Signature* sig) {
+                prepareForAssignment(m_Signature,sig);
+                *m_pos_Signature=m_Signature=sig;
+                // Sync content reference back up.
+                if (m_Signature)
+                    m_Signature->setContentReference(new opensaml::ContentReference(*this));
+            }
+
+            IMPL_INTEGER_ATTRIB(MinorVersion);
+            IMPL_STRING_ATTRIB(ResponseID);
+            IMPL_STRING_ATTRIB(InResponseTo);
+            IMPL_DATETIME_ATTRIB(IssueInstant);
+            IMPL_STRING_ATTRIB(Recipient);
+    
+        protected:
+            void marshallAttributes(DOMElement* domElement) const {
+                static const XMLCh MAJORVERSION[] = UNICODE_LITERAL_12(M,a,j,o,r,V,e,r,s,i,o,n);
+                static const XMLCh ONE[] = { chDigit_1, chNull };
+                domElement->setAttributeNS(NULL,MAJORVERSION,ONE);
+                MARSHALL_INTEGER_ATTRIB(MinorVersion,MINORVERSION,NULL);
+                if (!m_ResponseID)
+                    const_cast<AbstractResponseImpl*>(this)->m_ResponseID=SAMLConfig::getConfig().generateIdentifier();
+                MARSHALL_ID_ATTRIB(ResponseID,RESPONSEID,NULL);
+                MARSHALL_STRING_ATTRIB(InResponseTo,INRESPONSETO,NULL);
+                if (!m_IssueInstant)
+                    const_cast<AbstractResponseImpl*>(this)->m_IssueInstant=new DateTime(time(NULL));
+                MARSHALL_DATETIME_ATTRIB(IssueInstant,ISSUEINSTANT,NULL);
+                MARSHALL_STRING_ATTRIB(Recipient,RECIPIENT,NULL);
+            }
+
+            void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
+                PROC_TYPED_CHILD(Signature,XMLConstants::XMLSIG_NS,false);
+                AbstractXMLObjectUnmarshaller::processChildElement(childXMLObject,root);
+            }
+
+            void processAttribute(const DOMAttr* attribute) {
+                static const XMLCh MAJORVERSION[] = UNICODE_LITERAL_12(M,a,j,o,r,V,e,r,s,i,o,n);
+                if (XMLHelper::isNodeNamed(attribute,NULL,MAJORVERSION)) {
+                    if (XMLString::parseInt(attribute->getValue()) != 1)
+                        throw UnmarshallingException("Response has invalid major version.");
+                }
+                PROC_INTEGER_ATTRIB(MinorVersion,MINORVERSION,NULL);
+                PROC_ID_ATTRIB(ResponseID,RESPONSEID,NULL);
+                PROC_STRING_ATTRIB(InResponseTo,INRESPONSETO,NULL);
+                PROC_DATETIME_ATTRIB(IssueInstant,ISSUEINSTANT,NULL);
+                PROC_STRING_ATTRIB(Recipient,RECIPIENT,NULL);
+            }
+        };
+
+        class SAML_DLLLOCAL ResponseImpl : public virtual Response, public AbstractResponseImpl
+        {
+            void init() {
+                m_children.push_back(NULL);
+                m_Status=NULL;
+                m_pos_Status=m_pos_Signature;
+                m_pos_Status++;
+            }
+        public:
+            virtual ~ResponseImpl() {}
+    
+            ResponseImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
+                init();
+            }
+                
+            ResponseImpl(const ResponseImpl& src)
+                    : AbstractXMLObject(src), AbstractResponseImpl(src) {
+                init();
+                if (src.getStatus())
+                    setStatus(src.getStatus()->cloneStatus());
+                VectorOf(Assertion) v=getAssertions();
+                for (vector<Assertion*>::const_iterator i=src.m_Assertions.begin(); i!=src.m_Assertions.end(); i++) {
+                    if (*i) {
+                        v.push_back((*i)->cloneAssertion());
+                    }
+                }
+            }
+            
+            IMPL_XMLOBJECT_CLONE(Response);
+            AbstractResponse* cloneAbstractResponse() const {
+                return cloneResponse();
+            }
+            IMPL_TYPED_CHILD(Status);
+            IMPL_TYPED_CHILDREN(Assertion, m_children.end());
+    
+        protected:
+            void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
+                PROC_TYPED_CHILD(Status,SAMLConstants::SAML1P_NS,false);
+                PROC_TYPED_CHILDREN(Assertion,SAMLConstants::SAML1_NS,true);
+                AbstractResponseImpl::processChildElement(childXMLObject,root);
+            }
+        };
+
     };
 };
 
@@ -559,6 +786,8 @@ IMPL_XMLOBJECTBUILDER(AuthenticationQuery);
 IMPL_XMLOBJECTBUILDER(AuthorizationDecisionQuery);
 IMPL_XMLOBJECTBUILDER(Request);
 IMPL_XMLOBJECTBUILDER(RespondWith);
+IMPL_XMLOBJECTBUILDER(Response);
+IMPL_XMLOBJECTBUILDER(Status);
 IMPL_XMLOBJECTBUILDER(StatusCode);
 IMPL_XMLOBJECTBUILDER(StatusDetail);
 IMPL_XMLOBJECTBUILDER(StatusMessage);
@@ -567,6 +796,11 @@ IMPL_XMLOBJECTBUILDER(StatusMessage);
 const XMLCh AbstractRequest::MINORVERSION_ATTRIB_NAME[] =   UNICODE_LITERAL_12(M,i,n,o,r,V,e,r,s,i,o,n);
 const XMLCh AbstractRequest::REQUESTID_ATTRIB_NAME[] =      UNICODE_LITERAL_9(R,e,q,u,e,s,t,I,D);
 const XMLCh AbstractRequest::ISSUEINSTANT_ATTRIB_NAME[] =   UNICODE_LITERAL_12(I,s,s,u,e,I,n,s,t,a,n,t);
+const XMLCh AbstractResponse::MINORVERSION_ATTRIB_NAME[] =  UNICODE_LITERAL_12(M,i,n,o,r,V,e,r,s,i,o,n);
+const XMLCh AbstractResponse::RESPONSEID_ATTRIB_NAME[] =    UNICODE_LITERAL_10(R,e,s,p,o,n,s,e,I,D);
+const XMLCh AbstractResponse::ISSUEINSTANT_ATTRIB_NAME[] =  UNICODE_LITERAL_12(I,s,s,u,e,I,n,s,t,a,n,t);
+const XMLCh AbstractResponse::INRESPONSETO_ATTRIB_NAME[] =  UNICODE_LITERAL_12(I,n,R,e,s,p,o,n,s,e,T,o);
+const XMLCh AbstractResponse::RECIPIENT_ATTRIB_NAME[] =     UNICODE_LITERAL_9(R,e,c,i,p,i,e,n,t);
 const XMLCh AssertionArtifact::LOCAL_NAME[] =               UNICODE_LITERAL_17(A,s,s,e,r,t,i,o,n,A,r,t,i,f,a,c,t);
 const XMLCh AttributeQuery::LOCAL_NAME[] =                  UNICODE_LITERAL_14(A,t,t,r,i,b,u,t,e,Q,u,e,r,y);
 const XMLCh AttributeQuery::TYPE_NAME[] =                   UNICODE_LITERAL_18(A,t,t,r,i,b,u,t,e,Q,u,e,r,y,T,y,p,e);
@@ -581,6 +815,10 @@ const XMLCh Query::LOCAL_NAME[] =                           UNICODE_LITERAL_5(Q,
 const XMLCh Request::LOCAL_NAME[] =                         UNICODE_LITERAL_7(R,e,q,u,e,s,t);
 const XMLCh Request::TYPE_NAME[] =                          UNICODE_LITERAL_11(R,e,q,u,e,s,t,T,y,p,e);
 const XMLCh RespondWith::LOCAL_NAME[] =                     UNICODE_LITERAL_11(R,e,s,p,o,n,d,W,i,t,h);
+const XMLCh Response::LOCAL_NAME[] =                        UNICODE_LITERAL_8(R,e,s,p,o,n,s,e);
+const XMLCh Response::TYPE_NAME[] =                         UNICODE_LITERAL_12(R,e,s,p,o,n,s,e,T,y,p,e);
+const XMLCh Status::LOCAL_NAME[] =                          UNICODE_LITERAL_6(S,t,a,t,u,s);
+const XMLCh Status::TYPE_NAME[] =                           UNICODE_LITERAL_10(S,t,a,t,u,s,T,y,p,e);
 const XMLCh StatusCode::LOCAL_NAME[] =                      UNICODE_LITERAL_10(S,t,a,t,u,s,C,o,d,e);
 const XMLCh StatusCode::TYPE_NAME[] =                       UNICODE_LITERAL_14(S,t,a,t,u,s,C,o,d,e,T,y,p,e);
 const XMLCh StatusCode::VALUE_ATTRIB_NAME[] =               UNICODE_LITERAL_5(V,a,l,u,e);

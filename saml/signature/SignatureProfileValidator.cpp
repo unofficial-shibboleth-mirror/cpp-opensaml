@@ -21,7 +21,8 @@
  */
  
 #include "internal.h"
-#include "signature/VerifyingContext.h"
+#include "exceptions.h"
+#include "signature/SignatureProfileValidator.h"
 
 #include <xmltooling/signature/Signature.h>
 
@@ -31,18 +32,30 @@
 #include <xsec/dsig/DSIGTransformList.hpp>
 
 using namespace opensaml;
+using namespace xmlsignature;
+using namespace xmltooling;
 using namespace std;
 
-void VerifyingContext::verifySignature(DSIGSignature* sig) const
+void SignatureProfileValidator::validate(const XMLObject* xmlObject) const
 {
-    bool valid=false;
+    const Signature* sigObj=dynamic_cast<const Signature*>(xmlObject);
+    if (!sigObj)
+        throw ValidationException("Validator only applies to Signature objects.");
+    DSIGSignature* sig=sigObj->getXMLSignature();
+    if (!sig)
+        throw ValidationException("Signature does not exist yet.");
 
+    const SignableObject* signableObj=dynamic_cast<const SignableObject*>(sigObj->getParent());
+    if (!signableObj)
+        throw ValidationException("Signature is not a child of a signable SAML object.");
+    
+    bool valid=false;
     DSIGReferenceList* refs=sig->getReferenceList();
     if (refs && refs->getSize()==1) {
         DSIGReference* ref=refs->item(0);
         if (ref) {
             const XMLCh* URI=ref->getURI();
-            if (URI==NULL || *URI==0 || (*URI==chPound && !XMLString::compareString(URI+1,m_id))) {
+            if (URI==NULL || *URI==0 || (*URI==chPound && !XMLString::compareString(URI+1,signableObj->getId()))) {
                 DSIGTransformList* tlist=ref->getTransforms();
                 for (unsigned int i=0; tlist && i<tlist->getSize(); i++) {
                     if (tlist->item(i)->getTransformType()==TRANSFORM_ENVELOPED_SIGNATURE)
@@ -58,5 +71,5 @@ void VerifyingContext::verifySignature(DSIGSignature* sig) const
     }
     
     if (!valid)
-        throw xmlsignature::SignatureException("Invalid signature profile for SAML object.");
+        throw ValidationException("Invalid signature profile for SAML object.");
 }

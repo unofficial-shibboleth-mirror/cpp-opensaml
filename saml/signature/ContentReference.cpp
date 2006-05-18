@@ -15,14 +15,16 @@
  */
 
 /**
- * SigningContext.cpp
+ * ContentReference.cpp
  * 
- * SAML-specific signature construction 
+ * SAML-specific signature reference profile 
  */
  
 #include "internal.h"
-#include "signature/SigningContext.h"
+#include "signature/ContentReference.h"
+#include "signature/SignableObject.h"
 
+#include <xmltooling/signature/Signature.h>
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xsec/dsig/DSIGReference.hpp>
 #include <xsec/dsig/DSIGTransformC14n.hpp>
@@ -40,13 +42,17 @@ public:
     }
 };
 
-bool SigningContext::createSignature(DSIGSignature* sig)
+void ContentReference::createReferences(DSIGSignature* sig)
 {
+    const XMLCh* id=m_signableObject.getId();
+    if (!id || !*id)
+        throw xmlsignature::SignatureException("Cannot create Signature reference to SAML object without an identifier."); 
+    
     DSIGReference* ref=NULL;
-    XMLCh* buf=new XMLCh[XMLString::stringLen(m_id) + 2];
+    XMLCh* buf=new XMLCh[XMLString::stringLen(id) + 2];
     buf[0]=chPound;
     buf[1]=chNull;
-    XMLString::catString(buf,m_id);
+    XMLString::catString(buf,id);
     try {
         ref=sig->createReference(buf);
         delete[] buf;
@@ -58,6 +64,4 @@ bool SigningContext::createSignature(DSIGSignature* sig)
     ref->appendEnvelopedSignatureTransform();
     DSIGTransformC14n* c14n=ref->appendCanonicalizationTransform(CANON_C14NE_NOC);
     for_each(m_prefixes.begin(), m_prefixes.end(), bind1st(_addprefix(),c14n));
-    
-    return false;
 }

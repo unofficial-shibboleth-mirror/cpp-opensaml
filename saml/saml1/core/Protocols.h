@@ -70,7 +70,7 @@ namespace opensaml {
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
 
-        BEGIN_XMLOBJECT(SAML_API,AbstractRequest,xmltooling::XMLObject,SAML 1.x RequestAbstractType base type);
+        BEGIN_XMLOBJECT(SAML_API,AbstractRequest,SignableObject,SAML 1.x RequestAbstractType base type);
             DECL_INTEGER_ATTRIB(MinorVersion,MINORVERSION);
             DECL_STRING_ATTRIB(RequestID,REQUESTID);
             DECL_DATETIME_ATTRIB(IssueInstant,ISSUEINSTANT);
@@ -111,12 +111,38 @@ namespace opensaml {
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
 
+        BEGIN_XMLOBJECT(SAML_API,Status,xmltooling::XMLObject,SAML 1.x Status element);
+            DECL_TYPED_CHILD(StatusCode);
+            DECL_TYPED_CHILD(StatusMessage);
+            DECL_TYPED_CHILD(StatusDetail);
+            /** StatusType local name */
+            static const XMLCh TYPE_NAME[];
+        END_XMLOBJECT;
+
+        BEGIN_XMLOBJECT(SAML_API,AbstractResponse,SignableObject,SAML 1.x ResponseAbstractType base type);
+            DECL_INTEGER_ATTRIB(MinorVersion,MINORVERSION);
+            DECL_STRING_ATTRIB(ResponseID,RESPONSEID);
+            DECL_STRING_ATTRIB(InResponseTo,INRESPONSETO);
+            DECL_DATETIME_ATTRIB(IssueInstant,ISSUEINSTANT);
+            DECL_STRING_ATTRIB(Recipient,RECIPIENT);
+            DECL_TYPED_FOREIGN_CHILD(Signature,xmlsignature);
+        END_XMLOBJECT;
+
+        BEGIN_XMLOBJECT(SAML_API,Response,AbstractResponse,SAML 1.x Response element);
+            DECL_TYPED_CHILD(Status);
+            DECL_TYPED_CHILDREN(Assertion);
+            /** ResponseType local name */
+            static const XMLCh TYPE_NAME[];
+        END_XMLOBJECT;
+
         DECL_SAML1POBJECTBUILDER(AssertionArtifact);
         DECL_SAML1POBJECTBUILDER(AttributeQuery);
         DECL_SAML1POBJECTBUILDER(AuthenticationQuery);
         DECL_SAML1POBJECTBUILDER(AuthorizationDecisionQuery);
         DECL_SAML1POBJECTBUILDER(Request);
         DECL_SAML1POBJECTBUILDER(RespondWith);
+        DECL_SAML1POBJECTBUILDER(Response);
+        DECL_SAML1POBJECTBUILDER(Status);
         DECL_SAML1POBJECTBUILDER(StatusCode);
         DECL_SAML1POBJECTBUILDER(StatusDetail);
         DECL_SAML1POBJECTBUILDER(StatusMessage);

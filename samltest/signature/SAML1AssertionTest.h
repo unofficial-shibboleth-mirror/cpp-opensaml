@@ -16,10 +16,9 @@
 
 #include "internal.h"
 #include <saml/saml1/core/Assertions.h>
-#include <saml/signature/SigningContext.h>
-#include <saml/signature/VerifyingContext.h>
+#include <saml/signature/SignatureProfileValidator.h>
 
-using namespace opensaml::saml1;
+#include <xmltooling/signature/Signature.h>
 
 #include <fstream>
 #include <openssl/pem.h>
@@ -27,14 +26,59 @@ using namespace opensaml::saml1;
 #include <xsec/enc/XSECKeyInfoResolverDefault.hpp>
 #include <xsec/enc/OpenSSL/OpenSSLCryptoX509.hpp>
 #include <xsec/enc/OpenSSL/OpenSSLCryptoKeyRSA.hpp>
-#include <xmltooling/signature/Signature.h>
+#include <xsec/enc/XSECCryptoException.hpp>
+#include <xsec/framework/XSECException.hpp>
 
-class TestContext : public virtual CredentialResolver, public SigningContext, public VerifyingContext
+using namespace opensaml::saml1;
+using namespace xmlsignature;
+
+class TestValidator : public Validator
 {
-    vector<XSECCryptoX509*> m_certs;
-    OpenSSLCryptoKeyRSA* m_key;
 public:
-    TestContext(const XMLCh* uri) : VerifyingContext(uri), SigningContext(uri,*this), m_key(NULL) {
+    TestValidator() {}
+    virtual ~TestValidator() {}
+
+    Validator* clone() const {
+        return new TestValidator();
+    }
+
+    void validate(const XMLObject* xmlObject) const {
+        DSIGSignature* sig=dynamic_cast<const Signature*>(xmlObject)->getXMLSignature();
+        if (!sig)
+            throw SignatureException("Only a marshalled Signature object can be verified.");
+        XSECKeyInfoResolverDefault resolver;
+        sig->setKeyInfoResolver(&resolver); // It will clone the resolver for us.
+        try {
+            if (!sig->verify())
+                throw SignatureException("Signature did not verify.");
+        }
+        catch(XSECException& e) {
+            auto_ptr_char temp(e.getMsg());
+            throw SignatureException(string("Caught an XMLSecurity exception verifying signature: ") + temp.get());
+        }
+        catch(XSECCryptoException& e) {
+            throw SignatureException(string("Caught an XMLSecurity exception verifying signature: ") + e.getMsg());
+        }
+    }
+};
+
+class _addcert : public std::binary_function<X509Data*,XSECCryptoX509*,void> {
+public:
+    void operator()(X509Data* bag, XSECCryptoX509* cert) const {
+        safeBuffer& buf=cert->getDEREncodingSB();
+        X509Certificate* x=X509CertificateBuilder::buildX509Certificate();
+        x->setValue(buf.sbStrToXMLCh());
+        bag->getX509Certificates().push_back(x);
+    }
+};
+
+class SAML1AssertionTest : public CxxTest::TestSuite, public SAMLObjectBaseTestCase {
+    XSECCryptoKey* m_key;
+    vector<XSECCryptoX509*> m_certs;
+public:
+    void setUp() {
+        childElementsFile  = data_path + "signature/SAML1Assertion.xml";
+        SAMLObjectBaseTestCase::setUp();
         string keypath=data_path + "key.pem";
         BIO* in=BIO_new(BIO_s_file_internal());
         if (in && BIO_read_filename(in,keypath.c_str())>0) {
@@ -59,38 +103,11 @@ public:
         if (in) BIO_free(in);
         TS_ASSERT(m_certs.size()>0);
     }
-    
-    virtual ~TestContext() {
-        delete m_key;
-        for_each(m_certs.begin(),m_certs.end(),xmltooling::cleanup<XSECCryptoX509>());
-    }
-    
-    void verifySignature(DSIGSignature* sig) const {
-        VerifyingContext::verifySignature(sig);
-        sig->setSigningKey(NULL);
-        XSECKeyInfoResolverDefault resolver;
-        sig->setKeyInfoResolver(&resolver);
-        sig->verify();
-    }
-
-    xmlsignature::KeyInfo* getKeyInfo() { return NULL; }
-    const char* getId() const { return "test"; }
-    const vector<XSECCryptoX509*>* getX509Certificates() { return &m_certs; }
-    XSECCryptoKey* getPublicKey() { return m_key; }
-    XSECCryptoKey* getPrivateKey() { return m_key; }
-    Lockable& lock() { return *this; }
-    void unlock() {}
-};
-
-class SAML1AssertionTest : public CxxTest::TestSuite, public SAMLObjectBaseTestCase {
-public:
-    void setUp() {
-        childElementsFile  = data_path + "signature/SAML1Assertion.xml";
-        SAMLObjectBaseTestCase::setUp();
-    }
 
     void tearDown() {
         SAMLObjectBaseTestCase::tearDown();
+        delete m_key;
+        for_each(m_certs.begin(),m_certs.end(),xmltooling::cleanup<XSECCryptoX509>());
     }
 
     void testSignature() {
@@ -117,13 +134,27 @@ public:
         assertion->getAuthenticationStatements().push_back(statement);
 
         // Append a Signature.
-        xmlsignature::Signature* sig=xmlsignature::SignatureBuilder::newSignature();
+        Signature* sig=SignatureBuilder::buildSignature();
         assertion->setSignature(sig);
-        
-        // Signing context for the assertion.
-        TestContext tc(id.get());
-        MarshallingContext mctx(sig,&tc);
-        DOMElement* rootElement = assertion->marshall((DOMDocument*)NULL,&mctx);
+        sig->setSigningKey(m_key->clone());
+
+        // Build KeyInfo.
+        KeyInfo* keyInfo=KeyInfoBuilder::buildKeyInfo();
+        X509Data* x509Data=X509DataBuilder::buildX509Data();
+        keyInfo->getX509Datas().push_back(x509Data);
+        for_each(m_certs.begin(),m_certs.end(),bind1st(_addcert(),x509Data));
+        sig->setKeyInfo(keyInfo);
+
+        // Sign while marshalling.
+        vector<Signature*> sigs(1,sig);
+        DOMElement* rootElement = NULL;
+        try {
+            rootElement=assertion->marshall((DOMDocument*)NULL,&sigs);
+        }
+        catch (XMLToolingException& e) {
+            TS_TRACE(e.what());
+            throw;
+        }
         
         string buf;
         XMLHelper::serialize(rootElement, buf);
@@ -134,9 +165,11 @@ public:
         assertEquals(expectedChildElementsDOM, b->buildFromDocument(doc));
         
         try {
-            assertion->getSignature()->verify(tc);
+            assertion->getSignature()->registerValidator(new SignatureProfileValidator());
+            assertion->getSignature()->registerValidator(new TestValidator());
+            assertion->getSignature()->validate(true);
         }
-        catch (xmlsignature::SignatureException& e) {
+        catch (XMLToolingException& e) {
             TS_TRACE(e.what());
             throw;
         }
