@@ -314,7 +314,9 @@ namespace opensaml {
                 m_pos_Signature=m_children.begin();
             }
         protected:
-            AbstractRequestImpl() {}
+            AbstractRequestImpl() {
+                init();
+            }
         public:
             virtual ~AbstractRequestImpl() {
                 XMLString::release(&m_RequestID);
@@ -636,7 +638,9 @@ namespace opensaml {
                 m_pos_Signature=m_children.begin();
             }
         protected:
-            AbstractResponseImpl() {}
+            AbstractResponseImpl() {
+                init();
+            }
         public:
             virtual ~AbstractResponseImpl() {
                 XMLString::release(&m_ResponseID);
