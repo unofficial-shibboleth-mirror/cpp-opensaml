@@ -17,8 +17,8 @@
 #include "internal.h"
 #include <saml/saml1/core/Protocols.h>
 #include <saml/signature/SignatureProfileValidator.h>
+#include <xmltooling/signature/SignatureValidator.h>
 
-#include <xmltooling/signature/Signature.h>
 
 #include <fstream>
 #include <openssl/pem.h>
@@ -31,36 +31,6 @@
 
 using namespace opensaml::saml1;
 using namespace xmlsignature;
-
-class TestValidator : public Validator
-{
-public:
-    TestValidator() {}
-    virtual ~TestValidator() {}
-
-    Validator* clone() const {
-        return new TestValidator();
-    }
-
-    void validate(const XMLObject* xmlObject) const {
-        DSIGSignature* sig=dynamic_cast<const Signature*>(xmlObject)->getXMLSignature();
-        if (!sig)
-            throw SignatureException("Only a marshalled Signature object can be verified.");
-        XSECKeyInfoResolverDefault resolver;
-        sig->setKeyInfoResolver(&resolver); // It will clone the resolver for us.
-        try {
-            if (!sig->verify())
-                throw SignatureException("Signature did not verify.");
-        }
-        catch(XSECException& e) {
-            auto_ptr_char temp(e.getMsg());
-            throw SignatureException(string("Caught an XMLSecurity exception verifying signature: ") + temp.get());
-        }
-        catch(XSECCryptoException& e) {
-            throw SignatureException(string("Caught an XMLSecurity exception verifying signature: ") + e.getMsg());
-        }
-    }
-};
 
 class _addcert : public std::binary_function<X509Data*,XSECCryptoX509*,void> {
 public:
@@ -163,7 +133,7 @@ public:
         
         try {
             request->getSignature()->registerValidator(new SignatureProfileValidator());
-            request->getSignature()->registerValidator(new TestValidator());
+            request->getSignature()->registerValidator(new SignatureValidator(m_key->clone()));
             request->getSignature()->validate(true);
         }
         catch (XMLToolingException& e) {

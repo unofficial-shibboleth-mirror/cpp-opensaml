@@ -15,7 +15,7 @@
  */
 
 /**
- * VerifyingContext.cpp
+ * SignatureProfileValidator.cpp
  * 
  * SAML-specific signature verification 
  */
