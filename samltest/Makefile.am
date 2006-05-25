@@ -9,9 +9,9 @@ endif
 
 samltest_h = \
     samltest.h \
-    saml/signature/SAML1AssertionTest.h \
-    saml/signature/SAML1RequestTest.h \
-    saml/signature/SAML1ResponseTest.h \
+    signature/SAML1AssertionTest.h \
+    signature/SAML1RequestTest.h \
+    signature/SAML1ResponseTest.h \
     saml1/core/impl/ActionTest.h \
     saml1/core/impl/AdviceTest.h \
     saml1/core/impl/AssertionIDReferenceTest.h \

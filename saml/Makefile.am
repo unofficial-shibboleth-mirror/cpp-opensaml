@@ -4,6 +4,8 @@ lib_LTLIBRARIES = libsaml.la
 
 libsamlincludedir = $(includedir)/saml
 
+sigincludedir = $(includedir)/signature
+
 utilincludedir = $(includedir)/saml/util
 
 saml1coreincludedir = $(includedir)/saml/saml1/core

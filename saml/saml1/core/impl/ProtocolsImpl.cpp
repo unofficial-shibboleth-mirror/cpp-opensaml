@@ -95,7 +95,7 @@ namespace opensaml {
             }
             
             IMPL_XMLOBJECT_CLONE(RespondWith);
-            IMPL_XMLOBJECT_CONTENT();
+            IMPL_XMLOBJECT_CONTENT;
         };
 
         class SAML_DLLLOCAL SubjectQueryImpl : public virtual SubjectQuery,
