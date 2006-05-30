@@ -243,48 +243,12 @@
 						Name="impl"
 						>
 						<File
-							RelativePath=".\saml2\core\impl\AssertionsImpl.cpp"
+							RelativePath=".\saml2\core\impl\Assertions20Impl.cpp"
 							>
-							<FileConfiguration
-								Name="Debug|Win32"
-								>
-								<Tool
-									Name="VCCLCompilerTool"
-									ObjectFile="$(IntDir)\$(InputName)1.obj"
-									XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-								/>
-							</FileConfiguration>
-							<FileConfiguration
-								Name="Release|Win32"
-								>
-								<Tool
-									Name="VCCLCompilerTool"
-									ObjectFile="$(IntDir)\$(InputName)1.obj"
-									XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-								/>
-							</FileConfiguration>
 						</File>
 						<File
-							RelativePath=".\saml2\core\impl\AssertionsSchemaValidators.cpp"
+							RelativePath=".\saml2\core\impl\Assertions20SchemaValidators.cpp"
 							>
-							<FileConfiguration
-								Name="Debug|Win32"
-								>
-								<Tool
-									Name="VCCLCompilerTool"
-									ObjectFile="$(IntDir)\$(InputName)1.obj"
-									XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-								/>
-							</FileConfiguration>
-							<FileConfiguration
-								Name="Release|Win32"
-								>
-								<Tool
-									Name="VCCLCompilerTool"
-									ObjectFile="$(IntDir)\$(InputName)1.obj"
-									XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-								/>
-							</FileConfiguration>
 						</File>
 					</Filter>
 				</Filter>

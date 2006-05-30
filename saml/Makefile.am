@@ -20,7 +20,7 @@ libsamlinclude_HEADERS = \
 
 siginclude_HEADERS = \
     signature/ContentReference.h \
-    signature/SignableObject.h \ 
+    signature/SignableObject.h \
     signature/SignatureProfileValidator.h
 
 utilinclude_HEADERS = \
@@ -42,8 +42,8 @@ libsaml_la_SOURCES = \
     saml1/core/impl/AssertionsSchemaValidators.cpp \
     saml1/core/impl/ProtocolsImpl.cpp \
     saml1/core/impl/ProtocolsSchemaValidators.cpp \
-    saml2/core/impl/AssertionsImpl.cpp \
-    saml2/core/impl/AssertionsSchemaValidators.cpp \
+    saml2/core/impl/Assertions20Impl.cpp \
+    saml2/core/impl/Assertions20SchemaValidators.cpp \
     signature/ContentReference.cpp \
     signature/SignatureProfileValidator.cpp \
     util/SAMLConstants.cpp
