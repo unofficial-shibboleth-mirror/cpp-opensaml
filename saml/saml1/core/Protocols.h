@@ -30,7 +30,11 @@
 
 namespace opensaml {
 
-    namespace saml1 {
+    /**
+     * @namespace saml1p
+     * SAML 1.x protocol namespace
+     */
+    namespace saml1p {
         
         DECL_XMLOBJECT_SIMPLE(SAML_API,AssertionArtifact,Artifact,SAML 1.x AssertionArtifact element);
         DECL_XMLOBJECT_SIMPLE(SAML_API,StatusMessage,Message,SAML 1.x StatusMessage element);
@@ -46,7 +50,7 @@ namespace opensaml {
         END_XMLOBJECT;
 
         BEGIN_XMLOBJECT(SAML_API,SubjectQuery,Query,SAML 1.x SubjectQuery element);
-            DECL_TYPED_CHILD(Subject);
+            DECL_TYPED_FOREIGN_CHILD(Subject,saml1);
         END_XMLOBJECT;
 
         BEGIN_XMLOBJECT(SAML_API,AuthenticationQuery,SubjectQuery,SAML 1.x AuthenticationQuery element);
@@ -57,15 +61,15 @@ namespace opensaml {
 
         BEGIN_XMLOBJECT(SAML_API,AttributeQuery,SubjectQuery,SAML 1.x AttributeQuery element);
             DECL_STRING_ATTRIB(Resource,RESOURCE);
-            DECL_TYPED_CHILDREN(AttributeDesignator);
+            DECL_TYPED_FOREIGN_CHILDREN(AttributeDesignator,saml1);
             /** AttributeQueryType local name */
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
 
         BEGIN_XMLOBJECT(SAML_API,AuthorizationDecisionQuery,SubjectQuery,SAML 1.x AuthorizationDecisionQuery element);
             DECL_STRING_ATTRIB(Resource,RESOURCE);
-            DECL_TYPED_CHILDREN(Action);
-            DECL_TYPED_CHILD(Evidence);
+            DECL_TYPED_FOREIGN_CHILDREN(Action,saml1);
+            DECL_TYPED_FOREIGN_CHILD(Evidence,saml1);
             /** AuthorizationDecisionQueryType local name */
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
@@ -84,7 +88,7 @@ namespace opensaml {
             DECL_TYPED_CHILD(AuthenticationQuery);
             DECL_TYPED_CHILD(AttributeQuery);
             DECL_TYPED_CHILD(AuthorizationDecisionQuery);
-            DECL_TYPED_CHILDREN(AssertionIDReference);
+            DECL_TYPED_FOREIGN_CHILDREN(AssertionIDReference,saml1);
             DECL_TYPED_CHILDREN(AssertionArtifact);
             /** RequestType local name */
             static const XMLCh TYPE_NAME[];
@@ -130,7 +134,7 @@ namespace opensaml {
 
         BEGIN_XMLOBJECT(SAML_API,Response,AbstractResponse,SAML 1.x Response element);
             DECL_TYPED_CHILD(Status);
-            DECL_TYPED_CHILDREN(Assertion);
+            DECL_TYPED_FOREIGN_CHILDREN(Assertion,saml1);
             /** ResponseType local name */
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;

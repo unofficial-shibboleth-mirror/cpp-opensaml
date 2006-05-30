@@ -24,13 +24,14 @@
 #include "exceptions.h"
 #include "saml1/core/Protocols.h"
 
+using namespace opensaml::saml1p;
 using namespace opensaml::saml1;
 using namespace opensaml;
 using namespace xmltooling;
 using namespace std;
 
 namespace opensaml {
-    namespace saml1 {
+    namespace saml1p {
         
         XMLOBJECTVALIDATOR_SIMPLE(SAML_DLLLOCAL,AssertionArtifact);
         XMLOBJECTVALIDATOR_SIMPLE(SAML_DLLLOCAL,StatusMessage);
@@ -106,7 +107,7 @@ namespace opensaml {
     q=QName(SAMLConstants::SAML1P_NS,cname::TYPE_NAME); \
     XMLObjectBuilder::registerBuilder(q,new cname##Builder());
 
-void opensaml::saml1::registerProtocolClasses() {
+void opensaml::saml1p::registerProtocolClasses() {
     QName q;
     REGISTER_ELEMENT(AssertionArtifact);
     REGISTER_ELEMENT(AttributeQuery);

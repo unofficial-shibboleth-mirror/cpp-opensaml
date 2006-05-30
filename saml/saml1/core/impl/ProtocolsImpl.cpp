@@ -37,6 +37,7 @@
 #include <ctime>
 #include <xercesc/util/XMLUniDefs.hpp>
 
+using namespace opensaml::saml1p;
 using namespace opensaml::saml1;
 using namespace opensaml;
 using namespace xmlsignature;
@@ -49,7 +50,7 @@ using namespace std;
 #endif
 
 namespace opensaml {
-    namespace saml1 {
+    namespace saml1p {
     
         DECL_XMLOBJECTIMPL_SIMPLE(SAML_DLLLOCAL,AssertionArtifact);
         DECL_XMLOBJECTIMPL_SIMPLE(SAML_DLLLOCAL,StatusMessage);
@@ -243,7 +244,7 @@ namespace opensaml {
                 m_Evidence=NULL;
                 m_children.push_back(NULL);
                 m_pos_Evidence=m_pos_Subject;
-                m_pos_Evidence++;
+                ++m_pos_Evidence;
             }
         public:
             virtual ~AuthorizationDecisionQueryImpl() {
@@ -411,7 +412,7 @@ namespace opensaml {
                 m_children.push_back(NULL);
                 m_Query=NULL;
                 m_pos_Query=m_pos_Signature;
-                m_pos_Query++;
+                ++m_pos_Query;
             }
         public:
             virtual ~RequestImpl() {}
@@ -582,10 +583,10 @@ namespace opensaml {
                 m_pos_StatusCode=m_children.begin();
                 m_StatusMessage=NULL;
                 m_pos_StatusMessage=m_pos_StatusCode;
-                m_pos_StatusMessage++;
+                ++m_pos_StatusMessage;
                 m_StatusDetail=NULL;
                 m_pos_StatusDetail=m_pos_StatusMessage;
-                m_pos_StatusDetail++;
+                ++m_pos_StatusDetail;
             }
         public:
             virtual ~StatusImpl() {}
@@ -737,7 +738,7 @@ namespace opensaml {
                 m_children.push_back(NULL);
                 m_Status=NULL;
                 m_pos_Status=m_pos_Signature;
-                m_pos_Status++;
+                ++m_pos_Status;
             }
         public:
             virtual ~ResponseImpl() {}

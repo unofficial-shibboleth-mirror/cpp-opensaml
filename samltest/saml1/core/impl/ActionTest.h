@@ -43,14 +43,14 @@ public:
         Action* action = dynamic_cast<Action*>(xo.get());
         TS_ASSERT(action!=NULL);
         TSM_ASSERT("namespace attribute present", action->getNamespace()==NULL);
-        TSM_ASSERT("Contents present", action->getValue()==NULL);
+        TSM_ASSERT("Contents present", action->getAction()==NULL);
     }
 
     void testSingleElementOptionalAttributesUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
         Action* action = dynamic_cast<Action*>(xo.get());
         TSM_ASSERT_SAME_DATA("namespace attribute ", expectedNamespace, action->getNamespace(), XMLString::stringLen(expectedNamespace));
-        TSM_ASSERT_SAME_DATA("Contents ", expectedContents, action->getValue(), XMLString::stringLen(expectedContents));
+        TSM_ASSERT_SAME_DATA("Contents ", expectedContents, action->getAction(), XMLString::stringLen(expectedContents));
     }
 
     void testSingleElementMarshall() {
@@ -60,7 +60,7 @@ public:
     void testSingleElementOptionalAttributesMarshall() {
         Action* action=ActionBuilder::buildAction();
         action->setNamespace(expectedNamespace);
-        action->setValue(expectedContents);
+        action->setAction(expectedContents);
         assertEquals(expectedOptionalAttributesDOM, action);
     }
 

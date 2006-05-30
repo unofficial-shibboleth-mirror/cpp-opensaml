@@ -38,13 +38,13 @@ public:
     void testSingleElementUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         Audience& a = dynamic_cast<Audience&>(*xo.get());
-        TSM_ASSERT("Uri is non-null", a.getUri()==NULL);
+        TSM_ASSERT("Uri is non-null", a.getAudienceURI()==NULL);
     }
 
     void testSingleElementOptionalAttributesUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
         Audience& a = dynamic_cast<Audience&>(*xo.get());
-        TSM_ASSERT_SAME_DATA("Uri", expectedUri, a.getUri(), XMLString::stringLen(expectedUri));
+        TSM_ASSERT_SAME_DATA("Uri", expectedUri, a.getAudienceURI(), XMLString::stringLen(expectedUri));
     }
 
     void testSingleElementMarshall() {
@@ -53,7 +53,7 @@ public:
 
     void testSingleElementOptionalAttributesMarshall() {
         Audience* a=AudienceBuilder::buildAudience();
-        a->setUri(expectedUri);
+        a->setAudienceURI(expectedUri);
         assertEquals(expectedOptionalAttributesDOM, a);
     }
 

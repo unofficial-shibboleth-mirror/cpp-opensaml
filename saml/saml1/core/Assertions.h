@@ -23,7 +23,6 @@
 #ifndef __saml1_assertions_h__
 #define __saml1_assertions_h__
 
-#include <saml/exceptions.h>
 #include <saml/signature/SignableObject.h>
 #include <saml/util/SAMLConstants.h>
 
@@ -43,15 +42,15 @@ namespace opensaml {
 
     /**
      * @namespace saml1
-     * SAML 1.x class namespace
+     * SAML 1.x assertion namespace
      */
     namespace saml1 {
         
         // Forward references
         class SAML_API Assertion;
         
-        DECL_XMLOBJECT_SIMPLE(SAML_API,AssertionIDReference,Reference,SAML 1.x AssertionIDReference element);
-        DECL_XMLOBJECT_SIMPLE(SAML_API,Audience,Uri,SAML 1.x Audience element);
+        DECL_XMLOBJECT_SIMPLE(SAML_API,AssertionIDReference,AssertionID,SAML 1.x AssertionIDReference element);
+        DECL_XMLOBJECT_SIMPLE(SAML_API,Audience,AudienceURI,SAML 1.x Audience element);
         DECL_XMLOBJECT_SIMPLE(SAML_API,ConfirmationMethod,Method,SAML 1.x ConfirmationMethod element);
         
         BEGIN_XMLOBJECT(SAML_API,Condition,xmltooling::XMLObject,SAML 1.x Condition element);
@@ -69,8 +68,8 @@ namespace opensaml {
         END_XMLOBJECT;
 
         BEGIN_XMLOBJECT(SAML_API,Conditions,xmltooling::XMLObject,SAML 1.x Conditions element);
-            DECL_XMLOBJECT_ATTRIB(NotBefore,NOTBEFORE,xmltooling::DateTime);
-            DECL_XMLOBJECT_ATTRIB(NotOnOrAfter,NOTONORAFTER,xmltooling::DateTime);
+            DECL_DATETIME_ATTRIB(NotBefore,NOTBEFORE);
+            DECL_DATETIME_ATTRIB(NotOnOrAfter,NOTONORAFTER);
             DECL_TYPED_CHILDREN(AudienceRestrictionCondition);
             DECL_TYPED_CHILDREN(DoNotCacheCondition);
             DECL_TYPED_CHILDREN(Condition);
@@ -86,20 +85,8 @@ namespace opensaml {
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
 
-        /** SAML 1.x SubjectConfirmationData element */
-        class SAML_API SubjectConfirmationData : public virtual xmltooling::ElementProxy,
-            public virtual xmltooling::AttributeExtensibleXMLObject,
-            public virtual xmltooling::ValidatingXMLObject
-        {
-        protected:
-            SubjectConfirmationData() {}
-        public:
-            virtual ~SubjectConfirmationData() {}
-            /** Type-specific clone method. */
-            virtual SubjectConfirmationData* cloneSubjectConfirmationData() const=0;
-            /** Element local name. */
-            static const XMLCh LOCAL_NAME[];
-        };
+        BEGIN_XMLOBJECT2(SAML_API,SubjectConfirmationData,xmltooling::ElementProxy,xmltooling::AttributeExtensibleXMLObject,SAML 1.x SubjectConfirmationData element);
+        END_XMLOBJECT;
         
         BEGIN_XMLOBJECT(SAML_API,SubjectConfirmation,xmltooling::XMLObject,SAML 1.x SubjectConfirmation element);
             DECL_TYPED_CHILDREN(ConfirmationMethod);
@@ -149,7 +136,7 @@ namespace opensaml {
 
         BEGIN_XMLOBJECT(SAML_API,Action,xmltooling::SimpleElement,SAML 1.x Action element);
             DECL_STRING_ATTRIB(Namespace,NAMESPACE);
-            DECL_XMLOBJECT_CONTENT(Value);
+            DECL_XMLOBJECT_CONTENT(Action);
             /** ActionType local name */
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
@@ -189,20 +176,8 @@ namespace opensaml {
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
 
-        /** SAML 1.x AttributeValue element */
-        class SAML_API AttributeValue : public virtual xmltooling::ElementProxy,
-            public virtual xmltooling::AttributeExtensibleXMLObject,
-            public virtual xmltooling::ValidatingXMLObject
-        {
-        protected:
-            AttributeValue() {}
-        public:
-            virtual ~AttributeValue() {}
-            /** Type-specific clone method. */
-            virtual AttributeValue* cloneAttributeValue() const=0;
-            /** Element local name. */
-            static const XMLCh LOCAL_NAME[];
-        };
+        BEGIN_XMLOBJECT2(SAML_API,AttributeValue,xmltooling::ElementProxy,xmltooling::AttributeExtensibleXMLObject,SAML 1.x AttributeValue element);
+        END_XMLOBJECT;
 
         BEGIN_XMLOBJECT(SAML_API,AttributeStatement,SubjectStatement,SAML 1.x AttributeStatement element);
             DECL_TYPED_CHILDREN(Attribute);

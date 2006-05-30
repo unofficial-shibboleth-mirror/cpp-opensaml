@@ -233,6 +233,70 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="saml2"
+				>
+				<Filter
+					Name="core"
+					>
+					<Filter
+						Name="impl"
+						>
+						<File
+							RelativePath=".\saml2\core\impl\AssertionsImpl.cpp"
+							>
+							<FileConfiguration
+								Name="Debug|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)\$(InputName)1.obj"
+									XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Release|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)\$(InputName)1.obj"
+									XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+								/>
+							</FileConfiguration>
+						</File>
+						<File
+							RelativePath=".\saml2\core\impl\AssertionsSchemaValidators.cpp"
+							>
+							<FileConfiguration
+								Name="Debug|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)\$(InputName)1.obj"
+									XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Release|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)\$(InputName)1.obj"
+									XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+								/>
+							</FileConfiguration>
+						</File>
+					</Filter>
+				</Filter>
+				<Filter
+					Name="metadata"
+					>
+					<Filter
+						Name="impl"
+						>
+					</Filter>
+				</Filter>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -298,6 +362,26 @@
 					RelativePath=".\signature\SignatureProfileValidator.h"
 					>
 				</File>
+			</Filter>
+			<Filter
+				Name="saml2"
+				>
+				<Filter
+					Name="core"
+					>
+					<File
+						RelativePath=".\saml2\core\Assertions.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="metadata"
+					>
+					<File
+						RelativePath=".\saml2\metadata\Metadata.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
 		<Filter

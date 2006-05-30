@@ -27,6 +27,7 @@
 #include "SAMLConfig.h"
 #include "saml1/core/Assertions.h"
 #include "saml1/core/Protocols.h"
+#include "saml2/core/Assertions.h"
 #include "util/SAMLConstants.h"
 
 #include <xmltooling/XMLToolingConfig.h>
@@ -71,7 +72,8 @@ bool SAMLInternalConfig::init()
     log.debug("XMLTooling library initialized");
 
     saml1::registerAssertionClasses();
-    saml1::registerProtocolClasses();
+    saml1p::registerProtocolClasses();
+    saml2::registerAssertionClasses();
 
     log.info("library initialization complete");
     return true;

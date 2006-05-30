@@ -55,7 +55,7 @@ namespace opensaml {
         DECL_XMLOBJECTIMPL_SIMPLE(SAML_DLLLOCAL,Audience);
         DECL_XMLOBJECTIMPL_SIMPLE(SAML_DLLLOCAL,ConfirmationMethod);
         
-        class XMLTOOL_DLLLOCAL AudienceRestrictionConditionImpl : public virtual AudienceRestrictionCondition,
+        class SAML_DLLLOCAL AudienceRestrictionConditionImpl : public virtual AudienceRestrictionCondition,
             public AbstractComplexElement,
             public AbstractDOMCachingXMLObject,
             public AbstractValidatingXMLObject,
@@ -92,7 +92,7 @@ namespace opensaml {
             }
         };
 
-        class XMLTOOL_DLLLOCAL DoNotCacheConditionImpl : public virtual DoNotCacheCondition,
+        class SAML_DLLLOCAL DoNotCacheConditionImpl : public virtual DoNotCacheCondition,
             public AbstractChildlessElement,
             public AbstractDOMCachingXMLObject,
             public AbstractValidatingXMLObject,
@@ -537,7 +537,7 @@ namespace opensaml {
                 m_SubjectLocality=NULL;
                 m_children.push_back(NULL);
                 m_pos_SubjectLocality=m_pos_Subject;
-                m_pos_SubjectLocality++;
+                ++m_pos_SubjectLocality;
             }
             
             IMPL_XMLOBJECT_CLONE(AuthenticationStatement);
@@ -692,7 +692,7 @@ namespace opensaml {
                 m_Evidence=NULL;
                 m_children.push_back(NULL);
                 m_pos_Evidence=m_pos_Subject;
-                m_pos_Evidence++;
+                ++m_pos_Evidence;
             }
             
             IMPL_XMLOBJECT_CLONE(AuthorizationDecisionStatement);
@@ -958,9 +958,9 @@ namespace opensaml {
                 m_Signature=NULL;
                 m_pos_Conditions=m_children.begin();
                 m_pos_Advice=m_pos_Conditions;
-                m_pos_Advice++;
+                ++m_pos_Advice;
                 m_pos_Signature=m_pos_Advice;
-                m_pos_Signature++;
+                ++m_pos_Signature;
             }
         public:
             virtual ~AssertionImpl() {

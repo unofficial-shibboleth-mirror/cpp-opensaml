@@ -29,6 +29,7 @@
 #include <xsec/enc/XSECCryptoException.hpp>
 #include <xsec/framework/XSECException.hpp>
 
+using namespace opensaml::saml1p;
 using namespace opensaml::saml1;
 using namespace xmlsignature;
 
