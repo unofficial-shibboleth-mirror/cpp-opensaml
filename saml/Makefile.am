@@ -4,7 +4,9 @@ lib_LTLIBRARIES = libsaml.la
 
 libsamlincludedir = $(includedir)/saml
 
-sigincludedir = $(includedir)/signature
+encincludedir = $(includedir)/saml/encryption
+
+sigincludedir = $(includedir)/saml/signature
 
 utilincludedir = $(includedir)/saml/util
 
@@ -13,18 +15,21 @@ saml1coreincludedir = $(includedir)/saml/saml1/core
 saml2coreincludedir = $(includedir)/saml/saml2/core
 
 libsamlinclude_HEADERS = \
-    base.h \
-    exceptions.h \
-    version.h \
-    SAMLConfig.h
+	base.h \
+	exceptions.h \
+	version.h \
+	SAMLConfig.h
+
+encinclude_HEADERS = \
+	encryption/EncryptedKeyResolver.h
 
 siginclude_HEADERS = \
-    signature/ContentReference.h \
-    signature/SignableObject.h \
-    signature/SignatureProfileValidator.h
+	signature/ContentReference.h \
+	signature/SignableObject.h \
+	signature/SignatureProfileValidator.h
 
 utilinclude_HEADERS = \
-    util/SAMLConstants.h
+	util/SAMLConstants.h
 
 saml1coreinclude_HEADERS = \
 	saml1/core/Assertions.h \
@@ -34,19 +39,20 @@ saml2coreinclude_HEADERS = \
 	saml2/core/Assertions.h
 
 noinst_HEADERS = \
-    internal.h
+	internal.h
 
 libsaml_la_SOURCES = \
-    SAMLConfig.cpp \
-    saml1/core/impl/AssertionsImpl.cpp \
-    saml1/core/impl/AssertionsSchemaValidators.cpp \
-    saml1/core/impl/ProtocolsImpl.cpp \
-    saml1/core/impl/ProtocolsSchemaValidators.cpp \
-    saml2/core/impl/Assertions20Impl.cpp \
-    saml2/core/impl/Assertions20SchemaValidators.cpp \
-    signature/ContentReference.cpp \
-    signature/SignatureProfileValidator.cpp \
-    util/SAMLConstants.cpp
+	SAMLConfig.cpp \
+	encryption/EncryptedKeyResolver.cpp \
+	saml1/core/impl/AssertionsImpl.cpp \
+	saml1/core/impl/AssertionsSchemaValidators.cpp \
+	saml1/core/impl/ProtocolsImpl.cpp \
+	saml1/core/impl/ProtocolsSchemaValidators.cpp \
+	saml2/core/impl/Assertions20Impl.cpp \
+	saml2/core/impl/Assertions20SchemaValidators.cpp \
+	signature/ContentReference.cpp \
+	signature/SignatureProfileValidator.cpp \
+	util/SAMLConstants.cpp
 
 # this is different from the project version
 # http://sources.redhat.com/autobook/autobook/autobook_91.html

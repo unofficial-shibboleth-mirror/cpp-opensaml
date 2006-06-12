@@ -30,7 +30,8 @@
 #include <xmltooling/ElementProxy.h>
 #include <xmltooling/SimpleElement.h>
 #include <xmltooling/XMLObjectBuilder.h>
-#include <xmltooling/signature/KeyInfo.h>
+#include <xmltooling/encryption/Encryption.h>
+#include <xmltooling/signature/KeyResolver.h>
 #include <xmltooling/signature/Signature.h>
 #include <xmltooling/util/DateTime.h>
 #include <xmltooling/validation/ValidatingXMLObject.h>
@@ -55,6 +56,29 @@ namespace opensaml {
         DECL_XMLOBJECT_SIMPLE(SAML_API,AuthnContextClassRef,Reference,SAML 2.0 AuthnContextClassRef element);
         DECL_XMLOBJECT_SIMPLE(SAML_API,AuthnContextDeclRef,Reference,SAML 2.0 AuthnContextDeclRef element);
         DECL_XMLOBJECT_SIMPLE(SAML_API,AuthenticatingAuthority,ID,SAML 2.0 AuthenticatingAuthority element);
+
+        BEGIN_XMLOBJECT(SAML_API,EncryptedElementType,xmltooling::XMLObject,SAML 2.0 EncryptedElementType type);
+            DECL_TYPED_FOREIGN_CHILD(EncryptedData,xmlencryption);
+            DECL_TYPED_FOREIGN_CHILDREN(EncryptedKey,xmlencryption);
+            /** EncryptedElementType local name */
+            static const XMLCh TYPE_NAME[];
+            
+            /**
+             * Decrypts the element using a standard approach based on a wrapped decryption key
+             * inside the message. The key decryption key should be supplied using the provided
+             * resolver. The recipient name may be used when multiple encrypted keys are found.
+             * The object returned will be unmarshalled around the decrypted DOM element, but the
+             * DOM itself will be released. 
+             * 
+             * @param KEKresolver   resolver supplying key decryption key
+             * @param recipient     identifier naming the recipient (the entity performing the decryption)
+             * @return  the decrypted and unmarshalled object
+             */
+            virtual xmltooling::XMLObject* decrypt(xmlsignature::KeyResolver* KEKresolver, const XMLCh* recipient) const=0;
+        END_XMLOBJECT;
+
+        BEGIN_XMLOBJECT(SAML_API,EncryptedID,EncryptedElementType,SAML 2.0 EncryptedID element);
+        END_XMLOBJECT;
 
         BEGIN_XMLOBJECT(SAML_API,BaseID,xmltooling::XMLObject,SAML 2.0 BaseIDAbstractType abstract type);
             DECL_STRING_ATTRIB(NameQualifier,NAMEQUALIFIER);
@@ -133,7 +157,7 @@ namespace opensaml {
             DECL_STRING_ATTRIB(Method,METHOD);
             DECL_TYPED_CHILD(BaseID);
             DECL_TYPED_CHILD(NameID);
-            //DECL_TYPED_CHILD(EncryptedID);
+            DECL_TYPED_CHILD(EncryptedID);
             DECL_XMLOBJECT_CHILD(SubjectConfirmationData);
             DECL_TYPED_CHILD(KeyInfoConfirmationDataType);
             /** SubjectConfirmationType local name */
@@ -143,7 +167,7 @@ namespace opensaml {
         BEGIN_XMLOBJECT(SAML_API,Subject,xmltooling::XMLObject,SAML 2.0 Subject element);
             DECL_TYPED_CHILD(BaseID);
             DECL_TYPED_CHILD(NameID);
-            //DECL_TYPED_CHILD(EncryptedID);
+            DECL_TYPED_CHILD(EncryptedID);
             DECL_TYPED_CHILDREN(SubjectConfirmation);
             /** SubjectType local name */
             static const XMLCh TYPE_NAME[];
@@ -224,18 +248,24 @@ namespace opensaml {
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
 
+        BEGIN_XMLOBJECT(SAML_API,EncryptedAttribute,EncryptedElementType,SAML 2.0 EncryptedAttribute element);
+        END_XMLOBJECT;
+
         BEGIN_XMLOBJECT(SAML_API,AttributeStatement,Statement,SAML 2.0 AttributeStatement element);
             DECL_TYPED_CHILDREN(Attribute);
-            //DECL_TYPED_CHILDREN(EncryptedAttribute);
+            DECL_TYPED_CHILDREN(EncryptedAttribute);
             /** AttributeStatementType local name */
             static const XMLCh TYPE_NAME[];
+        END_XMLOBJECT;
+
+        BEGIN_XMLOBJECT(SAML_API,EncryptedAssertion,EncryptedElementType,SAML 2.0 EncryptedAssertion element);
         END_XMLOBJECT;
 
         BEGIN_XMLOBJECT(SAML_API,Advice,xmltooling::XMLObject,SAML 2.0 Advice element);
             DECL_TYPED_CHILDREN(AssertionIDRef);
             DECL_TYPED_CHILDREN(AssertionURIRef);
             DECL_TYPED_CHILDREN(Assertion);
-            //DECL_TYPED_CHILDREN(EncryptedAssertion);
+            DECL_TYPED_CHILDREN(EncryptedAssertion);
             DECL_XMLOBJECT_CHILDREN(Other);
             /** AdviceType local name */
             static const XMLCh TYPE_NAME[];
@@ -276,6 +306,9 @@ namespace opensaml {
         DECL_SAML2OBJECTBUILDER(AuthnStatement);
         DECL_SAML2OBJECTBUILDER(AuthzDecisionStatement);
         DECL_SAML2OBJECTBUILDER(Conditions);
+        DECL_SAML2OBJECTBUILDER(EncryptedAssertion);
+        DECL_SAML2OBJECTBUILDER(EncryptedAttribute);
+        DECL_SAML2OBJECTBUILDER(EncryptedID);
         DECL_SAML2OBJECTBUILDER(Evidence);
         DECL_SAML2OBJECTBUILDER(Issuer);
         DECL_SAML2OBJECTBUILDER(NameID);

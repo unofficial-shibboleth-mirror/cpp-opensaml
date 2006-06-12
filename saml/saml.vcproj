@@ -261,6 +261,14 @@
 					</Filter>
 				</Filter>
 			</Filter>
+			<Filter
+				Name="encryption"
+				>
+				<File
+					RelativePath=".\encryption\EncryptedKeyResolver.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -346,6 +354,14 @@
 						>
 					</File>
 				</Filter>
+			</Filter>
+			<Filter
+				Name="encryption"
+				>
+				<File
+					RelativePath=".\encryption\EncryptedKeyResolver.h"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<Filter

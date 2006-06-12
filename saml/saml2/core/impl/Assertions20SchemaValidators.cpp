@@ -43,6 +43,22 @@ namespace opensaml {
         XMLOBJECTVALIDATOR_SIMPLE(SAML_DLLLOCAL,NameID);
         XMLOBJECTVALIDATOR_SIMPLE(SAML_DLLLOCAL,Issuer);
 
+        BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,EncryptedElementType);
+            XMLOBJECTVALIDATOR_REQUIRE(EncryptedElementType,EncryptedData);
+        END_XMLOBJECTVALIDATOR;
+        
+        BEGIN_XMLOBJECTVALIDATOR_SUB(SAML_DLLLOCAL,EncryptedID,EncryptedElementType);
+            EncryptedElementTypeSchemaValidator::validate(xmlObject);
+        END_XMLOBJECTVALIDATOR;
+
+        BEGIN_XMLOBJECTVALIDATOR_SUB(SAML_DLLLOCAL,EncryptedAttribute,EncryptedElementType);
+            EncryptedElementTypeSchemaValidator::validate(xmlObject);
+        END_XMLOBJECTVALIDATOR;
+
+        BEGIN_XMLOBJECTVALIDATOR_SUB(SAML_DLLLOCAL,EncryptedAssertion,EncryptedElementType);
+            EncryptedElementTypeSchemaValidator::validate(xmlObject);
+        END_XMLOBJECTVALIDATOR;
+
         BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,AudienceRestriction);
             XMLOBJECTVALIDATOR_NONEMPTY(AudienceRestriction,Audience);
         END_XMLOBJECTVALIDATOR;
@@ -70,8 +86,8 @@ namespace opensaml {
                 count++;
             if (ptr->getNameID())
                 count++;
-            //if (ptr->getEncryptedID())
-                //count++;
+            if (ptr->getEncryptedID())
+                count++;
             if (count > 1)
                 throw ValidationException("SubjectConfirmation cannot contain multiple identifier elements.");
         END_XMLOBJECTVALIDATOR;
@@ -82,8 +98,8 @@ namespace opensaml {
                 count++;
             if (ptr->getNameID())
                 count++;
-            //if (ptr->getEncryptedID())
-                //count++;
+            if (ptr->getEncryptedID())
+                count++;
             if (count > 1)
                 throw ValidationException("Subject cannot contain multiple identifier elements.");
         END_XMLOBJECTVALIDATOR;
@@ -196,6 +212,9 @@ void opensaml::saml2::registerAssertionClasses() {
     REGISTER_ELEMENT(AuthnStatement);
     REGISTER_ELEMENT(AuthzDecisionStatement);
     REGISTER_ELEMENT(Conditions);
+    REGISTER_ELEMENT(EncryptedAssertion);
+    REGISTER_ELEMENT(EncryptedAttribute);
+    REGISTER_ELEMENT(EncryptedID);
     REGISTER_ELEMENT(Evidence);
     REGISTER_ELEMENT(Issuer);
     REGISTER_ELEMENT(NameID);

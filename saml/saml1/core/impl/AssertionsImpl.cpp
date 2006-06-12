@@ -931,8 +931,10 @@ namespace opensaml {
                 
                 // Unknown child.
                 const XMLCh* nsURI=root->getNamespaceURI();
-                if (!XMLString::equals(nsURI,SAMLConstants::SAML1_NS) && nsURI && *nsURI)
+                if (!XMLString::equals(nsURI,SAMLConstants::SAML1_NS) && nsURI && *nsURI) {
                     getOthers().push_back(childXMLObject);
+                    return;
+                }
                 
                 AbstractXMLObjectUnmarshaller::processChildElement(childXMLObject,root);
             }

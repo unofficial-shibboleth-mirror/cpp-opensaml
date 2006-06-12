@@ -22,12 +22,14 @@
 
 #include "internal.h"
 #include "exceptions.h"
+#include "saml/encryption/EncryptedKeyResolver.h"
 #include "saml2/core/Assertions.h"
 
 #include <xmltooling/AbstractChildlessElement.h>
 #include <xmltooling/AbstractComplexElement.h>
 #include <xmltooling/AbstractElementProxy.h>
 #include <xmltooling/AbstractSimpleElement.h>
+#include <xmltooling/encryption/Decrypter.h>
 #include <xmltooling/impl/AnyElement.h>
 #include <xmltooling/io/AbstractXMLObjectMarshaller.h>
 #include <xmltooling/io/AbstractXMLObjectUnmarshaller.h>
@@ -39,6 +41,7 @@
 
 using namespace opensaml::saml2;
 using namespace opensaml;
+using namespace xmlencryption;
 using namespace xmlsignature;
 using namespace xmltooling;
 using namespace std;
@@ -118,6 +121,7 @@ namespace opensaml {
                 PROC_STRING_ATTRIB(SPNameQualifier,SPNAMEQUALIFIER,NULL);
                 PROC_STRING_ATTRIB(Format,FORMAT,NULL);
                 PROC_STRING_ATTRIB(SPProvidedID,SPPROVIDEDID,NULL);
+                AbstractXMLObjectUnmarshaller::processAttribute(attribute);
             }
         };
 
@@ -150,6 +154,91 @@ namespace opensaml {
             IMPL_XMLOBJECT_CLONE(Issuer);
             NameIDType* cloneNameIDType() const {
                 return new IssuerImpl(*this);
+            }
+        };
+
+        class SAML_DLLLOCAL EncryptedElementTypeImpl : public virtual EncryptedElementType,
+            public AbstractComplexElement,
+            public AbstractDOMCachingXMLObject,
+            public AbstractValidatingXMLObject,
+            public AbstractXMLObjectMarshaller,
+            public AbstractXMLObjectUnmarshaller
+        {
+            void init() {
+                m_EncryptedData=NULL;
+                m_children.push_back(NULL);
+                m_pos_EncryptedData=m_children.begin();
+            }
+            
+        protected:
+            EncryptedElementTypeImpl() {
+                init();
+            }
+            
+        public:
+            virtual ~EncryptedElementTypeImpl() {}
+    
+            EncryptedElementTypeImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
+                    : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
+                init();
+            }
+                
+            EncryptedElementTypeImpl(const EncryptedElementTypeImpl& src)
+                    : AbstractXMLObject(src), AbstractDOMCachingXMLObject(src), AbstractValidatingXMLObject(src) {
+                init();
+                if (src.getEncryptedData())
+                    setEncryptedData(src.getEncryptedData()->cloneEncryptedData());
+                VectorOf(EncryptedKey) v=getEncryptedKeys();
+                for (vector<EncryptedKey*>::const_iterator i=src.m_EncryptedKeys.begin(); i!=src.m_EncryptedKeys.end(); i++) {
+                    if (*i) {
+                        v.push_back((*i)->cloneEncryptedKey());
+                    }
+                }
+            }
+    
+            XMLObject* decrypt(KeyResolver* KEKresolver, const XMLCh* recipient) const
+            {
+                if (!m_EncryptedData)
+                    throw DecryptionException("No encrypted data present.");
+                Decrypter decrypter(KEKresolver, new EncryptedKeyResolver(*this, recipient));
+                DOMDocumentFragment* frag = decrypter.decryptData(m_EncryptedData);
+                if (frag->hasChildNodes() && frag->getFirstChild()==frag->getLastChild()) {
+                    DOMNode* plaintext=frag->getFirstChild();
+                    if (plaintext->getNodeType()==DOMNode::ELEMENT_NODE) {
+                        auto_ptr<XMLObject> ret(XMLObjectBuilder::buildOneFromElement(static_cast<DOMElement*>(plaintext)));
+                        ret->releaseThisAndChildrenDOM();
+                        return ret.release();
+                    }
+                }
+                frag->release();
+                throw DecryptionException("Decryption did not result in a single element.");
+            }
+        
+            IMPL_XMLOBJECT_CLONE(EncryptedElementType);
+            IMPL_TYPED_FOREIGN_CHILD(EncryptedData,xmlencryption);
+            IMPL_TYPED_FOREIGN_CHILDREN(EncryptedKey,xmlencryption,m_children.end());
+    
+        protected:
+            void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
+                PROC_TYPED_FOREIGN_CHILD(EncryptedData,xmlencryption,XMLConstants::XMLENC_NS,false);
+                PROC_TYPED_FOREIGN_CHILDREN(EncryptedKey,xmlencryption,XMLConstants::XMLENC_NS,false);
+                AbstractXMLObjectUnmarshaller::processChildElement(childXMLObject,root);
+            }
+        };
+
+        class SAML_DLLLOCAL EncryptedIDImpl : public virtual EncryptedID, public EncryptedElementTypeImpl
+        {
+        public:
+            virtual ~EncryptedIDImpl() {}
+    
+            EncryptedIDImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {}
+                
+            EncryptedIDImpl(const EncryptedIDImpl& src) : AbstractXMLObject(src), EncryptedElementTypeImpl(src) {}
+            
+            IMPL_XMLOBJECT_CLONE(EncryptedID);
+            EncryptedElementType* cloneEncryptedElementType() const {
+                return new EncryptedIDImpl(*this);
             }
         };
 
@@ -258,6 +347,7 @@ namespace opensaml {
 
             void processAttribute(const DOMAttr* attribute) {
                 PROC_INTEGER_ATTRIB(Count,COUNT,NULL);
+                AbstractXMLObjectUnmarshaller::processAttribute(attribute);
             }
         };
 
@@ -343,6 +433,7 @@ namespace opensaml {
             void processAttribute(const DOMAttr* attribute) {
                 PROC_DATETIME_ATTRIB(NotBefore,NOTBEFORE,NULL);
                 PROC_DATETIME_ATTRIB(NotOnOrAfter,NOTONORAFTER,NULL);
+                AbstractXMLObjectUnmarshaller::processAttribute(attribute);
             }
         };
 
@@ -524,7 +615,7 @@ namespace opensaml {
                 m_Method=NULL;
                 m_BaseID=NULL;
                 m_NameID=NULL;
-                //m_EncryptedID=NULL;
+                m_EncryptedID=NULL;
                 m_SubjectConfirmationData=NULL;
                 m_KeyInfoConfirmationDataType=NULL;
                 m_children.push_back(NULL);
@@ -534,7 +625,9 @@ namespace opensaml {
                 m_pos_BaseID=m_children.begin();
                 m_pos_NameID=m_pos_BaseID;
                 ++m_pos_NameID;
-                m_pos_SubjectConfirmationData=m_pos_NameID;
+                m_pos_EncryptedID=m_pos_NameID;
+                ++m_pos_EncryptedID;
+                m_pos_SubjectConfirmationData=m_pos_EncryptedID;
                 ++m_pos_SubjectConfirmationData;
                 m_pos_KeyInfoConfirmationDataType=m_pos_SubjectConfirmationData;
                 ++m_pos_KeyInfoConfirmationDataType;
@@ -557,8 +650,8 @@ namespace opensaml {
                     setBaseID(src.getBaseID()->cloneBaseID());
                 if (src.getNameID())
                     setNameID(src.getNameID()->cloneNameID());
-                //if (src.getEncryptedID())
-                    //setEncryptedID(src.getEncryptedID()->cloneEncryptedID());
+                if (src.getEncryptedID())
+                    setEncryptedID(src.getEncryptedID()->cloneEncryptedID());
                 if (src.getSubjectConfirmationData())
                     setSubjectConfirmationData(src.getSubjectConfirmationData()->clone());
                 if (src.getKeyInfoConfirmationDataType())
@@ -569,7 +662,7 @@ namespace opensaml {
             IMPL_STRING_ATTRIB(Method);
             IMPL_TYPED_CHILD(BaseID);
             IMPL_TYPED_CHILD(NameID);
-            //IMPL_TYPED_CHILD(EncryptedID);
+            IMPL_TYPED_CHILD(EncryptedID);
             IMPL_XMLOBJECT_CHILD(SubjectConfirmationData);
             IMPL_TYPED_CHILD(KeyInfoConfirmationDataType);
     
@@ -581,7 +674,7 @@ namespace opensaml {
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
                 PROC_TYPED_CHILD(BaseID,SAMLConstants::SAML20_NS,false);
                 PROC_TYPED_CHILD(NameID,SAMLConstants::SAML20_NS,false);
-                //PROC_TYPED_CHILD(EncryptedID,SAMLConstants::SAML20_NS,false);
+                PROC_TYPED_CHILD(EncryptedID,SAMLConstants::SAML20_NS,false);
                 PROC_XMLOBJECT_CHILD(SubjectConfirmationData,SAMLConstants::SAML20_NS);
                 PROC_TYPED_CHILD(KeyInfoConfirmationDataType,SAMLConstants::SAML20_NS,false);
                 AbstractXMLObjectUnmarshaller::processChildElement(childXMLObject,root);
@@ -589,6 +682,7 @@ namespace opensaml {
 
             void processAttribute(const DOMAttr* attribute) {
                 PROC_STRING_ATTRIB(Method,METHOD,NULL);
+                AbstractXMLObjectUnmarshaller::processAttribute(attribute);
             }
         };
 
@@ -609,8 +703,8 @@ namespace opensaml {
                 m_pos_BaseID=m_children.begin();
                 m_pos_NameID=m_pos_BaseID;
                 ++m_pos_NameID;
-                //m_pos_EncryptedID=m_pos_NameID;
-                //++m_pos_EncryptedID;
+                m_pos_EncryptedID=m_pos_NameID;
+                ++m_pos_EncryptedID;
             }
         public:
             virtual ~SubjectImpl() {}
@@ -629,8 +723,8 @@ namespace opensaml {
                     setBaseID(src.getBaseID()->cloneBaseID());
                 if (src.getNameID())
                     setNameID(src.getNameID()->cloneNameID());
-                //if (src.getEncryptedID())
-                    //setEncryptedID(src.getEncryptedID()->cloneEncryptedID());
+                if (src.getEncryptedID())
+                    setEncryptedID(src.getEncryptedID()->cloneEncryptedID());
                 VectorOf(SubjectConfirmation) v=getSubjectConfirmations();
                 for (vector<SubjectConfirmation*>::const_iterator i=src.m_SubjectConfirmations.begin(); i!=src.m_SubjectConfirmations.end(); i++) {
                     if (*i) {
@@ -642,14 +736,14 @@ namespace opensaml {
             IMPL_XMLOBJECT_CLONE(Subject);
             IMPL_TYPED_CHILD(NameID);
             IMPL_TYPED_CHILD(BaseID);
-            //IMPL_TYPED_CHILD(EncryptedID);
+            IMPL_TYPED_CHILD(EncryptedID);
             IMPL_TYPED_CHILDREN(SubjectConfirmation,m_children.end());
     
         protected:
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
                 PROC_TYPED_CHILD(BaseID,SAMLConstants::SAML20_NS,false);
                 PROC_TYPED_CHILD(NameID,SAMLConstants::SAML20_NS,false);
-                //PROC_TYPED_CHILD(EncryptedID,SAMLConstants::SAML20_NS,false);
+                PROC_TYPED_CHILD(EncryptedID,SAMLConstants::SAML20_NS,false);
                 PROC_TYPED_CHILDREN(SubjectConfirmation,SAMLConstants::SAML20_NS,false);
                 AbstractXMLObjectUnmarshaller::processChildElement(childXMLObject,root);
             }
@@ -696,6 +790,7 @@ namespace opensaml {
             void processAttribute(const DOMAttr* attribute) {
                 PROC_STRING_ATTRIB(Address,ADDRESS,NULL);
                 PROC_STRING_ATTRIB(DNSName,DNSNAME,NULL);
+                AbstractXMLObjectUnmarshaller::processAttribute(attribute);
             }
         };
 
@@ -849,6 +944,7 @@ namespace opensaml {
                 PROC_DATETIME_ATTRIB(AuthnInstant,AUTHNINSTANT,NULL);
                 PROC_STRING_ATTRIB(SessionIndex,SESSIONINDEX,NULL);
                 PROC_DATETIME_ATTRIB(SessionNotOnOrAfter,SESSIONNOTONORAFTER,NULL);
+                AbstractXMLObjectUnmarshaller::processAttribute(attribute);
             }
         };
 
@@ -887,6 +983,7 @@ namespace opensaml {
 
             void processAttribute(const DOMAttr* attribute) {
                 PROC_STRING_ATTRIB(Namespace,NAMESPACE,NULL);
+                AbstractXMLObjectUnmarshaller::processAttribute(attribute);
             }
         };
 
@@ -1021,6 +1118,7 @@ namespace opensaml {
             void processAttribute(const DOMAttr* attribute) {
                 PROC_STRING_ATTRIB(Resource,RESOURCE,NULL);
                 PROC_STRING_ATTRIB(Decision,DECISION,NULL);
+                AbstractXMLObjectUnmarshaller::processAttribute(attribute);
             }
         };
 
@@ -1124,6 +1222,22 @@ namespace opensaml {
             }
         };
 
+        class SAML_DLLLOCAL EncryptedAttributeImpl : public virtual EncryptedAttribute, public EncryptedElementTypeImpl
+        {
+        public:
+            virtual ~EncryptedAttributeImpl() {}
+    
+            EncryptedAttributeImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {}
+                
+            EncryptedAttributeImpl(const EncryptedAttributeImpl& src) : AbstractXMLObject(src), EncryptedElementTypeImpl(src) {}
+            
+            IMPL_XMLOBJECT_CLONE(EncryptedAttribute);
+            EncryptedElementType* cloneEncryptedElementType() const {
+                return new EncryptedAttributeImpl(*this);
+            }
+        };
+
         class SAML_DLLLOCAL AttributeStatementImpl : public virtual AttributeStatement,
             public AbstractComplexElement,
             public AbstractDOMCachingXMLObject,
@@ -1150,13 +1264,11 @@ namespace opensaml {
                             continue;
                         }
                         
-                        /*
                         EncryptedAttribute* enc=dynamic_cast<EncryptedAttribute*>(*i);
                         if (enc) {
                             getEncryptedAttributes().push_back(enc->cloneEncryptedAttribute());
                             continue;
                         }
-                        */
                     }
                 }
             }
@@ -1166,12 +1278,12 @@ namespace opensaml {
                 return cloneAttributeStatement();
             }
             IMPL_TYPED_CHILDREN(Attribute, m_children.end());
-            //IMPL_TYPED_CHILDREN(EncryptedAttribute, m_children.end());
+            IMPL_TYPED_CHILDREN(EncryptedAttribute, m_children.end());
     
         protected:
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
                 PROC_TYPED_CHILDREN(Attribute,SAMLConstants::SAML20_NS,false);
-                //PROC_TYPED_CHILDREN(EncryptedAttribute,SAMLConstants::SAML20_NS,false);
+                PROC_TYPED_CHILDREN(EncryptedAttribute,SAMLConstants::SAML20_NS,false);
                 AbstractXMLObjectUnmarshaller::processChildElement(childXMLObject,root);
             }
         };
@@ -1214,13 +1326,12 @@ namespace opensaml {
                             continue;
                         }
                         
-                        /*
                         EncryptedAssertion* enc=dynamic_cast<EncryptedAssertion*>(*i);
                         if (enc) {
                             getEncryptedAssertions().push_back(enc->cloneEncryptedAssertion());
                             continue;
                         }
-                        */
+
                         getOthers().push_back((*i)->clone());
                     }
                 }
@@ -1230,7 +1341,7 @@ namespace opensaml {
             IMPL_TYPED_CHILDREN(AssertionIDRef,m_children.end());
             IMPL_TYPED_CHILDREN(AssertionURIRef,m_children.end());
             IMPL_TYPED_CHILDREN(Assertion,m_children.end());
-            //IMPL_TYPED_CHILDREN(EncryptedAssertion,m_children.end());
+            IMPL_TYPED_CHILDREN(EncryptedAssertion,m_children.end());
             IMPL_XMLOBJECT_CHILDREN(Other,m_children.end());
     
         protected:
@@ -1238,14 +1349,32 @@ namespace opensaml {
                 PROC_TYPED_CHILDREN(AssertionIDRef,SAMLConstants::SAML20_NS,false);
                 PROC_TYPED_CHILDREN(AssertionURIRef,SAMLConstants::SAML20_NS,false);
                 PROC_TYPED_CHILDREN(Assertion,SAMLConstants::SAML20_NS,false);
-                //PROC_TYPED_CHILDREN(EncryptedAssertion,SAMLConstants::SAML20_NS,false);
+                PROC_TYPED_CHILDREN(EncryptedAssertion,SAMLConstants::SAML20_NS,false);
                 
                 // Unknown child.
                 const XMLCh* nsURI=root->getNamespaceURI();
-                if (!XMLString::equals(nsURI,SAMLConstants::SAML20_NS) && nsURI && *nsURI)
+                if (!XMLString::equals(nsURI,SAMLConstants::SAML20_NS) && nsURI && *nsURI) {
                     getOthers().push_back(childXMLObject);
+                    return;
+                }
                 
                 AbstractXMLObjectUnmarshaller::processChildElement(childXMLObject,root);
+            }
+        };
+
+        class SAML_DLLLOCAL EncryptedAssertionImpl : public virtual EncryptedAssertion, public EncryptedElementTypeImpl
+        {
+        public:
+            virtual ~EncryptedAssertionImpl() {}
+    
+            EncryptedAssertionImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {}
+                
+            EncryptedAssertionImpl(const EncryptedAssertionImpl& src) : AbstractXMLObject(src), EncryptedElementTypeImpl(src) {}
+            
+            IMPL_XMLOBJECT_CLONE(EncryptedAssertion);
+            EncryptedElementType* cloneEncryptedElementType() const {
+                return new EncryptedAssertionImpl(*this);
             }
         };
 
@@ -1403,6 +1532,7 @@ namespace opensaml {
                 PROC_STRING_ATTRIB(Version,VER,NULL);
                 PROC_ID_ATTRIB(ID,ID,NULL);
                 PROC_DATETIME_ATTRIB(IssueInstant,ISSUEINSTANT,NULL);
+                AbstractXMLObjectUnmarshaller::processAttribute(attribute);
             }
         };
 
@@ -1433,6 +1563,9 @@ IMPL_XMLOBJECTBUILDER(AuthnContextDeclRef);
 IMPL_XMLOBJECTBUILDER(AuthnStatement);
 IMPL_XMLOBJECTBUILDER(AuthzDecisionStatement);
 IMPL_XMLOBJECTBUILDER(Conditions);
+IMPL_XMLOBJECTBUILDER(EncryptedAssertion);
+IMPL_XMLOBJECTBUILDER(EncryptedAttribute);
+IMPL_XMLOBJECTBUILDER(EncryptedID);
 IMPL_XMLOBJECTBUILDER(Evidence);
 IMPL_XMLOBJECTBUILDER(Issuer);
 IMPL_XMLOBJECTBUILDER(KeyInfoConfirmationDataType);
@@ -1495,6 +1628,11 @@ const XMLCh Conditions::LOCAL_NAME[] =              UNICODE_LITERAL_10(C,o,n,d,i
 const XMLCh Conditions::TYPE_NAME[] =               UNICODE_LITERAL_14(C,o,n,d,i,t,i,o,n,s,T,y,p,e);
 const XMLCh Conditions::NOTBEFORE_ATTRIB_NAME[] =   UNICODE_LITERAL_9(N,o,t,B,e,f,o,r,e);
 const XMLCh Conditions::NOTONORAFTER_ATTRIB_NAME[] =UNICODE_LITERAL_12(N,o,t,O,n,O,r,A,f,t,e,r);
+const XMLCh EncryptedAssertion::LOCAL_NAME[] =      UNICODE_LITERAL_18(E,n,c,r,y,p,t,e,d,A,s,s,e,r,t,i,o,n);
+const XMLCh EncryptedAttribute::LOCAL_NAME[] =      UNICODE_LITERAL_18(E,n,c,r,y,p,t,e,d,A,t,t,r,i,b,u,t,e);
+const XMLCh EncryptedElementType::LOCAL_NAME[] =    {chNull};
+const XMLCh EncryptedElementType::TYPE_NAME[] =     UNICODE_LITERAL_20(E,n,c,r,y,p,t,e,d,E,l,e,m,e,n,t,T,y,p,e);
+const XMLCh EncryptedID::LOCAL_NAME[] =             UNICODE_LITERAL_11(E,n,c,r,y,p,t,e,d,I,d);
 const XMLCh Evidence::LOCAL_NAME[] =                UNICODE_LITERAL_8(E,v,i,d,e,n,c,e);
 const XMLCh Evidence::TYPE_NAME[] =                 UNICODE_LITERAL_12(E,v,i,d,e,n,c,e,T,y,p,e);
 const XMLCh Issuer::LOCAL_NAME[] =                  UNICODE_LITERAL_6(I,s,s,u,e,r);
