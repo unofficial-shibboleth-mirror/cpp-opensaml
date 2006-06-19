@@ -15,7 +15,7 @@
  */
 
 /**
- * AssertionsSchemaValidators.cpp
+ * Assertions20SchemaValidators.cpp
  * 
  * Schema-based validators for SAML 2.0 Assertions classes
  */

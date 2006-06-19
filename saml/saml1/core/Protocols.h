@@ -74,15 +74,17 @@ namespace opensaml {
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
 
-        BEGIN_XMLOBJECT(SAML_API,AbstractRequest,SignableObject,SAML 1.x RequestAbstractType base type);
+        BEGIN_XMLOBJECT(SAML_API,RequestAbstractType,SignableObject,SAML 1.x RequestAbstractType base type);
             DECL_INTEGER_ATTRIB(MinorVersion,MINORVERSION);
             DECL_STRING_ATTRIB(RequestID,REQUESTID);
             DECL_DATETIME_ATTRIB(IssueInstant,ISSUEINSTANT);
             DECL_TYPED_CHILDREN(RespondWith);
             DECL_TYPED_FOREIGN_CHILD(Signature,xmlsignature);
+            /** RequestAbstractType local name */
+            static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
 
-        BEGIN_XMLOBJECT(SAML_API,Request,AbstractRequest,SAML 1.x Request element);
+        BEGIN_XMLOBJECT(SAML_API,Request,RequestAbstractType,SAML 1.x Request element);
             DECL_TYPED_CHILD(Query);
             DECL_TYPED_CHILD(SubjectQuery);
             DECL_TYPED_CHILD(AuthenticationQuery);
@@ -123,16 +125,18 @@ namespace opensaml {
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
 
-        BEGIN_XMLOBJECT(SAML_API,AbstractResponse,SignableObject,SAML 1.x ResponseAbstractType base type);
+        BEGIN_XMLOBJECT(SAML_API,ResponseAbstractType,SignableObject,SAML 1.x ResponseAbstractType base type);
             DECL_INTEGER_ATTRIB(MinorVersion,MINORVERSION);
             DECL_STRING_ATTRIB(ResponseID,RESPONSEID);
             DECL_STRING_ATTRIB(InResponseTo,INRESPONSETO);
             DECL_DATETIME_ATTRIB(IssueInstant,ISSUEINSTANT);
             DECL_STRING_ATTRIB(Recipient,RECIPIENT);
             DECL_TYPED_FOREIGN_CHILD(Signature,xmlsignature);
+            /** ResponseAbstractType local name */
+            static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
 
-        BEGIN_XMLOBJECT(SAML_API,Response,AbstractResponse,SAML 1.x Response element);
+        BEGIN_XMLOBJECT(SAML_API,Response,ResponseAbstractType,SAML 1.x Response element);
             DECL_TYPED_CHILD(Status);
             DECL_TYPED_FOREIGN_CHILDREN(Assertion,saml1);
             /** ResponseType local name */

@@ -15,7 +15,7 @@
  */
 
 /**
- * AssertionsImpl.cpp
+ * Assertions20Impl.cpp
  * 
  * Implementation classes for SAML 2.0 Assertions schema
  */
@@ -478,16 +478,26 @@ namespace opensaml {
         public:
             void setAttribute(QName& qualifiedName, const XMLCh* value) {
                 if (!qualifiedName.hasNamespaceURI()) {
-                    if (XMLString::equals(qualifiedName.getLocalPart(),NOTBEFORE_ATTRIB_NAME))
+                    if (XMLString::equals(qualifiedName.getLocalPart(),NOTBEFORE_ATTRIB_NAME)) {
                         setNotBefore(value);
-                    else if (XMLString::equals(qualifiedName.getLocalPart(),NOTONORAFTER_ATTRIB_NAME))
+                        return;
+                    }
+                    else if (XMLString::equals(qualifiedName.getLocalPart(),NOTONORAFTER_ATTRIB_NAME)) {
                         setNotOnOrAfter(value);
-                    else if (XMLString::equals(qualifiedName.getLocalPart(),RECIPIENT_ATTRIB_NAME))
+                        return;
+                    }
+                    else if (XMLString::equals(qualifiedName.getLocalPart(),RECIPIENT_ATTRIB_NAME)) {
                         setRecipient(value);
-                    else if (XMLString::equals(qualifiedName.getLocalPart(),INRESPONSETO_ATTRIB_NAME))
+                        return;
+                    }
+                    else if (XMLString::equals(qualifiedName.getLocalPart(),INRESPONSETO_ATTRIB_NAME)) {
                         setInResponseTo(value);
-                    else if (XMLString::equals(qualifiedName.getLocalPart(),ADDRESS_ATTRIB_NAME))
+                        return;
+                    }
+                    else if (XMLString::equals(qualifiedName.getLocalPart(),ADDRESS_ATTRIB_NAME)) {
                         setAddress(value);
+                        return;
+                    }
                 }
                 AbstractAttributeExtensibleXMLObject::setAttribute(qualifiedName, value);
             }
@@ -561,16 +571,26 @@ namespace opensaml {
         public:
             void setAttribute(QName& qualifiedName, const XMLCh* value) {
                 if (!qualifiedName.hasNamespaceURI()) {
-                    if (XMLString::equals(qualifiedName.getLocalPart(),NOTBEFORE_ATTRIB_NAME))
+                    if (XMLString::equals(qualifiedName.getLocalPart(),NOTBEFORE_ATTRIB_NAME)) {
                         setNotBefore(value);
-                    else if (XMLString::equals(qualifiedName.getLocalPart(),NOTONORAFTER_ATTRIB_NAME))
+                        return;
+                    }
+                    else if (XMLString::equals(qualifiedName.getLocalPart(),NOTONORAFTER_ATTRIB_NAME)) {
                         setNotOnOrAfter(value);
-                    else if (XMLString::equals(qualifiedName.getLocalPart(),RECIPIENT_ATTRIB_NAME))
+                        return;
+                    }
+                    else if (XMLString::equals(qualifiedName.getLocalPart(),RECIPIENT_ATTRIB_NAME)) {
                         setRecipient(value);
-                    else if (XMLString::equals(qualifiedName.getLocalPart(),INRESPONSETO_ATTRIB_NAME))
+                        return;
+                    }
+                    else if (XMLString::equals(qualifiedName.getLocalPart(),INRESPONSETO_ATTRIB_NAME)) {
                         setInResponseTo(value);
-                    else if (XMLString::equals(qualifiedName.getLocalPart(),ADDRESS_ATTRIB_NAME))
+                        return;
+                    }
+                    else if (XMLString::equals(qualifiedName.getLocalPart(),ADDRESS_ATTRIB_NAME)) {
                         setAddress(value);
+                        return;
+                    }
                 }
                 AbstractAttributeExtensibleXMLObject::setAttribute(qualifiedName, value);
             }
@@ -1025,13 +1045,11 @@ namespace opensaml {
                             continue;
                         }
                         
-                        /*
                         EncryptedAssertion* enc=dynamic_cast<EncryptedAssertion*>(*i);
                         if (enc) {
                             getEncryptedAssertions().push_back(enc->cloneEncryptedAssertion());
                             continue;
                         }
-                        */
                     }
                 }
             }
@@ -1040,14 +1058,14 @@ namespace opensaml {
             IMPL_TYPED_CHILDREN(AssertionIDRef,m_children.end());
             IMPL_TYPED_CHILDREN(AssertionURIRef,m_children.end());
             IMPL_TYPED_CHILDREN(Assertion,m_children.end());
-            //IMPL_TYPED_CHILDREN(EncryptedAssertion,m_children.end());
+            IMPL_TYPED_CHILDREN(EncryptedAssertion,m_children.end());
     
         protected:
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
                 PROC_TYPED_CHILDREN(AssertionIDRef,SAMLConstants::SAML20_NS,false);
                 PROC_TYPED_CHILDREN(AssertionURIRef,SAMLConstants::SAML20_NS,false);
                 PROC_TYPED_CHILDREN(Assertion,SAMLConstants::SAML20_NS,false);
-                //PROC_TYPED_CHILDREN(EncryptedAssertion,SAMLConstants::SAML20_NS,false);
+                PROC_TYPED_CHILDREN(EncryptedAssertion,SAMLConstants::SAML20_NS,false);
                 AbstractXMLObjectUnmarshaller::processChildElement(childXMLObject,root);
             }
         };
@@ -1186,12 +1204,18 @@ namespace opensaml {
     
             void setAttribute(QName& qualifiedName, const XMLCh* value) {
                 if (!qualifiedName.hasNamespaceURI()) {
-                    if (XMLString::equals(qualifiedName.getLocalPart(),NAME_ATTRIB_NAME))
+                    if (XMLString::equals(qualifiedName.getLocalPart(),NAME_ATTRIB_NAME)) {
                         setName(value);
-                    else if (XMLString::equals(qualifiedName.getLocalPart(),NAMEFORMAT_ATTRIB_NAME))
+                        return;
+                    }
+                    else if (XMLString::equals(qualifiedName.getLocalPart(),NAMEFORMAT_ATTRIB_NAME)) {
                         setNameFormat(value);
-                    else if (XMLString::equals(qualifiedName.getLocalPart(),FRIENDLYNAME_ATTRIB_NAME))
+                        return;
+                    }
+                    else if (XMLString::equals(qualifiedName.getLocalPart(),FRIENDLYNAME_ATTRIB_NAME)) {
                         setFriendlyName(value);
+                        return;
+                    }
                 }
                 AbstractAttributeExtensibleXMLObject::setAttribute(qualifiedName, value);
             }

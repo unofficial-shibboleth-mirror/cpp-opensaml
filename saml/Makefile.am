@@ -14,6 +14,8 @@ saml1coreincludedir = $(includedir)/saml/saml1/core
 
 saml2coreincludedir = $(includedir)/saml/saml2/core
 
+saml2mdincludedir = $(includedir)/saml/saml2/metadata
+
 libsamlinclude_HEADERS = \
 	base.h \
 	exceptions.h \
@@ -38,6 +40,9 @@ saml1coreinclude_HEADERS = \
 saml2coreinclude_HEADERS = \
 	saml2/core/Assertions.h
 
+saml2mdinclude_HEADERS = \
+	saml2/metadata/Metadata.h
+
 noinst_HEADERS = \
 	internal.h
 
@@ -50,6 +55,8 @@ libsaml_la_SOURCES = \
 	saml1/core/impl/ProtocolsSchemaValidators.cpp \
 	saml2/core/impl/Assertions20Impl.cpp \
 	saml2/core/impl/Assertions20SchemaValidators.cpp \
+	saml2/metadata/impl/MetadataImpl.cpp \
+	saml2/metadata/impl/MetadataSchemaValidators.cpp \
 	signature/ContentReference.cpp \
 	signature/SignatureProfileValidator.cpp \
 	util/SAMLConstants.cpp

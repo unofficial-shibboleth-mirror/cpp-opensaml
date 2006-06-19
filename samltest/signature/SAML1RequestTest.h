@@ -134,7 +134,7 @@ public:
         
         try {
             request->getSignature()->registerValidator(new SignatureProfileValidator());
-            request->getSignature()->registerValidator(new SignatureValidator(m_key->clone()));
+            request->getSignature()->registerValidator(new SignatureValidator(new KeyResolver(m_key->clone())));
             request->getSignature()->validate(true);
         }
         catch (XMLToolingException& e) {

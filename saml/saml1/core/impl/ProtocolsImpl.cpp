@@ -299,7 +299,7 @@ namespace opensaml {
             }
         };
 
-        class SAML_DLLLOCAL AbstractRequestImpl : public virtual AbstractRequest,
+        class SAML_DLLLOCAL RequestAbstractTypeImpl : public virtual RequestAbstractType,
             public AbstractComplexElement,
             public AbstractDOMCachingXMLObject,
             public AbstractValidatingXMLObject,
@@ -315,21 +315,21 @@ namespace opensaml {
                 m_pos_Signature=m_children.begin();
             }
         protected:
-            AbstractRequestImpl() {
+            RequestAbstractTypeImpl() {
                 init();
             }
         public:
-            virtual ~AbstractRequestImpl() {
+            virtual ~RequestAbstractTypeImpl() {
                 XMLString::release(&m_RequestID);
                 delete m_IssueInstant;
             }
     
-            AbstractRequestImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
+            RequestAbstractTypeImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
                 : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
                 init();
             }
                 
-            AbstractRequestImpl(const AbstractRequestImpl& src)
+            RequestAbstractTypeImpl(const RequestAbstractTypeImpl& src)
                     : AbstractXMLObject(src),
                         AbstractDOMCachingXMLObject(src),
                         AbstractValidatingXMLObject(src) {
@@ -381,10 +381,10 @@ namespace opensaml {
                 domElement->setAttributeNS(NULL,MAJORVERSION,ONE);
                 MARSHALL_INTEGER_ATTRIB(MinorVersion,MINORVERSION,NULL);
                 if (!m_RequestID)
-                    const_cast<AbstractRequestImpl*>(this)->m_RequestID=SAMLConfig::getConfig().generateIdentifier();
+                    const_cast<RequestAbstractTypeImpl*>(this)->m_RequestID=SAMLConfig::getConfig().generateIdentifier();
                 MARSHALL_ID_ATTRIB(RequestID,REQUESTID,NULL);
                 if (!m_IssueInstant)
-                    const_cast<AbstractRequestImpl*>(this)->m_IssueInstant=new DateTime(time(NULL));
+                    const_cast<RequestAbstractTypeImpl*>(this)->m_IssueInstant=new DateTime(time(NULL));
                 MARSHALL_DATETIME_ATTRIB(IssueInstant,ISSUEINSTANT,NULL);
             }
 
@@ -406,7 +406,7 @@ namespace opensaml {
             }
         };
 
-        class SAML_DLLLOCAL RequestImpl : public virtual Request, public AbstractRequestImpl
+        class SAML_DLLLOCAL RequestImpl : public virtual Request, public RequestAbstractTypeImpl
         {
             void init() {
                 m_children.push_back(NULL);
@@ -423,7 +423,7 @@ namespace opensaml {
             }
                 
             RequestImpl(const RequestImpl& src)
-                    : AbstractXMLObject(src), AbstractRequestImpl(src) {
+                    : AbstractXMLObject(src), RequestAbstractTypeImpl(src) {
                 init();
                 if (src.getQuery())
                     setQuery(src.getQuery()->cloneQuery());
@@ -442,7 +442,7 @@ namespace opensaml {
             }
             
             IMPL_XMLOBJECT_CLONE(Request);
-            AbstractRequest* cloneAbstractRequest() const {
+            RequestAbstractType* cloneRequestAbstractType() const {
                 return cloneRequest();
             }
             IMPL_TYPED_CHILD(Query);
@@ -481,7 +481,7 @@ namespace opensaml {
                 PROC_TYPED_CHILD(Query,SAMLConstants::SAML1P_NS,true);
                 PROC_TYPED_CHILDREN(AssertionIDReference,SAMLConstants::SAML1_NS,false);
                 PROC_TYPED_CHILDREN(AssertionArtifact,SAMLConstants::SAML1P_NS,false);
-                AbstractRequestImpl::processChildElement(childXMLObject,root);
+                RequestAbstractTypeImpl::processChildElement(childXMLObject,root);
             }
         };
 
@@ -621,7 +621,7 @@ namespace opensaml {
             }
         };
 
-        class SAML_DLLLOCAL AbstractResponseImpl : public virtual AbstractResponse,
+        class SAML_DLLLOCAL ResponseAbstractTypeImpl : public virtual ResponseAbstractType,
             public AbstractComplexElement,
             public AbstractDOMCachingXMLObject,
             public AbstractValidatingXMLObject,
@@ -639,23 +639,23 @@ namespace opensaml {
                 m_pos_Signature=m_children.begin();
             }
         protected:
-            AbstractResponseImpl() {
+            ResponseAbstractTypeImpl() {
                 init();
             }
         public:
-            virtual ~AbstractResponseImpl() {
+            virtual ~ResponseAbstractTypeImpl() {
                 XMLString::release(&m_ResponseID);
                 XMLString::release(&m_InResponseTo);
                 XMLString::release(&m_Recipient);
                 delete m_IssueInstant;
             }
     
-            AbstractResponseImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
+            ResponseAbstractTypeImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
                 : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
                 init();
             }
                 
-            AbstractResponseImpl(const AbstractResponseImpl& src)
+            ResponseAbstractTypeImpl(const ResponseAbstractTypeImpl& src)
                     : AbstractXMLObject(src),
                         AbstractDOMCachingXMLObject(src),
                         AbstractValidatingXMLObject(src) {
@@ -704,11 +704,11 @@ namespace opensaml {
                 domElement->setAttributeNS(NULL,MAJORVERSION,ONE);
                 MARSHALL_INTEGER_ATTRIB(MinorVersion,MINORVERSION,NULL);
                 if (!m_ResponseID)
-                    const_cast<AbstractResponseImpl*>(this)->m_ResponseID=SAMLConfig::getConfig().generateIdentifier();
+                    const_cast<ResponseAbstractTypeImpl*>(this)->m_ResponseID=SAMLConfig::getConfig().generateIdentifier();
                 MARSHALL_ID_ATTRIB(ResponseID,RESPONSEID,NULL);
                 MARSHALL_STRING_ATTRIB(InResponseTo,INRESPONSETO,NULL);
                 if (!m_IssueInstant)
-                    const_cast<AbstractResponseImpl*>(this)->m_IssueInstant=new DateTime(time(NULL));
+                    const_cast<ResponseAbstractTypeImpl*>(this)->m_IssueInstant=new DateTime(time(NULL));
                 MARSHALL_DATETIME_ATTRIB(IssueInstant,ISSUEINSTANT,NULL);
                 MARSHALL_STRING_ATTRIB(Recipient,RECIPIENT,NULL);
             }
@@ -732,7 +732,7 @@ namespace opensaml {
             }
         };
 
-        class SAML_DLLLOCAL ResponseImpl : public virtual Response, public AbstractResponseImpl
+        class SAML_DLLLOCAL ResponseImpl : public virtual Response, public ResponseAbstractTypeImpl
         {
             void init() {
                 m_children.push_back(NULL);
@@ -749,7 +749,7 @@ namespace opensaml {
             }
                 
             ResponseImpl(const ResponseImpl& src)
-                    : AbstractXMLObject(src), AbstractResponseImpl(src) {
+                    : AbstractXMLObject(src), ResponseAbstractTypeImpl(src) {
                 init();
                 if (src.getStatus())
                     setStatus(src.getStatus()->cloneStatus());
@@ -762,7 +762,7 @@ namespace opensaml {
             }
             
             IMPL_XMLOBJECT_CLONE(Response);
-            AbstractResponse* cloneAbstractResponse() const {
+            ResponseAbstractType* cloneResponseAbstractType() const {
                 return cloneResponse();
             }
             IMPL_TYPED_CHILD(Status);
@@ -772,7 +772,7 @@ namespace opensaml {
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
                 PROC_TYPED_CHILD(Status,SAMLConstants::SAML1P_NS,false);
                 PROC_TYPED_CHILDREN(Assertion,SAMLConstants::SAML1_NS,true);
-                AbstractResponseImpl::processChildElement(childXMLObject,root);
+                ResponseAbstractTypeImpl::processChildElement(childXMLObject,root);
             }
         };
 
@@ -798,14 +798,18 @@ IMPL_XMLOBJECTBUILDER(StatusDetail);
 IMPL_XMLOBJECTBUILDER(StatusMessage);
 
 // Unicode literals
-const XMLCh AbstractRequest::MINORVERSION_ATTRIB_NAME[] =   UNICODE_LITERAL_12(M,i,n,o,r,V,e,r,s,i,o,n);
-const XMLCh AbstractRequest::REQUESTID_ATTRIB_NAME[] =      UNICODE_LITERAL_9(R,e,q,u,e,s,t,I,D);
-const XMLCh AbstractRequest::ISSUEINSTANT_ATTRIB_NAME[] =   UNICODE_LITERAL_12(I,s,s,u,e,I,n,s,t,a,n,t);
-const XMLCh AbstractResponse::MINORVERSION_ATTRIB_NAME[] =  UNICODE_LITERAL_12(M,i,n,o,r,V,e,r,s,i,o,n);
-const XMLCh AbstractResponse::RESPONSEID_ATTRIB_NAME[] =    UNICODE_LITERAL_10(R,e,s,p,o,n,s,e,I,D);
-const XMLCh AbstractResponse::ISSUEINSTANT_ATTRIB_NAME[] =  UNICODE_LITERAL_12(I,s,s,u,e,I,n,s,t,a,n,t);
-const XMLCh AbstractResponse::INRESPONSETO_ATTRIB_NAME[] =  UNICODE_LITERAL_12(I,n,R,e,s,p,o,n,s,e,T,o);
-const XMLCh AbstractResponse::RECIPIENT_ATTRIB_NAME[] =     UNICODE_LITERAL_9(R,e,c,i,p,i,e,n,t);
+const XMLCh RequestAbstractType::LOCAL_NAME[] =             {chNull};
+const XMLCh RequestAbstractType::TYPE_NAME[] =              UNICODE_LITERAL_19(R,e,q,u,e,s,t,A,b,s,t,r,a,c,t,T,y,p,e);
+const XMLCh RequestAbstractType::MINORVERSION_ATTRIB_NAME[] =   UNICODE_LITERAL_12(M,i,n,o,r,V,e,r,s,i,o,n);
+const XMLCh RequestAbstractType::REQUESTID_ATTRIB_NAME[] =      UNICODE_LITERAL_9(R,e,q,u,e,s,t,I,D);
+const XMLCh RequestAbstractType::ISSUEINSTANT_ATTRIB_NAME[] =   UNICODE_LITERAL_12(I,s,s,u,e,I,n,s,t,a,n,t);
+const XMLCh ResponseAbstractType::LOCAL_NAME[] =            {chNull};
+const XMLCh ResponseAbstractType::TYPE_NAME[] =             UNICODE_LITERAL_20(R,e,s,p,o,n,s,e,A,b,s,t,r,a,c,t,T,y,p,e);
+const XMLCh ResponseAbstractType::MINORVERSION_ATTRIB_NAME[] =  UNICODE_LITERAL_12(M,i,n,o,r,V,e,r,s,i,o,n);
+const XMLCh ResponseAbstractType::RESPONSEID_ATTRIB_NAME[] =    UNICODE_LITERAL_10(R,e,s,p,o,n,s,e,I,D);
+const XMLCh ResponseAbstractType::ISSUEINSTANT_ATTRIB_NAME[] =  UNICODE_LITERAL_12(I,s,s,u,e,I,n,s,t,a,n,t);
+const XMLCh ResponseAbstractType::INRESPONSETO_ATTRIB_NAME[] =  UNICODE_LITERAL_12(I,n,R,e,s,p,o,n,s,e,T,o);
+const XMLCh ResponseAbstractType::RECIPIENT_ATTRIB_NAME[] =     UNICODE_LITERAL_9(R,e,c,i,p,i,e,n,t);
 const XMLCh AssertionArtifact::LOCAL_NAME[] =               UNICODE_LITERAL_17(A,s,s,e,r,t,i,o,n,A,r,t,i,f,a,c,t);
 const XMLCh AttributeQuery::LOCAL_NAME[] =                  UNICODE_LITERAL_14(A,t,t,r,i,b,u,t,e,Q,u,e,r,y);
 const XMLCh AttributeQuery::TYPE_NAME[] =                   UNICODE_LITERAL_18(A,t,t,r,i,b,u,t,e,Q,u,e,r,y,T,y,p,e);

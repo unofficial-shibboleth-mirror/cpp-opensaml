@@ -258,6 +258,14 @@
 					<Filter
 						Name="impl"
 						>
+						<File
+							RelativePath=".\saml2\metadata\impl\MetadataImpl.cpp"
+							>
+						</File>
+						<File
+							RelativePath=".\saml2\metadata\impl\MetadataSchemaValidators.cpp"
+							>
+						</File>
 					</Filter>
 				</Filter>
 			</Filter>
