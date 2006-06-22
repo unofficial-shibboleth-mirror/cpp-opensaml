@@ -38,7 +38,8 @@ saml1coreinclude_HEADERS = \
 	saml1/core/Protocols.h
 
 saml2coreinclude_HEADERS = \
-	saml2/core/Assertions.h
+	saml2/core/Assertions.h \
+	saml2/core/Protocols.h 
 
 saml2mdinclude_HEADERS = \
 	saml2/metadata/Metadata.h
@@ -55,6 +56,7 @@ libsaml_la_SOURCES = \
 	saml1/core/impl/ProtocolsSchemaValidators.cpp \
 	saml2/core/impl/Assertions20Impl.cpp \
 	saml2/core/impl/Assertions20SchemaValidators.cpp \
+	saml2/core/impl/Protocols20Impl.cpp \
 	saml2/metadata/impl/MetadataImpl.cpp \
 	saml2/metadata/impl/MetadataSchemaValidators.cpp \
 	signature/ContentReference.cpp \
