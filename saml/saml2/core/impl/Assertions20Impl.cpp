@@ -1411,6 +1411,7 @@ namespace opensaml {
         {
             void init() {
                 m_ID=NULL;
+                m_Version=NULL;
                 m_IssueInstant=NULL;
                 m_Issuer=NULL;
                 m_Signature=NULL;
