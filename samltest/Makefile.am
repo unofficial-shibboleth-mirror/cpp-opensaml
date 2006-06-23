@@ -24,7 +24,8 @@ samltest_h = \
     saml1/core/impl/AuthenticationStatementTest.h
 
 noinst_HEADERS = \
-    internal.h
+    internal.h \
+    signature/SAMLSignatureTestBase.h
 
 nodist_samltest_SOURCES = $(samltest_h:.h=.cpp)
 

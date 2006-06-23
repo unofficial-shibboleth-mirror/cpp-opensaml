@@ -547,7 +547,7 @@
 						>
 						<Tool
 							Name="VCCustomBuildTool"
-							CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+							CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 							Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 						/>
 					</FileConfiguration>
@@ -556,7 +556,7 @@
 						>
 						<Tool
 							Name="VCCustomBuildTool"
-							CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+							CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 							Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 						/>
 					</FileConfiguration>
@@ -569,7 +569,7 @@
 						>
 						<Tool
 							Name="VCCustomBuildTool"
-							CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+							CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 							Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 						/>
 					</FileConfiguration>
@@ -578,10 +578,14 @@
 						>
 						<Tool
 							Name="VCCustomBuildTool"
-							CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+							CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 							Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 						/>
 					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\signature\SAMLSignatureTestBase.h"
+					>
 				</File>
 			</Filter>
 		</Filter>
