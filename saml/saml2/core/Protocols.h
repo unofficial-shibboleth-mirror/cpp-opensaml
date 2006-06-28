@@ -69,7 +69,8 @@ namespace opensaml {
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
 
-        BEGIN_XMLOBJECT(SAML_API,StatusDetail,xmltooling::ElementProxy,SAML 2.0 StatusDetail element);
+        BEGIN_XMLOBJECT(SAML_API,StatusDetail,xmltooling::XMLObject,SAML 2.0 StatusDetail element);
+            DECL_XMLOBJECT_CHILDREN(Detail);
             /** StatusDetailType local name */
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
