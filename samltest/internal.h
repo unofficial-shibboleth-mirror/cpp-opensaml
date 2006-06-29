@@ -88,6 +88,19 @@ protected:
         delete xmlObject;
     }
 
+    void assertEquals(const char* failMessage, const XMLCh* expectedString, const XMLCh* testString) {
+        char* buf = NULL;
+        if (!XMLString::equals(expectedString, testString)) {
+            buf = XMLString::transcode(testString);
+            TS_TRACE(buf);
+            XMLString::release(&buf);
+            buf = XMLString::transcode(expectedString);
+            TS_TRACE(buf);
+            XMLString::release(&buf);
+            TSM_ASSERT(failMessage, false);
+        }
+    }
+
 public:
     void setUp() {
         ParserPool& p=XMLToolingConfig::getConfig().getParser();
