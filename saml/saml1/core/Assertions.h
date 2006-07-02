@@ -34,6 +34,7 @@
 #include <xmltooling/signature/Signature.h>
 #include <xmltooling/util/DateTime.h>
 #include <xmltooling/validation/ValidatingXMLObject.h>
+#include <xmltooling/validation/ValidatorSuite.h>
 
 #define DECL_SAML1OBJECTBUILDER(cname) \
     DECL_XMLOBJECTBUILDER(SAML_API,cname,opensaml::SAMLConstants::SAML1_NS,opensaml::SAMLConstants::SAML1_PREFIX)
@@ -234,9 +235,14 @@ namespace opensaml {
         DECL_SAML1OBJECTBUILDER(SubjectLocality);
         
         /**
-         * Registers builders and validators for Assertion classes into the runtime.
+         * Registers builders and validators for SAML 1.x Assertion classes into the runtime.
          */
         void SAML_API registerAssertionClasses();
+
+        /**
+         * Validator suite for SAML 1.x Assertion schema validation.
+         */
+        extern SAML_API xmltooling::ValidatorSuite AssertionSchemaValidators;
     };
 };
 

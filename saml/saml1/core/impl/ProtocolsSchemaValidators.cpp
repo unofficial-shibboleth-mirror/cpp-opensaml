@@ -92,12 +92,12 @@ namespace opensaml {
 #define REGISTER_ELEMENT(cname) \
     q=QName(SAMLConstants::SAML1P_NS,cname::LOCAL_NAME); \
     XMLObjectBuilder::registerBuilder(q,new cname##Builder()); \
-    Validator::registerValidator(q,new cname##SchemaValidator())
+    ProtocolSchemaValidators.registerValidator(q,new cname##SchemaValidator())
     
 #define REGISTER_TYPE(cname) \
     q=QName(SAMLConstants::SAML1P_NS,cname::TYPE_NAME); \
     XMLObjectBuilder::registerBuilder(q,new cname##Builder()); \
-    Validator::registerValidator(q,new cname##SchemaValidator())
+    ProtocolSchemaValidators.registerValidator(q,new cname##SchemaValidator())
 
 #define REGISTER_ELEMENT_NOVAL(cname) \
     q=QName(SAMLConstants::SAML1P_NS,cname::LOCAL_NAME); \
@@ -106,6 +106,8 @@ namespace opensaml {
 #define REGISTER_TYPE_NOVAL(cname) \
     q=QName(SAMLConstants::SAML1P_NS,cname::TYPE_NAME); \
     XMLObjectBuilder::registerBuilder(q,new cname##Builder());
+
+ValidatorSuite opensaml::saml1p::ProtocolSchemaValidators("ProtocolSchemaValidators");
 
 void opensaml::saml1p::registerProtocolClasses() {
     QName q;

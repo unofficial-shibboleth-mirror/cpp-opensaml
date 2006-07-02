@@ -85,6 +85,12 @@ void SAMLInternalConfig::term()
 #ifdef _DEBUG
     xmltooling::NDC ndc("term");
 #endif
+
+    saml1::AssertionSchemaValidators.destroyValidators();
+    saml1p::ProtocolSchemaValidators.destroyValidators();
+    saml2::AssertionSchemaValidators.destroyValidators();
+    saml2md::MetadataSchemaValidators.destroyValidators();
+
     XMLToolingConfig::getConfig().term();
     Category::getInstance(SAML_LOGCAT".SAMLConfig").info("library shutdown complete");
 }

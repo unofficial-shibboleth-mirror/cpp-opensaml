@@ -460,9 +460,14 @@ namespace opensaml {
         };
 
         /**
-         * Registers builders and validators for Metadata classes into the runtime.
+         * Registers builders and validators for SAML 2.0 Metadata classes into the runtime.
          */
         void SAML_API registerMetadataClasses();
+
+        /**
+         * Validator suite for SAML 2.0 Metadata schema validation.
+         */
+        extern SAML_API xmltooling::ValidatorSuite MetadataSchemaValidators;
     };
 };
 
