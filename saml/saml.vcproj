@@ -353,6 +353,10 @@
 						RelativePath=".\saml2\core\Assertions.h"
 						>
 					</File>
+					<File
+						RelativePath=".\saml2\core\Protocols.h"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="metadata"

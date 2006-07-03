@@ -127,7 +127,7 @@ namespace opensaml {
 
         BEGIN_XMLOBJECTVALIDATOR_SUB(SAML_DLLLOCAL,IndexedEndpointType,EndpointType);
             EndpointTypeSchemaValidator::validate(xmlObject);
-            XMLOBJECTVALIDATOR_REQUIRE(IndexedEndpointType,Index);
+            XMLOBJECTVALIDATOR_REQUIRE_INTEGER(IndexedEndpointType,Index);
         END_XMLOBJECTVALIDATOR;
 
         BEGIN_XMLOBJECTVALIDATOR_SUB(SAML_DLLLOCAL,ArtifactResolutionService,IndexedEndpointType);
@@ -172,7 +172,7 @@ namespace opensaml {
         END_XMLOBJECTVALIDATOR;
 
         BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,AttributeConsumingService);
-            XMLOBJECTVALIDATOR_REQUIRE(AttributeConsumingService,Index);
+            XMLOBJECTVALIDATOR_REQUIRE_INTEGER(AttributeConsumingService,Index);
             XMLOBJECTVALIDATOR_NONEMPTY(AttributeConsumingService,ServiceName);
             XMLOBJECTVALIDATOR_NONEMPTY(AttributeConsumingService,RequestedAttribute);
         END_XMLOBJECTVALIDATOR;

@@ -65,7 +65,7 @@ namespace opensaml {
 
         BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,ProxyRestriction);
             if (ptr->getAudiences().empty()) {
-                XMLOBJECTVALIDATOR_REQUIRE(ProxyRestriction,Count);
+                XMLOBJECTVALIDATOR_REQUIRE_INTEGER(ProxyRestriction,Count);
             }
         END_XMLOBJECTVALIDATOR;
 

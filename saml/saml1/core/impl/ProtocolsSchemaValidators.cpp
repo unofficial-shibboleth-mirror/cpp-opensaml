@@ -58,7 +58,10 @@ namespace opensaml {
         BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,Request);
             XMLOBJECTVALIDATOR_REQUIRE(Request,RequestID);
             XMLOBJECTVALIDATOR_REQUIRE(Request,IssueInstant);
-            int count=0; 
+            pair<bool,int> minor=ptr->getMinorVersion();
+            if (!minor.first)
+                throw ValidationException("Request must have MinorVersion");
+            int count=0;
             if (ptr->getQuery()!=NULL)
                 count++;
             if (!ptr->getAssertionIDReferences().empty())
@@ -85,6 +88,9 @@ namespace opensaml {
             XMLOBJECTVALIDATOR_REQUIRE(Response,ResponseID);
             XMLOBJECTVALIDATOR_REQUIRE(Response,IssueInstant);
             XMLOBJECTVALIDATOR_REQUIRE(Response,Status);
+            pair<bool,int> minor=ptr->getMinorVersion();
+            if (!minor.first)
+                throw ValidationException("Response must have MinorVersion");
         END_XMLOBJECTVALIDATOR;
     };
 };

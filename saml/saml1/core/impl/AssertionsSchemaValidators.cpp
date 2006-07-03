@@ -113,7 +113,10 @@ namespace opensaml {
                 ptr->getSubjectStatements().empty() &&
                 ptr->getStatements().empty())
                 throw ValidationException("Assertion must have at least one statement.");
-            if (ptr->getMinorVersion()==0 && ptr->getConditions() && !ptr->getConditions()->getDoNotCacheConditions().empty())
+            pair<bool,int> minor=ptr->getMinorVersion();
+            if (!minor.first)
+                throw ValidationException("Assertion must have MinorVersion");
+            if (minor.second==0 && ptr->getConditions() && !ptr->getConditions()->getDoNotCacheConditions().empty())
                 throw ValidationException("SAML 1.0 assertions cannot contain DoNotCacheCondition elements.");
         END_XMLOBJECTVALIDATOR;
 

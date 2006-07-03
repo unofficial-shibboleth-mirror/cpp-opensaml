@@ -690,8 +690,8 @@ namespace opensaml {
         class SAML_DLLLOCAL IndexedEndpointTypeImpl : public virtual IndexedEndpointType, public EndpointTypeImpl
         {
             void init() {
-                m_Index=0;
-                m_isDefault=false;
+                m_Index=NULL;
+                m_isDefault=XMLConstants::XML_BOOL_NULL;
             }
         
         protected:
@@ -699,14 +699,16 @@ namespace opensaml {
                 init();
             }
         public:
-            virtual ~IndexedEndpointTypeImpl() {}
+            virtual ~IndexedEndpointTypeImpl() {
+                XMLString::release(&m_Index);
+            }
     
             IndexedEndpointTypeImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
                 : AbstractXMLObject(nsURI, localName, prefix, schemaType) {}
                 
             IndexedEndpointTypeImpl(const IndexedEndpointTypeImpl& src) : AbstractXMLObject(src), EndpointTypeImpl(src) {
-                setIndex(src.getIndex());
-                isDefault(src.isDefault());
+                setIndex(src.m_Index);
+                isDefault(src.m_isDefault);
             }
             
             IMPL_XMLOBJECT_CLONE(IndexedEndpointType);
@@ -720,16 +722,11 @@ namespace opensaml {
             void setAttribute(QName& qualifiedName, const XMLCh* value) {
                 if (!qualifiedName.hasNamespaceURI()) {
                     if (XMLString::equals(qualifiedName.getLocalPart(),INDEX_ATTRIB_NAME)) {
-                        setIndex(XMLString::parseInt(value));
+                        setIndex(value);
                         return;
                     }
                     else if (XMLString::equals(qualifiedName.getLocalPart(),ISDEFAULT_ATTRIB_NAME)) {
-                        if (value) {
-                            if (*value==chLatin_t || *value==chDigit_1)
-                                isDefault(true);
-                            else if (*value==chLatin_f || *value==chDigit_0)
-                                isDefault(false);
-                        }
+                        setisDefault(value);
                         return;
                     }
                 }
@@ -1169,7 +1166,7 @@ namespace opensaml {
             list<XMLObject*>::iterator m_pos_AttributeProfile;
             
             void init() {
-                m_WantAuthnRequestsSigned=false;
+                m_WantAuthnRequestsSigned=XMLConstants::XML_BOOL_NULL;
                 m_children.push_back(NULL);
                 m_children.push_back(NULL);
                 m_children.push_back(NULL);
@@ -1194,7 +1191,7 @@ namespace opensaml {
                 
             IDPSSODescriptorImpl(const IDPSSODescriptorImpl& src) : AbstractXMLObject(src), SSODescriptorTypeImpl(src) {
                 init();
-                WantAuthnRequestsSigned(src.WantAuthnRequestsSigned());
+                WantAuthnRequestsSigned(src.m_WantAuthnRequestsSigned);
                 VectorOf(SingleSignOnService) v=getSingleSignOnServices();
                 for (vector<SingleSignOnService*>::const_iterator i=src.m_SingleSignOnServices.begin(); i!=src.m_SingleSignOnServices.end(); i++) {
                     if (*i) {
@@ -1245,12 +1242,7 @@ namespace opensaml {
             void setAttribute(QName& qualifiedName, const XMLCh* value) {
                 if (!qualifiedName.hasNamespaceURI()) {
                     if (XMLString::equals(qualifiedName.getLocalPart(),WANTAUTHNREQUESTSSIGNED_ATTRIB_NAME)) {
-                        if (value) {
-                            if (*value==chLatin_t || *value==chDigit_1)
-                                WantAuthnRequestsSigned(true);
-                            else if (*value==chLatin_f || *value==chDigit_0)
-                                WantAuthnRequestsSigned(false);
-                        }
+                        setWantAuthnRequestsSigned(value);
                         return;
                     }
                 }
@@ -1283,7 +1275,7 @@ namespace opensaml {
         {
             void init() {
                 m_Name=m_NameFormat=m_FriendlyName=NULL;
-                m_isRequired=false;
+                m_isRequired=XMLConstants::XML_BOOL_NULL;
             }
         public:
             virtual ~RequestedAttributeImpl() {
@@ -1306,7 +1298,7 @@ namespace opensaml {
                 setName(src.getName());
                 setNameFormat(src.getNameFormat());
                 setFriendlyName(src.getFriendlyName());
-                isRequired(src.isRequired());
+                isRequired(src.m_isRequired);
                 VectorOf(XMLObject) v=getAttributeValues();
                 for (vector<XMLObject*>::const_iterator i=src.m_AttributeValues.begin(); i!=src.m_AttributeValues.end(); i++) {
                     if (*i) {
@@ -1341,12 +1333,7 @@ namespace opensaml {
                         return;
                     }
                     else if (XMLString::equals(qualifiedName.getLocalPart(),ISREQUIRED_ATTRIB_NAME)) {
-                        if (value) {
-                            if (*value==chLatin_t || *value==chDigit_1)
-                                isRequired(true);
-                            else if (*value==chLatin_f || *value==chDigit_0)
-                                isRequired(false);
-                        }
+                        setisRequired(value);
                         return;
                     }
                 }
@@ -1391,8 +1378,8 @@ namespace opensaml {
             list<XMLObject*>::iterator m_pos_RequestedAttribute;
             
 	        void init() {
-                m_Index=1;
-                m_isDefault=false;
+                m_Index=NULL;
+                m_isDefault=XMLConstants::XML_BOOL_NULL;
                 m_children.push_back(NULL);
                 m_children.push_back(NULL);
                 m_pos_ServiceDescription=m_children.begin();
@@ -1401,7 +1388,9 @@ namespace opensaml {
             }
 
         public:
-            virtual ~AttributeConsumingServiceImpl() {}
+            virtual ~AttributeConsumingServiceImpl() {
+                XMLString::release(&m_Index);
+            }
     
             AttributeConsumingServiceImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
                 : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
@@ -1411,8 +1400,8 @@ namespace opensaml {
             AttributeConsumingServiceImpl(const AttributeConsumingServiceImpl& src)
                     : AbstractXMLObject(src), AbstractDOMCachingXMLObject(src), AbstractValidatingXMLObject(src) {
                 init();
-                setIndex(src.getIndex());
-                isDefault(src.isDefault());
+                setIndex(src.m_Index);
+                isDefault(src.m_isDefault);
                 VectorOf(ServiceName) v=getServiceNames();
                 for (vector<ServiceName*>::const_iterator i=src.m_ServiceNames.begin(); i!=src.m_ServiceNames.end(); i++) {
                     if (*i) {
@@ -1465,8 +1454,8 @@ namespace opensaml {
             list<XMLObject*>::iterator m_pos_AssertionConsumerService;
             
             void init() {
-                m_AuthnRequestsSigned=false;
-                m_WantAssertionsSigned=false;
+                m_AuthnRequestsSigned=XMLConstants::XML_BOOL_NULL;
+                m_WantAssertionsSigned=XMLConstants::XML_BOOL_NULL;
                 m_children.push_back(NULL);
                 m_pos_AssertionConsumerService=m_pos_NameIDFormat;
                 ++m_pos_AssertionConsumerService;
@@ -1482,8 +1471,8 @@ namespace opensaml {
                 
             SPSSODescriptorImpl(const SPSSODescriptorImpl& src) : AbstractXMLObject(src), SSODescriptorTypeImpl(src) {
                 init();
-                AuthnRequestsSigned(src.AuthnRequestsSigned());
-                WantAssertionsSigned(src.WantAssertionsSigned());
+                AuthnRequestsSigned(src.m_AuthnRequestsSigned);
+                WantAssertionsSigned(src.m_WantAssertionsSigned);
                 VectorOf(AssertionConsumerService) v=getAssertionConsumerServices();
                 for (vector<AssertionConsumerService*>::const_iterator i=src.m_AssertionConsumerServices.begin(); i!=src.m_AssertionConsumerServices.end(); i++) {
                     if (*i) {
@@ -1514,21 +1503,11 @@ namespace opensaml {
             void setAttribute(QName& qualifiedName, const XMLCh* value) {
                 if (!qualifiedName.hasNamespaceURI()) {
                     if (XMLString::equals(qualifiedName.getLocalPart(),AUTHNREQUESTSSIGNED_ATTRIB_NAME)) {
-                        if (value) {
-                            if (*value==chLatin_t || *value==chDigit_1)
-                                AuthnRequestsSigned(true);
-                            else if (*value==chLatin_f || *value==chDigit_0)
-                                AuthnRequestsSigned(false);
-                        }
+                        setAuthnRequestsSigned(value);
                         return;
                     }
                     else if (XMLString::equals(qualifiedName.getLocalPart(),WANTASSERTIONSSIGNED_ATTRIB_NAME)) {
-                        if (value) {
-                            if (*value==chLatin_t || *value==chDigit_1)
-                                WantAssertionsSigned(true);
-                            else if (*value==chLatin_f || *value==chDigit_0)
-                                WantAssertionsSigned(false);
-                        }
+                        setWantAssertionsSigned(value);
                         return;
                     }
                 }

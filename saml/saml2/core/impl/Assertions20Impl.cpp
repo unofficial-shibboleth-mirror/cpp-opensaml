@@ -311,15 +311,18 @@ namespace opensaml {
             public AbstractXMLObjectUnmarshaller
         {
         public:
-            virtual ~ProxyRestrictionImpl() {}
+            virtual ~ProxyRestrictionImpl() {
+                XMLString::release(&m_Count);
+            }
     
             ProxyRestrictionImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
                 : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
+                m_Count=NULL;
             }
                 
             ProxyRestrictionImpl(const ProxyRestrictionImpl& src)
                     : AbstractXMLObject(src), AbstractDOMCachingXMLObject(src), AbstractValidatingXMLObject(src) {
-                setCount(src.getCount());
+                setCount(src.m_Count);
                 VectorOf(Audience) v=getAudiences();
                 for (vector<Audience*>::const_iterator i=src.m_Audiences.begin(); i!=src.m_Audiences.end(); i++) {
                     if (*i) {

@@ -307,7 +307,7 @@ namespace opensaml {
             public AbstractXMLObjectUnmarshaller
         {
             void init() {
-                m_MinorVersion=1;
+                m_MinorVersion=NULL;
                 m_RequestID=NULL;
                 m_IssueInstant=NULL;
                 m_children.push_back(NULL);
@@ -320,6 +320,7 @@ namespace opensaml {
             }
         public:
             virtual ~RequestAbstractTypeImpl() {
+                XMLString::release(&m_MinorVersion);
                 XMLString::release(&m_RequestID);
                 delete m_IssueInstant;
             }
@@ -334,7 +335,7 @@ namespace opensaml {
                         AbstractDOMCachingXMLObject(src),
                         AbstractValidatingXMLObject(src) {
                 init();
-                setMinorVersion(src.getMinorVersion());
+                setMinorVersion(src.m_MinorVersion);
                 setRequestID(src.getRequestID());
                 setIssueInstant(src.getIssueInstant());
                 if (src.getSignature())
@@ -377,8 +378,9 @@ namespace opensaml {
         protected:
             void marshallAttributes(DOMElement* domElement) const {
                 static const XMLCh MAJORVERSION[] = UNICODE_LITERAL_12(M,a,j,o,r,V,e,r,s,i,o,n);
-                static const XMLCh ONE[] = { chDigit_1, chNull };
-                domElement->setAttributeNS(NULL,MAJORVERSION,ONE);
+                domElement->setAttributeNS(NULL,MAJORVERSION,XMLConstants::XML_ONE);
+                if (!m_MinorVersion)
+                    const_cast<RequestAbstractTypeImpl*>(this)->m_MinorVersion=XMLString::replicate(XMLConstants::XML_ONE);
                 MARSHALL_INTEGER_ATTRIB(MinorVersion,MINORVERSION,NULL);
                 if (!m_RequestID)
                     const_cast<RequestAbstractTypeImpl*>(this)->m_RequestID=SAMLConfig::getConfig().generateIdentifier();
@@ -397,7 +399,7 @@ namespace opensaml {
             void processAttribute(const DOMAttr* attribute) {
                 static const XMLCh MAJORVERSION[] = UNICODE_LITERAL_12(M,a,j,o,r,V,e,r,s,i,o,n);
                 if (XMLHelper::isNodeNamed(attribute,NULL,MAJORVERSION)) {
-                    if (XMLString::parseInt(attribute->getValue()) != 1)
+                    if (!XMLString::equals(attribute->getValue(),XMLConstants::XML_ONE))
                         throw UnmarshallingException("Request has invalid major version.");
                 }
                 PROC_INTEGER_ATTRIB(MinorVersion,MINORVERSION,NULL);
@@ -629,7 +631,7 @@ namespace opensaml {
             public AbstractXMLObjectUnmarshaller
         {
             void init() {
-                m_MinorVersion=1;
+                m_MinorVersion=NULL;
                 m_ResponseID=NULL;
                 m_InResponseTo=NULL;
                 m_IssueInstant=NULL;
@@ -644,6 +646,7 @@ namespace opensaml {
             }
         public:
             virtual ~ResponseAbstractTypeImpl() {
+                XMLString::release(&m_MinorVersion);
                 XMLString::release(&m_ResponseID);
                 XMLString::release(&m_InResponseTo);
                 XMLString::release(&m_Recipient);
@@ -660,7 +663,7 @@ namespace opensaml {
                         AbstractDOMCachingXMLObject(src),
                         AbstractValidatingXMLObject(src) {
                 init();
-                setMinorVersion(src.getMinorVersion());
+                setMinorVersion(src.m_MinorVersion);
                 setResponseID(src.getResponseID());
                 setInResponseTo(src.getInResponseTo());
                 setIssueInstant(src.getIssueInstant());
@@ -700,8 +703,9 @@ namespace opensaml {
         protected:
             void marshallAttributes(DOMElement* domElement) const {
                 static const XMLCh MAJORVERSION[] = UNICODE_LITERAL_12(M,a,j,o,r,V,e,r,s,i,o,n);
-                static const XMLCh ONE[] = { chDigit_1, chNull };
-                domElement->setAttributeNS(NULL,MAJORVERSION,ONE);
+                domElement->setAttributeNS(NULL,MAJORVERSION,XMLConstants::XML_ONE);
+                if (!m_MinorVersion)
+                    const_cast<ResponseAbstractTypeImpl*>(this)->m_MinorVersion=XMLString::replicate(XMLConstants::XML_ONE);
                 MARSHALL_INTEGER_ATTRIB(MinorVersion,MINORVERSION,NULL);
                 if (!m_ResponseID)
                     const_cast<ResponseAbstractTypeImpl*>(this)->m_ResponseID=SAMLConfig::getConfig().generateIdentifier();
@@ -721,7 +725,7 @@ namespace opensaml {
             void processAttribute(const DOMAttr* attribute) {
                 static const XMLCh MAJORVERSION[] = UNICODE_LITERAL_12(M,a,j,o,r,V,e,r,s,i,o,n);
                 if (XMLHelper::isNodeNamed(attribute,NULL,MAJORVERSION)) {
-                    if (XMLString::parseInt(attribute->getValue()) != 1)
+                    if (!XMLString::equals(attribute->getValue(),XMLConstants::XML_ONE))
                         throw UnmarshallingException("Response has invalid major version.");
                 }
                 PROC_INTEGER_ATTRIB(MinorVersion,MINORVERSION,NULL);

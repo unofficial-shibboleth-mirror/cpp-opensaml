@@ -68,7 +68,7 @@ public:
         TSM_ASSERT_SAME_DATA("Issuer attribute", expectedIssuer, assertion.getIssuer(), XMLString::stringLen(expectedIssuer));
         TSM_ASSERT_SAME_DATA("IssueInstant attribute", expectedIssueInstant, assertion.getIssueInstant()->getRawData(), XMLString::stringLen(expectedIssueInstant));
         TSM_ASSERT_SAME_DATA("ID attribute", expectedID, assertion.getAssertionID(), XMLString::stringLen(expectedID));
-        TSM_ASSERT_EQUALS("Issuer expectedMinorVersion", expectedMinorVersion, assertion.getMinorVersion());
+        TSM_ASSERT_EQUALS("Issuer expectedMinorVersion", expectedMinorVersion, assertion.getMinorVersion().second);
 
         TSM_ASSERT("Conditions element", assertion.getConditions()==NULL);
         TSM_ASSERT("Advice element", assertion.getAdvice()==NULL);
