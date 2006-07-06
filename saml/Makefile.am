@@ -42,10 +42,10 @@ saml2coreinclude_HEADERS = \
 	saml2/core/Protocols.h 
 
 saml2mdinclude_HEADERS = \
-	saml2/metadata/Metadata.h \
-	saml2/metadata/MetadataFilter.h \
-	saml2/metadata/MetadataProvider.h \
-	saml2/metadata/MetadataResolver.h
+    saml2/metadata/Metadata.h
+#   saml2/metadata/MetadataFilter.h \
+#	saml2/metadata/MetadataProvider.h \
+#	saml2/metadata/MetadataResolver.h
 
 noinst_HEADERS = \
 	internal.h
@@ -60,8 +60,8 @@ libsaml_la_SOURCES = \
 	saml2/core/impl/Assertions20Impl.cpp \
 	saml2/core/impl/Assertions20SchemaValidators.cpp \
 	saml2/core/impl/Protocols20Impl.cpp \
+	saml2/core/impl/Protocols20SchemaValidators.cpp \
 	saml2/metadata/impl/MetadataImpl.cpp \
-	saml2/metadata/impl/MetadataProvider.cpp \
 	saml2/metadata/impl/MetadataSchemaValidators.cpp \
 	signature/ContentReference.cpp \
 	signature/SignatureProfileValidator.cpp \

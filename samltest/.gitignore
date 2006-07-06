@@ -1,3 +1,8 @@
 /Debug
 /*.user
 /*.cpp
+/.deps
+/.libs
+/Makefile
+/Makefile.in
+/samltest

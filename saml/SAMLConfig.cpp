@@ -27,6 +27,7 @@
 #include "SAMLConfig.h"
 #include "saml1/core/Assertions.h"
 #include "saml1/core/Protocols.h"
+#include "saml2/core/Protocols.h"
 #include "saml2/metadata/Metadata.h"
 #include "util/SAMLConstants.h"
 
@@ -74,6 +75,7 @@ bool SAMLInternalConfig::init()
     saml1::registerAssertionClasses();
     saml1p::registerProtocolClasses();
     saml2::registerAssertionClasses();
+    saml2p::registerProtocolClasses();
     saml2md::registerMetadataClasses();
 
     log.info("library initialization complete");

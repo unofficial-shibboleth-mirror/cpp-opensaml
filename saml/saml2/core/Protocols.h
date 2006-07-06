@@ -37,6 +37,8 @@ namespace opensaml {
      */
     namespace saml2p {
 
+        //TODO sync C++ and Java class/interface names, e.g. -Type or no -Type, etc
+
         DECL_XMLOBJECT_SIMPLE(SAML_API,Artifact,Artifact,SAML 2.0 Artifact element);
         DECL_XMLOBJECT_SIMPLE(SAML_API,GetComplete,GetComplete,SAML 2.0 GetComplete element);
         DECL_XMLOBJECT_SIMPLE(SAML_API,NewID,NewID,SAML 2.0 NewID element);
@@ -90,10 +92,12 @@ namespace opensaml {
             DECL_DATETIME_ATTRIB(IssueInstant,ISSUEINSTANT);
             DECL_STRING_ATTRIB(Destination,DESTINATION);
             DECL_STRING_ATTRIB(Consent,CONSENT);
+
             DECL_TYPED_FOREIGN_CHILD(Issuer,saml2);
             DECL_TYPED_FOREIGN_CHILD(Signature,xmlsignature);
             DECL_TYPED_CHILD(Extensions);
             DECL_TYPED_CHILD(Status);
+
             /** StatusResponseType local name */
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
@@ -165,7 +169,7 @@ namespace opensaml {
         END_XMLOBJECT;
 
         BEGIN_XMLOBJECT(SAML_API,IDPList,xmltooling::XMLObject,SAML 2.0 IDPList element);
-            DECL_TYPED_CHILD(IDPEntry);
+            DECL_TYPED_CHILDREN(IDPEntry);
             DECL_TYPED_CHILD(GetComplete);
             /** IDPListType local name */
             static const XMLCh TYPE_NAME[];
@@ -177,6 +181,8 @@ namespace opensaml {
             DECL_TYPED_CHILDREN(RequesterID);
             /** ScopingType local name */
             static const XMLCh TYPE_NAME[];
+            /** ProxyCount value to express no restriction*/
+            static const int NO_PROXY_COUNT;
         END_XMLOBJECT;
 
         BEGIN_XMLOBJECT(SAML_API,AuthnRequest,Request,SAML 2.0 AuthnRequest element);
@@ -211,6 +217,7 @@ namespace opensaml {
         END_XMLOBJECT;
 
         BEGIN_XMLOBJECT(SAML_API,ArtifactResponse,StatusResponse,SAML 2.0 ArtifactResponse element);
+            DECL_XMLOBJECT_CHILD(Payload);
             /** ArtifiactResponseType local name */
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
@@ -220,7 +227,7 @@ namespace opensaml {
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
 
-        BEGIN_XMLOBJECT(SAML_API,NewEncryptedID,saml2::EncryptedElementType,SAML 2.0 EncryptedNewID element);
+        BEGIN_XMLOBJECT(SAML_API,NewEncryptedID,saml2::EncryptedElementType,SAML 2.0 NewEncryptedID element);
         END_XMLOBJECT;
 
         BEGIN_XMLOBJECT(SAML_API,ManageNameIDRequest,Request,SAML 2.0 ManageNameIDRequest element);
@@ -266,8 +273,6 @@ namespace opensaml {
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
 
-        //TODO custom builders, if any
-
         // Builders
         DECL_SAML2POBJECTBUILDER(Artifact);
         DECL_SAML2POBJECTBUILDER(ArtifactResolve);
@@ -301,11 +306,46 @@ namespace opensaml {
         DECL_SAML2POBJECTBUILDER(StatusMessage);
         DECL_SAML2POBJECTBUILDER(Terminate);
 
+        //
+        // Custom builders
+        //
+
+        /**
+         * Builder for StatusResponse objects.
+         * 
+         * This is customized to force the element name to be specified.
+         */
+        class SAML_API StatusResponseBuilder : public xmltooling::XMLObjectBuilder {
+        public:
+            virtual ~StatusResponseBuilder() {}
+            /** Builder that allows element/type override. */
+            virtual StatusResponse* buildObject(
+                const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=NULL, const xmltooling::QName* schemaType=NULL
+                ) const;
+        
+            /** Singleton builder. */
+            static StatusResponse* buildStatusResponse(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=NULL) {
+                const StatusResponseBuilder* b = dynamic_cast<const StatusResponseBuilder*>(
+                    XMLObjectBuilder::getBuilder(xmltooling::QName(SAMLConstants::SAML20P_NS,StatusResponse::TYPE_NAME))
+                    );
+                if (b) {
+                    xmltooling::QName schemaType(SAMLConstants::SAML20P_NS,StatusResponse::TYPE_NAME,SAMLConstants::SAML20P_PREFIX);
+                    return b->buildObject(nsURI, localName, prefix, &schemaType);
+                }
+                throw xmltooling::XMLObjectException("Unable to obtain typed builder for StatusResponse.");
+            }
+        };
+
         
         /**
-         * Registers builders and validators for Protocol classes into the runtime.
+         * Registers builders and validators for SAML 2.0 Protocol classes into the runtime.
          */
         void SAML_API registerProtocolClasses();
+
+        /**
+         * Validator suite for SAML 2.0 Protocol schema validation.
+         */
+        extern SAML_API xmltooling::ValidatorSuite ProtocolSchemaValidators;
     };
 };
 
