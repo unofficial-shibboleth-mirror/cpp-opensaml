@@ -412,8 +412,8 @@ namespace opensaml {
             }
                         
             IMPL_XMLOBJECT_CLONE(Conditions);
-            IMPL_DATETIME_ATTRIB(NotBefore);
-            IMPL_DATETIME_ATTRIB(NotOnOrAfter);
+            IMPL_DATETIME_ATTRIB(NotBefore,0);
+            IMPL_DATETIME_ATTRIB(NotOnOrAfter,LLONG_MAX);
             IMPL_TYPED_CHILDREN(AudienceRestriction, m_children.end());
             IMPL_TYPED_CHILDREN(OneTimeUse,m_children.end());
             IMPL_TYPED_CHILDREN(ProxyRestriction, m_children.end());
@@ -472,8 +472,8 @@ namespace opensaml {
             }
             
             IMPL_XMLOBJECT_CLONE(SubjectConfirmationData);
-            IMPL_DATETIME_ATTRIB(NotBefore);
-            IMPL_DATETIME_ATTRIB(NotOnOrAfter);
+            IMPL_DATETIME_ATTRIB(NotBefore,0);
+            IMPL_DATETIME_ATTRIB(NotOnOrAfter,LLONG_MAX);
             IMPL_STRING_ATTRIB(Recipient);
             IMPL_STRING_ATTRIB(InResponseTo);
             IMPL_STRING_ATTRIB(Address);
@@ -564,8 +564,8 @@ namespace opensaml {
             }
             
             IMPL_XMLOBJECT_CLONE(KeyInfoConfirmationDataType);
-            IMPL_DATETIME_ATTRIB(NotBefore);
-            IMPL_DATETIME_ATTRIB(NotOnOrAfter);
+            IMPL_DATETIME_ATTRIB(NotBefore,0);
+            IMPL_DATETIME_ATTRIB(NotOnOrAfter,LLONG_MAX);
             IMPL_STRING_ATTRIB(Recipient);
             IMPL_STRING_ATTRIB(InResponseTo);
             IMPL_STRING_ATTRIB(Address);
@@ -944,9 +944,9 @@ namespace opensaml {
             Statement* cloneStatement() const {
                 return cloneAuthnStatement();
             }
-            IMPL_DATETIME_ATTRIB(AuthnInstant);
+            IMPL_DATETIME_ATTRIB(AuthnInstant,0);
             IMPL_STRING_ATTRIB(SessionIndex);
-            IMPL_DATETIME_ATTRIB(SessionNotOnOrAfter);
+            IMPL_DATETIME_ATTRIB(SessionNotOnOrAfter,LLONG_MAX);
             IMPL_TYPED_CHILD(SubjectLocality);
             IMPL_TYPED_CHILD(AuthnContext);
     
@@ -1520,7 +1520,7 @@ namespace opensaml {
             IMPL_XMLOBJECT_CLONE(Assertion);
             IMPL_STRING_ATTRIB(Version);
             IMPL_STRING_ATTRIB(ID);
-            IMPL_DATETIME_ATTRIB(IssueInstant);
+            IMPL_DATETIME_ATTRIB(IssueInstant,0);
             IMPL_TYPED_CHILD(Issuer);
             IMPL_TYPED_CHILD(Subject);
             IMPL_TYPED_CHILD(Conditions);
@@ -1538,8 +1538,10 @@ namespace opensaml {
                 if (!m_ID)
                     const_cast<AssertionImpl*>(this)->m_ID=SAMLConfig::getConfig().generateIdentifier();
                 MARSHALL_ID_ATTRIB(ID,ID,NULL);
-                if (!m_IssueInstant)
-                    const_cast<AssertionImpl*>(this)->m_IssueInstant=new DateTime(time(NULL));
+                if (!m_IssueInstant) {
+                    const_cast<AssertionImpl*>(this)->m_IssueInstantEpoch=time(NULL);
+                    const_cast<AssertionImpl*>(this)->m_IssueInstant=new DateTime(m_IssueInstantEpoch);
+                }
                 MARSHALL_DATETIME_ATTRIB(IssueInstant,ISSUEINSTANT,NULL);
             }
     

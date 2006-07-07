@@ -26,6 +26,7 @@
 #include <saml/saml2/core/Assertions.h>
 #include <saml/util/SAMLConstants.h>
 
+#include <ctime>
 #include <xmltooling/AttributeExtensibleXMLObject.h>
 #include <xmltooling/ElementProxy.h>
 #include <xmltooling/SimpleElement.h>
@@ -47,6 +48,34 @@ namespace opensaml {
      */
     namespace saml2md {
         
+        /**
+         * Base class for metadata objects that feature a cacheDuration attribute.
+         */
+        class SAML_API CacheableSAMLObject : public virtual xmltooling::XMLObject
+        {
+        protected:
+            CacheableSAMLObject() {}
+        public:
+            ~CacheableSAMLObject() {}
+            DECL_DATETIME_ATTRIB(CacheDuration,CACHEDURATION);
+        };
+
+        /**
+         * Base class for metadata objects that feature a validUntil attribute.
+         */
+        class SAML_API TimeBoundSAMLObject : public virtual xmltooling::XMLObject
+        {
+        protected:
+            TimeBoundSAMLObject() {}
+        public:
+            ~TimeBoundSAMLObject() {}
+            DECL_DATETIME_ATTRIB(ValidUntil,VALIDUNTIL);
+            /** Returns true iff the object is valid at the current time. */
+            bool isValid() const {
+                return time(NULL) <= getValidUntilEpoch();
+            }
+        };
+
         DECL_XMLOBJECT_SIMPLE(SAML_API,AffiliateMember,ID,SAML 2.0 AffiliateMember element);
         DECL_XMLOBJECT_SIMPLE(SAML_API,AttributeProfile,ProfileURI,SAML 2.0 AttributeProfile element);
         DECL_XMLOBJECT_SIMPLE(SAML_API,Company,Name,SAML 2.0 Company element);
@@ -135,11 +164,12 @@ namespace opensaml {
             static const XMLCh KEYTYPE_SIGNING[];
         END_XMLOBJECT;
 
-        BEGIN_XMLOBJECT2(SAML_API,RoleDescriptor,xmltooling::AttributeExtensibleXMLObject,SignableObject,SAML 2.0 RoleDescriptor abstract element);
+        BEGIN_XMLOBJECT4(SAML_API,RoleDescriptor,xmltooling::AttributeExtensibleXMLObject,SignableObject,
+                CacheableSAMLObject,TimeBoundSAMLObject,SAML 2.0 RoleDescriptor abstract element);
             DECL_STRING_ATTRIB(ID,ID);
-            DECL_DATETIME_ATTRIB(ValidUntil,VALIDUNTIL);
-            DECL_DATETIME_ATTRIB(CacheDuration,CACHEDURATION);
             DECL_STRING_ATTRIB(ProtocolSupportEnumeration,PROTOCOLSUPPORTENUMERATION);
+            /** Searches the ProtocolSupportEnumeration attribute for the indicated protocol. */
+            virtual bool hasSupport(const XMLCh* protocol) const=0;
             DECL_STRING_ATTRIB(ErrorURL,ERRORURL);
             DECL_TYPED_FOREIGN_CHILD(Signature,xmlsignature);
             DECL_TYPED_CHILD(Extensions);
@@ -272,11 +302,10 @@ namespace opensaml {
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
 
-        BEGIN_XMLOBJECT2(SAML_API,AffiliationDescriptor,xmltooling::AttributeExtensibleXMLObject,SignableObject,SAML 2.0 AffiliationDescriptor element);
+        BEGIN_XMLOBJECT4(SAML_API,AffiliationDescriptor,xmltooling::AttributeExtensibleXMLObject,SignableObject,
+                CacheableSAMLObject,TimeBoundSAMLObject,SAML 2.0 AffiliationDescriptor element);
             DECL_STRING_ATTRIB(ID,ID);
             DECL_STRING_ATTRIB(AffiliationOwnerID,AFFILIATIONOWNERID);
-            DECL_DATETIME_ATTRIB(ValidUntil,VALIDUNTIL);
-            DECL_DATETIME_ATTRIB(CacheDuration,CACHEDURATION);
             DECL_TYPED_FOREIGN_CHILD(Signature,xmlsignature);
             DECL_TYPED_CHILD(Extensions);
             DECL_TYPED_CHILDREN(AffiliateMember);
@@ -285,11 +314,10 @@ namespace opensaml {
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
 
-        BEGIN_XMLOBJECT2(SAML_API,EntityDescriptor,xmltooling::AttributeExtensibleXMLObject,SignableObject,SAML 2.0 EntityDescriptor element);
+        BEGIN_XMLOBJECT4(SAML_API,EntityDescriptor,xmltooling::AttributeExtensibleXMLObject,SignableObject,
+                CacheableSAMLObject,TimeBoundSAMLObject,SAML 2.0 EntityDescriptor element);
             DECL_STRING_ATTRIB(ID,ID);
             DECL_STRING_ATTRIB(EntityID,ENTITYID);
-            DECL_DATETIME_ATTRIB(ValidUntil,VALIDUNTIL);
-            DECL_DATETIME_ATTRIB(CacheDuration,CACHEDURATION);
             DECL_TYPED_FOREIGN_CHILD(Signature,xmlsignature);
             DECL_TYPED_CHILD(Extensions);
             DECL_TYPED_CHILD(AffiliationDescriptor);
@@ -303,11 +331,10 @@ namespace opensaml {
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
 
-        BEGIN_XMLOBJECT(SAML_API,EntitiesDescriptor,SignableObject,SAML 2.0 EntitiesDescriptor element);
+        BEGIN_XMLOBJECT3(SAML_API,EntitiesDescriptor,SignableObject,CacheableSAMLObject,
+                TimeBoundSAMLObject,SAML 2.0 EntitiesDescriptor element);
             DECL_STRING_ATTRIB(ID,ID);
             DECL_STRING_ATTRIB(Name,NAME);
-            DECL_DATETIME_ATTRIB(ValidUntil,VALIDUNTIL);
-            DECL_DATETIME_ATTRIB(CacheDuration,CACHEDURATION);
             DECL_TYPED_FOREIGN_CHILD(Signature,xmlsignature);
             DECL_TYPED_CHILD(Extensions);
             DECL_TYPED_CHILDREN(EntityDescriptor);

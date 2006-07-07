@@ -372,7 +372,7 @@ namespace opensaml {
 
             IMPL_INTEGER_ATTRIB(MinorVersion);
             IMPL_STRING_ATTRIB(RequestID);
-            IMPL_DATETIME_ATTRIB(IssueInstant);
+            IMPL_DATETIME_ATTRIB(IssueInstant,0);
             IMPL_TYPED_CHILDREN(RespondWith,m_pos_Signature);
     
         protected:
@@ -385,8 +385,10 @@ namespace opensaml {
                 if (!m_RequestID)
                     const_cast<RequestAbstractTypeImpl*>(this)->m_RequestID=SAMLConfig::getConfig().generateIdentifier();
                 MARSHALL_ID_ATTRIB(RequestID,REQUESTID,NULL);
-                if (!m_IssueInstant)
-                    const_cast<RequestAbstractTypeImpl*>(this)->m_IssueInstant=new DateTime(time(NULL));
+                if (!m_IssueInstant) {
+                    const_cast<RequestAbstractTypeImpl*>(this)->m_IssueInstantEpoch=time(NULL);
+                    const_cast<RequestAbstractTypeImpl*>(this)->m_IssueInstant=new DateTime(m_IssueInstantEpoch);
+                }
                 MARSHALL_DATETIME_ATTRIB(IssueInstant,ISSUEINSTANT,NULL);
             }
 
@@ -697,7 +699,7 @@ namespace opensaml {
             IMPL_INTEGER_ATTRIB(MinorVersion);
             IMPL_STRING_ATTRIB(ResponseID);
             IMPL_STRING_ATTRIB(InResponseTo);
-            IMPL_DATETIME_ATTRIB(IssueInstant);
+            IMPL_DATETIME_ATTRIB(IssueInstant,0);
             IMPL_STRING_ATTRIB(Recipient);
     
         protected:
@@ -711,8 +713,10 @@ namespace opensaml {
                     const_cast<ResponseAbstractTypeImpl*>(this)->m_ResponseID=SAMLConfig::getConfig().generateIdentifier();
                 MARSHALL_ID_ATTRIB(ResponseID,RESPONSEID,NULL);
                 MARSHALL_STRING_ATTRIB(InResponseTo,INRESPONSETO,NULL);
-                if (!m_IssueInstant)
-                    const_cast<ResponseAbstractTypeImpl*>(this)->m_IssueInstant=new DateTime(time(NULL));
+                if (!m_IssueInstant) {
+                    const_cast<ResponseAbstractTypeImpl*>(this)->m_IssueInstantEpoch=time(NULL);
+                    const_cast<ResponseAbstractTypeImpl*>(this)->m_IssueInstant=new DateTime(m_IssueInstantEpoch);
+                }
                 MARSHALL_DATETIME_ATTRIB(IssueInstant,ISSUEINSTANT,NULL);
                 MARSHALL_STRING_ATTRIB(Recipient,RECIPIENT,NULL);
             }

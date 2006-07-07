@@ -578,7 +578,7 @@ namespace opensaml {
 
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
                 PROC_TYPED_FOREIGN_CHILD(KeyInfo,xmlsignature,XMLConstants::XMLSIG_NS,false);
-                PROC_TYPED_FOREIGN_CHILDREN(EncryptionMethod,xmlencryption,XMLConstants::XMLENC_NS,false);
+                PROC_TYPED_FOREIGN_CHILDREN(EncryptionMethod,xmlencryption,SAMLConstants::SAML20MD_NS,false);
                 AbstractXMLObjectUnmarshaller::processChildElement(childXMLObject,root);
             }
 
@@ -1013,12 +1013,44 @@ namespace opensaml {
             IMPL_STRING_ATTRIB(ID);
             IMPL_STRING_ATTRIB(ProtocolSupportEnumeration);
             IMPL_STRING_ATTRIB(ErrorURL);
-            IMPL_DATETIME_ATTRIB(ValidUntil);
-            IMPL_DATETIME_ATTRIB(CacheDuration);
+            IMPL_DATETIME_ATTRIB(ValidUntil,LLONG_MAX);
+            IMPL_DATETIME_ATTRIB(CacheDuration,0);
             IMPL_TYPED_CHILD(Extensions);
             IMPL_TYPED_CHILDREN(KeyDescriptor,m_pos_Organization);
             IMPL_TYPED_CHILD(Organization);
             IMPL_TYPED_CHILDREN(ContactPerson,m_pos_ContactPerson);
+
+            bool hasSupport(const XMLCh* protocol) const {
+                if (m_ProtocolSupportEnumeration) {
+                    // Look for first character.
+                    unsigned int len=XMLString::stringLen(protocol);
+                    unsigned int pos=0;
+                    int index=XMLString::indexOf(m_ProtocolSupportEnumeration,protocol[0],pos);
+                    while (index>=0) {
+                        // Only possible match is if it's the first character or a space comes before it.
+                        if (index==0 || m_ProtocolSupportEnumeration[index-1]==chSpace) {
+                            // See if rest of protocol string is present.
+                            if (0==XMLString::compareNString(m_ProtocolSupportEnumeration+index+1,protocol+1,len-1)) {
+                                // Only possible match is if it's the last character or a space comes after it.
+                                if (m_ProtocolSupportEnumeration[index+len+1]==chNull || m_ProtocolSupportEnumeration[index+len+1]==chSpace)
+                                    return true;
+                                else
+                                    pos=index+len+1;
+                            }
+                            else {
+                                // Move past last search and start again.
+                                pos=index+1;
+                            }
+                        }
+                        else {
+                            // Move past last search and start again.
+                            pos=index+1;
+                        }
+                        index=XMLString::indexOf(m_ProtocolSupportEnumeration,protocol[0],pos);
+                    }
+                }
+                return false;
+            }
     
             void setAttribute(QName& qualifiedName, const XMLCh* value) {
                 if (!qualifiedName.hasNamespaceURI()) {
@@ -1832,8 +1864,8 @@ namespace opensaml {
             
             IMPL_STRING_ATTRIB(ID);
             IMPL_STRING_ATTRIB(AffiliationOwnerID);
-            IMPL_DATETIME_ATTRIB(ValidUntil);
-            IMPL_DATETIME_ATTRIB(CacheDuration);
+            IMPL_DATETIME_ATTRIB(ValidUntil,LLONG_MAX);
+            IMPL_DATETIME_ATTRIB(CacheDuration,0);
             IMPL_TYPED_CHILD(Extensions);
             IMPL_TYPED_CHILDREN(AffiliateMember,m_pos_AffiliateMember);
             IMPL_TYPED_CHILDREN(KeyDescriptor,m_children.end());
@@ -2038,8 +2070,8 @@ namespace opensaml {
             
             IMPL_STRING_ATTRIB(ID);
             IMPL_STRING_ATTRIB(EntityID);
-            IMPL_DATETIME_ATTRIB(ValidUntil);
-            IMPL_DATETIME_ATTRIB(CacheDuration);
+            IMPL_DATETIME_ATTRIB(ValidUntil,LLONG_MAX);
+            IMPL_DATETIME_ATTRIB(CacheDuration,0);
             IMPL_TYPED_CHILD(Extensions);
             IMPL_TYPED_CHILDREN(RoleDescriptor,m_pos_AffiliationDescriptor);
             IMPL_TYPED_CHILDREN(IDPSSODescriptor,m_pos_AffiliationDescriptor);
@@ -2204,8 +2236,8 @@ namespace opensaml {
             
             IMPL_STRING_ATTRIB(ID);
             IMPL_STRING_ATTRIB(Name);
-            IMPL_DATETIME_ATTRIB(ValidUntil);
-            IMPL_DATETIME_ATTRIB(CacheDuration);
+            IMPL_DATETIME_ATTRIB(ValidUntil,LLONG_MAX);
+            IMPL_DATETIME_ATTRIB(CacheDuration,0);
             IMPL_TYPED_CHILD(Extensions);
             IMPL_TYPED_CHILDREN(EntityDescriptor,m_children.end());
             IMPL_TYPED_CHILDREN(EntitiesDescriptor,m_children.end());
@@ -2293,8 +2325,6 @@ const XMLCh AffiliateMember::LOCAL_NAME[] =             UNICODE_LITERAL_15(A,f,f
 const XMLCh AffiliationDescriptor::LOCAL_NAME[] =       UNICODE_LITERAL_21(A,f,f,i,l,i,a,t,i,o,n,D,e,s,c,r,i,p,t,o,r);
 const XMLCh AffiliationDescriptor::TYPE_NAME[] =        UNICODE_LITERAL_25(A,f,f,i,l,i,a,t,i,o,n,D,e,s,c,r,i,p,t,o,r,T,y,p,e);
 const XMLCh AffiliationDescriptor::ID_ATTRIB_NAME[] =   UNICODE_LITERAL_2(I,D);
-const XMLCh AffiliationDescriptor::VALIDUNTIL_ATTRIB_NAME[] =   UNICODE_LITERAL_10(v,a,l,i,d,U,n,t,i,l);
-const XMLCh AffiliationDescriptor::CACHEDURATION_ATTRIB_NAME[] =    UNICODE_LITERAL_13(c,a,c,h,e,D,u,r,a,t,i,o,n);
 const XMLCh AffiliationDescriptor::AFFILIATIONOWNERID_ATTRIB_NAME[] =   UNICODE_LITERAL_18(a,f,f,i,l,i,a,t,i,o,n,O,w,n,e,r,I,D);
 const XMLCh ArtifactResolutionService::LOCAL_NAME[] =   UNICODE_LITERAL_25(A,r,t,i,f,a,c,t,R,e,s,o,l,u,t,i,o,n,S,e,r,v,i,c,e);
 const XMLCh AssertionConsumerService::LOCAL_NAME[] =    UNICODE_LITERAL_24(A,s,s,e,r,t,i,o,n,C,o,n,s,u,m,e,r,S,e,r,v,i,c,e);
@@ -2311,6 +2341,7 @@ const XMLCh AuthnAuthorityDescriptor::LOCAL_NAME[] =    UNICODE_LITERAL_24(A,u,t
 const XMLCh AuthnAuthorityDescriptor::TYPE_NAME[] =     UNICODE_LITERAL_28(A,u,t,h,n,A,u,t,h,o,r,i,t,y,D,e,s,c,r,i,p,t,o,r,T,y,p,e);
 const XMLCh AuthnQueryService::LOCAL_NAME[] =           UNICODE_LITERAL_17(A,u,t,h,n,Q,u,e,r,y,S,e,r,v,i,c,e);
 const XMLCh AuthzService::LOCAL_NAME[] =                UNICODE_LITERAL_12(A,u,t,h,z,S,e,r,v,i,c,e);
+const XMLCh CacheableSAMLObject::CACHEDURATION_ATTRIB_NAME[] =  UNICODE_LITERAL_13(c,a,c,h,e,D,u,r,a,t,i,o,n);
 const XMLCh Company::LOCAL_NAME[] =                     UNICODE_LITERAL_7(C,o,m,p,a,n,y);
 const XMLCh ContactPerson::LOCAL_NAME[] =               UNICODE_LITERAL_13(C,o,n,t,a,c,t,P,e,r,s,o,n);
 const XMLCh ContactPerson::TYPE_NAME[] =                UNICODE_LITERAL_11(C,o,n,t,a,c,t,T,y,p,e);
@@ -2329,14 +2360,10 @@ const XMLCh EndpointType::RESPONSELOCATION_ATTRIB_NAME[] =  UNICODE_LITERAL_16(R
 const XMLCh EntitiesDescriptor::LOCAL_NAME[] =          UNICODE_LITERAL_18(E,n,t,i,t,i,e,s,D,e,s,c,r,i,p,t,o,r);
 const XMLCh EntitiesDescriptor::TYPE_NAME[] =           UNICODE_LITERAL_22(E,n,t,i,t,i,e,s,D,e,s,c,r,i,p,t,o,r,T,y,p,e);
 const XMLCh EntitiesDescriptor::ID_ATTRIB_NAME[] =      UNICODE_LITERAL_2(I,D);
-const XMLCh EntitiesDescriptor::VALIDUNTIL_ATTRIB_NAME[] =    UNICODE_LITERAL_10(v,a,l,i,d,U,n,t,i,l);
-const XMLCh EntitiesDescriptor::CACHEDURATION_ATTRIB_NAME[] = UNICODE_LITERAL_13(c,a,c,h,e,D,u,r,a,t,i,o,n);
 const XMLCh EntitiesDescriptor::NAME_ATTRIB_NAME[] =    UNICODE_LITERAL_4(N,a,m,e);
 const XMLCh EntityDescriptor::LOCAL_NAME[] =            UNICODE_LITERAL_16(E,n,t,i,t,y,D,e,s,c,r,i,p,t,o,r);
 const XMLCh EntityDescriptor::TYPE_NAME[] =             UNICODE_LITERAL_20(E,n,t,i,t,y,D,e,s,c,r,i,p,t,o,r,T,y,p,e);
 const XMLCh EntityDescriptor::ID_ATTRIB_NAME[] =        UNICODE_LITERAL_2(I,D);
-const XMLCh EntityDescriptor::VALIDUNTIL_ATTRIB_NAME[] =    UNICODE_LITERAL_10(v,a,l,i,d,U,n,t,i,l);
-const XMLCh EntityDescriptor::CACHEDURATION_ATTRIB_NAME[] = UNICODE_LITERAL_13(c,a,c,h,e,D,u,r,a,t,i,o,n);
 const XMLCh EntityDescriptor::ENTITYID_ATTRIB_NAME[] =  UNICODE_LITERAL_8(e,n,t,i,t,y,I,D);
 const XMLCh Extensions::LOCAL_NAME[] =                  UNICODE_LITERAL_10(E,x,t,e,n,s,i,o,n,s);
 const XMLCh Extensions::TYPE_NAME[] =                   UNICODE_LITERAL_14(E,x,t,e,n,s,i,o,n,s,T,y,p,e);
@@ -2374,8 +2401,6 @@ const XMLCh RequestedAttribute::TYPE_NAME[] =           UNICODE_LITERAL_22(R,e,q
 const XMLCh RequestedAttribute::ISREQUIRED_ATTRIB_NAME[] =  UNICODE_LITERAL_10(i,s,R,e,q,u,i,r,e,d);
 const XMLCh RoleDescriptor::LOCAL_NAME[] =              UNICODE_LITERAL_14(R,o,l,e,D,e,s,c,r,i,p,t,o,r);
 const XMLCh RoleDescriptor::ID_ATTRIB_NAME[] =          UNICODE_LITERAL_2(I,D);
-const XMLCh RoleDescriptor::VALIDUNTIL_ATTRIB_NAME[] =  UNICODE_LITERAL_10(v,a,l,i,d,U,n,t,i,l);
-const XMLCh RoleDescriptor::CACHEDURATION_ATTRIB_NAME[] =   UNICODE_LITERAL_13(c,a,c,h,e,D,u,r,a,t,i,o,n);
 const XMLCh RoleDescriptor::PROTOCOLSUPPORTENUMERATION_ATTRIB_NAME[] =  UNICODE_LITERAL_26(p,r,o,t,o,c,o,l,S,u,p,p,o,r,t,E,n,u,m,e,r,a,t,i,o,n);
 const XMLCh RoleDescriptor::ERRORURL_ATTRIB_NAME[] =    UNICODE_LITERAL_8(e,r,r,o,r,U,R,L);
 const XMLCh ServiceDescription::LOCAL_NAME[] =          UNICODE_LITERAL_18(S,e,r,v,i,c,e,D,e,s,c,r,i,p,t,i,o,n);
@@ -2390,3 +2415,4 @@ const XMLCh SSODescriptorType::LOCAL_NAME[] =           {chNull};
 const XMLCh SSODescriptorType::TYPE_NAME[] =            UNICODE_LITERAL_17(S,S,O,D,e,s,c,r,i,p,t,o,r,T,y,p,e);
 const XMLCh SurName::LOCAL_NAME[] =                     UNICODE_LITERAL_7(S,u,r,N,a,m,e);
 const XMLCh TelephoneNumber::LOCAL_NAME[] =             UNICODE_LITERAL_15(T,e,l,e,p,h,o,n,e,N,u,m,b,e,r);
+const XMLCh TimeBoundSAMLObject::VALIDUNTIL_ATTRIB_NAME[] =   UNICODE_LITERAL_10(v,a,l,i,d,U,n,t,i,l);

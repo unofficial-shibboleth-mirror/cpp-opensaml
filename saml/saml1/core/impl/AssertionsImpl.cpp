@@ -168,8 +168,8 @@ namespace opensaml {
             }
             
             IMPL_XMLOBJECT_CLONE(Conditions);
-            IMPL_DATETIME_ATTRIB(NotBefore);
-            IMPL_DATETIME_ATTRIB(NotOnOrAfter);
+            IMPL_DATETIME_ATTRIB(NotBefore,0);
+            IMPL_DATETIME_ATTRIB(NotOnOrAfter,LLONG_MAX);
             IMPL_TYPED_CHILDREN(AudienceRestrictionCondition, m_children.end());
             IMPL_TYPED_CHILDREN(DoNotCacheCondition,m_children.end());
             IMPL_TYPED_CHILDREN(Condition,m_children.end());
@@ -548,7 +548,7 @@ namespace opensaml {
                 return cloneAuthenticationStatement();
             }
             IMPL_STRING_ATTRIB(AuthenticationMethod);
-            IMPL_DATETIME_ATTRIB(AuthenticationInstant);
+            IMPL_DATETIME_ATTRIB(AuthenticationInstant,0);
             IMPL_TYPED_CHILD(SubjectLocality);
             IMPL_TYPED_CHILDREN(AuthorityBinding, m_children.end());
     
@@ -1053,7 +1053,7 @@ namespace opensaml {
             IMPL_INTEGER_ATTRIB(MinorVersion);
             IMPL_STRING_ATTRIB(AssertionID);
             IMPL_STRING_ATTRIB(Issuer);
-            IMPL_DATETIME_ATTRIB(IssueInstant);
+            IMPL_DATETIME_ATTRIB(IssueInstant,0);
             IMPL_TYPED_CHILD(Conditions);
             IMPL_TYPED_CHILD(Advice);
             IMPL_TYPED_CHILDREN(Statement, m_pos_Signature);
@@ -1073,8 +1073,10 @@ namespace opensaml {
                     const_cast<AssertionImpl*>(this)->m_AssertionID=SAMLConfig::getConfig().generateIdentifier();
                 MARSHALL_ID_ATTRIB(AssertionID,ASSERTIONID,NULL);
                 MARSHALL_STRING_ATTRIB(Issuer,ISSUER,NULL);
-                if (!m_IssueInstant)
-                    const_cast<AssertionImpl*>(this)->m_IssueInstant=new DateTime(time(NULL));
+                if (!m_IssueInstant) {
+                    const_cast<AssertionImpl*>(this)->m_IssueInstantEpoch=time(NULL);
+                    const_cast<AssertionImpl*>(this)->m_IssueInstant=new DateTime(m_IssueInstantEpoch);
+                }
                 MARSHALL_DATETIME_ATTRIB(IssueInstant,ISSUEINSTANT,NULL);
             }
     

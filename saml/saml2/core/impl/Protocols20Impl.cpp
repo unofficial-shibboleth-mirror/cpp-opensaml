@@ -338,7 +338,7 @@ namespace opensaml {
             IMPL_XMLOBJECT_CLONE(Request);
             IMPL_STRING_ATTRIB(Version);
             IMPL_STRING_ATTRIB(ID);
-            IMPL_DATETIME_ATTRIB(IssueInstant);
+            IMPL_DATETIME_ATTRIB(IssueInstant,0);
             IMPL_STRING_ATTRIB(Destination);
             IMPL_STRING_ATTRIB(Consent);
             IMPL_TYPED_FOREIGN_CHILD(Issuer,saml2);
@@ -352,8 +352,10 @@ namespace opensaml {
                 if (!m_ID)
                     const_cast<RequestImpl*>(this)->m_ID=SAMLConfig::getConfig().generateIdentifier();
                 MARSHALL_ID_ATTRIB(ID,ID,NULL);
-                if (!m_IssueInstant)
-                    const_cast<RequestImpl*>(this)->m_IssueInstant=new DateTime(time(NULL));
+                if (!m_IssueInstant) {
+                    const_cast<RequestImpl*>(this)->m_IssueInstantEpoch=time(NULL);
+                    const_cast<RequestImpl*>(this)->m_IssueInstant=new DateTime(m_IssueInstantEpoch);
+                }
                 MARSHALL_DATETIME_ATTRIB(IssueInstant,ISSUEINSTANT,NULL);
                 MARSHALL_STRING_ATTRIB(Destination,DESTINATION,NULL);
                 MARSHALL_STRING_ATTRIB(Consent,CONSENT,NULL);
@@ -1109,7 +1111,7 @@ namespace opensaml {
             IMPL_STRING_ATTRIB(Version);
             IMPL_STRING_ATTRIB(ID);
             IMPL_STRING_ATTRIB(InResponseTo);
-            IMPL_DATETIME_ATTRIB(IssueInstant);
+            IMPL_DATETIME_ATTRIB(IssueInstant,0);
             IMPL_STRING_ATTRIB(Destination);
             IMPL_STRING_ATTRIB(Consent);
             IMPL_TYPED_FOREIGN_CHILD(Issuer,saml2);
@@ -1124,8 +1126,10 @@ namespace opensaml {
                 if (!m_ID)
                     const_cast<StatusResponseImpl*>(this)->m_ID=SAMLConfig::getConfig().generateIdentifier();
                 MARSHALL_ID_ATTRIB(ID,ID,NULL);
-                if (!m_IssueInstant)
-                    const_cast<StatusResponseImpl*>(this)->m_IssueInstant=new DateTime(time(NULL));
+                if (!m_IssueInstant) {
+                    const_cast<StatusResponseImpl*>(this)->m_IssueInstantEpoch=time(NULL);
+                    const_cast<StatusResponseImpl*>(this)->m_IssueInstant=new DateTime(m_IssueInstantEpoch);
+                }
                 MARSHALL_DATETIME_ATTRIB(IssueInstant,ISSUEINSTANT,NULL);
                 MARSHALL_STRING_ATTRIB(Destination,DESTINATION,NULL);
                 MARSHALL_STRING_ATTRIB(Consent,CONSENT,NULL);
@@ -1519,7 +1523,7 @@ namespace opensaml {
             IMPL_XMLOBJECT_CLONE(LogoutRequest);
 
             IMPL_STRING_ATTRIB(Reason);
-            IMPL_DATETIME_ATTRIB(NotOnOrAfter);
+            IMPL_DATETIME_ATTRIB(NotOnOrAfter,LLONG_MAX);
             IMPL_TYPED_FOREIGN_CHILD(BaseID,saml2);
             IMPL_TYPED_FOREIGN_CHILD(NameID,saml2);
             IMPL_TYPED_FOREIGN_CHILD(EncryptedID,saml2);
