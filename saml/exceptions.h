@@ -15,7 +15,7 @@
  */
 
 /**
- * @file exceptions.h
+ * @file saml/exceptions.h
  * 
  * Exception classes
  */

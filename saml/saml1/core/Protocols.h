@@ -15,7 +15,7 @@
  */
 
 /**
- * @file Protocols.h
+ * @file saml/saml1/core/Protocols.h
  * 
  * XMLObjects representing the SAML 1.x Protocols schema
  */
@@ -31,7 +31,7 @@
 namespace opensaml {
 
     /**
-     * @namespace saml1p
+     * @namespace opensaml::saml1p
      * SAML 1.x protocol namespace
      */
     namespace saml1p {

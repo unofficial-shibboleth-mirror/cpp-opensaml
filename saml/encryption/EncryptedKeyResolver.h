@@ -15,7 +15,7 @@
  */
 
 /**
- * @file EncryptedKeyResolver.h
+ * @file saml/encryption/EncryptedKeyResolver.h
  * 
  * SAML-specific encrypted key resolver 
  */

@@ -15,7 +15,7 @@
  */
 
 /**
- * @file SignatureProfileValidator.h
+ * @file saml/signature/SignatureProfileValidator.h
  * 
  * SAML-specific signature profile validator 
  */

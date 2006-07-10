@@ -15,7 +15,7 @@
  */
 
 /**
- * @file SignableObject.h
+ * @file saml/signature/SignableObject.h
  * 
  * Base class for SAML objects that can be signed. 
  */

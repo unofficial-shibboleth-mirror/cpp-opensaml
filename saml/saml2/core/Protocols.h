@@ -15,7 +15,7 @@
  */
 
 /**
- * @file Protocols.h
+ * @file saml/saml2/core/Protocols.h
  * 
  * XMLObjects representing the SAML 2.0 Protocols schema
  */
@@ -32,7 +32,7 @@
 namespace opensaml {
 
     /**
-     * @namespace saml2p
+     * @namespace opensaml::saml2p
      * SAML 2.0 protocol namespace
      */
     namespace saml2p {
@@ -272,6 +272,7 @@ namespace opensaml {
             /** NameIDMappingResponseType local name */
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
+
 
         // Builders
         DECL_SAML2POBJECTBUILDER(Artifact);

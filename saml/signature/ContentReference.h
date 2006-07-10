@@ -15,7 +15,7 @@
  */
 
 /**
- * @file SigningContext.h
+ * @file saml/signature/ContentReference.h
  * 
  * SAML-specific signature reference profile 
  */

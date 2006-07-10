@@ -15,7 +15,7 @@
  */
 
 /**
- * @file XMLConstants.h
+ * @file saml/util/SAMLConstants.h
  * 
  * SAML XML namespace constants 
  */

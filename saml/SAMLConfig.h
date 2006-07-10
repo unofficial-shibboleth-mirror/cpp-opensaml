@@ -15,7 +15,7 @@
  */
 
 /**
- * @file SAMLConfig.h
+ * @file saml/SAMLConfig.h
  * 
  * Library configuration 
  */

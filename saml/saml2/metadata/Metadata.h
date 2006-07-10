@@ -15,7 +15,7 @@
  */
 
 /**
- * @file Metadata.h
+ * @file saml/saml2/metadata/Metadata.h
  * 
  * XMLObjects representing the SAML 2.0 Metadata schema
  */
@@ -43,7 +43,7 @@
 namespace opensaml {
 
     /**
-     * @namespace saml2md
+     * @namespace opensaml::saml2md
      * SAML 2.0 metadata namespace
      */
     namespace saml2md {

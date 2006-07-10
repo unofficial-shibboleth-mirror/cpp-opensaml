@@ -15,7 +15,7 @@
  */
 
 /**
- * @file Assertions.h
+ * @file saml/saml2/core/Assertions.h
  * 
  * XMLObjects representing the SAML 2.0 Assertions schema
  */
@@ -43,7 +43,7 @@
 namespace opensaml {
 
     /**
-     * @namespace saml2
+     * @namespace opensaml::saml2
      * SAML 2.0 assertion namespace
      */
     namespace saml2 {
