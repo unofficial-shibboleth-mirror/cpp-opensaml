@@ -54,8 +54,8 @@ public:
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
         AuthenticationStatement& as = dynamic_cast<AuthenticationStatement&>(*xo.get());
 
-        TSM_ASSERT_SAME_DATA("AuthenticationMethod attribute", expectedAuthenticationMethod, as.getAuthenticationMethod(), XMLString::stringLen(expectedAuthenticationMethod));
-        TSM_ASSERT_SAME_DATA("AuthenticationInstant attribute", expectedAuthenticationInstant, as.getAuthenticationInstant()->getRawData(), XMLString::stringLen(expectedAuthenticationInstant));
+        assertEquals("AuthenticationMethod attribute", expectedAuthenticationMethod, as.getAuthenticationMethod());
+        assertEquals("AuthenticationInstant attribute", expectedAuthenticationInstant, as.getAuthenticationInstant()->getRawData());
     }
 
     void testChildElementsUnmarshall() {

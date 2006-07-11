@@ -22,14 +22,15 @@ using namespace opensaml::saml1;
 class AssertionTest : public CxxTest::TestSuite, public SAMLObjectBaseTestCase {
     int expectedMinorVersion;
     XMLCh* expectedIssuer;
-    XMLCh* expectedIssueInstant;
+    DateTime* expectedIssueInstant;
     XMLCh* expectedID;
 
 public:
     void setUp() {
         expectedID=XMLString::transcode("ident");
         expectedMinorVersion=1;
-        expectedIssueInstant=XMLString::transcode("1970-01-02T01:01:02.100Z");
+        expectedIssueInstant=new DateTime(XMLString::transcode("1970-01-02T01:01:02.100Z"));
+        expectedIssueInstant->parseDateTime();
         expectedIssuer=XMLString::transcode("issuer");
         singleElementFile = data_path + "saml1/core/impl/singleAssertion.xml";
         singleElementOptionalAttributesFile = data_path + "saml1/core/impl/singleAssertionAttributes.xml";
@@ -39,8 +40,8 @@ public:
     
     void tearDown() {
         XMLString::release(&expectedID);
-        XMLString::release(&expectedIssueInstant);
         XMLString::release(&expectedIssuer);
+        delete expectedIssueInstant;
         SAMLObjectBaseTestCase::tearDown();
     }
 
@@ -48,8 +49,8 @@ public:
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         Assertion& assertion = dynamic_cast<Assertion&>(*xo.get());
         TSM_ASSERT("Issuer attribute", assertion.getIssuer()==NULL);
-        TSM_ASSERT_SAME_DATA("IssueInstant attribute", expectedIssueInstant, assertion.getIssueInstant()->getRawData(), XMLString::stringLen(expectedIssueInstant));
-        TSM_ASSERT_SAME_DATA("ID attribute", expectedID, assertion.getAssertionID(), XMLString::stringLen(expectedID));
+        TSM_ASSERT_EQUALS("IssueInstant attribute", expectedIssueInstant->getEpoch(), assertion.getIssueInstant()->getEpoch());
+        assertEquals("ID attribute", expectedID, assertion.getAssertionID());
 
         TSM_ASSERT("Conditions element", assertion.getConditions()==NULL);
         TSM_ASSERT("Advice element", assertion.getAdvice()==NULL);
@@ -65,9 +66,9 @@ public:
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
         Assertion& assertion = dynamic_cast<Assertion&>(*xo.get());
 
-        TSM_ASSERT_SAME_DATA("Issuer attribute", expectedIssuer, assertion.getIssuer(), XMLString::stringLen(expectedIssuer));
-        TSM_ASSERT_SAME_DATA("IssueInstant attribute", expectedIssueInstant, assertion.getIssueInstant()->getRawData(), XMLString::stringLen(expectedIssueInstant));
-        TSM_ASSERT_SAME_DATA("ID attribute", expectedID, assertion.getAssertionID(), XMLString::stringLen(expectedID));
+        assertEquals("Issuer attribute", expectedIssuer, assertion.getIssuer());
+        TSM_ASSERT_EQUALS("IssueInstant attribute", expectedIssueInstant->getEpoch(), assertion.getIssueInstant()->getEpoch());
+        assertEquals("ID attribute", expectedID, assertion.getAssertionID());
         TSM_ASSERT_EQUALS("Issuer expectedMinorVersion", expectedMinorVersion, assertion.getMinorVersion().second);
 
         TSM_ASSERT("Conditions element", assertion.getConditions()==NULL);
@@ -85,8 +86,8 @@ public:
         Assertion& assertion = dynamic_cast<Assertion&>(*xo.get());
 
         TSM_ASSERT("Issuer attribute", assertion.getIssuer()==NULL);
-        TSM_ASSERT_SAME_DATA("IssueInstant attribute", expectedIssueInstant, assertion.getIssueInstant()->getRawData(), XMLString::stringLen(expectedIssueInstant));
-        TSM_ASSERT_SAME_DATA("ID attribute", expectedID, assertion.getAssertionID(), XMLString::stringLen(expectedID));
+        TSM_ASSERT_EQUALS("IssueInstant attribute", expectedIssueInstant->getEpoch(), assertion.getIssueInstant()->getEpoch());
+        assertEquals("ID attribute", expectedID, assertion.getAssertionID());
 
         TSM_ASSERT("Conditions element null", assertion.getConditions()!=NULL);
         TSM_ASSERT("Advice element null", assertion.getAdvice()!=NULL);

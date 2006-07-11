@@ -35,6 +35,7 @@ public:
         expectedConsent = XMLString::transcode("urn:string:consent"); 
         expectedDestination = XMLString::transcode("http://idp.example.org/endpoint"); 
         expectedIssueInstant = new DateTime(XMLString::transcode("2006-02-21T16:40:00.000Z"));
+        expectedIssueInstant->parseDateTime();
 
         singleElementFile = data_path + "saml2/core/impl/ArtifactResolve.xml";
         singleElementOptionalAttributesFile = data_path + "saml2/core/impl/ArtifactResolveOptionalAttributes.xml";
@@ -57,7 +58,7 @@ public:
         TS_ASSERT(request!=NULL);
         assertEquals("ID attribute", expectedID, request->getID());
         assertEquals("Version attribute", expectedVersion, request->getVersion());
-        assertEquals("IssueInstant attribute", expectedIssueInstant->getFormattedString(), request->getIssueInstant()->getFormattedString());
+        TSM_ASSERT_EQUALS("IssueInstant attribute", expectedIssueInstant->getEpoch(), request->getIssueInstant()->getEpoch());
 
         TS_ASSERT(request->getIssuer()==NULL);
         TS_ASSERT(request->getSignature()==NULL);

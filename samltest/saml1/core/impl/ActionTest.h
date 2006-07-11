@@ -49,8 +49,8 @@ public:
     void testSingleElementOptionalAttributesUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
         Action* action = dynamic_cast<Action*>(xo.get());
-        TSM_ASSERT_SAME_DATA("namespace attribute ", expectedNamespace, action->getNamespace(), XMLString::stringLen(expectedNamespace));
-        TSM_ASSERT_SAME_DATA("Contents ", expectedContents, action->getAction(), XMLString::stringLen(expectedContents));
+        assertEquals("namespace attribute ", expectedNamespace, action->getNamespace());
+        assertEquals("Contents ", expectedContents, action->getAction());
     }
 
     void testSingleElementMarshall() {

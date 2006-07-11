@@ -44,7 +44,7 @@ public:
     void testSingleElementOptionalAttributesUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
         Audience& a = dynamic_cast<Audience&>(*xo.get());
-        TSM_ASSERT_SAME_DATA("Uri", expectedUri, a.getAudienceURI(), XMLString::stringLen(expectedUri));
+        assertEquals("Uri", expectedUri, a.getAudienceURI());
     }
 
     void testSingleElementMarshall() {

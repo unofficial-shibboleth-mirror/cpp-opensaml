@@ -48,8 +48,8 @@ public:
     void testSingleElementOptionalAttributesUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
         AttributeDesignator& ad = dynamic_cast<AttributeDesignator&>(*xo.get());
-        TSM_ASSERT_SAME_DATA("AttributeName", expectedAttributeName, ad.getAttributeName(), XMLString::stringLen(expectedAttributeName));
-        TSM_ASSERT_SAME_DATA("AttributeNamespace", expectedAttributeNamespace, ad.getAttributeNamespace(), XMLString::stringLen(expectedAttributeNamespace));
+        assertEquals("AttributeName", expectedAttributeName, ad.getAttributeName());
+        assertEquals("AttributeNamespace", expectedAttributeNamespace, ad.getAttributeNamespace());
     }
 
     void testSingleElementMarshall() {

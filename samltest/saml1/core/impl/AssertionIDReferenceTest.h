@@ -45,7 +45,7 @@ public:
     void testSingleElementOptionalAttributesUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
         AssertionIDReference* assertionIDReference = dynamic_cast<AssertionIDReference*>(xo.get());
-        TSM_ASSERT_SAME_DATA("NCName ", expectedNCName, assertionIDReference->getAssertionID(), XMLString::stringLen(expectedNCName));
+        assertEquals("NCName ", expectedNCName, assertionIDReference->getAssertionID());
     }
 
     void testSingleElementMarshall() {

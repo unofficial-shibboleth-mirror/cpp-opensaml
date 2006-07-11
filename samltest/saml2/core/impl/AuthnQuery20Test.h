@@ -36,6 +36,7 @@ public:
         expectedConsent = XMLString::transcode("urn:string:consent"); 
         expectedDestination = XMLString::transcode("http://idp.example.org/endpoint"); 
         expectedIssueInstant = new DateTime(XMLString::transcode("2006-02-21T16:40:00.000Z"));
+        expectedIssueInstant->parseDateTime();
         expectedSessionIndex = XMLString::transcode("session12345"); 
 
         singleElementFile = data_path + "saml2/core/impl/AuthnQuery.xml";
@@ -60,7 +61,7 @@ public:
         TS_ASSERT(query!=NULL);
         assertEquals("ID attribute", expectedID, query->getID());
         assertEquals("Version attribute", expectedVersion, query->getVersion());
-        assertEquals("IssueInstant attribute", expectedIssueInstant->getFormattedString(), query->getIssueInstant()->getFormattedString());
+        TSM_ASSERT_EQUALS("IssueInstant attribute", expectedIssueInstant->getEpoch(), query->getIssueInstant()->getEpoch());
 
         TS_ASSERT(query->getIssuer()==NULL);
         TS_ASSERT(query->getSignature()==NULL);

@@ -42,6 +42,7 @@ public:
         expectedConsent = XMLString::transcode("urn:string:consent"); 
         expectedDestination = XMLString::transcode("http://sp.example.org/endpoint"); 
         expectedIssueInstant = new DateTime(XMLString::transcode("2006-02-21T16:40:00.000Z"));
+        expectedIssueInstant->parseDateTime();
 
         assertionID1 = XMLString::transcode("test1"); 
         assertionID2= XMLString::transcode("test2"); 
@@ -73,7 +74,7 @@ public:
 
         assertEquals("ID attribute", expectedID, response->getID());
         assertEquals("Version attribute", expectedVersion, response->getVersion());
-        assertEquals("IssueInstant attribute", expectedIssueInstant->getFormattedString(), response->getIssueInstant()->getFormattedString());
+        TSM_ASSERT_EQUALS("IssueInstant attribute", expectedIssueInstant->getEpoch(), response->getIssueInstant()->getEpoch());
 
         TS_ASSERT(response->getIssuer()==NULL);
         TS_ASSERT(response->getSignature()==NULL);

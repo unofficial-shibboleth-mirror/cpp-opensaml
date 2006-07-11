@@ -33,6 +33,7 @@ public:
         expectedID = XMLString::transcode("abc123");; 
         expectedVersion = XMLString::transcode("2.0"); 
         expectedIssueInstant = new DateTime(XMLString::transcode("2006-02-21T16:40:00.000Z"));
+        expectedIssueInstant->parseDateTime();
         expectedConsent = XMLString::transcode("urn:string:consent"); 
         expectedDestination = XMLString::transcode("http://idp.example.org/endpoint"); 
 
@@ -57,7 +58,7 @@ public:
         TS_ASSERT(request!=NULL);
         assertEquals("ID attribute", expectedID, request->getID());
         assertEquals("Version attribute", expectedVersion, request->getVersion());
-        assertEquals("IssueInstant attribute", expectedIssueInstant->getFormattedString(), request->getIssueInstant()->getFormattedString());
+        TSM_ASSERT_EQUALS("IssueInstant attribute", expectedIssueInstant->getEpoch(), request->getIssueInstant()->getEpoch());
 
         TS_ASSERT(request->getIssuer()==NULL);
         TS_ASSERT(request->getSignature()==NULL);

@@ -50,8 +50,8 @@ public:
     void testSingleElementOptionalAttributesUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
         Attribute& a = dynamic_cast<Attribute&>(*xo.get());
-        TSM_ASSERT_SAME_DATA("AttributeName", expectedAttributeName, a.getAttributeName(), XMLString::stringLen(expectedAttributeName));
-        TSM_ASSERT_SAME_DATA("AttributeNamespace", expectedAttributeNamespace, a.getAttributeNamespace(), XMLString::stringLen(expectedAttributeNamespace));
+        assertEquals("AttributeName", expectedAttributeName, a.getAttributeName());
+        assertEquals("AttributeNamespace", expectedAttributeNamespace, a.getAttributeNamespace());
     }
 
     void testChildElementsUnmarshall() {
