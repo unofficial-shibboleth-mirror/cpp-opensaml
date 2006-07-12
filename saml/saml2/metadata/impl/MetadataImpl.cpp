@@ -1005,10 +1005,10 @@ namespace opensaml {
                             // See if rest of protocol string is present.
                             if (0==XMLString::compareNString(m_ProtocolSupportEnumeration+index+1,protocol+1,len-1)) {
                                 // Only possible match is if it's the last character or a space comes after it.
-                                if (m_ProtocolSupportEnumeration[index+len+1]==chNull || m_ProtocolSupportEnumeration[index+len+1]==chSpace)
+                                if (m_ProtocolSupportEnumeration[index+len]==chNull || m_ProtocolSupportEnumeration[index+len]==chSpace)
                                     return true;
                                 else
-                                    pos=index+len+1;
+                                    pos=index+len;
                             }
                             else {
                                 // Move past last search and start again.
@@ -2064,6 +2064,54 @@ namespace opensaml {
                     }
                 }
                 AbstractAttributeExtensibleXMLObject::setAttribute(qualifiedName, value);
+            }
+
+            const IDPSSODescriptor* getIDPSSODescriptor(const XMLCh* protocol) const {
+                for (vector<IDPSSODescriptor*>::const_iterator i=m_IDPSSODescriptors.begin(); i!=m_IDPSSODescriptors.end(); i++) {
+                    if ((*i)->hasSupport(protocol) && (*i)->isValid())
+                        return (*i);
+                }
+                return NULL;
+            }
+            
+            const SPSSODescriptor* getSPSSODescriptor(const XMLCh* protocol) const {
+                for (vector<SPSSODescriptor*>::const_iterator i=m_SPSSODescriptors.begin(); i!=m_SPSSODescriptors.end(); i++) {
+                    if ((*i)->hasSupport(protocol) && (*i)->isValid())
+                        return (*i);
+                }
+                return NULL;
+            }
+            
+            const AuthnAuthorityDescriptor* getAuthnAuthorityDescriptor(const XMLCh* protocol) const {
+                for (vector<AuthnAuthorityDescriptor*>::const_iterator i=m_AuthnAuthorityDescriptors.begin(); i!=m_AuthnAuthorityDescriptors.end(); i++) {
+                    if ((*i)->hasSupport(protocol) && (*i)->isValid())
+                        return (*i);
+                }
+                return NULL;
+            }
+            
+            const AttributeAuthorityDescriptor* getAttributeAuthorityDescriptor(const XMLCh* protocol) const {
+                for (vector<AttributeAuthorityDescriptor*>::const_iterator i=m_AttributeAuthorityDescriptors.begin(); i!=m_AttributeAuthorityDescriptors.end(); i++) {
+                    if ((*i)->hasSupport(protocol) && (*i)->isValid())
+                        return (*i);
+                }
+                return NULL;
+            }
+            
+            const PDPDescriptor* getPDPDescriptor(const XMLCh* protocol) const {
+                for (vector<PDPDescriptor*>::const_iterator i=m_PDPDescriptors.begin(); i!=m_PDPDescriptors.end(); i++) {
+                    if ((*i)->hasSupport(protocol) && (*i)->isValid())
+                        return (*i);
+                }
+                return NULL;
+            }
+            
+            const RoleDescriptor* getRoleDescriptor(xmltooling::QName& qname, const XMLCh* protocol) const {
+                for (vector<RoleDescriptor*>::const_iterator i=m_RoleDescriptors.begin(); i!=m_RoleDescriptors.end(); i++) {
+                    if ((*i)->getSchemaType() && qname==(*((*i)->getSchemaType())) && (*i)->hasSupport(protocol) && (*i)->isValid())
+                        return (*i);
+                }
+                return NULL;
             }
 
         protected:

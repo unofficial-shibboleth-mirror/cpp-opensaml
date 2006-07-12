@@ -326,6 +326,18 @@ namespace opensaml {
             DECL_TYPED_CHILDREN(AuthnAuthorityDescriptor);
             DECL_TYPED_CHILDREN(AttributeAuthorityDescriptor);
             DECL_TYPED_CHILDREN(PDPDescriptor);
+            /** Finds an IDP role supporting a given protocol. */
+            virtual const IDPSSODescriptor* getIDPSSODescriptor(const XMLCh* protocol) const=0;
+            /** Finds an SP role supporting a given protocol. */
+            virtual const SPSSODescriptor* getSPSSODescriptor(const XMLCh* protocol) const=0;
+            /** Finds an Authn Authority role supporting a given protocol. */
+            virtual const AuthnAuthorityDescriptor* getAuthnAuthorityDescriptor(const XMLCh* protocol) const=0;
+            /** Finds an Attribute Authority role supporting a given protocol. */
+            virtual const AttributeAuthorityDescriptor* getAttributeAuthorityDescriptor(const XMLCh* protocol) const=0;
+            /** Finds a PDP role supporting a given protocol. */
+            virtual const PDPDescriptor* getPDPDescriptor(const XMLCh* protocol) const=0;
+            /** Finds an extension role supporting a given protocol. */
+            virtual const RoleDescriptor* getRoleDescriptor(xmltooling::QName& qname, const XMLCh* protocol) const=0;
             /** EntityDescriptorType local name */
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;

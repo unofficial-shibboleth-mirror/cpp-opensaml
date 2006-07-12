@@ -55,10 +55,13 @@ namespace opensaml {
 
             void init();
 
-            const EntityDescriptor* lookup(const XMLCh* id, bool requireValidMetadata=true) const;
-            const EntityDescriptor* lookup(const char* id, bool requireValidMetadata=true) const;
-            const EntitiesDescriptor* lookupGroup(const XMLCh* name, bool requireValidMetadata=true) const;
-            const EntitiesDescriptor* lookupGroup(const char* name, bool requireValidMetadata=true) const;
+            const EntityDescriptor* getEntityDescriptor(const XMLCh* id, bool requireValidMetadata=true) const;
+            const EntityDescriptor* getEntityDescriptor(const char* id, bool requireValidMetadata=true) const;
+            const EntitiesDescriptor* getEntitiesDescriptor(const XMLCh* name, bool requireValidMetadata=true) const;
+            const EntitiesDescriptor* getEntitiesDescriptor(const char* name, bool requireValidMetadata=true) const;
+            const XMLObject* getMetadata() const {
+                return m_object;
+            }
 
         private:
             XMLObject* load() const;
@@ -306,7 +309,7 @@ void FilesystemMetadataProvider::index(EntitiesDescriptor* group, time_t validUn
         index(*j,group->getValidUntilEpoch());
 }
 
-const EntitiesDescriptor* FilesystemMetadataProvider::lookupGroup(const char* name, bool strict) const
+const EntitiesDescriptor* FilesystemMetadataProvider::getEntitiesDescriptor(const char* name, bool strict) const
 {
     pair<groupmap_t::const_iterator,groupmap_t::const_iterator> range=m_groups.equal_range(name);
 
@@ -321,13 +324,13 @@ const EntitiesDescriptor* FilesystemMetadataProvider::lookupGroup(const char* na
     return NULL;
 }
 
-const EntitiesDescriptor* FilesystemMetadataProvider::lookupGroup(const XMLCh* name, bool strict) const
+const EntitiesDescriptor* FilesystemMetadataProvider::getEntitiesDescriptor(const XMLCh* name, bool strict) const
 {
     auto_ptr_char temp(name);
-    return lookupGroup(temp.get(),strict);
+    return getEntitiesDescriptor(temp.get(),strict);
 }
 
-const EntityDescriptor* FilesystemMetadataProvider::lookup(const char* name, bool strict) const
+const EntityDescriptor* FilesystemMetadataProvider::getEntityDescriptor(const char* name, bool strict) const
 {
     pair<sitemap_t::const_iterator,sitemap_t::const_iterator> range=m_sites.equal_range(name);
 
@@ -342,8 +345,8 @@ const EntityDescriptor* FilesystemMetadataProvider::lookup(const char* name, boo
     return NULL;
 }
 
-const EntityDescriptor* FilesystemMetadataProvider::lookup(const XMLCh* name, bool strict) const
+const EntityDescriptor* FilesystemMetadataProvider::getEntityDescriptor(const XMLCh* name, bool strict) const
 {
     auto_ptr_char temp(name);
-    return lookup(temp.get(),strict);
+    return getEntityDescriptor(temp.get(),strict);
 }

@@ -22,12 +22,14 @@ using namespace opensaml::saml2md;
 class FilesystemMetadataProviderTest : public CxxTest::TestSuite, public SAMLObjectBaseTestCase {
     XMLCh* entityID;
     XMLCh* supportedProtocol;
+    XMLCh* supportedProtocol2;
     MetadataProvider* metadataProvider;
 
 public:
     void setUp() {
         entityID=XMLString::transcode("urn:mace:incommon:washington.edu");
         supportedProtocol=XMLString::transcode("urn:oasis:names:tc:SAML:1.1:protocol");
+        supportedProtocol2=XMLString::transcode("urn:mace:shibboleth:1.0");
         
         auto_ptr_XMLCh MP("MetadataProvider");
         auto_ptr_XMLCh path("path");
@@ -53,11 +55,14 @@ public:
         SAMLObjectBaseTestCase::tearDown();
     }
 
-    void testGetEntityDescriptor() {
+    void testEntityDescriptor() {
         Locker locker(metadataProvider);
-        const EntityDescriptor* descriptor = metadataProvider->lookup(entityID);
+        const EntityDescriptor* descriptor = metadataProvider->getEntityDescriptor(entityID);
         TSM_ASSERT("Retrieved entity descriptor was null", descriptor!=NULL);
         assertEquals("Entity's ID does not match requested ID", entityID, descriptor->getEntityID());
+        TSM_ASSERT_EQUALS("Unexpected number of roles", 1, descriptor->getIDPSSODescriptors().size());
+        TSM_ASSERT("Role lookup failed", descriptor->getIDPSSODescriptor(supportedProtocol)!=NULL);
+        TSM_ASSERT("Role lookup failed", descriptor->getIDPSSODescriptor(supportedProtocol2)!=NULL);
     }
 
 };

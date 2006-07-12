@@ -78,6 +78,14 @@ namespace opensaml {
             virtual void init()=0;
             
             /**
+             * Gets the entire metadata tree, after the registered filter has been applied.
+             * The caller MUST unlock the provider when finished with the data.
+             * 
+             * @return the entire metadata tree
+             */
+            virtual const xmltooling::XMLObject* getMetadata() const=0;
+        
+            /**
              * Gets the metadata for a given entity. If a valid entity is returned,
              * the provider will be left in a locked state. The caller MUST unlock the
              * provider when finished with the entity.
@@ -87,7 +95,7 @@ namespace opensaml {
              * 
              * @return the entity's metadata or NULL if there is no metadata or no valid metadata
              */
-            virtual const EntityDescriptor* lookup(const XMLCh* id, bool requireValidMetadata=true) const=0;
+            virtual const EntityDescriptor* getEntityDescriptor(const XMLCh* id, bool requireValidMetadata=true) const=0;
 
             /**
              * Gets the metadata for a given entity. If a valid entity is returned,
@@ -99,7 +107,7 @@ namespace opensaml {
              * 
              * @return the entity's metadata or NULL if there is no metadata or no valid metadata
              */
-            virtual const EntityDescriptor* lookup(const char* id, bool requireValidMetadata=true) const=0;
+            virtual const EntityDescriptor* getEntityDescriptor(const char* id, bool requireValidMetadata=true) const=0;
 
             /**
              * Gets the metadata for a given group of entities. If a valid group is returned,
@@ -111,7 +119,7 @@ namespace opensaml {
              * 
              * @return the group's metadata or NULL if there is no metadata or no valid metadata
              */
-            virtual const EntitiesDescriptor* lookupGroup(const XMLCh* name, bool requireValidMetadata=true) const=0;
+            virtual const EntitiesDescriptor* getEntitiesDescriptor(const XMLCh* name, bool requireValidMetadata=true) const=0;
 
             /**
              * Gets the metadata for a given group of entities. If a valid group is returned,
@@ -123,7 +131,7 @@ namespace opensaml {
              * 
              * @return the group's metadata or NULL if there is no metadata or no valid metadata
              */
-            virtual const EntitiesDescriptor* lookupGroup(const char* name, bool requireValidMetadata=true) const=0;
+            virtual const EntitiesDescriptor* getEntitiesDescriptor(const char* name, bool requireValidMetadata=true) const=0;
 
         protected:
             MetadataFilter* m_filter;
