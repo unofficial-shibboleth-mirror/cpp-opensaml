@@ -33,7 +33,6 @@
 #include <xmltooling/signature/KeyInfo.h>
 #include <xmltooling/signature/Signature.h>
 #include <xmltooling/util/DateTime.h>
-#include <xmltooling/validation/ValidatingXMLObject.h>
 #include <xmltooling/validation/ValidatorSuite.h>
 
 #define DECL_SAML1OBJECTBUILDER(cname) \

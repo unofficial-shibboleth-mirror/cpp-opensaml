@@ -250,6 +250,14 @@
 							RelativePath=".\saml2\core\impl\Assertions20SchemaValidators.cpp"
 							>
 						</File>
+						<File
+							RelativePath=".\saml2\core\impl\Protocols20Impl.cpp"
+							>
+						</File>
+						<File
+							RelativePath=".\saml2\core\impl\Protocols20SchemaValidators.cpp"
+							>
+						</File>
 					</Filter>
 				</Filter>
 				<Filter
@@ -259,7 +267,15 @@
 						Name="impl"
 						>
 						<File
+							RelativePath=".\saml2\metadata\impl\FilesystemMetadataProvider.cpp"
+							>
+						</File>
+						<File
 							RelativePath=".\saml2\metadata\impl\MetadataImpl.cpp"
+							>
+						</File>
+						<File
+							RelativePath=".\saml2\metadata\impl\MetadataProvider.cpp"
 							>
 						</File>
 						<File
@@ -363,6 +379,14 @@
 					>
 					<File
 						RelativePath=".\saml2\metadata\Metadata.h"
+						>
+					</File>
+					<File
+						RelativePath=".\saml2\metadata\MetadataFilter.h"
+						>
+					</File>
+					<File
+						RelativePath=".\saml2\metadata\MetadataProvider.h"
 						>
 					</File>
 				</Filter>

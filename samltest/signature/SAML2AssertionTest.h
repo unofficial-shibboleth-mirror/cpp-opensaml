@@ -95,9 +95,10 @@ public:
         assertEquals(expectedChildElementsDOM, b->buildFromDocument(doc));
         
         try {
-            assertion->getSignature()->registerValidator(new SignatureProfileValidator());
-            assertion->getSignature()->registerValidator(new SignatureValidator(new KeyResolver(m_key->clone())));
-            assertion->getSignature()->validate(true);
+            SignatureProfileValidator spv;
+            SignatureValidator sv(new KeyResolver(m_key->clone()));
+            spv.validate(assertion->getSignature());
+            sv.validate(assertion->getSignature());
         }
         catch (XMLToolingException& e) {
             TS_TRACE(e.what());

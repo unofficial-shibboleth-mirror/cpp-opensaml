@@ -35,7 +35,6 @@
 #include <xmltooling/signature/KeyInfo.h>
 #include <xmltooling/signature/Signature.h>
 #include <xmltooling/util/DateTime.h>
-#include <xmltooling/validation/ValidatingXMLObject.h>
 
 #define DECL_SAML2MDOBJECTBUILDER(cname) \
     DECL_XMLOBJECTBUILDER(SAML_API,cname,opensaml::SAMLConstants::SAML20MD_NS,opensaml::SAMLConstants::SAML20MD_PREFIX)

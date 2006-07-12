@@ -39,10 +39,6 @@ namespace opensaml {
         virtual ~SignatureProfileValidator() {}
 
         void validate(const xmltooling::XMLObject* xmlObject) const;
-        
-        SignatureProfileValidator* clone() const {
-            return new SignatureProfileValidator();
-        }
     };
 
 };

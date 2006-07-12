@@ -24,6 +24,9 @@
 #define __saml_config_h__
 
 #include <saml/base.h>
+#include <saml/saml2/metadata/MetadataProvider.h>
+
+#include <xmltooling/PluginManager.h>
 #include <xmltooling/unicode.h>
 #include <xmltooling/XMLToolingConfig.h>
 
@@ -92,6 +95,16 @@ namespace opensaml {
          * @return a valid null-terminated XML ID
          */
         virtual XMLCh* generateIdentifier()=0;
+        
+        /**
+         * Manages factories for MetadataProvider plugins.
+         */
+        xmltooling::PluginManager<saml2md::MetadataProvider,const DOMElement*> MetadataProviderManager;
+        
+        /**
+         * Manages factories for MetadataFilter plugins.
+         */
+        xmltooling::PluginManager<saml2md::MetadataFilter,const DOMElement*> MetadataFilterManager;
 
     protected:
         SAMLConfig() {}

@@ -77,6 +77,7 @@ bool SAMLInternalConfig::init()
     saml2::registerAssertionClasses();
     saml2p::registerProtocolClasses();
     saml2md::registerMetadataClasses();
+    saml2md::registerMetadataProviders();
 
     log.info("library initialization complete");
     return true;

@@ -32,7 +32,6 @@
 #include <xmltooling/io/AbstractXMLObjectMarshaller.h>
 #include <xmltooling/io/AbstractXMLObjectUnmarshaller.h>
 #include <xmltooling/util/XMLHelper.h>
-#include <xmltooling/validation/AbstractValidatingXMLObject.h>
 
 #include <ctime>
 #include <xercesc/util/XMLUniDefs.hpp>
@@ -59,7 +58,6 @@ namespace opensaml {
             protected AbstractSimpleElement,
             public AbstractChildlessElement,
             public AbstractDOMCachingXMLObject,
-            public AbstractValidatingXMLObject,
             public AbstractXMLObjectMarshaller,
             public AbstractXMLObjectUnmarshaller
         {
@@ -74,10 +72,7 @@ namespace opensaml {
             }
                 
             RespondWithImpl(const RespondWithImpl& src)
-                    : AbstractXMLObject(src),
-                        AbstractSimpleElement(src),
-                        AbstractDOMCachingXMLObject(src),
-                        AbstractValidatingXMLObject(src), m_qname(NULL) {
+                    : AbstractXMLObject(src), AbstractSimpleElement(src), AbstractDOMCachingXMLObject(src), m_qname(NULL) {
                 setQName(src.getQName());
             }
             
@@ -102,7 +97,6 @@ namespace opensaml {
         class SAML_DLLLOCAL SubjectQueryImpl : public virtual SubjectQuery,
             public AbstractComplexElement,
             public AbstractDOMCachingXMLObject,
-            public AbstractValidatingXMLObject,
             public AbstractXMLObjectMarshaller,
             public AbstractXMLObjectUnmarshaller
         {
@@ -123,10 +117,7 @@ namespace opensaml {
                 init();
             }
                 
-            SubjectQueryImpl(const SubjectQueryImpl& src)
-                    : AbstractXMLObject(src),
-                        AbstractDOMCachingXMLObject(src),
-                        AbstractValidatingXMLObject(src) {
+            SubjectQueryImpl(const SubjectQueryImpl& src) : AbstractXMLObject(src), AbstractDOMCachingXMLObject(src) {
                 init();
                 if (src.getSubject())
                     setSubject(src.getSubject()->cloneSubject());
@@ -156,8 +147,7 @@ namespace opensaml {
                 init();
             }
                 
-            AuthenticationQueryImpl(const AuthenticationQueryImpl& src)
-                    : AbstractXMLObject(src), SubjectQueryImpl(src) {
+            AuthenticationQueryImpl(const AuthenticationQueryImpl& src) : AbstractXMLObject(src), SubjectQueryImpl(src) {
                 init();
                 setAuthenticationMethod(src.getAuthenticationMethod());
             }
@@ -198,8 +188,7 @@ namespace opensaml {
                 init();
             }
                 
-            AttributeQueryImpl(const AttributeQueryImpl& src)
-                    : AbstractXMLObject(src), SubjectQueryImpl(src) {
+            AttributeQueryImpl(const AttributeQueryImpl& src) : AbstractXMLObject(src), SubjectQueryImpl(src) {
                 init();
                 setResource(src.getResource());
                 VectorOf(AttributeDesignator) v=getAttributeDesignators();
@@ -256,8 +245,7 @@ namespace opensaml {
                 init();
             }
                 
-            AuthorizationDecisionQueryImpl(const AuthorizationDecisionQueryImpl& src)
-                    : AbstractXMLObject(src), SubjectQueryImpl(src) {
+            AuthorizationDecisionQueryImpl(const AuthorizationDecisionQueryImpl& src) : AbstractXMLObject(src), SubjectQueryImpl(src) {
                 init();
                 setResource(src.getResource());
                 if (src.getEvidence())
@@ -302,7 +290,6 @@ namespace opensaml {
         class SAML_DLLLOCAL RequestAbstractTypeImpl : public virtual RequestAbstractType,
             public AbstractComplexElement,
             public AbstractDOMCachingXMLObject,
-            public AbstractValidatingXMLObject,
             public AbstractXMLObjectMarshaller,
             public AbstractXMLObjectUnmarshaller
         {
@@ -330,10 +317,7 @@ namespace opensaml {
                 init();
             }
                 
-            RequestAbstractTypeImpl(const RequestAbstractTypeImpl& src)
-                    : AbstractXMLObject(src),
-                        AbstractDOMCachingXMLObject(src),
-                        AbstractValidatingXMLObject(src) {
+            RequestAbstractTypeImpl(const RequestAbstractTypeImpl& src) : AbstractXMLObject(src), AbstractDOMCachingXMLObject(src) {
                 init();
                 setMinorVersion(src.m_MinorVersion);
                 setRequestID(src.getRequestID());
@@ -426,8 +410,7 @@ namespace opensaml {
                 init();
             }
                 
-            RequestImpl(const RequestImpl& src)
-                    : AbstractXMLObject(src), RequestAbstractTypeImpl(src) {
+            RequestImpl(const RequestImpl& src) : AbstractXMLObject(src), RequestAbstractTypeImpl(src) {
                 init();
                 if (src.getQuery())
                     setQuery(src.getQuery()->cloneQuery());
@@ -492,7 +475,6 @@ namespace opensaml {
         class SAML_DLLLOCAL StatusCodeImpl : public virtual StatusCode,
             public AbstractComplexElement,
             public AbstractDOMCachingXMLObject,
-            public AbstractValidatingXMLObject,
             public AbstractXMLObjectMarshaller,
             public AbstractXMLObjectUnmarshaller
         {
@@ -512,8 +494,7 @@ namespace opensaml {
                 init();
             }
                 
-            StatusCodeImpl(const StatusCodeImpl& src)
-                    : AbstractXMLObject(src), AbstractDOMCachingXMLObject(src), AbstractValidatingXMLObject(src) {
+            StatusCodeImpl(const StatusCodeImpl& src) : AbstractXMLObject(src), AbstractDOMCachingXMLObject(src) {
                 init();
                 setValue(src.getValue());
                 if (src.getStatusCode())
@@ -542,7 +523,6 @@ namespace opensaml {
         class SAML_DLLLOCAL StatusDetailImpl : public virtual StatusDetail,
             public AbstractComplexElement,
             public AbstractDOMCachingXMLObject,
-            public AbstractValidatingXMLObject,
             public AbstractXMLObjectMarshaller,
             public AbstractXMLObjectUnmarshaller
         {
@@ -553,8 +533,7 @@ namespace opensaml {
                 : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
             }
                 
-            StatusDetailImpl(const StatusDetailImpl& src)
-                    : AbstractXMLObject(src), AbstractDOMCachingXMLObject(src), AbstractValidatingXMLObject(src) {
+            StatusDetailImpl(const StatusDetailImpl& src) : AbstractXMLObject(src), AbstractDOMCachingXMLObject(src) {
                 VectorOf(XMLObject) v=getDetails();
                 for (vector<XMLObject*>::const_iterator i=src.m_Details.begin(); i!=src.m_Details.end(); i++) {
                     if (*i) {
@@ -575,7 +554,6 @@ namespace opensaml {
         class SAML_DLLLOCAL StatusImpl : public virtual Status,
             public AbstractComplexElement,
             public AbstractDOMCachingXMLObject,
-            public AbstractValidatingXMLObject,
             public AbstractXMLObjectMarshaller,
             public AbstractXMLObjectUnmarshaller
         {
@@ -600,8 +578,7 @@ namespace opensaml {
                 init();
             }
                 
-            StatusImpl(const StatusImpl& src)
-                    : AbstractXMLObject(src), AbstractDOMCachingXMLObject(src), AbstractValidatingXMLObject(src) {
+            StatusImpl(const StatusImpl& src) : AbstractXMLObject(src), AbstractDOMCachingXMLObject(src) {
                 init();
                 if (src.getStatusCode())
                     setStatusCode(src.getStatusCode()->cloneStatusCode());
@@ -628,7 +605,6 @@ namespace opensaml {
         class SAML_DLLLOCAL ResponseAbstractTypeImpl : public virtual ResponseAbstractType,
             public AbstractComplexElement,
             public AbstractDOMCachingXMLObject,
-            public AbstractValidatingXMLObject,
             public AbstractXMLObjectMarshaller,
             public AbstractXMLObjectUnmarshaller
         {
@@ -660,10 +636,7 @@ namespace opensaml {
                 init();
             }
                 
-            ResponseAbstractTypeImpl(const ResponseAbstractTypeImpl& src)
-                    : AbstractXMLObject(src),
-                        AbstractDOMCachingXMLObject(src),
-                        AbstractValidatingXMLObject(src) {
+            ResponseAbstractTypeImpl(const ResponseAbstractTypeImpl& src) : AbstractXMLObject(src), AbstractDOMCachingXMLObject(src) {
                 init();
                 setMinorVersion(src.m_MinorVersion);
                 setResponseID(src.getResponseID());
@@ -756,8 +729,7 @@ namespace opensaml {
                 init();
             }
                 
-            ResponseImpl(const ResponseImpl& src)
-                    : AbstractXMLObject(src), ResponseAbstractTypeImpl(src) {
+            ResponseImpl(const ResponseImpl& src) : AbstractXMLObject(src), ResponseAbstractTypeImpl(src) {
                 init();
                 if (src.getStatus())
                     setStatus(src.getStatus()->cloneStatus());
