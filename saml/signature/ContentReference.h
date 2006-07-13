@@ -26,6 +26,8 @@
 #include <saml/base.h>
 #include <xmltooling/signature/ContentReference.h>
 
+#include <string>
+
 namespace opensaml {
 
     class SAML_API SignableObject;
