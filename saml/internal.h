@@ -39,6 +39,37 @@
 #include "base.h"
 #include "SAMLConfig.h"
 
+#include <limits.h>
+
+// C99 defines LLONG_MIN, LLONG_MAX and ULLONG_MAX, but this part of
+// C99 is not yet included into the C++ standard.
+// GCC defines LONG_LONG_MIN, LONG_LONG_MAX and ULONG_LONG_MAX.
+// Some compilers (such as Comeau C++ up to and including version 4.3.3)
+// define nothing.  In this last case we make a reasonable guess.
+#ifndef LLONG_MIN
+#if defined(LONG_LONG_MIN)
+#define LLONG_MIN LONG_LONG_MIN
+#elif SIZEOF_LONG_LONG == 8
+#define LLONG_MIN 0x8000000000000000LL
+#endif
+#endif
+ 
+#ifndef LLONG_MAX
+#if defined(LONG_LONG_MAX)
+#define LLONG_MAX LONG_LONG_MAX
+#elif SIZEOF_LONG_LONG == 8
+#define LLONG_MAX 0x7fffffffffffffffLL
+#endif
+#endif
+ 
+#ifndef ULLONG_MAX
+#if defined(ULONG_LONG_MAX)
+#define ULLONG_MAX ULONG_LONG_MAX
+#elif SIZEOF_UNSIGNED_LONG_LONG == 8
+#define ULLONG_MAX 0xffffffffffffffffULL
+#endif
+#endif
+
 #define SAML_LOGCAT "OpenSAML"
 
 namespace opensaml {

@@ -34,6 +34,7 @@
 #include <xmltooling/util/XMLHelper.h>
 
 #include <ctime>
+#include <limits.h>
 #include <xercesc/util/XMLUniDefs.hpp>
 
 using namespace opensaml::saml1;

@@ -249,7 +249,7 @@ namespace opensaml {
             }
                 
             ExtensionsImpl(const ExtensionsImpl& src)
-                    : AbstractXMLObject(src), AbstractDOMCachingXMLObject(src), AbstractElementProxy(src) {
+                    : AbstractXMLObject(src), AbstractElementProxy(src), AbstractDOMCachingXMLObject(src) {
                 for (list<XMLObject*>::const_iterator i=src.m_children.begin(); i!=src.m_children.end(); i++) {
                     if (*i) {
                         getXMLObjects().push_back((*i)->clone());
