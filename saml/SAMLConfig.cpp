@@ -29,6 +29,7 @@
 #include "saml1/core/Protocols.h"
 #include "saml2/core/Protocols.h"
 #include "saml2/metadata/Metadata.h"
+#include "saml2/metadata/MetadataProvider.h"
 #include "util/SAMLConstants.h"
 
 #include <xmltooling/XMLToolingConfig.h>
@@ -78,6 +79,7 @@ bool SAMLInternalConfig::init()
     saml2p::registerProtocolClasses();
     saml2md::registerMetadataClasses();
     saml2md::registerMetadataProviders();
+    saml2md::registerMetadataFilters();
 
     log.info("library initialization complete");
     return true;

@@ -15,7 +15,7 @@
  */
 
 /**
- * @file MetadataFilter.h
+ * @file saml/saml2/metadata/MetadataFilter.h
  * 
  * Processes metadata after it's been unmarshalled.
  */
@@ -39,7 +39,8 @@ namespace opensaml {
         class SAML_API MetadataFilter
         {
             MAKE_NONCOPYABLE(MetadataFilter);
-            
+        protected:
+            MetadataFilter() {}
         public:
             virtual ~MetadataFilter() {}
             
@@ -55,11 +56,22 @@ namespace opensaml {
              * signal the removal of information, only for systemic processing failure.
              * 
              * @param xmlObject the metadata to be filtered.
-             * @throws FilterException thrown if an error occurs during the filtering process
              */
             virtual void doFilter(xmltooling::XMLObject& xmlObject) const=0;
         };
 
+        /**
+         * Registers MetadataFilter classes into the runtime.
+         */
+        void SAML_API registerMetadataFilters();
+        
+        /** MetadataFilter that deletes blacklisted entities. */
+        #define BLACKLIST_METADATA_FILTER  "org.opensaml.saml2.metadata.provider.BlacklistMetadataFilter"
+
+        /** MetadataFilter that deletes all but whitelisted entities. */
+        #define WHITELIST_METADATA_FILTER  "org.opensaml.saml2.metadata.provider.WhitelistMetadataFilter"
+        
+        DECL_XMLTOOLING_EXCEPTION(MetadataFilterException,SAML_EXCEPTIONAPI(SAML_API),opensaml::saml2md,xmltooling::XMLToolingException,Exceptions related to metadata filtering);
     };
 };
 

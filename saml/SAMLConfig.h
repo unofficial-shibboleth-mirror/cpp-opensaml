@@ -24,7 +24,6 @@
 #define __saml_config_h__
 
 #include <saml/base.h>
-#include <saml/saml2/metadata/MetadataProvider.h>
 
 #include <xmltooling/PluginManager.h>
 #include <xmltooling/unicode.h>
@@ -37,6 +36,16 @@
  * Common classes for OpenSAML library
  */
 namespace opensaml {
+
+    namespace saml2md {
+        class SAML_API MetadataProvider;
+        class SAML_API MetadataFilter;
+    };
+
+#if defined (_MSC_VER)
+    #pragma warning( push )
+    #pragma warning( disable : 4250 4251 )
+#endif
 
     /**
      * Singleton object that manages library startup/shutdown.configuration.
@@ -110,6 +119,10 @@ namespace opensaml {
         SAMLConfig() {}
     };
 
+#if defined (_MSC_VER)
+    #pragma warning( pop )
+#endif
+    
 };
 
 #endif /* __saml_config_h__ */

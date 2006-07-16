@@ -15,7 +15,7 @@
  */
 
 /**
- * @file MetadataProvider.h
+ * @file saml/saml2/metadata/MetadataProvider.h
  * 
  * Supplies an individual source of metadata.
  */
@@ -39,41 +39,65 @@ namespace opensaml {
         class SAML_API MetadataProvider : public virtual xmltooling::Lockable
         {
             MAKE_NONCOPYABLE(MetadataProvider);
+            
         protected:
-            MetadataProvider() : m_filter(NULL) {}
+            /**
+             * Constructor. If a DOM is supplied, a set of default logic will be
+             * used to identify and build MetadataFilter plugins and install them
+             * into the provider. The following XML content is supported:
+             * 
+             * <ul>
+             *  <li>&lt;MetadataFilter&gt; elements with a type attribute
+             *  <li>&lt;Exclude&gt; elements representing a BlacklistMetadataFilter
+             *  <li>&lt;BlacklistMetadataFilter&gt; element containing &lt;Exclude&gt; elements 
+             *  <li>&lt;Include&gt; elements representing a WhitelistMetadataFilter
+             *  <li>&lt;WhitelistMetadataFilter&gt; element containing &lt;Include&gt; elements 
+             * </ul>
+             * 
+             * XML namespaces are ignored in the processing of these elements.
+             * 
+             * @param e DOM to supply configuration for provider
+             */
+            MetadataProvider(const DOMElement* e=NULL);
             
         public:
-            virtual ~MetadataProvider() {
-                delete m_filter;
+            /**
+             * Destructor will delete any installed filters.
+             */
+            virtual ~MetadataProvider();
+            
+            /**
+             * Adds a metadata filter to apply to any resolved metadata. Will not be applied
+             * to metadata that is already loaded.
+             * 
+             * @param newFilter metadata filter to add
+             */
+            virtual void addMetadataFilter(MetadataFilter* newFilter) {
+                m_filters.push_back(newFilter);
+            }
+
+            /**
+             * Removes a metadata filter. The caller must delete the filter if necessary.
+             * 
+             * @param oldFilter metadata filter to remove
+             * @return  the old filter
+             */
+            virtual MetadataFilter* removeMetadataFilter(MetadataFilter* oldFilter) {
+                for (std::vector<MetadataFilter*>::iterator i=m_filters.begin(); i!=m_filters.end(); i++) {
+                    if (oldFilter==(*i)) {
+                        m_filters.erase(i);
+                        return oldFilter;
+                    }
+                }
+                return NULL;
             }
             
             /**
-             * Gets the metadata filter applied to the resolved metadata.
-             * 
-             * @return the metadata filter applied to the resolved metadata
-             */
-            const MetadataFilter* getMetadataFilter() const {
-                return m_filter;
-            }
-        
-            /**
-             * Sets the metadata filter applied to the resolved metadata.
-             * 
-             * @param newFilter the metadata filter applied to the resolved metadata
-             */
-            void setMetadataFilter(MetadataFilter* newFilter) {
-                delete m_filter;
-                m_filter=newFilter;
-            }
-            
-            /**
-             * Should be called after instantiating provider and setting filter, but before
+             * Should be called after instantiating provider and adding filters, but before
              * performing any lookup operations. Allows the provider to defer initialization
              * processes that are likely to result in exceptions until after the provider is
              * safely created. Providers SHOULD perform as much processing as possible in
              * this method so as to report/log any errors that would affect later processing.
-             * Also, any inputs supplied to the factory MUST persist until the completion of
-             * this method, but the caller is then free to modify or delete them.
              */
             virtual void init()=0;
             
@@ -134,7 +158,15 @@ namespace opensaml {
             virtual const EntitiesDescriptor* getEntitiesDescriptor(const char* name, bool requireValidMetadata=true) const=0;
 
         protected:
-            MetadataFilter* m_filter;
+            /**
+             * Applies any installed filters to a metadata instance.
+             * 
+             * @param xmlObject the metadata to be filtered
+             */
+            void doFilters(xmltooling::XMLObject& xmlObject) const;
+        
+        private:
+            std::vector<MetadataFilter*> m_filters;
         };
         
         /**

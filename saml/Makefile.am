@@ -60,10 +60,12 @@ libsaml_la_SOURCES = \
 	saml2/core/impl/Assertions20SchemaValidators.cpp \
 	saml2/core/impl/Protocols20Impl.cpp \
 	saml2/core/impl/Protocols20SchemaValidators.cpp \
+	saml2/metadata/impl/BlacklistMetadataFilter.cpp \
 	saml2/metadata/impl/FilesystemMetadataProvider.cpp \
 	saml2/metadata/impl/MetadataImpl.cpp \
 	saml2/metadata/impl/MetadataProvider.cpp \
 	saml2/metadata/impl/MetadataSchemaValidators.cpp \
+	saml2/metadata/impl/WhitelistMetadataFilter.cpp \
 	signature/ContentReference.cpp \
 	signature/SignatureProfileValidator.cpp \
 	util/SAMLConstants.cpp

@@ -267,6 +267,10 @@
 						Name="impl"
 						>
 						<File
+							RelativePath=".\saml2\metadata\impl\BlacklistMetadataFilter.cpp"
+							>
+						</File>
+						<File
 							RelativePath=".\saml2\metadata\impl\FilesystemMetadataProvider.cpp"
 							>
 						</File>
@@ -280,6 +284,10 @@
 						</File>
 						<File
 							RelativePath=".\saml2\metadata\impl\MetadataSchemaValidators.cpp"
+							>
+						</File>
+						<File
+							RelativePath=".\saml2\metadata\impl\WhitelistMetadataFilter.cpp"
 							>
 						</File>
 					</Filter>

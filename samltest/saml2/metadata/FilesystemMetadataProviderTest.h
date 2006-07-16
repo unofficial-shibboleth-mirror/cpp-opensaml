@@ -21,42 +21,45 @@ using namespace opensaml::saml2md;
 
 class FilesystemMetadataProviderTest : public CxxTest::TestSuite, public SAMLObjectBaseTestCase {
     XMLCh* entityID;
+    XMLCh* entityID2;
     XMLCh* supportedProtocol;
     XMLCh* supportedProtocol2;
-    MetadataProvider* metadataProvider;
 
 public:
     void setUp() {
         entityID=XMLString::transcode("urn:mace:incommon:washington.edu");
+        entityID2=XMLString::transcode("urn:mace:incommon:rochester.edu");
         supportedProtocol=XMLString::transcode("urn:oasis:names:tc:SAML:1.1:protocol");
         supportedProtocol2=XMLString::transcode("urn:mace:shibboleth:1.0");
-        
-        auto_ptr_XMLCh MP("MetadataProvider");
-        auto_ptr_XMLCh path("path");
-        auto_ptr_XMLCh validate("validate");
-        string s=data_path + "saml2/metadata/InCommon-metadata.xml";
-        auto_ptr_XMLCh file(s.c_str());
-        DOMDocument* doc=XMLToolingConfig::getConfig().getParser().newDocument();
-        XercesJanitor<DOMDocument> janitor(doc);
-        DOMElement* root=doc->createElementNS(NULL,MP.get());
-        root->setAttributeNS(NULL,path.get(),file.get());
-        root->setAttributeNS(NULL,validate.get(),XMLConstants::XML_ZERO);
-        metadataProvider = NULL;
-        metadataProvider = SAMLConfig::getConfig().MetadataProviderManager.newPlugin(FILESYSTEM_METADATA_PROVIDER,root);
-        metadataProvider->init();
-        
         SAMLObjectBaseTestCase::setUp();
     }
     
     void tearDown() {
         XMLString::release(&entityID);
+        XMLString::release(&entityID2);
         XMLString::release(&supportedProtocol);
-        delete metadataProvider;
+        XMLString::release(&supportedProtocol2);
         SAMLObjectBaseTestCase::tearDown();
     }
 
-    void testEntityDescriptor() {
-        Locker locker(metadataProvider);
+    void testFilesystemProvider() {
+        string config = data_path + "saml2/metadata/FilesystemMetadataProvider.xml";
+        ifstream in(config.c_str());
+        DOMDocument* doc=XMLToolingConfig::getConfig().getParser().parse(in);
+        XercesJanitor<DOMDocument> janitor(doc);
+
+        auto_ptr_XMLCh path("path");
+        string s = data_path + "saml2/metadata/InCommon-metadata.xml";
+        auto_ptr_XMLCh file(s.c_str());
+        doc->getDocumentElement()->setAttributeNS(NULL,path.get(),file.get());
+
+        auto_ptr<MetadataProvider> metadataProvider(
+            SAMLConfig::getConfig().MetadataProviderManager.newPlugin(FILESYSTEM_METADATA_PROVIDER,doc->getDocumentElement())
+            );
+        metadataProvider->init();
+        
+
+        Locker locker(metadataProvider.get());
         const EntityDescriptor* descriptor = metadataProvider->getEntityDescriptor(entityID);
         TSM_ASSERT("Retrieved entity descriptor was null", descriptor!=NULL);
         assertEquals("Entity's ID does not match requested ID", entityID, descriptor->getEntityID());
@@ -65,4 +68,53 @@ public:
         TSM_ASSERT("Role lookup failed", descriptor->getIDPSSODescriptor(supportedProtocol2)!=NULL);
     }
 
+    void testFilesystemWithBlacklists() {
+        string config = data_path + "saml2/metadata/FilesystemWithBlacklists.xml";
+        ifstream in(config.c_str());
+        DOMDocument* doc=XMLToolingConfig::getConfig().getParser().parse(in);
+        XercesJanitor<DOMDocument> janitor(doc);
+
+        auto_ptr_XMLCh path("path");
+        string s = data_path + "saml2/metadata/InCommon-metadata.xml";
+        auto_ptr_XMLCh file(s.c_str());
+        doc->getDocumentElement()->setAttributeNS(NULL,path.get(),file.get());
+
+        auto_ptr<MetadataProvider> metadataProvider(
+            SAMLConfig::getConfig().MetadataProviderManager.newPlugin(FILESYSTEM_METADATA_PROVIDER,doc->getDocumentElement())
+            );
+        metadataProvider->init();
+        
+
+        Locker locker(metadataProvider.get());
+        const EntityDescriptor* descriptor = metadataProvider->getEntityDescriptor(entityID);
+        TSM_ASSERT("Retrieved entity descriptor was not null", descriptor==NULL);
+        descriptor = metadataProvider->getEntityDescriptor(entityID2);
+        TSM_ASSERT("Retrieved entity descriptor was null", descriptor!=NULL);
+        assertEquals("Entity's ID does not match requested ID", entityID2, descriptor->getEntityID());
+    }
+
+    void testFilesystemWithWhitelists() {
+        string config = data_path + "saml2/metadata/FilesystemWithWhitelists.xml";
+        ifstream in(config.c_str());
+        DOMDocument* doc=XMLToolingConfig::getConfig().getParser().parse(in);
+        XercesJanitor<DOMDocument> janitor(doc);
+
+        auto_ptr_XMLCh path("path");
+        string s = data_path + "saml2/metadata/InCommon-metadata.xml";
+        auto_ptr_XMLCh file(s.c_str());
+        doc->getDocumentElement()->setAttributeNS(NULL,path.get(),file.get());
+
+        auto_ptr<MetadataProvider> metadataProvider(
+            SAMLConfig::getConfig().MetadataProviderManager.newPlugin(FILESYSTEM_METADATA_PROVIDER,doc->getDocumentElement())
+            );
+        metadataProvider->init();
+        
+
+        Locker locker(metadataProvider.get());
+        const EntityDescriptor* descriptor = metadataProvider->getEntityDescriptor(entityID2);
+        TSM_ASSERT("Retrieved entity descriptor was not null", descriptor==NULL);
+        descriptor = metadataProvider->getEntityDescriptor(entityID);
+        TSM_ASSERT("Retrieved entity descriptor was null", descriptor!=NULL);
+        assertEquals("Entity's ID does not match requested ID", entityID, descriptor->getEntityID());
+    }
 };

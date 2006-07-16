@@ -53,7 +53,8 @@ samltest_h = \
     saml2/core/impl/StatusDetail20Test.h \
     saml2/core/impl/StatusMessage20Test.h \
     saml2/core/impl/StatusResponse20Test.h\
-    saml2/core/impl/Terminate20Test.h
+    saml2/core/impl/Terminate20Test.h \
+    saml2/metadata/FilesystemMetadataProviderTest.h
 
 noinst_HEADERS = \
     internal.h \

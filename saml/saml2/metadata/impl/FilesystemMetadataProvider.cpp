@@ -101,7 +101,7 @@ static const XMLCh filename[] = UNICODE_LITERAL_8(f,i,l,e,n,a,m,e);
 static const XMLCh validate[] = UNICODE_LITERAL_8(v,a,l,i,d,a,t,e);
 
 FilesystemMetadataProvider::FilesystemMetadataProvider(const DOMElement* e)
-    : m_root(e), m_filestamp(0), m_validate(false), m_lock(NULL), m_object(NULL)
+    : MetadataProvider(e), m_root(e), m_filestamp(0), m_validate(false), m_lock(NULL), m_object(NULL)
 {
 #ifdef _DEBUG
     NDC ndc("FilesystemMetadataProvider");
@@ -199,10 +199,7 @@ XMLObject* FilesystemMetadataProvider::load() const
         
         auto_ptr<XMLObject> xmlObjectPtr(xmlObject);
         
-        if (m_filter) {
-            log.info("applying metadata filter (%s)", m_filter->getId());
-            m_filter->doFilter(*xmlObject);
-        }
+        doFilters(*xmlObject);
         
         xmlObjectPtr->releaseThisAndChildrenDOM();
         xmlObjectPtr->setDocument(NULL);
