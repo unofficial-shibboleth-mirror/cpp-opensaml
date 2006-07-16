@@ -164,7 +164,7 @@ namespace opensaml {
             
             IMPL_XMLOBJECT_CLONE(Conditions);
             IMPL_DATETIME_ATTRIB(NotBefore,0);
-            IMPL_DATETIME_ATTRIB(NotOnOrAfter,LLONG_MAX);
+            IMPL_DATETIME_ATTRIB(NotOnOrAfter,SAMLTIME_MAX);
             IMPL_TYPED_CHILDREN(AudienceRestrictionCondition, m_children.end());
             IMPL_TYPED_CHILDREN(DoNotCacheCondition,m_children.end());
             IMPL_TYPED_CHILDREN(Condition,m_children.end());

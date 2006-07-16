@@ -43,7 +43,6 @@ MetadataProvider::MetadataProvider(const DOMElement* e)
 #ifdef _DEBUG
     NDC ndc("MetadataProvider");
 #endif
-    Category& log=Category::getInstance(SAML_LOGCAT".Metadata");
     SAMLConfig& conf=SAMLConfig::getConfig();
     
     // Locate any default recognized filters.
@@ -70,7 +69,8 @@ MetadataProvider::MetadataProvider(const DOMElement* e)
             child = XMLHelper::getNextSiblingElement(child);
         }
     }
-    catch (XMLToolingException&) {
+    catch (XMLToolingException& ex) {
+        Category::getInstance(SAML_LOGCAT".Metadata").error("caught exception while installing filters: %s", ex.what());
         for_each(m_filters.begin(),m_filters.end(),xmltooling::cleanup<MetadataFilter>());
         throw;
     }

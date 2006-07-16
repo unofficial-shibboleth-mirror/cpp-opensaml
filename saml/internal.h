@@ -70,6 +70,12 @@
 #endif
 #endif
 
+#if SIZEOF_TIME_T == 8
+# define SAMLTIME_MAX LLONG_MAX
+#elif SIZEOF_TIME_T == 4
+# define SAMLTIME_MAX LONG_MAX
+#endif
+
 #define SAML_LOGCAT "OpenSAML"
 
 namespace opensaml {

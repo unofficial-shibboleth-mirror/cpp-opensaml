@@ -986,7 +986,7 @@ namespace opensaml {
             IMPL_STRING_ATTRIB(ID);
             IMPL_STRING_ATTRIB(ProtocolSupportEnumeration);
             IMPL_STRING_ATTRIB(ErrorURL);
-            IMPL_DATETIME_ATTRIB(ValidUntil,LLONG_MAX);
+            IMPL_DATETIME_ATTRIB(ValidUntil,SAMLTIME_MAX);
             IMPL_DATETIME_ATTRIB(CacheDuration,0);
             IMPL_TYPED_CHILD(Extensions);
             IMPL_TYPED_CHILDREN(KeyDescriptor,m_pos_Organization);
@@ -1828,7 +1828,7 @@ namespace opensaml {
             
             IMPL_STRING_ATTRIB(ID);
             IMPL_STRING_ATTRIB(AffiliationOwnerID);
-            IMPL_DATETIME_ATTRIB(ValidUntil,LLONG_MAX);
+            IMPL_DATETIME_ATTRIB(ValidUntil,SAMLTIME_MAX);
             IMPL_DATETIME_ATTRIB(CacheDuration,0);
             IMPL_TYPED_CHILD(Extensions);
             IMPL_TYPED_CHILDREN(AffiliateMember,m_pos_AffiliateMember);
@@ -2030,7 +2030,7 @@ namespace opensaml {
             
             IMPL_STRING_ATTRIB(ID);
             IMPL_STRING_ATTRIB(EntityID);
-            IMPL_DATETIME_ATTRIB(ValidUntil,LLONG_MAX);
+            IMPL_DATETIME_ATTRIB(ValidUntil,SAMLTIME_MAX);
             IMPL_DATETIME_ATTRIB(CacheDuration,0);
             IMPL_TYPED_CHILD(Extensions);
             IMPL_TYPED_CHILDREN(RoleDescriptor,m_pos_AffiliationDescriptor);
@@ -2240,7 +2240,7 @@ namespace opensaml {
             
             IMPL_STRING_ATTRIB(ID);
             IMPL_STRING_ATTRIB(Name);
-            IMPL_DATETIME_ATTRIB(ValidUntil,LLONG_MAX);
+            IMPL_DATETIME_ATTRIB(ValidUntil,SAMLTIME_MAX);
             IMPL_DATETIME_ATTRIB(CacheDuration,0);
             IMPL_TYPED_CHILD(Extensions);
             IMPL_TYPED_CHILDREN(EntityDescriptor,m_children.end());

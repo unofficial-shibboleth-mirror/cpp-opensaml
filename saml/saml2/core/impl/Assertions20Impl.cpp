@@ -401,7 +401,7 @@ namespace opensaml {
                         
             IMPL_XMLOBJECT_CLONE(Conditions);
             IMPL_DATETIME_ATTRIB(NotBefore,0);
-            IMPL_DATETIME_ATTRIB(NotOnOrAfter,LLONG_MAX);
+            IMPL_DATETIME_ATTRIB(NotOnOrAfter,SAMLTIME_MAX);
             IMPL_TYPED_CHILDREN(AudienceRestriction, m_children.end());
             IMPL_TYPED_CHILDREN(OneTimeUse,m_children.end());
             IMPL_TYPED_CHILDREN(ProxyRestriction, m_children.end());
@@ -459,7 +459,7 @@ namespace opensaml {
             
             IMPL_XMLOBJECT_CLONE(SubjectConfirmationData);
             IMPL_DATETIME_ATTRIB(NotBefore,0);
-            IMPL_DATETIME_ATTRIB(NotOnOrAfter,LLONG_MAX);
+            IMPL_DATETIME_ATTRIB(NotOnOrAfter,SAMLTIME_MAX);
             IMPL_STRING_ATTRIB(Recipient);
             IMPL_STRING_ATTRIB(InResponseTo);
             IMPL_STRING_ATTRIB(Address);
@@ -547,7 +547,7 @@ namespace opensaml {
             
             IMPL_XMLOBJECT_CLONE(KeyInfoConfirmationDataType);
             IMPL_DATETIME_ATTRIB(NotBefore,0);
-            IMPL_DATETIME_ATTRIB(NotOnOrAfter,LLONG_MAX);
+            IMPL_DATETIME_ATTRIB(NotOnOrAfter,SAMLTIME_MAX);
             IMPL_STRING_ATTRIB(Recipient);
             IMPL_STRING_ATTRIB(InResponseTo);
             IMPL_STRING_ATTRIB(Address);
@@ -910,7 +910,7 @@ namespace opensaml {
             }
             IMPL_DATETIME_ATTRIB(AuthnInstant,0);
             IMPL_STRING_ATTRIB(SessionIndex);
-            IMPL_DATETIME_ATTRIB(SessionNotOnOrAfter,LLONG_MAX);
+            IMPL_DATETIME_ATTRIB(SessionNotOnOrAfter,SAMLTIME_MAX);
             IMPL_TYPED_CHILD(SubjectLocality);
             IMPL_TYPED_CHILD(AuthnContext);
     

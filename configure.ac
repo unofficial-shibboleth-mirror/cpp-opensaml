@@ -55,6 +55,8 @@ AC_TYPE_SIZE_T
 # Checks for library functions.
 AC_CHECK_FUNCS([strchr strdup strstr])
 
+AC_CHECK_SIZEOF(time_t)
+
 # libcurl settings
 AC_PATH_PROG(CURL_CONFIG,curl-config)
 AC_ARG_WITH(curl,

@@ -1453,7 +1453,7 @@ namespace opensaml {
             IMPL_XMLOBJECT_CLONE(LogoutRequest);
 
             IMPL_STRING_ATTRIB(Reason);
-            IMPL_DATETIME_ATTRIB(NotOnOrAfter,LLONG_MAX);
+            IMPL_DATETIME_ATTRIB(NotOnOrAfter,SAMLTIME_MAX);
             IMPL_TYPED_FOREIGN_CHILD(BaseID,saml2);
             IMPL_TYPED_FOREIGN_CHILD(NameID,saml2);
             IMPL_TYPED_FOREIGN_CHILD(EncryptedID,saml2);

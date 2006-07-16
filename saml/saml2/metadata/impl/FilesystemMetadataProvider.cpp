@@ -66,8 +66,8 @@ namespace opensaml {
         private:
             XMLObject* load() const;
             void index();
-            void index(EntityDescriptor* site, time_t validUntil=LLONG_MAX);
-            void index(EntitiesDescriptor* group, time_t validUntil=LLONG_MAX);
+            void index(EntityDescriptor* site, time_t validUntil=SAMLTIME_MAX);
+            void index(EntitiesDescriptor* group, time_t validUntil=SAMLTIME_MAX);
         
             // index of loaded metadata
             typedef multimap<string,const EntityDescriptor*> sitemap_t;
