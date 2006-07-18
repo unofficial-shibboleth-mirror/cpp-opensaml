@@ -81,6 +81,10 @@ const XMLCh SAMLConstants::SAML1_METADATA_PROFILE[] = // urn:oasis:names:tc:SAML
   chLatin_v, chDigit_1, chLatin_m, chLatin_e, chLatin_t, chLatin_a, chLatin_d, chLatin_a, chLatin_t, chLatin_a, chNull
 };
 
+const XMLCh SAMLConstants::SAML20_VERSION[] = // 2.0
+{ chDigit_2, chPeriod, chDigit_0, chNull
+};
+
 const XMLCh SAMLConstants::SAML20_NS[] = // urn:oasis:names:tc:SAML:2.0:assertion
 { chLatin_u, chLatin_r, chLatin_n, chColon, chLatin_o, chLatin_a, chLatin_s, chLatin_i, chLatin_s, chColon,
   chLatin_n, chLatin_a, chLatin_m, chLatin_e, chLatin_s, chColon, chLatin_t, chLatin_c, chColon,

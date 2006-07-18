@@ -61,6 +61,9 @@ namespace opensaml {
         
         /** SAML 1.x Metadata Profile ID ("urn:oasis:names:tc:SAML:profiles:v1metadata") */
         static const XMLCh SAML1_METADATA_PROFILE[];
+
+        /**  SAML 2.0 Version ("2.0") */
+        static const XMLCh SAML20_VERSION[];
         
         /**  SAML 2.0 Assertion XML namespace ("urn:oasis:names:tc:SAML:2.0:assertion") */
         static const XMLCh SAML20_NS[];

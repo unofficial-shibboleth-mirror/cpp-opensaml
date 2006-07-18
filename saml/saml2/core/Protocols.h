@@ -69,6 +69,62 @@ namespace opensaml {
             DECL_TYPED_CHILD(StatusCode);
             /** StatusCodeType local name */
             static const XMLCh TYPE_NAME[];
+
+            /**
+              * @name StatusCode Value Attribute URI Reference Constants
+              *
+              * SAML 2.0 Core, section 3.2.2.2, predefines several URI
+              * references for use in the Value attribue of the StatusCode
+              * element.  Other values may be defined elsewhere.
+              */
+            /*@{*/
+            /** StatusCode Value 'urn:oasis:names:tc:SAML:2.0:status:Success' */
+            static const XMLCh SUCCESS[];
+            /** StatusCode Value 'urn:oasis:names:tc:SAML:2.0:status:Requester' */
+            static const XMLCh REQUESTER[];
+            /** StatusCode Value 'urn:oasis:names:tc:SAML:2.0:status:Responder' */
+            static const XMLCh RESPONDER[];
+            /** StatusCode Value 'urn:oasis:names:tc:SAML:2.0:status:VersionMismatch' */
+            static const XMLCh VERSION_MISMATCH[];
+            /** StatusCode Value 'urn:oasis:names:tc:SAML:2.0:status:AuthnFailed' */
+            static const XMLCh AUTHN_FAILED[];
+            /** StatusCode Value 'urn:oasis:names:tc:SAML:2.0:status:InvalidAttrNameOrValue' */
+            static const XMLCh INVALID_ATTR_NAME_OR_VALUE[];
+            /** StatusCode Value 'urn:oasis:names:tc:SAML:2.0:status:InvalidNameIDPolicy' */
+            static const XMLCh INVALID_NAMEID_POLICY[];
+            /** StatusCode Value 'urn:oasis:names:tc:SAML:2.0:status:NoAuthnContext' */
+            static const XMLCh NO_AUTHN_CONTEXT[];
+            /** StatusCode Value 'urn:oasis:names:tc:SAML:2.0:status:NoAvailableIDP' */
+            static const XMLCh NO_AVAILABLE_IDP[];
+            /** StatusCode Value 'urn:oasis:names:tc:SAML:2.0:status:NoPassive' */
+            static const XMLCh NO_PASSIVE[];
+            /** StatusCode Value 'urn:oasis:names:tc:SAML:2.0:status:NoSupportedIDP' */
+            static const XMLCh NO_SUPPORTED_IDP[];
+            /** StatusCode Value 'urn:oasis:names:tc:SAML:2.0:status:PartialLogout' */
+            static const XMLCh PARTIAL_LOGOUT[];
+            /** StatusCode Value 'urn:oasis:names:tc:SAML:2.0:status:ProxyCountExceeded' */
+            static const XMLCh PROXY_COUNT_EXCEEDED[];
+            /** StatusCode Value 'urn:oasis:names:tc:SAML:2.0:status:RequestDenied' */
+            static const XMLCh REQUEST_DENIED[];
+            /** StatusCode Value 'urn:oasis:names:tc:SAML:2.0:status:RequestUnsupported' */
+            static const XMLCh REQUEST_UNSUPPORTED[];
+            /** StatusCode Value 'urn:oasis:names:tc:SAML:2.0:status:RequestVersionDeprecated' */
+            static const XMLCh REQUEST_VERSION_DEPRECATED[];
+            /** StatusCode Value 'urn:oasis:names:tc:SAML:2.0:status:RequestVersionTooHigh' */
+            static const XMLCh REQUEST_VERSION_TOO_HIGH[];
+            /** StatusCode Value 'urn:oasis:names:tc:SAML:2.0:status:RequestVersionTooLow' */
+            static const XMLCh REQUEST_VERSION_TOO_LOW[];
+            /** StatusCode Value 'urn:oasis:names:tc:SAML:2.0:status:ResourceNotRecognized' */
+            static const XMLCh RESOURCE_NOT_RECOGNIZED[];
+            /** StatusCode Value 'urn:oasis:names:tc:SAML:2.0:status:TooManyResponses' */
+            static const XMLCh TOO_MANY_RESPONSES[];
+            /** StatusCode Value 'urn:oasis:names:tc:SAML:2.0:status:UnknownAttrProfile' */
+            static const XMLCh UNKNOWN_ATTR_PROFILE[];
+            /** StatusCode Value 'urn:oasis:names:tc:SAML:2.0:status:UnknownPrincipal' */
+            static const XMLCh UNKNOWN_PRINCIPAL[];
+            /** StatusCode Value 'urn:oasis:names:tc:SAML:2.0:status:UnsupportedBinding' */
+            static const XMLCh UNSUPPORTED_BINDING[];
+            /*@{*/
         END_XMLOBJECT;
 
         BEGIN_XMLOBJECT(SAML_API,StatusDetail,xmltooling::XMLObject,SAML 2.0 StatusDetail element);
@@ -119,16 +175,26 @@ namespace opensaml {
             DECL_STRING_ATTRIB(Comparison,COMPARISON);
             DECL_TYPED_FOREIGN_CHILDREN(AuthnContextClassRef,saml2);
             DECL_TYPED_FOREIGN_CHILDREN(AuthnContextDeclRef,saml2);
-            /** exact Comparison */
-            static const XMLCh COMPARISON_EXACT[];
-            /** minimum Comparison */
-            static const XMLCh COMPARISON_MINIMUM[];
-            /** maximum Comparison */
-            static const XMLCh COMPARISON_MAXIMUM[];
-            /** better Comparison */
-            static const XMLCh COMPARISON_BETTER[];
+
             /** RequestedAuthnContextType local name */
             static const XMLCh TYPE_NAME[];
+
+            /**
+             * @name RequestedAuthnContext Comparison Attribute Constants
+             *
+             * These are the allowed values for the Comparison attribute of
+             * the RequestedAuthnContext element, as defined by SAML 2.0 Core.
+             */
+            /*@{*/
+            /** 'exact' Comparison */
+            static const XMLCh COMPARISON_EXACT[];
+            /** 'minimum' Comparison */
+            static const XMLCh COMPARISON_MINIMUM[];
+            /** 'maximum' Comparison */
+            static const XMLCh COMPARISON_MAXIMUM[];
+            /** 'better' Comparison */
+            static const XMLCh COMPARISON_BETTER[];
+            /*@}*/
         END_XMLOBJECT;
 
         BEGIN_XMLOBJECT(SAML_API,AuthnQuery,SubjectQuery,SAML 2.0 AuthnQuery element);
@@ -181,8 +247,6 @@ namespace opensaml {
             DECL_TYPED_CHILDREN(RequesterID);
             /** ScopingType local name */
             static const XMLCh TYPE_NAME[];
-            /** ProxyCount value to express no restriction*/
-            static const int NO_PROXY_COUNT;
         END_XMLOBJECT;
 
         BEGIN_XMLOBJECT(SAML_API,AuthnRequest,Request,SAML 2.0 AuthnRequest element);
@@ -250,8 +314,26 @@ namespace opensaml {
             DECL_TYPED_FOREIGN_CHILD(NameID,saml2);
             DECL_TYPED_FOREIGN_CHILD(EncryptedID,saml2);
             DECL_TYPED_CHILDREN(SessionIndex);
+
             /** LogoutRequestType local name */
             static const XMLCh TYPE_NAME[];
+
+            /**
+              * @name LogoutRequest Reason URI Constants
+              * 
+              * URI Constants for the Reason attribute of the LogoutRequest
+              * element as defined by SAML 2.0 Core, section 3.7.3.
+              */
+            /*@{*/
+            /** Reason value 'urn:oasis:names:tc:SAML:2.0:logout:user' */
+            static const XMLCh REASON_USER[];
+            /** Reason value 'urn:oasis:names:tc:SAML:2.0:logout:admin' */
+            static const XMLCh REASON_ADMIN[];
+            /** Reason value 'urn:oasis:names:tc:SAML:2.0:logout:global-timeout' */
+            static const XMLCh REASON_GLOBAL_TIMEOUT[];
+            /** Reason value 'urn:oasis:names:tc:SAML:2.0:logout:sp-timeout' */
+            static const XMLCh REASON_SP_TIMEOUT[];
+            /*@}*/
         END_XMLOBJECT;
 
         BEGIN_XMLOBJECT(SAML_API,LogoutResponse,StatusResponse,SAML 2.0 LogoutResponse element);

@@ -30,8 +30,6 @@ using namespace opensaml;
 using namespace xmltooling;
 using namespace std;
 
-//TODO add in rules from normative spec document
-
 namespace opensaml {
     namespace saml2p {
         
@@ -42,6 +40,8 @@ namespace opensaml {
         XMLOBJECTVALIDATOR_SIMPLE(SAML_DLLLOCAL,SessionIndex);
         XMLOBJECTVALIDATOR_SIMPLE(SAML_DLLLOCAL,StatusMessage);
 
+        //TODO wildcard NS ##other - spec says must be a "non-SAML defined" namespace,
+        // not just other than the target namespace
         class SAML_DLLLOCAL checkWildcardNS {
         public:
             void operator()(const XMLObject* xmlObject) const {
@@ -55,6 +55,28 @@ namespace opensaml {
             }
         };
 
+        BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,Request);
+            XMLOBJECTVALIDATOR_REQUIRE(Request,ID);
+            XMLOBJECTVALIDATOR_REQUIRE(Request,Version);
+            XMLOBJECTVALIDATOR_REQUIRE(Request,IssueInstant);
+            if (!XMLString::equals(SAMLConstants::SAML20_VERSION, ptr->getVersion()))
+                throw ValidationException("Request has wrong SAML Version.");
+        END_XMLOBJECTVALIDATOR;
+
+        BEGIN_XMLOBJECTVALIDATOR_SUB(SAML_DLLLOCAL,SubjectQuery,Request);
+            RequestSchemaValidator::validate(xmlObject);
+            XMLOBJECTVALIDATOR_REQUIRE(SubjectQuery,Subject);
+        END_XMLOBJECTVALIDATOR;
+
+        BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,StatusResponse);
+            XMLOBJECTVALIDATOR_REQUIRE(StatusResponse,ID);
+            XMLOBJECTVALIDATOR_REQUIRE(StatusResponse,Version);
+            XMLOBJECTVALIDATOR_REQUIRE(StatusResponse,IssueInstant);
+            XMLOBJECTVALIDATOR_REQUIRE(StatusResponse,Status);
+            if (!XMLString::equals(SAMLConstants::SAML20_VERSION, ptr->getVersion()))
+                throw ValidationException("StatusResponse has wrong SAML Version.");
+        END_XMLOBJECTVALIDATOR;
+
         BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,Extensions);
             if (!ptr->hasChildren())
                 throw ValidationException("Extensions must have at least one child element.");
@@ -64,16 +86,36 @@ namespace opensaml {
 
         BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,StatusCode);
             XMLOBJECTVALIDATOR_REQUIRE(StatusCode,Value);
+
+            //TODO test this !!!
+            // If this is a top-level StatusCode (ie. parent is a Status),
+            // then there are only 4 valid values per SAML Core.
+            if (ptr->getParent()!=NULL && ptr->getParent()->getElementQName().hasLocalPart())
+            {
+                QName pq = ptr->getParent()->getElementQName();
+
+                if ( XMLString::equals(pq.getNamespaceURI(), SAMLConstants::SAML20P_NS) &&
+                        XMLString::equals(pq.getLocalPart(), Status::LOCAL_NAME))
+                {
+                    const XMLCh* code = ptr->getValue();
+
+                    if (!XMLString::equals(code, StatusCode::SUCCESS) &&
+                        !XMLString::equals(code, StatusCode::REQUESTER) &&
+                        !XMLString::equals(code, StatusCode::RESPONDER) &&
+                        !XMLString::equals(code, StatusCode::VERSION_MISMATCH) )
+                    {
+                        throw ValidationException("Invalid value for top-level StatusCode");
+                    }
+                }
+            }
         END_XMLOBJECTVALIDATOR;
 
         BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,Status);
             XMLOBJECTVALIDATOR_REQUIRE(Status,StatusCode);
         END_XMLOBJECTVALIDATOR;
 
-        BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,AssertionIDRequest);
-            XMLOBJECTVALIDATOR_REQUIRE(AssertionIDRequest,ID);
-            XMLOBJECTVALIDATOR_REQUIRE(AssertionIDRequest,Version);
-            XMLOBJECTVALIDATOR_REQUIRE(AssertionIDRequest,IssueInstant);
+        BEGIN_XMLOBJECTVALIDATOR_SUB(SAML_DLLLOCAL,AssertionIDRequest,Request);
+            RequestSchemaValidator::validate(xmlObject);
             XMLOBJECTVALIDATOR_NONEMPTY(AssertionIDRequest,AssertionIDRef);
         END_XMLOBJECTVALIDATOR;
 
@@ -86,20 +128,22 @@ namespace opensaml {
                 !XMLString::equals(ptr->getComparison(),RequestedAuthnContext::COMPARISON_MINIMUM) &&
                 !XMLString::equals(ptr->getComparison(),RequestedAuthnContext::COMPARISON_MAXIMUM) &&
                 !XMLString::equals(ptr->getComparison(),RequestedAuthnContext::COMPARISON_BETTER))
-                throw ValidationException("Comparison must be one of: 'exact', 'minimum', 'maximum', or 'better'.");
+                throw ValidationException("RequestedAuthnContext Comparison attribute must be one of: 'exact', 'minimum', 'maximum', or 'better'.");
         END_XMLOBJECTVALIDATOR;
 
-        BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,AuthnQuery);
-            XMLOBJECTVALIDATOR_REQUIRE(AuthnQuery,Subject);
+        BEGIN_XMLOBJECTVALIDATOR_SUB(SAML_DLLLOCAL,AuthnQuery,SubjectQuery);
+            SubjectQuerySchemaValidator::validate(xmlObject);
         END_XMLOBJECTVALIDATOR;
 
-        BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,AttributeQuery);
-            XMLOBJECTVALIDATOR_REQUIRE(AttributeQuery,Subject);
+        BEGIN_XMLOBJECTVALIDATOR_SUB(SAML_DLLLOCAL,AttributeQuery,SubjectQuery);
+            SubjectQuerySchemaValidator::validate(xmlObject);
+            //TODO Name/NameFormat pairs of child Attributes must be unique 
+            //   - whether and how to implement efficiently?
         END_XMLOBJECTVALIDATOR;
 
-        BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,AuthzDecisionQuery);
+        BEGIN_XMLOBJECTVALIDATOR_SUB(SAML_DLLLOCAL,AuthzDecisionQuery,SubjectQuery);
+            SubjectQuerySchemaValidator::validate(xmlObject);
             XMLOBJECTVALIDATOR_REQUIRE(AuthzDecisionQuery,Resource);
-            XMLOBJECTVALIDATOR_REQUIRE(AuthzDecisionQuery,Subject);
             XMLOBJECTVALIDATOR_NONEMPTY(AuthzDecisionQuery,Action);
         END_XMLOBJECTVALIDATOR;
 
@@ -117,55 +161,57 @@ namespace opensaml {
                 throw xmltooling::ValidationException("ProxyCount attribute on Scoping element must be non-negative"); 
         END_XMLOBJECTVALIDATOR;
 
-        BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,AuthnRequest);
-            //TODO no schema, but need spec constraints
+        BEGIN_XMLOBJECTVALIDATOR_SUB(SAML_DLLLOCAL,AuthnRequest,Request);
+            RequestSchemaValidator::validate(xmlObject);
+            if (ptr->getAssertionConsumerServiceIndex().first 
+                    && (ptr->getAssertionConsumerServiceURL()!=NULL || ptr->getProtocolBinding()!=NULL))
+                throw xmltooling::ValidationException("On AuthnRequest AssertionConsumerServiceIndex is mutually exclusive with both AssertionConsumerServiceURL and ProtocolBinding");
         END_XMLOBJECTVALIDATOR;
 
-        BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,StatusResponse);
-            XMLOBJECTVALIDATOR_REQUIRE(StatusResponse,Status);
+        BEGIN_XMLOBJECTVALIDATOR_SUB(SAML_DLLLOCAL,Response,StatusResponse);
+            StatusResponseSchemaValidator::validate(xmlObject);
         END_XMLOBJECTVALIDATOR;
 
-        BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,Response);
-            XMLOBJECTVALIDATOR_REQUIRE(Response,Status);
-        END_XMLOBJECTVALIDATOR;
-
-        BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,ArtifactResolve);
+        BEGIN_XMLOBJECTVALIDATOR_SUB(SAML_DLLLOCAL,ArtifactResolve,Request);
+            RequestSchemaValidator::validate(xmlObject);
             XMLOBJECTVALIDATOR_REQUIRE(ArtifactResolve,Artifact);
         END_XMLOBJECTVALIDATOR;
 
-        BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,ArtifactResponse);
-            XMLOBJECTVALIDATOR_REQUIRE(ArtifactResponse,Status);
+        BEGIN_XMLOBJECTVALIDATOR_SUB(SAML_DLLLOCAL,ArtifactResponse,StatusResponse);
+            StatusResponseSchemaValidator::validate(xmlObject);
         END_XMLOBJECTVALIDATOR;
 
         BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,NewEncryptedID);
             XMLOBJECTVALIDATOR_REQUIRE(NewEncryptedID,EncryptedData);
         END_XMLOBJECTVALIDATOR;
 
-        BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,ManageNameIDRequest);
+        BEGIN_XMLOBJECTVALIDATOR_SUB(SAML_DLLLOCAL,ManageNameIDRequest,Request);
+            RequestSchemaValidator::validate(xmlObject);
             XMLOBJECTVALIDATOR_ONLYONEOF(ManageNameIDRequest,NameID,EncryptedID);
             XMLOBJECTVALIDATOR_ONLYONEOF3(ManageNameIDRequest,NewID,NewEncryptedID,Terminate);
         END_XMLOBJECTVALIDATOR;
 
-
-        BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,ManageNameIDResponse);
-            XMLOBJECTVALIDATOR_REQUIRE(ManageNameIDResponse,Status);
+        BEGIN_XMLOBJECTVALIDATOR_SUB(SAML_DLLLOCAL,ManageNameIDResponse,StatusResponse);
+            StatusResponseSchemaValidator::validate(xmlObject);
         END_XMLOBJECTVALIDATOR;
 
-        BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,LogoutRequest);
+        BEGIN_XMLOBJECTVALIDATOR_SUB(SAML_DLLLOCAL,LogoutRequest,Request);
+            RequestSchemaValidator::validate(xmlObject);
             XMLOBJECTVALIDATOR_ONLYONEOF3(LogoutRequest,BaseID,NameID,EncryptedID);
         END_XMLOBJECTVALIDATOR;
 
-        BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,LogoutResponse);
-            XMLOBJECTVALIDATOR_REQUIRE(LogoutResponse,Status);
+        BEGIN_XMLOBJECTVALIDATOR_SUB(SAML_DLLLOCAL,LogoutResponse,StatusResponse);
+            StatusResponseSchemaValidator::validate(xmlObject);
         END_XMLOBJECTVALIDATOR;
 
-        BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,NameIDMappingRequest);
+        BEGIN_XMLOBJECTVALIDATOR_SUB(SAML_DLLLOCAL,NameIDMappingRequest,Request);
+            RequestSchemaValidator::validate(xmlObject);
             XMLOBJECTVALIDATOR_ONLYONEOF3(NameIDMappingRequest,BaseID,NameID,EncryptedID);
             XMLOBJECTVALIDATOR_REQUIRE(NameIDMappingRequest,NameIDPolicy);
         END_XMLOBJECTVALIDATOR;
 
-        BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,NameIDMappingResponse);
-            XMLOBJECTVALIDATOR_REQUIRE(NameIDMappingResponse,Status);
+        BEGIN_XMLOBJECTVALIDATOR_SUB(SAML_DLLLOCAL,NameIDMappingResponse,StatusResponse);
+            StatusResponseSchemaValidator::validate(xmlObject);
             XMLOBJECTVALIDATOR_ONLYONEOF(NameIDMappingResponse,NameID,EncryptedID);
         END_XMLOBJECTVALIDATOR;
 
