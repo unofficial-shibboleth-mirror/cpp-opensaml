@@ -696,7 +696,7 @@ namespace opensaml {
             void init() {
                 m_BaseID=NULL;
                 m_NameID=NULL;
-                //m_EncryptedID=NULL;
+                m_EncryptedID=NULL;
                 m_children.push_back(NULL);
                 m_children.push_back(NULL);
                 m_children.push_back(NULL);
