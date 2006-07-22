@@ -154,6 +154,8 @@ namespace opensaml {
             }
         };
 
+        //TODO unit test for this
+        //  - need to test encryption/decryption too, or already done in xmltooling ?
         class SAML_DLLLOCAL EncryptedElementTypeImpl : public virtual EncryptedElementType,
             public AbstractComplexElement,
             public AbstractDOMCachingXMLObject,
@@ -222,6 +224,7 @@ namespace opensaml {
             }
         };
 
+        //TODO unit test for this 
         class SAML_DLLLOCAL EncryptedIDImpl : public virtual EncryptedID, public EncryptedElementTypeImpl
         {
         public:
@@ -789,6 +792,7 @@ namespace opensaml {
             }
         };
 
+        //TODO need unit test for this
         class SAML_DLLLOCAL AuthnContextDeclImpl : public virtual AuthnContextDecl, public AnyElementImpl
         {
         public:
@@ -1097,6 +1101,7 @@ namespace opensaml {
             }
         };
 
+        //TODO need unit test for this
         class SAML_DLLLOCAL AttributeValueImpl : public virtual AttributeValue, public AnyElementImpl
         {
         public:
@@ -1199,6 +1204,7 @@ namespace opensaml {
             }
         };
 
+        //TODO unit test for this 
         class SAML_DLLLOCAL EncryptedAttributeImpl : public virtual EncryptedAttribute, public EncryptedElementTypeImpl
         {
         public:
@@ -1331,6 +1337,7 @@ namespace opensaml {
             }
         };
 
+        //TODO unit test for this 
         class SAML_DLLLOCAL EncryptedAssertionImpl : public virtual EncryptedAssertion, public EncryptedElementTypeImpl
         {
         public:

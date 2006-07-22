@@ -49,6 +49,7 @@ namespace opensaml {
         
         // Forward references
         class SAML_API Assertion;
+        class SAML_API EncryptedAssertion;
         
         DECL_XMLOBJECT_SIMPLE(SAML_API,AssertionIDRef,AssertionID,SAML 2.0 AssertionIDRef element);
         DECL_XMLOBJECT_SIMPLE(SAML_API,AssertionURIRef,AssertionURI,SAML 2.0 AssertionURIRef element);
@@ -216,7 +217,7 @@ namespace opensaml {
             DECL_TYPED_CHILDREN(AssertionIDRef);
             DECL_TYPED_CHILDREN(AssertionURIRef);
             DECL_TYPED_CHILDREN(Assertion);
-            //DECL_TYPED_CHILDREN(EncryptedAssertion);
+            DECL_TYPED_CHILDREN(EncryptedAssertion);
             /** EvidenceType local name */
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;

@@ -20,6 +20,8 @@
 #include <saml/exceptions.h>
 #include <saml/SAMLConfig.h>
 #include <saml/util/SAMLConstants.h>
+#include <xmltooling/exceptions.h>
+#include <xmltooling/validation/Validator.h>
 #include <xmltooling/XMLObject.h>
 #include <xmltooling/XMLObjectBuilder.h>
 
@@ -126,3 +128,120 @@ public:
         if (expectedChildElementsDOM) expectedChildElementsDOM->release();
     }
 };
+
+class SAMLObjectValidatorBaseTestCase : virtual public SAMLObjectBaseTestCase {
+
+    public:
+        SAMLObjectValidatorBaseTestCase() : target(NULL), targetQName(NULL), builder(NULL), validator(NULL) {}
+
+        virtual ~SAMLObjectValidatorBaseTestCase() {
+            delete validator;
+        }
+
+    protected: 
+        /** The primary XMLObject which will be the target of a given test run */
+        XMLObject* target;
+
+        /** QName of the object to be tested */
+        QName targetQName;
+
+        /** Builder for XMLObjects of type targetQName */
+        const XMLObjectBuilder* builder;
+
+        /** Validator for the type corresponding to the test target */
+        Validator* validator;
+
+        /** Subclasses should override to populate required elements and attributes */
+        virtual void populateRequiredData() { }
+
+        /**
+         * Asserts that the validation of default test XMLObject target 
+         * was successful, as expected.
+         * 
+         * @param message
+         */
+        void assertValidationPass(const char* message) {
+            assertValidationPass(message, target);
+        }
+
+        /**
+         * Asserts that the validation of the specified XMLObject target 
+         * was successful, as expected.
+         * 
+         * @param message
+         * @param validateTarget
+         */
+        void assertValidationPass(const char* message, XMLObject* validateTarget) {
+            try {
+                validator->validate(validateTarget);
+            } catch (ValidationException &e) {
+                TS_TRACE(message);
+                TS_TRACE("Expected success, but validation failure raised following ValidationException: ");
+                TS_FAIL(e.getMessage());
+            }
+        }
+
+        /**
+         * Asserts that the validation of the default test XMLObject target 
+         * failed, as expected.
+         * 
+         * @param message
+         */
+        void assertValidationFail(const char* message) {
+            assertValidationFail(message, target);
+        }
+
+        /**
+         * Asserts that the validation of the specified XMLObject target 
+         * failed, as expected.
+         * 
+         * @param message
+         * @param validateTarget
+         */
+        void assertValidationFail(const char* message, XMLObject* validateTarget) {
+            try {
+                validator->validate(validateTarget);
+                TS_TRACE(message);
+                TS_FAIL("Validation success, expected failure to raise ValidationException");
+            } catch (ValidationException &e) {
+            }
+        }
+
+        /**
+         * Build an XMLObject based on the specified QName
+         * 
+         * @param targetQName QName of the type of object to build
+         * @returns new XMLObject of type targetQName
+         */
+        XMLObject* buildXMLObject(QName &targetQName) {
+            // Create the builder on the first request only, for efficiency
+            if (builder == NULL) {
+                builder = XMLObjectBuilder::getBuilder(targetQName);
+                TSM_ASSERT("Unable to retrieve builder for object QName: " + targetQName.toString(), builder!=NULL);
+            }
+            return builder->buildObject(targetQName.getNamespaceURI(), targetQName.getLocalPart(), targetQName.getPrefix());
+
+        }
+
+    public:
+
+        void setUp() {
+            SAMLObjectBaseTestCase::setUp();
+
+            TSM_ASSERT("targetQName was empty", targetQName.hasLocalPart());
+
+            TSM_ASSERT("validator was null", validator!=NULL);
+
+            target = buildXMLObject(targetQName);
+            TSM_ASSERT("XMLObject target was NULL", target!=NULL);
+            populateRequiredData();
+        }
+
+        void tearDown() {
+            delete target;
+            target=NULL;
+            SAMLObjectBaseTestCase::tearDown();
+        }
+
+};
+

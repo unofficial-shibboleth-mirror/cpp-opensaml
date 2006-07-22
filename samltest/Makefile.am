@@ -23,17 +23,35 @@ samltest_h = \
     saml1/core/impl/AudienceRestrictionConditionTest.h \
     saml1/core/impl/AudienceTest.h \
     saml1/core/impl/AuthenticationStatementTest.h \
+    saml2/core/impl/Action20Test.h \
+    saml2/core/impl/Advice20Test.h \
     saml2/core/impl/Artifact20Test.h \
     saml2/core/impl/ArtifactResolve20Test.h \
     saml2/core/impl/ArtifactResponse20Test.h \
+    saml2/core/impl/Assertion20Test.h \
     saml2/core/impl/AssertionIDRequest20Test.h \
+    saml2/core/impl/AssertionURIRef20Test.h \
+    saml2/core/impl/Attribute20Test.h \
     saml2/core/impl/AttributeQuery20Test.h \
+    saml2/core/impl/AttributeStatement20Test.h \
+    saml2/core/impl/Audience20Test.h \
+    saml2/core/impl/AudienceRestriction20Test.h \
+    saml2/core/impl/AuthenticatingAuthority20Test.h \
+    saml2/core/impl/AuthnContext20Test.h \
+    saml2/core/impl/AuthnContextClassRef20Test.h \
+    saml2/core/impl/AuthnContextDeclRef20Test.h \
     saml2/core/impl/AuthnQuery20Test.h \
     saml2/core/impl/AuthnRequest20Test.h \
+    saml2/core/impl/AuthnStatement20Test.h \
     saml2/core/impl/AuthzDecisionQuery20Test.h \
+    saml2/core/impl/AuthzDecisionStatement20Test.h \
+    saml2/core/impl/Conditions20Test.h \
+    saml2/core/impl/Evidence20Test.h \
     saml2/core/impl/GetComplete20Test.h \
     saml2/core/impl/IDPEntry20Test.h \
     saml2/core/impl/IDPList20Test.h \
+    saml2/core/impl/Issuer20Test.h \
+    saml2/core/impl/KeyInfoConfirmationDataType20Test.h\
     saml2/core/impl/LogoutRequest20Test.h \
     saml2/core/impl/LogoutResponse20Test.h \
     saml2/core/impl/ManageNameIDRequest20Test.h \
@@ -41,8 +59,12 @@ samltest_h = \
     saml2/core/impl/NameIDMappingRequest20Test.h \
     saml2/core/impl/NameIDMappingResponse20Test.h \
     saml2/core/impl/NameIDPolicy20Test.h \
+    saml2/core/impl/NameID20Test.h \
+    saml2/core/impl/NameIDType20Test.h \
     saml2/core/impl/NewEncryptedID20Test.h \
     saml2/core/impl/NewID20Test.h \
+    saml2/core/impl/OneTimeUse20Test.h \
+    saml2/core/impl/ProxyRestriction20Test.h \
     saml2/core/impl/RequesterID20Test.h \
     saml2/core/impl/RequestedAuthnContext20Test.h \
     saml2/core/impl/Response20Test.h \
@@ -53,6 +75,10 @@ samltest_h = \
     saml2/core/impl/StatusDetail20Test.h \
     saml2/core/impl/StatusMessage20Test.h \
     saml2/core/impl/StatusResponse20Test.h\
+    saml2/core/impl/Subject20Test.h\
+    saml2/core/impl/SubjectConfirmation20Test.h\
+    saml2/core/impl/SubjectConfirmationData20Test.h\
+    saml2/core/impl/SubjectLocality20Test.h\
     saml2/core/impl/Terminate20Test.h \
     saml2/metadata/FilesystemMetadataProviderTest.h
 
