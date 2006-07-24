@@ -95,6 +95,9 @@ void SAMLInternalConfig::term()
     saml1p::ProtocolSchemaValidators.destroyValidators();
     saml2::AssertionSchemaValidators.destroyValidators();
     saml2md::MetadataSchemaValidators.destroyValidators();
+    
+    MetadataFilterManager.deregisterFactories();
+    MetadataProviderManager.deregisterFactories();
 
     XMLToolingConfig::getConfig().term();
     Category::getInstance(SAML_LOGCAT".SAMLConfig").info("library shutdown complete");

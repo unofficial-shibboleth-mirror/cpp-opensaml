@@ -103,7 +103,10 @@ namespace opensaml {
 
 void SAML_API opensaml::saml2md::registerMetadataProviders()
 {
-    SAMLConfig::getConfig().MetadataProviderManager.registerFactory(FILESYSTEM_METADATA_PROVIDER, FilesystemMetadataProviderFactory);
+    SAMLConfig& conf=SAMLConfig::getConfig();
+    conf.MetadataProviderManager.registerFactory(FILESYSTEM_METADATA_PROVIDER, FilesystemMetadataProviderFactory);
+    conf.MetadataProviderManager.registerFactory("edu.internet2.middleware.shibboleth.metadata.provider.XMLMetadata", FilesystemMetadataProviderFactory);
+    conf.MetadataProviderManager.registerFactory("edu.internet2.middleware.shibboleth.common.provider.XMLMetadata", FilesystemMetadataProviderFactory);
 }
 
 void SAML_API opensaml::saml2md::registerMetadataFilters()
