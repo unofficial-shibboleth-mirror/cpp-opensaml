@@ -203,7 +203,7 @@ class SAMLObjectValidatorBaseTestCase : virtual public SAMLObjectBaseTestCase {
                 validator->validate(validateTarget);
                 TS_TRACE(message);
                 TS_FAIL("Validation success, expected failure to raise ValidationException");
-            } catch (ValidationException &e) {
+            } catch (ValidationException&) {
             }
         }
 
