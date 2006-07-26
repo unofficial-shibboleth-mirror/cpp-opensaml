@@ -61,7 +61,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="..\..\cpp-xmltooling\Debug\xmltooling_1D.lib xerces-c_2D.lib xsec_1D.lib libeay32_0_9_8D.lib"
+				AdditionalDependencies="..\..\cpp-xmltooling\Debug\xmltooling_1D.lib xerces-c_2D.lib xsec_1D.lib"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -136,7 +136,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="..\..\cpp-xmltooling\Release\xmltooling_1.lib xerces-c_2.lib xsec_1.lib libeay32_0_9_8.lib"
+				AdditionalDependencies="..\..\cpp-xmltooling\Release\xmltooling_1.lib xerces-c_2.lib xsec_1.lib"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -883,7 +883,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -892,7 +892,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -905,7 +905,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -914,7 +914,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -927,7 +927,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -936,7 +936,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -949,7 +949,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -958,7 +958,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -971,7 +971,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -980,7 +980,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -993,7 +993,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1002,7 +1002,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1015,7 +1015,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1024,7 +1024,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1037,7 +1037,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1046,7 +1046,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1059,7 +1059,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1068,7 +1068,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1081,7 +1081,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1090,7 +1090,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1103,7 +1103,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1112,7 +1112,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1125,7 +1125,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1134,7 +1134,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1147,7 +1147,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1156,7 +1156,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1169,7 +1169,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1178,7 +1178,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1191,7 +1191,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1200,7 +1200,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1213,7 +1213,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1222,7 +1222,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1235,7 +1235,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1244,7 +1244,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1257,7 +1257,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1266,7 +1266,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1279,7 +1279,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1288,7 +1288,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1301,7 +1301,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1310,7 +1310,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1323,7 +1323,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1332,7 +1332,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1345,7 +1345,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1354,7 +1354,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1367,7 +1367,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1376,7 +1376,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1389,7 +1389,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1398,7 +1398,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1411,7 +1411,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1420,7 +1420,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1433,7 +1433,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1442,7 +1442,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1455,7 +1455,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1464,7 +1464,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1477,7 +1477,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1486,7 +1486,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1499,7 +1499,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1508,7 +1508,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1521,7 +1521,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1530,7 +1530,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1543,7 +1543,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1552,7 +1552,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1565,7 +1565,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1574,7 +1574,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1587,7 +1587,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1596,7 +1596,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1609,7 +1609,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1618,7 +1618,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1631,7 +1631,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1640,7 +1640,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1653,7 +1653,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1662,7 +1662,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1675,7 +1675,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1684,7 +1684,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1697,7 +1697,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1706,7 +1706,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1719,7 +1719,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1728,7 +1728,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1741,7 +1741,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1750,7 +1750,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1763,7 +1763,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1772,7 +1772,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1785,7 +1785,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1794,7 +1794,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1807,7 +1807,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1816,7 +1816,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1829,7 +1829,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1838,7 +1838,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1851,7 +1851,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1860,7 +1860,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1873,7 +1873,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1882,7 +1882,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1895,7 +1895,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1904,7 +1904,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1917,7 +1917,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1926,7 +1926,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1939,7 +1939,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1948,7 +1948,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1961,7 +1961,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1970,7 +1970,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1983,7 +1983,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -1992,7 +1992,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -2005,7 +2005,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -2014,7 +2014,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -2027,7 +2027,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -2036,7 +2036,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -2049,7 +2049,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -2058,7 +2058,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -2071,7 +2071,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -2080,7 +2080,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -2093,7 +2093,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -2102,7 +2102,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -2115,7 +2115,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -2124,7 +2124,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -2137,7 +2137,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>
@@ -2146,7 +2146,7 @@
 								>
 								<Tool
 									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 								/>
 							</FileConfiguration>

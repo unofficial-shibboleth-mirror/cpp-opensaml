@@ -60,13 +60,14 @@ public:
 
         // Append a Signature.
         assertion->setSignature(SignatureBuilder::buildSignature());
-        assertion->getSignature()->setSigningKey(m_key->clone());
+        Locker locker(m_resolver);
+        assertion->getSignature()->setSigningKey(m_resolver->getKey());
 
         // Build KeyInfo.
         KeyInfo* keyInfo=KeyInfoBuilder::buildKeyInfo();
         X509Data* x509Data=X509DataBuilder::buildX509Data();
         keyInfo->getX509Datas().push_back(x509Data);
-        for_each(m_certs.begin(),m_certs.end(),bind1st(_addcert(),x509Data));
+        for_each(m_resolver->getCertificates().begin(),m_resolver->getCertificates().end(),bind1st(_addcert(),x509Data));
         assertion->getSignature()->setKeyInfo(keyInfo);
 
         // Sign assertion while marshalling.
@@ -92,7 +93,7 @@ public:
         response->setStatus(status);
         response->getAssertions().push_back(assertion);
         response->setSignature(SignatureBuilder::buildSignature());
-        response->getSignature()->setSigningKey(m_key->clone());
+        response->getSignature()->setSigningKey(m_resolver->getKey());
         response->getSignature()->setKeyInfo(keyInfo->cloneKeyInfo());
 
         // Sign response while marshalling.
@@ -120,7 +121,7 @@ public:
             spv.validate(assertion->getSignature());
             spv.validate(response->getSignature());
 
-            SignatureValidator sv(new KeyResolver(m_key->clone()));
+            SignatureValidator sv(new KeyResolver(m_resolver->getKey()));
             sv.validate(assertion->getSignature());
             sv.validate(response->getSignature());
         }

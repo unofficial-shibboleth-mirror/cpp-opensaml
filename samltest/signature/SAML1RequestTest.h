@@ -57,13 +57,14 @@ public:
         // Append a Signature.
         Signature* sig=SignatureBuilder::buildSignature();
         request->setSignature(sig);
-        sig->setSigningKey(m_key->clone());
+        Locker locker(m_resolver);
+        sig->setSigningKey(m_resolver->getKey());
 
         // Build KeyInfo.
         KeyInfo* keyInfo=KeyInfoBuilder::buildKeyInfo();
         X509Data* x509Data=X509DataBuilder::buildX509Data();
         keyInfo->getX509Datas().push_back(x509Data);
-        for_each(m_certs.begin(),m_certs.end(),bind1st(_addcert(),x509Data));
+        for_each(m_resolver->getCertificates().begin(),m_resolver->getCertificates().end(),bind1st(_addcert(),x509Data));
         sig->setKeyInfo(keyInfo);
 
         // Sign while marshalling.
@@ -87,7 +88,7 @@ public:
         
         try {
             SignatureProfileValidator spv;
-            SignatureValidator sv(new KeyResolver(m_key->clone()));
+            SignatureValidator sv(new KeyResolver(m_resolver->getKey()));
             spv.validate(request->getSignature());
             sv.validate(request->getSignature());
         }
