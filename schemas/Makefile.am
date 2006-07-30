@@ -38,7 +38,10 @@ schemas = soap-envelope.xsd \
 	saml-schema-metadata-2.0.xsd \
 	saml-schema-protocol-2.0.xsd \
 	saml-schema-x500-2.0.xsd \
-	saml-schema-xacml-2.0.xsd
+	saml-schema-xacml-2.0.xsd \
+	sstc-saml1x-metadata.xsd \
+	sstc-saml-metadata-ext-query.xsd \
+	sstc-saml-protocol-ext-thirdparty.xsd
 
 pkgxmldir = $(datadir)/xml/@PACKAGE@
 
