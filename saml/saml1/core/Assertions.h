@@ -83,6 +83,14 @@ namespace opensaml {
             DECL_XMLOBJECT_CONTENT(Name);
             /** NameIdentifierType local name */
             static const XMLCh TYPE_NAME[];
+            /** Unspecified name format ID */
+            static const XMLCh UNSPECIFIED[];
+            /** Email address name format ID */
+            static const XMLCh EMAIL[];
+            /** X.509 subject name format ID */
+            static const XMLCh X509_SUBJECT[];
+            /** Windows domain qualified name format ID */
+            static const XMLCh WIN_DOMAIN_QUALIFIED[];
         END_XMLOBJECT;
 
         BEGIN_XMLOBJECT2(SAML_API,SubjectConfirmationData,xmltooling::ElementProxy,xmltooling::AttributeExtensibleXMLObject,SAML 1.x SubjectConfirmationData element);
@@ -94,6 +102,16 @@ namespace opensaml {
             DECL_TYPED_FOREIGN_CHILD(KeyInfo,xmlsignature);
             /** SubjectConfirmationType local name */
             static const XMLCh TYPE_NAME[];
+            /** Deprecated SAML 1.0 Artifact confirmation method */
+            static const XMLCh ARTIFACT01[];
+            /** Artifact confirmation method */
+            static const XMLCh ARTIFACT[];
+            /** Bearer confirmation method */
+            static const XMLCh BEARER[];
+            /** Holder of key confirmation method */
+            static const XMLCh HOLDER_KEY[];
+            /** Sender vouches confirmation method */
+            static const XMLCh SENDER_VOUCHES[];
         END_XMLOBJECT;
 
         BEGIN_XMLOBJECT(SAML_API,Subject,xmltooling::XMLObject,SAML 1.x Subject element);
@@ -139,6 +157,14 @@ namespace opensaml {
             DECL_XMLOBJECT_CONTENT(Action);
             /** ActionType local name */
             static const XMLCh TYPE_NAME[];
+            /** Read/Write/Execute/Delete/Control Action Namespace */
+            static const XMLCh RWEDC_NEG_ACTION_NAMESPACE[];
+            /** Read/Write/Execute/Delete/Control with Negation Action Namespace */
+            static const XMLCh RWEDC_ACTION_NAMESPACE[];
+            /** Get/Head/Put/Post Action Namespace */
+            static const XMLCh GHPP_ACTION_NAMESPACE[];
+            /** UNIX File Permissions Action Namespace */
+            static const XMLCh UNIX_ACTION_NAMESPACE[];
         END_XMLOBJECT;
 
         BEGIN_XMLOBJECT(SAML_API,Evidence,xmltooling::XMLObject,SAML 1.x Evidence element);

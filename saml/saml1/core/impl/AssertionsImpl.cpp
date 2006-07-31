@@ -1159,5 +1159,113 @@ const XMLCh SubjectLocality::IPADDRESS_ATTRIB_NAME[] =      UNICODE_LITERAL_9(I,
 const XMLCh SubjectLocality::DNSADDRESS_ATTRIB_NAME[] =     UNICODE_LITERAL_10(D,N,S,A,d,d,r,e,s,s);
 const XMLCh SubjectStatement::LOCAL_NAME[] =        UNICODE_LITERAL_16(S,u,b,j,e,c,t,S,t,a,t,e,m,e,n,t);
 
-#define XCH(ch) chLatin_##ch
-#define XNUM(d) chDigit_##d
+const XMLCh NameIdentifier::UNSPECIFIED[] = // urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified
+{ chLatin_u, chLatin_r, chLatin_n, chColon, chLatin_o, chLatin_a, chLatin_s, chLatin_i, chLatin_s, chColon,
+  chLatin_n, chLatin_a, chLatin_m, chLatin_e, chLatin_s, chColon, chLatin_t, chLatin_c, chColon,
+  chLatin_S, chLatin_A, chLatin_M, chLatin_L, chColon, chDigit_1, chPeriod, chDigit_1, chColon,
+  chLatin_n, chLatin_a, chLatin_m, chLatin_e, chLatin_i, chLatin_d, chDash,
+  chLatin_f, chLatin_o, chLatin_r, chLatin_m, chLatin_a, chLatin_t, chColon,
+  chLatin_u, chLatin_n, chLatin_s, chLatin_p, chLatin_e, chLatin_c, chLatin_i, chLatin_f, chLatin_i, chLatin_e, chLatin_d, chLatin_d, chNull
+};
+
+const XMLCh NameIdentifier::EMAIL[] = // urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress
+{ chLatin_u, chLatin_r, chLatin_n, chColon, chLatin_o, chLatin_a, chLatin_s, chLatin_i, chLatin_s, chColon,
+  chLatin_n, chLatin_a, chLatin_m, chLatin_e, chLatin_s, chColon, chLatin_t, chLatin_c, chColon,
+  chLatin_S, chLatin_A, chLatin_M, chLatin_L, chColon, chDigit_1, chPeriod, chDigit_1, chColon,
+  chLatin_n, chLatin_a, chLatin_m, chLatin_e, chLatin_i, chLatin_d, chDash,
+  chLatin_f, chLatin_o, chLatin_r, chLatin_m, chLatin_a, chLatin_t, chColon,
+  chLatin_e, chLatin_m, chLatin_a, chLatin_i, chLatin_l, chLatin_A, chLatin_d, chLatin_d, chLatin_r, chLatin_e, chLatin_s, chLatin_s, chNull
+};
+
+const XMLCh NameIdentifier::X509_SUBJECT[] = // urn:oasis:names:tc:SAML:1.1:nameid-format:X509SubjectName
+{ chLatin_u, chLatin_r, chLatin_n, chColon, chLatin_o, chLatin_a, chLatin_s, chLatin_i, chLatin_s, chColon,
+  chLatin_n, chLatin_a, chLatin_m, chLatin_e, chLatin_s, chColon, chLatin_t, chLatin_c, chColon,
+  chLatin_S, chLatin_A, chLatin_M, chLatin_L, chColon, chDigit_1, chPeriod, chDigit_1, chColon,
+  chLatin_n, chLatin_a, chLatin_m, chLatin_e, chLatin_i, chLatin_d, chDash,
+  chLatin_f, chLatin_o, chLatin_r, chLatin_m, chLatin_a, chLatin_t, chColon,
+  chLatin_X, chDigit_5, chDigit_0, chDigit_9, chLatin_S, chLatin_u, chLatin_b, chLatin_j, chLatin_e, chLatin_c, chLatin_t,
+  chLatin_N, chLatin_a, chLatin_m, chLatin_e, chNull
+};
+
+const XMLCh NameIdentifier::WIN_DOMAIN_QUALIFIED[] = // urn:oasis:names:tc:SAML:1.1:nameid-format:WindowsDomainQualifiedName
+{ chLatin_u, chLatin_r, chLatin_n, chColon, chLatin_o, chLatin_a, chLatin_s, chLatin_i, chLatin_s, chColon,
+  chLatin_n, chLatin_a, chLatin_m, chLatin_e, chLatin_s, chColon, chLatin_t, chLatin_c, chColon,
+  chLatin_S, chLatin_A, chLatin_M, chLatin_L, chColon, chDigit_1, chPeriod, chDigit_1, chColon,
+  chLatin_n, chLatin_a, chLatin_m, chLatin_e, chLatin_i, chLatin_d, chDash,
+  chLatin_f, chLatin_o, chLatin_r, chLatin_m, chLatin_a, chLatin_t, chColon,
+  chLatin_W, chLatin_i, chLatin_n, chLatin_d, chLatin_o, chLatin_w, chLatin_s,
+  chLatin_D, chLatin_o, chLatin_m, chLatin_a, chLatin_i, chLatin_n,
+  chLatin_Q, chLatin_u, chLatin_a, chLatin_l, chLatin_i, chLatin_f, chLatin_i, chLatin_e, chLatin_d,
+  chLatin_N, chLatin_a, chLatin_m, chLatin_e, chNull
+};
+
+const XMLCh SubjectConfirmation::ARTIFACT01[] = // urn:oasis:names:tc:SAML:1.0:cm:artifact-01
+{ chLatin_u, chLatin_r, chLatin_n, chColon, chLatin_o, chLatin_a, chLatin_s, chLatin_i, chLatin_s, chColon,
+  chLatin_n, chLatin_a, chLatin_m, chLatin_e, chLatin_s, chColon, chLatin_t, chLatin_c, chColon,
+  chLatin_S, chLatin_A, chLatin_M, chLatin_L, chColon, chDigit_1, chPeriod, chDigit_0, chColon,
+  chLatin_c, chLatin_m, chColon, chLatin_a, chLatin_r, chLatin_t, chLatin_i, chLatin_f, chLatin_a, chLatin_c, chLatin_t,
+      chDash, chDigit_0, chDigit_1, chNull
+};
+
+const XMLCh SubjectConfirmation::ARTIFACT[] = // urn:oasis:names:tc:SAML:1.0:cm:artifact
+{ chLatin_u, chLatin_r, chLatin_n, chColon, chLatin_o, chLatin_a, chLatin_s, chLatin_i, chLatin_s, chColon,
+  chLatin_n, chLatin_a, chLatin_m, chLatin_e, chLatin_s, chColon, chLatin_t, chLatin_c, chColon,
+  chLatin_S, chLatin_A, chLatin_M, chLatin_L, chColon, chDigit_1, chPeriod, chDigit_0, chColon,
+  chLatin_c, chLatin_m, chColon, chLatin_a, chLatin_r, chLatin_t, chLatin_i, chLatin_f, chLatin_a, chLatin_c, chLatin_t, chNull
+};
+
+const XMLCh SubjectConfirmation::BEARER[] = // urn:oasis:names:tc:SAML:1.0:cm:bearer
+{ chLatin_u, chLatin_r, chLatin_n, chColon, chLatin_o, chLatin_a, chLatin_s, chLatin_i, chLatin_s, chColon,
+  chLatin_n, chLatin_a, chLatin_m, chLatin_e, chLatin_s, chColon, chLatin_t, chLatin_c, chColon,
+  chLatin_S, chLatin_A, chLatin_M, chLatin_L, chColon, chDigit_1, chPeriod, chDigit_0, chColon,
+  chLatin_c, chLatin_m, chColon, chLatin_b, chLatin_e, chLatin_a, chLatin_r, chLatin_e, chLatin_r, chNull
+};
+
+const XMLCh SubjectConfirmation::HOLDER_KEY[] = // urn:oasis:names:tc:SAML:1.0:cm:holder-of-key
+{ chLatin_u, chLatin_r, chLatin_n, chColon, chLatin_o, chLatin_a, chLatin_s, chLatin_i, chLatin_s, chColon,
+  chLatin_n, chLatin_a, chLatin_m, chLatin_e, chLatin_s, chColon, chLatin_t, chLatin_c, chColon,
+  chLatin_S, chLatin_A, chLatin_M, chLatin_L, chColon, chDigit_1, chPeriod, chDigit_0, chColon,
+  chLatin_c, chLatin_m, chColon, chLatin_h, chLatin_o, chLatin_l, chLatin_d, chLatin_e, chLatin_r, chDash,
+      chLatin_o, chLatin_f, chDash, chLatin_k, chLatin_e, chLatin_y, chNull
+};
+
+const XMLCh SubjectConfirmation::SENDER_VOUCHES[] = // urn:oasis:names:tc:SAML:1.0:cm:sender-vouches
+{ chLatin_u, chLatin_r, chLatin_n, chColon, chLatin_o, chLatin_a, chLatin_s, chLatin_i, chLatin_s, chColon,
+  chLatin_n, chLatin_a, chLatin_m, chLatin_e, chLatin_s, chColon, chLatin_t, chLatin_c, chColon,
+  chLatin_S, chLatin_A, chLatin_M, chLatin_L, chColon, chDigit_1, chPeriod, chDigit_0, chColon,
+  chLatin_c, chLatin_m, chColon, chLatin_s, chLatin_e, chLatin_n, chLatin_d, chLatin_e, chLatin_r, chDash,
+      chLatin_v, chLatin_o, chLatin_u, chLatin_c, chLatin_h, chLatin_e, chLatin_s, chNull
+};
+
+const XMLCh Action::RWEDC_ACTION_NAMESPACE[] = // urn:oasis:names:tc:SAML:1.0:action:rwedc
+{ chLatin_u, chLatin_r, chLatin_n, chColon, chLatin_o, chLatin_a, chLatin_s, chLatin_i, chLatin_s, chColon,
+  chLatin_n, chLatin_a, chLatin_m, chLatin_e, chLatin_s, chColon, chLatin_t, chLatin_c, chColon,
+  chLatin_S, chLatin_A, chLatin_M, chLatin_L, chColon, chDigit_1, chPeriod, chDigit_0, chColon,
+  chLatin_a, chLatin_c, chLatin_t, chLatin_i, chLatin_o, chLatin_n, chColon,
+  chLatin_r, chLatin_w, chLatin_e, chLatin_d, chLatin_c, chNull
+};
+
+const XMLCh Action::RWEDC_NEG_ACTION_NAMESPACE[] = // urn:oasis:names:tc:SAML:1.0:action:rwedc-negation
+{ chLatin_u, chLatin_r, chLatin_n, chColon, chLatin_o, chLatin_a, chLatin_s, chLatin_i, chLatin_s, chColon,
+  chLatin_n, chLatin_a, chLatin_m, chLatin_e, chLatin_s, chColon, chLatin_t, chLatin_c, chColon,
+  chLatin_S, chLatin_A, chLatin_M, chLatin_L, chColon, chDigit_1, chPeriod, chDigit_0, chColon,
+  chLatin_a, chLatin_c, chLatin_t, chLatin_i, chLatin_o, chLatin_n, chColon,
+  chLatin_r, chLatin_w, chLatin_e, chLatin_d, chLatin_c, chDash,
+  chLatin_n, chLatin_e, chLatin_g, chLatin_a, chLatin_t, chLatin_i, chLatin_o, chLatin_n, chNull
+};
+
+const XMLCh Action::GHPP_ACTION_NAMESPACE[] = // urn:oasis:names:tc:SAML:1.0:action:ghpp
+{ chLatin_u, chLatin_r, chLatin_n, chColon, chLatin_o, chLatin_a, chLatin_s, chLatin_i, chLatin_s, chColon,
+  chLatin_n, chLatin_a, chLatin_m, chLatin_e, chLatin_s, chColon, chLatin_t, chLatin_c, chColon,
+  chLatin_S, chLatin_A, chLatin_M, chLatin_L, chColon, chDigit_1, chPeriod, chDigit_0, chColon,
+  chLatin_a, chLatin_c, chLatin_t, chLatin_i, chLatin_o, chLatin_n, chColon,
+  chLatin_g, chLatin_h, chLatin_p, chLatin_p, chNull
+};
+
+const XMLCh Action::UNIX_ACTION_NAMESPACE[] = // urn:oasis:names:tc:SAML:1.0:action:unix
+{ chLatin_u, chLatin_r, chLatin_n, chColon, chLatin_o, chLatin_a, chLatin_s, chLatin_i, chLatin_s, chColon,
+  chLatin_n, chLatin_a, chLatin_m, chLatin_e, chLatin_s, chColon, chLatin_t, chLatin_c, chColon,
+  chLatin_S, chLatin_A, chLatin_M, chLatin_L, chColon, chDigit_1, chPeriod, chDigit_0, chColon,
+  chLatin_a, chLatin_c, chLatin_t, chLatin_i, chLatin_o, chLatin_n, chColon,
+  chLatin_u, chLatin_n, chLatin_i, chLatin_x, chNull
+};
