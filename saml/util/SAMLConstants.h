@@ -56,12 +56,6 @@ namespace opensaml {
         /** SAML 1.X Protocol QName prefix ("samlp") */
         static const XMLCh SAML1P_PREFIX[];
         
-        /** SAML 1.1 Protocol Enumeration constant ("urn:oasis:names:tc:SAML:1.0:protocol") */
-        static const XMLCh SAML11_PROTOCOL_ENUM[];
-        
-        /** SAML 1.x Metadata Profile ID ("urn:oasis:names:tc:SAML:profiles:v1metadata") */
-        static const XMLCh SAML1_METADATA_PROFILE[];
-
         /**  SAML 2.0 Version ("2.0") */
         static const XMLCh SAML20_VERSION[];
         
@@ -112,6 +106,30 @@ namespace opensaml {
         
         /** SAML 2.0 XACML Attribute Profile QName prefix ("xacmlprof") */
         static const XMLCh SAML20XACML_PREFIX[];
+
+        /** SAML 1.x Metadata Profile XML Namespace ("urn:oasis:names:tc:SAML:profiles:v1metadata") */
+        static const XMLCh SAML1MD_NS[];
+        
+        /** SAML 1.x Metadata Profile QName prefix ("saml1md") */
+        static const XMLCh SAML1MD_PREFIX[];
+
+        /** SAML 1.0 Protocol Enumeration constant ("urn:oasis:names:tc:SAML:1.0:protocol") */
+        #define SAML10_PROTOCOL_ENUM SAML1P_NS
+        
+        /** SAML 1.1 Protocol Enumeration constant ("urn:oasis:names:tc:SAML:1.1:protocol") */
+        static const XMLCh SAML11_PROTOCOL_ENUM[];
+
+        /** SAML Query Requester Metadata Extension XML Namespace ("urn:oasis:names:tc:SAML:metadata:ext:query") */
+        static const XMLCh SAML20MD_QUERY_EXT_NS[];
+        
+        /** SAML Query Requester Metadata Extension QName prefix ("query") */
+        static const XMLCh SAML20MD_QUERY_EXT_PREFIX[];
+
+        /** SAML Third-Party Request Protocol Extension XML Namespace ("urn:oasis:names:tc:SAML:protocol:ext:third-party") */
+        static const XMLCh SAML20P_THIRDPARTY_EXT_NS[];
+        
+        /** SAML Third-Party Request Protocol Extension QName prefix ("query") */
+        static const XMLCh SAML20P_THIRDPARTY_EXT_PREFIX[];
     };
 
 };

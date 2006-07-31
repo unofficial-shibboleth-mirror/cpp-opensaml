@@ -679,8 +679,8 @@ namespace opensaml {
                 PROC_TYPED_CHILD(BaseID,SAMLConstants::SAML20_NS,false);
                 PROC_TYPED_CHILD(NameID,SAMLConstants::SAML20_NS,false);
                 PROC_TYPED_CHILD(EncryptedID,SAMLConstants::SAML20_NS,false);
-                PROC_XMLOBJECT_CHILD(SubjectConfirmationData,SAMLConstants::SAML20_NS);
                 PROC_TYPED_CHILD(KeyInfoConfirmationDataType,SAMLConstants::SAML20_NS,false);
+                PROC_XMLOBJECT_CHILD(SubjectConfirmationData,SAMLConstants::SAML20_NS);
                 AbstractXMLObjectUnmarshaller::processChildElement(childXMLObject,root);
             }
 

@@ -61,6 +61,7 @@ namespace opensaml {
         DECL_XMLOBJECTIMPL_SIMPLE(SAML_DLLLOCAL,SessionIndex);
         DECL_XMLOBJECTIMPL_SIMPLE(SAML_DLLLOCAL,StatusMessage);
 
+        DECL_XMLOBJECTIMPL_SIMPLE(SAML_DLLLOCAL,RespondTo);
 
         //TODO need unit test for this, using objects from another namespace
         class SAML_DLLLOCAL ExtensionsImpl : public virtual Extensions,
@@ -1639,6 +1640,7 @@ IMPL_XMLOBJECTBUILDER(StatusMessage);
 IMPL_XMLOBJECTBUILDER(StatusResponse);
 IMPL_XMLOBJECTBUILDER(Terminate);
 
+IMPL_XMLOBJECTBUILDER(RespondTo);
 
 // Unicode literals
 const XMLCh Artifact::LOCAL_NAME[] = UNICODE_LITERAL_8(A,r,t,i,f,a,c,t);
@@ -1709,6 +1711,7 @@ const XMLCh Request::VER_ATTRIB_NAME[] = UNICODE_LITERAL_7(V,e,r,s,i,o,n);
 const XMLCh Request::ISSUEINSTANT_ATTRIB_NAME[] = UNICODE_LITERAL_12(I,s,s,u,e,I,n,s,t,a,n,t);
 const XMLCh Request::DESTINATION_ATTRIB_NAME[] = UNICODE_LITERAL_11(D,e,s,t,i,n,a,t,i,o,n);
 const XMLCh Request::CONSENT_ATTRIB_NAME[] = UNICODE_LITERAL_7(C,o,n,s,e,n,t);
+const XMLCh RespondTo::LOCAL_NAME[] = UNICODE_LITERAL_9(R,e,s,p,o,n,d,T,o);
 const XMLCh Response::LOCAL_NAME[] = UNICODE_LITERAL_8(R,e,s,p,o,n,s,e);
 const XMLCh Response::TYPE_NAME[] = UNICODE_LITERAL_12(R,e,s,p,o,n,s,e,T,y,p,e);
 const XMLCh Scoping::LOCAL_NAME[] = UNICODE_LITERAL_7(S,c,o,p,i,n,g);

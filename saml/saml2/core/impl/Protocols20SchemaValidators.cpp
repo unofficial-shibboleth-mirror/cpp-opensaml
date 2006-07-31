@@ -39,6 +39,8 @@ namespace opensaml {
         XMLOBJECTVALIDATOR_SIMPLE(SAML_DLLLOCAL,RequesterID);
         XMLOBJECTVALIDATOR_SIMPLE(SAML_DLLLOCAL,SessionIndex);
         XMLOBJECTVALIDATOR_SIMPLE(SAML_DLLLOCAL,StatusMessage);
+        
+        XMLOBJECTVALIDATOR_SIMPLE(SAML_DLLLOCAL,RespondTo);
 
         //TODO wildcard NS ##other - spec says must be a "non-SAML defined" namespace,
         // not just other than the target namespace
@@ -295,4 +297,8 @@ void opensaml::saml2p::registerProtocolClasses() {
     REGISTER_TYPE(StatusResponse);
     REGISTER_TYPE_NOVAL(StatusDetail);
     REGISTER_TYPE_NOVAL(Terminate);
+
+    q=QName(SAMLConstants::SAML20P_THIRDPARTY_EXT_NS,RespondTo::LOCAL_NAME);
+    XMLObjectBuilder::registerBuilder(q,new RespondToBuilder());
+    ProtocolSchemaValidators.registerValidator(q,new RespondToSchemaValidator());
 }

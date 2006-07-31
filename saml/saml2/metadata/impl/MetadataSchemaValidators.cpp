@@ -33,12 +33,14 @@ using namespace std;
 namespace opensaml {
     namespace saml2md {
         
+        XMLOBJECTVALIDATOR_SIMPLE(SAML_DLLLOCAL,ActionNamespace);
         XMLOBJECTVALIDATOR_SIMPLE(SAML_DLLLOCAL,AffiliateMember);
         XMLOBJECTVALIDATOR_SIMPLE(SAML_DLLLOCAL,AttributeProfile);
         XMLOBJECTVALIDATOR_SIMPLE(SAML_DLLLOCAL,Company);
         XMLOBJECTVALIDATOR_SIMPLE(SAML_DLLLOCAL,EmailAddress);
         XMLOBJECTVALIDATOR_SIMPLE(SAML_DLLLOCAL,GivenName);
         XMLOBJECTVALIDATOR_SIMPLE(SAML_DLLLOCAL,NameIDFormat);
+        XMLOBJECTVALIDATOR_SIMPLE(SAML_DLLLOCAL,SourceID);
         XMLOBJECTVALIDATOR_SIMPLE(SAML_DLLLOCAL,SurName);
         XMLOBJECTVALIDATOR_SIMPLE(SAML_DLLLOCAL,TelephoneNumber);
 
@@ -321,4 +323,24 @@ void opensaml::saml2md::registerMetadataClasses() {
     REGISTER_TYPE(PDPDescriptor);
     REGISTER_TYPE(RequestedAttribute);
     REGISTER_TYPE(SPSSODescriptor);
+
+    q=QName(SAMLConstants::SAML1MD_NS,SourceID::LOCAL_NAME);
+    XMLObjectBuilder::registerBuilder(q,new SourceIDBuilder());
+    MetadataSchemaValidators.registerValidator(q,new SourceIDSchemaValidator());
+
+    q=QName(SAMLConstants::SAML20MD_QUERY_EXT_NS,ActionNamespace::LOCAL_NAME);
+    XMLObjectBuilder::registerBuilder(q,new ActionNamespaceBuilder());
+    MetadataSchemaValidators.registerValidator(q,new ActionNamespaceSchemaValidator());
+
+    q=QName(SAMLConstants::SAML20MD_QUERY_EXT_NS,AuthnQueryDescriptorType::TYPE_NAME);
+    XMLObjectBuilder::registerBuilder(q,new AuthnQueryDescriptorTypeBuilder());
+    MetadataSchemaValidators.registerValidator(q,new RoleDescriptorSchemaValidator());
+
+    q=QName(SAMLConstants::SAML20MD_QUERY_EXT_NS,AttributeQueryDescriptorType::TYPE_NAME);
+    XMLObjectBuilder::registerBuilder(q,new AttributeQueryDescriptorTypeBuilder());
+    MetadataSchemaValidators.registerValidator(q,new RoleDescriptorSchemaValidator());
+
+    q=QName(SAMLConstants::SAML20MD_QUERY_EXT_NS,AuthzDecisionQueryDescriptorType::TYPE_NAME);
+    XMLObjectBuilder::registerBuilder(q,new AuthzDecisionQueryDescriptorTypeBuilder());
+    MetadataSchemaValidators.registerValidator(q,new RoleDescriptorSchemaValidator());
 }

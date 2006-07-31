@@ -83,6 +83,9 @@ namespace opensaml {
         DECL_XMLOBJECT_SIMPLE(SAML_API,NameIDFormat,Format,SAML 2.0 NameIDFormat element);
         DECL_XMLOBJECT_SIMPLE(SAML_API,SurName,Name,SAML 2.0 SurName element);
         DECL_XMLOBJECT_SIMPLE(SAML_API,TelephoneNumber,Number,SAML 2.0 TelephoneNumber element);
+        
+        DECL_XMLOBJECT_SIMPLE(SAML_API,ActionNamespace,Namespace,SAML 2.0 Metadata Extension ActionNamespace element);
+        DECL_XMLOBJECT_SIMPLE(SAML_API,SourceID,ID,SAML 1.x Metadata Profile SourceID element);
 
         BEGIN_XMLOBJECT(SAML_API,localizedNameType,xmltooling::SimpleElement,SAML 2.0 localizedNameType type);
             DECL_STRING_ATTRIB(Lang,LANG);
@@ -301,6 +304,30 @@ namespace opensaml {
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
 
+        BEGIN_XMLOBJECT(SAML_API,QueryDescriptorType,RoleDescriptor,SAML 2.0 QueryDescriptorType abstract type);
+            DECL_BOOLEAN_ATTRIB(WantAssertionsSigned,WANTASSERTIONSSIGNED);
+            DECL_TYPED_CHILDREN(NameIDFormat);
+            /** QueryDescriptorType local name */
+            static const XMLCh TYPE_NAME[];
+        END_XMLOBJECT;
+
+        BEGIN_XMLOBJECT(SAML_API,AuthnQueryDescriptorType,QueryDescriptorType,SAML 2.0 AuthnQueryDescriptorType extension type);
+            /** AuthnQueryDescriptorType local name */
+            static const XMLCh TYPE_NAME[];
+        END_XMLOBJECT;
+
+        BEGIN_XMLOBJECT(SAML_API,AttributeQueryDescriptorType,QueryDescriptorType,SAML 2.0 AttributeQueryDescriptorType extension type);
+            DECL_TYPED_CHILDREN(AttributeConsumingService);
+            /** AttributeQueryDescriptorType local name */
+            static const XMLCh TYPE_NAME[];
+        END_XMLOBJECT;
+
+        BEGIN_XMLOBJECT(SAML_API,AuthzDecisionQueryDescriptorType,QueryDescriptorType,SAML 2.0 AuthzDecisionQueryDescriptorType extension type);
+            DECL_TYPED_CHILDREN(ActionNamespace);
+            /** AuthzDecisionQueryDescriptorType local name */
+            static const XMLCh TYPE_NAME[];
+        END_XMLOBJECT;
+
         BEGIN_XMLOBJECT4(SAML_API,AffiliationDescriptor,xmltooling::AttributeExtensibleXMLObject,SignableObject,
                 CacheableSAMLObject,TimeBoundSAMLObject,SAML 2.0 AffiliationDescriptor element);
             DECL_STRING_ATTRIB(ID,ID);
@@ -326,6 +353,9 @@ namespace opensaml {
             DECL_TYPED_CHILDREN(AuthnAuthorityDescriptor);
             DECL_TYPED_CHILDREN(AttributeAuthorityDescriptor);
             DECL_TYPED_CHILDREN(PDPDescriptor);
+            DECL_TYPED_CHILDREN(AuthnQueryDescriptorType);
+            DECL_TYPED_CHILDREN(AttributeQueryDescriptorType);
+            DECL_TYPED_CHILDREN(AuthzDecisionQueryDescriptorType);
             /** Finds an IDP role supporting a given protocol. */
             virtual const IDPSSODescriptor* getIDPSSODescriptor(const XMLCh* protocol) const=0;
             /** Finds an SP role supporting a given protocol. */
@@ -336,6 +366,12 @@ namespace opensaml {
             virtual const AttributeAuthorityDescriptor* getAttributeAuthorityDescriptor(const XMLCh* protocol) const=0;
             /** Finds a PDP role supporting a given protocol. */
             virtual const PDPDescriptor* getPDPDescriptor(const XMLCh* protocol) const=0;
+            /** Finds an AuthnQuery role supporting a given protocol. */
+            virtual const AuthnQueryDescriptorType* getAuthnQueryDescriptorType(const XMLCh* protocol) const=0;
+            /** Finds an AttributeQuery role supporting a given protocol. */
+            virtual const AttributeQueryDescriptorType* getAttributeQueryDescriptorType(const XMLCh* protocol) const=0;
+            /** Finds an AuthzDecisionQuery role supporting a given protocol. */
+            virtual const AuthzDecisionQueryDescriptorType* getAuthzDecisionQueryDescriptorType(const XMLCh* protocol) const=0;
             /** Finds an extension role supporting a given protocol. */
             virtual const RoleDescriptor* getRoleDescriptor(xmltooling::QName& qname, const XMLCh* protocol) const=0;
             /** EntityDescriptorType local name */
@@ -392,6 +428,9 @@ namespace opensaml {
         DECL_SAML2MDOBJECTBUILDER(SPSSODescriptor);
         DECL_SAML2MDOBJECTBUILDER(SurName);
         DECL_SAML2MDOBJECTBUILDER(TelephoneNumber);
+        
+        DECL_XMLOBJECTBUILDER(SAML_API,ActionNamespace,opensaml::SAMLConstants::SAML20MD_QUERY_EXT_NS,opensaml::SAMLConstants::SAML20MD_QUERY_EXT_PREFIX);
+        DECL_XMLOBJECTBUILDER(SAML_API,SourceID,opensaml::SAMLConstants::SAML1MD_NS,opensaml::SAMLConstants::SAML1MD_PREFIX);
 
         /**
          * Builder for localizedNameType objects.
@@ -494,6 +533,108 @@ namespace opensaml {
                     return b->buildObject(nsURI, localName, prefix, &schemaType);
                 }
                 throw xmltooling::XMLObjectException("Unable to obtain typed builder for IndexedEndpointType.");
+            }
+        };
+
+        /**
+         * Builder for AuthnQueryDescriptorType objects.
+         * 
+         * This is customized to return a RoleDescriptor element with an
+         * xsi:type of AuthnQueryDescriptorType.
+         */
+        class SAML_API AuthnQueryDescriptorTypeBuilder : public xmltooling::XMLObjectBuilder {
+        public:
+            virtual ~AuthnQueryDescriptorTypeBuilder() {}
+            /** Default builder. */
+            virtual AuthnQueryDescriptorType* buildObject() const {
+                xmltooling::QName schemaType(
+                    SAMLConstants::SAML20_NS,AuthnQueryDescriptorType::TYPE_NAME,SAMLConstants::SAML20MD_QUERY_EXT_PREFIX
+                    );
+                return buildObject(
+                    SAMLConstants::SAML20_NS,AuthnQueryDescriptorType::LOCAL_NAME,SAMLConstants::SAML20_PREFIX,&schemaType
+                    );
+            }
+            /** Builder that allows element/type override. */
+            virtual AuthnQueryDescriptorType* buildObject(
+                const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=NULL, const xmltooling::QName* schemaType=NULL
+                ) const;
+        
+            /** Singleton builder. */
+            static AuthnQueryDescriptorType* buildAuthnQueryDescriptorType() {
+                const AuthnQueryDescriptorTypeBuilder* b = dynamic_cast<const AuthnQueryDescriptorTypeBuilder*>(
+                    XMLObjectBuilder::getBuilder(xmltooling::QName(SAMLConstants::SAML20MD_QUERY_EXT_NS,AuthnQueryDescriptorType::TYPE_NAME))
+                    );
+                if (b)
+                    return b->buildObject();
+                throw xmltooling::XMLObjectException("Unable to obtain typed builder for AuthnQueryDescriptorType.");
+            }
+        };
+
+        /**
+         * Builder for AttributeQueryDescriptorType objects.
+         * 
+         * This is customized to return a RoleDescriptor element with an
+         * xsi:type of AttributeQueryDescriptorType.
+         */
+        class SAML_API AttributeQueryDescriptorTypeBuilder : public xmltooling::XMLObjectBuilder {
+        public:
+            virtual ~AttributeQueryDescriptorTypeBuilder() {}
+            /** Default builder. */
+            virtual AttributeQueryDescriptorType* buildObject() const {
+                xmltooling::QName schemaType(
+                    SAMLConstants::SAML20_NS,AttributeQueryDescriptorType::TYPE_NAME,SAMLConstants::SAML20MD_QUERY_EXT_PREFIX
+                    );
+                return buildObject(
+                    SAMLConstants::SAML20_NS,AttributeQueryDescriptorType::LOCAL_NAME,SAMLConstants::SAML20_PREFIX,&schemaType
+                    );
+            }
+            /** Builder that allows element/type override. */
+            virtual AttributeQueryDescriptorType* buildObject(
+                const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=NULL, const xmltooling::QName* schemaType=NULL
+                ) const;
+        
+            /** Singleton builder. */
+            static AttributeQueryDescriptorType* buildAttributeQueryDescriptorType() {
+                const AttributeQueryDescriptorTypeBuilder* b = dynamic_cast<const AttributeQueryDescriptorTypeBuilder*>(
+                    XMLObjectBuilder::getBuilder(xmltooling::QName(SAMLConstants::SAML20MD_QUERY_EXT_NS,AttributeQueryDescriptorType::TYPE_NAME))
+                    );
+                if (b)
+                    return b->buildObject();
+                throw xmltooling::XMLObjectException("Unable to obtain typed builder for AttributeQueryDescriptorType.");
+            }
+        };
+
+        /**
+         * Builder for AuthzDecisionQueryDescriptorType objects.
+         * 
+         * This is customized to return a RoleDescriptor element with an
+         * xsi:type of AuthzDecisionQueryDescriptorType.
+         */
+        class SAML_API AuthzDecisionQueryDescriptorTypeBuilder : public xmltooling::XMLObjectBuilder {
+        public:
+            virtual ~AuthzDecisionQueryDescriptorTypeBuilder() {}
+            /** Default builder. */
+            virtual AuthzDecisionQueryDescriptorType* buildObject() const {
+                xmltooling::QName schemaType(
+                    SAMLConstants::SAML20_NS,AuthzDecisionQueryDescriptorType::TYPE_NAME,SAMLConstants::SAML20MD_QUERY_EXT_PREFIX
+                    );
+                return buildObject(
+                    SAMLConstants::SAML20_NS,AuthzDecisionQueryDescriptorType::LOCAL_NAME,SAMLConstants::SAML20_PREFIX,&schemaType
+                    );
+            }
+            /** Builder that allows element/type override. */
+            virtual AuthzDecisionQueryDescriptorType* buildObject(
+                const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=NULL, const xmltooling::QName* schemaType=NULL
+                ) const;
+        
+            /** Singleton builder. */
+            static AuthzDecisionQueryDescriptorType* buildAuthzDecisionQueryDescriptorType() {
+                const AuthzDecisionQueryDescriptorTypeBuilder* b = dynamic_cast<const AuthzDecisionQueryDescriptorTypeBuilder*>(
+                    XMLObjectBuilder::getBuilder(xmltooling::QName(SAMLConstants::SAML20MD_QUERY_EXT_NS,AuthzDecisionQueryDescriptorType::TYPE_NAME))
+                    );
+                if (b)
+                    return b->buildObject();
+                throw xmltooling::XMLObjectException("Unable to obtain typed builder for AuthzDecisionQueryDescriptorType.");
             }
         };
 

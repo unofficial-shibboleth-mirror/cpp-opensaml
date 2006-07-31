@@ -46,6 +46,8 @@ namespace opensaml {
         DECL_XMLOBJECT_SIMPLE(SAML_API,SessionIndex,SessionIndex,SAML 2.0 SessionIndex element);
         DECL_XMLOBJECT_SIMPLE(SAML_API,StatusMessage,Message,SAML 2.0 StatusMessage element);
 
+        DECL_XMLOBJECT_SIMPLE(SAML_API,RespondTo,Name,SAML 2.0 third-party request RespondTo extension element);
+
         BEGIN_XMLOBJECT(SAML_API,Extensions,xmltooling::ElementProxy,SAML 2.0 protocol Extensions element);
             /** ExtensionsType local name */
             static const XMLCh TYPE_NAME[];
@@ -388,6 +390,8 @@ namespace opensaml {
         DECL_SAML2POBJECTBUILDER(StatusDetail);
         DECL_SAML2POBJECTBUILDER(StatusMessage);
         DECL_SAML2POBJECTBUILDER(Terminate);
+        
+        DECL_XMLOBJECTBUILDER(SAML_API,RespondTo,opensaml::SAMLConstants::SAML20P_THIRDPARTY_EXT_NS,opensaml::SAMLConstants::SAML20P_THIRDPARTY_EXT_PREFIX);
 
         //
         // Custom builders

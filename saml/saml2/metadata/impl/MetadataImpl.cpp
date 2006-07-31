@@ -61,6 +61,9 @@ namespace opensaml {
         DECL_XMLOBJECTIMPL_SIMPLE(SAML_DLLLOCAL,SurName);
         DECL_XMLOBJECTIMPL_SIMPLE(SAML_DLLLOCAL,TelephoneNumber);
 
+        DECL_XMLOBJECTIMPL_SIMPLE(SAML_DLLLOCAL,ActionNamespace);
+        DECL_XMLOBJECTIMPL_SIMPLE(SAML_DLLLOCAL,SourceID);
+
         class SAML_DLLLOCAL localizedNameTypeImpl : public virtual localizedNameType,
             public AbstractSimpleElement,
             public AbstractChildlessElement,
@@ -1738,6 +1741,155 @@ namespace opensaml {
             }
         };
 
+        class SAML_DLLLOCAL QueryDescriptorTypeImpl : public virtual QueryDescriptorType, public RoleDescriptorImpl
+        {
+            void init() {
+                m_WantAssertionsSigned=XMLConstants::XML_BOOL_NULL;
+                m_children.push_back(NULL);
+                m_pos_NameIDFormat=m_pos_ContactPerson;
+                ++m_pos_NameIDFormat;
+            }
+        
+        protected:
+            list<XMLObject*>::iterator m_pos_NameIDFormat;
+            
+            QueryDescriptorTypeImpl() {
+                init();
+            }
+        
+        public:
+            virtual ~QueryDescriptorTypeImpl() {}
+    
+            QueryDescriptorTypeImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
+                init();
+            }
+                
+            QueryDescriptorTypeImpl(const QueryDescriptorTypeImpl& src) : AbstractXMLObject(src), RoleDescriptorImpl(src) {
+                init();
+                WantAssertionsSigned(src.m_WantAssertionsSigned);
+                VectorOf(NameIDFormat) y=getNameIDFormats();
+                for (vector<NameIDFormat*>::const_iterator m=src.m_NameIDFormats.begin(); m!=src.m_NameIDFormats.end(); m++) {
+                    if (*m) {
+                        y.push_back((*m)->cloneNameIDFormat());
+                    }
+                }
+            }
+            
+            IMPL_BOOLEAN_ATTRIB(WantAssertionsSigned);
+            IMPL_TYPED_CHILDREN(NameIDFormat,m_pos_NameIDFormat);
+
+            void setAttribute(QName& qualifiedName, const XMLCh* value) {
+                if (!qualifiedName.hasNamespaceURI()) {
+                    if (XMLString::equals(qualifiedName.getLocalPart(),WANTASSERTIONSSIGNED_ATTRIB_NAME)) {
+                        setWantAssertionsSigned(value);
+                        return;
+                    }
+                }
+                RoleDescriptorImpl::setAttribute(qualifiedName, value);
+            }
+
+        protected:
+            void marshallAttributes(DOMElement* domElement) const {
+                MARSHALL_BOOLEAN_ATTRIB(WantAssertionsSigned,WANTASSERTIONSSIGNED,NULL);
+                RoleDescriptorImpl::marshallAttributes(domElement);
+            }
+
+            void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
+                PROC_TYPED_CHILDREN(NameIDFormat,SAMLConstants::SAML20MD_NS,false);
+                RoleDescriptorImpl::processChildElement(childXMLObject,root);
+            }
+        };
+
+        class SAML_DLLLOCAL AuthnQueryDescriptorTypeImpl : public virtual AuthnQueryDescriptorType, public QueryDescriptorTypeImpl
+        {
+        public:
+            virtual ~AuthnQueryDescriptorTypeImpl() {}
+    
+            AuthnQueryDescriptorTypeImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {}
+                
+            AuthnQueryDescriptorTypeImpl(const AuthnQueryDescriptorTypeImpl& src) : AbstractXMLObject(src), QueryDescriptorTypeImpl(src) {}
+            
+            IMPL_XMLOBJECT_CLONE(AuthnQueryDescriptorType);
+            QueryDescriptorType* cloneQueryDescriptorType() const {
+                return new AuthnQueryDescriptorTypeImpl(*this);
+            }
+            RoleDescriptor* cloneRoleDescriptor() const {
+                return new AuthnQueryDescriptorTypeImpl(*this);
+            }
+        };
+
+        class SAML_DLLLOCAL AttributeQueryDescriptorTypeImpl : public virtual AttributeQueryDescriptorType, public QueryDescriptorTypeImpl
+        {
+        public:
+            virtual ~AttributeQueryDescriptorTypeImpl() {}
+    
+            AttributeQueryDescriptorTypeImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {}
+                
+            AttributeQueryDescriptorTypeImpl(const AttributeQueryDescriptorTypeImpl& src)
+                    : AbstractXMLObject(src), QueryDescriptorTypeImpl(src) {
+                VectorOf(AttributeConsumingService) w=getAttributeConsumingServices();
+                for (vector<AttributeConsumingService*>::const_iterator j=src.m_AttributeConsumingServices.begin(); j!=src.m_AttributeConsumingServices.end(); j++) {
+                    if (*j) {
+                        w.push_back((*j)->cloneAttributeConsumingService());
+                    }
+                }
+            }
+            
+            IMPL_XMLOBJECT_CLONE(AttributeQueryDescriptorType);
+            QueryDescriptorType* cloneQueryDescriptorType() const {
+                return new AttributeQueryDescriptorTypeImpl(*this);
+            }
+            RoleDescriptor* cloneRoleDescriptor() const {
+                return new AttributeQueryDescriptorTypeImpl(*this);
+            }
+            
+            IMPL_TYPED_CHILDREN(AttributeConsumingService,m_children.end());
+
+        protected:
+            void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
+                PROC_TYPED_CHILDREN(AttributeConsumingService,SAMLConstants::SAML20MD_NS,false);
+                QueryDescriptorTypeImpl::processChildElement(childXMLObject,root);
+            }
+        };
+
+        class SAML_DLLLOCAL AuthzDecisionQueryDescriptorTypeImpl : public virtual AuthzDecisionQueryDescriptorType, public QueryDescriptorTypeImpl
+        {
+        public:
+            virtual ~AuthzDecisionQueryDescriptorTypeImpl() {}
+    
+            AuthzDecisionQueryDescriptorTypeImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {}
+                
+            AuthzDecisionQueryDescriptorTypeImpl(const AuthzDecisionQueryDescriptorTypeImpl& src)
+                    : AbstractXMLObject(src), QueryDescriptorTypeImpl(src) {
+                VectorOf(ActionNamespace) w=getActionNamespaces();
+                for (vector<ActionNamespace*>::const_iterator j=src.m_ActionNamespaces.begin(); j!=src.m_ActionNamespaces.end(); j++) {
+                    if (*j) {
+                        w.push_back((*j)->cloneActionNamespace());
+                    }
+                }
+            }
+            
+            IMPL_XMLOBJECT_CLONE(AuthzDecisionQueryDescriptorType);
+            QueryDescriptorType* cloneQueryDescriptorType() const {
+                return new AuthzDecisionQueryDescriptorTypeImpl(*this);
+            }
+            RoleDescriptor* cloneRoleDescriptor() const {
+                return new AuthzDecisionQueryDescriptorTypeImpl(*this);
+            }
+            
+            IMPL_TYPED_CHILDREN(ActionNamespace,m_children.end());
+
+        protected:
+            void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
+                PROC_TYPED_CHILDREN(ActionNamespace,SAMLConstants::SAML20MD_QUERY_EXT_NS,false);
+                QueryDescriptorTypeImpl::processChildElement(childXMLObject,root);
+            }
+        };
+
         class SAML_DLLLOCAL AffiliationDescriptorImpl : public virtual AffiliationDescriptor,
             public virtual SignableObject,
             public AbstractComplexElement,
@@ -1982,6 +2134,24 @@ namespace opensaml {
                             continue;
                         }
     
+                        AuthnQueryDescriptorType* authnq=dynamic_cast<AuthnQueryDescriptorType*>(*i);
+                        if (authnq) {
+                            getAuthnQueryDescriptorTypes().push_back(authnq->cloneAuthnQueryDescriptorType());
+                            continue;
+                        }
+
+                        AttributeQueryDescriptorType* attrq=dynamic_cast<AttributeQueryDescriptorType*>(*i);
+                        if (attrq) {
+                            getAttributeQueryDescriptorTypes().push_back(attrq->cloneAttributeQueryDescriptorType());
+                            continue;
+                        }
+
+                        AuthzDecisionQueryDescriptorType* authzq=dynamic_cast<AuthzDecisionQueryDescriptorType*>(*i);
+                        if (authzq) {
+                            getAuthzDecisionQueryDescriptorTypes().push_back(authzq->cloneAuthzDecisionQueryDescriptorType());
+                            continue;
+                        }
+
                         RoleDescriptor* role=dynamic_cast<RoleDescriptor*>(*i);
                         if (role) {
                             getRoleDescriptors().push_back(role->cloneRoleDescriptor());
@@ -2039,6 +2209,9 @@ namespace opensaml {
             IMPL_TYPED_CHILDREN(AuthnAuthorityDescriptor,m_pos_AffiliationDescriptor);
             IMPL_TYPED_CHILDREN(AttributeAuthorityDescriptor,m_pos_AffiliationDescriptor);
             IMPL_TYPED_CHILDREN(PDPDescriptor,m_pos_AffiliationDescriptor);
+            IMPL_TYPED_CHILDREN(AuthnQueryDescriptorType,m_pos_AffiliationDescriptor);
+            IMPL_TYPED_CHILDREN(AttributeQueryDescriptorType,m_pos_AffiliationDescriptor);
+            IMPL_TYPED_CHILDREN(AuthzDecisionQueryDescriptorType,m_pos_AffiliationDescriptor);
             IMPL_TYPED_CHILD(AffiliationDescriptor);
             IMPL_TYPED_CHILD(Organization);
             IMPL_TYPED_CHILDREN(ContactPerson,m_pos_ContactPerson);
@@ -2105,7 +2278,31 @@ namespace opensaml {
                 }
                 return NULL;
             }
+
+            const AuthnQueryDescriptorType* getAuthnQueryDescriptorType(const XMLCh* protocol) const {
+                for (vector<AuthnQueryDescriptorType*>::const_iterator i=m_AuthnQueryDescriptorTypes.begin(); i!=m_AuthnQueryDescriptorTypes.end(); i++) {
+                    if ((*i)->hasSupport(protocol) && (*i)->isValid())
+                        return (*i);
+                }
+                return NULL;
+            }
+
+            const AttributeQueryDescriptorType* getAttributeQueryDescriptorType(const XMLCh* protocol) const {
+                for (vector<AttributeQueryDescriptorType*>::const_iterator i=m_AttributeQueryDescriptorTypes.begin(); i!=m_AttributeQueryDescriptorTypes.end(); i++) {
+                    if ((*i)->hasSupport(protocol) && (*i)->isValid())
+                        return (*i);
+                }
+                return NULL;
+            }
             
+            const AuthzDecisionQueryDescriptorType* getAuthzDecisionQueryDescriptorType(const XMLCh* protocol) const {
+                for (vector<AuthzDecisionQueryDescriptorType*>::const_iterator i=m_AuthzDecisionQueryDescriptorTypes.begin(); i!=m_AuthzDecisionQueryDescriptorTypes.end(); i++) {
+                    if ((*i)->hasSupport(protocol) && (*i)->isValid())
+                        return (*i);
+                }
+                return NULL;
+            }
+
             const RoleDescriptor* getRoleDescriptor(xmltooling::QName& qname, const XMLCh* protocol) const {
                 for (vector<RoleDescriptor*>::const_iterator i=m_RoleDescriptors.begin(); i!=m_RoleDescriptors.end(); i++) {
                     if ((*i)->getSchemaType() && qname==(*((*i)->getSchemaType())) && (*i)->hasSupport(protocol) && (*i)->isValid())
@@ -2134,12 +2331,15 @@ namespace opensaml {
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
                 PROC_TYPED_FOREIGN_CHILD(Signature,xmlsignature,XMLConstants::XMLSIG_NS,false);
                 PROC_TYPED_CHILD(Extensions,SAMLConstants::SAML20MD_NS,false);
-                PROC_TYPED_CHILDREN(RoleDescriptor,SAMLConstants::SAML20MD_NS,false);
                 PROC_TYPED_CHILDREN(IDPSSODescriptor,SAMLConstants::SAML20MD_NS,false);
                 PROC_TYPED_CHILDREN(SPSSODescriptor,SAMLConstants::SAML20MD_NS,false);
                 PROC_TYPED_CHILDREN(AuthnAuthorityDescriptor,SAMLConstants::SAML20MD_NS,false);
                 PROC_TYPED_CHILDREN(AttributeAuthorityDescriptor,SAMLConstants::SAML20MD_NS,false);
                 PROC_TYPED_CHILDREN(PDPDescriptor,SAMLConstants::SAML20MD_NS,false);
+                PROC_TYPED_CHILDREN(AuthnQueryDescriptorType,SAMLConstants::SAML20MD_QUERY_EXT_NS,false);
+                PROC_TYPED_CHILDREN(AttributeQueryDescriptorType,SAMLConstants::SAML20MD_QUERY_EXT_NS,false);
+                PROC_TYPED_CHILDREN(AuthzDecisionQueryDescriptorType,SAMLConstants::SAML20MD_QUERY_EXT_NS,false);
+                PROC_TYPED_CHILDREN(RoleDescriptor,SAMLConstants::SAML20MD_NS,false);
                 PROC_TYPED_CHILD(AffiliationDescriptor,SAMLConstants::SAML20MD_NS,false);
                 PROC_TYPED_CHILD(Organization,SAMLConstants::SAML20MD_NS,false);
                 PROC_TYPED_CHILDREN(ContactPerson,SAMLConstants::SAML20MD_NS,false);
@@ -2288,9 +2488,12 @@ IMPL_XMLOBJECTBUILDER(AssertionIDRequestService);
 IMPL_XMLOBJECTBUILDER(AttributeAuthorityDescriptor);
 IMPL_XMLOBJECTBUILDER(AttributeConsumingService);
 IMPL_XMLOBJECTBUILDER(AttributeProfile);
+IMPL_XMLOBJECTBUILDER(AttributeQueryDescriptorType);
 IMPL_XMLOBJECTBUILDER(AttributeService);
 IMPL_XMLOBJECTBUILDER(AuthnAuthorityDescriptor);
+IMPL_XMLOBJECTBUILDER(AuthnQueryDescriptorType);
 IMPL_XMLOBJECTBUILDER(AuthnQueryService);
+IMPL_XMLOBJECTBUILDER(AuthzDecisionQueryDescriptorType);
 IMPL_XMLOBJECTBUILDER(AuthzService);
 IMPL_XMLOBJECTBUILDER(Company);
 IMPL_XMLOBJECTBUILDER(ContactPerson);
@@ -2322,6 +2525,10 @@ IMPL_XMLOBJECTBUILDER(SPSSODescriptor);
 IMPL_XMLOBJECTBUILDER(SurName);
 IMPL_XMLOBJECTBUILDER(TelephoneNumber);
 
+IMPL_XMLOBJECTBUILDER(ActionNamespace);
+IMPL_XMLOBJECTBUILDER(SourceID);
+
+const XMLCh ActionNamespace::LOCAL_NAME[] =             UNICODE_LITERAL_15(A,c,t,i,o,n,N,a,m,e,s,p,a,c,e);
 const XMLCh AdditionalMetadataLocation::LOCAL_NAME[] =  UNICODE_LITERAL_26(A,d,d,i,t,i,o,n,a,l,M,e,t,a,d,a,t,a,L,o,c,a,t,i,o,n);
 const XMLCh AdditionalMetadataLocation::TYPE_NAME[] =   UNICODE_LITERAL_30(A,d,d,i,t,i,o,n,a,l,M,e,t,a,d,a,t,a,L,o,c,a,t,i,o,n,T,y,p,e);
 const XMLCh AdditionalMetadataLocation::NAMESPACE_ATTRIB_NAME[] =   UNICODE_LITERAL_9(n,a,m,e,s,p,a,c,e);
@@ -2340,10 +2547,16 @@ const XMLCh AttributeConsumingService::TYPE_NAME[] =    UNICODE_LITERAL_29(A,t,t
 const XMLCh AttributeConsumingService::INDEX_ATTRIB_NAME[] =    UNICODE_LITERAL_5(i,n,d,e,x);
 const XMLCh AttributeConsumingService::ISDEFAULT_ATTRIB_NAME[] =    UNICODE_LITERAL_9(i,s,D,e,f,a,u,l,t);
 const XMLCh AttributeProfile::LOCAL_NAME[] =            UNICODE_LITERAL_16(A,t,t,r,i,b,u,t,e,P,r,o,f,i,l,e);
+const XMLCh AttributeQueryDescriptorType::LOCAL_NAME[] =UNICODE_LITERAL_14(R,o,l,e,D,e,s,c,r,i,p,t,o,r);
+const XMLCh AttributeQueryDescriptorType::TYPE_NAME[] = UNICODE_LITERAL_28(A,t,t,r,i,b,u,t,e,Q,u,e,r,y,D,e,s,c,r,i,p,t,o,r,T,y,p,e);
 const XMLCh AttributeService::LOCAL_NAME[] =            UNICODE_LITERAL_16(A,t,t,r,i,b,u,t,e,S,e,r,v,i,c,e);
 const XMLCh AuthnAuthorityDescriptor::LOCAL_NAME[] =    UNICODE_LITERAL_24(A,u,t,h,n,A,u,t,h,o,r,i,t,y,D,e,s,c,r,i,p,t,o,r);
 const XMLCh AuthnAuthorityDescriptor::TYPE_NAME[] =     UNICODE_LITERAL_28(A,u,t,h,n,A,u,t,h,o,r,i,t,y,D,e,s,c,r,i,p,t,o,r,T,y,p,e);
+const XMLCh AuthnQueryDescriptorType::LOCAL_NAME[] =    UNICODE_LITERAL_14(R,o,l,e,D,e,s,c,r,i,p,t,o,r);
+const XMLCh AuthnQueryDescriptorType::TYPE_NAME[] =     UNICODE_LITERAL_24(A,u,t,h,n,Q,u,e,r,y,D,e,s,c,r,i,p,t,o,r,T,y,p,e);
 const XMLCh AuthnQueryService::LOCAL_NAME[] =           UNICODE_LITERAL_17(A,u,t,h,n,Q,u,e,r,y,S,e,r,v,i,c,e);
+const XMLCh AuthzDecisionQueryDescriptorType::LOCAL_NAME[] =    UNICODE_LITERAL_14(R,o,l,e,D,e,s,c,r,i,p,t,o,r);
+const XMLCh AuthzDecisionQueryDescriptorType::TYPE_NAME[] = UNICODE_LITERAL_32(A,u,t,h,z,D,e,c,i,s,i,o,n,Q,u,e,r,y,D,e,s,c,r,i,p,t,o,r,T,y,p,e);
 const XMLCh AuthzService::LOCAL_NAME[] =                UNICODE_LITERAL_12(A,u,t,h,z,S,e,r,v,i,c,e);
 const XMLCh CacheableSAMLObject::CACHEDURATION_ATTRIB_NAME[] =  UNICODE_LITERAL_13(c,a,c,h,e,D,u,r,a,t,i,o,n);
 const XMLCh Company::LOCAL_NAME[] =                     UNICODE_LITERAL_7(C,o,m,p,a,n,y);
@@ -2400,6 +2613,9 @@ const XMLCh OrganizationDisplayName::LOCAL_NAME[] =     UNICODE_LITERAL_23(O,r,g
 const XMLCh OrganizationURL::LOCAL_NAME[] =             UNICODE_LITERAL_15(O,r,g,a,n,i,z,a,t,i,o,n,U,R,L);
 const XMLCh PDPDescriptor::LOCAL_NAME[] =               UNICODE_LITERAL_13(P,D,P,D,e,s,c,r,i,p,t,o,r);
 const XMLCh PDPDescriptor::TYPE_NAME[] =                UNICODE_LITERAL_17(P,D,P,D,e,s,c,r,i,p,t,o,r,T,y,p,e);
+const XMLCh QueryDescriptorType::LOCAL_NAME[] =         {chNull};
+const XMLCh QueryDescriptorType::TYPE_NAME[] =          UNICODE_LITERAL_19(Q,u,e,r,y,D,e,s,c,r,i,p,t,o,r,T,y,p,e);
+const XMLCh QueryDescriptorType::WANTASSERTIONSSIGNED_ATTRIB_NAME[] =   UNICODE_LITERAL_20(W,a,n,t,A,s,s,e,r,t,i,o,n,s,S,i,g,n,e,d);
 const XMLCh RequestedAttribute::LOCAL_NAME[] =          UNICODE_LITERAL_18(R,e,q,u,e,s,t,e,d,A,t,t,r,i,b,u,t,e);
 const XMLCh RequestedAttribute::TYPE_NAME[] =           UNICODE_LITERAL_22(R,e,q,u,e,s,t,e,d,A,t,t,r,i,b,u,t,e,T,y,p,e);
 const XMLCh RequestedAttribute::ISREQUIRED_ATTRIB_NAME[] =  UNICODE_LITERAL_10(i,s,R,e,q,u,i,r,e,d);
@@ -2411,6 +2627,7 @@ const XMLCh ServiceDescription::LOCAL_NAME[] =          UNICODE_LITERAL_18(S,e,r
 const XMLCh ServiceName::LOCAL_NAME[] =                 UNICODE_LITERAL_11(S,e,r,v,i,c,e,N,a,m,e);
 const XMLCh SingleLogoutService::LOCAL_NAME[] =         UNICODE_LITERAL_19(S,i,n,g,l,e,L,o,g,o,u,t,S,e,r,v,i,c,e);
 const XMLCh SingleSignOnService::LOCAL_NAME[] =         UNICODE_LITERAL_19(S,i,n,g,l,e,S,i,g,n,O,n,S,e,r,v,i,c,e);
+const XMLCh SourceID::LOCAL_NAME[] =                    UNICODE_LITERAL_8(S,o,u,r,c,e,I,D);
 const XMLCh SPSSODescriptor::LOCAL_NAME[] =             UNICODE_LITERAL_15(S,P,S,S,O,D,e,s,c,r,i,p,t,o,r);
 const XMLCh SPSSODescriptor::TYPE_NAME[] =              UNICODE_LITERAL_19(S,P,S,S,O,D,e,s,c,r,i,p,t,o,r,T,y,p,e);
 const XMLCh SPSSODescriptor::AUTHNREQUESTSSIGNED_ATTRIB_NAME[] =    UNICODE_LITERAL_19(A,u,t,h,n,R,e,q,u,e,s,t,s,S,i,g,n,e,d);
