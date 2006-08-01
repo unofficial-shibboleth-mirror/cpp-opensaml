@@ -75,7 +75,7 @@ namespace opensaml {
             static const unsigned int HANDLE_LENGTH;
     
         protected:
-            SAMLArtifactType0002(const SAMLArtifact& src) : SAMLArtifact(src) {}
+            SAMLArtifactType0002(const SAMLArtifactType0002& src) : SAMLArtifact(src) {}
         };
         
     };

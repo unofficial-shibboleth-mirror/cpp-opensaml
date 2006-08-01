@@ -36,7 +36,7 @@ namespace opensaml {
     };
 
     namespace saml2p {
-        //SAML_DLLLOCAL PluginManager<SAMLArtifact,const char*>::Factory SAMLArtifactType0004Factory; 
+        SAML_DLLLOCAL PluginManager<SAMLArtifact,const char*>::Factory SAML2ArtifactType0004Factory; 
     };
 };
 
@@ -50,8 +50,8 @@ void SAML_API opensaml::registerSAMLArtifacts()
     conf.SAMLArtifactManager.registerFactory(typecode, saml1p::SAMLArtifactType0001Factory);
     typecode[1]=(char)0x2;
     conf.SAMLArtifactManager.registerFactory(typecode, saml1p::SAMLArtifactType0002Factory);
-    //typecode[1]=(char)0x4;
-    //conf.SAMLArtifactManager.registerFactory(typecode, saml2p::SAMLArtifactType0004Factory);
+    typecode[1]=(char)0x4;
+    conf.SAMLArtifactManager.registerFactory(typecode, saml2p::SAML2ArtifactType0004Factory);
 }
 
 const unsigned int SAMLArtifact::TYPECODE_LENGTH = 2;

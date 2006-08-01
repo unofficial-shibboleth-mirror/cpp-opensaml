@@ -179,6 +179,22 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\SAMLArtifactCreationTest.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\SAMLArtifactType0001Test.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\SAMLArtifactType0002Test.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\SAMLArtifactType0004Test.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\samltest.cpp"
 				>
 			</File>
@@ -515,6 +531,94 @@
 			<File
 				RelativePath=".\internal.h"
 				>
+			</File>
+			<File
+				RelativePath=".\SAMLArtifactCreationTest.h"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+						Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+						Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\SAMLArtifactType0001Test.h"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+						Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+						Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\SAMLArtifactType0002Test.h"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+						Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+						Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\SAMLArtifactType0004Test.h"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+						Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+						Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\samltest.h"

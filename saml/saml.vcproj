@@ -278,6 +278,14 @@
 							RelativePath=".\saml2\core\impl\Protocols20SchemaValidators.cpp"
 							>
 						</File>
+						<File
+							RelativePath=".\saml2\core\impl\SAML2Artifact.cpp"
+							>
+						</File>
+						<File
+							RelativePath=".\saml2\core\impl\SAML2ArtifactType0004.cpp"
+							>
+						</File>
 					</Filter>
 				</Filter>
 				<Filter
@@ -415,6 +423,14 @@
 					</File>
 					<File
 						RelativePath=".\saml2\core\Protocols.h"
+						>
+					</File>
+					<File
+						RelativePath=".\saml2\core\SAML2Artifact.h"
+						>
+					</File>
+					<File
+						RelativePath=".\saml2\core\SAML2ArtifactType0004.h"
 						>
 					</File>
 				</Filter>

@@ -42,7 +42,9 @@ saml1coreinclude_HEADERS = \
 
 saml2coreinclude_HEADERS = \
 	saml2/core/Assertions.h \
-	saml2/core/Protocols.h 
+	saml2/core/Protocols.h \
+	saml2/core/SAML2Artifact.h \ 
+	saml2/core/SAML2ArtifactType0004.h
 
 saml2mdinclude_HEADERS = \
 	saml2/metadata/Metadata.h
@@ -53,7 +55,7 @@ noinst_HEADERS = \
 	internal.h
 
 libsaml_la_SOURCES = \
-	SAMLArtifact.h \
+	SAMLArtifact.cpp \
 	SAMLConfig.cpp \
 	encryption/EncryptedKeyResolver.cpp \
 	saml1/core/impl/AssertionsImpl.cpp \
@@ -66,6 +68,8 @@ libsaml_la_SOURCES = \
 	saml2/core/impl/Assertions20SchemaValidators.cpp \
 	saml2/core/impl/Protocols20Impl.cpp \
 	saml2/core/impl/Protocols20SchemaValidators.cpp \
+	saml2/core/impl/SAML2Artifact.cpp \
+	saml2/core/impl/SAML2ArtifactType0004.cpp \
 	saml2/metadata/impl/BlacklistMetadataFilter.cpp \
 	saml2/metadata/impl/FilesystemMetadataProvider.cpp \
 	saml2/metadata/impl/MetadataImpl.cpp \
