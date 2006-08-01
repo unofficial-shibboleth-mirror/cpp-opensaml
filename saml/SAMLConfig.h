@@ -26,7 +26,6 @@
 #include <saml/base.h>
 
 #include <xmltooling/PluginManager.h>
-#include <xmltooling/unicode.h>
 #include <xmltooling/XMLToolingConfig.h>
 
 #include <string>
@@ -36,6 +35,8 @@
  * Common classes for OpenSAML library
  */
 namespace opensaml {
+
+    class SAML_API SAMLArtifact;
 
     namespace saml2md {
         class SAML_API MetadataProvider;
@@ -106,6 +107,16 @@ namespace opensaml {
         virtual XMLCh* generateIdentifier()=0;
         
         /**
+         * Generate the SHA-1 hash of a string
+         * 
+         * @param s     NULL-terminated string to hash
+         * @param toHex true iff the result should be encoded in hexadecimal form or left as raw bytes
+         *  
+         * @return  SHA-1 hash of the data
+         */
+        virtual std::string hashSHA1(const char* s, bool toHex=false)=0;
+        
+        /**
          * Manages factories for MetadataProvider plugins.
          */
         xmltooling::PluginManager<saml2md::MetadataProvider,const DOMElement*> MetadataProviderManager;
@@ -114,6 +125,11 @@ namespace opensaml {
          * Manages factories for MetadataFilter plugins.
          */
         xmltooling::PluginManager<saml2md::MetadataFilter,const DOMElement*> MetadataFilterManager;
+
+        /**
+         * Manages factories for SAMLArtifact plugins.
+         */
+        xmltooling::PluginManager<SAMLArtifact,const char*> SAMLArtifactManager;
 
     protected:
         SAMLConfig() {}

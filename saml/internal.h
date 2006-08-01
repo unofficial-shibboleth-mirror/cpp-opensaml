@@ -95,6 +95,7 @@ namespace opensaml {
         void generateRandomBytes(void* buf, unsigned int len);
         void generateRandomBytes(std::string& buf, unsigned int len);
         XMLCh* generateIdentifier();
+        std::string hashSHA1(const char* data, bool toHex=false);
     private:
     };
     /// @endcond

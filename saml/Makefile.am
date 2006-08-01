@@ -20,6 +20,7 @@ libsamlinclude_HEADERS = \
 	base.h \
 	exceptions.h \
 	version.h \
+	SAMLArtifact.h \
 	SAMLConfig.h
 
 encinclude_HEADERS = \
@@ -35,7 +36,9 @@ utilinclude_HEADERS = \
 
 saml1coreinclude_HEADERS = \
 	saml1/core/Assertions.h \
-	saml1/core/Protocols.h
+	saml1/core/Protocols.h \
+	saml1/core/SAMLArtifactType0001.h \
+	saml1/core/SAMLArtifactType0002.h
 
 saml2coreinclude_HEADERS = \
 	saml2/core/Assertions.h \
@@ -50,12 +53,15 @@ noinst_HEADERS = \
 	internal.h
 
 libsaml_la_SOURCES = \
+	SAMLArtifact.h \
 	SAMLConfig.cpp \
 	encryption/EncryptedKeyResolver.cpp \
 	saml1/core/impl/AssertionsImpl.cpp \
 	saml1/core/impl/AssertionsSchemaValidators.cpp \
 	saml1/core/impl/ProtocolsImpl.cpp \
 	saml1/core/impl/ProtocolsSchemaValidators.cpp \
+	saml1/core/impl/SAMLArtifactType0001.cpp \
+	saml1/core/impl/SAMLArtifactType0002.cpp \
 	saml2/core/impl/Assertions20Impl.cpp \
 	saml2/core/impl/Assertions20SchemaValidators.cpp \
 	saml2/core/impl/Protocols20Impl.cpp \

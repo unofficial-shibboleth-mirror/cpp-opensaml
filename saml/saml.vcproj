@@ -182,6 +182,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\SAMLArtifact.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\SAMLConfig.cpp"
 				>
 			</File>
@@ -218,6 +222,22 @@
 							RelativePath=".\saml1\core\impl\ProtocolsSchemaValidators.cpp"
 							>
 						</File>
+						<File
+							RelativePath=".\saml1\core\impl\SAMLArtifactType0001.cpp"
+							>
+						</File>
+						<File
+							RelativePath=".\saml1\core\impl\SAMLArtifactType0002.cpp"
+							>
+						</File>
+					</Filter>
+				</Filter>
+				<Filter
+					Name="profile"
+					>
+					<Filter
+						Name="impl"
+						>
 					</Filter>
 				</Filter>
 			</Filter>
@@ -320,6 +340,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\SAMLArtifact.h"
+				>
+			</File>
+			<File
 				RelativePath=".\SAMLConfig.h"
 				>
 			</File>
@@ -349,6 +373,18 @@
 						RelativePath=".\saml1\core\Protocols.h"
 						>
 					</File>
+					<File
+						RelativePath=".\saml1\core\SAMLArtifactType0001.h"
+						>
+					</File>
+					<File
+						RelativePath=".\saml1\core\SAMLArtifactType0002.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="profile"
+					>
 				</Filter>
 			</Filter>
 			<Filter

@@ -20,10 +20,9 @@
  * Library configuration 
  */
 
-#define SAML_DECLARE_VALIDATORS
-
 #include "internal.h"
 #include "exceptions.h"
+#include "SAMLArtifact.h"
 #include "SAMLConfig.h"
 #include "saml1/core/Assertions.h"
 #include "saml1/core/Protocols.h"
@@ -38,7 +37,9 @@
 
 #include <log4cpp/Category.hh>
 #include <xsec/enc/XSECCryptoException.hpp>
+#include <xsec/enc/XSECCryptoProvider.hpp>
 #include <xsec/utils/XSECPlatformUtils.hpp>
+
 
 using namespace opensaml;
 using namespace xmlsignature;
@@ -46,7 +47,8 @@ using namespace xmltooling;
 using namespace log4cpp;
 using namespace std;
 
-//DECL_EXCEPTION_FACTORY(XMLParserException,xmltooling);
+DECL_EXCEPTION_FACTORY(ArtifactException,opensaml);
+DECL_EXCEPTION_FACTORY(MetadataFilterException,opensaml::saml2md);
 
 namespace opensaml {
    SAMLInternalConfig g_config;
@@ -73,6 +75,10 @@ bool SAMLInternalConfig::init()
     XMLToolingConfig::getConfig().init();
     log.debug("XMLTooling library initialized");
 
+    REGISTER_EXCEPTION_FACTORY(ArtifactException,opensaml);
+    REGISTER_EXCEPTION_FACTORY(MetadataFilterException,opensaml::saml2md);
+
+    registerSAMLArtifacts();
     saml1::registerAssertionClasses();
     saml1p::registerProtocolClasses();
     saml2::registerAssertionClasses();
@@ -96,6 +102,7 @@ void SAMLInternalConfig::term()
     saml2::AssertionSchemaValidators.destroyValidators();
     saml2md::MetadataSchemaValidators.destroyValidators();
     
+    SAMLArtifactManager.deregisterFactories();
     MetadataFilterManager.deregisterFactories();
     MetadataProviderManager.deregisterFactories();
 
@@ -134,4 +141,32 @@ XMLCh* SAMLInternalConfig::generateIdentifier()
             key[8],key[9],key[10],key[11],key[12],key[13],key[14],key[15]);
     hexform[33]=0;
     return XMLString::transcode(hexform);
+}
+
+string SAMLInternalConfig::hashSHA1(const char* s, bool toHex)
+{
+    static char DIGITS[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+
+    auto_ptr<XSECCryptoHash> hasher(XSECPlatformUtils::g_cryptoProvider->hashSHA1());
+    if (hasher.get()) {
+        auto_ptr<char> dup(strdup(s));
+        unsigned char buf[21];
+        hasher->hash(reinterpret_cast<unsigned char*>(dup.get()),strlen(dup.get()));
+        if (hasher->finish(buf,20)==20) {
+            string ret;
+            if (toHex) {
+                for (unsigned int i=0; i<20; i++) {
+                    ret+=(DIGITS[((unsigned char)(0xF0 & buf[i])) >> 4 ]);
+                    ret+=(DIGITS[0x0F & buf[i]]);
+                }
+            }
+            else {
+                for (unsigned int i=0; i<20; i++) {
+                    ret+=buf[i];
+                }
+            }
+            return ret;
+        }
+    }
+    throw XMLSecurityException("Unable to generate SHA-1 hash.");
 }
