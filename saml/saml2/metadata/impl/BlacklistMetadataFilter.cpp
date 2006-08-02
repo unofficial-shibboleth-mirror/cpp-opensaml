@@ -97,7 +97,10 @@ void BlacklistMetadataFilter::doFilter(XMLObject& xmlObject) const
 #endif
     
     try {
-        doFilter(dynamic_cast<EntitiesDescriptor&>(xmlObject));
+        EntitiesDescriptor& entities = dynamic_cast<EntitiesDescriptor&>(xmlObject);
+        if (found(entities.getName()))
+            throw MetadataFilterException("BlacklistMetadataFilter instructed to filter the root/only group in the metadata.");
+        doFilter(entities);
         return;
     }
     catch (bad_cast) {
@@ -132,7 +135,17 @@ void BlacklistMetadataFilter::doFilter(EntitiesDescriptor& entities) const
         }
     }
     
-    const vector<EntitiesDescriptor*>& groups=const_cast<const EntitiesDescriptor&>(entities).getEntitiesDescriptors();
-    for (vector<EntitiesDescriptor*>::const_iterator j=groups.begin(); j!=groups.end(); j++)
-        doFilter(*(*j));
+    VectorOf(EntitiesDescriptor) w=entities.getEntitiesDescriptors();
+    for (VectorOf(EntitiesDescriptor)::size_type j=0; j<w.size(); ) {
+        const XMLCh* name=w[j]->getName();
+        if (found(name)) {
+            auto_ptr_char name2(name);
+            log.info("filtering out blacklisted group (%s)", name2.get());
+            w.erase(w.begin() + j);
+        }
+        else {
+            doFilter(*(w[j]));
+            j++;
+        }
+    }
 }
