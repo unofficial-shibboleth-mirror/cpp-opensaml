@@ -63,7 +63,7 @@ namespace opensaml {
 
         /**
          * Returns the binary type code of the artifact.
-         * The result is NOT null-terminated.
+         * The result MAY contain embedded null characters.
          * 
          * @return the binary type code
          */
@@ -73,7 +73,7 @@ namespace opensaml {
         
         /**
          * Returns the binary artifact data following the type code.
-         * The result is NOT null-terminated.
+         * The result MAY contain embedded null characters.
          * 
          * @return the binary artifact data
          */
@@ -82,18 +82,18 @@ namespace opensaml {
         }
         
         /**
-         * Returns the binary data that identifies the source of the artifact.
-         * The exact form this takes depends on the type.
-         * The result is NOT null-terminated.
+         * Returns a string that identifies the source of the artifact.
+         * The exact form this takes depends on the type but should match
+         * the syntax needed for metadata lookup.
          * 
-         * @return the binary source data
+         * @return null-terminated source string
          */
         virtual std::string getSource() const=0;
         
         /**
          * Returns the binary data that references the message (2.0) or assertion (1.x)
          * The exact form this takes depends on the type.
-         * The result is NOT null-terminated.
+         * The result MAY contain embedded null characters.
          * 
          * @return the binary reference data
          */

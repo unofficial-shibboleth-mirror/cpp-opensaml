@@ -66,6 +66,16 @@ namespace opensaml {
             }
             
             virtual std::string getSource() const {
+                return toHex(getSourceID());
+            }
+
+            /**
+             * Returns the binary data that identifies the source.
+             * The result MAY contain embedded null characters.
+             * 
+             * @return the binary source ID
+             */
+            virtual std::string getSourceID() const {
                 return m_raw.substr(TYPECODE_LENGTH + INDEX_LENGTH, SOURCEID_LENGTH);    // bytes 5-24
             }
             

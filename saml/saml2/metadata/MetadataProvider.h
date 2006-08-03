@@ -27,6 +27,8 @@
 #include <saml/saml2/metadata/MetadataFilter.h>
 
 namespace opensaml {
+    
+    class SAML_API SAMLArtifact;
 
     namespace saml2md {
         
@@ -34,7 +36,8 @@ namespace opensaml {
          * Supplies an individual source of metadata.
          * 
          * The source can be a local file, remote service, or the result of a
-         * dynamic lookup, can include local caching, etc.
+         * dynamic lookup, can include local caching, etc. Providers
+         * <strong>MUST</strong> be locked before any lookup operations.
          */
         class SAML_API MetadataProvider : public virtual xmltooling::Lockable
         {
@@ -119,7 +122,7 @@ namespace opensaml {
              * 
              * @return the entity's metadata or NULL if there is no metadata or no valid metadata
              */
-            virtual const EntityDescriptor* getEntityDescriptor(const XMLCh* id, bool requireValidMetadata=true) const=0;
+            virtual const EntityDescriptor* getEntityDescriptor(const XMLCh* id, bool requireValidMetadata=true) const;
 
             /**
              * Gets the metadata for a given entity. If a valid entity is returned,
@@ -131,7 +134,18 @@ namespace opensaml {
              * 
              * @return the entity's metadata or NULL if there is no metadata or no valid metadata
              */
-            virtual const EntityDescriptor* getEntityDescriptor(const char* id, bool requireValidMetadata=true) const=0;
+            virtual const EntityDescriptor* getEntityDescriptor(const char* id, bool requireValidMetadata=true) const;
+
+            /**
+             * Gets the metadata for an entity that issued a SAML artifact. If a valid entity is returned,
+             * the provider will be left in a locked state. The caller MUST unlock the
+             * provider when finished with the entity.
+             *  
+             * @param artifact              a SAML artifact to find the issuer of
+             * 
+             * @return the entity's metadata or NULL if there is no valid metadata
+             */
+            virtual const EntityDescriptor* getEntityDescriptor(const SAMLArtifact* artifact) const;
 
             /**
              * Gets the metadata for a given group of entities. If a valid group is returned,
@@ -143,7 +157,7 @@ namespace opensaml {
              * 
              * @return the group's metadata or NULL if there is no metadata or no valid metadata
              */
-            virtual const EntitiesDescriptor* getEntitiesDescriptor(const XMLCh* name, bool requireValidMetadata=true) const=0;
+            virtual const EntitiesDescriptor* getEntitiesDescriptor(const XMLCh* name, bool requireValidMetadata=true) const;
 
             /**
              * Gets the metadata for a given group of entities. If a valid group is returned,
@@ -155,7 +169,7 @@ namespace opensaml {
              * 
              * @return the group's metadata or NULL if there is no metadata or no valid metadata
              */
-            virtual const EntitiesDescriptor* getEntitiesDescriptor(const char* name, bool requireValidMetadata=true) const=0;
+            virtual const EntitiesDescriptor* getEntitiesDescriptor(const char* name, bool requireValidMetadata=true) const;
 
         protected:
             /**
@@ -164,9 +178,37 @@ namespace opensaml {
              * @param xmlObject the metadata to be filtered
              */
             void doFilters(xmltooling::XMLObject& xmlObject) const;
+
+            /**
+             * Loads an entity into the cache for faster lookup. This includes
+             * processing known reverse lookup strategies for artifacts.
+             * 
+             * @param site          entity definition
+             * @param validUntil    expiration time of the entity definition
+             */
+            virtual void index(EntityDescriptor* site, time_t validUntil);
+
+            /**
+             * Loads a group of entities into the cache for faster lookup.
+             * 
+             * @param group         group definition
+             * @param validUntil    expiration time of the group definition
+             */
+            virtual void index(EntitiesDescriptor* group, time_t validUntil);
+        
+            /**
+             * Clear the cache of known entities and groups.
+             */
+            virtual void clearIndex();
         
         private:
             std::vector<MetadataFilter*> m_filters;
+
+            typedef std::multimap<std::string,const EntityDescriptor*> sitemap_t;
+            typedef std::multimap<std::string,const EntitiesDescriptor*> groupmap_t;
+            sitemap_t m_sites;
+            sitemap_t m_sources;
+            groupmap_t m_groups;
         };
         
         /**

@@ -15,9 +15,11 @@
  */
 
 #include "internal.h"
+#include <saml/saml2/core/SAML2ArtifactType0004.h>
 #include <saml/saml2/metadata/MetadataProvider.h>
 
 using namespace opensaml::saml2md;
+using namespace opensaml::saml2p;
 
 class FilesystemMetadataProviderTest : public CxxTest::TestSuite, public SAMLObjectBaseTestCase {
     XMLCh* entityID;
@@ -66,6 +68,13 @@ public:
         TSM_ASSERT_EQUALS("Unexpected number of roles", 1, descriptor->getIDPSSODescriptors().size());
         TSM_ASSERT("Role lookup failed", descriptor->getIDPSSODescriptor(supportedProtocol)!=NULL);
         TSM_ASSERT("Role lookup failed", descriptor->getIDPSSODescriptor(supportedProtocol2)!=NULL);
+
+        auto_ptr<SAML2ArtifactType0004> artifact(
+            new SAML2ArtifactType0004(SAMLConfig::getConfig().hashSHA1("urn:mace:incommon:washington.edu"),1)
+            );
+        descriptor = metadataProvider->getEntityDescriptor(artifact.get());
+        TSM_ASSERT("Retrieved entity descriptor was null", descriptor!=NULL);
+        assertEquals("Entity's ID does not match requested ID", entityID, descriptor->getEntityID());
     }
 
     void testFilesystemWithBlacklists() {

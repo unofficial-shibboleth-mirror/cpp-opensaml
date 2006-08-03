@@ -34,7 +34,7 @@ public:
         auto_ptr<SAMLArtifactType0002> artifact(new SAMLArtifactType0002(providerIdStr));
         auto_ptr<SAMLArtifact> tempArtifact(SAMLArtifact::parse(artifact->encode().c_str()));
         
-        TS_ASSERT_SAME_DATA(artifact->getSource().c_str(),tempArtifact->getSource().c_str(),artifact->getSource().length());
+        TS_ASSERT_EQUALS(artifact->getSource(),tempArtifact->getSource());
         TS_ASSERT_EQUALS(artifact->getMessageHandle(),tempArtifact->getMessageHandle());
 
         TS_ASSERT_THROWS(auto_ptr<SAMLArtifact> bogus1(new SAMLArtifactType0002(providerIdStr, artifact->getMessageHandle() + artifact->getMessageHandle())), ArtifactException);

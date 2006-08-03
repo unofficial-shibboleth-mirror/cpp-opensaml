@@ -55,10 +55,6 @@ namespace opensaml {
 
             void init();
 
-            const EntityDescriptor* getEntityDescriptor(const XMLCh* id, bool requireValidMetadata=true) const;
-            const EntityDescriptor* getEntityDescriptor(const char* id, bool requireValidMetadata=true) const;
-            const EntitiesDescriptor* getEntitiesDescriptor(const XMLCh* name, bool requireValidMetadata=true) const;
-            const EntitiesDescriptor* getEntitiesDescriptor(const char* name, bool requireValidMetadata=true) const;
             const XMLObject* getMetadata() const {
                 return m_object;
             }
@@ -66,16 +62,7 @@ namespace opensaml {
         private:
             XMLObject* load() const;
             void index();
-            void index(EntityDescriptor* site, time_t validUntil=SAMLTIME_MAX);
-            void index(EntitiesDescriptor* group, time_t validUntil=SAMLTIME_MAX);
         
-            // index of loaded metadata
-            typedef multimap<string,const EntityDescriptor*> sitemap_t;
-            typedef multimap<string,const EntitiesDescriptor*> groupmap_t;
-            sitemap_t m_sites;
-            sitemap_t m_sources;
-            groupmap_t m_groups;
-
             const DOMElement* m_root; // survives only until init() method is done
             std::string m_source;
             time_t m_filestamp;
@@ -263,87 +250,11 @@ Lockable* FilesystemMetadataProvider::lock()
 
 void FilesystemMetadataProvider::index()
 {
-    m_sources.clear();
-    m_sites.clear();
-    m_groups.clear();
-    
     EntitiesDescriptor* group=dynamic_cast<EntitiesDescriptor*>(m_object);
     if (group) {
-        index(group);
+        MetadataProvider::index(group, SAMLTIME_MAX);
         return;
     }
     EntityDescriptor* site=dynamic_cast<EntityDescriptor*>(m_object);
-    index(site);
-}
-
-void FilesystemMetadataProvider::index(EntityDescriptor* site, time_t validUntil)
-{
-    if (validUntil < site->getValidUntilEpoch())
-        site->setValidUntil(validUntil);
-
-    auto_ptr_char id(site->getEntityID());
-    if (id.get()) {
-        m_sites.insert(make_pair(id.get(),site));
-    }
-}
-
-void FilesystemMetadataProvider::index(EntitiesDescriptor* group, time_t validUntil)
-{
-    if (validUntil < group->getValidUntilEpoch())
-        group->setValidUntil(validUntil);
-
-    auto_ptr_char name(group->getName());
-    if (name.get()) {
-        m_groups.insert(make_pair(name.get(),group));
-    }
-    
-    const vector<EntitiesDescriptor*>& groups=const_cast<const EntitiesDescriptor*>(group)->getEntitiesDescriptors();
-    for (vector<EntitiesDescriptor*>::const_iterator i=groups.begin(); i!=groups.end(); i++)
-        index(*i,group->getValidUntilEpoch());
-
-    const vector<EntityDescriptor*>& sites=const_cast<const EntitiesDescriptor*>(group)->getEntityDescriptors();
-    for (vector<EntityDescriptor*>::const_iterator j=sites.begin(); j!=sites.end(); j++)
-        index(*j,group->getValidUntilEpoch());
-}
-
-const EntitiesDescriptor* FilesystemMetadataProvider::getEntitiesDescriptor(const char* name, bool strict) const
-{
-    pair<groupmap_t::const_iterator,groupmap_t::const_iterator> range=m_groups.equal_range(name);
-
-    time_t now=time(NULL);
-    for (groupmap_t::const_iterator i=range.first; i!=range.second; i++)
-        if (now < i->second->getValidUntilEpoch())
-            return i->second;
-    
-    if (!strict && range.first!=range.second)
-        return range.first->second;
-        
-    return NULL;
-}
-
-const EntitiesDescriptor* FilesystemMetadataProvider::getEntitiesDescriptor(const XMLCh* name, bool strict) const
-{
-    auto_ptr_char temp(name);
-    return getEntitiesDescriptor(temp.get(),strict);
-}
-
-const EntityDescriptor* FilesystemMetadataProvider::getEntityDescriptor(const char* name, bool strict) const
-{
-    pair<sitemap_t::const_iterator,sitemap_t::const_iterator> range=m_sites.equal_range(name);
-
-    time_t now=time(NULL);
-    for (sitemap_t::const_iterator i=range.first; i!=range.second; i++)
-        if (now < i->second->getValidUntilEpoch())
-            return i->second;
-    
-    if (!strict && range.first!=range.second)
-        return range.first->second;
-        
-    return NULL;
-}
-
-const EntityDescriptor* FilesystemMetadataProvider::getEntityDescriptor(const XMLCh* name, bool strict) const
-{
-    auto_ptr_char temp(name);
-    return getEntityDescriptor(temp.get(),strict);
+    MetadataProvider::index(site, SAMLTIME_MAX);
 }
