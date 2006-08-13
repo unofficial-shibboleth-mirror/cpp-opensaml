@@ -85,13 +85,14 @@ public:
         DOMDocument* doc=XMLToolingConfig::getConfig().getParser().parse(in);
         const XMLObjectBuilder* b = XMLObjectBuilder::getBuilder(doc->getDocumentElement());
         
-        assertEquals(expectedChildElementsDOM, b->buildFromDocument(doc));
+        auto_ptr<XMLObject> assertion2(b->buildFromDocument(doc));
+        assertEquals("Unmarshalled assertion does not match", expectedChildElementsDOM, assertion2.get(), false);
         
         try {
             SignatureProfileValidator spv;
             SignatureValidator sv(new KeyResolver(m_resolver->getKey()));
-            spv.validate(assertion->getSignature());
-            sv.validate(assertion->getSignature());
+            spv.validate(dynamic_cast<Assertion*>(assertion2.get())->getSignature());
+            sv.validate(dynamic_cast<Assertion*>(assertion2.get())->getSignature());
         }
         catch (XMLToolingException& e) {
             TS_TRACE(e.what());
