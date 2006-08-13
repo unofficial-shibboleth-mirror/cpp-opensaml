@@ -56,24 +56,30 @@ void SAML_API opensaml::saml2md::registerMetadataFilters()
 }
 
 static const XMLCh Blacklist[] =                    UNICODE_LITERAL_23(B,l,a,c,k,l,i,s,t,M,e,t,a,d,a,t,a,F,i,l,t,e,r);
+static const XMLCh Whitelist[] =                    UNICODE_LITERAL_23(W,h,i,t,e,l,i,s,t,M,e,t,a,d,a,t,a,F,i,l,t,e,r);
 static const XMLCh Exclude[] =                      UNICODE_LITERAL_7(E,x,c,l,u,d,e);
 static const XMLCh Include[] =                      UNICODE_LITERAL_7(I,n,c,l,u,d,e);
+static const XMLCh GenericKeyResolver[] =           UNICODE_LITERAL_11(K,e,y,R,e,s,o,l,v,e,r);
 static const XMLCh GenericMetadataFilter[] =        UNICODE_LITERAL_14(M,e,t,a,d,a,t,a,F,i,l,t,e,r);
 static const XMLCh type[] =                         UNICODE_LITERAL_4(t,y,p,e);
-static const XMLCh Whitelist[] =                    UNICODE_LITERAL_23(W,h,i,t,e,l,i,s,t,M,e,t,a,d,a,t,a,F,i,l,t,e,r);
 
-MetadataProvider::MetadataProvider(const DOMElement* e)
+MetadataProvider::MetadataProvider(const DOMElement* e) : m_resolver(NULL)
 {
 #ifdef _DEBUG
     NDC ndc("MetadataProvider");
 #endif
     SAMLConfig& conf=SAMLConfig::getConfig();
     
-    // Locate any default recognized filters.
+    // Locate any default recognized filters and plugins.
     try {
         DOMElement* child = e ? XMLHelper::getFirstChildElement(e) : NULL;
         while (child) {
-            if (XMLString::equals(child->getLocalName(),GenericMetadataFilter)) {
+            if (!m_resolver && XMLString::equals(child->getLocalName(),GenericKeyResolver)) {
+                auto_ptr_char t(child->getAttributeNS(NULL,type));
+                if (t.get())
+                    m_resolver = XMLToolingConfig::getConfig().KeyResolverManager.newPlugin(t.get(),child);
+            }
+            else if (XMLString::equals(child->getLocalName(),GenericMetadataFilter)) {
                 auto_ptr_char t(child->getAttributeNS(NULL,type));
                 if (t.get())
                     m_filters.push_back(conf.MetadataFilterManager.newPlugin(t.get(),child));
@@ -92,9 +98,14 @@ MetadataProvider::MetadataProvider(const DOMElement* e)
             }
             child = XMLHelper::getNextSiblingElement(child);
         }
+        
+        if (!m_resolver) {
+            m_resolver = XMLToolingConfig::getConfig().KeyResolverManager.newPlugin(INLINE_KEY_RESOLVER, child);
+        }
     }
     catch (XMLToolingException& ex) {
-        Category::getInstance(SAML_LOGCAT".Metadata").error("caught exception while installing filters: %s", ex.what());
+        Category::getInstance(SAML_LOGCAT".Metadata").error("caught exception while installing plugins and filters: %s", ex.what());
+        delete m_resolver;
         for_each(m_filters.begin(),m_filters.end(),xmltooling::cleanup<MetadataFilter>());
         throw;
     }
@@ -102,6 +113,7 @@ MetadataProvider::MetadataProvider(const DOMElement* e)
 
 MetadataProvider::~MetadataProvider()
 {
+    delete m_resolver;
     for_each(m_filters.begin(),m_filters.end(),xmltooling::cleanup<MetadataFilter>());
 }
 

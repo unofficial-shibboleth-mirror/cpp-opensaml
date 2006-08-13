@@ -23,8 +23,10 @@
 #ifndef __saml2_metadataprov_h__
 #define __saml2_metadataprov_h__
 
-#include <xmltooling/Lockable.h>
 #include <saml/saml2/metadata/MetadataFilter.h>
+
+#include <xmltooling/Lockable.h>
+#include <xmltooling/signature/KeyResolver.h>
 
 namespace opensaml {
     
@@ -45,11 +47,16 @@ namespace opensaml {
             
         protected:
             /**
-             * Constructor. If a DOM is supplied, a set of default logic will be
-             * used to identify and build MetadataFilter plugins and install them
-             * into the provider. The following XML content is supported:
+             * Constructor.
+             * 
+             * If a DOM is supplied, a set of default logic will be used to identify
+             * and build MetadataFilter plugins and install them into the provider.
+             * A KeyResolver can also be supplied, or a default resolver will be used.
+             * 
+             * The following XML content is supported:
              * 
              * <ul>
+             *  <li>&lt;KeyResolver&gt; elements with a type attribute
              *  <li>&lt;MetadataFilter&gt; elements with a type attribute
              *  <li>&lt;Exclude&gt; elements representing a BlacklistMetadataFilter
              *  <li>&lt;BlacklistMetadataFilter&gt; element containing &lt;Exclude&gt; elements 
@@ -103,6 +110,15 @@ namespace opensaml {
              * this method so as to report/log any errors that would affect later processing.
              */
             virtual void init()=0;
+            
+            /**
+             * Returns a KeyResolver associated with this metadata provider, if any.
+             * 
+             * @return an associated KeyResolver, or NULL
+             */
+            virtual const xmlsignature::KeyResolver* getKeyResolver() const {
+                return m_resolver;
+            }
             
             /**
              * Gets the entire metadata tree, after the registered filter has been applied.
@@ -172,6 +188,9 @@ namespace opensaml {
             virtual const EntitiesDescriptor* getEntitiesDescriptor(const char* name, bool requireValidMetadata=true) const;
 
         protected:
+            /** Embedded KeyResolver instance. */
+            xmlsignature::KeyResolver* m_resolver;
+
             /**
              * Applies any installed filters to a metadata instance.
              * 
