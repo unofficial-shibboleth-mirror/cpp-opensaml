@@ -72,8 +72,16 @@ protected:
         }
     }
 
-    void assertEquals(const char* failMessage, DOMDocument* expectedDOM, XMLObject* xmlObject) {
-        DOMElement* generatedDOM = xmlObject->marshall();
+    void assertEquals(const char* failMessage, DOMDocument* expectedDOM, XMLObject* xmlObject, bool canMarshall=true) {
+        DOMElement* generatedDOM = xmlObject->getDOM();
+        if (!generatedDOM) {
+            if (!canMarshall) {
+                TSM_ASSERT("DOM not available", false);
+            }
+            else {
+                generatedDOM = xmlObject->marshall();
+            }
+        }
         if (!generatedDOM->isEqualNode(expectedDOM->getDocumentElement())) {
             string buf;
             XMLHelper::serialize(generatedDOM, buf);
@@ -85,8 +93,8 @@ protected:
         }
     }
 
-    void assertEquals(DOMDocument* expectedDOM, XMLObject* xmlObject) {
-        assertEquals("Marshalled DOM was not the same as the expected DOM", expectedDOM, xmlObject);
+    void assertEquals(DOMDocument* expectedDOM, XMLObject* xmlObject, bool canMarshall=true) {
+        assertEquals("Marshalled DOM was not the same as the expected DOM", expectedDOM, xmlObject, canMarshall);
         delete xmlObject;
     }
 

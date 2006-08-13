@@ -38,6 +38,7 @@ namespace opensaml {
         SAML_DLLLOCAL PluginManager<MetadataProvider,const DOMElement*>::Factory FilesystemMetadataProviderFactory; 
         SAML_DLLLOCAL PluginManager<MetadataFilter,const DOMElement*>::Factory BlacklistMetadataFilterFactory; 
         SAML_DLLLOCAL PluginManager<MetadataFilter,const DOMElement*>::Factory WhitelistMetadataFilterFactory; 
+        SAML_DLLLOCAL PluginManager<MetadataFilter,const DOMElement*>::Factory SignatureMetadataFilterFactory; 
     };
 };
 
@@ -53,10 +54,12 @@ void SAML_API opensaml::saml2md::registerMetadataFilters()
 {
     SAMLConfig::getConfig().MetadataFilterManager.registerFactory(BLACKLIST_METADATA_FILTER, BlacklistMetadataFilterFactory);
     SAMLConfig::getConfig().MetadataFilterManager.registerFactory(WHITELIST_METADATA_FILTER, WhitelistMetadataFilterFactory);
+    SAMLConfig::getConfig().MetadataFilterManager.registerFactory(SIGNATURE_METADATA_FILTER, SignatureMetadataFilterFactory);
 }
 
 static const XMLCh Blacklist[] =                    UNICODE_LITERAL_23(B,l,a,c,k,l,i,s,t,M,e,t,a,d,a,t,a,F,i,l,t,e,r);
 static const XMLCh Whitelist[] =                    UNICODE_LITERAL_23(W,h,i,t,e,l,i,s,t,M,e,t,a,d,a,t,a,F,i,l,t,e,r);
+static const XMLCh SigFilter[] =                    UNICODE_LITERAL_23(S,i,g,n,a,t,u,r,e,M,e,t,a,d,a,t,a,F,i,l,t,e,r);
 static const XMLCh Exclude[] =                      UNICODE_LITERAL_7(E,x,c,l,u,d,e);
 static const XMLCh Include[] =                      UNICODE_LITERAL_7(I,n,c,l,u,d,e);
 static const XMLCh GenericKeyResolver[] =           UNICODE_LITERAL_11(K,e,y,R,e,s,o,l,v,e,r);
@@ -78,11 +81,18 @@ MetadataProvider::MetadataProvider(const DOMElement* e) : m_resolver(NULL)
                 auto_ptr_char t(child->getAttributeNS(NULL,type));
                 if (t.get())
                     m_resolver = XMLToolingConfig::getConfig().KeyResolverManager.newPlugin(t.get(),child);
+                else
+                    throw UnknownExtensionException("<KeyResolver> element found with no type attribute");
             }
             else if (XMLString::equals(child->getLocalName(),GenericMetadataFilter)) {
                 auto_ptr_char t(child->getAttributeNS(NULL,type));
                 if (t.get())
                     m_filters.push_back(conf.MetadataFilterManager.newPlugin(t.get(),child));
+                else
+                    throw UnknownExtensionException("<MetadataFilter> element found with no type attribute");
+            }
+            else if (XMLString::equals(child->getLocalName(),SigFilter)) {
+                m_filters.push_back(conf.MetadataFilterManager.newPlugin(SIGNATURE_METADATA_FILTER,child));
             }
             else if (XMLString::equals(child->getLocalName(),Whitelist)) {
                 m_filters.push_back(conf.MetadataFilterManager.newPlugin(WHITELIST_METADATA_FILTER,child));

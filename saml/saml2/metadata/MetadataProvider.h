@@ -57,10 +57,11 @@ namespace opensaml {
              * 
              * <ul>
              *  <li>&lt;KeyResolver&gt; elements with a type attribute
-             *  <li>&lt;MetadataFilter&gt; elements with a type attribute
+             *  <li>&lt;MetadataFilter&gt; elements with a type attribute and type-specific content
              *  <li>&lt;Exclude&gt; elements representing a BlacklistMetadataFilter
              *  <li>&lt;BlacklistMetadataFilter&gt; element containing &lt;Exclude&gt; elements 
              *  <li>&lt;Include&gt; elements representing a WhitelistMetadataFilter
+             *  <li>&lt;SignatureMetadataFilter&gt; element containing a &lt;KeyResolver&gt; element 
              *  <li>&lt;WhitelistMetadataFilter&gt; element containing &lt;Include&gt; elements 
              * </ul>
              * 

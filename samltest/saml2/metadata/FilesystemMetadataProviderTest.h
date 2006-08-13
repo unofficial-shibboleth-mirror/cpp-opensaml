@@ -58,9 +58,14 @@ public:
         auto_ptr<MetadataProvider> metadataProvider(
             SAMLConfig::getConfig().MetadataProviderManager.newPlugin(FILESYSTEM_METADATA_PROVIDER,doc->getDocumentElement())
             );
-        metadataProvider->init();
+        try {
+            metadataProvider->init();
+        }
+        catch (XMLToolingException& ex) {
+            TS_TRACE(ex.what());
+            throw;
+        }
         
-
         Locker locker(metadataProvider.get());
         const EntityDescriptor* descriptor = metadataProvider->getEntityDescriptor(entityID);
         TSM_ASSERT("Retrieved entity descriptor was null", descriptor!=NULL);
@@ -91,8 +96,13 @@ public:
         auto_ptr<MetadataProvider> metadataProvider(
             SAMLConfig::getConfig().MetadataProviderManager.newPlugin(FILESYSTEM_METADATA_PROVIDER,doc->getDocumentElement())
             );
-        metadataProvider->init();
-        
+        try {
+            metadataProvider->init();
+        }
+        catch (XMLToolingException& ex) {
+            TS_TRACE(ex.what());
+            throw;
+        }
 
         Locker locker(metadataProvider.get());
         const EntityDescriptor* descriptor = metadataProvider->getEntityDescriptor(entityID);
@@ -116,8 +126,13 @@ public:
         auto_ptr<MetadataProvider> metadataProvider(
             SAMLConfig::getConfig().MetadataProviderManager.newPlugin(FILESYSTEM_METADATA_PROVIDER,doc->getDocumentElement())
             );
-        metadataProvider->init();
-        
+        try {
+            metadataProvider->init();
+        }
+        catch (XMLToolingException& ex) {
+            TS_TRACE(ex.what());
+            throw;
+        }
 
         Locker locker(metadataProvider.get());
         const EntityDescriptor* descriptor = metadataProvider->getEntityDescriptor(entityID2);
