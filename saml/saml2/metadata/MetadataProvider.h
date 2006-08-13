@@ -199,7 +199,7 @@ namespace opensaml {
             /**
              * Clear the cache of known entities and groups.
              */
-            virtual void clearIndex();
+            virtual void clearDescriptorIndex();
         
         private:
             std::vector<MetadataFilter*> m_filters;

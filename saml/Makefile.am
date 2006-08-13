@@ -49,7 +49,8 @@ saml2coreinclude_HEADERS = \
 saml2mdinclude_HEADERS = \
 	saml2/metadata/Metadata.h
 	saml2/metadata/MetadataFilter.h \
-	saml2/metadata/MetadataProvider.h
+	saml2/metadata/MetadataProvider.h \
+	saml2/metadata/ObservableMetadataProvider.h
 
 noinst_HEADERS = \
 	internal.h
@@ -75,6 +76,7 @@ libsaml_la_SOURCES = \
 	saml2/metadata/impl/MetadataImpl.cpp \
 	saml2/metadata/impl/MetadataProvider.cpp \
 	saml2/metadata/impl/MetadataSchemaValidators.cpp \
+	saml2/metadata/impl/ObservableMetadataProvider.cpp \
 	saml2/metadata/impl/WhitelistMetadataFilter.cpp \
 	signature/ContentReference.cpp \
 	signature/SignatureProfileValidator.cpp \

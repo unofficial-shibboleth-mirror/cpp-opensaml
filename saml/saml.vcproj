@@ -315,6 +315,10 @@
 							>
 						</File>
 						<File
+							RelativePath=".\saml2\metadata\impl\ObservableMetadataProvider.cpp"
+							>
+						</File>
+						<File
 							RelativePath=".\saml2\metadata\impl\WhitelistMetadataFilter.cpp"
 							>
 						</File>
@@ -447,6 +451,10 @@
 					</File>
 					<File
 						RelativePath=".\saml2\metadata\MetadataProvider.h"
+						>
+					</File>
+					<File
+						RelativePath=".\saml2\metadata\ObservableMetadataProvider.h"
 						>
 					</File>
 				</Filter>

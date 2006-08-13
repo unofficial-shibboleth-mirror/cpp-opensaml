@@ -191,7 +191,7 @@ void MetadataProvider::index(EntitiesDescriptor* group, time_t validUntil)
         index(*j,group->getValidUntilEpoch());
 }
 
-void MetadataProvider::clearIndex()
+void MetadataProvider::clearDescriptorIndex()
 {
     m_sources.clear();
     m_sites.clear();

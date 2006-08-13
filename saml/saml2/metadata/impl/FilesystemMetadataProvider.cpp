@@ -21,7 +21,7 @@
  */
 
 #include "internal.h"
-#include "saml2/metadata/MetadataProvider.h"
+#include "saml2/metadata/ObservableMetadataProvider.h"
 
 #include <ctime>
 #include <sys/types.h>
@@ -41,7 +41,7 @@ namespace opensaml {
     namespace saml2md {
         
         
-        class SAML_DLLLOCAL FilesystemMetadataProvider : public MetadataProvider
+        class SAML_DLLLOCAL FilesystemMetadataProvider : public ObservableMetadataProvider
         {
         public:
             FilesystemMetadataProvider(const DOMElement* e);
@@ -88,7 +88,7 @@ static const XMLCh filename[] = UNICODE_LITERAL_8(f,i,l,e,n,a,m,e);
 static const XMLCh validate[] = UNICODE_LITERAL_8(v,a,l,i,d,a,t,e);
 
 FilesystemMetadataProvider::FilesystemMetadataProvider(const DOMElement* e)
-    : MetadataProvider(e), m_root(e), m_filestamp(0), m_validate(false), m_lock(NULL), m_object(NULL)
+    : ObservableMetadataProvider(e), m_root(e), m_filestamp(0), m_validate(false), m_lock(NULL), m_object(NULL)
 {
 #ifdef _DEBUG
     NDC ndc("FilesystemMetadataProvider");
@@ -234,6 +234,7 @@ Lockable* FilesystemMetadataProvider::lock()
                     delete m_object;
                     m_object = newstuff;
                     index();
+                    emitChangeEvent();
                 }
                 catch(XMLToolingException& e) {
                     Category::getInstance(SAML_LOGCAT".Metadata").error("failed to reload metadata from file, sticking with what we have: %s", e.what());
@@ -250,6 +251,7 @@ Lockable* FilesystemMetadataProvider::lock()
 
 void FilesystemMetadataProvider::index()
 {
+    clearDescriptorIndex();
     EntitiesDescriptor* group=dynamic_cast<EntitiesDescriptor*>(m_object);
     if (group) {
         MetadataProvider::index(group, SAMLTIME_MAX);
