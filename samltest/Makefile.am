@@ -33,6 +33,7 @@ samltest_h = \
     saml2/core/impl/ArtifactResolve20Test.h \
     saml2/core/impl/ArtifactResponse20Test.h \
     saml2/core/impl/Assertion20Test.h \
+    saml2/core/impl/AssertionIDRef20Test.h \
     saml2/core/impl/AssertionIDRequest20Test.h \
     saml2/core/impl/AssertionURIRef20Test.h \
     saml2/core/impl/Attribute20Test.h \
