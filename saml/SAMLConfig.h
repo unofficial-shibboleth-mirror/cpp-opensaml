@@ -37,6 +37,7 @@
 namespace opensaml {
 
     class SAML_API SAMLArtifact;
+    class SAML_API TrustEngine;
 
     namespace saml2md {
         class SAML_API MetadataProvider;
@@ -130,6 +131,11 @@ namespace opensaml {
          * Manages factories for SAMLArtifact plugins.
          */
         xmltooling::PluginManager<SAMLArtifact,const char*> SAMLArtifactManager;
+
+        /**
+         * Manages factories for TrustEngine plugins.
+         */
+        xmltooling::PluginManager<TrustEngine,const DOMElement*> TrustEngineManager;
 
     protected:
         SAMLConfig() {}

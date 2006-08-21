@@ -337,6 +337,22 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="security"
+				>
+				<Filter
+					Name="impl"
+					>
+					<File
+						RelativePath=".\security\impl\ExplicitKeyTrustEngine.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\security\impl\TrustEngine.cpp"
+						>
+					</File>
+				</Filter>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -468,6 +484,22 @@
 				>
 				<File
 					RelativePath=".\encryption\EncryptedKeyResolver.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="security"
+				>
+				<File
+					RelativePath=".\security\MetadataKeyInfoIterator.h"
+					>
+				</File>
+				<File
+					RelativePath=".\security\TrustEngine.h"
+					>
+				</File>
+				<File
+					RelativePath=".\security\X509TrustEngine.h"
 					>
 				</File>
 			</Filter>

@@ -6,6 +6,8 @@ libsamlincludedir = $(includedir)/saml
 
 encincludedir = $(includedir)/saml/encryption
 
+secincludedir = $(includedir)/saml/security
+
 sigincludedir = $(includedir)/saml/signature
 
 utilincludedir = $(includedir)/saml/util
@@ -25,6 +27,11 @@ libsamlinclude_HEADERS = \
 
 encinclude_HEADERS = \
 	encryption/EncryptedKeyResolver.h
+
+secinclude_HEADERS = \
+	security/MetadataKeyInfoIterator.h \
+	security/TrustEngine.h \
+	security/X509TrustEngine.h
 
 siginclude_HEADERS = \
 	signature/ContentReference.h \
@@ -58,7 +65,6 @@ noinst_HEADERS = \
 libsaml_la_SOURCES = \
 	SAMLArtifact.cpp \
 	SAMLConfig.cpp \
-	encryption/EncryptedKeyResolver.cpp \
 	saml1/core/impl/AssertionsImpl.cpp \
 	saml1/core/impl/AssertionsSchemaValidators.cpp \
 	saml1/core/impl/ProtocolsImpl.cpp \
@@ -79,6 +85,9 @@ libsaml_la_SOURCES = \
 	saml2/metadata/impl/ObservableMetadataProvider.cpp \
 	saml2/metadata/impl/SignatureMetadataFilter.cpp \
 	saml2/metadata/impl/WhitelistMetadataFilter.cpp \
+	encryption/EncryptedKeyResolver.cpp \
+	security/impl/TrustEngine.cpp \
+	security/impl/ExplicitKeyTrustEngine.cpp \
 	signature/ContentReference.cpp \
 	signature/SignatureProfileValidator.cpp \
 	util/SAMLConstants.cpp

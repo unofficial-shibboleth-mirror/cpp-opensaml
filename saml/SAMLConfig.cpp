@@ -29,6 +29,7 @@
 #include "saml2/core/Protocols.h"
 #include "saml2/metadata/Metadata.h"
 #include "saml2/metadata/MetadataProvider.h"
+#include "security/TrustEngine.h"
 #include "util/SAMLConstants.h"
 
 #include <xmltooling/XMLToolingConfig.h>
@@ -86,6 +87,7 @@ bool SAMLInternalConfig::init()
     saml2md::registerMetadataClasses();
     saml2md::registerMetadataProviders();
     saml2md::registerMetadataFilters();
+    registerTrustEngines();
 
     log.info("library initialization complete");
     return true;
@@ -105,6 +107,7 @@ void SAMLInternalConfig::term()
     SAMLArtifactManager.deregisterFactories();
     MetadataFilterManager.deregisterFactories();
     MetadataProviderManager.deregisterFactories();
+    TrustEngineManager.deregisterFactories();
 
     XMLToolingConfig::getConfig().term();
     Category::getInstance(SAML_LOGCAT".SAMLConfig").info("library shutdown complete");
