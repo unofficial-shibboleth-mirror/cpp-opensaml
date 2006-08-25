@@ -88,6 +88,7 @@ libsaml_la_SOURCES = \
 	saml2/metadata/impl/WhitelistMetadataFilter.cpp \
 	encryption/EncryptedKeyResolver.cpp \
 	security/impl/TrustEngine.cpp \
+	security/impl/AbstractPKIXTrustEngine.cpp \
 	security/impl/ExplicitKeyTrustEngine.cpp \
 	signature/ContentReference.cpp \
 	signature/SignatureProfileValidator.cpp \
