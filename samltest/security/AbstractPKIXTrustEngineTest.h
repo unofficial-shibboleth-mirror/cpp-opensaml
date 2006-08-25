@@ -15,14 +15,67 @@
  */
 
 #include "internal.h"
-#include <saml/security/TrustEngine.h>
+#include <saml/security/AbstractPKIXTrustEngine.h>
 #include <saml/saml2/metadata/MetadataProvider.h>
 
 using namespace opensaml::saml2;
 using namespace opensaml::saml2md;
 using namespace xmlsignature;
 
-class ExplicitKeyTrustEngineTest : public CxxTest::TestSuite, public SAMLObjectBaseTestCase {
+namespace {
+    class SampleTrustEngine : public AbstractPKIXTrustEngine {
+    public:
+        SampleTrustEngine() {}
+        ~SampleTrustEngine() {}
+        
+        class SampleIterator : public PKIXValidationInfoIterator {
+            vector<XSECCryptoX509CRL*> m_crls;
+            KeyResolver::ResolvedCertificates m_certs;
+            KeyResolver* m_resolver;
+            bool m_done;
+        public:
+            SampleIterator() : m_resolver(NULL), m_done(false) {
+                string config = data_path + "security/FilesystemKeyResolver.xml";
+                ifstream in(config.c_str());
+                DOMDocument* doc=XMLToolingConfig::getConfig().getParser().parse(in);
+                XercesJanitor<DOMDocument> janitor(doc);
+                m_resolver = XMLToolingConfig::getConfig().KeyResolverManager.newPlugin(
+                    FILESYSTEM_KEY_RESOLVER,doc->getDocumentElement()
+                    );
+                m_resolver->resolveCertificates((KeyInfo*)NULL,m_certs);
+            }
+            
+            ~SampleIterator() {
+                delete m_resolver;
+            }
+
+            bool next() {
+                if (m_done)
+                    return false;
+                m_done = true;
+                return true;
+            }
+            
+            int getVerificationDepth() const {
+                return 0;
+            }
+            
+            const vector<XSECCryptoX509*>& getTrustAnchors() const {
+                return m_certs.v();
+            }
+            
+            const vector<XSECCryptoX509CRL*>& getCRLs() const {
+                return m_crls;
+            }
+        };
+    
+        PKIXValidationInfoIterator* getPKIXValidationInfoIterator(const RoleDescriptor& role) const {
+            return new SampleIterator();
+        }
+    };
+};
+
+class AbstractPKIXTrustEngineTest : public CxxTest::TestSuite, public SAMLObjectBaseTestCase {
 public:
     void setUp() {
         SAMLObjectBaseTestCase::setUp();
@@ -56,9 +109,7 @@ public:
         }
         
         // Build trust engine.
-        auto_ptr<opensaml::TrustEngine> trustEngine(
-            SAMLConfig::getConfig().TrustEngineManager.newPlugin(EXPLICIT_KEY_SAMLTRUSTENGINE, NULL)
-            );
+        auto_ptr<opensaml::TrustEngine> trustEngine(new SampleTrustEngine());
         
         // Get signed assertion.
         config = data_path + "signature/SAML2Assertion.xml";

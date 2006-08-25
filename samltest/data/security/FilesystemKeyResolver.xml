@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FilesystemKeyResolver>
+    <Certificate>
+        <Path>../samltest/data/cert.pem</Path>
+    </Certificate>
+</FilesystemKeyResolver>

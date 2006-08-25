@@ -67,7 +67,7 @@ namespace opensaml {
         virtual bool validate(
             XSECCryptoX509* certEE,
             const std::vector<XSECCryptoX509*>& certChain,
-            saml2md::RoleDescriptor& role,
+            const saml2md::RoleDescriptor& role,
             bool checkName=true,
             const xmlsignature::KeyResolver* keyResolver=NULL
             )=0;

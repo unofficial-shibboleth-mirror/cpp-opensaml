@@ -1,11 +1,14 @@
-<EntityDescriptor 
+<EntitiesDescriptor
 	xmlns="urn:oasis:names:tc:SAML:2.0:metadata"
-	xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+	xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+
+<EntityDescriptor 
 	entityID="https://idp.example.org">
 	
 	<IDPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
 		<KeyDescriptor use="signing">
 		    <ds:KeyInfo>
+		    	<ds:KeyName>sp.example.org</ds:KeyName>
 		        <ds:X509Data>
 		        	<ds:X509Certificate>
 		        		MIICjzCCAfigAwIBAgIJAKk8t1hYcMkhMA0GCSqGSIb3DQEBBAUAMDoxCzAJBgNV
@@ -31,3 +34,20 @@
 	</IDPSSODescriptor>
 
 </EntityDescriptor>
+
+<EntityDescriptor 
+	entityID="https://idp2.example.org">
+	
+	<IDPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+		<KeyDescriptor use="signing">
+			<ds:KeyInfo>
+				<ds:KeyName>sp2.example.org</ds:KeyName>
+			</ds:KeyInfo>
+		</KeyDescriptor>
+		
+		<SingleSignOnService Binding="foo" Location="foo"/>
+	</IDPSSODescriptor>
+	
+</EntityDescriptor>
+
+</EntitiesDescriptor>

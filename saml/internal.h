@@ -98,6 +98,8 @@ namespace opensaml {
         std::string hashSHA1(const char* data, bool toHex=false);
     private:
     };
+
+    void log_openssl();
     /// @endcond
 
 };

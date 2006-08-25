@@ -56,13 +56,13 @@ namespace opensaml {
 
         virtual bool validate(
             Signature& sig,
-            RoleDescriptor& role,
+            const RoleDescriptor& role,
             const KeyResolver* keyResolver=NULL
             );
         virtual bool validate(
             XSECCryptoX509* certEE,
             const vector<XSECCryptoX509*>& certChain,
-            RoleDescriptor& role,
+            const RoleDescriptor& role,
             bool checkName=true,
             const KeyResolver* keyResolver=NULL
             );
@@ -79,7 +79,7 @@ namespace opensaml {
 
 bool ExplicitKeyTrustEngine::validate(
     Signature& sig,
-    RoleDescriptor& role,
+    const RoleDescriptor& role,
     const KeyResolver* keyResolver
     )
 {
@@ -108,7 +108,7 @@ bool ExplicitKeyTrustEngine::validate(
 bool ExplicitKeyTrustEngine::validate(
     XSECCryptoX509* certEE,
     const vector<XSECCryptoX509*>& certChain,
-    RoleDescriptor& role,
+    const RoleDescriptor& role,
     bool checkName,
     const KeyResolver* keyResolver
     )

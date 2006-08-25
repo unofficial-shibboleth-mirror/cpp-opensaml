@@ -29,6 +29,7 @@ encinclude_HEADERS = \
 	encryption/EncryptedKeyResolver.h
 
 secinclude_HEADERS = \
+	security/AbstractPKIXTrustEngine.h \
 	security/MetadataKeyInfoIterator.h \
 	security/TrustEngine.h \
 	security/X509TrustEngine.h

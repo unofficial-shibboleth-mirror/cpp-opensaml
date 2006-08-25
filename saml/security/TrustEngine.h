@@ -68,7 +68,7 @@ namespace opensaml {
          */
         virtual bool validate(
             xmlsignature::Signature& sig,
-            saml2md::RoleDescriptor& role,
+            const saml2md::RoleDescriptor& role,
             const xmlsignature::KeyResolver* keyResolver=NULL
             )=0;
     };
