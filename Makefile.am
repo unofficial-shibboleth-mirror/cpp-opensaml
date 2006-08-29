@@ -31,7 +31,11 @@ dist-hook:
 
 SUBDIRS = schemas saml samltest
 
-all-local: opensaml.spec pkginfo doxygen-doc
+all-local: opensaml.spec pkginfo
+
+if DX_COND_doc
+all-local: doxygen-doc
+endif
 
 opensaml.spec: opensaml.spec.in Makefile
 	rm -f $@.tmp
