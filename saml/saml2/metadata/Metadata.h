@@ -190,7 +190,7 @@ namespace opensaml {
 
         BEGIN_XMLOBJECT(SAML_API,IndexedEndpointType,EndpointType,SAML 2.0 IndexedEndpointType type);
             DECL_INTEGER_ATTRIB(Index,INDEX);
-            DECL_BOOLEAN_ATTRIB(isDefault,ISDEFAULT);
+            DECL_BOOLEAN_ATTRIB(isDefault,ISDEFAULT,false);
             /** IndexedEndpointType local name */
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
@@ -223,7 +223,7 @@ namespace opensaml {
         END_XMLOBJECT;
 
         BEGIN_XMLOBJECT(SAML_API,IDPSSODescriptor,SSODescriptorType,SAML 2.0 IDPSSODescriptor element);
-            DECL_BOOLEAN_ATTRIB(WantAuthnRequestsSigned,WANTAUTHNREQUESTSSIGNED);
+            DECL_BOOLEAN_ATTRIB(WantAuthnRequestsSigned,WANTAUTHNREQUESTSSIGNED,false);
             DECL_TYPED_CHILDREN(SingleSignOnService);
             DECL_TYPED_CHILDREN(NameIDMappingService);
             DECL_TYPED_CHILDREN(AssertionIDRequestService);
@@ -242,14 +242,14 @@ namespace opensaml {
         END_XMLOBJECT;
 
         BEGIN_XMLOBJECT(SAML_API,RequestedAttribute,saml2::Attribute,SAML 2.0 RequestedAttribute element);
-            DECL_BOOLEAN_ATTRIB(isRequired,ISREQUIRED);
+            DECL_BOOLEAN_ATTRIB(isRequired,ISREQUIRED,false);
             /** RequestedAttributeType local name */
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
 
         BEGIN_XMLOBJECT(SAML_API,AttributeConsumingService,xmltooling::XMLObject,SAML 2.0 AttributeConsumingService element);
             DECL_INTEGER_ATTRIB(Index,INDEX);
-            DECL_BOOLEAN_ATTRIB(isDefault,ISDEFAULT);
+            DECL_BOOLEAN_ATTRIB(isDefault,ISDEFAULT,false);
             DECL_TYPED_CHILDREN(ServiceName);
             DECL_TYPED_CHILDREN(ServiceDescription);
             DECL_TYPED_CHILDREN(RequestedAttribute);
@@ -261,8 +261,8 @@ namespace opensaml {
         END_XMLOBJECT;
 
         BEGIN_XMLOBJECT(SAML_API,SPSSODescriptor,SSODescriptorType,SAML 2.0 SPSSODescriptor element);
-            DECL_BOOLEAN_ATTRIB(AuthnRequestsSigned,AUTHNREQUESTSSIGNED);
-            DECL_BOOLEAN_ATTRIB(WantAssertionsSigned,WANTASSERTIONSSIGNED);
+            DECL_BOOLEAN_ATTRIB(AuthnRequestsSigned,AUTHNREQUESTSSIGNED,false);
+            DECL_BOOLEAN_ATTRIB(WantAssertionsSigned,WANTASSERTIONSSIGNED,false);
             DECL_TYPED_CHILDREN(AssertionConsumerService);
             DECL_TYPED_CHILDREN(AttributeConsumingService);
             /** SPSSODescriptorType local name */
@@ -305,7 +305,7 @@ namespace opensaml {
         END_XMLOBJECT;
 
         BEGIN_XMLOBJECT(SAML_API,QueryDescriptorType,RoleDescriptor,SAML 2.0 QueryDescriptorType abstract type);
-            DECL_BOOLEAN_ATTRIB(WantAssertionsSigned,WANTASSERTIONSSIGNED);
+            DECL_BOOLEAN_ATTRIB(WantAssertionsSigned,WANTASSERTIONSSIGNED,false);
             DECL_TYPED_CHILDREN(NameIDFormat);
             /** QueryDescriptorType local name */
             static const XMLCh TYPE_NAME[];

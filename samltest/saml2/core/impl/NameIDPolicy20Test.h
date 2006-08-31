@@ -47,7 +47,7 @@ public:
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         NameIDPolicy* policy = dynamic_cast<NameIDPolicy*>(xo.get());
         TS_ASSERT(policy!=NULL);
-        TSM_ASSERT_EQUALS("AllowCreate attribute presence", false, policy->AllowCreate().first);
+        TSM_ASSERT_EQUALS("AllowCreate attribute presence", XMLConstants::XML_BOOL_NULL, policy->getAllowCreate());
     }
 
     void testSingleElementOptionalAttributesUnmarshall() {
@@ -56,8 +56,8 @@ public:
         TS_ASSERT(policy!=NULL);
         assertEquals("Format attribute", expectedFormat, policy->getFormat());
         assertEquals("SPNameQualifier attribute", expectedSPNameQualifier, policy->getSPNameQualifier());
-        TSM_ASSERT_EQUALS("AllowCreate attribute presence", true, policy->AllowCreate().first);
-        TSM_ASSERT_EQUALS("AllowCreate attribute value", expectedAllowCreate, policy->AllowCreate().second);
+        TSM_ASSERT_DIFFERS("AllowCreate attribute presence", XMLConstants::XML_BOOL_NULL, policy->getAllowCreate());
+        TSM_ASSERT_EQUALS("AllowCreate attribute value", expectedAllowCreate, policy->AllowCreate());
     }
 
     void testSingleElementMarshall() {

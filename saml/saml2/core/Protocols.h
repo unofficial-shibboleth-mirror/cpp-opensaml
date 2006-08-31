@@ -223,7 +223,7 @@ namespace opensaml {
         BEGIN_XMLOBJECT(SAML_API,NameIDPolicy,xmltooling::XMLObject,SAML 2.0 NameIDPolicy element);
             DECL_STRING_ATTRIB(Format,FORMAT);
             DECL_STRING_ATTRIB(SPNameQualifier,SPNAMEQUALIFIER);
-            DECL_BOOLEAN_ATTRIB(AllowCreate,ALLOWCREATE);
+            DECL_BOOLEAN_ATTRIB(AllowCreate,ALLOWCREATE,false);
             /** NameIDPolicyType local name */
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
@@ -252,8 +252,8 @@ namespace opensaml {
         END_XMLOBJECT;
 
         BEGIN_XMLOBJECT(SAML_API,AuthnRequest,Request,SAML 2.0 AuthnRequest element);
-            DECL_BOOLEAN_ATTRIB(ForceAuthn,FORCEAUTHN);
-            DECL_BOOLEAN_ATTRIB(IsPassive,ISPASSIVE);
+            DECL_BOOLEAN_ATTRIB(ForceAuthn,FORCEAUTHN,false);
+            DECL_BOOLEAN_ATTRIB(IsPassive,ISPASSIVE,false);
             DECL_STRING_ATTRIB(ProtocolBinding,PROTOCOLBINDING);
             DECL_INTEGER_ATTRIB(AssertionConsumerServiceIndex,ASSERTIONCONSUMERSERVICEINDEX);
             DECL_STRING_ATTRIB(AssertionConsumerServiceURL,ASSERTIONCONSUMERSERVICEURL);

@@ -76,8 +76,8 @@ public:
         assertEquals("ID attribute", expectedID, request->getID());
         assertEquals("Version attribute", expectedVersion, request->getVersion());
         TSM_ASSERT_EQUALS("IssueInstant attribute", expectedIssueInstant->getEpoch(), request->getIssueInstant()->getEpoch());
-        TSM_ASSERT_EQUALS("ForceAuthn attribute presence", false, request->ForceAuthn().first);
-        TSM_ASSERT_EQUALS("IsPassive attribute presence", false, request->IsPassive().first);
+        TSM_ASSERT_EQUALS("ForceAuthn attribute presence", XMLConstants::XML_BOOL_NULL, request->getForceAuthn());
+        TSM_ASSERT_EQUALS("IsPassive attribute presence", XMLConstants::XML_BOOL_NULL, request->getIsPassive());
         TSM_ASSERT_EQUALS("AssertionConsumerServiceIndex attribute presence",false, request->getAssertionConsumerServiceIndex().first);
         TSM_ASSERT_EQUALS("AttributeConsumingServiceIndex attribute presence", false, request->getAttributeConsumingServiceIndex().first);
 
@@ -98,10 +98,8 @@ public:
 
         assertEquals("Consent attribute", expectedConsent, request->getConsent());
         assertEquals("Destination attribute", expectedDestination, request->getDestination());
-        TSM_ASSERT_EQUALS("ForceAuthn attribute presence", true, request->ForceAuthn().first);
-        TSM_ASSERT_EQUALS("ForceAuthn attribute value", expectedForceAuthn, request->ForceAuthn().second);
-        TSM_ASSERT_EQUALS("IsPassive attribute presence", true, request->IsPassive().first);
-        TSM_ASSERT_EQUALS("IsPassive attribute value", expectedIsPassive, request->IsPassive().second);
+        TSM_ASSERT_EQUALS("ForceAuthn attribute value", expectedForceAuthn, request->ForceAuthn());
+        TSM_ASSERT_EQUALS("IsPassive attribute value", expectedIsPassive, request->IsPassive());
         assertEquals("ProtocolBinding attribute", expectedProtocolBinding,request->getProtocolBinding());
         TSM_ASSERT_EQUALS("AssertionConsumerServiceIndex attribute presence",true, request->getAssertionConsumerServiceIndex().first);
         TSM_ASSERT_EQUALS("AssertionConsumerServiceIndex attribute value",expectedAssertionConsumerServiceIndex, request->getAssertionConsumerServiceIndex().second);
@@ -132,8 +130,8 @@ public:
         TS_ASSERT(request->getConditions()!=NULL);
         TS_ASSERT(request->getRequestedAuthnContext()!=NULL);
         TS_ASSERT(request->getScoping()!=NULL);
-        TSM_ASSERT_EQUALS("ForceAuthn attribute presence", false, request->ForceAuthn().first);
-        TSM_ASSERT_EQUALS("IsPassive attribute presence", false, request->IsPassive().first);
+        TSM_ASSERT_EQUALS("ForceAuthn attribute presence", XMLConstants::XML_BOOL_NULL, request->getForceAuthn());
+        TSM_ASSERT_EQUALS("IsPassive attribute presence", XMLConstants::XML_BOOL_NULL, request->getIsPassive());
         TSM_ASSERT_EQUALS("AssertionConsumerServiceIndex attribute presence",false, request->getAssertionConsumerServiceIndex().first);
         TSM_ASSERT_EQUALS("AttributeConsumingServiceIndex attribute presence", false, request->getAttributeConsumingServiceIndex().first);
     }
