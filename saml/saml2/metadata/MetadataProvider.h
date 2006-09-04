@@ -33,6 +33,9 @@ namespace opensaml {
     class SAML_API SAMLArtifact;
 
     namespace saml2md {
+
+        class SAML_API EntityDescriptor;
+        class SAML_API EntitiesDescriptor;
         
         /**
          * Supplies an individual source of metadata.

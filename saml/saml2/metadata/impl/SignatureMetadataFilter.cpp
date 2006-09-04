@@ -21,6 +21,7 @@
  */
 
 #include "internal.h"
+#include "saml2/metadata/Metadata.h"
 #include "saml2/metadata/MetadataFilter.h"
 #include "signature/SignatureProfileValidator.h"
 

@@ -22,10 +22,13 @@
 
 #include "internal.h"
 #include "SAMLArtifact.h"
+#include "saml2/metadata/Metadata.h"
 #include "saml2/metadata/MetadataProvider.h"
 
 #include <log4cpp/Category.hh>
+#include <xercesc/util/XMLUniDefs.hpp>
 #include <xmltooling/util/NDC.h>
+#include <xmltooling/util/XMLHelper.h>
 
 using namespace opensaml::saml2md;
 using namespace opensaml;

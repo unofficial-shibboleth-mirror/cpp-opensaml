@@ -20,10 +20,12 @@
  * Processes metadata after it's been unmarshalled.
  */
 
+#include <saml/base.h>
+#include <saml/exceptions.h>
+#include <xmltooling/XMLObject.h>
+
 #ifndef __saml2_metadatafilt_h__
 #define __saml2_metadatafilt_h__
-
-#include <saml/saml2/metadata/Metadata.h>
 
 namespace opensaml {
 

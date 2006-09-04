@@ -21,6 +21,7 @@
  */
 
 #include "internal.h"
+#include "saml2/metadata/Metadata.h"
 #include "saml2/metadata/ObservableMetadataProvider.h"
 
 #include <ctime>
@@ -29,8 +30,10 @@
 #include <log4cpp/Category.hh>
 #include <xercesc/framework/LocalFileInputSource.hpp>
 #include <xercesc/framework/Wrapper4InputSource.hpp>
+#include <xercesc/util/XMLUniDefs.hpp>
 #include <xmltooling/util/NDC.h>
 #include <xmltooling/util/Threads.h>
+#include <xmltooling/util/XMLConstants.h>
 
 using namespace opensaml::saml2md;
 using namespace xmltooling;

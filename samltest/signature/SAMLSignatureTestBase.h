@@ -18,6 +18,7 @@
 #include <saml/signature/SignatureProfileValidator.h>
 
 #include <xmltooling/signature/CredentialResolver.h>
+#include <xmltooling/signature/KeyInfo.h>
 #include <xmltooling/signature/SignatureValidator.h>
 
 using namespace xmlsignature;
