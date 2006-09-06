@@ -89,8 +89,8 @@ namespace opensaml {
         static SAMLInternalConfig& getInternalConfig();
 
         // global per-process setup and shutdown of runtime
-        bool init();
-        void term();
+        bool init(bool initXMLTooling=true);
+        void term(bool termXMLTooling=true);
 
         void generateRandomBytes(void* buf, unsigned int len);
         void generateRandomBytes(std::string& buf, unsigned int len);

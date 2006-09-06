@@ -240,6 +240,14 @@
 						>
 					</Filter>
 				</Filter>
+				<Filter
+					Name="binding"
+					>
+					<Filter
+						Name="impl"
+						>
+					</Filter>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="signature"
@@ -326,6 +334,14 @@
 							RelativePath=".\saml2\metadata\impl\WhitelistMetadataFilter.cpp"
 							>
 						</File>
+					</Filter>
+				</Filter>
+				<Filter
+					Name="binding"
+					>
+					<Filter
+						Name="impl"
+						>
 					</Filter>
 				</Filter>
 			</Filter>
@@ -422,6 +438,10 @@
 					Name="profile"
 					>
 				</Filter>
+				<Filter
+					Name="binding"
+					>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="signature"
@@ -481,6 +501,10 @@
 						RelativePath=".\saml2\metadata\ObservableMetadataProvider.h"
 						>
 					</File>
+				</Filter>
+				<Filter
+					Name="binding"
+					>
 				</Filter>
 			</Filter>
 			<Filter

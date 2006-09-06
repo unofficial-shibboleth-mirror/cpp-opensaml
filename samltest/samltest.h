@@ -15,6 +15,7 @@
  */
 
 #include "internal.h"
+#include <saml/SAMLConfig.h>
 
 #include <fstream>
 #include <cxxtest/GlobalFixture.h>

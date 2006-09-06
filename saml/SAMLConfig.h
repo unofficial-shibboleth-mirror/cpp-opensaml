@@ -69,19 +69,26 @@ namespace opensaml {
          * Initializes library
          * 
          * Each process using the library MUST call this function exactly once
-         * before using any library classes.
+         * before using any library classes. The flag controls whether this is the
+         * "dominant" library or not and can allow the SAML library to be loaded
+         * as an extension of XMLTooling rather than subsuming it.
          * 
+         * @param initXMLTooling true iff this method should initialize the XMLTooling layer
          * @return true iff initialization was successful 
          */
-        virtual bool init()=0;
+        virtual bool init(bool initXMLTooling=true)=0;
         
         /**
          * Shuts down library
          * 
          * Each process using the library SHOULD call this function exactly once
-         * before terminating itself
+         * before terminating itself. The flag controls whether this is the
+         * "dominant" library or not and can allow the SAML library to be loaded
+         * as an extension of XMLTooling rather than subsuming it.
+         * 
+         * @param termXMLTooling true iff this method should shutdown the XMLTooling layer
          */
-        virtual void term()=0;
+        virtual void term(bool termXMLTooling=true)=0;
         
         /**
          * Generate random information using the underlying security library

@@ -49,6 +49,20 @@ using namespace xmltooling;
 using namespace log4cpp;
 using namespace std;
 
+// Expose entry points when used as an extension library
+
+extern "C" int SAML_API xmltooling_extension_init(void*)
+{
+    if (SAMLConfig::getConfig().init(false))
+        return 0;
+    return -1;
+}
+
+extern "C" void SAML_API xmltooling_extension_term()
+{
+    SAMLConfig::getConfig().term(false);
+}
+
 DECL_EXCEPTION_FACTORY(ArtifactException,opensaml);
 DECL_EXCEPTION_FACTORY(MetadataFilterException,opensaml::saml2md);
 
@@ -66,7 +80,7 @@ SAMLInternalConfig& SAMLInternalConfig::getInternalConfig()
     return g_config;
 }
 
-bool SAMLInternalConfig::init()
+bool SAMLInternalConfig::init(bool initXMLTooling)
 {
 #ifdef _DEBUG
     xmltooling::NDC ndc("init");
@@ -74,8 +88,10 @@ bool SAMLInternalConfig::init()
     Category& log=Category::getInstance(SAML_LOGCAT".SAMLConfig");
     log.debug("library initialization started");
 
-    XMLToolingConfig::getConfig().init();
-    log.debug("XMLTooling library initialized");
+    if (initXMLTooling) {
+        XMLToolingConfig::getConfig().init();
+        log.debug("XMLTooling library initialized");
+    }
 
     REGISTER_EXCEPTION_FACTORY(ArtifactException,opensaml);
     REGISTER_EXCEPTION_FACTORY(MetadataFilterException,opensaml::saml2md);
@@ -94,11 +110,12 @@ bool SAMLInternalConfig::init()
     return true;
 }
 
-void SAMLInternalConfig::term()
+void SAMLInternalConfig::term(bool termXMLTooling)
 {
 #ifdef _DEBUG
     xmltooling::NDC ndc("term");
 #endif
+    Category& log=Category::getInstance(SAML_LOGCAT".SAMLConfig");
 
     saml1::AssertionSchemaValidators.destroyValidators();
     saml1p::ProtocolSchemaValidators.destroyValidators();
@@ -110,8 +127,11 @@ void SAMLInternalConfig::term()
     MetadataProviderManager.deregisterFactories();
     TrustEngineManager.deregisterFactories();
 
-    XMLToolingConfig::getConfig().term();
-    Category::getInstance(SAML_LOGCAT".SAMLConfig").info("library shutdown complete");
+    if (termXMLTooling) {
+        XMLToolingConfig::getConfig().term();
+        log.debug("XMLTooling library shut down");
+    }
+    log.info("library shutdown complete");
 }
 
 void SAMLInternalConfig::generateRandomBytes(void* buf, unsigned int len)

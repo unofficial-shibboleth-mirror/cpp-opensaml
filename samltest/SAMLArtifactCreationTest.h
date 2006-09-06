@@ -15,6 +15,7 @@
  */
 
 #include "internal.h"
+#include <saml/SAMLConfig.h>
 #include <saml/saml1/core/SAMLArtifactType0001.h>
 #include <saml/saml1/core/SAMLArtifactType0002.h>
 #include <saml/saml2/core/SAML2ArtifactType0004.h>

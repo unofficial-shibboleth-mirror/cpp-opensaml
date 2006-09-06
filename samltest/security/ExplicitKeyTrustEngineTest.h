@@ -15,6 +15,7 @@
  */
 
 #include "internal.h"
+#include <saml/SAMLConfig.h>
 #include <saml/security/TrustEngine.h>
 #include <saml/saml2/metadata/MetadataProvider.h>
 
