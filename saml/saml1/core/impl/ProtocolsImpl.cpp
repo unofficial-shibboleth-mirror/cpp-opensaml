@@ -332,10 +332,6 @@ namespace opensaml {
                 }
             }
             
-            const XMLCh* getId() const {
-                return getRequestID();
-            }
-
             //IMPL_TYPED_CHILD(Signature);
             // Need customized setter.
         protected:
@@ -355,7 +351,7 @@ namespace opensaml {
             }
 
             IMPL_INTEGER_ATTRIB(MinorVersion);
-            IMPL_STRING_ATTRIB(RequestID);
+            IMPL_ID_ATTRIB(RequestID);
             IMPL_DATETIME_ATTRIB(IssueInstant,0);
             IMPL_TYPED_CHILDREN(RespondWith,m_pos_Signature);
     
@@ -647,10 +643,6 @@ namespace opensaml {
                     setSignature(src.getSignature()->cloneSignature());
             }
 
-            const XMLCh* getId() const {
-                return getResponseID();
-            }
-
             //IMPL_TYPED_CHILD(Signature);
             // Need customized setter.
         protected:
@@ -670,7 +662,7 @@ namespace opensaml {
             }
 
             IMPL_INTEGER_ATTRIB(MinorVersion);
-            IMPL_STRING_ATTRIB(ResponseID);
+            IMPL_ID_ATTRIB(ResponseID);
             IMPL_STRING_ATTRIB(InResponseTo);
             IMPL_DATETIME_ATTRIB(IssueInstant,0);
             IMPL_STRING_ATTRIB(Recipient);

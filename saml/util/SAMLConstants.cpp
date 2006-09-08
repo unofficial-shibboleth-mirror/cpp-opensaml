@@ -28,17 +28,6 @@
 using namespace xercesc;
 using namespace opensaml;
 
-const XMLCh SAMLConstants::SOAP11ENV_NS[] = // http://schemas.xmlsoap.org/soap/envelope/
-{ chLatin_h, chLatin_t, chLatin_t, chLatin_p, chColon, chForwardSlash, chForwardSlash,
-  chLatin_s, chLatin_c, chLatin_h, chLatin_e, chLatin_m, chLatin_a, chLatin_s, chPeriod,
-      chLatin_x, chLatin_m, chLatin_l, chLatin_s, chLatin_o, chLatin_a, chLatin_p, chPeriod,
-      chLatin_o, chLatin_r, chLatin_g, chForwardSlash,
-  chLatin_s, chLatin_o, chLatin_a, chLatin_p, chForwardSlash,
-  chLatin_e, chLatin_n, chLatin_v, chLatin_e, chLatin_l, chLatin_o, chLatin_p, chLatin_e, chForwardSlash, chNull
-};
-
-const XMLCh SAMLConstants::SOAP11ENV_PREFIX[] = UNICODE_LITERAL_1(S);
-
 const XMLCh SAMLConstants::PAOS_NS[] = // urn:liberty:paos:2003-08
 { chLatin_u, chLatin_r, chLatin_n, chColon,
   chLatin_l, chLatin_i, chLatin_b, chLatin_e, chLatin_r, chLatin_t, chLatin_y, chColon,

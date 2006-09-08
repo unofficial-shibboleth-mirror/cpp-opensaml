@@ -32,12 +32,6 @@ namespace opensaml {
      */
     struct SAML_API SAMLConstants : public xmltooling::XMLConstants
     {
-        /**  SOAP 1.1 Envelope XML namespace ("http://schemas.xmlsoap.org/soap/envelope/") */
-        static const XMLCh SOAP11ENV_NS[]; 
-
-        /**  SOAP 1.1 Envelope QName prefix ("S") */
-        static const XMLCh SOAP11ENV_PREFIX[];
-    
         /**  Liberty PAOS XML Namespace ("urn:liberty:paos:2003-08") */
         static const XMLCh PAOS_NS[];
         

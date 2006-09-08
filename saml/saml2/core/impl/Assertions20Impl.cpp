@@ -468,7 +468,7 @@ namespace opensaml {
             IMPL_STRING_ATTRIB(Address);
             
         public:
-            void setAttribute(QName& qualifiedName, const XMLCh* value) {
+            void setAttribute(const QName& qualifiedName, const XMLCh* value, bool ID=false) {
                 if (!qualifiedName.hasNamespaceURI()) {
                     if (XMLString::equals(qualifiedName.getLocalPart(),NOTBEFORE_ATTRIB_NAME)) {
                         setNotBefore(value);
@@ -491,7 +491,7 @@ namespace opensaml {
                         return;
                     }
                 }
-                AbstractAttributeExtensibleXMLObject::setAttribute(qualifiedName, value);
+                AbstractAttributeExtensibleXMLObject::setAttribute(qualifiedName, value, ID);
             }
 
         protected:
@@ -557,7 +557,7 @@ namespace opensaml {
             IMPL_TYPED_CHILDREN(KeyInfo,m_children.end());
             
         public:
-            void setAttribute(QName& qualifiedName, const XMLCh* value) {
+            void setAttribute(const QName& qualifiedName, const XMLCh* value, bool ID=false) {
                 if (!qualifiedName.hasNamespaceURI()) {
                     if (XMLString::equals(qualifiedName.getLocalPart(),NOTBEFORE_ATTRIB_NAME)) {
                         setNotBefore(value);
@@ -580,7 +580,7 @@ namespace opensaml {
                         return;
                     }
                 }
-                AbstractAttributeExtensibleXMLObject::setAttribute(qualifiedName, value);
+                AbstractAttributeExtensibleXMLObject::setAttribute(qualifiedName, value, ID);
             }
 
         protected:
@@ -590,15 +590,7 @@ namespace opensaml {
                 MARSHALL_STRING_ATTRIB(Recipient,RECIPIENT,NULL);
                 MARSHALL_STRING_ATTRIB(InResponseTo,INRESPONSETO,NULL);
                 MARSHALL_STRING_ATTRIB(Address,ADDRESS,NULL);
-                
-                // Take care of wildcard.
-                for (map<QName,XMLCh*>::const_iterator i=m_attributeMap.begin(); i!=m_attributeMap.end(); i++) {
-                    DOMAttr* attr=domElement->getOwnerDocument()->createAttributeNS(i->first.getNamespaceURI(),i->first.getLocalPart());
-                    if (i->first.hasPrefix())
-                        attr->setPrefix(i->first.getPrefix());
-                    attr->setNodeValue(i->second);
-                    domElement->setAttributeNode(attr);
-                }
+                marshallExtensionAttributes(domElement);
             }
     
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
@@ -607,8 +599,7 @@ namespace opensaml {
             }
 
             void processAttribute(const DOMAttr* attribute) {
-                QName q(attribute->getNamespaceURI(),attribute->getLocalName(),attribute->getPrefix()); 
-                setAttribute(q,attribute->getNodeValue());
+                unmarshallExtensionAttribute(attribute);
             }
         };
 
@@ -1160,7 +1151,7 @@ namespace opensaml {
             IMPL_STRING_ATTRIB(FriendlyName);
             IMPL_XMLOBJECT_CHILDREN(AttributeValue,m_children.end());
     
-            void setAttribute(QName& qualifiedName, const XMLCh* value) {
+            void setAttribute(const QName& qualifiedName, const XMLCh* value, bool ID=false) {
                 if (!qualifiedName.hasNamespaceURI()) {
                     if (XMLString::equals(qualifiedName.getLocalPart(),NAME_ATTRIB_NAME)) {
                         setName(value);
@@ -1175,7 +1166,7 @@ namespace opensaml {
                         return;
                     }
                 }
-                AbstractAttributeExtensibleXMLObject::setAttribute(qualifiedName, value);
+                AbstractAttributeExtensibleXMLObject::setAttribute(qualifiedName, value, ID);
             }
 
         protected:
@@ -1183,15 +1174,7 @@ namespace opensaml {
                 MARSHALL_STRING_ATTRIB(Name,NAME,NULL);
                 MARSHALL_STRING_ATTRIB(NameFormat,NAMEFORMAT,NULL);
                 MARSHALL_STRING_ATTRIB(FriendlyName,FRIENDLYNAME,NULL);
-
-                // Take care of wildcard.
-                for (map<QName,XMLCh*>::const_iterator i=m_attributeMap.begin(); i!=m_attributeMap.end(); i++) {
-                    DOMAttr* attr=domElement->getOwnerDocument()->createAttributeNS(i->first.getNamespaceURI(),i->first.getLocalPart());
-                    if (i->first.hasPrefix())
-                        attr->setPrefix(i->first.getPrefix());
-                    attr->setNodeValue(i->second);
-                    domElement->setAttributeNode(attr);
-                }
+                marshallExtensionAttributes(domElement);
             }
 
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
@@ -1199,8 +1182,7 @@ namespace opensaml {
             }
 
             void processAttribute(const DOMAttr* attribute) {
-                QName q(attribute->getNamespaceURI(),attribute->getLocalName(),attribute->getPrefix()); 
-                setAttribute(q,attribute->getNodeValue());
+                unmarshallExtensionAttribute(attribute);
             }
         };
 
@@ -1440,10 +1422,6 @@ namespace opensaml {
                 }
             }
             
-            const XMLCh* getId() const {
-                return getID();
-            }
-
             //IMPL_TYPED_CHILD(Signature);
             // Need customized setter.
         protected:
@@ -1464,7 +1442,7 @@ namespace opensaml {
             
             IMPL_XMLOBJECT_CLONE(Assertion);
             IMPL_STRING_ATTRIB(Version);
-            IMPL_STRING_ATTRIB(ID);
+            IMPL_ID_ATTRIB(ID);
             IMPL_DATETIME_ATTRIB(IssueInstant,0);
             IMPL_TYPED_CHILD(Issuer);
             IMPL_TYPED_CHILD(Subject);

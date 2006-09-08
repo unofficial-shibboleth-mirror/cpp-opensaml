@@ -44,7 +44,7 @@ public:
 
 void ContentReference::createReferences(DSIGSignature* sig)
 {
-    const XMLCh* id=m_signableObject.getId();
+    const XMLCh* id=m_signableObject.getXMLID();
     if (!id || !*id)
         throw xmlsignature::SignatureException("Cannot create Signature reference to SAML object without an identifier."); 
     

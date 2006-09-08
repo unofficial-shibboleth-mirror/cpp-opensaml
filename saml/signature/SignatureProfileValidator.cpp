@@ -55,7 +55,8 @@ void SignatureProfileValidator::validate(const XMLObject* xmlObject) const
         DSIGReference* ref=refs->item(0);
         if (ref) {
             const XMLCh* URI=ref->getURI();
-            if (URI==NULL || *URI==0 || (*URI==chPound && !XMLString::compareString(URI+1,signableObj->getId()))) {
+            const XMLCh* ID=signableObj->getXMLID();
+            if (URI==NULL || *URI==0 || (*URI==chPound && ID && !XMLString::compareString(URI+1,ID))) {
                 DSIGTransformList* tlist=ref->getTransforms();
                 for (unsigned int i=0; tlist && i<tlist->getSize(); i++) {
                     if (tlist->item(i)->getTransformType()==TRANSFORM_ENVELOPED_SIGNATURE)

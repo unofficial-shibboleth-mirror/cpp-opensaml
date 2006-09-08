@@ -38,14 +38,6 @@ namespace opensaml {
         virtual ~SignableObject() {}
 
         /**
-         * Returns the XML ID for the object being signed, for input to the
-         * reference creation process. 
-         * 
-         * @return      XML ID or NULL if not set yet 
-         */
-        virtual const XMLCh* getId() const=0;
-
-        /**
          * Gets a new ContentReference object bound to this object.
          * It's lifetime must not outlast this object, so it should
          * generally be set into a Signature owned by the object.

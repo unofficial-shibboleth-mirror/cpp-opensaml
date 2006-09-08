@@ -295,10 +295,6 @@ namespace opensaml {
                     setExtensions(src.getExtensions()->cloneExtensions());
             }
             
-            const XMLCh* getId() const {
-                return getID();
-            }
-
             //IMPL_TYPED_CHILD(Signature);
             // Need customized setter.
         protected:
@@ -319,7 +315,7 @@ namespace opensaml {
             
             IMPL_XMLOBJECT_CLONE(Request);
             IMPL_STRING_ATTRIB(Version);
-            IMPL_STRING_ATTRIB(ID);
+            IMPL_ID_ATTRIB(ID);
             IMPL_DATETIME_ATTRIB(IssueInstant,0);
             IMPL_STRING_ATTRIB(Destination);
             IMPL_STRING_ATTRIB(Consent);
@@ -1031,10 +1027,6 @@ namespace opensaml {
                     setStatus(src.getStatus()->cloneStatus());
             }
             
-            const XMLCh* getId() const {
-                return getID();
-            }
-
             //IMPL_TYPED_CHILD(Signature);
             // Need customized setter.
         protected:
@@ -1055,7 +1047,7 @@ namespace opensaml {
             
             IMPL_XMLOBJECT_CLONE(StatusResponse);
             IMPL_STRING_ATTRIB(Version);
-            IMPL_STRING_ATTRIB(ID);
+            IMPL_ID_ATTRIB(ID);
             IMPL_STRING_ATTRIB(InResponseTo);
             IMPL_DATETIME_ATTRIB(IssueInstant,0);
             IMPL_STRING_ATTRIB(Destination);

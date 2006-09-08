@@ -982,10 +982,6 @@ namespace opensaml {
                 }
             }
             
-            const XMLCh* getId() const {
-                return getAssertionID();
-            }
-
             //IMPL_TYPED_CHILD(Signature);
             // Need customized setter.
         protected:
@@ -1006,7 +1002,7 @@ namespace opensaml {
             
             IMPL_XMLOBJECT_CLONE(Assertion);
             IMPL_INTEGER_ATTRIB(MinorVersion);
-            IMPL_STRING_ATTRIB(AssertionID);
+            IMPL_ID_ATTRIB(AssertionID);
             IMPL_STRING_ATTRIB(Issuer);
             IMPL_DATETIME_ATTRIB(IssueInstant,0);
             IMPL_TYPED_CHILD(Conditions);

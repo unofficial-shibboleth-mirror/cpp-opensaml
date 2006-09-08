@@ -102,10 +102,10 @@ protected:
         char* buf = NULL;
         if (!XMLString::equals(expectedString, testString)) {
             buf = XMLString::transcode(testString);
-            TS_TRACE(buf);
+            TS_TRACE(buf ? buf : "(NULL)");
             XMLString::release(&buf);
             buf = XMLString::transcode(expectedString);
-            TS_TRACE(buf);
+            TS_TRACE(buf ? buf : "(NULL)");
             XMLString::release(&buf);
             TSM_ASSERT(failMessage, false);
         }
