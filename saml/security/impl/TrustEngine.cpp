@@ -29,10 +29,12 @@ using namespace std;
 
 namespace opensaml {
     SAML_DLLLOCAL PluginManager<TrustEngine,const DOMElement*>::Factory ExplicitKeyTrustEngineFactory; 
+    SAML_DLLLOCAL PluginManager<TrustEngine,const DOMElement*>::Factory ChainingTrustEngineFactory;
 };
 
 void SAML_API opensaml::registerTrustEngines()
 {
     SAMLConfig& conf=SAMLConfig::getConfig();
     conf.TrustEngineManager.registerFactory(EXPLICIT_KEY_SAMLTRUSTENGINE, ExplicitKeyTrustEngineFactory);
+    conf.TrustEngineManager.registerFactory(CHAINING_SAMLTRUSTENGINE, ChainingTrustEngineFactory);
 }

@@ -23,8 +23,6 @@
 #include "internal.h"
 #include "saml2/metadata/ObservableMetadataProvider.h"
 
-#include <xmltooling/signature/CachingKeyResolver.h>
-
 using namespace opensaml::saml2md;
 using namespace std;
 
@@ -35,10 +33,6 @@ ObservableMetadataProvider::~ObservableMetadataProvider()
 
 void ObservableMetadataProvider::emitChangeEvent()
 {
-    xmlsignature::CachingKeyResolver* ckr=dynamic_cast<xmlsignature::CachingKeyResolver*>(m_resolver);
-    if (ckr)
-        ckr->clearCache();
-    
     for (std::vector<Observer*>::const_iterator i=m_observers.begin(); i!=m_observers.end(); i++) {
         (*i)->onEvent(*this);
     }

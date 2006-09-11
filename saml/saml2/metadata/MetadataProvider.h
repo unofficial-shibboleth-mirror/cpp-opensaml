@@ -54,12 +54,10 @@ namespace opensaml {
              * 
              * If a DOM is supplied, a set of default logic will be used to identify
              * and build MetadataFilter plugins and install them into the provider.
-             * A KeyResolver can also be supplied, or a default resolver will be used.
              * 
              * The following XML content is supported:
              * 
              * <ul>
-             *  <li>&lt;KeyResolver&gt; elements with a type attribute
              *  <li>&lt;MetadataFilter&gt; elements with a type attribute and type-specific content
              *  <li>&lt;Exclude&gt; elements representing a BlacklistMetadataFilter
              *  <li>&lt;BlacklistMetadataFilter&gt; element containing &lt;Exclude&gt; elements 
@@ -120,9 +118,7 @@ namespace opensaml {
              * 
              * @return an associated KeyResolver, or NULL
              */
-            virtual const xmlsignature::KeyResolver* getKeyResolver() const {
-                return m_resolver;
-            }
+            virtual const xmlsignature::KeyResolver* getKeyResolver() const=0;
             
             /**
              * Gets the entire metadata tree, after the registered filter has been applied.
@@ -154,7 +150,7 @@ namespace opensaml {
              * 
              * @return the entity's metadata or NULL if there is no metadata or no valid metadata
              */
-            virtual const EntityDescriptor* getEntityDescriptor(const char* id, bool requireValidMetadata=true) const;
+            virtual const EntityDescriptor* getEntityDescriptor(const char* id, bool requireValidMetadata=true) const=0;
 
             /**
              * Gets the metadata for an entity that issued a SAML artifact. If a valid entity is returned,
@@ -165,7 +161,7 @@ namespace opensaml {
              * 
              * @return the entity's metadata or NULL if there is no valid metadata
              */
-            virtual const EntityDescriptor* getEntityDescriptor(const SAMLArtifact* artifact) const;
+            virtual const EntityDescriptor* getEntityDescriptor(const SAMLArtifact* artifact) const=0;
 
             /**
              * Gets the metadata for a given group of entities. If a valid group is returned,
@@ -189,12 +185,9 @@ namespace opensaml {
              * 
              * @return the group's metadata or NULL if there is no metadata or no valid metadata
              */
-            virtual const EntitiesDescriptor* getEntitiesDescriptor(const char* name, bool requireValidMetadata=true) const;
+            virtual const EntitiesDescriptor* getEntitiesDescriptor(const char* name, bool requireValidMetadata=true) const=0;
 
         protected:
-            /** Embedded KeyResolver instance. */
-            xmlsignature::KeyResolver* m_resolver;
-
             /**
              * Applies any installed filters to a metadata instance.
              * 
@@ -202,36 +195,8 @@ namespace opensaml {
              */
             void doFilters(xmltooling::XMLObject& xmlObject) const;
 
-            /**
-             * Loads an entity into the cache for faster lookup. This includes
-             * processing known reverse lookup strategies for artifacts.
-             * 
-             * @param site          entity definition
-             * @param validUntil    expiration time of the entity definition
-             */
-            virtual void index(EntityDescriptor* site, time_t validUntil);
-
-            /**
-             * Loads a group of entities into the cache for faster lookup.
-             * 
-             * @param group         group definition
-             * @param validUntil    expiration time of the group definition
-             */
-            virtual void index(EntitiesDescriptor* group, time_t validUntil);
-        
-            /**
-             * Clear the cache of known entities and groups.
-             */
-            virtual void clearDescriptorIndex();
-        
         private:
             std::vector<MetadataFilter*> m_filters;
-
-            typedef std::multimap<std::string,const EntityDescriptor*> sitemap_t;
-            typedef std::multimap<std::string,const EntitiesDescriptor*> groupmap_t;
-            sitemap_t m_sites;
-            sitemap_t m_sources;
-            groupmap_t m_groups;
         };
         
         /**
@@ -241,6 +206,9 @@ namespace opensaml {
         
         /** MetadataProvider based on local XML files */
         #define FILESYSTEM_METADATA_PROVIDER  "org.opensaml.saml2.metadata.provider.FilesystemMetadataProvider"
+
+        /** MetadataProvider that wraps a sequence of metadata providers. */
+        #define CHAINING_METADATA_PROVIDER  "org.opensaml.saml2.metadata.provider.ChainingMetadataProvider"
     };
 };
 

@@ -31,6 +31,7 @@ encinclude_HEADERS = \
 secinclude_HEADERS = \
 	security/AbstractPKIXTrustEngine.h \
 	security/MetadataKeyInfoIterator.h \
+	security/ChainingTrustEngine.h \
 	security/TrustEngine.h \
 	security/X509TrustEngine.h
 
@@ -55,7 +56,9 @@ saml2coreinclude_HEADERS = \
 	saml2/core/SAML2ArtifactType0004.h
 
 saml2mdinclude_HEADERS = \
-	saml2/metadata/Metadata.h
+	saml2/metadata/AbstractMetadataProvider.h \
+	saml2/metadata/ChainingMetadataProvider.h \
+	saml2/metadata/Metadata.h \
 	saml2/metadata/MetadataFilter.h \
 	saml2/metadata/MetadataProvider.h \
 	saml2/metadata/ObservableMetadataProvider.h
@@ -78,7 +81,9 @@ libsaml_la_SOURCES = \
 	saml2/core/impl/Protocols20SchemaValidators.cpp \
 	saml2/core/impl/SAML2Artifact.cpp \
 	saml2/core/impl/SAML2ArtifactType0004.cpp \
+	saml2/metadata/impl/AbstractMetadataProvider.cpp \
 	saml2/metadata/impl/BlacklistMetadataFilter.cpp \
+	saml2/metadata/impl/ChainingMetadataProvider.cpp \
 	saml2/metadata/impl/FilesystemMetadataProvider.cpp \
 	saml2/metadata/impl/MetadataImpl.cpp \
 	saml2/metadata/impl/MetadataProvider.cpp \
@@ -89,6 +94,7 @@ libsaml_la_SOURCES = \
 	encryption/EncryptedKeyResolver.cpp \
 	security/impl/TrustEngine.cpp \
 	security/impl/AbstractPKIXTrustEngine.cpp \
+	security/impl/ChainingTrustEngine.cpp \
 	security/impl/ExplicitKeyTrustEngine.cpp \
 	signature/ContentReference.cpp \
 	signature/SignatureProfileValidator.cpp \

@@ -303,7 +303,15 @@
 						Name="impl"
 						>
 						<File
+							RelativePath=".\saml2\metadata\impl\AbstractMetadataProvider.cpp"
+							>
+						</File>
+						<File
 							RelativePath=".\saml2\metadata\impl\BlacklistMetadataFilter.cpp"
+							>
+						</File>
+						<File
+							RelativePath=".\saml2\metadata\impl\ChainingMetadataProvider.cpp"
 							>
 						</File>
 						<File
@@ -361,6 +369,10 @@
 					>
 					<File
 						RelativePath=".\security\impl\AbstractPKIXTrustEngine.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\security\impl\ChainingTrustEngine.cpp"
 						>
 					</File>
 					<File
@@ -486,6 +498,14 @@
 					Name="metadata"
 					>
 					<File
+						RelativePath=".\saml2\metadata\AbstractMetadataProvider.h"
+						>
+					</File>
+					<File
+						RelativePath=".\saml2\metadata\ChainingMetadataProvider.h"
+						>
+					</File>
+					<File
 						RelativePath=".\saml2\metadata\Metadata.h"
 						>
 					</File>
@@ -520,6 +540,10 @@
 				>
 				<File
 					RelativePath=".\security\AbstractPKIXTrustEngine.h"
+					>
+				</File>
+				<File
+					RelativePath=".\security\ChainingTrustEngine.h"
 					>
 				</File>
 				<File

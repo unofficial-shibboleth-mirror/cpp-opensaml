@@ -40,12 +40,12 @@ namespace opensaml {
              * 
              * @param e DOM to supply configuration for provider
              */
-            ObservableMetadataProvider(const DOMElement* e) : MetadataProvider(e) {}
+            ObservableMetadataProvider(const DOMElement* e=NULL) : MetadataProvider(e) {}
             
             /**
              * Convenience method for notifying every registered Observer of an event.
              */
-            void emitChangeEvent();
+            virtual void emitChangeEvent();
 
         public:
             /**

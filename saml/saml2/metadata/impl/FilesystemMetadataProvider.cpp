@@ -22,7 +22,7 @@
 
 #include "internal.h"
 #include "saml2/metadata/Metadata.h"
-#include "saml2/metadata/ObservableMetadataProvider.h"
+#include "saml2/metadata/AbstractMetadataProvider.h"
 
 #include <ctime>
 #include <sys/types.h>
@@ -44,7 +44,7 @@ namespace opensaml {
     namespace saml2md {
         
         
-        class SAML_DLLLOCAL FilesystemMetadataProvider : public ObservableMetadataProvider
+        class SAML_DLLLOCAL FilesystemMetadataProvider : public AbstractMetadataProvider
         {
         public:
             FilesystemMetadataProvider(const DOMElement* e);
@@ -91,7 +91,7 @@ static const XMLCh filename[] = UNICODE_LITERAL_8(f,i,l,e,n,a,m,e);
 static const XMLCh validate[] = UNICODE_LITERAL_8(v,a,l,i,d,a,t,e);
 
 FilesystemMetadataProvider::FilesystemMetadataProvider(const DOMElement* e)
-    : ObservableMetadataProvider(e), m_root(e), m_filestamp(0), m_validate(false), m_lock(NULL), m_object(NULL)
+    : AbstractMetadataProvider(e), m_root(e), m_filestamp(0), m_validate(false), m_lock(NULL), m_object(NULL)
 {
 #ifdef _DEBUG
     NDC ndc("FilesystemMetadataProvider");
@@ -257,9 +257,9 @@ void FilesystemMetadataProvider::index()
     clearDescriptorIndex();
     EntitiesDescriptor* group=dynamic_cast<EntitiesDescriptor*>(m_object);
     if (group) {
-        MetadataProvider::index(group, SAMLTIME_MAX);
+        AbstractMetadataProvider::index(group, SAMLTIME_MAX);
         return;
     }
     EntityDescriptor* site=dynamic_cast<EntityDescriptor*>(m_object);
-    MetadataProvider::index(site, SAMLTIME_MAX);
+    AbstractMetadataProvider::index(site, SAMLTIME_MAX);
 }

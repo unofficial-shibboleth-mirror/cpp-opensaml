@@ -81,6 +81,9 @@ namespace opensaml {
 
     /** TrustEngine based on explicit key information resolved from metadata. */
     #define EXPLICIT_KEY_SAMLTRUSTENGINE  "org.opensaml.security.ExplicitKeyTrustEngine"
+
+    /** TrustEngine that tries multiple engines in sequence. */
+    #define CHAINING_SAMLTRUSTENGINE  "org.opensaml.security.ChainingTrustEngine"
 };
 
 #endif /* __saml_trust_h__ */
