@@ -23,8 +23,8 @@
 
 #include "internal.h"
 #include "exceptions.h"
-#include "SAMLArtifact.h"
 #include "SAMLConfig.h"
+#include "binding/SAMLArtifact.h"
 #include "saml1/core/Assertions.h"
 #include "saml1/core/Protocols.h"
 #include "saml2/core/Protocols.h"

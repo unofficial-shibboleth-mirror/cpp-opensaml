@@ -60,7 +60,9 @@
 <pathentry include="C:/cxxtest" kind="inc" path="" system="true"/>
 <pathentry kind="out" path=""/>
 <pathentry kind="con" path="org.eclipse.cdt.make.core.DISCOVERED_SCANNER_INFO"/>
-<pathentry excluding="util/|saml1/|signature/|saml2/|encryption/|security/|security/impl/|saml1/binding/|saml1/binding/impl/|saml2/binding/|saml2/binding/impl/" kind="src" path="saml"/>
+<pathentry excluding="util/|saml1/|signature/|saml2/|encryption/|security/|security/impl/|saml1/binding/|saml1/binding/impl/|saml2/binding/|saml2/binding/impl/|binding/|binding/impl/" kind="src" path="saml"/>
+<pathentry excluding="impl/" kind="src" path="saml/binding"/>
+<pathentry kind="src" path="saml/binding/impl"/>
 <pathentry excluding="impl/" kind="src" path="saml/saml1/core"/>
 <pathentry kind="src" path="saml/saml1/core/impl"/>
 <pathentry excluding="impl/" kind="src" path="saml/saml1/binding"/>

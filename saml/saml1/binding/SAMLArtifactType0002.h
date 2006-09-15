@@ -15,7 +15,7 @@
  */
 
 /**
- * @file saml/saml1/core/SAMLArtifactType0002.h
+ * @file saml/saml1/binding/SAMLArtifactType0002.h
  * 
  * Type 0x0002 SAML 1.x artifact class
  */
@@ -23,7 +23,7 @@
 #ifndef __saml_artifacttype0002_h__
 #define __saml_artifacttype0002_h__
 
-#include <saml/SAMLArtifact.h>
+#include <saml/binding/SAMLArtifact.h>
 
 namespace opensaml {
     namespace saml1p {

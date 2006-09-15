@@ -21,7 +21,7 @@
  */
 
 #include "internal.h"
-#include "SAMLArtifact.h"
+#include "binding/SAMLArtifact.h"
 #include "saml2/metadata/Metadata.h"
 #include "saml2/metadata/AbstractMetadataProvider.h"
 

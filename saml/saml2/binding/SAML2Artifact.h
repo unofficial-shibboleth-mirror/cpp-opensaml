@@ -23,7 +23,7 @@
 #ifndef __saml2_artifact_h__
 #define __saml2_artifact_h__
 
-#include <saml/SAMLArtifact.h>
+#include <saml/binding/SAMLArtifact.h>
 
 namespace opensaml {
     namespace saml2p {

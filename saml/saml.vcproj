@@ -182,10 +182,6 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\SAMLArtifact.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\SAMLConfig.cpp"
 				>
 			</File>
@@ -222,14 +218,6 @@
 							RelativePath=".\saml1\core\impl\ProtocolsSchemaValidators.cpp"
 							>
 						</File>
-						<File
-							RelativePath=".\saml1\core\impl\SAMLArtifactType0001.cpp"
-							>
-						</File>
-						<File
-							RelativePath=".\saml1\core\impl\SAMLArtifactType0002.cpp"
-							>
-						</File>
 					</Filter>
 				</Filter>
 				<Filter
@@ -246,6 +234,14 @@
 					<Filter
 						Name="impl"
 						>
+						<File
+							RelativePath=".\saml1\binding\impl\SAMLArtifactType0001.cpp"
+							>
+						</File>
+						<File
+							RelativePath=".\saml1\binding\impl\SAMLArtifactType0002.cpp"
+							>
+						</File>
 					</Filter>
 				</Filter>
 			</Filter>
@@ -284,14 +280,6 @@
 						</File>
 						<File
 							RelativePath=".\saml2\core\impl\Protocols20SchemaValidators.cpp"
-							>
-						</File>
-						<File
-							RelativePath=".\saml2\core\impl\SAML2Artifact.cpp"
-							>
-						</File>
-						<File
-							RelativePath=".\saml2\core\impl\SAML2ArtifactType0004.cpp"
 							>
 						</File>
 					</Filter>
@@ -350,6 +338,50 @@
 					<Filter
 						Name="impl"
 						>
+						<File
+							RelativePath=".\saml2\binding\impl\SAML2Artifact.cpp"
+							>
+							<FileConfiguration
+								Name="Debug|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)\$(InputName)1.obj"
+									XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Release|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)\$(InputName)1.obj"
+									XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+								/>
+							</FileConfiguration>
+						</File>
+						<File
+							RelativePath=".\saml2\binding\impl\SAML2ArtifactType0004.cpp"
+							>
+							<FileConfiguration
+								Name="Debug|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)\$(InputName)1.obj"
+									XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Release|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)\$(InputName)1.obj"
+									XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+								/>
+							</FileConfiguration>
+						</File>
 					</Filter>
 				</Filter>
 			</Filter>
@@ -385,6 +417,18 @@
 					</File>
 				</Filter>
 			</Filter>
+			<Filter
+				Name="binding"
+				>
+				<Filter
+					Name="impl"
+					>
+					<File
+						RelativePath=".\binding\impl\SAMLArtifact.cpp"
+						>
+					</File>
+				</Filter>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -401,10 +445,6 @@
 			</File>
 			<File
 				RelativePath=".\internal.h"
-				>
-			</File>
-			<File
-				RelativePath=".\SAMLArtifact.h"
 				>
 			</File>
 			<File
@@ -437,14 +477,6 @@
 						RelativePath=".\saml1\core\Protocols.h"
 						>
 					</File>
-					<File
-						RelativePath=".\saml1\core\SAMLArtifactType0001.h"
-						>
-					</File>
-					<File
-						RelativePath=".\saml1\core\SAMLArtifactType0002.h"
-						>
-					</File>
 				</Filter>
 				<Filter
 					Name="profile"
@@ -453,6 +485,14 @@
 				<Filter
 					Name="binding"
 					>
+					<File
+						RelativePath=".\saml1\binding\SAMLArtifactType0001.h"
+						>
+					</File>
+					<File
+						RelativePath=".\saml1\binding\SAMLArtifactType0002.h"
+						>
+					</File>
 				</Filter>
 			</Filter>
 			<Filter
@@ -483,14 +523,6 @@
 					</File>
 					<File
 						RelativePath=".\saml2\core\Protocols.h"
-						>
-					</File>
-					<File
-						RelativePath=".\saml2\core\SAML2Artifact.h"
-						>
-					</File>
-					<File
-						RelativePath=".\saml2\core\SAML2ArtifactType0004.h"
 						>
 					</File>
 				</Filter>
@@ -525,6 +557,14 @@
 				<Filter
 					Name="binding"
 					>
+					<File
+						RelativePath=".\saml2\binding\SAML2Artifact.h"
+						>
+					</File>
+					<File
+						RelativePath=".\saml2\binding\SAML2ArtifactType0004.h"
+						>
+					</File>
 				</Filter>
 			</Filter>
 			<Filter
@@ -556,6 +596,14 @@
 				</File>
 				<File
 					RelativePath=".\security\X509TrustEngine.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="binding"
+				>
+				<File
+					RelativePath=".\binding\SAMLArtifact.h"
 					>
 				</File>
 			</Filter>

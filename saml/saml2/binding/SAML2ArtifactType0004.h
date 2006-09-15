@@ -15,52 +15,54 @@
  */
 
 /**
- * @file saml/saml1/core/SAMLArtifactType0001.h
+ * @file saml/saml2/core/SAML2ArtifactType0004.h
  * 
- * Type 0x0001 SAML 1.x artifact class
+ * Type 0x0004 SAML 2.0 artifact class
  */
 
-#ifndef __saml_artifacttype0001_h__
-#define __saml_artifacttype0001_h__
+#ifndef __saml_artifacttype0004_h__
+#define __saml_artifacttype0004_h__
 
-#include <saml/SAMLArtifact.h>
+#include <saml/saml2/binding/SAML2Artifact.h>
 
 namespace opensaml {
-    namespace saml1p {
+    namespace saml2p {
         
         /**
-         * Type 0x0001 SAML 1.x artifact class
+         * Type 0x0004 SAML 2.0 artifact class
          */
-        class SAML_API SAMLArtifactType0001 : public SAMLArtifact
+        class SAML_API SAML2ArtifactType0004 : public SAML2Artifact
         {
-            SAMLArtifactType0001& operator=(const SAMLArtifactType0001& src);
+            SAML2ArtifactType0004& operator=(const SAML2ArtifactType0004& src);
         public:
             /**
-             * Decodes a base64-encoded type 0x0001 artifact
+             * Decodes a base64-encoded type 0x0004 artifact
              * 
              * @param s NULL-terminated base64-encoded string 
              */        
-            SAMLArtifactType0001(const char* s);
+            SAML2ArtifactType0004(const char* s);
 
             /**
-             * Constructs an artifact with the specified source ID, but a random assertion handle.
+             * Constructs an artifact with the specified source ID and index, but a random message handle.
              * 
-             * @param sourceid SOURCEID_LENGTH bytes of binary data 
+             * @param sourceid  SOURCEID_LENGTH bytes of binary data
+             * @param index     endpoint index
              */        
-            SAMLArtifactType0001(const std::string& sourceid);
+            SAML2ArtifactType0004(const std::string& sourceid, int index);
 
             /**
              * Constructs an artifact with the specified source ID and assertion handle.
              * 
              * @param sourceid  SOURCEID_LENGTH bytes of binary data
+             * @param index     endpoint index
              * @param handle    HANDLE_LENGTH bytes of binary data 
              */        
-            SAMLArtifactType0001(const std::string& sourceid, const std::string& handle);
+            SAML2ArtifactType0004(const std::string& sourceid, int index, const std::string& handle);
     
-            virtual ~SAMLArtifactType0001() {}
+            virtual ~SAML2ArtifactType0004() {}
             
-            virtual SAMLArtifactType0001* clone() const {
-                return new SAMLArtifactType0001(*this);
+            virtual SAML2ArtifactType0004* clone() const {
+                return new SAML2ArtifactType0004(*this);
             }
             
             virtual std::string getSource() const {
@@ -74,24 +76,24 @@ namespace opensaml {
              * @return the binary source ID
              */
             virtual std::string getSourceID() const {
-                return m_raw.substr(TYPECODE_LENGTH,SOURCEID_LENGTH);                   // bytes 3-22
+                return m_raw.substr(TYPECODE_LENGTH + INDEX_LENGTH, SOURCEID_LENGTH);    // bytes 5-24
             }
             
             virtual std::string getMessageHandle() const {
-                return m_raw.substr(TYPECODE_LENGTH+SOURCEID_LENGTH, HANDLE_LENGTH);    // bytes 23-42
+                return m_raw.substr(TYPECODE_LENGTH + INDEX_LENGTH + SOURCEID_LENGTH, HANDLE_LENGTH);    // bytes 25-44
             }
 
             /** Length of source ID */            
             static const unsigned int SOURCEID_LENGTH;
 
-            /** Length of assertion handle */            
+            /** Length of message handle */            
             static const unsigned int HANDLE_LENGTH;
     
         protected:
-            SAMLArtifactType0001(const SAMLArtifactType0001& src) : SAMLArtifact(src) {}
+            SAML2ArtifactType0004(const SAML2ArtifactType0004& src) : SAML2Artifact(src) {}
         };
         
     };
 };
 
-#endif /* __saml_artifacttype0001_h__ */
+#endif /* __saml_artifacttype0004_h__ */

@@ -21,7 +21,7 @@
  */
 
 #include "internal.h"
-#include "saml2/core/SAML2Artifact.h"
+#include "saml2/binding/SAML2Artifact.h"
 
 using namespace opensaml::saml2p;
 

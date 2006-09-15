@@ -16,7 +16,7 @@
 
 #include "internal.h"
 #include <saml/SAMLConfig.h>
-#include <saml/saml1/core/SAMLArtifactType0002.h>
+#include <saml/saml1/binding/SAMLArtifactType0002.h>
 
 using namespace opensaml::saml1p;
 using namespace opensaml;

@@ -22,8 +22,10 @@ libsamlinclude_HEADERS = \
 	base.h \
 	exceptions.h \
 	version.h \
-	SAMLArtifact.h \
 	SAMLConfig.h
+
+samlbindinclude_HEADERS = \
+	SAMLArtifact.h
 
 encinclude_HEADERS = \
 	encryption/EncryptedKeyResolver.h
@@ -45,13 +47,17 @@ utilinclude_HEADERS = \
 
 saml1coreinclude_HEADERS = \
 	saml1/core/Assertions.h \
-	saml1/core/Protocols.h \
+	saml1/core/Protocols.h
+
+saml1bindinclude_HEADERS = \
 	saml1/core/SAMLArtifactType0001.h \
 	saml1/core/SAMLArtifactType0002.h
 
 saml2coreinclude_HEADERS = \
 	saml2/core/Assertions.h \
-	saml2/core/Protocols.h \
+	saml2/core/Protocols.h
+
+saml2bindinclude_HEADERS = \
 	saml2/core/SAML2Artifact.h \ 
 	saml2/core/SAML2ArtifactType0004.h
 
@@ -67,20 +73,18 @@ noinst_HEADERS = \
 	internal.h
 
 libsaml_la_SOURCES = \
-	SAMLArtifact.cpp \
 	SAMLConfig.cpp \
+	binding/SAMLArtifact.cpp \
 	saml1/core/impl/AssertionsImpl.cpp \
 	saml1/core/impl/AssertionsSchemaValidators.cpp \
 	saml1/core/impl/ProtocolsImpl.cpp \
 	saml1/core/impl/ProtocolsSchemaValidators.cpp \
-	saml1/core/impl/SAMLArtifactType0001.cpp \
-	saml1/core/impl/SAMLArtifactType0002.cpp \
+	saml1/binding/impl/SAMLArtifactType0001.cpp \
+	saml1/binding/impl/SAMLArtifactType0002.cpp \
 	saml2/core/impl/Assertions20Impl.cpp \
 	saml2/core/impl/Assertions20SchemaValidators.cpp \
 	saml2/core/impl/Protocols20Impl.cpp \
 	saml2/core/impl/Protocols20SchemaValidators.cpp \
-	saml2/core/impl/SAML2Artifact.cpp \
-	saml2/core/impl/SAML2ArtifactType0004.cpp \
 	saml2/metadata/impl/AbstractMetadataProvider.cpp \
 	saml2/metadata/impl/BlacklistMetadataFilter.cpp \
 	saml2/metadata/impl/ChainingMetadataProvider.cpp \
@@ -91,6 +95,8 @@ libsaml_la_SOURCES = \
 	saml2/metadata/impl/ObservableMetadataProvider.cpp \
 	saml2/metadata/impl/SignatureMetadataFilter.cpp \
 	saml2/metadata/impl/WhitelistMetadataFilter.cpp \
+	saml2/binding/impl/SAML2Artifact.cpp \
+	saml2/binding/impl/SAML2ArtifactType0004.cpp \
 	encryption/EncryptedKeyResolver.cpp \
 	security/impl/TrustEngine.cpp \
 	security/impl/AbstractPKIXTrustEngine.cpp \

@@ -21,7 +21,7 @@
  */
 
 #include "internal.h"
-#include "SAMLArtifact.h"
+#include "binding/SAMLArtifact.h"
 
 #include <xercesc/util/Base64.hpp>
 
