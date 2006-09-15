@@ -12,7 +12,13 @@ sigincludedir = $(includedir)/saml/signature
 
 utilincludedir = $(includedir)/saml/util
 
+samlbindincludedir = $(includedir)/saml/binding
+
+saml1bindincludedir = $(includedir)/saml/saml1/binding
+
 saml1coreincludedir = $(includedir)/saml/saml1/core
+
+saml2bindincludedir = $(includedir)/saml/saml2/binding
 
 saml2coreincludedir = $(includedir)/saml/saml2/core
 
@@ -25,7 +31,7 @@ libsamlinclude_HEADERS = \
 	SAMLConfig.h
 
 samlbindinclude_HEADERS = \
-	SAMLArtifact.h
+	binding/SAMLArtifact.h
 
 encinclude_HEADERS = \
 	encryption/EncryptedKeyResolver.h
@@ -50,16 +56,16 @@ saml1coreinclude_HEADERS = \
 	saml1/core/Protocols.h
 
 saml1bindinclude_HEADERS = \
-	saml1/core/SAMLArtifactType0001.h \
-	saml1/core/SAMLArtifactType0002.h
+	saml1/binding/SAMLArtifactType0001.h \
+	saml1/binding/SAMLArtifactType0002.h
 
 saml2coreinclude_HEADERS = \
 	saml2/core/Assertions.h \
 	saml2/core/Protocols.h
 
 saml2bindinclude_HEADERS = \
-	saml2/core/SAML2Artifact.h \ 
-	saml2/core/SAML2ArtifactType0004.h
+	saml2/binding/SAML2Artifact.h \
+	saml2/binding/SAML2ArtifactType0004.h
 
 saml2mdinclude_HEADERS = \
 	saml2/metadata/AbstractMetadataProvider.h \
@@ -74,7 +80,7 @@ noinst_HEADERS = \
 
 libsaml_la_SOURCES = \
 	SAMLConfig.cpp \
-	binding/SAMLArtifact.cpp \
+	binding/impl/SAMLArtifact.cpp \
 	saml1/core/impl/AssertionsImpl.cpp \
 	saml1/core/impl/AssertionsSchemaValidators.cpp \
 	saml1/core/impl/ProtocolsImpl.cpp \
