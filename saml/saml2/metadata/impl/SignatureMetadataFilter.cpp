@@ -15,9 +15,9 @@
  */
 
 /**
- * BlacklistMetadataFilter.cpp
+ * SignatureMetadataFilter.cpp
  * 
- * Removes blacklisted entities from a metadata instance
+ * Filters out unsigned or mis-signed elements.
  */
 
 #include "internal.h"

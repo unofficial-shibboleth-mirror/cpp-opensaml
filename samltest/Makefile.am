@@ -13,6 +13,7 @@ samltest_h = \
     SAMLArtifactType0001Test.h \
     SAMLArtifactType0002Test.h \
     SAMLArtifactType0004Test.h \
+    ArtifactMapTest.h \
     signature/SAML1AssertionTest.h \
     signature/SAML1RequestTest.h \
     signature/SAML1ResponseTest.h \

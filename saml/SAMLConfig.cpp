@@ -24,6 +24,7 @@
 #include "internal.h"
 #include "exceptions.h"
 #include "SAMLConfig.h"
+#include "binding/MessageEncoder.h"
 #include "binding/SAMLArtifact.h"
 #include "saml1/core/Assertions.h"
 #include "saml1/core/Protocols.h"
@@ -65,6 +66,7 @@ extern "C" void SAML_API xmltooling_extension_term()
 
 DECL_EXCEPTION_FACTORY(ArtifactException,opensaml);
 DECL_EXCEPTION_FACTORY(MetadataFilterException,opensaml::saml2md);
+DECL_EXCEPTION_FACTORY(BindingException,opensaml);
 
 namespace opensaml {
    SAMLInternalConfig g_config;
@@ -95,7 +97,9 @@ bool SAMLInternalConfig::init(bool initXMLTooling)
 
     REGISTER_EXCEPTION_FACTORY(ArtifactException,opensaml);
     REGISTER_EXCEPTION_FACTORY(MetadataFilterException,opensaml::saml2md);
+    REGISTER_EXCEPTION_FACTORY(BindingException,opensaml);
 
+    registerMessageEncoders();
     registerSAMLArtifacts();
     saml1::registerAssertionClasses();
     saml1p::registerProtocolClasses();
@@ -122,10 +126,14 @@ void SAMLInternalConfig::term(bool termXMLTooling)
     saml2::AssertionSchemaValidators.destroyValidators();
     saml2md::MetadataSchemaValidators.destroyValidators();
     
-    SAMLArtifactManager.deregisterFactories();
+    TrustEngineManager.deregisterFactories();
     MetadataFilterManager.deregisterFactories();
     MetadataProviderManager.deregisterFactories();
-    TrustEngineManager.deregisterFactories();
+    SAMLArtifactManager.deregisterFactories();
+    MessageEncoderManager.deregisterFactories();
+
+    delete m_artifactMap;
+    m_artifactMap = NULL;
 
     if (termXMLTooling) {
         XMLToolingConfig::getConfig().term();

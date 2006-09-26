@@ -235,6 +235,14 @@
 						Name="impl"
 						>
 						<File
+							RelativePath=".\saml1\binding\impl\SAML1ArtifactEncoder.cpp"
+							>
+						</File>
+						<File
+							RelativePath=".\saml1\binding\impl\SAML1POSTEncoder.cpp"
+							>
+						</File>
+						<File
 							RelativePath=".\saml1\binding\impl\SAMLArtifactType0001.cpp"
 							>
 						</File>
@@ -424,6 +432,14 @@
 					Name="impl"
 					>
 					<File
+						RelativePath=".\binding\impl\ArtifactMap.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\binding\impl\MessageEncoder.cpp"
+						>
+					</File>
+					<File
 						RelativePath=".\binding\impl\SAMLArtifact.cpp"
 						>
 					</File>
@@ -485,6 +501,14 @@
 				<Filter
 					Name="binding"
 					>
+					<File
+						RelativePath=".\saml1\binding\SAML1ArtifactEncoder.h"
+						>
+					</File>
+					<File
+						RelativePath=".\saml1\binding\SAML1POSTEncoder.h"
+						>
+					</File>
 					<File
 						RelativePath=".\saml1\binding\SAMLArtifactType0001.h"
 						>
@@ -602,6 +626,14 @@
 			<Filter
 				Name="binding"
 				>
+				<File
+					RelativePath=".\binding\ArtifactMap.h"
+					>
+				</File>
+				<File
+					RelativePath=".\binding\MessageEncoder.h"
+					>
+				</File>
 				<File
 					RelativePath=".\binding\SAMLArtifact.h"
 					>

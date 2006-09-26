@@ -27,7 +27,7 @@
 #include <xmltooling/exceptions.h>
 
 namespace opensaml {
-    
+    DECL_XMLTOOLING_EXCEPTION(BindingException,SAML_EXCEPTIONAPI(SAML_API),opensaml,xmltooling::XMLToolingException,Exceptions in SAML binding processing);
 };
 
 #endif /* __saml_exceptions_h__ */

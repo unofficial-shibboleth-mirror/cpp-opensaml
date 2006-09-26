@@ -31,6 +31,8 @@ libsamlinclude_HEADERS = \
 	SAMLConfig.h
 
 samlbindinclude_HEADERS = \
+	binding/ArtifactMap.h \
+	binding/MessageEncoder.h \
 	binding/SAMLArtifact.h
 
 encinclude_HEADERS = \
@@ -56,6 +58,8 @@ saml1coreinclude_HEADERS = \
 	saml1/core/Protocols.h
 
 saml1bindinclude_HEADERS = \
+	saml1/binding/SAML1ArtifactEncoder.h \
+	saml1/binding/SAML1POSTEncoder.h \
 	saml1/binding/SAMLArtifactType0001.h \
 	saml1/binding/SAMLArtifactType0002.h
 
@@ -80,11 +84,14 @@ noinst_HEADERS = \
 
 libsaml_la_SOURCES = \
 	SAMLConfig.cpp \
+	binding/impl/ArtifactMap.cpp \
 	binding/impl/SAMLArtifact.cpp \
 	saml1/core/impl/AssertionsImpl.cpp \
 	saml1/core/impl/AssertionsSchemaValidators.cpp \
 	saml1/core/impl/ProtocolsImpl.cpp \
 	saml1/core/impl/ProtocolsSchemaValidators.cpp \
+	saml1/binding/impl/SAML1ArtifactEncoder.cpp \
+	saml1/binding/impl/SAML1POSTEncoder.cpp \
 	saml1/binding/impl/SAMLArtifactType0001.cpp \
 	saml1/binding/impl/SAMLArtifactType0002.cpp \
 	saml2/core/impl/Assertions20Impl.cpp \

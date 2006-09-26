@@ -24,6 +24,7 @@
 #define __saml_config_h__
 
 #include <saml/base.h>
+#include <saml/binding/ArtifactMap.h>
 
 #include <xmltooling/PluginManager.h>
 #include <xmltooling/XMLToolingConfig.h>
@@ -36,6 +37,8 @@
  */
 namespace opensaml {
 
+    class SAML_API MessageEncoder;
+    class SAML_API MessageDecoder;
     class SAML_API SAMLArtifact;
     class SAML_API TrustEngine;
 
@@ -91,6 +94,27 @@ namespace opensaml {
         virtual void term(bool termXMLTooling=true)=0;
         
         /**
+         * Sets the global ArtifactMap instance.
+         * This method must be externally synchronized with any code that uses the object.
+         * Any previously set object is destroyed.
+         * 
+         * @param artifactMap   new ArtifactMap instance to store
+         */
+        void setArtifactMap(ArtifactMap* artifactMap) {
+            delete m_artifactMap;
+            m_artifactMap = artifactMap;
+        }
+        
+        /**
+         * Returns the global ArtifactMap instance.
+         * 
+         * @return  global ArtifactMap
+         */
+        ArtifactMap* getArtifactMap() const {
+            return m_artifactMap;
+        }
+        
+        /**
          * Generate random information using the underlying security library
          * 
          * @param buf   buffer for the information
@@ -123,16 +147,16 @@ namespace opensaml {
          * @return  SHA-1 hash of the data
          */
         virtual std::string hashSHA1(const char* s, bool toHex=false)=0;
-        
+
         /**
-         * Manages factories for MetadataProvider plugins.
+         * Manages factories for MessageDecoder plugins.
          */
-        xmltooling::PluginManager<saml2md::MetadataProvider,const DOMElement*> MetadataProviderManager;
-        
+        xmltooling::PluginManager<MessageDecoder,const DOMElement*> MessageDecoderManager;
+
         /**
-         * Manages factories for MetadataFilter plugins.
+         * Manages factories for MessageEncoder plugins.
          */
-        xmltooling::PluginManager<saml2md::MetadataFilter,const DOMElement*> MetadataFilterManager;
+        xmltooling::PluginManager<MessageEncoder,const DOMElement*> MessageEncoderManager;        
 
         /**
          * Manages factories for SAMLArtifact plugins.
@@ -144,8 +168,21 @@ namespace opensaml {
          */
         xmltooling::PluginManager<TrustEngine,const DOMElement*> TrustEngineManager;
 
+        /**
+         * Manages factories for MetadataProvider plugins.
+         */
+        xmltooling::PluginManager<saml2md::MetadataProvider,const DOMElement*> MetadataProviderManager;
+        
+        /**
+         * Manages factories for MetadataFilter plugins.
+         */
+        xmltooling::PluginManager<saml2md::MetadataFilter,const DOMElement*> MetadataFilterManager;
+
     protected:
-        SAMLConfig() {}
+        SAMLConfig() : m_artifactMap(NULL) {}
+        
+        /** Global ArtifactMap instance for use by artifact-related functions. */
+        ArtifactMap* m_artifactMap;
     };
 
 #if defined (_MSC_VER)
