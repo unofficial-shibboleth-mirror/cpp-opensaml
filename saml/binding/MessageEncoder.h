@@ -177,10 +177,10 @@ namespace opensaml {
     void SAML_API registerMessageEncoders();
 
     /** MessageEncoder for SAML 1.x Browser/Artifact "binding" (really part of profile) */
-    #define SAML1_ARTIFACT_ENCODER  "org.opensaml.saml1.binding.SAML1ArtifactEncoder"
+    #define SAML1_ARTIFACT_ENCODER  "urn:oasis:names:tc:SAML:1.0:profiles:artifact-01"
 
     /** MessageEncoder for SAML 1.x Browser/POST "binding" (really part of profile) */
-    #define SAML1_POST_ENCODER  "org.opensaml.saml1.binding.SAML1POSTEncoder"
+    #define SAML1_POST_ENCODER  "urn:oasis:names:tc:SAML:1.0:profiles:browser-post"
 };
 
 #endif /* __saml_encoder_h__ */
