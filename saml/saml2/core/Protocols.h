@@ -37,8 +37,6 @@ namespace opensaml {
      */
     namespace saml2p {
 
-        //TODO sync C++ and Java class/interface names, e.g. -Type or no -Type, etc
-
         DECL_XMLOBJECT_SIMPLE(SAML_API,Artifact,Artifact,SAML 2.0 Artifact element);
         DECL_XMLOBJECT_SIMPLE(SAML_API,GetComplete,GetComplete,SAML 2.0 GetComplete element);
         DECL_XMLOBJECT_SIMPLE(SAML_API,NewID,NewID,SAML 2.0 NewID element);
@@ -53,7 +51,7 @@ namespace opensaml {
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
 
-        BEGIN_XMLOBJECT(SAML_API,Request,SignableObject,SAML 2.0 Request element);
+        BEGIN_XMLOBJECT(SAML_API,RequestAbstractType,SignableObject,SAML 2.0 RequestAbstractType base type);
             DECL_STRING_ATTRIB(ID,ID);
             DECL_STRING_ATTRIB(Version,VER);
             DECL_DATETIME_ATTRIB(IssueInstant,ISSUEINSTANT);
@@ -143,7 +141,7 @@ namespace opensaml {
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
 
-        BEGIN_XMLOBJECT(SAML_API,StatusResponse,SignableObject,SAML 2.0 StatusResponse element);
+        BEGIN_XMLOBJECT(SAML_API,StatusResponseType,SignableObject,SAML 2.0 StatusResponseType base type);
             DECL_STRING_ATTRIB(ID,ID);
             DECL_STRING_ATTRIB(InResponseTo,INRESPONSETO);
             DECL_STRING_ATTRIB(Version,VER);
@@ -160,15 +158,15 @@ namespace opensaml {
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
 
-        BEGIN_XMLOBJECT(SAML_API,AssertionIDRequest,Request,SAML 2.0 AssertionIDRequest element);
+        BEGIN_XMLOBJECT(SAML_API,AssertionIDRequest,RequestAbstractType,SAML 2.0 AssertionIDRequest element);
             DECL_TYPED_FOREIGN_CHILDREN(AssertionIDRef,saml2);
             /** AssertionIDRequest local name */
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
 
-        BEGIN_XMLOBJECT(SAML_API,SubjectQuery,Request,SAML 2.0 SubjectQuery element);
+        BEGIN_XMLOBJECT(SAML_API,SubjectQuery,RequestAbstractType,SAML 2.0 SubjectQuery abstract element);
             DECL_TYPED_FOREIGN_CHILD(Subject,saml2);
-            /** SubjectQueryType local name */
+            /** SubjectQueryAbstractType local name */
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
 
@@ -251,7 +249,7 @@ namespace opensaml {
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
 
-        BEGIN_XMLOBJECT(SAML_API,AuthnRequest,Request,SAML 2.0 AuthnRequest element);
+        BEGIN_XMLOBJECT(SAML_API,AuthnRequest,RequestAbstractType,SAML 2.0 AuthnRequest element);
             DECL_BOOLEAN_ATTRIB(ForceAuthn,FORCEAUTHN,false);
             DECL_BOOLEAN_ATTRIB(IsPassive,ISPASSIVE,false);
             DECL_STRING_ATTRIB(ProtocolBinding,PROTOCOLBINDING);
@@ -269,20 +267,20 @@ namespace opensaml {
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
 
-        BEGIN_XMLOBJECT(SAML_API,Response,StatusResponse,SAML 2.0 Response element);
+        BEGIN_XMLOBJECT(SAML_API,Response,StatusResponseType,SAML 2.0 Response element);
             DECL_TYPED_FOREIGN_CHILDREN(Assertion,saml2);
             DECL_TYPED_FOREIGN_CHILDREN(EncryptedAssertion,saml2);
             /** ResponseType local name */
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
 
-        BEGIN_XMLOBJECT(SAML_API,ArtifactResolve,Request,SAML 2.0 ArtifactResolve element);
+        BEGIN_XMLOBJECT(SAML_API,ArtifactResolve,RequestAbstractType,SAML 2.0 ArtifactResolve element);
             DECL_TYPED_CHILD(Artifact);
             /** ArtifiactResolveType local name */
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
 
-        BEGIN_XMLOBJECT(SAML_API,ArtifactResponse,StatusResponse,SAML 2.0 ArtifactResponse element);
+        BEGIN_XMLOBJECT(SAML_API,ArtifactResponse,StatusResponseType,SAML 2.0 ArtifactResponse element);
             DECL_XMLOBJECT_CHILD(Payload);
             /** ArtifiactResponseType local name */
             static const XMLCh TYPE_NAME[];
@@ -296,7 +294,7 @@ namespace opensaml {
         BEGIN_XMLOBJECT(SAML_API,NewEncryptedID,saml2::EncryptedElementType,SAML 2.0 NewEncryptedID element);
         END_XMLOBJECT;
 
-        BEGIN_XMLOBJECT(SAML_API,ManageNameIDRequest,Request,SAML 2.0 ManageNameIDRequest element);
+        BEGIN_XMLOBJECT(SAML_API,ManageNameIDRequest,RequestAbstractType,SAML 2.0 ManageNameIDRequest element);
             DECL_TYPED_FOREIGN_CHILD(NameID,saml2);
             DECL_TYPED_FOREIGN_CHILD(EncryptedID,saml2);
             DECL_TYPED_CHILD(NewID);
@@ -306,10 +304,10 @@ namespace opensaml {
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
 
-        BEGIN_XMLOBJECT(SAML_API,ManageNameIDResponse,StatusResponse,SAML 2.0 ManageNameIDResponse element);
+        BEGIN_XMLOBJECT(SAML_API,ManageNameIDResponse,StatusResponseType,SAML 2.0 ManageNameIDResponse element);
         END_XMLOBJECT;
         
-        BEGIN_XMLOBJECT(SAML_API,LogoutRequest,Request,SAML 2.0 LogoutRequest element);
+        BEGIN_XMLOBJECT(SAML_API,LogoutRequest,RequestAbstractType,SAML 2.0 LogoutRequest element);
             DECL_STRING_ATTRIB(Reason,REASON);
             DECL_DATETIME_ATTRIB(NotOnOrAfter,NOTONORAFTER);
             DECL_TYPED_FOREIGN_CHILD(BaseID,saml2);
@@ -338,10 +336,10 @@ namespace opensaml {
             /*@}*/
         END_XMLOBJECT;
 
-        BEGIN_XMLOBJECT(SAML_API,LogoutResponse,StatusResponse,SAML 2.0 LogoutResponse element);
+        BEGIN_XMLOBJECT(SAML_API,LogoutResponse,StatusResponseType,SAML 2.0 LogoutResponse element);
         END_XMLOBJECT;
 
-        BEGIN_XMLOBJECT(SAML_API,NameIDMappingRequest,Request,SAML 2.0 NameIDMappingRequest element);
+        BEGIN_XMLOBJECT(SAML_API,NameIDMappingRequest,RequestAbstractType,SAML 2.0 NameIDMappingRequest element);
             DECL_TYPED_FOREIGN_CHILD(BaseID,saml2);
             DECL_TYPED_FOREIGN_CHILD(NameID,saml2);
             DECL_TYPED_FOREIGN_CHILD(EncryptedID,saml2);
@@ -350,7 +348,7 @@ namespace opensaml {
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
 
-        BEGIN_XMLOBJECT(SAML_API,NameIDMappingResponse,StatusResponse,SAML 2.0 NameIDMappingResponse element);
+        BEGIN_XMLOBJECT(SAML_API,NameIDMappingResponse,StatusResponseType,SAML 2.0 NameIDMappingResponse element);
             DECL_TYPED_FOREIGN_CHILD(NameID,saml2);
             DECL_TYPED_FOREIGN_CHILD(EncryptedID,saml2);
             /** NameIDMappingResponseType local name */
@@ -393,37 +391,6 @@ namespace opensaml {
         
         DECL_XMLOBJECTBUILDER(SAML_API,RespondTo,opensaml::SAMLConstants::SAML20P_THIRDPARTY_EXT_NS,opensaml::SAMLConstants::SAML20P_THIRDPARTY_EXT_PREFIX);
 
-        //
-        // Custom builders
-        //
-
-        /**
-         * Builder for StatusResponse objects.
-         * 
-         * This is customized to force the element name to be specified.
-         */
-        class SAML_API StatusResponseBuilder : public xmltooling::XMLObjectBuilder {
-        public:
-            virtual ~StatusResponseBuilder() {}
-            /** Builder that allows element/type override. */
-            virtual StatusResponse* buildObject(
-                const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=NULL, const xmltooling::QName* schemaType=NULL
-                ) const;
-        
-            /** Singleton builder. */
-            static StatusResponse* buildStatusResponse(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=NULL) {
-                const StatusResponseBuilder* b = dynamic_cast<const StatusResponseBuilder*>(
-                    XMLObjectBuilder::getBuilder(xmltooling::QName(SAMLConstants::SAML20P_NS,StatusResponse::TYPE_NAME))
-                    );
-                if (b) {
-                    xmltooling::QName schemaType(SAMLConstants::SAML20P_NS,StatusResponse::TYPE_NAME,SAMLConstants::SAML20P_PREFIX);
-                    return b->buildObject(nsURI, localName, prefix, &schemaType);
-                }
-                throw xmltooling::XMLObjectException("Unable to obtain typed builder for StatusResponse.");
-            }
-        };
-
-        
         /**
          * Registers builders and validators for SAML 2.0 Protocol classes into the runtime.
          */

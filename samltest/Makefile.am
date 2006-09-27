@@ -82,7 +82,6 @@ samltest_h = \
     saml2/core/impl/StatusCode20Test.h \
     saml2/core/impl/StatusDetail20Test.h \
     saml2/core/impl/StatusMessage20Test.h \
-    saml2/core/impl/StatusResponse20Test.h\
     saml2/core/impl/Subject20Test.h\
     saml2/core/impl/SubjectConfirmation20Test.h\
     saml2/core/impl/SubjectConfirmationData20Test.h\

@@ -492,10 +492,6 @@
 							>
 						</File>
 						<File
-							RelativePath=".\saml2\core\impl\StatusResponse20Test.cpp"
-							>
-						</File>
-						<File
 							RelativePath=".\saml2\core\impl\Subject20Test.cpp"
 							>
 						</File>
@@ -2141,28 +2137,6 @@
 						</File>
 						<File
 							RelativePath=".\saml2\core\impl\StatusMessage20Test.h"
-							>
-							<FileConfiguration
-								Name="Debug|Win32"
-								>
-								<Tool
-									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
-									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
-								/>
-							</FileConfiguration>
-							<FileConfiguration
-								Name="Release|Win32"
-								>
-								<Tool
-									Name="VCCustomBuildTool"
-									CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
-									Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
-								/>
-							</FileConfiguration>
-						</File>
-						<File
-							RelativePath=".\saml2\core\impl\StatusResponse20Test.h"
 							>
 							<FileConfiguration
 								Name="Debug|Win32"
