@@ -451,6 +451,10 @@
 						RelativePath=".\binding\impl\SAMLArtifact.cpp"
 						>
 					</File>
+					<File
+						RelativePath=".\binding\impl\URLEncoder.cpp"
+						>
+					</File>
 				</Filter>
 			</Filter>
 		</Filter>
@@ -652,6 +656,10 @@
 				</File>
 				<File
 					RelativePath=".\binding\SAMLArtifact.h"
+					>
+				</File>
+				<File
+					RelativePath=".\binding\URLEncoder.h"
 					>
 				</File>
 			</Filter>

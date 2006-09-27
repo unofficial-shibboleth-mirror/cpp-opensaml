@@ -22,6 +22,7 @@
 
 #include "internal.h"
 #include "exceptions.h"
+#include "saml/binding/ArtifactMap.h"
 #include "saml2/binding/SAML2Artifact.h"
 #include "saml2/binding/SAML2ArtifactEncoder.h"
 #include "saml2/core/Protocols.h"

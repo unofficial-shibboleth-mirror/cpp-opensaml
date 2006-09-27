@@ -22,6 +22,7 @@
 
 #include "internal.h"
 #include "exceptions.h"
+#include "saml/binding/ArtifactMap.h"
 #include "saml/binding/SAMLArtifact.h"
 #include "saml1/binding/SAML1ArtifactEncoder.h"
 #include "saml1/core/Assertions.h"

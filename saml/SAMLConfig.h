@@ -24,7 +24,6 @@
 #define __saml_config_h__
 
 #include <saml/base.h>
-#include <saml/binding/ArtifactMap.h>
 
 #include <xmltooling/PluginManager.h>
 #include <xmltooling/XMLToolingConfig.h>
@@ -37,10 +36,12 @@
  */
 namespace opensaml {
 
+    class SAML_API ArtifactMap;
     class SAML_API MessageEncoder;
     class SAML_API MessageDecoder;
     class SAML_API SAMLArtifact;
     class SAML_API TrustEngine;
+    class SAML_API URLEncoder;
 
     namespace saml2md {
         class SAML_API MetadataProvider;
@@ -100,10 +101,7 @@ namespace opensaml {
          * 
          * @param artifactMap   new ArtifactMap instance to store
          */
-        void setArtifactMap(ArtifactMap* artifactMap) {
-            delete m_artifactMap;
-            m_artifactMap = artifactMap;
-        }
+        void setArtifactMap(ArtifactMap* artifactMap);
         
         /**
          * Returns the global ArtifactMap instance.
@@ -112,6 +110,24 @@ namespace opensaml {
          */
         ArtifactMap* getArtifactMap() const {
             return m_artifactMap;
+        }
+
+        /**
+         * Sets the global URLEncoder instance.
+         * This method must be externally synchronized with any code that uses the object.
+         * Any previously set object is destroyed.
+         * 
+         * @param urlEncoder   new URLEncoder instance to store
+         */
+        void setURLEncoder(URLEncoder* urlEncoder);
+        
+        /**
+         * Returns the global URLEncoder instance.
+         * 
+         * @return  global URLEncoder
+         */
+        URLEncoder* getURLEncoder() const {
+            return m_urlEncoder;
         }
         
         /**
@@ -179,10 +195,13 @@ namespace opensaml {
         xmltooling::PluginManager<saml2md::MetadataFilter,const DOMElement*> MetadataFilterManager;
 
     protected:
-        SAMLConfig() : m_artifactMap(NULL) {}
+        SAMLConfig() : m_artifactMap(NULL), m_urlEncoder(NULL) {}
         
         /** Global ArtifactMap instance for use by artifact-related functions. */
         ArtifactMap* m_artifactMap;
+
+        /** Global URLEncoder instance for use by URL-related functions. */
+        URLEncoder* m_urlEncoder;
     };
 
 #if defined (_MSC_VER)

@@ -33,7 +33,8 @@ libsamlinclude_HEADERS = \
 samlbindinclude_HEADERS = \
 	binding/ArtifactMap.h \
 	binding/MessageEncoder.h \
-	binding/SAMLArtifact.h
+	binding/SAMLArtifact.h \
+	binding/URLEncoder.h
 
 encinclude_HEADERS = \
 	encryption/EncryptedKeyResolver.h
@@ -88,6 +89,7 @@ libsaml_la_SOURCES = \
 	SAMLConfig.cpp \
 	binding/impl/ArtifactMap.cpp \
 	binding/impl/SAMLArtifact.cpp \
+	binding/impl/URLEncoder.cpp \
 	saml1/core/impl/AssertionsImpl.cpp \
 	saml1/core/impl/AssertionsSchemaValidators.cpp \
 	saml1/core/impl/ProtocolsImpl.cpp \

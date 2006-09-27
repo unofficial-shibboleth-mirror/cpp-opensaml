@@ -24,8 +24,10 @@
 #include "internal.h"
 #include "exceptions.h"
 #include "SAMLConfig.h"
+#include "binding/ArtifactMap.h"
 #include "binding/MessageEncoder.h"
 #include "binding/SAMLArtifact.h"
+#include "binding/URLEncoder.h"
 #include "saml1/core/Assertions.h"
 #include "saml1/core/Protocols.h"
 #include "saml2/core/Protocols.h"
@@ -82,6 +84,18 @@ SAMLInternalConfig& SAMLInternalConfig::getInternalConfig()
     return g_config;
 }
 
+void SAMLConfig::setArtifactMap(ArtifactMap* artifactMap)
+{
+    delete m_artifactMap;
+    m_artifactMap = artifactMap;
+}
+
+void SAMLConfig::setURLEncoder(URLEncoder* urlEncoder)
+{
+    delete m_urlEncoder;
+    m_urlEncoder = urlEncoder;
+}
+
 bool SAMLInternalConfig::init(bool initXMLTooling)
 {
 #ifdef _DEBUG
@@ -109,6 +123,8 @@ bool SAMLInternalConfig::init(bool initXMLTooling)
     saml2md::registerMetadataProviders();
     saml2md::registerMetadataFilters();
     registerTrustEngines();
+    
+    m_urlEncoder = new URLEncoder();
 
     log.info("library initialization complete");
     return true;
@@ -134,6 +150,8 @@ void SAMLInternalConfig::term(bool termXMLTooling)
 
     delete m_artifactMap;
     m_artifactMap = NULL;
+    delete m_urlEncoder;
+    m_urlEncoder = NULL;
 
     if (termXMLTooling) {
         XMLToolingConfig::getConfig().term();

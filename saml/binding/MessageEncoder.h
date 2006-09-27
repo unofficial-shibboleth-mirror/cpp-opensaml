@@ -48,39 +48,6 @@ namespace opensaml {
         virtual ~MessageEncoder() {}
 
         /**
-         * Interface to caller-supplied URL-encoding mechanism.
-         * 
-         * Since URL-encoding is not canonical, it's important that the same
-         * encoder is used during some binding-specific signature operations.
-         */
-        class SAML_API URLEncoder {
-            MAKE_NONCOPYABLE(URLEncoder);
-        protected:
-            URLEncoder() {}
-        public:
-            virtual ~URLEncoder() {}
-            
-            /**
-             * Produce a URL-safe but equivalent version of the input string.
-             * 
-             * @param s input string to encode
-             * @return a string object containing the result of encoding the input
-             */
-            virtual std::string encode(const char* s) const=0;
-        };
-        
-        /**
-         * Provides a URLEncoder implementation for the MessageEncoder to use.
-         * The implementation's lifetime must be longer than the lifetime of this object.
-         * This method must be externally synchronized. 
-         * 
-         * @param urlEncoder    a URLEncoder implementation to use
-         */
-        void setURLEncoder(const URLEncoder* urlEncoder) {
-            m_urlEncoder = urlEncoder;
-        }
-
-        /**
          * Interface to caller-supplied artifact generation mechanism.
          * 
          * Generating an artifact for storage and retrieval requires knowledge of
@@ -162,7 +129,7 @@ namespace opensaml {
             ) const=0;
 
     protected:
-        MessageEncoder() : m_urlEncoder(NULL), m_artifactGenerator(NULL) {}
+        MessageEncoder() : m_artifactGenerator(NULL) {}
         
         /**
          * Helper function to build a new XML Signature with KeyInfo, based
@@ -176,9 +143,6 @@ namespace opensaml {
             const xmlsignature::CredentialResolver* credResolver,
             const XMLCh* sigAlgorithm=NULL
             ) const;
-        
-        /** Pointer to a URLEncoder implementation. */
-        const URLEncoder* m_urlEncoder;
         
         /** Pointer to an ArtifactGenerator implementation. */
         const ArtifactGenerator* m_artifactGenerator;
