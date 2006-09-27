@@ -16,6 +16,7 @@
 
 #include "internal.h"
 #include <saml/SAMLConfig.h>
+#include "saml/binding/ArtifactMap.h"
 #include <saml/saml2/binding/SAML2ArtifactType0004.h>
 #include <saml/saml2/core/Protocols.h>
 
