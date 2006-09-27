@@ -15,21 +15,21 @@
  */
 
 /**
- * SAML1POSTEncoder.cpp
+ * SAML2POSTEncoder.cpp
  * 
- * SAML 1.x POST binding/profile message encoder
+ * SAML 2.0 HTTP-POST binding message encoder
  */
 
 #include "internal.h"
 #include "exceptions.h"
-#include "saml1/binding/SAML1POSTEncoder.h"
-#include "saml1/core/Protocols.h"
+#include "saml2/binding/SAML2POSTEncoder.h"
+#include "saml2/core/Protocols.h"
 
 #include <log4cpp/Category.hh>
 #include <xercesc/util/Base64.hpp>
 #include <xmltooling/util/NDC.h>
 
-using namespace opensaml::saml1p;
+using namespace opensaml::saml2p;
 using namespace opensaml;
 using namespace xmlsignature;
 using namespace xmltooling;
@@ -37,19 +37,19 @@ using namespace log4cpp;
 using namespace std;
 
 namespace opensaml {
-    namespace saml1p {              
-        MessageEncoder* SAML_DLLLOCAL SAML1POSTEncoderFactory(const DOMElement* const & e)
+    namespace saml2p {              
+        MessageEncoder* SAML_DLLLOCAL SAML2POSTEncoderFactory(const DOMElement* const & e)
         {
-            return new SAML1POSTEncoder(e);
+            return new SAML2POSTEncoder(e);
         }
     };
 };
 
-SAML1POSTEncoder::SAML1POSTEncoder(const DOMElement* e) {}
+SAML2POSTEncoder::SAML2POSTEncoder(const DOMElement* e) {}
 
-SAML1POSTEncoder::~SAML1POSTEncoder() {}
+SAML2POSTEncoder::~SAML2POSTEncoder() {}
 
-void SAML1POSTEncoder::encode(
+void SAML2POSTEncoder::encode(
     map<string,string>& outputFields,
     XMLObject* xmlObject,
     const char* recipientID,
@@ -61,39 +61,43 @@ void SAML1POSTEncoder::encode(
 #ifdef _DEBUG
     xmltooling::NDC ndc("encode");
 #endif
-    Category& log = Category::getInstance(SAML_LOGCAT".MessageEncoder.SAML1POST");
+    Category& log = Category::getInstance(SAML_LOGCAT".MessageEncoder.SAML2POST");
     log.debug("validating input");
     
     outputFields.clear();
     if (xmlObject->getParent())
         throw BindingException("Cannot encode XML content with parent.");
-    Response* response = dynamic_cast<Response*>(xmlObject);
+    
+    StatusResponseType* response = NULL;
+    RequestAbstractType* request = dynamic_cast<RequestAbstractType*>(xmlObject);
+    if (!request)
+        response = dynamic_cast<StatusResponseType*>(xmlObject);
     if (!response)
-        throw BindingException("XML content for SAML 1.x POST Encoder must be a SAML 1.x <Response>.");
-    if (!relayState)
-        throw BindingException("SAML 1.x POST Encoder requires relay state (TARGET) value.");
+        throw BindingException("XML content for SAML 2.0 HTTP-POST Encoder must be a SAML 2.0 protocol message.");
     
     DOMElement* rootElement = NULL;
     if (credResolver) {
         // Signature based on native XML signing.
-        if (response->getSignature()) {
-            log.debug("response already signed, skipping signature operation");
+        if (request ? request->getSignature() : response->getSignature()) {
+            log.debug("message already signed, skipping signature operation");
         }
         else {
-            log.debug("signing and marshalling the response");
+            log.debug("signing and marshalling the message");
 
             // Build a Signature.
             Signature* sig = buildSignature(credResolver, sigAlgorithm);
-            response->setSignature(sig);
-    
+            
+            // Append Signature.
+            request ? request->setSignature(sig) : response->setSignature(sig);    
+        
             // Sign response while marshalling.
             vector<Signature*> sigs(1,sig);
-            rootElement = response->marshall((DOMDocument*)NULL,&sigs);
+            rootElement = xmlObject->marshall((DOMDocument*)NULL,&sigs);
         }
     }
     else {
-        log.debug("marshalling the response");
-        rootElement = response->marshall();
+        log.debug("marshalling the message");
+        rootElement = xmlObject->marshall();
     }
     
     string xmlbuf;
@@ -110,8 +114,9 @@ void SAML1POSTEncoder::encode(
     }
     
     // Pass back output fields.
-    outputFields["SAMLResponse"] = xmlbuf;
-    outputFields["TARGET"] = relayState;
+    outputFields[request ? "SAMLRequest" : "SAMLResponse"] = xmlbuf;
+    if (relayState)
+        outputFields["RelayState"] = relayState;
 
     // Cleanup by destroying XML.
     delete xmlObject;

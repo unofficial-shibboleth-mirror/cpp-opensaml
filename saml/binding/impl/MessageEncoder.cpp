@@ -23,7 +23,11 @@
 #include "internal.h"
 #include "binding/MessageEncoder.h"
 
+#include <xmltooling/signature/KeyInfo.h>
+#include <xmltooling/signature/Signature.h>
+
 using namespace opensaml;
+using namespace xmlsignature;
 using namespace xmltooling;
 using namespace std;
 
@@ -32,6 +36,11 @@ namespace opensaml {
         SAML_DLLLOCAL PluginManager<MessageEncoder,const DOMElement*>::Factory SAML1ArtifactEncoderFactory;
         SAML_DLLLOCAL PluginManager<MessageEncoder,const DOMElement*>::Factory SAML1POSTEncoderFactory;
     }; 
+
+    namespace saml2p {
+        SAML_DLLLOCAL PluginManager<MessageEncoder,const DOMElement*>::Factory SAML2ArtifactEncoderFactory;
+        SAML_DLLLOCAL PluginManager<MessageEncoder,const DOMElement*>::Factory SAML2POSTEncoderFactory;
+    };
 };
 
 void SAML_API opensaml::registerMessageEncoders()
@@ -39,4 +48,39 @@ void SAML_API opensaml::registerMessageEncoders()
     SAMLConfig& conf=SAMLConfig::getConfig();
     conf.MessageEncoderManager.registerFactory(SAML1_ARTIFACT_ENCODER, saml1p::SAML1ArtifactEncoderFactory);
     conf.MessageEncoderManager.registerFactory(SAML1_POST_ENCODER, saml1p::SAML1POSTEncoderFactory);
+    conf.MessageEncoderManager.registerFactory(SAML2_ARTIFACT_ENCODER, saml2p::SAML2ArtifactEncoderFactory);
+    conf.MessageEncoderManager.registerFactory(SAML2_POST_ENCODER, saml2p::SAML2POSTEncoderFactory);
+}
+
+namespace {
+    class SAML_DLLLOCAL _addcert : public binary_function<X509Data*,XSECCryptoX509*,void> {
+    public:
+        void operator()(X509Data* bag, XSECCryptoX509* cert) const {
+            safeBuffer& buf=cert->getDEREncodingSB();
+            X509Certificate* x=X509CertificateBuilder::buildX509Certificate();
+            x->setValue(buf.sbStrToXMLCh());
+            bag->getX509Certificates().push_back(x);
+        }
+    };
+};
+
+Signature* MessageEncoder::buildSignature(const CredentialResolver* credResolver, const XMLCh* sigAlgorithm) const
+{
+    // Build a Signature.
+    Signature* sig = SignatureBuilder::buildSignature();
+    if (sigAlgorithm)
+        sig->setSignatureAlgorithm(sigAlgorithm);
+    sig->setSigningKey(credResolver->getKey());
+
+    // Build KeyInfo.
+    const vector<XSECCryptoX509*>& certs = credResolver->getCertificates();
+    if (!certs.empty()) {
+        KeyInfo* keyInfo=KeyInfoBuilder::buildKeyInfo();
+        X509Data* x509Data=X509DataBuilder::buildX509Data();
+        keyInfo->getX509Datas().push_back(x509Data);
+        for_each(certs.begin(),certs.end(),bind1st(_addcert(),x509Data));
+        sig->setKeyInfo(keyInfo);
+    }
+    
+    return sig;
 }

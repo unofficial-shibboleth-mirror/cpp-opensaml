@@ -164,6 +164,19 @@ namespace opensaml {
     protected:
         MessageEncoder() : m_urlEncoder(NULL), m_artifactGenerator(NULL) {}
         
+        /**
+         * Helper function to build a new XML Signature with KeyInfo, based
+         * on the supplied CredentialResolver.
+         * 
+         * @param credResolver      CredentialResolver instance to supply signing material
+         * @param sigAlgorithm      optional signature algorithm identifier
+         * @return  a new Signature object
+         */
+        xmlsignature::Signature* buildSignature(
+            const xmlsignature::CredentialResolver* credResolver,
+            const XMLCh* sigAlgorithm=NULL
+            ) const;
+        
         /** Pointer to a URLEncoder implementation. */
         const URLEncoder* m_urlEncoder;
         
@@ -181,6 +194,15 @@ namespace opensaml {
 
     /** MessageEncoder for SAML 1.x Browser/POST "binding" (really part of profile) */
     #define SAML1_POST_ENCODER  "urn:oasis:names:tc:SAML:1.0:profiles:browser-post"
+    
+    /** MessageEncoder for SAML 2.0 HTTP-Artifact binding */
+    #define SAML2_ARTIFACT_ENCODER "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact"
+
+    /** MessageEncoder for SAML 2.0 HTTP-POST binding */
+    #define SAML2_POST_ENCODER "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+
+    /** MessageEncoder for SAML 2.0 HTTP-Redirect binding */
+    #define SAML2_REDIRECT_ENCODER "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
 };
 
 #endif /* __saml_encoder_h__ */

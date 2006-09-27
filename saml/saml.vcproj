@@ -369,6 +369,10 @@
 							</FileConfiguration>
 						</File>
 						<File
+							RelativePath=".\saml2\binding\impl\SAML2ArtifactEncoder.cpp"
+							>
+						</File>
+						<File
 							RelativePath=".\saml2\binding\impl\SAML2ArtifactType0004.cpp"
 							>
 							<FileConfiguration
@@ -389,6 +393,10 @@
 									XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
 								/>
 							</FileConfiguration>
+						</File>
+						<File
+							RelativePath=".\saml2\binding\impl\SAML2POSTEncoder.cpp"
+							>
 						</File>
 					</Filter>
 				</Filter>
@@ -586,7 +594,15 @@
 						>
 					</File>
 					<File
+						RelativePath=".\saml2\binding\SAML2ArtifactEncoder.h"
+						>
+					</File>
+					<File
 						RelativePath=".\saml2\binding\SAML2ArtifactType0004.h"
+						>
+					</File>
+					<File
+						RelativePath=".\saml2\binding\SAML2POSTEncoder.h"
 						>
 					</File>
 				</Filter>
