@@ -279,7 +279,7 @@ bool AbstractPKIXTrustEngine::validate(
     const RoleDescriptor& role,
     bool checkName,
     const KeyResolver* keyResolver
-    )
+    ) const
 {
 #ifdef _DEBUG
     NDC ndc("validate");
@@ -319,7 +319,7 @@ bool AbstractPKIXTrustEngine::validate(
     return false;
 }
 
-bool AbstractPKIXTrustEngine::validate(Signature& sig, const RoleDescriptor& role, const KeyResolver* keyResolver)
+bool AbstractPKIXTrustEngine::validate(Signature& sig, const RoleDescriptor& role, const KeyResolver* keyResolver) const
 {
 #ifdef _DEBUG
     NDC ndc("validate");

@@ -58,14 +58,14 @@ namespace opensaml {
             Signature& sig,
             const RoleDescriptor& role,
             const KeyResolver* keyResolver=NULL
-            );
+            ) const;
         virtual bool validate(
             XSECCryptoX509* certEE,
             const vector<XSECCryptoX509*>& certChain,
             const RoleDescriptor& role,
             bool checkName=true,
             const KeyResolver* keyResolver=NULL
-            );
+            ) const;
 
     private:
         xmltooling::X509TrustEngine* m_engine;
@@ -81,7 +81,7 @@ bool ExplicitKeyTrustEngine::validate(
     Signature& sig,
     const RoleDescriptor& role,
     const KeyResolver* keyResolver
-    )
+    ) const
 {
 #ifdef _DEBUG
     xmltooling::NDC ndc("validate");
@@ -111,7 +111,7 @@ bool ExplicitKeyTrustEngine::validate(
     const RoleDescriptor& role,
     bool checkName,
     const KeyResolver* keyResolver
-    )
+    ) const
 {
     MetadataKeyInfoIterator keys(role);
     return m_engine->validate(certEE,certChain,keys,checkName,keyResolver);

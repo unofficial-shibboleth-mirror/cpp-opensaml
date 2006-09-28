@@ -70,7 +70,7 @@ namespace opensaml {
             xmlsignature::Signature& sig,
             const saml2md::RoleDescriptor& role,
             const xmlsignature::KeyResolver* keyResolver=NULL
-            )=0;
+            ) const=0;
     };
     
 

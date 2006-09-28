@@ -74,9 +74,9 @@ bool ChainingTrustEngine::validate(
     Signature& sig,
     const RoleDescriptor& role,
     const KeyResolver* keyResolver
-    )
+    ) const
 {
-    for (vector<X509TrustEngine*>::iterator i=m_engines.begin(); i!=m_engines.end(); ++i) {
+    for (vector<X509TrustEngine*>::const_iterator i=m_engines.begin(); i!=m_engines.end(); ++i) {
         if (static_cast<TrustEngine*>(*i)->validate(sig,role,keyResolver))
             return true;
     }
@@ -89,9 +89,9 @@ bool ChainingTrustEngine::validate(
     const RoleDescriptor& role,
     bool checkName,
     const KeyResolver* keyResolver
-    )
+    ) const
 {
-    for (vector<X509TrustEngine*>::iterator i=m_engines.begin(); i!=m_engines.end(); ++i) {
+    for (vector<X509TrustEngine*>::const_iterator i=m_engines.begin(); i!=m_engines.end(); ++i) {
         if ((*i)->validate(certEE,certChain,role,checkName,keyResolver))
             return true;
     }

@@ -73,7 +73,7 @@ namespace opensaml {
             xmlsignature::Signature& sig,
             const saml2md::RoleDescriptor& role,
             const xmlsignature::KeyResolver* keyResolver=NULL
-            );
+            ) const;
 
         virtual bool validate(
             XSECCryptoX509* certEE,
@@ -81,7 +81,7 @@ namespace opensaml {
             const saml2md::RoleDescriptor& role,
             bool checkName=true,
             const xmlsignature::KeyResolver* keyResolver=NULL
-            );
+            ) const;
 
         /**
          * Stateful interface that supplies PKIX validation data to the trust engine.
