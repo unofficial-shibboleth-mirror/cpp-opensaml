@@ -351,7 +351,11 @@ namespace opensaml {
             }
 
             IMPL_INTEGER_ATTRIB(MinorVersion);
-            IMPL_ID_ATTRIB(RequestID);
+            IMPL_STRING_ATTRIB(RequestID);    // have to special-case getXMLID
+            const XMLCh* getXMLID() const {
+                pair<bool,int> v = getMinorVersion();
+                return (!v.first || v.second > 0) ? m_RequestID : NULL;
+            }
             IMPL_DATETIME_ATTRIB(IssueInstant,0);
             IMPL_TYPED_CHILDREN(RespondWith,m_pos_Signature);
     
@@ -662,7 +666,11 @@ namespace opensaml {
             }
 
             IMPL_INTEGER_ATTRIB(MinorVersion);
-            IMPL_ID_ATTRIB(ResponseID);
+            IMPL_STRING_ATTRIB(ResponseID);    // have to special-case getXMLID
+            const XMLCh* getXMLID() const {
+                pair<bool,int> v = getMinorVersion();
+                return (!v.first || v.second > 0) ? m_ResponseID : NULL;
+            }
             IMPL_STRING_ATTRIB(InResponseTo);
             IMPL_DATETIME_ATTRIB(IssueInstant,0);
             IMPL_STRING_ATTRIB(Recipient);

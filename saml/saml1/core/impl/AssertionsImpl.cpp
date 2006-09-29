@@ -1002,7 +1002,11 @@ namespace opensaml {
             
             IMPL_XMLOBJECT_CLONE(Assertion);
             IMPL_INTEGER_ATTRIB(MinorVersion);
-            IMPL_ID_ATTRIB(AssertionID);
+            IMPL_STRING_ATTRIB(AssertionID);    // have to special-case getXMLID
+            const XMLCh* getXMLID() const {
+                pair<bool,int> v = getMinorVersion();
+                return (!v.first || v.second > 0) ? m_AssertionID : NULL;
+            }
             IMPL_STRING_ATTRIB(Issuer);
             IMPL_DATETIME_ATTRIB(IssueInstant,0);
             IMPL_TYPED_CHILD(Conditions);
