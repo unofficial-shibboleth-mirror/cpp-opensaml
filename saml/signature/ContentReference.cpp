@@ -44,22 +44,23 @@ public:
 
 void ContentReference::createReferences(DSIGSignature* sig)
 {
+    DSIGReference* ref=NULL;
     const XMLCh* id=m_signableObject.getXMLID();
     if (!id || !*id)
-        throw xmlsignature::SignatureException("Cannot create Signature reference to SAML object without an identifier."); 
-    
-    DSIGReference* ref=NULL;
-    XMLCh* buf=new XMLCh[XMLString::stringLen(id) + 2];
-    buf[0]=chPound;
-    buf[1]=chNull;
-    XMLString::catString(buf,id);
-    try {
-        ref=sig->createReference(buf);
-        delete[] buf;
-    }
-    catch(...) {
-        delete[] buf;
-        throw;
+        ref=sig->createReference(&chNull);  // whole doc reference
+    else {
+        XMLCh* buf=new XMLCh[XMLString::stringLen(id) + 2];
+        buf[0]=chPound;
+        buf[1]=chNull;
+        XMLString::catString(buf,id);
+        try {
+            ref=sig->createReference(buf);
+            delete[] buf;
+        }
+        catch(...) {
+            delete[] buf;
+            throw;
+        }
     }
     ref->appendEnvelopedSignatureTransform();
     DSIGTransformC14n* c14n=ref->appendCanonicalizationTransform(CANON_C14NE_NOC);
