@@ -247,12 +247,12 @@ namespace opensaml {
 #define REGISTER_ELEMENT(cname) \
     q=QName(SAMLConstants::SAML20MD_NS,cname::LOCAL_NAME); \
     XMLObjectBuilder::registerBuilder(q,new cname##Builder()); \
-    MetadataSchemaValidators.registerValidator(q,new cname##SchemaValidator())
+    SchemaValidators.registerValidator(q,new cname##SchemaValidator())
     
 #define REGISTER_TYPE(cname) \
     q=QName(SAMLConstants::SAML20MD_NS,cname::TYPE_NAME); \
     XMLObjectBuilder::registerBuilder(q,new cname##Builder()); \
-    MetadataSchemaValidators.registerValidator(q,new cname##SchemaValidator())
+    SchemaValidators.registerValidator(q,new cname##SchemaValidator())
 
 #define REGISTER_ELEMENT_NOVAL(cname) \
     q=QName(SAMLConstants::SAML20MD_NS,cname::LOCAL_NAME); \
@@ -261,8 +261,6 @@ namespace opensaml {
 #define REGISTER_TYPE_NOVAL(cname) \
     q=QName(SAMLConstants::SAML20MD_NS,cname::TYPE_NAME); \
     XMLObjectBuilder::registerBuilder(q,new cname##Builder());
-
-ValidatorSuite opensaml::saml2md::MetadataSchemaValidators("MetadataSchemaValidators");
 
 void opensaml::saml2md::registerMetadataClasses() {
     QName q;
@@ -326,21 +324,21 @@ void opensaml::saml2md::registerMetadataClasses() {
 
     q=QName(SAMLConstants::SAML1MD_NS,SourceID::LOCAL_NAME);
     XMLObjectBuilder::registerBuilder(q,new SourceIDBuilder());
-    MetadataSchemaValidators.registerValidator(q,new SourceIDSchemaValidator());
+    SchemaValidators.registerValidator(q,new SourceIDSchemaValidator());
 
     q=QName(SAMLConstants::SAML20MD_QUERY_EXT_NS,ActionNamespace::LOCAL_NAME);
     XMLObjectBuilder::registerBuilder(q,new ActionNamespaceBuilder());
-    MetadataSchemaValidators.registerValidator(q,new ActionNamespaceSchemaValidator());
+    SchemaValidators.registerValidator(q,new ActionNamespaceSchemaValidator());
 
     q=QName(SAMLConstants::SAML20MD_QUERY_EXT_NS,AuthnQueryDescriptorType::TYPE_NAME);
     XMLObjectBuilder::registerBuilder(q,new AuthnQueryDescriptorTypeBuilder());
-    MetadataSchemaValidators.registerValidator(q,new RoleDescriptorSchemaValidator());
+    SchemaValidators.registerValidator(q,new RoleDescriptorSchemaValidator());
 
     q=QName(SAMLConstants::SAML20MD_QUERY_EXT_NS,AttributeQueryDescriptorType::TYPE_NAME);
     XMLObjectBuilder::registerBuilder(q,new AttributeQueryDescriptorTypeBuilder());
-    MetadataSchemaValidators.registerValidator(q,new RoleDescriptorSchemaValidator());
+    SchemaValidators.registerValidator(q,new RoleDescriptorSchemaValidator());
 
     q=QName(SAMLConstants::SAML20MD_QUERY_EXT_NS,AuthzDecisionQueryDescriptorType::TYPE_NAME);
     XMLObjectBuilder::registerBuilder(q,new AuthzDecisionQueryDescriptorTypeBuilder());
-    MetadataSchemaValidators.registerValidator(q,new RoleDescriptorSchemaValidator());
+    SchemaValidators.registerValidator(q,new RoleDescriptorSchemaValidator());
 }

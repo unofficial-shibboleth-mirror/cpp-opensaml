@@ -29,7 +29,6 @@
 #include <string>
 #include <xmltooling/XMLObject.h>
 #include <xmltooling/signature/CredentialResolver.h>
-#include <xmltooling/util/StorageService.h>
 
 namespace opensaml {
 
@@ -54,7 +53,7 @@ namespace opensaml {
          * the sender's SourceID (or sometimes SourceLocation), and the relying party's
          * preferred artifact type. This information can be supplied using whatever
          * configuration or defaults are appropriate for the SAML application.
-         * An ArtifactMap implementation will invoke the supplied generator interface
+         * A MessageEncoder implementation will invoke the supplied generator interface
          * when it requires an artifact be created.
          */
         class SAML_API ArtifactGenerator {

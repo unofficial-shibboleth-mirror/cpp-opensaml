@@ -239,6 +239,10 @@
 							>
 						</File>
 						<File
+							RelativePath=".\saml1\binding\impl\SAML1POSTDecoder.cpp"
+							>
+						</File>
+						<File
 							RelativePath=".\saml1\binding\impl\SAML1POSTEncoder.cpp"
 							>
 						</File>
@@ -444,7 +448,15 @@
 						>
 					</File>
 					<File
+						RelativePath=".\binding\impl\MessageDecoder.cpp"
+						>
+					</File>
+					<File
 						RelativePath=".\binding\impl\MessageEncoder.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\binding\impl\ReplayCache.cpp"
 						>
 					</File>
 					<File
@@ -515,6 +527,10 @@
 					>
 					<File
 						RelativePath=".\saml1\binding\SAML1ArtifactEncoder.h"
+						>
+					</File>
+					<File
+						RelativePath=".\saml1\binding\SAML1POSTDecoder.h"
 						>
 					</File>
 					<File
@@ -651,7 +667,15 @@
 					>
 				</File>
 				<File
+					RelativePath=".\binding\MessageDecoder.h"
+					>
+				</File>
+				<File
 					RelativePath=".\binding\MessageEncoder.h"
+					>
+				</File>
+				<File
+					RelativePath=".\binding\ReplayCache.h"
 					>
 				</File>
 				<File

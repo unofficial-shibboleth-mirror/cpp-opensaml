@@ -224,12 +224,12 @@ namespace opensaml {
 #define REGISTER_ELEMENT(cname) \
     q=QName(SAMLConstants::SAML20P_NS,cname::LOCAL_NAME); \
     XMLObjectBuilder::registerBuilder(q,new cname##Builder()); \
-    ProtocolSchemaValidators.registerValidator(q,new cname##SchemaValidator())
+    SchemaValidators.registerValidator(q,new cname##SchemaValidator())
     
 #define REGISTER_TYPE(cname) \
     q=QName(SAMLConstants::SAML20P_NS,cname::TYPE_NAME); \
     XMLObjectBuilder::registerBuilder(q,new cname##Builder()); \
-    ProtocolSchemaValidators.registerValidator(q,new cname##SchemaValidator())
+    SchemaValidators.registerValidator(q,new cname##SchemaValidator())
 
 #define REGISTER_ELEMENT_NOVAL(cname) \
     q=QName(SAMLConstants::SAML20P_NS,cname::LOCAL_NAME); \
@@ -238,8 +238,6 @@ namespace opensaml {
 #define REGISTER_TYPE_NOVAL(cname) \
     q=QName(SAMLConstants::SAML20P_NS,cname::TYPE_NAME); \
     XMLObjectBuilder::registerBuilder(q,new cname##Builder());
-
-ValidatorSuite opensaml::saml2p::ProtocolSchemaValidators("ProtocolSchemaValidators");
 
 void opensaml::saml2p::registerProtocolClasses() {
     QName q;
@@ -299,5 +297,5 @@ void opensaml::saml2p::registerProtocolClasses() {
 
     q=QName(SAMLConstants::SAML20P_THIRDPARTY_EXT_NS,RespondTo::LOCAL_NAME);
     XMLObjectBuilder::registerBuilder(q,new RespondToBuilder());
-    ProtocolSchemaValidators.registerValidator(q,new RespondToSchemaValidator());
+    SchemaValidators.registerValidator(q,new RespondToSchemaValidator());
 }

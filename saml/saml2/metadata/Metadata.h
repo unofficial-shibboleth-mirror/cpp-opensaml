@@ -373,7 +373,7 @@ namespace opensaml {
             /** Finds an AuthzDecisionQuery role supporting a given protocol. */
             virtual const AuthzDecisionQueryDescriptorType* getAuthzDecisionQueryDescriptorType(const XMLCh* protocol) const=0;
             /** Finds an extension role supporting a given protocol. */
-            virtual const RoleDescriptor* getRoleDescriptor(xmltooling::QName& qname, const XMLCh* protocol) const=0;
+            virtual const RoleDescriptor* getRoleDescriptor(const xmltooling::QName& qname, const XMLCh* protocol) const=0;
             /** EntityDescriptorType local name */
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
@@ -642,11 +642,6 @@ namespace opensaml {
          * Registers builders and validators for SAML 2.0 Metadata classes into the runtime.
          */
         void SAML_API registerMetadataClasses();
-
-        /**
-         * Validator suite for SAML 2.0 Metadata schema validation.
-         */
-        extern SAML_API xmltooling::ValidatorSuite MetadataSchemaValidators;
     };
 };
 

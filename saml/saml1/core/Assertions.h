@@ -263,11 +263,6 @@ namespace opensaml {
          * Registers builders and validators for SAML 1.x Assertion classes into the runtime.
          */
         void SAML_API registerAssertionClasses();
-
-        /**
-         * Validator suite for SAML 1.x Assertion schema validation.
-         */
-        extern SAML_API xmltooling::ValidatorSuite AssertionSchemaValidators;
     };
 };
 

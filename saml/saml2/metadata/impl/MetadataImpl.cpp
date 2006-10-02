@@ -2237,7 +2237,36 @@ namespace opensaml {
                 return NULL;
             }
 
-            const RoleDescriptor* getRoleDescriptor(xmltooling::QName& qname, const XMLCh* protocol) const {
+            const RoleDescriptor* getRoleDescriptor(const xmltooling::QName& qname, const XMLCh* protocol) const {
+                // Check for "known" elements/types.
+                QName q;
+                q.setNamespaceURI(SAMLConstants::SAML20MD_NS);
+                q.setLocalPart(IDPSSODescriptor::LOCAL_NAME);
+                if (q == qname)
+                    return getIDPSSODescriptor(protocol);
+                q.setLocalPart(SPSSODescriptor::LOCAL_NAME);
+                if (q == qname)
+                    return getSPSSODescriptor(protocol);
+                q.setLocalPart(AuthnAuthorityDescriptor::LOCAL_NAME);
+                if (q == qname)
+                    return getAuthnAuthorityDescriptor(protocol);
+                q.setLocalPart(AttributeAuthorityDescriptor::LOCAL_NAME);
+                if (q == qname)
+                    return getAttributeAuthorityDescriptor(protocol);
+                q.setLocalPart(PDPDescriptor::LOCAL_NAME);
+                if (q == qname)
+                    return getPDPDescriptor(protocol);
+                q.setNamespaceURI(SAMLConstants::SAML20MD_QUERY_EXT_NS);
+                q.setLocalPart(AuthnQueryDescriptorType::TYPE_NAME);
+                if (q == qname)
+                    return getAuthnQueryDescriptorType(protocol);
+                q.setLocalPart(AttributeQueryDescriptorType::TYPE_NAME);
+                if (q == qname)
+                    return getAttributeQueryDescriptorType(protocol);
+                q.setLocalPart(AuthzDecisionQueryDescriptorType::TYPE_NAME);
+                if (q == qname)
+                    return getAuthzDecisionQueryDescriptorType(protocol);
+                
                 for (vector<RoleDescriptor*>::const_iterator i=m_RoleDescriptors.begin(); i!=m_RoleDescriptors.end(); i++) {
                     if ((*i)->getSchemaType() && qname==(*((*i)->getSchemaType())) && (*i)->hasSupport(protocol) && (*i)->isValid())
                         return (*i);

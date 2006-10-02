@@ -159,11 +159,6 @@ namespace opensaml {
          * Registers builders and validators for SAML 1.x Protocol classes into the runtime.
          */
         void SAML_API registerProtocolClasses();
-
-        /**
-         * Validator suite for SAML 1.x Protocol schema validation.
-         */
-        extern SAML_API xmltooling::ValidatorSuite ProtocolSchemaValidators;
     };
 };
 

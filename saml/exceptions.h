@@ -27,7 +27,51 @@
 #include <xmltooling/exceptions.h>
 
 namespace opensaml {
+    
+    namespace saml2md {
+        class SAML_API EntityDescriptor;
+        class SAML_API RoleDescriptor;
+    };
+    
     DECL_XMLTOOLING_EXCEPTION(BindingException,SAML_EXCEPTIONAPI(SAML_API),opensaml,xmltooling::XMLToolingException,Exceptions in SAML binding processing);
+
+    /**
+     * Attaches metadata-derived information as exception properties and optionally
+     * rethrows the object. The following named properties are attached, when possible:
+     * 
+     *  <dl>
+     *  <dt>providerId</dt>     <dd>The unique ID of the entity</dd>
+     *  <dt>errorURL</dt>       <dd>The error support URL of a random role</dd>
+     *  <dt>contactName</dt>    <dd>A formatted support or technical contact name</dd>
+     *  <dt>contactEmail</dt>   <dd>A contact email address</dd>
+     *  </dl>
+     * 
+     * @param e         pointer to exception object
+     * @param entity    pointer to entity
+     * @param rethrow   true iff the exception should be rethrown
+     */
+    void SAML_API annotateException(
+        xmltooling::XMLToolingException* e, const saml2md::EntityDescriptor* entity, bool rethrow=true
+        );
+    
+    /**
+     * Attaches metadata-derived information as exception properties and optionally
+     * rethrows the object. The following named properties are attached, when possible:
+     * 
+     *  <dl>
+     *  <dt>providerId</dt>     <dd>The unique ID of the entity</dd>
+     *  <dt>errorURL</dt>       <dd>The error support URL of the role</dd>
+     *  <dt>contactName</dt>    <dd>A formatted support or technical contact name</dd>
+     *  <dt>contactEmail</dt>   <dd>A contact email address</dd>
+     *  </dl>
+     * 
+     * @param e         pointer to exception object
+     * @param entity    pointer to role
+     * @param rethrow   true iff the exception should be rethrown
+     */
+    void SAML_API annotateException(
+        xmltooling::XMLToolingException* e, const saml2md::RoleDescriptor* role, bool rethrow=true
+        );
 };
 
 #endif /* __saml_exceptions_h__ */

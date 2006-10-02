@@ -25,7 +25,9 @@
 #include "exceptions.h"
 #include "SAMLConfig.h"
 #include "binding/ArtifactMap.h"
+#include "binding/MessageDecoder.h"
 #include "binding/MessageEncoder.h"
+#include "binding/ReplayCache.h"
 #include "binding/SAMLArtifact.h"
 #include "binding/URLEncoder.h"
 #include "saml1/core/Assertions.h"
@@ -96,6 +98,12 @@ void SAMLConfig::setURLEncoder(URLEncoder* urlEncoder)
     m_urlEncoder = urlEncoder;
 }
 
+void SAMLConfig::setReplayCache(ReplayCache* replayCache)
+{
+    delete m_replayCache;
+    m_replayCache = replayCache;
+}
+
 bool SAMLInternalConfig::init(bool initXMLTooling)
 {
 #ifdef _DEBUG
@@ -113,8 +121,6 @@ bool SAMLInternalConfig::init(bool initXMLTooling)
     REGISTER_EXCEPTION_FACTORY(MetadataFilterException,opensaml::saml2md);
     REGISTER_EXCEPTION_FACTORY(BindingException,opensaml);
 
-    registerMessageEncoders();
-    registerSAMLArtifacts();
     saml1::registerAssertionClasses();
     saml1p::registerProtocolClasses();
     saml2::registerAssertionClasses();
@@ -122,7 +128,10 @@ bool SAMLInternalConfig::init(bool initXMLTooling)
     saml2md::registerMetadataClasses();
     saml2md::registerMetadataProviders();
     saml2md::registerMetadataFilters();
+    registerSAMLArtifacts();
     registerTrustEngines();
+    registerMessageEncoders();
+    registerMessageDecoders();
     
     m_urlEncoder = new URLEncoder();
 
@@ -137,21 +146,19 @@ void SAMLInternalConfig::term(bool termXMLTooling)
 #endif
     Category& log=Category::getInstance(SAML_LOGCAT".SAMLConfig");
 
-    saml1::AssertionSchemaValidators.destroyValidators();
-    saml1p::ProtocolSchemaValidators.destroyValidators();
-    saml2::AssertionSchemaValidators.destroyValidators();
-    saml2md::MetadataSchemaValidators.destroyValidators();
-    
+    MessageDecoderManager.deregisterFactories();
+    MessageEncoderManager.deregisterFactories();
     TrustEngineManager.deregisterFactories();
+    SAMLArtifactManager.deregisterFactories();
     MetadataFilterManager.deregisterFactories();
     MetadataProviderManager.deregisterFactories();
-    SAMLArtifactManager.deregisterFactories();
-    MessageEncoderManager.deregisterFactories();
 
     delete m_artifactMap;
     m_artifactMap = NULL;
     delete m_urlEncoder;
     m_urlEncoder = NULL;
+    delete m_replayCache;
+    m_replayCache = NULL;
 
     if (termXMLTooling) {
         XMLToolingConfig::getConfig().term();
@@ -235,4 +242,99 @@ void opensaml::log_openssl()
             log.errorStream() << "error data: " << data << CategoryStream::ENDLINE;
         code=ERR_get_error_line_data(&file,&line,&data,&flags);
     }
+}
+
+using namespace saml2md;
+
+void opensaml::annotateException(XMLToolingException* e, const EntityDescriptor* entity, bool rethrow)
+{
+    if (entity) {
+        auto_ptr_char id(entity->getEntityID());
+        e->addProperty("entityID",id.get());
+        const list<XMLObject*>& roles=entity->getOrderedChildren();
+        for (list<XMLObject*>::const_iterator child=roles.begin(); child!=roles.end(); ++child) {
+            const RoleDescriptor* role=dynamic_cast<RoleDescriptor*>(*child);
+            if (role && role->isValid()) {
+                const vector<ContactPerson*>& contacts=role->getContactPersons();
+                for (vector<ContactPerson*>::const_iterator c=contacts.begin(); c!=contacts.end(); ++c) {
+                    const XMLCh* ctype=(*c)->getContactType();
+                    if (ctype && (XMLString::equals(ctype,ContactPerson::CONTACT_SUPPORT)
+                            || XMLString::equals(ctype,ContactPerson::CONTACT_TECHNICAL))) {
+                        GivenName* fname=(*c)->getGivenName();
+                        SurName* lname=(*c)->getSurName();
+                        auto_ptr_char first(fname ? fname->getName() : NULL);
+                        auto_ptr_char last(lname ? lname->getName() : NULL);
+                        if (first.get() && last.get()) {
+                            string contact=string(first.get()) + ' ' + last.get();
+                            e->addProperty("contactName",contact.c_str());
+                        }
+                        else if (first.get())
+                            e->addProperty("contactName",first.get());
+                        else if (last.get())
+                            e->addProperty("contactName",last.get());
+                        const vector<EmailAddress*>& emails=const_cast<const ContactPerson*>(*c)->getEmailAddresss();
+                        if (!emails.empty()) {
+                            auto_ptr_char email(emails.front()->getAddress());
+                            if (email.get())
+                                e->addProperty("contactEmail",email.get());
+                        }
+                        break;
+                    }
+                }
+                if (e->getProperty("contactName") || e->getProperty("contactEmail")) {
+                    auto_ptr_char eurl(role->getErrorURL());
+                    if (eurl.get()) {
+                        e->addProperty("errorURL",eurl.get());
+                    }
+                }
+                break;
+            }
+        }
+    }
+    
+    if (rethrow)
+        e->raise();
+}
+
+void opensaml::annotateException(XMLToolingException* e, const RoleDescriptor* role, bool rethrow)
+{
+    if (role) {
+        auto_ptr_char id(dynamic_cast<EntityDescriptor*>(role->getParent())->getEntityID());
+        e->addProperty("entityID",id.get());
+
+        const vector<ContactPerson*>& contacts=role->getContactPersons();
+        for (vector<ContactPerson*>::const_iterator c=contacts.begin(); c!=contacts.end(); ++c) {
+            const XMLCh* ctype=(*c)->getContactType();
+            if (ctype && (XMLString::equals(ctype,ContactPerson::CONTACT_SUPPORT)
+                    || XMLString::equals(ctype,ContactPerson::CONTACT_TECHNICAL))) {
+                GivenName* fname=(*c)->getGivenName();
+                SurName* lname=(*c)->getSurName();
+                auto_ptr_char first(fname ? fname->getName() : NULL);
+                auto_ptr_char last(lname ? lname->getName() : NULL);
+                if (first.get() && last.get()) {
+                    string contact=string(first.get()) + ' ' + last.get();
+                    e->addProperty("contactName",contact.c_str());
+                }
+                else if (first.get())
+                    e->addProperty("contactName",first.get());
+                else if (last.get())
+                    e->addProperty("contactName",last.get());
+                const vector<EmailAddress*>& emails=const_cast<const ContactPerson*>(*c)->getEmailAddresss();
+                if (!emails.empty()) {
+                    auto_ptr_char email(emails.front()->getAddress());
+                    if (email.get())
+                        e->addProperty("contactEmail",email.get());
+                }
+                break;
+            }
+        }
+
+        auto_ptr_char eurl(role->getErrorURL());
+        if (eurl.get()) {
+            e->addProperty("errorURL",eurl.get());
+        }
+    }
+    
+    if (rethrow)
+        e->raise();
 }

@@ -32,7 +32,9 @@ libsamlinclude_HEADERS = \
 
 samlbindinclude_HEADERS = \
 	binding/ArtifactMap.h \
+	binding/MessageDecoder.h \
 	binding/MessageEncoder.h \
+	binding/ReplayCache.h \
 	binding/SAMLArtifact.h \
 	binding/URLEncoder.h
 
@@ -88,6 +90,9 @@ noinst_HEADERS = \
 libsaml_la_SOURCES = \
 	SAMLConfig.cpp \
 	binding/impl/ArtifactMap.cpp \
+	binding/impl/MessageDecoder.cpp \
+	binding/impl/MessageEncoder.cpp \
+	binding/impl/ReplayCache.cpp \
 	binding/impl/SAMLArtifact.cpp \
 	binding/impl/URLEncoder.cpp \
 	saml1/core/impl/AssertionsImpl.cpp \
@@ -97,6 +102,7 @@ libsaml_la_SOURCES = \
 	saml1/binding/impl/SAMLArtifactType0001.cpp \
 	saml1/binding/impl/SAMLArtifactType0002.cpp \
 	saml1/binding/impl/SAML1ArtifactEncoder.cpp \
+	saml1/binding/impl/SAML1POSTDecoder.cpp \
 	saml1/binding/impl/SAML1POSTEncoder.cpp \
 	saml2/core/impl/Assertions20Impl.cpp \
 	saml2/core/impl/Assertions20SchemaValidators.cpp \
