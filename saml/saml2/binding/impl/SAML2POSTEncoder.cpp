@@ -70,10 +70,11 @@ void SAML2POSTEncoder::encode(
     
     StatusResponseType* response = NULL;
     RequestAbstractType* request = dynamic_cast<RequestAbstractType*>(xmlObject);
-    if (!request)
+    if (!request) {
         response = dynamic_cast<StatusResponseType*>(xmlObject);
-    if (!response)
-        throw BindingException("XML content for SAML 2.0 HTTP-POST Encoder must be a SAML 2.0 protocol message.");
+        if (!response)
+            throw BindingException("XML content for SAML 2.0 HTTP-POST Encoder must be a SAML 2.0 protocol message.");
+    }
     
     DOMElement* rootElement = NULL;
     if (credResolver) {
