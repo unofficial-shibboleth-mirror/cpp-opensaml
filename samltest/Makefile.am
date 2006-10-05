@@ -20,6 +20,7 @@ samltest_h = \
     signature/SAML2AssertionTest.h \
     security/AbstractPKIXTrustEngineTest.h \
     security/ExplicitKeyTrustEngineTest.h \
+    saml1/binding/impl/SAML1POSTTest.h \
     saml1/core/impl/ActionTest.h \
     saml1/core/impl/AdviceTest.h \
     saml1/core/impl/AssertionIDReferenceTest.h \
@@ -90,6 +91,7 @@ samltest_h = \
     saml2/metadata/FilesystemMetadataProviderTest.h
 
 noinst_HEADERS = \
+	binding.h \
     internal.h \
     signature/SAMLSignatureTestBase.h
 

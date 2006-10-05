@@ -19,11 +19,10 @@
 #include <fstream>
 #include <saml/exceptions.h>
 #include <saml/util/SAMLConstants.h>
-#include <xmltooling/exceptions.h>
-#include <xmltooling/validation/Validator.h>
 #include <xmltooling/XMLObject.h>
 #include <xmltooling/XMLObjectBuilder.h>
 #include <xmltooling/XMLToolingConfig.h>
+#include <xmltooling/validation/Validator.h>
 
 using namespace opensaml;
 using namespace xmltooling;

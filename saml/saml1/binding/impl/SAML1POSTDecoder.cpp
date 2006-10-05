@@ -105,54 +105,84 @@ Response* SAML1POSTDecoder::decode(
         // Check recipient URL.
         auto_ptr_char recipient(response->getRecipient());
         const char* recipient2 = httpRequest.getRequestURL();
-        if (!recipient2 || !*recipient2 || strcmp(recipient.get(),recipient2)) {
+        if (!recipient.get() || !*(recipient.get())) {
+            log.error("response missing Recipient attribute");
+            throw BindingException("SAML response did not contain Recipient attribute identifying intended destination.");
+        }
+        else if (!recipient2 || !*recipient2 || strcmp(recipient.get(),recipient2)) {
             log.error("POST targeted at (%s), but delivered to (%s)", recipient.get(), recipient2 ? recipient2 : "none");
             throw BindingException("SAML message delivered with POST to incorrect server URL.");
         }
         
+        // Check freshness.
         time_t now = time(NULL);
         if (response->getIssueInstant()->getEpoch() < now-(2*XMLToolingConfig::getConfig().clock_skew_secs))
             throw BindingException("Detected expired POST profile response.");
-            
+        
+        // Check replay.
         ReplayCache* replayCache = SAMLConfig::getConfig().getReplayCache();
         if (replayCache) {
             auto_ptr_char id(response->getResponseID());
-            if (!replayCache->check("SAML1POST", id.get(), response->getIssueInstant()->getEpoch() + (2*XMLToolingConfig::getConfig().clock_skew_secs)))
+            if (!replayCache->check("SAML1POST", id.get(), response->getIssueInstant()->getEpoch() + (2*XMLToolingConfig::getConfig().clock_skew_secs))) {
+                log.error("replay detected of response ID (%s)", id.get());
                 throw BindingException("Rejecting replayed response ID ($1).", params(1,id.get()));
+            }
         }
         else
             log.warn("replay cache was not provided, this is a serious security risk!");
         
+        /* For SAML 1, the issuer can only be established from any assertions in the message.
+         * Generally, errors aren't delivered like this, so there should be one.
+         * The Issuer attribute is matched against metadata, and then trust checking can be
+         * applied.
+         */
         issuer = NULL;
         issuerTrusted = false;
         log.debug("attempting to establish issuer and integrity of message...");
         const vector<Assertion*>& assertions=const_cast<const Response*>(response)->getAssertions();
         if (!assertions.empty()) {
+            log.debug("searching metadata for assertion issuer...");
             const EntityDescriptor* provider=
                 metadataProvider ? metadataProvider->getEntityDescriptor(assertions.front()->getIssuer()) : NULL;
             if (provider) {
+                log.debug("matched assertion issuer against metadata, searching for applicable role...");
                 pair<bool,int> minor = response->getMinorVersion();
                 issuer=provider->getRoleDescriptor(
                     *role,
                     (minor.first && minor.second==0) ? SAMLConstants::SAML10_PROTOCOL_ENUM : SAMLConstants::SAML11_PROTOCOL_ENUM
                     );
-                if (issuer && trustEngine && response->getSignature()) {
-                    issuerTrusted = static_cast<const TrustEngine*>(trustEngine)->validate(
-                        *(response->getSignature()), *issuer, metadataProvider->getKeyResolver()
+                if (issuer) {
+                    if (trustEngine && response->getSignature()) {
+                        issuerTrusted = static_cast<const TrustEngine*>(trustEngine)->validate(
+                            *(response->getSignature()), *issuer, metadataProvider->getKeyResolver()
+                            );
+                        if (!issuerTrusted)
+                            log.error("unable to verify signature on message with supplied trust engine");
+                    }
+                    else {
+                        log.warn("unable to verify integrity of the message, leaving untrusted");
+                    }
+                }
+                else {
+                    log.warn(
+                        "unable to find compatible SAML 1.%d role (%s) in metadata",
+                        (minor.first && minor.second==0) ? 0 : 1,
+                        role->toString().c_str()
                         );
-                    if (!issuerTrusted)
-                        log.error("signature on message could not be verified by supplied trust engine");
                 }
                 if (log.isDebugEnabled()) {
                     auto_ptr_char iname(assertions.front()->getIssuer());
                     log.debug("message from (%s), integrity %sverified", iname.get(), issuerTrusted ? "" : "NOT ");
                 }
             }
-            else
-                log.warn("no metadata provider supplied, can't establish identity of issuer");
+            else {
+                auto_ptr_char temp(assertions.front()->getIssuer());
+                log.warn("no metadata found, can't establish identity of issuer (%s)", temp.get());
+            }
         }
-        else
+        else {
             log.warn("no assertions found, can't establish identity of issuer");
+        }
     }
     catch (XMLToolingException& ex) {
         // Check for an Issuer.
@@ -169,10 +199,11 @@ Response* SAML1POSTDecoder::decode(
             const EntityDescriptor* provider=metadataProvider->getEntityDescriptor(assertions.front()->getIssuer(),false);
             if (provider) {
                 pair<bool,int> minor = response->getMinorVersion();
-                const IDPSSODescriptor* role=provider->getIDPSSODescriptor(
+                issuer=provider->getRoleDescriptor(
+                    *role,
                     (minor.first && minor.second==0) ? SAMLConstants::SAML10_PROTOCOL_ENUM : SAMLConstants::SAML11_PROTOCOL_ENUM
                     );
-                if (role) annotateException(&ex,role); // throws it
+                if (issuer) annotateException(&ex,issuer); // throws it
                 annotateException(&ex,provider);  // throws it
             }
         }

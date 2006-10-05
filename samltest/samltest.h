@@ -16,6 +16,7 @@
 
 #include "internal.h"
 #include <saml/SAMLConfig.h>
+#include <saml/binding/ReplayCache.h>
 
 #include <fstream>
 #include <cxxtest/GlobalFixture.h>
@@ -31,6 +32,8 @@ public:
         XMLToolingConfig::getConfig().log_config();
         if (!SAMLConfig::getConfig().init())
             return false;
+        SAMLConfig::getConfig().setReplayCache(new ReplayCache());
+
         if (getenv("SAMLTEST_DATA"))
             data_path=std::string(getenv("SAMLTEST_DATA")) + "/";
         //std::string catpath=data_path + "catalog.xml";

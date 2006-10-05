@@ -253,6 +253,14 @@
 						</File>
 					</Filter>
 				</Filter>
+				<Filter
+					Name="binding"
+					>
+					<File
+						RelativePath=".\saml1\binding\SAML1POSTTest.cpp"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="signature"
@@ -521,6 +529,10 @@
 						>
 					</File>
 				</Filter>
+				<Filter
+					Name="binding"
+					>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="security"
@@ -548,7 +560,7 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+						CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 					/>
 				</FileConfiguration>
@@ -557,10 +569,14 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+						CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\binding.h"
+				>
 			</File>
 			<File
 				RelativePath=".\internal.h"
@@ -906,6 +922,32 @@
 							</FileConfiguration>
 						</File>
 					</Filter>
+				</Filter>
+				<Filter
+					Name="bnding"
+					>
+					<File
+						RelativePath=".\saml1\binding\SAML1POSTTest.h"
+						>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCustomBuildTool"
+								CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+								Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCustomBuildTool"
+								CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+								Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
+							/>
+						</FileConfiguration>
+					</File>
 				</Filter>
 			</Filter>
 			<Filter
@@ -2294,6 +2336,10 @@
 							/>
 						</FileConfiguration>
 					</File>
+				</Filter>
+				<Filter
+					Name="binding"
+					>
 				</Filter>
 			</Filter>
 			<Filter
