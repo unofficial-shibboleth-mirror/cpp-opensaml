@@ -81,12 +81,13 @@
 <pathentry kind="src" path="saml/signature"/>
 <pathentry kind="src" path="saml/util"/>
 <pathentry kind="src" path="samltest/signature"/>
-<pathentry excluding="saml1/core/impl/|signature/|saml2/core/impl/|saml2/metadata/|security/|saml1/binding/" kind="src" path="samltest"/>
+<pathentry excluding="saml1/core/impl/|signature/|saml2/core/impl/|saml2/metadata/|security/|saml1/binding/|saml2/binding/" kind="src" path="samltest"/>
 <pathentry kind="src" path="samltest/saml1/core/impl"/>
 <pathentry kind="src" path="samltest/saml2/core/impl"/>
 <pathentry kind="src" path="samltest/saml2/metadata"/>
 <pathentry kind="src" path="samltest/security"/>
 <pathentry kind="src" path="samltest/saml1/binding"/>
+<pathentry kind="src" path="samltest/saml2/binding"/>
 </item>
 </data>
 </cdtproject>

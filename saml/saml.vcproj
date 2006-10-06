@@ -399,6 +399,10 @@
 							</FileConfiguration>
 						</File>
 						<File
+							RelativePath=".\saml2\binding\impl\SAML2POSTDecoder.cpp"
+							>
+						</File>
+						<File
 							RelativePath=".\saml2\binding\impl\SAML2POSTEncoder.cpp"
 							>
 						</File>
@@ -619,6 +623,10 @@
 					</File>
 					<File
 						RelativePath=".\saml2\binding\SAML2ArtifactType0004.h"
+						>
+					</File>
+					<File
+						RelativePath=".\saml2\binding\SAML2POSTDecoder.h"
 						>
 					</File>
 					<File

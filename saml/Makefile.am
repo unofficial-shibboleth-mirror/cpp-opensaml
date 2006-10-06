@@ -64,6 +64,7 @@ saml1bindinclude_HEADERS = \
 	saml1/binding/SAMLArtifactType0001.h \
 	saml1/binding/SAMLArtifactType0002.h \
 	saml1/binding/SAML1ArtifactEncoder.h \
+	saml1/binding/SAML1POSTDecoder.h \
 	saml1/binding/SAML1POSTEncoder.h
 
 saml2coreinclude_HEADERS = \
@@ -73,8 +74,9 @@ saml2coreinclude_HEADERS = \
 saml2bindinclude_HEADERS = \
 	saml2/binding/SAML2Artifact.h \
 	saml2/binding/SAML2ArtifactType0004.h \
-	saml1/binding/SAML2ArtifactEncoder.h \
-	saml1/binding/SAML2POSTEncoder.h
+	saml2/binding/SAML2ArtifactEncoder.h \
+	saml2/binding/SAML2POSTDecoder.h \
+	saml2/binding/SAML2POSTEncoder.h
 
 saml2mdinclude_HEADERS = \
 	saml2/metadata/AbstractMetadataProvider.h \
@@ -121,6 +123,7 @@ libsaml_la_SOURCES = \
 	saml2/binding/impl/SAML2Artifact.cpp \
 	saml2/binding/impl/SAML2ArtifactType0004.cpp \
 	saml2/binding/impl/SAML2ArtifactEncoder.cpp \
+	saml2/binding/impl/SAML2POSTDecoder.cpp \
 	saml2/binding/impl/SAML2POSTEncoder.cpp \
 	encryption/EncryptedKeyResolver.cpp \
 	security/impl/TrustEngine.cpp \

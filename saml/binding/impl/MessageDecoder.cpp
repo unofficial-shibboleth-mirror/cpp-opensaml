@@ -44,5 +44,5 @@ void SAML_API opensaml::registerMessageDecoders()
     //conf.MessageDecoderManager.registerFactory(SAML1_ARTIFACT_DECODER, saml1p::SAML1ArtifactDecoderFactory);
     conf.MessageDecoderManager.registerFactory(SAML1_POST_DECODER, saml1p::SAML1POSTDecoderFactory);
     //conf.MessageDecoderManager.registerFactory(SAML2_ARTIFACT_DECODER, saml2p::SAML2ArtifactDecoderFactory);
-    //conf.MessageDecoderManager.registerFactory(SAML2_POST_DECODER, saml2p::SAML2POSTDecoderFactory);
+    conf.MessageDecoderManager.registerFactory(SAML2_POST_DECODER, saml2p::SAML2POSTDecoderFactory);
 }

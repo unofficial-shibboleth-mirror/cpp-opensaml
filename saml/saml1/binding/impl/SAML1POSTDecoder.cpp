@@ -98,6 +98,7 @@ Response* SAML1POSTDecoder::decode(
     if (!response)
         throw BindingException("Decoded message was not a SAML 1.x Response.");
 
+    const EntityDescriptor* provider=NULL;
     try {
         if (!m_validate)
             SchemaValidators.validate(xmlObject.get());
@@ -142,8 +143,7 @@ Response* SAML1POSTDecoder::decode(
         const vector<Assertion*>& assertions=const_cast<const Response*>(response)->getAssertions();
         if (!assertions.empty()) {
             log.debug("searching metadata for assertion issuer...");
-            const EntityDescriptor* provider=
-                metadataProvider ? metadataProvider->getEntityDescriptor(assertions.front()->getIssuer()) : NULL;
+            provider=metadataProvider ? metadataProvider->getEntityDescriptor(assertions.front()->getIssuer()) : NULL;
             if (provider) {
                 log.debug("matched assertion issuer against metadata, searching for applicable role...");
                 pair<bool,int> minor = response->getMinorVersion();
@@ -156,8 +156,10 @@ Response* SAML1POSTDecoder::decode(
                         issuerTrusted = static_cast<const TrustEngine*>(trustEngine)->validate(
                             *(response->getSignature()), *issuer, metadataProvider->getKeyResolver()
                             );
-                        if (!issuerTrusted)
+                        if (!issuerTrusted) {
                             log.error("unable to verify signature on message with supplied trust engine");
+                            throw BindingException("Message signature failed verification.");
+                        }
                     }
                     else {
                         log.warn("unable to verify integrity of the message, leaving untrusted");
@@ -186,27 +188,26 @@ Response* SAML1POSTDecoder::decode(
     }
     catch (XMLToolingException& ex) {
         // Check for an Issuer.
-        const vector<Assertion*>& assertions=const_cast<const Response*>(response)->getAssertions();
-        if (!assertions.empty()) {
-            if (!metadataProvider) {
+        if (!provider) {
+            const vector<Assertion*>& assertions=const_cast<const Response*>(response)->getAssertions();
+            if (!assertions.empty() || !metadataProvider ||
+                    !(provider=metadataProvider->getEntityDescriptor(assertions.front()->getIssuer(), false))) {
                 // Just record it.
-                auto_ptr_char issuer(assertions.front()->getIssuer());
-                if (issuer.get())
-                    ex.addProperty("entityID", issuer.get());
-                throw;  
-            }
-            // Try and locate metadata for error handling.
-            const EntityDescriptor* provider=metadataProvider->getEntityDescriptor(assertions.front()->getIssuer(),false);
-            if (provider) {
-                pair<bool,int> minor = response->getMinorVersion();
-                issuer=provider->getRoleDescriptor(
-                    *role,
-                    (minor.first && minor.second==0) ? SAMLConstants::SAML10_PROTOCOL_ENUM : SAMLConstants::SAML11_PROTOCOL_ENUM
-                    );
-                if (issuer) annotateException(&ex,issuer); // throws it
-                annotateException(&ex,provider);  // throws it
+                auto_ptr_char iname(assertions.front()->getIssuer());
+                if (iname.get())
+                    ex.addProperty("entityID", iname.get());
+                throw;
             }
         }
+        if (!issuer) {
+            pair<bool,int> minor = response->getMinorVersion();
+            issuer=provider->getRoleDescriptor(
+                *role,
+                (minor.first && minor.second==0) ? SAMLConstants::SAML10_PROTOCOL_ENUM : SAMLConstants::SAML11_PROTOCOL_ENUM
+                );
+        }
+        if (issuer) annotateException(&ex,issuer); // throws it
+        annotateException(&ex,provider);  // throws it
     }
 
     xmlObject.release();

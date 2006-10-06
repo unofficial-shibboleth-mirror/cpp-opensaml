@@ -16,12 +16,12 @@
 
 #include "binding.h"
 
-#include <saml/saml1/core/Protocols.h>
+#include <saml/saml2/core/Protocols.h>
 
-using namespace opensaml::saml1p;
-using namespace opensaml::saml1;
+using namespace opensaml::saml2p;
+using namespace opensaml::saml2;
 
-class SAML1POSTTest : public CxxTest::TestSuite, public SAMLBindingBaseTestCase {
+class SAML2POSTTest : public CxxTest::TestSuite, public SAMLBindingBaseTestCase {
 public:
     void setUp() {
         m_fields.clear();
@@ -33,10 +33,10 @@ public:
         SAMLBindingBaseTestCase::tearDown();
     }
 
-    void testSAML1POSTTrusted() {
+    void testSAML2POSTTrusted() {
         try {
             // Read message to use from file.
-            string path = data_path + "saml1/binding/SAML1Response.xml";
+            string path = data_path + "saml2/binding/SAML2Response.xml";
             ifstream in(path.c_str());
             DOMDocument* doc=XMLToolingConfig::getConfig().getParser().parse(in);
             XercesJanitor<DOMDocument> janitor(doc);
@@ -49,7 +49,7 @@ public:
             toSend->setIssueInstant(time(NULL));
     
             // Encode message.
-            auto_ptr<MessageEncoder> encoder(SAMLConfig::getConfig().MessageEncoderManager.newPlugin(SAML1_POST_ENCODER, NULL));
+            auto_ptr<MessageEncoder> encoder(SAMLConfig::getConfig().MessageEncoderManager.newPlugin(SAML2_POST_ENCODER, NULL));
             encoder->encode(m_fields,toSend.get(),"https://sp.example.org/","state",m_creds);
             toSend.release();
             
@@ -58,7 +58,7 @@ public:
             const RoleDescriptor* issuer=NULL;
             bool trusted=false;
             QName idprole(SAMLConstants::SAML20MD_NS, IDPSSODescriptor::LOCAL_NAME);
-            auto_ptr<MessageDecoder> decoder(SAMLConfig::getConfig().MessageDecoderManager.newPlugin(SAML1_POST_DECODER, NULL));
+            auto_ptr<MessageDecoder> decoder(SAMLConfig::getConfig().MessageDecoderManager.newPlugin(SAML2_POST_DECODER, NULL));
             Locker locker(m_metadata);
             auto_ptr<Response> response(
                 dynamic_cast<Response*>(
@@ -67,7 +67,7 @@ public:
                 );
             
             // Test the results.
-            TSM_ASSERT_EQUALS("TARGET was not the expected result.", relayState, "state");
+            TSM_ASSERT_EQUALS("RelayState was not the expected result.", relayState, "state");
             TSM_ASSERT("SAML Response not decoded successfully.", response.get());
             TSM_ASSERT("Message was not verified.", issuer && trusted);
             auto_ptr_char entityID(dynamic_cast<const EntityDescriptor*>(issuer->getParent())->getEntityID());
@@ -80,10 +80,10 @@ public:
         }
     }
 
-    void testSAML1POSTUntrusted() {
+    void testSAML2POSTUntrusted() {
         try {
             // Read message to use from file.
-            string path = data_path + "saml1/binding/SAML1Response.xml";
+            string path = data_path + "saml2/binding/SAML2Response.xml";
             ifstream in(path.c_str());
             DOMDocument* doc=XMLToolingConfig::getConfig().getParser().parse(in);
             XercesJanitor<DOMDocument> janitor(doc);
@@ -94,10 +94,10 @@ public:
 
             // Freshen timestamp and clear ID.
             toSend->setIssueInstant(time(NULL));
-            toSend->setResponseID(NULL);
+            toSend->setID(NULL);
     
             // Encode message.
-            auto_ptr<MessageEncoder> encoder(SAMLConfig::getConfig().MessageEncoderManager.newPlugin(SAML1_POST_ENCODER, NULL));
+            auto_ptr<MessageEncoder> encoder(SAMLConfig::getConfig().MessageEncoderManager.newPlugin(SAML2_POST_ENCODER, NULL));
             encoder->encode(m_fields,toSend.get(),"https://sp.example.org/","state");
             toSend.release();
             
@@ -106,7 +106,7 @@ public:
             const RoleDescriptor* issuer=NULL;
             bool trusted=false;
             QName idprole(SAMLConstants::SAML20MD_NS, IDPSSODescriptor::LOCAL_NAME);
-            auto_ptr<MessageDecoder> decoder(SAMLConfig::getConfig().MessageDecoderManager.newPlugin(SAML1_POST_DECODER, NULL));
+            auto_ptr<MessageDecoder> decoder(SAMLConfig::getConfig().MessageDecoderManager.newPlugin(SAML2_POST_DECODER, NULL));
             Locker locker(m_metadata);
             auto_ptr<Response> response(
                 dynamic_cast<Response*>(
@@ -115,7 +115,7 @@ public:
                 );
             
             // Test the results.
-            TSM_ASSERT_EQUALS("TARGET was not the expected result.", relayState, "state");
+            TSM_ASSERT_EQUALS("RelayState was not the expected result.", relayState, "state");
             TSM_ASSERT("SAML Response not decoded successfully.", response.get());
             TSM_ASSERT("Message was verified.", issuer && !trusted);
             auto_ptr_char entityID(dynamic_cast<const EntityDescriptor*>(issuer->getParent())->getEntityID());
