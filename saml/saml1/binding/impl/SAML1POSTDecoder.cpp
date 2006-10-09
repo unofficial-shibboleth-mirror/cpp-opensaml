@@ -17,7 +17,7 @@
 /**
  * SAML1POSTDecoder.cpp
  * 
- * SAML 1.x POST binding/profile message encoder
+ * SAML 1.x POST binding/profile message decoder
  */
 
 #include "internal.h"
@@ -61,7 +61,7 @@ Response* SAML1POSTDecoder::decode(
     const HTTPRequest& httpRequest,
     const MetadataProvider* metadataProvider,
     const QName* role,
-    const X509TrustEngine* trustEngine
+    const opensaml::TrustEngine* trustEngine
     ) const
 {
 #ifdef _DEBUG
@@ -153,7 +153,7 @@ Response* SAML1POSTDecoder::decode(
                     );
                 if (issuer) {
                     if (trustEngine && response->getSignature()) {
-                        issuerTrusted = static_cast<const TrustEngine*>(trustEngine)->validate(
+                        issuerTrusted = trustEngine->validate(
                             *(response->getSignature()), *issuer, metadataProvider->getKeyResolver()
                             );
                         if (!issuerTrusted) {

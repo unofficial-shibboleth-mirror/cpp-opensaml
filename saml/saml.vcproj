@@ -235,6 +235,10 @@
 						Name="impl"
 						>
 						<File
+							RelativePath=".\saml1\binding\impl\SAML1ArtifactDecoder.cpp"
+							>
+						</File>
+						<File
 							RelativePath=".\saml1\binding\impl\SAML1ArtifactEncoder.cpp"
 							>
 						</File>
@@ -529,6 +533,10 @@
 				<Filter
 					Name="binding"
 					>
+					<File
+						RelativePath=".\saml1\binding\SAML1ArtifactDecoder.h"
+						>
+					</File>
 					<File
 						RelativePath=".\saml1\binding\SAML1ArtifactEncoder.h"
 						>

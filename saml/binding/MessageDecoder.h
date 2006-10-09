@@ -127,20 +127,37 @@ namespace opensaml {
             MAKE_NONCOPYABLE(ArtifactResolver);
         protected:
             ArtifactResolver() {}
+            
+            /** Flag controlling schema validation. */
+            bool m_validate;
+
         public:
             virtual ~ArtifactResolver() {}
+
+            /**
+             * Controls schema validation of incoming XML messages.
+             * This is separate from other forms of programmatic validation of objects,
+             * but can detect a much wider range of syntax errors. 
+             * 
+             * @param validate  true iff the resolver should use a validating XML parser
+             */
+            void setValidating(bool validate=true) {
+                m_validate = validate;
+            }
             
             /**
              * Resolves one or more SAML 1.x artifacts into a response containing a set of
              * resolved Assertions. The caller is responsible for the resulting Response. 
              * 
+             * @param authenticated     output flag set to true iff the resolution channel was authenticated
              * @param artifacts         one or more SAML 1.x artifacts
              * @param idpDescriptor     reference to IdP role of artifact issuer
              * @param trustEngine       optional pointer to X509TrustEngine supplied to MessageDecoder
              * @return the corresponding SAML Assertions wrapped in a Response.
              */
             virtual saml1p::Response* resolve(
-                const std::vector<const SAMLArtifact*>& artifacts,
+                bool& authenticated,
+                const std::vector<SAMLArtifact*>& artifacts,
                 const saml2md::IDPSSODescriptor& idpDescriptor,
                 const X509TrustEngine* trustEngine=NULL
                 ) const=0;
@@ -149,12 +166,14 @@ namespace opensaml {
              * Resolves a SAML 2.0 artifact into the corresponding SAML protocol message.
              * The caller is responsible for the resulting XMLObject.
              * 
+             * @param authenticated     output flag set to true iff the resolution channel was authenticated
              * @param artifact          reference to a SAML 2.0 artifact
              * @param ssoDescriptor     reference to SSO role of artifact issuer (may be SP or IdP)
              * @param trustEngine       optional pointer to X509TrustEngine supplied to MessageDecoder
              * @return the corresponding SAML protocol message or NULL
              */
             virtual xmltooling::XMLObject* resolve(
+                bool& authenticated,
                 const saml2p::SAML2Artifact& artifact,
                 const saml2md::SSODescriptorType& ssoDescriptor,
                 const X509TrustEngine* trustEngine=NULL
@@ -170,6 +189,8 @@ namespace opensaml {
          */
         void setArtifactResolver(ArtifactResolver* artifactResolver) {
             m_artifactResolver = artifactResolver;
+            if (m_artifactResolver)
+                m_artifactResolver->setValidating(m_validate);
         }
         
         /**
@@ -181,6 +202,8 @@ namespace opensaml {
          */
         void setValidating(bool validate=true) {
             m_validate = validate;
+            if (m_artifactResolver)
+                m_artifactResolver->setValidating(m_validate);
         }
 
         /**
@@ -198,11 +221,12 @@ namespace opensaml {
          * 
          * @param relayState        RelayState/TARGET value accompanying message
          * @param issuer            role descriptor of issuing party
-         * @param issuerTrusted     will be true iff the message was authenticated (signed or obtained via secure backchannel)
+         * @param issuerTrusted     output flag set to true iff the message was authenticated
+         *                          (signed or obtained via secure backchannel)
          * @param httpRequest       reference to interface for accessing HTTP message to decode
          * @param metadataProvider  optional MetadataProvider instance to authenticate the message
          * @param role              optional, identifies the role (generally IdP or SP) of the peer who issued the message 
-         * @param trustEngine       optional X509TrustEngine to authenticate the message
+         * @param trustEngine       optional TrustEngine to authenticate the message
          * @return  the decoded message, or NULL if the decoder did not recognize the request content
          */
         virtual xmltooling::XMLObject* decode(
@@ -212,14 +236,14 @@ namespace opensaml {
             const HTTPRequest& httpRequest,
             const saml2md::MetadataProvider* metadataProvider=NULL,
             const xmltooling::QName* role=NULL,
-            const X509TrustEngine* trustEngine=NULL
+            const TrustEngine* trustEngine=NULL
             ) const=0;
 
     protected:
         MessageDecoder() : m_artifactResolver(NULL), m_validate(false) {}
 
         /** Pointer to an ArtifactResolver implementation. */
-        const ArtifactResolver* m_artifactResolver;
+        ArtifactResolver* m_artifactResolver;
         
         /** Flag controlling schema validation. */
         bool m_validate;

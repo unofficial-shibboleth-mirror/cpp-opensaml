@@ -41,7 +41,7 @@ namespace opensaml {
                 const HTTPRequest& httpRequest,
                 const saml2md::MetadataProvider* metadataProvider=NULL,
                 const xmltooling::QName* role=NULL,
-                const X509TrustEngine* trustEngine=NULL
+                const TrustEngine* trustEngine=NULL
                 ) const;
         };                
 

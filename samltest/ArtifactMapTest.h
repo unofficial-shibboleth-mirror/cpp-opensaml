@@ -29,23 +29,20 @@ class ArtifactMapTest : public CxxTest::TestSuite
 public:
     string providerIdStr;
     string handle;
-    ArtifactMap* artifactMap;
     void setUp() {
         if (handle.empty()) {
             providerIdStr = "https://idp.org/SAML";
             SAMLConfig::getConfig().generateRandomBytes(handle,SAML2ArtifactType0004::HANDLE_LENGTH);
         }
-        artifactMap = new ArtifactMap();
     }
     void tearDown() {
-        delete artifactMap;
-        artifactMap=NULL;
     }
     void testArtifactMap(void) {
         auto_ptr<Response> response(ResponseBuilder::buildResponse());
 
         SAML2ArtifactType0004 artifact(SAMLConfig::getConfig().hashSHA1(providerIdStr.c_str()),666,handle);
-
+        
+        ArtifactMap* artifactMap = SAMLConfig::getConfig().getArtifactMap();
         artifactMap->storeContent(response.get(), &artifact, providerIdStr.c_str());
         response.release();
 

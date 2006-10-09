@@ -62,7 +62,7 @@ XMLObject* SAML2POSTDecoder::decode(
     const HTTPRequest& httpRequest,
     const MetadataProvider* metadataProvider,
     const QName* role,
-    const X509TrustEngine* trustEngine
+    const opensaml::TrustEngine* trustEngine
     ) const
 {
 #ifdef _DEBUG
@@ -182,9 +182,7 @@ XMLObject* SAML2POSTDecoder::decode(
             issuer=provider->getRoleDescriptor(*role, SAMLConstants::SAML20P_NS);
             if (issuer) {
                 if (trustEngine && signature) {
-                    issuerTrusted = static_cast<const TrustEngine*>(trustEngine)->validate(
-                        *signature, *issuer, metadataProvider->getKeyResolver()
-                        );
+                    issuerTrusted = trustEngine->validate(*signature, *issuer, metadataProvider->getKeyResolver());
                     if (!issuerTrusted) {
                         log.error("unable to verify signature on message with supplied trust engine");
                         throw BindingException("Message signature failed verification.");

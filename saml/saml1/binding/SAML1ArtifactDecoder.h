@@ -15,9 +15,9 @@
  */
 
 /**
- * @file saml/saml1/binding/SAML1POSTDecoder.h
+ * @file saml/saml1/binding/SAML1ArtifactDecoder.h
  * 
- * SAML 1.x POST binding/profile message decoder
+ * SAML 1.x Artifact binding/profile message decoder
  */
 
 #include <saml/binding/MessageDecoder.h>
@@ -28,13 +28,13 @@ namespace opensaml {
     namespace saml1p {
 
         /**
-         * SAML 1.x POST binding/profile message decoder
+         * SAML 1.x Artifact binding/profile message decoder
          */
-        class SAML_API SAML1POSTDecoder : public MessageDecoder
+        class SAML_API SAML1ArtifactDecoder : public MessageDecoder
         {
         public:
-            SAML1POSTDecoder(const DOMElement* e);
-            virtual ~SAML1POSTDecoder();
+            SAML1ArtifactDecoder(const DOMElement* e);
+            virtual ~SAML1ArtifactDecoder();
             
             Response* decode(
                 std::string& relayState,
