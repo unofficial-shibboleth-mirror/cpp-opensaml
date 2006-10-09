@@ -39,7 +39,6 @@ namespace opensaml {
     class SAML_API ArtifactMap;
     class SAML_API MessageEncoder;
     class SAML_API MessageDecoder;
-    class SAML_API ReplayCache;
     class SAML_API SAMLArtifact;
     class SAML_API TrustEngine;
     class SAML_API URLEncoder;
@@ -132,24 +131,6 @@ namespace opensaml {
         }
         
         /**
-         * Sets the global ReplayCache instance.
-         * This method must be externally synchronized with any code that uses the object.
-         * Any previously set object is destroyed.
-         * 
-         * @param replayCache   new ReplayCache instance to store
-         */
-        void setReplayCache(ReplayCache* replayCache);
-
-        /**
-         * Returns the global ReplayCache instance.
-         * 
-         * @return  global ReplayCache or NULL
-         */
-        ReplayCache* getReplayCache() const {
-            return m_replayCache;
-        }
-        
-        /**
          * Generate random information using the underlying security library
          * 
          * @param buf   buffer for the information
@@ -214,16 +195,13 @@ namespace opensaml {
         xmltooling::PluginManager<saml2md::MetadataFilter,const DOMElement*> MetadataFilterManager;
 
     protected:
-        SAMLConfig() : m_artifactMap(NULL), m_urlEncoder(NULL), m_replayCache(NULL) {}
+        SAMLConfig() : m_artifactMap(NULL), m_urlEncoder(NULL) {}
         
         /** Global ArtifactMap instance for use by artifact-related functions. */
         ArtifactMap* m_artifactMap;
 
         /** Global URLEncoder instance for use by URL-related functions. */
         URLEncoder* m_urlEncoder;
-        
-        /** Global ReplayCache instance. */
-        ReplayCache* m_replayCache;
     };
 
 #if defined (_MSC_VER)

@@ -22,7 +22,6 @@
 
 #include "internal.h"
 #include "exceptions.h"
-#include "saml/binding/ReplayCache.h"
 #include "saml1/binding/SAML1POSTDecoder.h"
 #include "saml2/metadata/Metadata.h"
 #include "saml2/metadata/MetadataProvider.h"
@@ -31,6 +30,7 @@
 #include <log4cpp/Category.hh>
 #include <xercesc/util/Base64.hpp>
 #include <xmltooling/util/NDC.h>
+#include <xmltooling/util/ReplayCache.h>
 
 using namespace opensaml::saml2md;
 using namespace opensaml::saml1p;
@@ -121,7 +121,7 @@ Response* SAML1POSTDecoder::decode(
             throw BindingException("Detected expired POST profile response.");
         
         // Check replay.
-        ReplayCache* replayCache = SAMLConfig::getConfig().getReplayCache();
+        ReplayCache* replayCache = XMLToolingConfig::getConfig().getReplayCache();
         if (replayCache) {
             auto_ptr_char id(response->getResponseID());
             if (!replayCache->check("SAML1POST", id.get(), response->getIssueInstant()->getEpoch() + (2*XMLToolingConfig::getConfig().clock_skew_secs))) {

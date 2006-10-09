@@ -15,12 +15,11 @@
  */
 
 #include "internal.h"
-#include <saml/SAMLConfig.h>
-#include <saml/binding/ArtifactMap.h>
-#include <saml/binding/ReplayCache.h>
-
 #include <fstream>
 #include <cxxtest/GlobalFixture.h>
+#include <saml/SAMLConfig.h>
+#include <saml/binding/ArtifactMap.h>
+#include <xmltooling/util/ReplayCache.h>
 
 //#define SAML_LEAKCHECK
 
@@ -33,7 +32,7 @@ public:
         XMLToolingConfig::getConfig().log_config();
         if (!SAMLConfig::getConfig().init())
             return false;
-        SAMLConfig::getConfig().setReplayCache(new ReplayCache());
+        XMLToolingConfig::getConfig().setReplayCache(new ReplayCache());
         SAMLConfig::getConfig().setArtifactMap(new ArtifactMap());
 
         if (getenv("SAMLTEST_DATA"))

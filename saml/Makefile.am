@@ -34,7 +34,6 @@ samlbindinclude_HEADERS = \
 	binding/ArtifactMap.h \
 	binding/MessageDecoder.h \
 	binding/MessageEncoder.h \
-	binding/ReplayCache.h \
 	binding/SAMLArtifact.h \
 	binding/URLEncoder.h
 
@@ -95,7 +94,6 @@ libsaml_la_SOURCES = \
 	binding/impl/ArtifactMap.cpp \
 	binding/impl/MessageDecoder.cpp \
 	binding/impl/MessageEncoder.cpp \
-	binding/impl/ReplayCache.cpp \
 	binding/impl/SAMLArtifact.cpp \
 	binding/impl/URLEncoder.cpp \
 	saml1/core/impl/AssertionsImpl.cpp \

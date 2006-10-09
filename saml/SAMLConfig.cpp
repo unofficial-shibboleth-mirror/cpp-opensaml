@@ -27,7 +27,6 @@
 #include "binding/ArtifactMap.h"
 #include "binding/MessageDecoder.h"
 #include "binding/MessageEncoder.h"
-#include "binding/ReplayCache.h"
 #include "binding/SAMLArtifact.h"
 #include "binding/URLEncoder.h"
 #include "saml1/core/Assertions.h"
@@ -98,12 +97,6 @@ void SAMLConfig::setURLEncoder(URLEncoder* urlEncoder)
     m_urlEncoder = urlEncoder;
 }
 
-void SAMLConfig::setReplayCache(ReplayCache* replayCache)
-{
-    delete m_replayCache;
-    m_replayCache = replayCache;
-}
-
 bool SAMLInternalConfig::init(bool initXMLTooling)
 {
 #ifdef _DEBUG
@@ -157,8 +150,6 @@ void SAMLInternalConfig::term(bool termXMLTooling)
     m_artifactMap = NULL;
     delete m_urlEncoder;
     m_urlEncoder = NULL;
-    delete m_replayCache;
-    m_replayCache = NULL;
 
     if (termXMLTooling) {
         XMLToolingConfig::getConfig().term();

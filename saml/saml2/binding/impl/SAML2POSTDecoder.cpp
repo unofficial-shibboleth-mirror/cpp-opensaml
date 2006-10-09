@@ -22,7 +22,6 @@
 
 #include "internal.h"
 #include "exceptions.h"
-#include "saml/binding/ReplayCache.h"
 #include "saml2/binding/SAML2POSTDecoder.h"
 #include "saml2/core/Protocols.h"
 #include "saml2/metadata/Metadata.h"
@@ -32,6 +31,7 @@
 #include <log4cpp/Category.hh>
 #include <xercesc/util/Base64.hpp>
 #include <xmltooling/util/NDC.h>
+#include <xmltooling/util/ReplayCache.h>
 
 using namespace opensaml::saml2md;
 using namespace opensaml::saml2p;
@@ -149,7 +149,7 @@ XMLObject* SAML2POSTDecoder::decode(
             throw BindingException("Detected expired POST binding message.");
         
         // Check replay.
-        ReplayCache* replayCache = SAMLConfig::getConfig().getReplayCache();
+        ReplayCache* replayCache = XMLToolingConfig::getConfig().getReplayCache();
         if (replayCache) {
             auto_ptr_char id(xmlObject->getXMLID());
             if (!replayCache->check("SAML2POST", id.get(), response->getIssueInstant()->getEpoch() + (2*XMLToolingConfig::getConfig().clock_skew_secs))) {

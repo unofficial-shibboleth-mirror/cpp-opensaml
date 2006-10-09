@@ -464,10 +464,6 @@
 						>
 					</File>
 					<File
-						RelativePath=".\binding\impl\ReplayCache.cpp"
-						>
-					</File>
-					<File
 						RelativePath=".\binding\impl\SAMLArtifact.cpp"
 						>
 					</File>
@@ -688,10 +684,6 @@
 				</File>
 				<File
 					RelativePath=".\binding\MessageEncoder.h"
-					>
-				</File>
-				<File
-					RelativePath=".\binding\ReplayCache.h"
 					>
 				</File>
 				<File

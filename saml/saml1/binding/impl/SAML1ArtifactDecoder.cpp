@@ -23,7 +23,6 @@
 #include "internal.h"
 #include "exceptions.h"
 #include "saml/binding/SAMLArtifact.h"
-#include "saml/binding/ReplayCache.h"
 #include "saml1/binding/SAML1ArtifactDecoder.h"
 #include "saml2/metadata/Metadata.h"
 #include "saml2/metadata/MetadataProvider.h"
@@ -31,6 +30,7 @@
 
 #include <log4cpp/Category.hh>
 #include <xmltooling/util/NDC.h>
+#include <xmltooling/util/ReplayCache.h>
 
 using namespace opensaml::saml2md;
 using namespace opensaml::saml1p;
@@ -88,7 +88,7 @@ Response* SAML1ArtifactDecoder::decode(
             log.debug("processing encoded artifact (%s)", *raw);
             
             // Check replay.
-            ReplayCache* replayCache = SAMLConfig::getConfig().getReplayCache();
+            ReplayCache* replayCache = XMLToolingConfig::getConfig().getReplayCache();
             if (replayCache) {
                 if (!replayCache->check("SAML1Artifact", *raw, time(NULL) + (2*XMLToolingConfig::getConfig().clock_skew_secs))) {
                     log.error("replay detected of artifact (%s)", *raw);
