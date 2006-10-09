@@ -63,6 +63,7 @@ saml1coreinclude_HEADERS = \
 saml1bindinclude_HEADERS = \
 	saml1/binding/SAMLArtifactType0001.h \
 	saml1/binding/SAMLArtifactType0002.h \
+	saml1/binding/SAML1ArtifactDecoder.h \
 	saml1/binding/SAML1ArtifactEncoder.h \
 	saml1/binding/SAML1POSTDecoder.h \
 	saml1/binding/SAML1POSTEncoder.h
@@ -103,6 +104,7 @@ libsaml_la_SOURCES = \
 	saml1/core/impl/ProtocolsSchemaValidators.cpp \
 	saml1/binding/impl/SAMLArtifactType0001.cpp \
 	saml1/binding/impl/SAMLArtifactType0002.cpp \
+	saml1/binding/impl/SAML1ArtifactDecoder.cpp \
 	saml1/binding/impl/SAML1ArtifactEncoder.cpp \
 	saml1/binding/impl/SAML1POSTDecoder.cpp \
 	saml1/binding/impl/SAML1POSTEncoder.cpp \
