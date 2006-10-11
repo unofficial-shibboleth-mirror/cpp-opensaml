@@ -20,8 +20,6 @@ samltest_h = \
     signature/SAML2AssertionTest.h \
     security/AbstractPKIXTrustEngineTest.h \
     security/ExplicitKeyTrustEngineTest.h \
-    saml1/binding/impl/SAML1ArtifactTest.h \
-    saml1/binding/impl/SAML1POSTTest.h \
     saml1/core/impl/ActionTest.h \
     saml1/core/impl/AdviceTest.h \
     saml1/core/impl/AssertionIDReferenceTest.h \
@@ -32,7 +30,8 @@ samltest_h = \
     saml1/core/impl/AudienceRestrictionConditionTest.h \
     saml1/core/impl/AudienceTest.h \
     saml1/core/impl/AuthenticationStatementTest.h \
-    saml2/binding/impl/SAML2POSTTest.h \
+    saml1/binding/SAML1ArtifactTest.h \
+    saml1/binding/SAML1POSTTest.h \
     saml2/core/impl/Action20Test.h \
     saml2/core/impl/Advice20Test.h \
     saml2/core/impl/Artifact20Test.h \
@@ -90,6 +89,8 @@ samltest_h = \
     saml2/core/impl/SubjectConfirmationData20Test.h\
     saml2/core/impl/SubjectLocality20Test.h\
     saml2/core/impl/Terminate20Test.h \
+    saml2/binding/SAML2ArtifactTest.h \
+    saml2/binding/SAML2POSTTest.h \
     saml2/metadata/FilesystemMetadataProviderTest.h
 
 noinst_HEADERS = \

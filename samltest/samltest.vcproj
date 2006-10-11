@@ -538,6 +538,10 @@
 					Name="binding"
 					>
 					<File
+						RelativePath=".\saml2\binding\SAML2ArtifactTest.cpp"
+						>
+					</File>
+					<File
 						RelativePath=".\saml2\binding\SAML2POSTTest.cpp"
 						>
 					</File>
@@ -2371,6 +2375,28 @@
 				<Filter
 					Name="binding"
 					>
+					<File
+						RelativePath=".\saml2\binding\SAML2ArtifactTest.h"
+						>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCustomBuildTool"
+								CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
+								Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCustomBuildTool"
+								CommandLine="\perl\bin\perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
+								Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
+							/>
+						</FileConfiguration>
+					</File>
 					<File
 						RelativePath=".\saml2\binding\SAML2POSTTest.h"
 						>

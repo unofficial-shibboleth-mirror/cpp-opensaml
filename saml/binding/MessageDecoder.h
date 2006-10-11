@@ -36,6 +36,7 @@ namespace opensaml {
     };
     namespace saml2p {
         class SAML_API SAML2Artifact;
+        class SAML_API ArtifactResponse;
     };
     namespace saml2md {
         class SAML_API MetadataProvider;
@@ -164,7 +165,7 @@ namespace opensaml {
 
             /**
              * Resolves a SAML 2.0 artifact into the corresponding SAML protocol message.
-             * The caller is responsible for the resulting XMLObject.
+             * The caller is responsible for the resulting ArtifactResponse message.
              * 
              * @param authenticated     output flag set to true iff the resolution channel was authenticated
              * @param artifact          reference to a SAML 2.0 artifact
@@ -172,7 +173,7 @@ namespace opensaml {
              * @param trustEngine       optional pointer to X509TrustEngine supplied to MessageDecoder
              * @return the corresponding SAML protocol message or NULL
              */
-            virtual xmltooling::XMLObject* resolve(
+            virtual saml2p::ArtifactResponse* resolve(
                 bool& authenticated,
                 const saml2p::SAML2Artifact& artifact,
                 const saml2md::SSODescriptorType& ssoDescriptor,

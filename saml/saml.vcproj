@@ -377,6 +377,10 @@
 							</FileConfiguration>
 						</File>
 						<File
+							RelativePath=".\saml2\binding\impl\SAML2ArtifactDecoder.cpp"
+							>
+						</File>
+						<File
 							RelativePath=".\saml2\binding\impl\SAML2ArtifactEncoder.cpp"
 							>
 						</File>
@@ -619,6 +623,10 @@
 					>
 					<File
 						RelativePath=".\saml2\binding\SAML2Artifact.h"
+						>
+					</File>
+					<File
+						RelativePath=".\saml2\binding\SAML2ArtifactDecoder.h"
 						>
 					</File>
 					<File

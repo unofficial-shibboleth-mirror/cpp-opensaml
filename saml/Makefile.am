@@ -74,6 +74,7 @@ saml2coreinclude_HEADERS = \
 saml2bindinclude_HEADERS = \
 	saml2/binding/SAML2Artifact.h \
 	saml2/binding/SAML2ArtifactType0004.h \
+	saml2/binding/SAML2ArtifactDecoder.h \
 	saml2/binding/SAML2ArtifactEncoder.h \
 	saml2/binding/SAML2POSTDecoder.h \
 	saml2/binding/SAML2POSTEncoder.h
@@ -122,6 +123,7 @@ libsaml_la_SOURCES = \
 	saml2/metadata/impl/WhitelistMetadataFilter.cpp \
 	saml2/binding/impl/SAML2Artifact.cpp \
 	saml2/binding/impl/SAML2ArtifactType0004.cpp \
+	saml2/binding/impl/SAML2ArtifactDecoder.cpp \
 	saml2/binding/impl/SAML2ArtifactEncoder.cpp \
 	saml2/binding/impl/SAML2POSTDecoder.cpp \
 	saml2/binding/impl/SAML2POSTEncoder.cpp \

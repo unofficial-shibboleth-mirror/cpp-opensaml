@@ -17,13 +17,13 @@
 #include "binding.h"
 
 #include <saml/binding/ArtifactMap.h>
-#include <saml/saml1/core/Protocols.h>
-#include <saml/saml1/binding/SAMLArtifactType0001.h>
+#include <saml/saml2/core/Protocols.h>
+#include <saml/saml2/binding/SAML2ArtifactType0004.h>
 
-using namespace opensaml::saml1p;
-using namespace opensaml::saml1;
+using namespace opensaml::saml2p;
+using namespace opensaml::saml2;
 
-class SAML1ArtifactTest : public CxxTest::TestSuite,
+class SAML2ArtifactTest : public CxxTest::TestSuite,
     public SAMLBindingBaseTestCase, public MessageEncoder::ArtifactGenerator, public MessageDecoder::ArtifactResolver {
 public:
     void setUp() {
@@ -36,20 +36,23 @@ public:
         SAMLBindingBaseTestCase::tearDown();
     }
 
-    void testSAML1Artifact() {
+    void testSAML2Artifact() {
         try {
             // Read message to use from file.
-            string path = data_path + "saml1/binding/SAML1Assertion.xml";
+            string path = data_path + "saml2/binding/SAML2Response.xml";
             ifstream in(path.c_str());
             DOMDocument* doc=XMLToolingConfig::getConfig().getParser().parse(in);
             XercesJanitor<DOMDocument> janitor(doc);
-            auto_ptr<Assertion> toSend(
-                dynamic_cast<Assertion*>(XMLObjectBuilder::buildOneFromElement(doc->getDocumentElement(),true))
+            auto_ptr<Response> toSend(
+                dynamic_cast<Response*>(XMLObjectBuilder::buildOneFromElement(doc->getDocumentElement(),true))
                 );
             janitor.release();
 
+            // Freshen timestamp.
+            toSend->setIssueInstant(time(NULL));
+
             // Encode message.
-            auto_ptr<MessageEncoder> encoder(SAMLConfig::getConfig().MessageEncoderManager.newPlugin(SAML1_ARTIFACT_ENCODER, NULL));
+            auto_ptr<MessageEncoder> encoder(SAMLConfig::getConfig().MessageEncoderManager.newPlugin(SAML2_ARTIFACT_ENCODER, NULL));
             encoder->setArtifactGenerator(this);
             encoder->encode(m_fields,toSend.get(),"https://sp.example.org/","state",m_creds);
             toSend.release();
@@ -59,7 +62,7 @@ public:
             const RoleDescriptor* issuer=NULL;
             bool trusted=false;
             QName idprole(SAMLConstants::SAML20MD_NS, IDPSSODescriptor::LOCAL_NAME);
-            auto_ptr<MessageDecoder> decoder(SAMLConfig::getConfig().MessageDecoderManager.newPlugin(SAML1_ARTIFACT_DECODER, NULL));
+            auto_ptr<MessageDecoder> decoder(SAMLConfig::getConfig().MessageDecoderManager.newPlugin(SAML2_ARTIFACT_DECODER, NULL));
             decoder->setArtifactResolver(this);
             Locker locker(m_metadata);
             auto_ptr<Response> response(
@@ -69,7 +72,7 @@ public:
                 );
             
             // Test the results.
-            TSM_ASSERT_EQUALS("TARGET was not the expected result.", relayState, "state");
+            TSM_ASSERT_EQUALS("RelayState was not the expected result.", relayState, "state");
             TSM_ASSERT("SAML Response not decoded successfully.", response.get());
             TSM_ASSERT("Message was not verified.", issuer && trusted);
             auto_ptr_char entityID(dynamic_cast<const EntityDescriptor*>(issuer->getParent())->getEntityID());
@@ -100,43 +103,42 @@ public:
     }
     
     SAMLArtifact* generateSAML1Artifact(const char* relyingParty) const {
-        return new SAMLArtifactType0001(SAMLConfig::getConfig().hashSHA1("https://idp.example.org/"));
-    }
-    
-    saml2p::SAML2Artifact* generateSAML2Artifact(const char* relyingParty) const {
         throw BindingException("Not implemented.");
     }
     
-    Response* resolve(
+    saml2p::SAML2Artifact* generateSAML2Artifact(const char* relyingParty) const {
+        return new SAML2ArtifactType0004(SAMLConfig::getConfig().hashSHA1("https://idp.example.org/"),1);
+    }
+    
+    saml1p::Response* resolve(
         bool& authenticated,
         const vector<SAMLArtifact*>& artifacts,
         const IDPSSODescriptor& idpDescriptor,
         const X509TrustEngine* trustEngine=NULL
         ) const {
-        TSM_ASSERT_EQUALS("Too many artifacts.", artifacts.size(), 1);
+        throw BindingException("Not implemented.");
+    }
+
+    ArtifactResponse* resolve(
+        bool& authenticated,
+        const SAML2Artifact& artifact,
+        const SSODescriptorType& ssoDescriptor,
+        const X509TrustEngine* trustEngine=NULL
+        ) const {
         XMLObject* xmlObject =
-            SAMLConfig::getConfig().getArtifactMap()->retrieveContent(artifacts.front(), "https://sp.example.org/");
-        Assertion* assertion = dynamic_cast<Assertion*>(xmlObject);
-        TSM_ASSERT("Not an assertion.", assertion!=NULL);
-        auto_ptr<Response> response(ResponseBuilder::buildResponse());
-        response->getAssertions().push_back(assertion);
+            SAMLConfig::getConfig().getArtifactMap()->retrieveContent(&artifact, "https://sp.example.org/");
+        Response* payload = dynamic_cast<Response*>(xmlObject);
+        TSM_ASSERT("Not a response.", payload!=NULL);
+        auto_ptr<ArtifactResponse> response(ArtifactResponseBuilder::buildArtifactResponse());
+        response->setPayload(payload);
         Status* status = StatusBuilder::buildStatus();
         response->setStatus(status);
         StatusCode* sc = StatusCodeBuilder::buildStatusCode();
         status->setStatusCode(sc);
-        sc->setValue(&StatusCode::SUCCESS);
+        sc->setValue(StatusCode::SUCCESS);
         response->marshall();
         SchemaValidators.validate(response.get());
         authenticated = true;
         return response.release();
-    }
-
-    saml2p::ArtifactResponse* resolve(
-        bool& authenticated,
-        const saml2p::SAML2Artifact& artifact,
-        const SSODescriptorType& ssoDescriptor,
-        const X509TrustEngine* trustEngine=NULL
-        ) const {
-        throw BindingException("Not implemented.");
     }
 };
