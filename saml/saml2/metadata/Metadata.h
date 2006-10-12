@@ -24,17 +24,7 @@
 #define __saml2_metadata_h__
 
 #include <saml/saml2/core/Assertions.h>
-#include <saml/util/SAMLConstants.h>
-
 #include <ctime>
-#include <xmltooling/AttributeExtensibleXMLObject.h>
-#include <xmltooling/ElementProxy.h>
-#include <xmltooling/SimpleElement.h>
-#include <xmltooling/XMLObjectBuilder.h>
-#include <xmltooling/encryption/Encryption.h>
-#include <xmltooling/signature/KeyInfo.h>
-#include <xmltooling/signature/Signature.h>
-#include <xmltooling/util/DateTime.h>
 
 #define DECL_SAML2MDOBJECTBUILDER(cname) \
     DECL_XMLOBJECTBUILDER(SAML_API,cname,opensaml::SAMLConstants::SAML20MD_NS,opensaml::SAMLConstants::SAML20MD_PREFIX)
@@ -87,28 +77,28 @@ namespace opensaml {
         DECL_XMLOBJECT_SIMPLE(SAML_API,ActionNamespace,Namespace,SAML 2.0 Metadata Extension ActionNamespace element);
         DECL_XMLOBJECT_SIMPLE(SAML_API,SourceID,ID,SAML 1.x Metadata Profile SourceID element);
 
-        BEGIN_XMLOBJECT(SAML_API,localizedNameType,xmltooling::SimpleElement,SAML 2.0 localizedNameType type);
+        BEGIN_XMLOBJECT(SAML_API,localizedNameType,xmltooling::XMLObject,SAML 2.0 localizedNameType type);
             DECL_STRING_ATTRIB(Lang,LANG);
             /** localizedNameType local name */
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
 
-        BEGIN_XMLOBJECT(SAML_API,localizedURIType,xmltooling::SimpleElement,SAML 2.0 localizedURIType type);
+        BEGIN_XMLOBJECT(SAML_API,localizedURIType,xmltooling::XMLObject,SAML 2.0 localizedURIType type);
             DECL_STRING_ATTRIB(Lang,LANG);
             /** localizedURIType local name */
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
 
         BEGIN_XMLOBJECT(SAML_API,OrganizationName,localizedNameType,SAML 2.0 OrganizationName element);
-            DECL_XMLOBJECT_CONTENT(Name);
+            DECL_SIMPLE_CONTENT(Name);
         END_XMLOBJECT;
 
         BEGIN_XMLOBJECT(SAML_API,OrganizationDisplayName,localizedNameType,SAML 2.0 OrganizationDisplayName element);
-            DECL_XMLOBJECT_CONTENT(Name);
+            DECL_SIMPLE_CONTENT(Name);
         END_XMLOBJECT;
 
         BEGIN_XMLOBJECT(SAML_API,OrganizationURL,localizedURIType,SAML 2.0 OrganizationURL element);
-            DECL_XMLOBJECT_CONTENT(URL);
+            DECL_SIMPLE_CONTENT(URL);
         END_XMLOBJECT;
         
         BEGIN_XMLOBJECT(SAML_API,Extensions,xmltooling::ElementProxy,SAML 2.0 Extensions element);
@@ -147,9 +137,9 @@ namespace opensaml {
             static const XMLCh CONTACT_OTHER[];
         END_XMLOBJECT;
 
-        BEGIN_XMLOBJECT(SAML_API,AdditionalMetadataLocation,xmltooling::SimpleElement,SAML 2.0 AdditionalMetadataLocation element);
+        BEGIN_XMLOBJECT(SAML_API,AdditionalMetadataLocation,xmltooling::XMLObject,SAML 2.0 AdditionalMetadataLocation element);
             DECL_STRING_ATTRIB(Namespace,NAMESPACE);
-            DECL_XMLOBJECT_CONTENT(Location);
+            DECL_SIMPLE_CONTENT(Location);
             /** AdditionalMetadataLocationType local name */
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
@@ -234,11 +224,11 @@ namespace opensaml {
         END_XMLOBJECT;
 
         BEGIN_XMLOBJECT(SAML_API,ServiceName,localizedNameType,SAML 2.0 ServiceName element);
-            DECL_XMLOBJECT_CONTENT(Name);
+            DECL_SIMPLE_CONTENT(Name);
         END_XMLOBJECT;
 
         BEGIN_XMLOBJECT(SAML_API,ServiceDescription,localizedNameType,SAML 2.0 ServiceDescription element);
-            DECL_XMLOBJECT_CONTENT(Description);
+            DECL_SIMPLE_CONTENT(Description);
         END_XMLOBJECT;
 
         BEGIN_XMLOBJECT(SAML_API,RequestedAttribute,saml2::Attribute,SAML 2.0 RequestedAttribute element);

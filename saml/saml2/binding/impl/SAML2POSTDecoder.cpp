@@ -32,6 +32,7 @@
 #include <xercesc/util/Base64.hpp>
 #include <xmltooling/util/NDC.h>
 #include <xmltooling/util/ReplayCache.h>
+#include <xmltooling/validation/ValidatorSuite.h>
 
 using namespace opensaml::saml2md;
 using namespace opensaml::saml2p;

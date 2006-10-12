@@ -24,6 +24,8 @@
 #include "exceptions.h"
 #include "saml2/metadata/Metadata.h"
 
+#include <xmltooling/validation/ValidatorSuite.h>
+
 using namespace opensaml::saml2md;
 using namespace opensaml::saml2;
 using namespace opensaml;

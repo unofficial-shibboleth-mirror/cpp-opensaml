@@ -19,6 +19,7 @@
 #include <saml/binding/ArtifactMap.h>
 #include <saml/saml2/core/Protocols.h>
 #include <saml/saml2/binding/SAML2ArtifactType0004.h>
+#include <xmltooling/validation/ValidatorSuite.h>
 
 using namespace opensaml::saml2p;
 using namespace opensaml::saml2;

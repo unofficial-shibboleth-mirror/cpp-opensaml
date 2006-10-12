@@ -24,6 +24,8 @@
 #include "exceptions.h"
 #include "saml2/core/Protocols.h"
 
+#include <xmltooling/validation/ValidatorSuite.h>
+
 using namespace opensaml::saml2p;
 using namespace opensaml::saml2;
 using namespace opensaml;

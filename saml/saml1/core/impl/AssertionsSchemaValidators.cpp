@@ -24,6 +24,8 @@
 #include "exceptions.h"
 #include "saml1/core/Assertions.h"
 
+#include <xmltooling/validation/ValidatorSuite.h>
+
 using namespace opensaml::saml1;
 using namespace opensaml;
 using namespace xmltooling;

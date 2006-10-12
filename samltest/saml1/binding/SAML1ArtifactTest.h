@@ -17,8 +17,10 @@
 #include "binding.h"
 
 #include <saml/binding/ArtifactMap.h>
+#include <saml/saml1/core/Assertions.h>
 #include <saml/saml1/core/Protocols.h>
 #include <saml/saml1/binding/SAMLArtifactType0001.h>
+#include <xmltooling/validation/ValidatorSuite.h>
 
 using namespace opensaml::saml1p;
 using namespace opensaml::saml1;

@@ -28,13 +28,11 @@
 
 #include <xmltooling/AttributeExtensibleXMLObject.h>
 #include <xmltooling/ElementProxy.h>
-#include <xmltooling/SimpleElement.h>
 #include <xmltooling/XMLObjectBuilder.h>
 #include <xmltooling/encryption/Encryption.h>
 #include <xmltooling/signature/KeyResolver.h>
 #include <xmltooling/signature/Signature.h>
 #include <xmltooling/util/DateTime.h>
-#include <xmltooling/validation/ValidatorSuite.h>
 
 #define DECL_SAML2OBJECTBUILDER(cname) \
     DECL_XMLOBJECTBUILDER(SAML_API,cname,opensaml::SAMLConstants::SAML20_NS,opensaml::SAMLConstants::SAML20_PREFIX)
@@ -86,12 +84,12 @@ namespace opensaml {
             DECL_STRING_ATTRIB(SPNameQualifier,SPNAMEQUALIFIER);
         END_XMLOBJECT;
 
-        BEGIN_XMLOBJECT(SAML_API,NameIDType,xmltooling::SimpleElement,SAML 2.0 NameIDType type);
+        BEGIN_XMLOBJECT(SAML_API,NameIDType,xmltooling::XMLObject,SAML 2.0 NameIDType type);
             DECL_STRING_ATTRIB(NameQualifier,NAMEQUALIFIER);
             DECL_STRING_ATTRIB(SPNameQualifier,SPNAMEQUALIFIER);
             DECL_STRING_ATTRIB(Format,FORMAT);
             DECL_STRING_ATTRIB(SPProvidedID,SPPROVIDEDID);
-            DECL_XMLOBJECT_CONTENT(Name);
+            DECL_SIMPLE_CONTENT(Name);
             /** NameIDType local name */
             static const XMLCh TYPE_NAME[];
             /** Unspecified name format ID */
@@ -156,7 +154,7 @@ namespace opensaml {
             DECL_STRING_ATTRIB(Recipient,RECIPIENT);
             DECL_STRING_ATTRIB(InResponseTo,INRESPONSETO);
             DECL_STRING_ATTRIB(Address,ADDRESS);
-            DECL_XMLOBJECT_CONTENT(Data);
+            DECL_SIMPLE_CONTENT(Data);
         END_XMLOBJECT;
 
         BEGIN_XMLOBJECT(SAML_API,KeyInfoConfirmationDataType,xmltooling::AttributeExtensibleXMLObject,SAML 2.0 KeyInfoConfirmationDataType type);
@@ -228,9 +226,9 @@ namespace opensaml {
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
 
-        BEGIN_XMLOBJECT(SAML_API,Action,xmltooling::SimpleElement,SAML 2.0 Action element);
+        BEGIN_XMLOBJECT(SAML_API,Action,xmltooling::XMLObject,SAML 2.0 Action element);
             DECL_STRING_ATTRIB(Namespace,NAMESPACE);
-            DECL_XMLOBJECT_CONTENT(Action);
+            DECL_SIMPLE_CONTENT(Action);
             /** ActionType local name */
             static const XMLCh TYPE_NAME[];
             /** Read/Write/Execute/Delete/Control Action Namespace */

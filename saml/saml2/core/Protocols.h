@@ -25,7 +25,6 @@
 
 #include <saml/saml2/core/Assertions.h>
 
-
 #define DECL_SAML2POBJECTBUILDER(cname) \
     DECL_XMLOBJECTBUILDER(SAML_API,cname,opensaml::SAMLConstants::SAML20P_NS,opensaml::SAMLConstants::SAML20P_PREFIX)
 

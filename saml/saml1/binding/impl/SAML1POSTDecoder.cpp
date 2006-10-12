@@ -22,6 +22,7 @@
 
 #include "internal.h"
 #include "exceptions.h"
+#include "saml1/core/Assertions.h"
 #include "saml1/binding/SAML1POSTDecoder.h"
 #include "saml2/metadata/Metadata.h"
 #include "saml2/metadata/MetadataProvider.h"
@@ -31,6 +32,7 @@
 #include <xercesc/util/Base64.hpp>
 #include <xmltooling/util/NDC.h>
 #include <xmltooling/util/ReplayCache.h>
+#include <xmltooling/validation/ValidatorSuite.h>
 
 using namespace opensaml::saml2md;
 using namespace opensaml::saml1p;

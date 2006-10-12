@@ -23,12 +23,29 @@
 #ifndef __saml1_protocols_h__
 #define __saml1_protocols_h__
 
-#include <saml/saml1/core/Assertions.h>
+#include <saml/signature/SignableObject.h>
+#include <saml/util/SAMLConstants.h>
+
+#include <xmltooling/AttributeExtensibleXMLObject.h>
+#include <xmltooling/ElementProxy.h>
+#include <xmltooling/XMLObjectBuilder.h>
+#include <xmltooling/signature/KeyInfo.h>
+#include <xmltooling/signature/Signature.h>
+#include <xmltooling/util/DateTime.h>
 
 #define DECL_SAML1POBJECTBUILDER(cname) \
     DECL_XMLOBJECTBUILDER(SAML_API,cname,opensaml::SAMLConstants::SAML1P_NS,opensaml::SAMLConstants::SAML1P_PREFIX)
 
 namespace opensaml {
+
+    namespace saml1 {
+        class SAML_API Action;
+        class SAML_API Assertion;
+        class SAML_API AssertionIDReference;
+        class SAML_API AttributeDesignator;
+        class SAML_API Evidence;
+        class SAML_API Subject;
+    };
 
     /**
      * @namespace opensaml::saml1p

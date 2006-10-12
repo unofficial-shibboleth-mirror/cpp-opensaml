@@ -25,7 +25,6 @@
 #include "saml/encryption/EncryptedKeyResolver.h"
 #include "saml2/core/Protocols.h"
 
-#include <xmltooling/AbstractChildlessElement.h>
 #include <xmltooling/AbstractComplexElement.h>
 #include <xmltooling/AbstractElementProxy.h>
 #include <xmltooling/AbstractSimpleElement.h>
@@ -122,7 +121,8 @@ namespace opensaml {
                         init();
                 }
 
-                StatusCodeImpl(const StatusCodeImpl& src) : AbstractXMLObject(src), AbstractDOMCachingXMLObject(src) {
+                StatusCodeImpl(const StatusCodeImpl& src)
+                        : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
                     init();
                     setValue(src.getValue());
                     if (src.getStatusCode())
@@ -162,14 +162,15 @@ namespace opensaml {
                 StatusDetailImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
                     : AbstractXMLObject(nsURI, localName, prefix, schemaType) { }
 
-                StatusDetailImpl(const StatusDetailImpl& src) : AbstractXMLObject(src), AbstractDOMCachingXMLObject(src) {
-                        VectorOf(XMLObject) v=getDetails();
-                        for (vector<XMLObject*>::const_iterator i=src.m_Details.begin(); i!=src.m_Details.end(); i++) {
-                            if (*i) {
-                                v.push_back((*i)->clone());
-                            }
+                StatusDetailImpl(const StatusDetailImpl& src)
+                        : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
+                    VectorOf(XMLObject) v=getDetails();
+                    for (vector<XMLObject*>::const_iterator i=src.m_Details.begin(); i!=src.m_Details.end(); i++) {
+                        if (*i) {
+                            v.push_back((*i)->clone());
                         }
                     }
+                }
 
                 IMPL_XMLOBJECT_CLONE(StatusDetail);
                 IMPL_XMLOBJECT_CHILDREN(Detail,m_children.end());
@@ -205,12 +206,12 @@ namespace opensaml {
             virtual ~StatusImpl() { }
     
             StatusImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
-                : AbstractXMLObject(nsURI, localName, prefix, schemaType)
-            {
-                    init();
+                    : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
+                init();
             }
                 
-            StatusImpl(const StatusImpl& src) : AbstractXMLObject(src), AbstractDOMCachingXMLObject(src) {
+            StatusImpl(const StatusImpl& src)
+                    : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
                 init();
                 if (src.getStatusCode())
                     setStatusCode(src.getStatusCode()->cloneStatusCode());
@@ -279,7 +280,8 @@ namespace opensaml {
                 init();
             }
                 
-            RequestAbstractTypeImpl(const RequestAbstractTypeImpl& src) : AbstractXMLObject(src), AbstractDOMCachingXMLObject(src) {
+            RequestAbstractTypeImpl(const RequestAbstractTypeImpl& src)
+                    : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
                 init();
                 setID(src.getID());
                 setVersion(src.getVersion());
@@ -440,12 +442,12 @@ namespace opensaml {
             }
     
             RequestedAuthnContextImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
-                : AbstractXMLObject(nsURI, localName, prefix, schemaType)
-            {
+                    : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
                 init();
             }
                 
-            RequestedAuthnContextImpl(const RequestedAuthnContextImpl& src) : AbstractXMLObject(src), AbstractDOMCachingXMLObject(src) {
+            RequestedAuthnContextImpl(const RequestedAuthnContextImpl& src)
+                    : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
                 init();
                 setComparison(src.getComparison());
                 for (list<XMLObject*>::const_iterator i=src.m_children.begin(); i!=src.m_children.end(); i++) {
@@ -597,8 +599,7 @@ namespace opensaml {
             }
     
             AuthzDecisionQueryImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
-                : AbstractXMLObject(nsURI, localName, prefix, schemaType)
-            {
+                    : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
                 init();
             }
                 
@@ -648,7 +649,7 @@ namespace opensaml {
         };
 
         class SAML_DLLLOCAL NameIDPolicyImpl : public virtual NameIDPolicy,
-            public AbstractChildlessElement,
+            public AbstractSimpleElement,
             public AbstractDOMCachingXMLObject,
             public AbstractXMLObjectMarshaller,
             public AbstractXMLObjectUnmarshaller
@@ -671,7 +672,8 @@ namespace opensaml {
                         init();
                 }
 
-                NameIDPolicyImpl(const NameIDPolicyImpl& src) : AbstractXMLObject(src), AbstractDOMCachingXMLObject(src) {
+                NameIDPolicyImpl(const NameIDPolicyImpl& src)
+                        : AbstractXMLObject(src), AbstractSimpleElement(src), AbstractDOMCachingXMLObject(src) {
                     init();
                     setFormat(src.getFormat());
                     setSPNameQualifier(src.getSPNameQualifier());
@@ -699,7 +701,7 @@ namespace opensaml {
         };
 
         class SAML_DLLLOCAL IDPEntryImpl : public virtual IDPEntry,
-            public AbstractChildlessElement,
+            public AbstractSimpleElement,
             public AbstractDOMCachingXMLObject,
             public AbstractXMLObjectMarshaller,
             public AbstractXMLObjectUnmarshaller
@@ -723,7 +725,8 @@ namespace opensaml {
                         init();
                 }
 
-                IDPEntryImpl(const IDPEntryImpl& src) : AbstractXMLObject(src), AbstractDOMCachingXMLObject(src) {
+                IDPEntryImpl(const IDPEntryImpl& src)
+                        : AbstractXMLObject(src), AbstractSimpleElement(src), AbstractDOMCachingXMLObject(src) {
                     init();
                     setProviderID(src.getProviderID());
                     setName(src.getName());
@@ -1034,7 +1037,8 @@ namespace opensaml {
                 init();
             }
                 
-            StatusResponseTypeImpl(const StatusResponseTypeImpl& src) : AbstractXMLObject(src), AbstractDOMCachingXMLObject(src) {
+            StatusResponseTypeImpl(const StatusResponseTypeImpl& src)
+                    : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
                 init();
                 setID(src.getID());
                 setInResponseTo(src.getInResponseTo());
@@ -1273,7 +1277,8 @@ namespace opensaml {
                 init();
             }
                 
-            NewEncryptedIDImpl(const NewEncryptedIDImpl& src) : AbstractXMLObject(src), AbstractDOMCachingXMLObject(src) {
+            NewEncryptedIDImpl(const NewEncryptedIDImpl& src)
+                    : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
                 init();
                 if (src.getEncryptedData())
                     setEncryptedData(src.getEncryptedData()->cloneEncryptedData());
@@ -1320,7 +1325,7 @@ namespace opensaml {
         };
 
         class SAML_DLLLOCAL TerminateImpl : public virtual Terminate,
-            public AbstractChildlessElement,
+            public AbstractSimpleElement,
             public AbstractDOMCachingXMLObject,
             public AbstractXMLObjectMarshaller,
             public AbstractXMLObjectUnmarshaller
@@ -1331,7 +1336,8 @@ namespace opensaml {
                 TerminateImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
                     : AbstractXMLObject(nsURI, localName, prefix, schemaType) { }
 
-                TerminateImpl(const TerminateImpl& src) : AbstractXMLObject(src), AbstractDOMCachingXMLObject(src) {
+                TerminateImpl(const TerminateImpl& src)
+                    : AbstractXMLObject(src), AbstractSimpleElement(src), AbstractDOMCachingXMLObject(src) {
                 }
 
                 IMPL_XMLOBJECT_CLONE(Terminate);

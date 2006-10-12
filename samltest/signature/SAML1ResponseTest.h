@@ -16,6 +16,7 @@
 
 #include "signature/SAMLSignatureTestBase.h"
 
+#include <saml/saml1/core/Assertions.h>
 #include <saml/saml1/core/Protocols.h>
 
 #include <fstream>
@@ -115,7 +116,7 @@ public:
         const XMLObjectBuilder* b = XMLObjectBuilder::getBuilder(doc->getDocumentElement());
         
         auto_ptr<XMLObject> response2(b->buildFromDocument(doc));
-        assertEquals("Unmarshalled request does not match", expectedChildElementsDOM, response2.get(), false);
+        assertEquals("Unmarshalled response does not match", expectedChildElementsDOM, response2.get(), false);
         
         try {
             SignatureProfileValidator spv;

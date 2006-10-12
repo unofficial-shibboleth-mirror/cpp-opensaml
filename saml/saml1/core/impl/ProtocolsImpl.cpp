@@ -22,9 +22,9 @@
 
 #include "internal.h"
 #include "exceptions.h"
+#include "saml1/core/Assertions.h"
 #include "saml1/core/Protocols.h"
 
-#include <xmltooling/AbstractChildlessElement.h>
 #include <xmltooling/AbstractComplexElement.h>
 #include <xmltooling/AbstractElementProxy.h>
 #include <xmltooling/AbstractSimpleElement.h>
@@ -55,8 +55,7 @@ namespace opensaml {
         DECL_XMLOBJECTIMPL_SIMPLE(SAML_DLLLOCAL,StatusMessage);
 
         class SAML_DLLLOCAL RespondWithImpl : public virtual RespondWith,
-            protected AbstractSimpleElement,
-            public AbstractChildlessElement,
+            public AbstractSimpleElement,
             public AbstractDOMCachingXMLObject,
             public AbstractXMLObjectMarshaller,
             public AbstractXMLObjectUnmarshaller
@@ -91,7 +90,6 @@ namespace opensaml {
             }
             
             IMPL_XMLOBJECT_CLONE(RespondWith);
-            IMPL_XMLOBJECT_CONTENT;
         };
 
         class SAML_DLLLOCAL SubjectQueryImpl : public virtual SubjectQuery,
@@ -117,7 +115,8 @@ namespace opensaml {
                 init();
             }
                 
-            SubjectQueryImpl(const SubjectQueryImpl& src) : AbstractXMLObject(src), AbstractDOMCachingXMLObject(src) {
+            SubjectQueryImpl(const SubjectQueryImpl& src)
+                    : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
                 init();
                 if (src.getSubject())
                     setSubject(src.getSubject()->cloneSubject());
@@ -317,7 +316,8 @@ namespace opensaml {
                 init();
             }
                 
-            RequestAbstractTypeImpl(const RequestAbstractTypeImpl& src) : AbstractXMLObject(src), AbstractDOMCachingXMLObject(src) {
+            RequestAbstractTypeImpl(const RequestAbstractTypeImpl& src)
+                    : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
                 init();
                 setMinorVersion(src.m_MinorVersion);
                 setRequestID(src.getRequestID());
@@ -494,7 +494,8 @@ namespace opensaml {
                 init();
             }
                 
-            StatusCodeImpl(const StatusCodeImpl& src) : AbstractXMLObject(src), AbstractDOMCachingXMLObject(src) {
+            StatusCodeImpl(const StatusCodeImpl& src)
+                    : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
                 init();
                 setValue(src.getValue());
                 if (src.getStatusCode())
@@ -533,7 +534,8 @@ namespace opensaml {
                 : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
             }
                 
-            StatusDetailImpl(const StatusDetailImpl& src) : AbstractXMLObject(src), AbstractDOMCachingXMLObject(src) {
+            StatusDetailImpl(const StatusDetailImpl& src)
+                    : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
                 VectorOf(XMLObject) v=getDetails();
                 for (vector<XMLObject*>::const_iterator i=src.m_Details.begin(); i!=src.m_Details.end(); i++) {
                     if (*i) {
@@ -578,7 +580,8 @@ namespace opensaml {
                 init();
             }
                 
-            StatusImpl(const StatusImpl& src) : AbstractXMLObject(src), AbstractDOMCachingXMLObject(src) {
+            StatusImpl(const StatusImpl& src)
+                    : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
                 init();
                 if (src.getStatusCode())
                     setStatusCode(src.getStatusCode()->cloneStatusCode());
@@ -636,7 +639,8 @@ namespace opensaml {
                 init();
             }
                 
-            ResponseAbstractTypeImpl(const ResponseAbstractTypeImpl& src) : AbstractXMLObject(src), AbstractDOMCachingXMLObject(src) {
+            ResponseAbstractTypeImpl(const ResponseAbstractTypeImpl& src)
+                    : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
                 init();
                 setMinorVersion(src.m_MinorVersion);
                 setResponseID(src.getResponseID());

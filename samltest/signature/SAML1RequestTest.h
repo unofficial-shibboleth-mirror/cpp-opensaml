@@ -16,6 +16,7 @@
 
 #include "signature/SAMLSignatureTestBase.h"
 
+#include <saml/saml1/core/Assertions.h>
 #include <saml/saml1/core/Protocols.h>
 
 #include <fstream>

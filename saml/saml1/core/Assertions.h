@@ -28,12 +28,10 @@
 
 #include <xmltooling/AttributeExtensibleXMLObject.h>
 #include <xmltooling/ElementProxy.h>
-#include <xmltooling/SimpleElement.h>
 #include <xmltooling/XMLObjectBuilder.h>
 #include <xmltooling/signature/KeyInfo.h>
 #include <xmltooling/signature/Signature.h>
 #include <xmltooling/util/DateTime.h>
-#include <xmltooling/validation/ValidatorSuite.h>
 
 #define DECL_SAML1OBJECTBUILDER(cname) \
     DECL_XMLOBJECTBUILDER(SAML_API,cname,opensaml::SAMLConstants::SAML1_NS,opensaml::SAMLConstants::SAML1_PREFIX)
@@ -77,10 +75,10 @@ namespace opensaml {
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
 
-        BEGIN_XMLOBJECT(SAML_API,NameIdentifier,xmltooling::SimpleElement,SAML 1.x NameIdentifier element);
+        BEGIN_XMLOBJECT(SAML_API,NameIdentifier,xmltooling::XMLObject,SAML 1.x NameIdentifier element);
             DECL_STRING_ATTRIB(NameQualifier,NAMEQUALIFIER);
             DECL_STRING_ATTRIB(Format,FORMAT);
-            DECL_XMLOBJECT_CONTENT(Name);
+            DECL_SIMPLE_CONTENT(Name);
             /** NameIdentifierType local name */
             static const XMLCh TYPE_NAME[];
             /** Unspecified name format ID */
@@ -152,9 +150,9 @@ namespace opensaml {
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
 
-        BEGIN_XMLOBJECT(SAML_API,Action,xmltooling::SimpleElement,SAML 1.x Action element);
+        BEGIN_XMLOBJECT(SAML_API,Action,xmltooling::XMLObject,SAML 1.x Action element);
             DECL_STRING_ATTRIB(Namespace,NAMESPACE);
-            DECL_XMLOBJECT_CONTENT(Action);
+            DECL_SIMPLE_CONTENT(Action);
             /** ActionType local name */
             static const XMLCh TYPE_NAME[];
             /** Read/Write/Execute/Delete/Control Action Namespace */
