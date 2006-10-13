@@ -22,6 +22,7 @@
 
 #include "internal.h"
 #include "binding/MessageDecoder.h"
+#include "util/SAMLConstants.h"
 
 using namespace opensaml;
 using namespace xmltooling;
@@ -41,8 +42,8 @@ namespace opensaml {
 void SAML_API opensaml::registerMessageDecoders()
 {
     SAMLConfig& conf=SAMLConfig::getConfig();
-    conf.MessageDecoderManager.registerFactory(SAML1_ARTIFACT_DECODER, saml1p::SAML1ArtifactDecoderFactory);
-    conf.MessageDecoderManager.registerFactory(SAML1_POST_DECODER, saml1p::SAML1POSTDecoderFactory);
-    conf.MessageDecoderManager.registerFactory(SAML2_ARTIFACT_DECODER, saml2p::SAML2ArtifactDecoderFactory);
-    conf.MessageDecoderManager.registerFactory(SAML2_POST_DECODER, saml2p::SAML2POSTDecoderFactory);
+    conf.MessageDecoderManager.registerFactory(SAMLConstants::SAML1_PROFILE_BROWSER_ARTIFACT, saml1p::SAML1ArtifactDecoderFactory);
+    conf.MessageDecoderManager.registerFactory(SAMLConstants::SAML1_PROFILE_BROWSER_POST, saml1p::SAML1POSTDecoderFactory);
+    conf.MessageDecoderManager.registerFactory(SAMLConstants::SAML20_BINDING_HTTP_ARTIFACT, saml2p::SAML2ArtifactDecoderFactory);
+    conf.MessageDecoderManager.registerFactory(SAMLConstants::SAML20_BINDING_HTTP_POST, saml2p::SAML2POSTDecoderFactory);
 }

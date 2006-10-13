@@ -151,21 +151,6 @@ namespace opensaml {
      * Registers MessageEncoder plugins into the runtime.
      */
     void SAML_API registerMessageEncoders();
-
-    /** MessageEncoder for SAML 1.x Browser/Artifact "binding" (really part of profile) */
-    #define SAML1_ARTIFACT_ENCODER  "urn:oasis:names:tc:SAML:1.0:profiles:artifact-01"
-
-    /** MessageEncoder for SAML 1.x Browser/POST "binding" (really part of profile) */
-    #define SAML1_POST_ENCODER  "urn:oasis:names:tc:SAML:1.0:profiles:browser-post"
-    
-    /** MessageEncoder for SAML 2.0 HTTP-Artifact binding */
-    #define SAML2_ARTIFACT_ENCODER "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact"
-
-    /** MessageEncoder for SAML 2.0 HTTP-POST binding */
-    #define SAML2_POST_ENCODER "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
-
-    /** MessageEncoder for SAML 2.0 HTTP-Redirect binding */
-    #define SAML2_REDIRECT_ENCODER "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
 };
 
 #endif /* __saml_encoder_h__ */

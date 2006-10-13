@@ -51,7 +51,9 @@ public:
             janitor.release();
 
             // Encode message.
-            auto_ptr<MessageEncoder> encoder(SAMLConfig::getConfig().MessageEncoderManager.newPlugin(SAML1_ARTIFACT_ENCODER, NULL));
+            auto_ptr<MessageEncoder> encoder(
+                SAMLConfig::getConfig().MessageEncoderManager.newPlugin(SAMLConstants::SAML1_PROFILE_BROWSER_ARTIFACT, NULL)
+                );
             encoder->setArtifactGenerator(this);
             encoder->encode(m_fields,toSend.get(),"https://sp.example.org/","state",m_creds);
             toSend.release();
@@ -61,7 +63,9 @@ public:
             const RoleDescriptor* issuer=NULL;
             bool trusted=false;
             QName idprole(SAMLConstants::SAML20MD_NS, IDPSSODescriptor::LOCAL_NAME);
-            auto_ptr<MessageDecoder> decoder(SAMLConfig::getConfig().MessageDecoderManager.newPlugin(SAML1_ARTIFACT_DECODER, NULL));
+            auto_ptr<MessageDecoder> decoder(
+                SAMLConfig::getConfig().MessageDecoderManager.newPlugin(SAMLConstants::SAML1_PROFILE_BROWSER_ARTIFACT, NULL)
+                );
             decoder->setArtifactResolver(this);
             Locker locker(m_metadata);
             auto_ptr<Response> response(

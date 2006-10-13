@@ -124,6 +124,21 @@ namespace opensaml {
         
         /** SAML Third-Party Request Protocol Extension QName prefix ("query") */
         static const XMLCh SAML20P_THIRDPARTY_EXT_PREFIX[];
+
+        /** SAML 1.x Browser Artifact profile ("urn:oasis:names:tc:SAML:1.0:profiles:artifact-01")*/
+        static const char SAML1_PROFILE_BROWSER_ARTIFACT[];
+    
+        /** SAML 1.x Browser POST profile ("urn:oasis:names:tc:SAML:1.0:profiles:browser-post") */
+        static const char SAML1_PROFILE_BROWSER_POST[];
+        
+        /** SAML 2.0 HTTP-Artifact binding ("urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact") */
+        static const char SAML20_BINDING_HTTP_ARTIFACT[];
+    
+        /** SAML 2.0 HTTP-POST binding ("urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST") */
+        static const char SAML20_BINDING_HTTP_POST[];
+
+        /** SAML 2.0 HTTP-Redirect binding ("urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect") */
+        static const char SAML20_BINDING_HTTP_REDIRECT[];
     };
 
 };
