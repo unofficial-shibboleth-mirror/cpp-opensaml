@@ -24,12 +24,10 @@ using namespace opensaml::saml1;
 class SAML1POSTTest : public CxxTest::TestSuite, public SAMLBindingBaseTestCase {
 public:
     void setUp() {
-        m_fields.clear();
         SAMLBindingBaseTestCase::setUp();
     }
 
     void tearDown() {
-        m_fields.clear();
         SAMLBindingBaseTestCase::tearDown();
     }
 
@@ -49,10 +47,20 @@ public:
             toSend->setIssueInstant(time(NULL));
     
             // Encode message.
+            auto_ptr_XMLCh lit1("MessageEncoder");
+            auto_ptr_XMLCh lit2("template");
+            path = data_path + "binding/template.html";
+            auto_ptr_XMLCh lit3(path.c_str());
+            DOMDocument* encoder_config = XMLToolingConfig::getConfig().getParser().newDocument();
+            XercesJanitor<DOMDocument> janitor2(encoder_config);
+            encoder_config->appendChild(encoder_config->createElementNS(NULL,lit1.get()));
+            encoder_config->getDocumentElement()->setAttributeNS(NULL,lit2.get(),lit3.get());
             auto_ptr<MessageEncoder> encoder(
-                SAMLConfig::getConfig().MessageEncoderManager.newPlugin(SAMLConstants::SAML1_PROFILE_BROWSER_POST, NULL)
+                SAMLConfig::getConfig().MessageEncoderManager.newPlugin(
+                    SAMLConstants::SAML1_PROFILE_BROWSER_POST, encoder_config->getDocumentElement()
+                    )
                 );
-            encoder->encode(m_fields,toSend.get(),"https://sp.example.org/","state",m_creds);
+            encoder->encode(*this,toSend.get(),"https://sp.example.org/SAML/POST","https://sp.example.org/","state",m_creds);
             toSend.release();
             
             // Decode message.
@@ -101,10 +109,20 @@ public:
             toSend->setResponseID(NULL);
     
             // Encode message.
+            auto_ptr_XMLCh lit1("MessageEncoder");
+            auto_ptr_XMLCh lit2("template");
+            path = data_path + "binding/template.html";
+            auto_ptr_XMLCh lit3(path.c_str());
+            DOMDocument* encoder_config = XMLToolingConfig::getConfig().getParser().newDocument();
+            XercesJanitor<DOMDocument> janitor2(encoder_config);
+            encoder_config->appendChild(encoder_config->createElementNS(NULL,lit1.get()));
+            encoder_config->getDocumentElement()->setAttributeNS(NULL,lit2.get(),lit3.get());
             auto_ptr<MessageEncoder> encoder(
-                SAMLConfig::getConfig().MessageEncoderManager.newPlugin(SAMLConstants::SAML1_PROFILE_BROWSER_POST, NULL)
+                SAMLConfig::getConfig().MessageEncoderManager.newPlugin(
+                    SAMLConstants::SAML1_PROFILE_BROWSER_POST, encoder_config->getDocumentElement()
+                    )
                 );
-            encoder->encode(m_fields,toSend.get(),"https://sp.example.org/","state");
+            encoder->encode(*this,toSend.get(),"https://sp.example.org/SAML/POST","https://sp.example.org/","state");
             toSend.release();
             
             // Decode message.
@@ -139,17 +157,5 @@ public:
             TS_TRACE(ex.what());
             throw;
         }
-    }
-
-    const char* getMethod() const {
-        return "POST";
-    } 
-
-    const char* getRequestURL() const {
-        return "https://sp.example.org/SAML/POST";
-    }
-    
-    const char* getQueryString() const {
-        return NULL;
     }
 };

@@ -20,6 +20,7 @@
 #include <saml/SAMLConfig.h>
 #include <saml/binding/ArtifactMap.h>
 #include <xmltooling/util/ReplayCache.h>
+#include <xmltooling/util/TemplateEngine.h>
 
 //#define SAML_LEAKCHECK
 
@@ -33,6 +34,7 @@ public:
         if (!SAMLConfig::getConfig().init())
             return false;
         XMLToolingConfig::getConfig().setReplayCache(new ReplayCache());
+        XMLToolingConfig::getConfig().setTemplateEngine(new TemplateEngine());
         SAMLConfig::getConfig().setArtifactMap(new ArtifactMap());
 
         if (getenv("SAMLTEST_DATA"))

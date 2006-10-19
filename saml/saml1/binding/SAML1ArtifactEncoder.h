@@ -35,9 +35,10 @@ namespace opensaml {
             SAML1ArtifactEncoder(const DOMElement* e);
             virtual ~SAML1ArtifactEncoder();
             
-            void encode(
-                std::map<std::string,std::string>& outputFields,
+            long encode(
+                HTTPResponse& httpResponse,
                 xmltooling::XMLObject* xmlObject,
+                const char* destination,
                 const char* recipientID=NULL,
                 const char* relayState=NULL,
                 const xmlsignature::CredentialResolver* credResolver=NULL,

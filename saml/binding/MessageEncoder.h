@@ -27,6 +27,7 @@
 
 #include <map>
 #include <string>
+#include <istream>
 #include <xmltooling/XMLObject.h>
 #include <xmltooling/signature/CredentialResolver.h>
 
@@ -45,6 +46,59 @@ namespace opensaml {
         MAKE_NONCOPYABLE(MessageEncoder);
     public:
         virtual ~MessageEncoder() {}
+
+        /**
+         * Interface to caller-supplied shim for issuing an HTTP response.
+         * 
+         * <p>To supply information to the surrounding web server environment,
+         * a shim must be supplied in the form of this interface to adapt the
+         * library to different proprietary server APIs.
+         * 
+         * <p>This interface need not be threadsafe.
+         */
+        class SAML_API HTTPResponse {
+            MAKE_NONCOPYABLE(HTTPResponse);
+        protected:
+            HTTPResponse() {}
+        public:
+            virtual ~HTTPResponse() {}
+            
+            /**
+             * Sets or clears a response header.
+             * 
+             * @param name  header name
+             * @param value value to set, or NULL to clear
+             */
+            virtual void setHeader(const char* name, const char* value)=0;
+
+            /**
+             * Sets a client cookie.
+             * 
+             * @param name  cookie name
+             * @param value value to set, or NULL to clear
+             */
+            virtual void setCookie(const char* name, const char* value)=0;
+            
+            /**
+             * Redirect the client to the specified URL and complete the response.
+             * Any headers previously set will be sent ahead of the redirect.
+             * 
+             * @param url   location to redirect client
+             * @return a result code to return from the calling MessageEncoder
+             */
+            virtual long sendRedirect(const char* url)=0;
+
+            /**
+             * Sends a completed response to the client. Any headers previously set
+             * will be sent ahead of the data.
+             * 
+             * @param inputStream   reference to source of response data
+             * @param status        HTTP status code to return
+             * @param contentType   Content-Type header to return
+             * @return a result code to return from the calling MessageEncoder
+             */
+            virtual long sendResponse(std::istream& inputStream, int status = 200, const char* contentType = "text/html")=0;
+        };
 
         /**
          * Interface to caller-supplied artifact generation mechanism.
@@ -92,7 +146,7 @@ namespace opensaml {
         }
         
         /**
-         * Encodes an XML object/message into a set of binding-specific data "fields".
+         * Encodes an XML object/message into a binding-specific HTTP response.
          * The XML content cannot have a parent object, and any existing references to
          * the content will be invalidated if the encode method returns successfully.
          * 
@@ -100,27 +154,21 @@ namespace opensaml {
          * binding-specific manner. The CredentialResolver <strong>MUST</strong>
          * be locked by the caller. 
          * 
-         * <p>An embedded URLEncoder instance may be required by some bindings
-         * in order to produce predictable signature input.
-         * 
          * <p>Artifact-based bindings require an ArtifactGenerator be set to
          * produce an artifact suitable for the intended recipient.
          * 
-         * <p>Note that the name/value pairs resulting from the encoding operation are
-         * <strong>NOT</strong> URL-encoded or otherwise transformed. It is the caller's
-         * responsibility to apply any necessary encoding when preparing the data for
-         * transport.
-         * 
-         * @param outputFields      name/value pairs containing the results of encoding the message
-         * @param xmlObject         XML object/message to encode
+         * @param httpResponse      reference to interface for sending encoded response to client      
+         * @param xmlObject         XML message to encode
+         * @param destination       destination URL for message
          * @param recipientID       optional entityID of message recipient
          * @param relayState        optional RelayState value to accompany message
          * @param credResolver      optional CredentialResolver instance to supply signing material
          * @param sigAlgorithm      optional signature algorithm identifier
          */
-        virtual void encode(
-            std::map<std::string,std::string>& outputFields,
+        virtual long encode(
+            HTTPResponse& httpResponse,
             xmltooling::XMLObject* xmlObject,
+            const char* destination,
             const char* recipientID=NULL,
             const char* relayState=NULL,
             const xmlsignature::CredentialResolver* credResolver=NULL,

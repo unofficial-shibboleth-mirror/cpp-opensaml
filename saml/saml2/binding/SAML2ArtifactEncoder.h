@@ -35,15 +35,20 @@ namespace opensaml {
             SAML2ArtifactEncoder(const DOMElement* e);
             virtual ~SAML2ArtifactEncoder();
             
-            void encode(
-                std::map<std::string,std::string>& outputFields,
+            long encode(
+                HTTPResponse& httpResponse,
                 xmltooling::XMLObject* xmlObject,
+                const char* destination,
                 const char* recipientID=NULL,
                 const char* relayState=NULL,
                 const xmlsignature::CredentialResolver* credResolver=NULL,
                 const XMLCh* sigAlgorithm=NULL
                 ) const;
-        };                
+        
+        protected:
+            /** Pathname of HTML template for transmission of message via POST. */
+            std::string m_template; 
+        };
 
     };
 };

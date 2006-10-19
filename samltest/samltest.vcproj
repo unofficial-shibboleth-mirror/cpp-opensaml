@@ -588,14 +588,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\binding.h"
-				>
-			</File>
-			<File
-				RelativePath=".\internal.h"
-				>
-			</File>
-			<File
 				RelativePath=".\SAMLArtifactCreationTest.h"
 				>
 				<FileConfiguration
@@ -2476,6 +2468,14 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 		</Filter>
+		<File
+			RelativePath=".\binding.h"
+			>
+		</File>
+		<File
+			RelativePath=".\internal.h"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

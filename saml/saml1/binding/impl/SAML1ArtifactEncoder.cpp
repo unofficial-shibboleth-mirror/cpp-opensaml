@@ -22,8 +22,9 @@
 
 #include "internal.h"
 #include "exceptions.h"
-#include "saml/binding/ArtifactMap.h"
-#include "saml/binding/SAMLArtifact.h"
+#include "binding/ArtifactMap.h"
+#include "binding/SAMLArtifact.h"
+#include "binding/URLEncoder.h"
 #include "saml1/binding/SAML1ArtifactEncoder.h"
 #include "saml1/core/Assertions.h"
 
@@ -51,9 +52,10 @@ SAML1ArtifactEncoder::SAML1ArtifactEncoder(const DOMElement* e) {}
 
 SAML1ArtifactEncoder::~SAML1ArtifactEncoder() {}
 
-void SAML1ArtifactEncoder::encode(
-    map<string,string>& outputFields,
+long SAML1ArtifactEncoder::encode(
+    HTTPResponse& httpResponse,
     XMLObject* xmlObject,
+    const char* destination,
     const char* recipientID,
     const char* relayState,
     const CredentialResolver* credResolver,
@@ -66,7 +68,6 @@ void SAML1ArtifactEncoder::encode(
     Category& log = Category::getInstance(SAML_LOGCAT".MessageEncoder.SAML1Artifact");
     log.debug("validating input");
     
-    outputFields.clear();
     if (xmlObject->getParent())
         throw BindingException("Cannot encode XML content with parent.");
     Assertion* assertion = dynamic_cast<Assertion*>(xmlObject);
@@ -87,13 +88,15 @@ void SAML1ArtifactEncoder::encode(
     log.debug("obtaining new artifact for relying party (%s)", recipientID ? recipientID : "unknown");
     auto_ptr<SAMLArtifact> artifact(m_artifactGenerator->generateSAML1Artifact(recipientID));
     
-    // Pass back output fields.
-    outputFields["SAMLart"] = artifact->encode();
-    outputFields["TARGET"] = relayState;
-
     // Store the assertion. Last step in storage will be to delete the XML.
     log.debug("storing artifact and content in map");
     mapper->storeContent(xmlObject, artifact.get(), recipientID);
 
-    log.debug("message encoded");
+    // Generate redirect.
+    string loc = destination;
+    loc += (strchr(destination,'?') ? '&' : '?');
+    URLEncoder* escaper = SAMLConfig::getConfig().getURLEncoder();
+    loc = loc + "SAMLart=" + escaper->encode(artifact->encode().c_str()) + "&TARGET=" + escaper->encode(relayState);
+    log.debug("message encoded, sending redirect to client");
+    return httpResponse.sendRedirect(loc.c_str());
 }

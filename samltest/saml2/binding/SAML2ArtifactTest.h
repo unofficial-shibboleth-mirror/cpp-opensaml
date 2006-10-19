@@ -28,12 +28,10 @@ class SAML2ArtifactTest : public CxxTest::TestSuite,
     public SAMLBindingBaseTestCase, public MessageEncoder::ArtifactGenerator, public MessageDecoder::ArtifactResolver {
 public:
     void setUp() {
-        m_fields.clear();
         SAMLBindingBaseTestCase::setUp();
     }
 
     void tearDown() {
-        m_fields.clear();
         SAMLBindingBaseTestCase::tearDown();
     }
 
@@ -57,7 +55,7 @@ public:
                 SAMLConfig::getConfig().MessageEncoderManager.newPlugin(SAMLConstants::SAML20_BINDING_HTTP_ARTIFACT, NULL)
                 );
             encoder->setArtifactGenerator(this);
-            encoder->encode(m_fields,toSend.get(),"https://sp.example.org/","state",m_creds);
+            encoder->encode(*this,toSend.get(),"https://sp.example.org/SAML/Artifact","https://sp.example.org/","state",m_creds);
             toSend.release();
             
             // Decode message.
@@ -93,18 +91,6 @@ public:
             TS_TRACE(ex.what());
             throw;
         }
-    }
-
-    const char* getMethod() const {
-        return "GET";
-    } 
-
-    const char* getRequestURL() const {
-        return "https://sp.example.org/SAML/Artifact";
-    }
-    
-    const char* getQueryString() const {
-        return NULL;
     }
     
     SAMLArtifact* generateSAML1Artifact(const char* relyingParty) const {

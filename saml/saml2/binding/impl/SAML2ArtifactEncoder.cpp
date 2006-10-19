@@ -22,13 +22,17 @@
 
 #include "internal.h"
 #include "exceptions.h"
-#include "saml/binding/ArtifactMap.h"
+#include "binding/ArtifactMap.h"
+#include "binding/URLEncoder.h"
 #include "saml2/binding/SAML2Artifact.h"
 #include "saml2/binding/SAML2ArtifactEncoder.h"
 #include "saml2/core/Protocols.h"
 
+#include <fstream>
+#include <sstream>
 #include <log4cpp/Category.hh>
 #include <xmltooling/util/NDC.h>
+#include <xmltooling/util/TemplateEngine.h>
 
 using namespace opensaml::saml2p;
 using namespace opensaml;
@@ -46,13 +50,23 @@ namespace opensaml {
     };
 };
 
-SAML2ArtifactEncoder::SAML2ArtifactEncoder(const DOMElement* e) {}
+static const XMLCh templat[] = UNICODE_LITERAL_8(t,e,m,p,l,a,t,e);
+
+SAML2ArtifactEncoder::SAML2ArtifactEncoder(const DOMElement* e)
+{
+    if (e) {
+        auto_ptr_char t(e->getAttributeNS(NULL, templat));
+        if (t.get())
+            m_template = t.get();
+    }
+}
 
 SAML2ArtifactEncoder::~SAML2ArtifactEncoder() {}
 
-void SAML2ArtifactEncoder::encode(
-    map<string,string>& outputFields,
-    XMLObject* xmlObject,
+long SAML2ArtifactEncoder::encode(
+    HTTPResponse& httpResponse,
+    xmltooling::XMLObject* xmlObject,
+    const char* destination,
     const char* recipientID,
     const char* relayState,
     const CredentialResolver* credResolver,
@@ -65,7 +79,9 @@ void SAML2ArtifactEncoder::encode(
     Category& log = Category::getInstance(SAML_LOGCAT".MessageEncoder.SAML2Artifact");
     log.debug("validating input");
     
-    outputFields.clear();
+    if (relayState && strlen(relayState)>80)
+        throw BindingException("RelayState cannot exceed 80 bytes in length.");
+    
     if (xmlObject->getParent())
         throw BindingException("Cannot encode XML content with parent.");
 
@@ -106,14 +122,37 @@ void SAML2ArtifactEncoder::encode(
         }
     }
     
-    // Pass back output fields.
-    outputFields["SAMLart"] = artifact->encode();
-    if (relayState)
-        outputFields["RelayState"] = relayState;
-
     // Store the message. Last step in storage will be to delete the XML.
     log.debug("storing artifact and content in map");
     mapper->storeContent(xmlObject, artifact.get(), recipientID);
 
-    log.debug("message encoded");
+    if (m_template.empty()) {
+        // Generate redirect.
+        string loc = destination;
+        loc += (strchr(destination,'?') ? '&' : '?');
+        URLEncoder* escaper = SAMLConfig::getConfig().getURLEncoder();
+        loc = loc + "SAMLart=" + escaper->encode(artifact->encode().c_str());
+        if (relayState)
+            loc = loc + "&RelayState=" + escaper->encode(relayState);
+        log.debug("message encoded, sending redirect to client");
+        return httpResponse.sendRedirect(loc.c_str());
+    }
+    else {
+        // Push message into template and send result to client. 
+        log.debug("message encoded, sending HTML form template to client");
+        TemplateEngine* engine = XMLToolingConfig::getConfig().getTemplateEngine();
+        if (!engine)
+            throw BindingException("Encoding artifact using POST requires a TemplateEngine instance.");
+        ifstream infile(m_template.c_str());
+        if (!infile)
+            throw BindingException("Failed to open HTML template for POST response ($1).", params(1,m_template.c_str()));
+        map<string,string> params;
+        params["action"] = destination;
+        params["SAMLart"] = artifact->encode();
+        if (relayState)
+            params["RelayState"] = relayState;
+        stringstream s;
+        engine->run(infile, s, params);
+        return httpResponse.sendResponse(s);
+    }
 }

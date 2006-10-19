@@ -57,9 +57,11 @@ namespace opensaml {
         /**
          * Interface to caller-supplied shim for accessing HTTP request context.
          * 
-         * To supply information from the surrounding web server environment,
+         * <p>To supply information from the surrounding web server environment,
          * a shim must be supplied in the form of this interface to adapt the
          * library to different proprietary server APIs.
+         * 
+         * <p>This interface need not be threadsafe.
          */
         class SAML_API HTTPRequest {
             MAKE_NONCOPYABLE(HTTPRequest);
@@ -90,6 +92,14 @@ namespace opensaml {
              * @return the query string
              */
             virtual const char* getQueryString() const=0;
+
+            /**
+             * Returns the raw HTTP request body. Used to access the body
+             * of a POST that is not in URL-encoded form.
+             * 
+             * @return the request body, or NULL
+             */
+            virtual const char* getRequestBody() const=0;
             
             /**
              * Returns a decoded named parameter value from the query string or form body.
@@ -111,6 +121,21 @@ namespace opensaml {
             virtual std::vector<const char*>::size_type getParameters(
                 const char* name, std::vector<const char*>& values
                 ) const=0;
+
+            /**
+             * Returns the authenticated identity associated with the request
+             * 
+             * @return the authenticated username or an empty string
+             */
+            virtual std::string getRemoteUser() const=0;
+
+            /**
+             * Returns a request header value.
+             * 
+             * @param name  the name of the header to return
+             * @return the header's value, or an empty string
+             */
+            virtual std::string getHeader(const char* name) const=0;
         };
 
         /**

@@ -25,9 +25,12 @@
 #include "saml2/binding/SAML2POSTEncoder.h"
 #include "saml2/core/Protocols.h"
 
+#include <fstream>
+#include <sstream>
 #include <log4cpp/Category.hh>
 #include <xercesc/util/Base64.hpp>
 #include <xmltooling/util/NDC.h>
+#include <xmltooling/util/TemplateEngine.h>
 
 using namespace opensaml::saml2p;
 using namespace opensaml;
@@ -45,13 +48,25 @@ namespace opensaml {
     };
 };
 
-SAML2POSTEncoder::SAML2POSTEncoder(const DOMElement* e) {}
+static const XMLCh templat[] = UNICODE_LITERAL_8(t,e,m,p,l,a,t,e);
+
+SAML2POSTEncoder::SAML2POSTEncoder(const DOMElement* e)
+{
+    if (e) {
+        auto_ptr_char t(e->getAttributeNS(NULL, templat));
+        if (t.get())
+            m_template = t.get();
+    }
+    if (m_template.empty())
+        throw XMLToolingException("SAML2POSTEncoder requires template attribute.");
+}
 
 SAML2POSTEncoder::~SAML2POSTEncoder() {}
 
-void SAML2POSTEncoder::encode(
-    map<string,string>& outputFields,
+long SAML2POSTEncoder::encode(
+    HTTPResponse& httpResponse,
     XMLObject* xmlObject,
+    const char* destination,
     const char* recipientID,
     const char* relayState,
     const CredentialResolver* credResolver,
@@ -64,7 +79,6 @@ void SAML2POSTEncoder::encode(
     Category& log = Category::getInstance(SAML_LOGCAT".MessageEncoder.SAML2POST");
     log.debug("validating input");
     
-    outputFields.clear();
     if (xmlObject->getParent())
         throw BindingException("Cannot encode XML content with parent.");
     
@@ -114,13 +128,24 @@ void SAML2POSTEncoder::encode(
         throw BindingException("Base64 encoding of XML failed.");
     }
     
-    // Pass back output fields.
-    outputFields[request ? "SAMLRequest" : "SAMLResponse"] = xmlbuf;
+    // Push message into template and send result to client.
+    log.debug("message encoded, sending HTML form template to client");
+    TemplateEngine* engine = XMLToolingConfig::getConfig().getTemplateEngine();
+    if (!engine)
+        throw BindingException("Encoding message using POST requires a TemplateEngine instance.");
+    ifstream infile(m_template.c_str());
+    if (!infile)
+        throw BindingException("Failed to open HTML template for POST message ($1).", params(1,m_template.c_str()));
+    map<string,string> params;
+    params["action"] = destination;
+    params[request ? "SAMLRequest" : "SAMLResponse"] = xmlbuf;
     if (relayState)
-        outputFields["RelayState"] = relayState;
+        params["RelayState"] = relayState;
+    stringstream s;
+    engine->run(infile, s, params);
+    long ret = httpResponse.sendResponse(s);
 
     // Cleanup by destroying XML.
     delete xmlObject;
-
-    log.debug("message encoded");
+    return ret;
 }
