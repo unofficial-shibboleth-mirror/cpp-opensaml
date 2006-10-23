@@ -35,7 +35,7 @@
 #include <xmltooling/util/DateTime.h>
 
 #define DECL_SAML2OBJECTBUILDER(cname) \
-    DECL_XMLOBJECTBUILDER(SAML_API,cname,opensaml::SAMLConstants::SAML20_NS,opensaml::SAMLConstants::SAML20_PREFIX)
+    DECL_XMLOBJECTBUILDER(SAML_API,cname,samlconstants::SAML20_NS,samlconstants::SAML20_PREFIX)
 
 namespace opensaml {
 
@@ -370,10 +370,10 @@ namespace opensaml {
             /** Singleton builder. */
             static NameIDType* buildNameIDType(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=NULL) {
                 const NameIDTypeBuilder* b = dynamic_cast<const NameIDTypeBuilder*>(
-                    XMLObjectBuilder::getBuilder(xmltooling::QName(SAMLConstants::SAML20_NS,NameIDType::TYPE_NAME))
+                    XMLObjectBuilder::getBuilder(xmltooling::QName(samlconstants::SAML20_NS,NameIDType::TYPE_NAME))
                     );
                 if (b) {
-                    xmltooling::QName schemaType(SAMLConstants::SAML20_NS,NameIDType::TYPE_NAME,SAMLConstants::SAML20_PREFIX);
+                    xmltooling::QName schemaType(samlconstants::SAML20_NS,NameIDType::TYPE_NAME,samlconstants::SAML20_PREFIX);
                     return b->buildObject(nsURI, localName, prefix, &schemaType);
                 }
                 throw xmltooling::XMLObjectException("Unable to obtain typed builder for NameIDType.");
@@ -392,10 +392,10 @@ namespace opensaml {
             /** Default builder. */
             virtual KeyInfoConfirmationDataType* buildObject() const {
                 xmltooling::QName schemaType(
-                    SAMLConstants::SAML20_NS,KeyInfoConfirmationDataType::TYPE_NAME,SAMLConstants::SAML20_PREFIX
+                    samlconstants::SAML20_NS,KeyInfoConfirmationDataType::TYPE_NAME,samlconstants::SAML20_PREFIX
                     );
                 return buildObject(
-                    SAMLConstants::SAML20_NS,KeyInfoConfirmationDataType::LOCAL_NAME,SAMLConstants::SAML20_PREFIX,&schemaType
+                    samlconstants::SAML20_NS,KeyInfoConfirmationDataType::LOCAL_NAME,samlconstants::SAML20_PREFIX,&schemaType
                     );
             }
             /** Builder that allows element/type override. */
@@ -406,7 +406,7 @@ namespace opensaml {
             /** Singleton builder. */
             static KeyInfoConfirmationDataType* buildKeyInfoConfirmationDataType() {
                 const KeyInfoConfirmationDataTypeBuilder* b = dynamic_cast<const KeyInfoConfirmationDataTypeBuilder*>(
-                    XMLObjectBuilder::getBuilder(xmltooling::QName(SAMLConstants::SAML20_NS,KeyInfoConfirmationDataType::TYPE_NAME))
+                    XMLObjectBuilder::getBuilder(xmltooling::QName(samlconstants::SAML20_NS,KeyInfoConfirmationDataType::TYPE_NAME))
                     );
                 if (b)
                     return b->buildObject();

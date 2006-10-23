@@ -151,7 +151,7 @@ Response* SAML1POSTDecoder::decode(
                 pair<bool,int> minor = response->getMinorVersion();
                 issuer=provider->getRoleDescriptor(
                     *role,
-                    (minor.first && minor.second==0) ? SAMLConstants::SAML10_PROTOCOL_ENUM : SAMLConstants::SAML11_PROTOCOL_ENUM
+                    (minor.first && minor.second==0) ? samlconstants::SAML10_PROTOCOL_ENUM : samlconstants::SAML11_PROTOCOL_ENUM
                     );
                 if (issuer) {
                     if (trustEngine && response->getSignature()) {
@@ -205,7 +205,7 @@ Response* SAML1POSTDecoder::decode(
             pair<bool,int> minor = response->getMinorVersion();
             issuer=provider->getRoleDescriptor(
                 *role,
-                (minor.first && minor.second==0) ? SAMLConstants::SAML10_PROTOCOL_ENUM : SAMLConstants::SAML11_PROTOCOL_ENUM
+                (minor.first && minor.second==0) ? samlconstants::SAML10_PROTOCOL_ENUM : samlconstants::SAML11_PROTOCOL_ENUM
                 );
         }
         if (issuer) annotateException(&ex,issuer); // throws it

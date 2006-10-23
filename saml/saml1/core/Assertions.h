@@ -34,7 +34,7 @@
 #include <xmltooling/util/DateTime.h>
 
 #define DECL_SAML1OBJECTBUILDER(cname) \
-    DECL_XMLOBJECTBUILDER(SAML_API,cname,opensaml::SAMLConstants::SAML1_NS,opensaml::SAMLConstants::SAML1_PREFIX)
+    DECL_XMLOBJECTBUILDER(SAML_API,cname,samlconstants::SAML1_NS,samlconstants::SAML1_PREFIX)
 
 namespace opensaml {
 

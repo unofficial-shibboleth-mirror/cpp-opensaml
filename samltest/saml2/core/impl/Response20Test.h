@@ -145,7 +145,7 @@ public:
         response->setID(expectedID);
         response->setIssueInstant(expectedIssueInstant);
         // Do this just so don't have to redeclare the saml namespace prefix on every child element in the control XML file
-        Namespace* ns = new Namespace(opensaml::SAMLConstants::SAML20_NS, opensaml::SAMLConstants::SAML20_PREFIX);
+        Namespace* ns = new Namespace(samlconstants::SAML20_NS, samlconstants::SAML20_PREFIX);
         response->addNamespace(*ns);
         response->setIssuer(IssuerBuilder::buildIssuer());
         // If the form of the default, basic, empty signature that is emittted changes wrt whitespace, etc,

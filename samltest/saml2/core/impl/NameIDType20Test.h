@@ -51,8 +51,8 @@ public:
         elementNS = XMLString::transcode("http://www.example.org/test");
         elementPrefix = XMLString::transcode("test");;
         typeName = NameIDType::TYPE_NAME;
-        typeNS = SAMLConstants::SAML20_NS;
-        typePrefix = SAMLConstants::SAML20_PREFIX;
+        typeNS = samlconstants::SAML20_NS;
+        typePrefix = samlconstants::SAML20_PREFIX;
 
         singleElementFile = data_path + "saml2/core/impl/NameIDType.xml";
         singleElementOptionalAttributesFile = data_path + "saml2/core/impl/NameIDTypeOptionalAttributes.xml";

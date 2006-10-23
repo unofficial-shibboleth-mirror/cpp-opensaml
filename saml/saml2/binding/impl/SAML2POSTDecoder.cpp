@@ -180,7 +180,7 @@ XMLObject* SAML2POSTDecoder::decode(
         provider=metadataProvider ? metadataProvider->getEntityDescriptor(claimedIssuer->getName()) : NULL;
         if (provider) {
             log.debug("matched assertion issuer against metadata, searching for applicable role...");
-            issuer=provider->getRoleDescriptor(*role, SAMLConstants::SAML20P_NS);
+            issuer=provider->getRoleDescriptor(*role, samlconstants::SAML20P_NS);
             if (issuer) {
                 if (trustEngine && signature) {
                     issuerTrusted = trustEngine->validate(*signature, *issuer, metadataProvider->getKeyResolver());
@@ -219,7 +219,7 @@ XMLObject* SAML2POSTDecoder::decode(
             }
         }
         if (!issuer)
-            issuer=provider->getRoleDescriptor(*role, SAMLConstants::SAML20P_NS);
+            issuer=provider->getRoleDescriptor(*role, samlconstants::SAML20P_NS);
         if (issuer) annotateException(&ex,issuer); // throws it
         annotateException(&ex,provider);  // throws it
     }

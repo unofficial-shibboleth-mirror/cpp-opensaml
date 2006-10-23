@@ -80,7 +80,7 @@ void AbstractMetadataProvider::index(EntityDescriptor* site, time_t validUntil)
     const vector<IDPSSODescriptor*>& roles=const_cast<const EntityDescriptor*>(site)->getIDPSSODescriptors();
     for (vector<IDPSSODescriptor*>::const_iterator i=roles.begin(); i!=roles.end(); i++) {
         // SAML 1.x?
-        if ((*i)->hasSupport(SAMLConstants::SAML10_PROTOCOL_ENUM) || (*i)->hasSupport(SAMLConstants::SAML11_PROTOCOL_ENUM)) {
+        if ((*i)->hasSupport(samlconstants::SAML10_PROTOCOL_ENUM) || (*i)->hasSupport(samlconstants::SAML11_PROTOCOL_ENUM)) {
             // Check for SourceID extension element.
             const Extensions* exts=(*i)->getExtensions();
             if (exts) {
@@ -112,7 +112,7 @@ void AbstractMetadataProvider::index(EntityDescriptor* site, time_t validUntil)
         }
         
         // SAML 2.0?
-        if ((*i)->hasSupport(SAMLConstants::SAML20P_NS)) {
+        if ((*i)->hasSupport(samlconstants::SAML20P_NS)) {
             // Hash the ID.
             m_sources.insert(
                 pair<string,const EntityDescriptor*>(SAMLConfig::getConfig().hashSHA1(id.get(), true),site)

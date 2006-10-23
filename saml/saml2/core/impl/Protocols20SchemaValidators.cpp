@@ -31,6 +31,7 @@ using namespace opensaml::saml2;
 using namespace opensaml;
 using namespace xmltooling;
 using namespace std;
+using samlconstants::SAML20P_NS;
 
 namespace opensaml {
     namespace saml2p {
@@ -50,7 +51,7 @@ namespace opensaml {
         public:
             void operator()(const XMLObject* xmlObject) const {
                 const XMLCh* ns=xmlObject->getElementQName().getNamespaceURI();
-                if (XMLString::equals(ns,SAMLConstants::SAML20P_NS) || !ns || !*ns) {
+                if (XMLString::equals(ns,SAML20P_NS) || !ns || !*ns) {
                     throw ValidationException(
                         "Object contains an illegal extension child element ($1).",
                         params(1,xmlObject->getElementQName().toString().c_str())
@@ -63,7 +64,7 @@ namespace opensaml {
             XMLOBJECTVALIDATOR_REQUIRE(RequestAbstractType,ID);
             XMLOBJECTVALIDATOR_REQUIRE(RequestAbstractType,Version);
             XMLOBJECTVALIDATOR_REQUIRE(RequestAbstractType,IssueInstant);
-            if (!XMLString::equals(SAMLConstants::SAML20_VERSION, ptr->getVersion()))
+            if (!XMLString::equals(samlconstants::SAML20_VERSION, ptr->getVersion()))
                 throw ValidationException("Request has wrong SAML Version.");
         END_XMLOBJECTVALIDATOR;
 
@@ -77,7 +78,7 @@ namespace opensaml {
             XMLOBJECTVALIDATOR_REQUIRE(StatusResponseType,Version);
             XMLOBJECTVALIDATOR_REQUIRE(StatusResponseType,IssueInstant);
             XMLOBJECTVALIDATOR_REQUIRE(StatusResponseType,Status);
-            if (!XMLString::equals(SAMLConstants::SAML20_VERSION, ptr->getVersion()))
+            if (!XMLString::equals(samlconstants::SAML20_VERSION, ptr->getVersion()))
                 throw ValidationException("StatusResponse has wrong SAML Version.");
         END_XMLOBJECTVALIDATOR;
 
@@ -98,7 +99,7 @@ namespace opensaml {
             {
                 QName pq = ptr->getParent()->getElementQName();
 
-                if ( XMLString::equals(pq.getNamespaceURI(), SAMLConstants::SAML20P_NS) &&
+                if ( XMLString::equals(pq.getNamespaceURI(), SAML20P_NS) &&
                         XMLString::equals(pq.getLocalPart(), Status::LOCAL_NAME))
                 {
                     const XMLCh* code = ptr->getValue();
@@ -224,21 +225,21 @@ namespace opensaml {
 };
 
 #define REGISTER_ELEMENT(cname) \
-    q=QName(SAMLConstants::SAML20P_NS,cname::LOCAL_NAME); \
+    q=QName(SAML20P_NS,cname::LOCAL_NAME); \
     XMLObjectBuilder::registerBuilder(q,new cname##Builder()); \
     SchemaValidators.registerValidator(q,new cname##SchemaValidator())
     
 #define REGISTER_TYPE(cname) \
-    q=QName(SAMLConstants::SAML20P_NS,cname::TYPE_NAME); \
+    q=QName(SAML20P_NS,cname::TYPE_NAME); \
     XMLObjectBuilder::registerBuilder(q,new cname##Builder()); \
     SchemaValidators.registerValidator(q,new cname##SchemaValidator())
 
 #define REGISTER_ELEMENT_NOVAL(cname) \
-    q=QName(SAMLConstants::SAML20P_NS,cname::LOCAL_NAME); \
+    q=QName(SAML20P_NS,cname::LOCAL_NAME); \
     XMLObjectBuilder::registerBuilder(q,new cname##Builder());
     
 #define REGISTER_TYPE_NOVAL(cname) \
-    q=QName(SAMLConstants::SAML20P_NS,cname::TYPE_NAME); \
+    q=QName(SAML20P_NS,cname::TYPE_NAME); \
     XMLObjectBuilder::registerBuilder(q,new cname##Builder());
 
 void opensaml::saml2p::registerProtocolClasses() {
@@ -297,7 +298,7 @@ void opensaml::saml2p::registerProtocolClasses() {
     REGISTER_TYPE_NOVAL(StatusDetail);
     REGISTER_TYPE_NOVAL(Terminate);
 
-    q=QName(SAMLConstants::SAML20P_THIRDPARTY_EXT_NS,RespondTo::LOCAL_NAME);
+    q=QName(samlconstants::SAML20P_THIRDPARTY_EXT_NS,RespondTo::LOCAL_NAME);
     XMLObjectBuilder::registerBuilder(q,new RespondToBuilder());
     SchemaValidators.registerValidator(q,new RespondToSchemaValidator());
 }

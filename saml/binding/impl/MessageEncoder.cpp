@@ -22,7 +22,7 @@
 
 #include "internal.h"
 #include "binding/MessageEncoder.h"
-#include "util/SAMLConstants.h"
+#include "util/samlconstants.h"
 
 #include <xmltooling/signature/KeyInfo.h>
 #include <xmltooling/signature/Signature.h>
@@ -47,10 +47,10 @@ namespace opensaml {
 void SAML_API opensaml::registerMessageEncoders()
 {
     SAMLConfig& conf=SAMLConfig::getConfig();
-    conf.MessageEncoderManager.registerFactory(SAMLConstants::SAML1_PROFILE_BROWSER_ARTIFACT, saml1p::SAML1ArtifactEncoderFactory);
-    conf.MessageEncoderManager.registerFactory(SAMLConstants::SAML1_PROFILE_BROWSER_POST, saml1p::SAML1POSTEncoderFactory);
-    conf.MessageEncoderManager.registerFactory(SAMLConstants::SAML20_BINDING_HTTP_ARTIFACT, saml2p::SAML2ArtifactEncoderFactory);
-    conf.MessageEncoderManager.registerFactory(SAMLConstants::SAML20_BINDING_HTTP_POST, saml2p::SAML2POSTEncoderFactory);
+    conf.MessageEncoderManager.registerFactory(samlconstants::SAML1_PROFILE_BROWSER_ARTIFACT, saml1p::SAML1ArtifactEncoderFactory);
+    conf.MessageEncoderManager.registerFactory(samlconstants::SAML1_PROFILE_BROWSER_POST, saml1p::SAML1POSTEncoderFactory);
+    conf.MessageEncoderManager.registerFactory(samlconstants::SAML20_BINDING_HTTP_ARTIFACT, saml2p::SAML2ArtifactEncoderFactory);
+    conf.MessageEncoderManager.registerFactory(samlconstants::SAML20_BINDING_HTTP_POST, saml2p::SAML2POSTEncoderFactory);
 }
 
 namespace {

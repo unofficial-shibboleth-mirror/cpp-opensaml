@@ -130,9 +130,9 @@ Response* SAML1ArtifactDecoder::decode(
     }
     
     log.debug("attempting to find artifact issuing role...");
-    issuer=provider->getRoleDescriptor(*role, SAMLConstants::SAML11_PROTOCOL_ENUM);
+    issuer=provider->getRoleDescriptor(*role, samlconstants::SAML11_PROTOCOL_ENUM);
     if (!issuer)
-        issuer=provider->getRoleDescriptor(*role, SAMLConstants::SAML10_PROTOCOL_ENUM);
+        issuer=provider->getRoleDescriptor(*role, samlconstants::SAML10_PROTOCOL_ENUM);
     if (!issuer || !dynamic_cast<const IDPSSODescriptor*>(issuer)) {
         log.error("unable to find compatible SAML role (%s) in metadata", role->toString().c_str());
         for_each(artifacts.begin(), artifacts.end(), xmltooling::cleanup<SAMLArtifact>());

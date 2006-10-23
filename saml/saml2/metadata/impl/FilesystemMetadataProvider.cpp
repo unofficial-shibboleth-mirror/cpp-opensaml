@@ -118,7 +118,7 @@ FilesystemMetadataProvider::FilesystemMetadataProvider(const DOMElement* e)
     
     if (source && *source) {
         const XMLCh* valflag=e->getAttributeNS(NULL,validate);
-        m_validate=(XMLString::equals(valflag,XMLConstants::XML_TRUE) || XMLString::equals(valflag,XMLConstants::XML_ONE));
+        m_validate=(XMLString::equals(valflag,xmlconstants::XML_TRUE) || XMLString::equals(valflag,xmlconstants::XML_ONE));
         
         auto_ptr_char temp(source);
         m_source=temp.get();

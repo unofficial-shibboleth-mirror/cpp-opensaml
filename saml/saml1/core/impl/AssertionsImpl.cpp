@@ -41,6 +41,9 @@ using namespace opensaml;
 using namespace xmlsignature;
 using namespace xmltooling;
 using namespace std;
+using xmlconstants::XMLSIG_NS;
+using xmlconstants::XML_ONE;
+using samlconstants::SAML1_NS;
 
 #if defined (_MSC_VER)
     #pragma warning( push )
@@ -85,7 +88,7 @@ namespace opensaml {
     
         protected:
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_CHILDREN(Audience,SAMLConstants::SAML1_NS,false);
+                PROC_TYPED_CHILDREN(Audience,SAML1_NS,false);
                 AbstractXMLObjectUnmarshaller::processChildElement(childXMLObject,root);
             }
         };
@@ -177,9 +180,9 @@ namespace opensaml {
             }
     
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_CHILDREN(AudienceRestrictionCondition,SAMLConstants::SAML1_NS,true);
-                PROC_TYPED_CHILDREN(DoNotCacheCondition,SAMLConstants::SAML1_NS,true);
-                PROC_TYPED_CHILDREN(Condition,SAMLConstants::SAML1_NS,true);
+                PROC_TYPED_CHILDREN(AudienceRestrictionCondition,SAML1_NS,true);
+                PROC_TYPED_CHILDREN(DoNotCacheCondition,SAML1_NS,true);
+                PROC_TYPED_CHILDREN(Condition,SAML1_NS,true);
                 AbstractXMLObjectUnmarshaller::processChildElement(childXMLObject,root);
             }
     
@@ -294,8 +297,8 @@ namespace opensaml {
     
         protected:
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_CHILDREN(ConfirmationMethod,SAMLConstants::SAML1_NS,false);
-                PROC_TYPED_CHILD(KeyInfo,XMLConstants::XMLSIG_NS,false);
+                PROC_TYPED_CHILDREN(ConfirmationMethod,SAML1_NS,false);
+                PROC_TYPED_CHILD(KeyInfo,XMLSIG_NS,false);
                 
                 // Anything else we'll assume is the data.
                 if (getSubjectConfirmationData())
@@ -343,8 +346,8 @@ namespace opensaml {
     
         protected:
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_CHILD(NameIdentifier,SAMLConstants::SAML1_NS,true);
-                PROC_TYPED_CHILD(SubjectConfirmation,SAMLConstants::SAML1_NS,true);
+                PROC_TYPED_CHILD(NameIdentifier,SAML1_NS,true);
+                PROC_TYPED_CHILD(SubjectConfirmation,SAML1_NS,true);
                 AbstractXMLObjectUnmarshaller::processChildElement(childXMLObject,root);
             }
         };
@@ -383,7 +386,7 @@ namespace opensaml {
     
         protected:
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_CHILD(Subject,SAMLConstants::SAML1_NS,true);
+                PROC_TYPED_CHILD(Subject,SAML1_NS,true);
                 AbstractXMLObjectUnmarshaller::processChildElement(childXMLObject,root);
             }
         };
@@ -538,8 +541,8 @@ namespace opensaml {
             }
     
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_CHILD(SubjectLocality,SAMLConstants::SAML1_NS,false);
-                PROC_TYPED_CHILDREN(AuthorityBinding,SAMLConstants::SAML1_NS,false);
+                PROC_TYPED_CHILD(SubjectLocality,SAML1_NS,false);
+                PROC_TYPED_CHILDREN(AuthorityBinding,SAML1_NS,false);
                 SubjectStatementImpl::processChildElement(childXMLObject,root);
             }
     
@@ -620,8 +623,8 @@ namespace opensaml {
     
         protected:
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_CHILDREN(AssertionIDReference,SAMLConstants::SAML1_NS,false);
-                PROC_TYPED_CHILDREN(Assertion,SAMLConstants::SAML1_NS,true);
+                PROC_TYPED_CHILDREN(AssertionIDReference,SAML1_NS,false);
+                PROC_TYPED_CHILDREN(Assertion,SAML1_NS,true);
                 AbstractXMLObjectUnmarshaller::processChildElement(childXMLObject,root);
             }
         };
@@ -684,8 +687,8 @@ namespace opensaml {
             }
     
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_CHILD(Evidence,SAMLConstants::SAML1_NS,false);
-                PROC_TYPED_CHILDREN(Action,SAMLConstants::SAML1_NS,false);
+                PROC_TYPED_CHILD(Evidence,SAML1_NS,false);
+                PROC_TYPED_CHILDREN(Action,SAML1_NS,false);
                 SubjectStatementImpl::processChildElement(childXMLObject,root);
             }
     
@@ -842,7 +845,7 @@ namespace opensaml {
     
         protected:
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_CHILDREN(Attribute,SAMLConstants::SAML1_NS,true);
+                PROC_TYPED_CHILDREN(Attribute,SAML1_NS,true);
                 SubjectStatementImpl::processChildElement(childXMLObject,root);
             }
         };
@@ -888,12 +891,12 @@ namespace opensaml {
     
         protected:
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_CHILDREN(AssertionIDReference,SAMLConstants::SAML1_NS,false);
-                PROC_TYPED_CHILDREN(Assertion,SAMLConstants::SAML1_NS,true);
+                PROC_TYPED_CHILDREN(AssertionIDReference,SAML1_NS,false);
+                PROC_TYPED_CHILDREN(Assertion,SAML1_NS,true);
                 
                 // Unknown child.
                 const XMLCh* nsURI=root->getNamespaceURI();
-                if (!XMLString::equals(nsURI,SAMLConstants::SAML1_NS) && nsURI && *nsURI) {
+                if (!XMLString::equals(nsURI,SAML1_NS) && nsURI && *nsURI) {
                     getOthers().push_back(childXMLObject);
                     return;
                 }
@@ -1024,9 +1027,9 @@ namespace opensaml {
         protected:
             void marshallAttributes(DOMElement* domElement) const {
                 static const XMLCh MAJORVERSION[] = UNICODE_LITERAL_12(M,a,j,o,r,V,e,r,s,i,o,n);
-                domElement->setAttributeNS(NULL,MAJORVERSION,XMLConstants::XML_ONE);
+                domElement->setAttributeNS(NULL,MAJORVERSION,XML_ONE);
                 if (!m_MinorVersion)
-                    const_cast<AssertionImpl*>(this)->m_MinorVersion=XMLString::replicate(XMLConstants::XML_ONE);
+                    const_cast<AssertionImpl*>(this)->m_MinorVersion=XMLString::replicate(XML_ONE);
                 MARSHALL_INTEGER_ATTRIB(MinorVersion,MINORVERSION,NULL);
                 if (!m_AssertionID)
                     const_cast<AssertionImpl*>(this)->m_AssertionID=SAMLConfig::getConfig().generateIdentifier();
@@ -1040,21 +1043,21 @@ namespace opensaml {
             }
     
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_CHILD(Conditions,SAMLConstants::SAML1_NS,false);
-                PROC_TYPED_CHILD(Advice,SAMLConstants::SAML1_NS,false);
-                PROC_TYPED_CHILD(Signature,XMLConstants::XMLSIG_NS,false);
-                PROC_TYPED_CHILDREN(AuthenticationStatement,SAMLConstants::SAML1_NS,false);
-                PROC_TYPED_CHILDREN(AttributeStatement,SAMLConstants::SAML1_NS,false);
-                PROC_TYPED_CHILDREN(AuthorizationDecisionStatement,SAMLConstants::SAML1_NS,false);
-                PROC_TYPED_CHILDREN(SubjectStatement,SAMLConstants::SAML1_NS,true);
-                PROC_TYPED_CHILDREN(Statement,SAMLConstants::SAML1_NS,true);
+                PROC_TYPED_CHILD(Conditions,SAML1_NS,false);
+                PROC_TYPED_CHILD(Advice,SAML1_NS,false);
+                PROC_TYPED_CHILD(Signature,XMLSIG_NS,false);
+                PROC_TYPED_CHILDREN(AuthenticationStatement,SAML1_NS,false);
+                PROC_TYPED_CHILDREN(AttributeStatement,SAML1_NS,false);
+                PROC_TYPED_CHILDREN(AuthorizationDecisionStatement,SAML1_NS,false);
+                PROC_TYPED_CHILDREN(SubjectStatement,SAML1_NS,true);
+                PROC_TYPED_CHILDREN(Statement,SAML1_NS,true);
                 AbstractXMLObjectUnmarshaller::processChildElement(childXMLObject,root);
             }
     
             void processAttribute(const DOMAttr* attribute) {
                 static const XMLCh MAJORVERSION[] = UNICODE_LITERAL_12(M,a,j,o,r,V,e,r,s,i,o,n);
                 if (XMLHelper::isNodeNamed(attribute,NULL,MAJORVERSION)) {
-                    if (!XMLString::equals(attribute->getValue(),XMLConstants::XML_ONE))
+                    if (!XMLString::equals(attribute->getValue(),XML_ONE))
                         throw UnmarshallingException("Assertion has invalid major version.");
                 }
                 PROC_INTEGER_ATTRIB(MinorVersion,MINORVERSION,NULL);

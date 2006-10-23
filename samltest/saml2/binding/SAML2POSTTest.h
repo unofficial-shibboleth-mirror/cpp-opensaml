@@ -57,7 +57,7 @@ public:
             encoder_config->getDocumentElement()->setAttributeNS(NULL,lit2.get(),lit3.get());
             auto_ptr<MessageEncoder> encoder(
                 SAMLConfig::getConfig().MessageEncoderManager.newPlugin(
-                    SAMLConstants::SAML20_BINDING_HTTP_POST, encoder_config->getDocumentElement()
+                    samlconstants::SAML20_BINDING_HTTP_POST, encoder_config->getDocumentElement()
                     )
                 );
             encoder->encode(*this,toSend.get(),"https://sp.example.org/SAML/POST","https://sp.example.org/","state",m_creds);
@@ -67,9 +67,9 @@ public:
             string relayState;
             const RoleDescriptor* issuer=NULL;
             bool trusted=false;
-            QName idprole(SAMLConstants::SAML20MD_NS, IDPSSODescriptor::LOCAL_NAME);
+            QName idprole(samlconstants::SAML20MD_NS, IDPSSODescriptor::LOCAL_NAME);
             auto_ptr<MessageDecoder> decoder(
-                SAMLConfig::getConfig().MessageDecoderManager.newPlugin(SAMLConstants::SAML20_BINDING_HTTP_POST, NULL)
+                SAMLConfig::getConfig().MessageDecoderManager.newPlugin(samlconstants::SAML20_BINDING_HTTP_POST, NULL)
                 );
             Locker locker(m_metadata);
             auto_ptr<Response> response(
@@ -119,7 +119,7 @@ public:
             encoder_config->getDocumentElement()->setAttributeNS(NULL,lit2.get(),lit3.get());
             auto_ptr<MessageEncoder> encoder(
                 SAMLConfig::getConfig().MessageEncoderManager.newPlugin(
-                    SAMLConstants::SAML20_BINDING_HTTP_POST, encoder_config->getDocumentElement()
+                    samlconstants::SAML20_BINDING_HTTP_POST, encoder_config->getDocumentElement()
                     )
                 );
             encoder->encode(*this,toSend.get(),"https://sp.example.org/SAML/POST","https://sp.example.org/","state");
@@ -129,9 +129,9 @@ public:
             string relayState;
             const RoleDescriptor* issuer=NULL;
             bool trusted=false;
-            QName idprole(SAMLConstants::SAML20MD_NS, IDPSSODescriptor::LOCAL_NAME);
+            QName idprole(samlconstants::SAML20MD_NS, IDPSSODescriptor::LOCAL_NAME);
             auto_ptr<MessageDecoder> decoder(
-                SAMLConfig::getConfig().MessageDecoderManager.newPlugin(SAMLConstants::SAML20_BINDING_HTTP_POST, NULL)
+                SAMLConfig::getConfig().MessageDecoderManager.newPlugin(samlconstants::SAML20_BINDING_HTTP_POST, NULL)
                 );
             Locker locker(m_metadata);
             auto_ptr<Response> response(

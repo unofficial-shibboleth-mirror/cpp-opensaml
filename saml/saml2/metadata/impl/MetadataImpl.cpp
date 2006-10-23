@@ -42,6 +42,10 @@ using namespace xmlencryption;
 using namespace xmlsignature;
 using namespace xmltooling;
 using namespace std;
+using xmlconstants::XMLSIG_NS;
+using xmlconstants::XML_BOOL_NULL;
+using samlconstants::SAML20_NS;
+using samlconstants::SAML20MD_NS;
 
 #if defined (_MSC_VER)
     #pragma warning( push )
@@ -99,11 +103,11 @@ namespace opensaml {
     
         protected:
             void marshallAttributes(DOMElement* domElement) const {
-                MARSHALL_STRING_ATTRIB(Lang,LANG,XMLConstants::XML_NS);
+                MARSHALL_STRING_ATTRIB(Lang,LANG,xmlconstants::XML_NS);
             }
 
             void processAttribute(const DOMAttr* attribute) {
-                PROC_STRING_ATTRIB(Lang,LANG,XMLConstants::XML_NS);
+                PROC_STRING_ATTRIB(Lang,LANG,xmlconstants::XML_NS);
                 AbstractXMLObjectUnmarshaller::processAttribute(attribute);
             }
         };
@@ -144,11 +148,11 @@ namespace opensaml {
     
         protected:
             void marshallAttributes(DOMElement* domElement) const {
-                MARSHALL_STRING_ATTRIB(Lang,LANG,XMLConstants::XML_NS);
+                MARSHALL_STRING_ATTRIB(Lang,LANG,xmlconstants::XML_NS);
             }
 
             void processAttribute(const DOMAttr* attribute) {
-                PROC_STRING_ATTRIB(Lang,LANG,XMLConstants::XML_NS);
+                PROC_STRING_ATTRIB(Lang,LANG,xmlconstants::XML_NS);
                 AbstractXMLObjectUnmarshaller::processAttribute(attribute);
             }
         };
@@ -261,7 +265,7 @@ namespace opensaml {
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
                 // Unknown child.
                 const XMLCh* nsURI=root->getNamespaceURI();
-                if (!XMLString::equals(nsURI,SAMLConstants::SAML20MD_NS) && nsURI && *nsURI) {
+                if (!XMLString::equals(nsURI,SAML20MD_NS) && nsURI && *nsURI) {
                     getXMLObjects().push_back(childXMLObject);
                     return;
                 }
@@ -337,10 +341,10 @@ namespace opensaml {
             }
 
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_CHILD(Extensions,SAMLConstants::SAML20MD_NS,false);
-                PROC_TYPED_CHILDREN(OrganizationName,SAMLConstants::SAML20MD_NS,false);
-                PROC_TYPED_CHILDREN(OrganizationDisplayName,SAMLConstants::SAML20MD_NS,false);
-                PROC_TYPED_CHILDREN(OrganizationURL,SAMLConstants::SAML20MD_NS,false);
+                PROC_TYPED_CHILD(Extensions,SAML20MD_NS,false);
+                PROC_TYPED_CHILDREN(OrganizationName,SAML20MD_NS,false);
+                PROC_TYPED_CHILDREN(OrganizationDisplayName,SAML20MD_NS,false);
+                PROC_TYPED_CHILDREN(OrganizationURL,SAML20MD_NS,false);
                 AbstractXMLObjectUnmarshaller::processChildElement(childXMLObject,root);
             }
 
@@ -440,12 +444,12 @@ namespace opensaml {
             }
 
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_CHILD(Extensions,SAMLConstants::SAML20MD_NS,false);
-                PROC_TYPED_CHILD(Company,SAMLConstants::SAML20MD_NS,false);
-                PROC_TYPED_CHILD(GivenName,SAMLConstants::SAML20MD_NS,false);
-                PROC_TYPED_CHILD(SurName,SAMLConstants::SAML20MD_NS,false);
-                PROC_TYPED_CHILDREN(EmailAddress,SAMLConstants::SAML20MD_NS,false);
-                PROC_TYPED_CHILDREN(TelephoneNumber,SAMLConstants::SAML20MD_NS,false);
+                PROC_TYPED_CHILD(Extensions,SAML20MD_NS,false);
+                PROC_TYPED_CHILD(Company,SAML20MD_NS,false);
+                PROC_TYPED_CHILD(GivenName,SAML20MD_NS,false);
+                PROC_TYPED_CHILD(SurName,SAML20MD_NS,false);
+                PROC_TYPED_CHILDREN(EmailAddress,SAML20MD_NS,false);
+                PROC_TYPED_CHILDREN(TelephoneNumber,SAML20MD_NS,false);
                 AbstractXMLObjectUnmarshaller::processChildElement(childXMLObject,root);
             }
 
@@ -540,8 +544,8 @@ namespace opensaml {
             }
 
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_FOREIGN_CHILD(KeyInfo,xmlsignature,XMLConstants::XMLSIG_NS,false);
-                PROC_TYPED_FOREIGN_CHILDREN(EncryptionMethod,xmlencryption,SAMLConstants::SAML20MD_NS,false);
+                PROC_TYPED_FOREIGN_CHILD(KeyInfo,xmlsignature,XMLSIG_NS,false);
+                PROC_TYPED_FOREIGN_CHILDREN(EncryptionMethod,xmlencryption,SAML20MD_NS,false);
                 AbstractXMLObjectUnmarshaller::processChildElement(childXMLObject,root);
             }
 
@@ -624,7 +628,7 @@ namespace opensaml {
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
                 // Unknown child.
                 const XMLCh* nsURI=root->getNamespaceURI();
-                if (!XMLString::equals(nsURI,SAMLConstants::SAML20MD_NS) && nsURI && *nsURI) {
+                if (!XMLString::equals(nsURI,SAML20MD_NS) && nsURI && *nsURI) {
                     getXMLObjects().push_back(childXMLObject);
                     return;
                 }
@@ -640,7 +644,7 @@ namespace opensaml {
         {
             void init() {
                 m_Index=NULL;
-                m_isDefault=XMLConstants::XML_BOOL_NULL;
+                m_isDefault=XML_BOOL_NULL;
             }
         
         protected:
@@ -1031,11 +1035,11 @@ namespace opensaml {
             }
 
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_FOREIGN_CHILD(Signature,xmlsignature,XMLConstants::XMLSIG_NS,false);
-                PROC_TYPED_CHILD(Extensions,SAMLConstants::SAML20MD_NS,false);
-                PROC_TYPED_CHILDREN(KeyDescriptor,SAMLConstants::SAML20MD_NS,false);
-                PROC_TYPED_CHILD(Organization,SAMLConstants::SAML20MD_NS,false);
-                PROC_TYPED_CHILDREN(ContactPerson,SAMLConstants::SAML20MD_NS,false);
+                PROC_TYPED_FOREIGN_CHILD(Signature,xmlsignature,XMLSIG_NS,false);
+                PROC_TYPED_CHILD(Extensions,SAML20MD_NS,false);
+                PROC_TYPED_CHILDREN(KeyDescriptor,SAML20MD_NS,false);
+                PROC_TYPED_CHILD(Organization,SAML20MD_NS,false);
+                PROC_TYPED_CHILDREN(ContactPerson,SAML20MD_NS,false);
                 AbstractXMLObjectUnmarshaller::processChildElement(childXMLObject,root);
             }
 
@@ -1115,10 +1119,10 @@ namespace opensaml {
 
         protected:
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_CHILDREN(ArtifactResolutionService,SAMLConstants::SAML20MD_NS,false);
-                PROC_TYPED_CHILDREN(SingleLogoutService,SAMLConstants::SAML20MD_NS,false);
-                PROC_TYPED_CHILDREN(ManageNameIDService,SAMLConstants::SAML20MD_NS,false);
-                PROC_TYPED_CHILDREN(NameIDFormat,SAMLConstants::SAML20MD_NS,false);
+                PROC_TYPED_CHILDREN(ArtifactResolutionService,SAML20MD_NS,false);
+                PROC_TYPED_CHILDREN(SingleLogoutService,SAML20MD_NS,false);
+                PROC_TYPED_CHILDREN(ManageNameIDService,SAML20MD_NS,false);
+                PROC_TYPED_CHILDREN(NameIDFormat,SAML20MD_NS,false);
                 RoleDescriptorImpl::processChildElement(childXMLObject,root);
             }
         };
@@ -1131,7 +1135,7 @@ namespace opensaml {
             list<XMLObject*>::iterator m_pos_AttributeProfile;
             
             void init() {
-                m_WantAuthnRequestsSigned=XMLConstants::XML_BOOL_NULL;
+                m_WantAuthnRequestsSigned=XML_BOOL_NULL;
                 m_children.push_back(NULL);
                 m_children.push_back(NULL);
                 m_children.push_back(NULL);
@@ -1221,11 +1225,11 @@ namespace opensaml {
             }
             
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_CHILDREN(SingleSignOnService,SAMLConstants::SAML20MD_NS,false);
-                PROC_TYPED_CHILDREN(NameIDMappingService,SAMLConstants::SAML20MD_NS,false);
-                PROC_TYPED_CHILDREN(AssertionIDRequestService,SAMLConstants::SAML20MD_NS,false);
-                PROC_TYPED_CHILDREN(AttributeProfile,SAMLConstants::SAML20MD_NS,false);
-                PROC_TYPED_FOREIGN_CHILDREN(Attribute,saml2,SAMLConstants::SAML20_NS,false);
+                PROC_TYPED_CHILDREN(SingleSignOnService,SAML20MD_NS,false);
+                PROC_TYPED_CHILDREN(NameIDMappingService,SAML20MD_NS,false);
+                PROC_TYPED_CHILDREN(AssertionIDRequestService,SAML20MD_NS,false);
+                PROC_TYPED_CHILDREN(AttributeProfile,SAML20MD_NS,false);
+                PROC_TYPED_FOREIGN_CHILDREN(Attribute,saml2,SAML20_NS,false);
                 SSODescriptorTypeImpl::processChildElement(childXMLObject,root);
             }
         };
@@ -1239,7 +1243,7 @@ namespace opensaml {
         {
             void init() {
                 m_Name=m_NameFormat=m_FriendlyName=NULL;
-                m_isRequired=XMLConstants::XML_BOOL_NULL;
+                m_isRequired=XML_BOOL_NULL;
             }
         public:
             virtual ~RequestedAttributeImpl() {
@@ -1331,7 +1335,7 @@ namespace opensaml {
             
 	        void init() {
                 m_Index=NULL;
-                m_isDefault=XMLConstants::XML_BOOL_NULL;
+                m_isDefault=XML_BOOL_NULL;
                 m_children.push_back(NULL);
                 m_children.push_back(NULL);
                 m_pos_ServiceDescription=m_children.begin();
@@ -1388,9 +1392,9 @@ namespace opensaml {
             }
 
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_CHILDREN(ServiceName,SAMLConstants::SAML20MD_NS,false);
-                PROC_TYPED_CHILDREN(ServiceDescription,SAMLConstants::SAML20MD_NS,false);
-                PROC_TYPED_CHILDREN(RequestedAttribute,SAMLConstants::SAML20MD_NS,false);
+                PROC_TYPED_CHILDREN(ServiceName,SAML20MD_NS,false);
+                PROC_TYPED_CHILDREN(ServiceDescription,SAML20MD_NS,false);
+                PROC_TYPED_CHILDREN(RequestedAttribute,SAML20MD_NS,false);
                 AbstractXMLObjectUnmarshaller::processChildElement(childXMLObject,root);
             }
 
@@ -1406,8 +1410,8 @@ namespace opensaml {
             list<XMLObject*>::iterator m_pos_AssertionConsumerService;
             
             void init() {
-                m_AuthnRequestsSigned=XMLConstants::XML_BOOL_NULL;
-                m_WantAssertionsSigned=XMLConstants::XML_BOOL_NULL;
+                m_AuthnRequestsSigned=XML_BOOL_NULL;
+                m_WantAssertionsSigned=XML_BOOL_NULL;
                 m_children.push_back(NULL);
                 m_pos_AssertionConsumerService=m_pos_NameIDFormat;
                 ++m_pos_AssertionConsumerService;
@@ -1474,8 +1478,8 @@ namespace opensaml {
             }
             
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_CHILDREN(AssertionConsumerService,SAMLConstants::SAML20MD_NS,false);
-                PROC_TYPED_CHILDREN(AttributeConsumingService,SAMLConstants::SAML20MD_NS,false);
+                PROC_TYPED_CHILDREN(AssertionConsumerService,SAML20MD_NS,false);
+                PROC_TYPED_CHILDREN(AttributeConsumingService,SAML20MD_NS,false);
                 SSODescriptorTypeImpl::processChildElement(childXMLObject,root);
             }
         };
@@ -1535,9 +1539,9 @@ namespace opensaml {
 
         protected:
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_CHILDREN(AuthnQueryService,SAMLConstants::SAML20MD_NS,false);
-                PROC_TYPED_CHILDREN(AssertionIDRequestService,SAMLConstants::SAML20MD_NS,false);
-                PROC_TYPED_CHILDREN(NameIDFormat,SAMLConstants::SAML20MD_NS,false);
+                PROC_TYPED_CHILDREN(AuthnQueryService,SAML20MD_NS,false);
+                PROC_TYPED_CHILDREN(AssertionIDRequestService,SAML20MD_NS,false);
+                PROC_TYPED_CHILDREN(NameIDFormat,SAML20MD_NS,false);
                 RoleDescriptorImpl::processChildElement(childXMLObject,root);
             }
         };
@@ -1597,9 +1601,9 @@ namespace opensaml {
 
         protected:
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_CHILDREN(AuthzService,SAMLConstants::SAML20MD_NS,false);
-                PROC_TYPED_CHILDREN(AssertionIDRequestService,SAMLConstants::SAML20MD_NS,false);
-                PROC_TYPED_CHILDREN(NameIDFormat,SAMLConstants::SAML20MD_NS,false);
+                PROC_TYPED_CHILDREN(AuthzService,SAML20MD_NS,false);
+                PROC_TYPED_CHILDREN(AssertionIDRequestService,SAML20MD_NS,false);
+                PROC_TYPED_CHILDREN(NameIDFormat,SAML20MD_NS,false);
                 RoleDescriptorImpl::processChildElement(childXMLObject,root);
             }
         };
@@ -1681,11 +1685,11 @@ namespace opensaml {
 
         protected:
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_CHILDREN(AttributeService,SAMLConstants::SAML20MD_NS,false);
-                PROC_TYPED_CHILDREN(AssertionIDRequestService,SAMLConstants::SAML20MD_NS,false);
-                PROC_TYPED_CHILDREN(NameIDFormat,SAMLConstants::SAML20MD_NS,false);
-                PROC_TYPED_CHILDREN(AttributeProfile,SAMLConstants::SAML20MD_NS,false);
-                PROC_TYPED_FOREIGN_CHILDREN(Attribute,saml2,SAMLConstants::SAML20_NS,false);
+                PROC_TYPED_CHILDREN(AttributeService,SAML20MD_NS,false);
+                PROC_TYPED_CHILDREN(AssertionIDRequestService,SAML20MD_NS,false);
+                PROC_TYPED_CHILDREN(NameIDFormat,SAML20MD_NS,false);
+                PROC_TYPED_CHILDREN(AttributeProfile,SAML20MD_NS,false);
+                PROC_TYPED_FOREIGN_CHILDREN(Attribute,saml2,SAML20_NS,false);
                 RoleDescriptorImpl::processChildElement(childXMLObject,root);
             }
         };
@@ -1693,7 +1697,7 @@ namespace opensaml {
         class SAML_DLLLOCAL QueryDescriptorTypeImpl : public virtual QueryDescriptorType, public RoleDescriptorImpl
         {
             void init() {
-                m_WantAssertionsSigned=XMLConstants::XML_BOOL_NULL;
+                m_WantAssertionsSigned=XML_BOOL_NULL;
                 m_children.push_back(NULL);
                 m_pos_NameIDFormat=m_pos_ContactPerson;
                 ++m_pos_NameIDFormat;
@@ -1745,7 +1749,7 @@ namespace opensaml {
             }
 
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_CHILDREN(NameIDFormat,SAMLConstants::SAML20MD_NS,false);
+                PROC_TYPED_CHILDREN(NameIDFormat,SAML20MD_NS,false);
                 RoleDescriptorImpl::processChildElement(childXMLObject,root);
             }
         };
@@ -1799,7 +1803,7 @@ namespace opensaml {
 
         protected:
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_CHILDREN(AttributeConsumingService,SAMLConstants::SAML20MD_NS,false);
+                PROC_TYPED_CHILDREN(AttributeConsumingService,SAML20MD_NS,false);
                 QueryDescriptorTypeImpl::processChildElement(childXMLObject,root);
             }
         };
@@ -1834,7 +1838,7 @@ namespace opensaml {
 
         protected:
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_CHILDREN(ActionNamespace,SAMLConstants::SAML20MD_QUERY_EXT_NS,false);
+                PROC_TYPED_CHILDREN(ActionNamespace,samlconstants::SAML20MD_QUERY_EXT_NS,false);
                 QueryDescriptorTypeImpl::processChildElement(childXMLObject,root);
             }
         };
@@ -1964,10 +1968,10 @@ namespace opensaml {
             }
 
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_FOREIGN_CHILD(Signature,xmlsignature,XMLConstants::XMLSIG_NS,false);
-                PROC_TYPED_CHILD(Extensions,SAMLConstants::SAML20MD_NS,false);
-                PROC_TYPED_CHILDREN(AffiliateMember,SAMLConstants::SAML20MD_NS,false);
-                PROC_TYPED_CHILDREN(KeyDescriptor,SAMLConstants::SAML20MD_NS,false);
+                PROC_TYPED_FOREIGN_CHILD(Signature,xmlsignature,XMLSIG_NS,false);
+                PROC_TYPED_CHILD(Extensions,SAML20MD_NS,false);
+                PROC_TYPED_CHILDREN(AffiliateMember,SAML20MD_NS,false);
+                PROC_TYPED_CHILDREN(KeyDescriptor,SAML20MD_NS,false);
                 AbstractXMLObjectUnmarshaller::processChildElement(childXMLObject,root);
             }
 
@@ -2240,7 +2244,7 @@ namespace opensaml {
             const RoleDescriptor* getRoleDescriptor(const xmltooling::QName& qname, const XMLCh* protocol) const {
                 // Check for "known" elements/types.
                 QName q;
-                q.setNamespaceURI(SAMLConstants::SAML20MD_NS);
+                q.setNamespaceURI(SAML20MD_NS);
                 q.setLocalPart(IDPSSODescriptor::LOCAL_NAME);
                 if (q == qname)
                     return getIDPSSODescriptor(protocol);
@@ -2256,7 +2260,7 @@ namespace opensaml {
                 q.setLocalPart(PDPDescriptor::LOCAL_NAME);
                 if (q == qname)
                     return getPDPDescriptor(protocol);
-                q.setNamespaceURI(SAMLConstants::SAML20MD_QUERY_EXT_NS);
+                q.setNamespaceURI(samlconstants::SAML20MD_QUERY_EXT_NS);
                 q.setLocalPart(AuthnQueryDescriptorType::TYPE_NAME);
                 if (q == qname)
                     return getAuthnQueryDescriptorType(protocol);
@@ -2284,21 +2288,21 @@ namespace opensaml {
             }
 
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_FOREIGN_CHILD(Signature,xmlsignature,XMLConstants::XMLSIG_NS,false);
-                PROC_TYPED_CHILD(Extensions,SAMLConstants::SAML20MD_NS,false);
-                PROC_TYPED_CHILDREN(IDPSSODescriptor,SAMLConstants::SAML20MD_NS,false);
-                PROC_TYPED_CHILDREN(SPSSODescriptor,SAMLConstants::SAML20MD_NS,false);
-                PROC_TYPED_CHILDREN(AuthnAuthorityDescriptor,SAMLConstants::SAML20MD_NS,false);
-                PROC_TYPED_CHILDREN(AttributeAuthorityDescriptor,SAMLConstants::SAML20MD_NS,false);
-                PROC_TYPED_CHILDREN(PDPDescriptor,SAMLConstants::SAML20MD_NS,false);
-                PROC_TYPED_CHILDREN(AuthnQueryDescriptorType,SAMLConstants::SAML20MD_QUERY_EXT_NS,false);
-                PROC_TYPED_CHILDREN(AttributeQueryDescriptorType,SAMLConstants::SAML20MD_QUERY_EXT_NS,false);
-                PROC_TYPED_CHILDREN(AuthzDecisionQueryDescriptorType,SAMLConstants::SAML20MD_QUERY_EXT_NS,false);
-                PROC_TYPED_CHILDREN(RoleDescriptor,SAMLConstants::SAML20MD_NS,false);
-                PROC_TYPED_CHILD(AffiliationDescriptor,SAMLConstants::SAML20MD_NS,false);
-                PROC_TYPED_CHILD(Organization,SAMLConstants::SAML20MD_NS,false);
-                PROC_TYPED_CHILDREN(ContactPerson,SAMLConstants::SAML20MD_NS,false);
-                PROC_TYPED_CHILDREN(AdditionalMetadataLocation,SAMLConstants::SAML20MD_NS,false);
+                PROC_TYPED_FOREIGN_CHILD(Signature,xmlsignature,XMLSIG_NS,false);
+                PROC_TYPED_CHILD(Extensions,SAML20MD_NS,false);
+                PROC_TYPED_CHILDREN(IDPSSODescriptor,SAML20MD_NS,false);
+                PROC_TYPED_CHILDREN(SPSSODescriptor,SAML20MD_NS,false);
+                PROC_TYPED_CHILDREN(AuthnAuthorityDescriptor,SAML20MD_NS,false);
+                PROC_TYPED_CHILDREN(AttributeAuthorityDescriptor,SAML20MD_NS,false);
+                PROC_TYPED_CHILDREN(PDPDescriptor,SAML20MD_NS,false);
+                PROC_TYPED_CHILDREN(AuthnQueryDescriptorType,samlconstants::SAML20MD_QUERY_EXT_NS,false);
+                PROC_TYPED_CHILDREN(AttributeQueryDescriptorType,samlconstants::SAML20MD_QUERY_EXT_NS,false);
+                PROC_TYPED_CHILDREN(AuthzDecisionQueryDescriptorType,samlconstants::SAML20MD_QUERY_EXT_NS,false);
+                PROC_TYPED_CHILDREN(RoleDescriptor,SAML20MD_NS,false);
+                PROC_TYPED_CHILD(AffiliationDescriptor,SAML20MD_NS,false);
+                PROC_TYPED_CHILD(Organization,SAML20MD_NS,false);
+                PROC_TYPED_CHILDREN(ContactPerson,SAML20MD_NS,false);
+                PROC_TYPED_CHILDREN(AdditionalMetadataLocation,SAML20MD_NS,false);
                 AbstractXMLObjectUnmarshaller::processChildElement(childXMLObject,root);
             }
 
@@ -2406,10 +2410,10 @@ namespace opensaml {
             }
 
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_FOREIGN_CHILD(Signature,xmlsignature,XMLConstants::XMLSIG_NS,false);
-                PROC_TYPED_CHILD(Extensions,SAMLConstants::SAML20MD_NS,false);
-                PROC_TYPED_CHILDREN(EntityDescriptor,SAMLConstants::SAML20MD_NS,false);
-                PROC_TYPED_CHILDREN(EntitiesDescriptor,SAMLConstants::SAML20MD_NS,false);
+                PROC_TYPED_FOREIGN_CHILD(Signature,xmlsignature,XMLSIG_NS,false);
+                PROC_TYPED_CHILD(Extensions,SAML20MD_NS,false);
+                PROC_TYPED_CHILDREN(EntityDescriptor,SAML20MD_NS,false);
+                PROC_TYPED_CHILDREN(EntitiesDescriptor,SAML20MD_NS,false);
                 AbstractXMLObjectUnmarshaller::processChildElement(childXMLObject,root);
             }
 

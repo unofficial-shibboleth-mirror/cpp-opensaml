@@ -42,6 +42,11 @@ using namespace opensaml;
 using namespace xmlsignature;
 using namespace xmltooling;
 using namespace std;
+using xmlconstants::XMLSIG_NS;
+using xmlconstants::XML_ONE;
+using samlconstants::SAML1P_NS;
+using samlconstants::SAML1_NS;
+using samlconstants::SAML1P_PREFIX;
 
 #if defined (_MSC_VER)
     #pragma warning( push )
@@ -126,7 +131,7 @@ namespace opensaml {
     
         protected:
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_CHILD(Subject,SAMLConstants::SAML1_NS,true);
+                PROC_TYPED_CHILD(Subject,SAML1_NS,true);
                 AbstractXMLObjectUnmarshaller::processChildElement(childXMLObject,root);
             }
         };
@@ -215,7 +220,7 @@ namespace opensaml {
             }
     
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_CHILDREN(AttributeDesignator,SAMLConstants::SAML1_NS,true);
+                PROC_TYPED_CHILDREN(AttributeDesignator,SAML1_NS,true);
                 SubjectQueryImpl::processChildElement(childXMLObject,root);
             }
     
@@ -275,8 +280,8 @@ namespace opensaml {
             }
     
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_CHILD(Evidence,SAMLConstants::SAML1_NS,false);
-                PROC_TYPED_CHILDREN(Action,SAMLConstants::SAML1_NS,false);
+                PROC_TYPED_CHILD(Evidence,SAML1_NS,false);
+                PROC_TYPED_CHILDREN(Action,SAML1_NS,false);
                 SubjectQueryImpl::processChildElement(childXMLObject,root);
             }
     
@@ -362,9 +367,9 @@ namespace opensaml {
         protected:
             void marshallAttributes(DOMElement* domElement) const {
                 static const XMLCh MAJORVERSION[] = UNICODE_LITERAL_12(M,a,j,o,r,V,e,r,s,i,o,n);
-                domElement->setAttributeNS(NULL,MAJORVERSION,XMLConstants::XML_ONE);
+                domElement->setAttributeNS(NULL,MAJORVERSION,XML_ONE);
                 if (!m_MinorVersion)
-                    const_cast<RequestAbstractTypeImpl*>(this)->m_MinorVersion=XMLString::replicate(XMLConstants::XML_ONE);
+                    const_cast<RequestAbstractTypeImpl*>(this)->m_MinorVersion=XMLString::replicate(XML_ONE);
                 MARSHALL_INTEGER_ATTRIB(MinorVersion,MINORVERSION,NULL);
                 if (!m_RequestID)
                     const_cast<RequestAbstractTypeImpl*>(this)->m_RequestID=SAMLConfig::getConfig().generateIdentifier();
@@ -377,15 +382,15 @@ namespace opensaml {
             }
 
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_CHILDREN(RespondWith,SAMLConstants::SAML1P_NS,false);
-                PROC_TYPED_CHILD(Signature,XMLConstants::XMLSIG_NS,false);
+                PROC_TYPED_CHILDREN(RespondWith,SAML1P_NS,false);
+                PROC_TYPED_CHILD(Signature,XMLSIG_NS,false);
                 AbstractXMLObjectUnmarshaller::processChildElement(childXMLObject,root);
             }
 
             void processAttribute(const DOMAttr* attribute) {
                 static const XMLCh MAJORVERSION[] = UNICODE_LITERAL_12(M,a,j,o,r,V,e,r,s,i,o,n);
                 if (XMLHelper::isNodeNamed(attribute,NULL,MAJORVERSION)) {
-                    if (!XMLString::equals(attribute->getValue(),XMLConstants::XML_ONE))
+                    if (!XMLString::equals(attribute->getValue(),XML_ONE))
                         throw UnmarshallingException("Request has invalid major version.");
                 }
                 PROC_INTEGER_ATTRIB(MinorVersion,MINORVERSION,NULL);
@@ -465,9 +470,9 @@ namespace opensaml {
     
         protected:
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_CHILD(Query,SAMLConstants::SAML1P_NS,true);
-                PROC_TYPED_CHILDREN(AssertionIDReference,SAMLConstants::SAML1_NS,false);
-                PROC_TYPED_CHILDREN(AssertionArtifact,SAMLConstants::SAML1P_NS,false);
+                PROC_TYPED_CHILD(Query,SAML1P_NS,true);
+                PROC_TYPED_CHILDREN(AssertionIDReference,SAML1_NS,false);
+                PROC_TYPED_CHILDREN(AssertionArtifact,SAML1P_NS,false);
                 RequestAbstractTypeImpl::processChildElement(childXMLObject,root);
             }
         };
@@ -512,7 +517,7 @@ namespace opensaml {
             }
 
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_CHILD(StatusCode,SAMLConstants::SAML1P_NS,true);
+                PROC_TYPED_CHILD(StatusCode,SAML1P_NS,true);
                 AbstractXMLObjectUnmarshaller::processChildElement(childXMLObject,root);
             }
 
@@ -598,9 +603,9 @@ namespace opensaml {
     
         protected:
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_CHILD(StatusCode,SAMLConstants::SAML1P_NS,false);
-                PROC_TYPED_CHILD(StatusMessage,SAMLConstants::SAML1P_NS,false);
-                PROC_TYPED_CHILD(StatusDetail,SAMLConstants::SAML1P_NS,false);
+                PROC_TYPED_CHILD(StatusCode,SAML1P_NS,false);
+                PROC_TYPED_CHILD(StatusMessage,SAML1P_NS,false);
+                PROC_TYPED_CHILD(StatusDetail,SAML1P_NS,false);
                 AbstractXMLObjectUnmarshaller::processChildElement(childXMLObject,root);
             }
         };
@@ -682,9 +687,9 @@ namespace opensaml {
         protected:
             void marshallAttributes(DOMElement* domElement) const {
                 static const XMLCh MAJORVERSION[] = UNICODE_LITERAL_12(M,a,j,o,r,V,e,r,s,i,o,n);
-                domElement->setAttributeNS(NULL,MAJORVERSION,XMLConstants::XML_ONE);
+                domElement->setAttributeNS(NULL,MAJORVERSION,XML_ONE);
                 if (!m_MinorVersion)
-                    const_cast<ResponseAbstractTypeImpl*>(this)->m_MinorVersion=XMLString::replicate(XMLConstants::XML_ONE);
+                    const_cast<ResponseAbstractTypeImpl*>(this)->m_MinorVersion=XMLString::replicate(XML_ONE);
                 MARSHALL_INTEGER_ATTRIB(MinorVersion,MINORVERSION,NULL);
                 if (!m_ResponseID)
                     const_cast<ResponseAbstractTypeImpl*>(this)->m_ResponseID=SAMLConfig::getConfig().generateIdentifier();
@@ -699,14 +704,14 @@ namespace opensaml {
             }
 
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_CHILD(Signature,XMLConstants::XMLSIG_NS,false);
+                PROC_TYPED_CHILD(Signature,XMLSIG_NS,false);
                 AbstractXMLObjectUnmarshaller::processChildElement(childXMLObject,root);
             }
 
             void processAttribute(const DOMAttr* attribute) {
                 static const XMLCh MAJORVERSION[] = UNICODE_LITERAL_12(M,a,j,o,r,V,e,r,s,i,o,n);
                 if (XMLHelper::isNodeNamed(attribute,NULL,MAJORVERSION)) {
-                    if (!XMLString::equals(attribute->getValue(),XMLConstants::XML_ONE))
+                    if (!XMLString::equals(attribute->getValue(),XML_ONE))
                         throw UnmarshallingException("Response has invalid major version.");
                 }
                 PROC_INTEGER_ATTRIB(MinorVersion,MINORVERSION,NULL);
@@ -754,8 +759,8 @@ namespace opensaml {
     
         protected:
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_CHILD(Status,SAMLConstants::SAML1P_NS,false);
-                PROC_TYPED_CHILDREN(Assertion,SAMLConstants::SAML1_NS,true);
+                PROC_TYPED_CHILD(Status,SAML1P_NS,false);
+                PROC_TYPED_CHILDREN(Assertion,SAML1_NS,true);
                 ResponseAbstractTypeImpl::processChildElement(childXMLObject,root);
             }
         };
@@ -828,7 +833,7 @@ const XMLCh _REQUESTER[] =                                  UNICODE_LITERAL_9(R,
 const XMLCh _RESPONDER[] =                                  UNICODE_LITERAL_9(R,e,s,p,o,n,d,e,r);
 const XMLCh _VERSIONMISMATCH[] =                            UNICODE_LITERAL_15(V,e,r,s,i,o,n,M,i,s,m,a,t,c,h);
  
-QName StatusCode::SUCCESS(SAMLConstants::SAML1P_NS,_SUCCESS,SAMLConstants::SAML1P_PREFIX);
-QName StatusCode::REQUESTER(SAMLConstants::SAML1P_NS,_REQUESTER,SAMLConstants::SAML1P_PREFIX);
-QName StatusCode::RESPONDER(SAMLConstants::SAML1P_NS,_RESPONDER,SAMLConstants::SAML1P_PREFIX);
-QName StatusCode::VERSIONMISMATCH(SAMLConstants::SAML1P_NS,_VERSIONMISMATCH,SAMLConstants::SAML1P_PREFIX);
+QName StatusCode::SUCCESS(SAML1P_NS,_SUCCESS,SAML1P_PREFIX);
+QName StatusCode::REQUESTER(SAML1P_NS,_REQUESTER,SAML1P_PREFIX);
+QName StatusCode::RESPONDER(SAML1P_NS,_RESPONDER,SAML1P_PREFIX);
+QName StatusCode::VERSIONMISMATCH(SAML1P_NS,_VERSIONMISMATCH,SAML1P_PREFIX);

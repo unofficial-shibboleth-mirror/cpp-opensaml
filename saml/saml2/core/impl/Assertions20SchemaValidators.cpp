@@ -30,6 +30,7 @@ using namespace opensaml::saml2;
 using namespace opensaml;
 using namespace xmltooling;
 using namespace std;
+using samlconstants::SAML20_NS;
 
 namespace opensaml {
     namespace saml2 {
@@ -146,6 +147,8 @@ namespace opensaml {
 
         BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,Assertion);
             XMLOBJECTVALIDATOR_REQUIRE(Assertion,Version);
+            if (!XMLString::equals(samlconstants::SAML20_VERSION, ptr->getVersion()))
+                throw ValidationException("Assertion has wrong SAML Version.");
             XMLOBJECTVALIDATOR_REQUIRE(Assertion,ID);
             XMLOBJECTVALIDATOR_REQUIRE(Assertion,IssueInstant);
             XMLOBJECTVALIDATOR_REQUIRE(Assertion,Issuer);
@@ -159,7 +162,7 @@ namespace opensaml {
         public:
             void operator()(const XMLObject* xmlObject) const {
                 const XMLCh* ns=xmlObject->getElementQName().getNamespaceURI();
-                if (XMLString::equals(ns,SAMLConstants::SAML20_NS) || !ns || !*ns) {
+                if (XMLString::equals(ns,SAML20_NS) || !ns || !*ns) {
                     throw ValidationException(
                         "Object contains an illegal extension child element ($1).",
                         params(1,xmlObject->getElementQName().toString().c_str())
@@ -177,21 +180,21 @@ namespace opensaml {
 };
 
 #define REGISTER_ELEMENT(cname) \
-    q=QName(SAMLConstants::SAML20_NS,cname::LOCAL_NAME); \
+    q=QName(SAML20_NS,cname::LOCAL_NAME); \
     XMLObjectBuilder::registerBuilder(q,new cname##Builder()); \
     SchemaValidators.registerValidator(q,new cname##SchemaValidator())
     
 #define REGISTER_TYPE(cname) \
-    q=QName(SAMLConstants::SAML20_NS,cname::TYPE_NAME); \
+    q=QName(SAML20_NS,cname::TYPE_NAME); \
     XMLObjectBuilder::registerBuilder(q,new cname##Builder()); \
     SchemaValidators.registerValidator(q,new cname##SchemaValidator())
 
 #define REGISTER_ELEMENT_NOVAL(cname) \
-    q=QName(SAMLConstants::SAML20_NS,cname::LOCAL_NAME); \
+    q=QName(SAML20_NS,cname::LOCAL_NAME); \
     XMLObjectBuilder::registerBuilder(q,new cname##Builder());
     
 #define REGISTER_TYPE_NOVAL(cname) \
-    q=QName(SAMLConstants::SAML20_NS,cname::TYPE_NAME); \
+    q=QName(SAML20_NS,cname::TYPE_NAME); \
     XMLObjectBuilder::registerBuilder(q,new cname##Builder());
 
 void opensaml::saml2::registerAssertionClasses() {

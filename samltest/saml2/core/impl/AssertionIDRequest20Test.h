@@ -112,7 +112,7 @@ public:
         request->setID(expectedID);
         request->setIssueInstant(expectedIssueInstant);
         // Do this just so don't have to redeclare the saml namespace prefix on every child element in the control XML file
-        Namespace* ns = new Namespace(opensaml::SAMLConstants::SAML20_NS, opensaml::SAMLConstants::SAML20_PREFIX);
+        Namespace* ns = new Namespace(samlconstants::SAML20_NS, samlconstants::SAML20_PREFIX);
         request->addNamespace(*ns);
         request->setIssuer(IssuerBuilder::buildIssuer());
         request->getAssertionIDRefs().push_back(AssertionIDRefBuilder::buildAssertionIDRef());

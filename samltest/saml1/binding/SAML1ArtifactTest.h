@@ -50,7 +50,7 @@ public:
 
             // Encode message.
             auto_ptr<MessageEncoder> encoder(
-                SAMLConfig::getConfig().MessageEncoderManager.newPlugin(SAMLConstants::SAML1_PROFILE_BROWSER_ARTIFACT, NULL)
+                SAMLConfig::getConfig().MessageEncoderManager.newPlugin(samlconstants::SAML1_PROFILE_BROWSER_ARTIFACT, NULL)
                 );
             encoder->setArtifactGenerator(this);
             encoder->encode(*this,toSend.get(),"https://sp.example.org/SAML/Artifact","https://sp.example.org/","state",m_creds);
@@ -60,9 +60,9 @@ public:
             string relayState;
             const RoleDescriptor* issuer=NULL;
             bool trusted=false;
-            QName idprole(SAMLConstants::SAML20MD_NS, IDPSSODescriptor::LOCAL_NAME);
+            QName idprole(samlconstants::SAML20MD_NS, IDPSSODescriptor::LOCAL_NAME);
             auto_ptr<MessageDecoder> decoder(
-                SAMLConfig::getConfig().MessageDecoderManager.newPlugin(SAMLConstants::SAML1_PROFILE_BROWSER_ARTIFACT, NULL)
+                SAMLConfig::getConfig().MessageDecoderManager.newPlugin(samlconstants::SAML1_PROFILE_BROWSER_ARTIFACT, NULL)
                 );
             decoder->setArtifactResolver(this);
             Locker locker(m_metadata);

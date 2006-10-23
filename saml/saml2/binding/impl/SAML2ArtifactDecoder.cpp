@@ -130,7 +130,7 @@ XMLObject* SAML2ArtifactDecoder::decode(
     }
     
     log.debug("attempting to find artifact issuing role...");
-    issuer=provider->getRoleDescriptor(*role, SAMLConstants::SAML20P_NS);
+    issuer=provider->getRoleDescriptor(*role, samlconstants::SAML20P_NS);
     if (!issuer || !dynamic_cast<const SSODescriptorType*>(issuer)) {
         log.error("unable to find compatible SAML role (%s) in metadata", role->toString().c_str());
         BindingException ex("Unable to find compatible metadata role for artifact issuer.");

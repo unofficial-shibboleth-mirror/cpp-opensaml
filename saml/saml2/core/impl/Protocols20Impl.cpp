@@ -44,6 +44,11 @@ using namespace xmlsignature;
 using namespace xmlencryption;
 using namespace xmltooling;
 using namespace std;
+using xmlconstants::XMLSIG_NS;
+using xmlconstants::XMLENC_NS;
+using xmlconstants::XML_BOOL_NULL;
+using samlconstants::SAML20_NS;
+using samlconstants::SAML20P_NS;
 
 #if defined (_MSC_VER)
     #pragma warning( push )
@@ -91,7 +96,7 @@ namespace opensaml {
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
                 // Unknown child.
                 const XMLCh* nsURI=root->getNamespaceURI();
-                if (!XMLString::equals(nsURI,SAMLConstants::SAML20P_NS) && nsURI && *nsURI) {
+                if (!XMLString::equals(nsURI,SAML20P_NS) && nsURI && *nsURI) {
                     getXMLObjects().push_back(childXMLObject);
                     return;
                 }
@@ -139,7 +144,7 @@ namespace opensaml {
                 }
 
                 void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                    PROC_TYPED_CHILD(StatusCode,SAMLConstants::SAML20P_NS,false);
+                    PROC_TYPED_CHILD(StatusCode,SAML20P_NS,false);
                     AbstractXMLObjectUnmarshaller::processChildElement(childXMLObject,root);
                 }
 
@@ -229,9 +234,9 @@ namespace opensaml {
         protected:
     
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_CHILD(StatusCode,SAMLConstants::SAML20P_NS,false);
-                PROC_TYPED_CHILD(StatusMessage,SAMLConstants::SAML20P_NS,false);
-                PROC_TYPED_CHILD(StatusDetail,SAMLConstants::SAML20P_NS,false);
+                PROC_TYPED_CHILD(StatusCode,SAML20P_NS,false);
+                PROC_TYPED_CHILD(StatusMessage,SAML20P_NS,false);
+                PROC_TYPED_CHILD(StatusDetail,SAML20P_NS,false);
                 AbstractXMLObjectUnmarshaller::processChildElement(childXMLObject,root);
             }
     
@@ -340,9 +345,9 @@ namespace opensaml {
             }
     
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_FOREIGN_CHILD(Issuer,saml2,SAMLConstants::SAML20_NS,false);
-                PROC_TYPED_FOREIGN_CHILD(Signature,xmlsignature,XMLConstants::XMLSIG_NS,false);
-                PROC_TYPED_CHILD(Extensions,SAMLConstants::SAML20P_NS,false);
+                PROC_TYPED_FOREIGN_CHILD(Issuer,saml2,SAML20_NS,false);
+                PROC_TYPED_FOREIGN_CHILD(Signature,xmlsignature,XMLSIG_NS,false);
+                PROC_TYPED_CHILD(Extensions,SAML20P_NS,false);
                 AbstractXMLObjectUnmarshaller::processChildElement(childXMLObject,root);
             }
     
@@ -384,7 +389,7 @@ namespace opensaml {
     
         protected:
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_FOREIGN_CHILDREN(AssertionIDRef,saml2,SAMLConstants::SAML20_NS,false);
+                PROC_TYPED_FOREIGN_CHILDREN(AssertionIDRef,saml2,SAML20_NS,false);
                 RequestAbstractTypeImpl::processChildElement(childXMLObject,root);
             }
         };
@@ -421,7 +426,7 @@ namespace opensaml {
     
         protected:
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_FOREIGN_CHILD(Subject,saml2,SAMLConstants::SAML20_NS,false);
+                PROC_TYPED_FOREIGN_CHILD(Subject,saml2,SAML20_NS,false);
                 RequestAbstractTypeImpl::processChildElement(childXMLObject,root);
             }
         };
@@ -478,8 +483,8 @@ namespace opensaml {
             }
     
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_FOREIGN_CHILDREN(AuthnContextClassRef,saml2,SAMLConstants::SAML20_NS,false);
-                PROC_TYPED_FOREIGN_CHILDREN(AuthnContextDeclRef,saml2,SAMLConstants::SAML20_NS,false);
+                PROC_TYPED_FOREIGN_CHILDREN(AuthnContextClassRef,saml2,SAML20_NS,false);
+                PROC_TYPED_FOREIGN_CHILDREN(AuthnContextDeclRef,saml2,SAML20_NS,false);
                 AbstractXMLObjectUnmarshaller::processChildElement(childXMLObject,root);
             }
     
@@ -536,7 +541,7 @@ namespace opensaml {
             }
     
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_CHILD(RequestedAuthnContext,SAMLConstants::SAML20P_NS,false);
+                PROC_TYPED_CHILD(RequestedAuthnContext,SAML20P_NS,false);
                 SubjectQueryImpl::processChildElement(childXMLObject,root);
             }
             void processAttribute(const DOMAttr* attribute) {
@@ -578,7 +583,7 @@ namespace opensaml {
     
         protected:
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_FOREIGN_CHILDREN(Attribute,saml2,SAMLConstants::SAML20_NS,false);
+                PROC_TYPED_FOREIGN_CHILDREN(Attribute,saml2,SAML20_NS,false);
                 SubjectQueryImpl::processChildElement(childXMLObject,root);
             }
         };
@@ -638,8 +643,8 @@ namespace opensaml {
             }
     
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_FOREIGN_CHILD(Evidence,saml2,SAMLConstants::SAML20_NS,false);
-                PROC_TYPED_FOREIGN_CHILDREN(Action,saml2,SAMLConstants::SAML20_NS,false);
+                PROC_TYPED_FOREIGN_CHILD(Evidence,saml2,SAML20_NS,false);
+                PROC_TYPED_FOREIGN_CHILDREN(Action,saml2,SAML20_NS,false);
                 SubjectQueryImpl::processChildElement(childXMLObject,root);
             }
             void processAttribute(const DOMAttr* attribute) {
@@ -657,7 +662,7 @@ namespace opensaml {
             void init() {
                 m_Format=NULL;
                 m_SPNameQualifier=NULL;
-                m_AllowCreate=XMLConstants::XML_BOOL_NULL;
+                m_AllowCreate=XML_BOOL_NULL;
             }
             public:
                 virtual ~NameIDPolicyImpl()
@@ -796,8 +801,8 @@ namespace opensaml {
     
         protected:
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_CHILDREN(IDPEntry,SAMLConstants::SAML20P_NS,false);
-                PROC_TYPED_CHILD(GetComplete,SAMLConstants::SAML20P_NS,false);
+                PROC_TYPED_CHILDREN(IDPEntry,SAML20P_NS,false);
+                PROC_TYPED_CHILD(GetComplete,SAML20P_NS,false);
                 AbstractXMLObjectUnmarshaller::processChildElement(childXMLObject,root);
             }
         };
@@ -855,8 +860,8 @@ namespace opensaml {
             }
     
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_CHILD(IDPList,SAMLConstants::SAML20P_NS,false);
-                PROC_TYPED_CHILDREN(RequesterID,SAMLConstants::SAML20P_NS,false);
+                PROC_TYPED_CHILD(IDPList,SAML20P_NS,false);
+                PROC_TYPED_CHILDREN(RequesterID,SAML20P_NS,false);
                 AbstractXMLObjectUnmarshaller::processChildElement(childXMLObject,root);
             }
 
@@ -869,8 +874,8 @@ namespace opensaml {
         class SAML_DLLLOCAL AuthnRequestImpl : public virtual AuthnRequest, public RequestAbstractTypeImpl
         {
             void init() {
-                m_ForceAuthn=XMLConstants::XML_BOOL_NULL;
-                m_IsPassive=XMLConstants::XML_BOOL_NULL;
+                m_ForceAuthn=XML_BOOL_NULL;
+                m_IsPassive=XML_BOOL_NULL;
                 m_ProtocolBinding=NULL;
                 m_AssertionConsumerServiceIndex=NULL;
                 m_AssertionConsumerServiceURL=NULL;
@@ -969,11 +974,11 @@ namespace opensaml {
             }
     
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_FOREIGN_CHILD(Subject,saml2,SAMLConstants::SAML20_NS,false);
-                PROC_TYPED_CHILD(NameIDPolicy,SAMLConstants::SAML20P_NS,false);
-                PROC_TYPED_FOREIGN_CHILD(Conditions,saml2,SAMLConstants::SAML20_NS,false);
-                PROC_TYPED_CHILD(RequestedAuthnContext,SAMLConstants::SAML20P_NS,false);
-                PROC_TYPED_CHILD(Scoping,SAMLConstants::SAML20P_NS,false);
+                PROC_TYPED_FOREIGN_CHILD(Subject,saml2,SAML20_NS,false);
+                PROC_TYPED_CHILD(NameIDPolicy,SAML20P_NS,false);
+                PROC_TYPED_FOREIGN_CHILD(Conditions,saml2,SAML20_NS,false);
+                PROC_TYPED_CHILD(RequestedAuthnContext,SAML20P_NS,false);
+                PROC_TYPED_CHILD(Scoping,SAML20P_NS,false);
                 RequestAbstractTypeImpl::processChildElement(childXMLObject,root);
             }
             void processAttribute(const DOMAttr* attribute) {
@@ -1103,10 +1108,10 @@ namespace opensaml {
             }
     
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_FOREIGN_CHILD(Issuer,saml2,SAMLConstants::SAML20_NS,false);
-                PROC_TYPED_FOREIGN_CHILD(Signature,xmlsignature,XMLConstants::XMLSIG_NS,false);
-                PROC_TYPED_CHILD(Extensions,SAMLConstants::SAML20P_NS,false);
-                PROC_TYPED_CHILD(Status,SAMLConstants::SAML20P_NS,false);
+                PROC_TYPED_FOREIGN_CHILD(Issuer,saml2,SAML20_NS,false);
+                PROC_TYPED_FOREIGN_CHILD(Signature,xmlsignature,XMLSIG_NS,false);
+                PROC_TYPED_CHILD(Extensions,SAML20P_NS,false);
+                PROC_TYPED_CHILD(Status,SAML20P_NS,false);
                 AbstractXMLObjectUnmarshaller::processChildElement(childXMLObject,root);
             }
     
@@ -1157,8 +1162,8 @@ namespace opensaml {
     
         protected:
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_FOREIGN_CHILDREN(Assertion,saml2,SAMLConstants::SAML20_NS,false);
-                PROC_TYPED_FOREIGN_CHILDREN(EncryptedAssertion,saml2,SAMLConstants::SAML20_NS,false);
+                PROC_TYPED_FOREIGN_CHILDREN(Assertion,saml2,SAML20_NS,false);
+                PROC_TYPED_FOREIGN_CHILDREN(EncryptedAssertion,saml2,SAML20_NS,false);
                 StatusResponseTypeImpl::processChildElement(childXMLObject,root);
             }
         };
@@ -1195,7 +1200,7 @@ namespace opensaml {
     
         protected:
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_CHILD(Artifact,SAMLConstants::SAML20P_NS,false);
+                PROC_TYPED_CHILD(Artifact,SAML20P_NS,false);
                 RequestAbstractTypeImpl::processChildElement(childXMLObject,root);
             }
         };
@@ -1236,10 +1241,10 @@ namespace opensaml {
                 // These are valid elements for the parent StatusResponseType, so don't process these.
                 // If not one of these, then it must be the payload.
                 if (
-                    ! XMLHelper::isNodeNamed(root,SAMLConstants::SAML20_NS,saml2::Issuer::LOCAL_NAME) &&
-                    ! XMLHelper::isNodeNamed(root,XMLConstants::XMLSIG_NS,xmlsignature::Signature::LOCAL_NAME) &&
-                    ! XMLHelper::isNodeNamed(root,SAMLConstants::SAML20P_NS,saml2p::Extensions::LOCAL_NAME) &&
-                    ! XMLHelper::isNodeNamed(root,SAMLConstants::SAML20P_NS,saml2p::Status::LOCAL_NAME)
+                    ! XMLHelper::isNodeNamed(root,SAML20_NS,saml2::Issuer::LOCAL_NAME) &&
+                    ! XMLHelper::isNodeNamed(root,XMLSIG_NS,xmlsignature::Signature::LOCAL_NAME) &&
+                    ! XMLHelper::isNodeNamed(root,SAML20P_NS,saml2p::Extensions::LOCAL_NAME) &&
+                    ! XMLHelper::isNodeNamed(root,SAML20P_NS,saml2p::Status::LOCAL_NAME)
                    )
                 {
                     setPayload(childXMLObject);
@@ -1318,8 +1323,8 @@ namespace opensaml {
     
         protected:
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_FOREIGN_CHILD(EncryptedData,xmlencryption,XMLConstants::XMLENC_NS,false);
-                PROC_TYPED_FOREIGN_CHILDREN(EncryptedKey,xmlencryption,XMLConstants::XMLENC_NS,false);
+                PROC_TYPED_FOREIGN_CHILD(EncryptedData,xmlencryption,XMLENC_NS,false);
+                PROC_TYPED_FOREIGN_CHILDREN(EncryptedKey,xmlencryption,XMLENC_NS,false);
                 AbstractXMLObjectUnmarshaller::processChildElement(childXMLObject,root);
             }
         };
@@ -1409,11 +1414,11 @@ namespace opensaml {
     
         protected:
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_FOREIGN_CHILD(NameID,saml2,SAMLConstants::SAML20_NS,false);
-                PROC_TYPED_FOREIGN_CHILD(EncryptedID,saml2,SAMLConstants::SAML20_NS,false);
-                PROC_TYPED_CHILD(NewID,SAMLConstants::SAML20P_NS,false);
-                PROC_TYPED_CHILD(NewEncryptedID,SAMLConstants::SAML20P_NS,false);
-                PROC_TYPED_CHILD(Terminate,SAMLConstants::SAML20P_NS,false);
+                PROC_TYPED_FOREIGN_CHILD(NameID,saml2,SAML20_NS,false);
+                PROC_TYPED_FOREIGN_CHILD(EncryptedID,saml2,SAML20_NS,false);
+                PROC_TYPED_CHILD(NewID,SAML20P_NS,false);
+                PROC_TYPED_CHILD(NewEncryptedID,SAML20P_NS,false);
+                PROC_TYPED_CHILD(Terminate,SAML20P_NS,false);
                 RequestAbstractTypeImpl::processChildElement(childXMLObject,root);
             }
         };
@@ -1511,10 +1516,10 @@ namespace opensaml {
             }
     
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_FOREIGN_CHILD(BaseID,saml2,SAMLConstants::SAML20_NS,false);
-                PROC_TYPED_FOREIGN_CHILD(NameID,saml2,SAMLConstants::SAML20_NS,false);
-                PROC_TYPED_FOREIGN_CHILD(EncryptedID,saml2,SAMLConstants::SAML20_NS,false);
-                PROC_TYPED_CHILDREN(SessionIndex,SAMLConstants::SAML20P_NS,false);
+                PROC_TYPED_FOREIGN_CHILD(BaseID,saml2,SAML20_NS,false);
+                PROC_TYPED_FOREIGN_CHILD(NameID,saml2,SAML20_NS,false);
+                PROC_TYPED_FOREIGN_CHILD(EncryptedID,saml2,SAML20_NS,false);
+                PROC_TYPED_CHILDREN(SessionIndex,SAML20P_NS,false);
                 RequestAbstractTypeImpl::processChildElement(childXMLObject,root);
             }
             void processAttribute(const DOMAttr* attribute) {
@@ -1598,10 +1603,10 @@ namespace opensaml {
     
         protected:
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_FOREIGN_CHILD(BaseID,saml2,SAMLConstants::SAML20_NS,false);
-                PROC_TYPED_FOREIGN_CHILD(NameID,saml2,SAMLConstants::SAML20_NS,false);
-                PROC_TYPED_FOREIGN_CHILD(EncryptedID,saml2,SAMLConstants::SAML20_NS,false);
-                PROC_TYPED_CHILD(NameIDPolicy,SAMLConstants::SAML20P_NS,false);
+                PROC_TYPED_FOREIGN_CHILD(BaseID,saml2,SAML20_NS,false);
+                PROC_TYPED_FOREIGN_CHILD(NameID,saml2,SAML20_NS,false);
+                PROC_TYPED_FOREIGN_CHILD(EncryptedID,saml2,SAML20_NS,false);
+                PROC_TYPED_CHILD(NameIDPolicy,SAML20P_NS,false);
                 RequestAbstractTypeImpl::processChildElement(childXMLObject,root);
             }
         };
@@ -1647,8 +1652,8 @@ namespace opensaml {
     
         protected:
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_FOREIGN_CHILD(NameID,saml2,SAMLConstants::SAML20_NS,false);
-                PROC_TYPED_FOREIGN_CHILD(EncryptedID,saml2,SAMLConstants::SAML20_NS,false);
+                PROC_TYPED_FOREIGN_CHILD(NameID,saml2,SAML20_NS,false);
+                PROC_TYPED_FOREIGN_CHILD(EncryptedID,saml2,SAML20_NS,false);
                 StatusResponseTypeImpl::processChildElement(childXMLObject,root);
             }
         };

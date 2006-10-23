@@ -27,7 +27,7 @@ class Assertion20Test : public CxxTest::TestSuite, public SAMLObjectBaseTestCase
 
 public:
     void setUp() {
-        expectedVersion = SAMLConstants::SAML20_VERSION;
+        expectedVersion = samlconstants::SAML20_VERSION;
         expectedID = XMLString::transcode("abc123");
         expectedIssueInstant = new DateTime(XMLString::transcode("1984-08-26T10:01:30.043Z"));
         expectedIssueInstant->parseDateTime();

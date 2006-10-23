@@ -26,7 +26,7 @@
 #include <saml/saml2/core/Assertions.h>
 
 #define DECL_SAML2POBJECTBUILDER(cname) \
-    DECL_XMLOBJECTBUILDER(SAML_API,cname,opensaml::SAMLConstants::SAML20P_NS,opensaml::SAMLConstants::SAML20P_PREFIX)
+    DECL_XMLOBJECTBUILDER(SAML_API,cname,samlconstants::SAML20P_NS,samlconstants::SAML20P_PREFIX)
 
 namespace opensaml {
 
@@ -388,7 +388,7 @@ namespace opensaml {
         DECL_SAML2POBJECTBUILDER(StatusMessage);
         DECL_SAML2POBJECTBUILDER(Terminate);
         
-        DECL_XMLOBJECTBUILDER(SAML_API,RespondTo,opensaml::SAMLConstants::SAML20P_THIRDPARTY_EXT_NS,opensaml::SAMLConstants::SAML20P_THIRDPARTY_EXT_PREFIX);
+        DECL_XMLOBJECTBUILDER(SAML_API,RespondTo,samlconstants::SAML20P_THIRDPARTY_EXT_NS,samlconstants::SAML20P_THIRDPARTY_EXT_PREFIX);
 
         /**
          * Registers builders and validators for SAML 2.0 Protocol classes into the runtime.

@@ -15,87 +15,87 @@
  */
 
 /**
- * SAMLConstants.cpp
+ * samlconstants.cpp
  * 
  * SAML XML namespace constants 
  */
 
 
 #include "internal.h"
-#include "util/SAMLConstants.h"
+#include "util/samlconstants.h"
 #include <xercesc/util/XMLUniDefs.hpp>
 
 using namespace xercesc;
-using namespace opensaml;
+using namespace samlconstants;
 
-const XMLCh SAMLConstants::PAOS_NS[] = // urn:liberty:paos:2003-08
+const XMLCh samlconstants::PAOS_NS[] = // urn:liberty:paos:2003-08
 { chLatin_u, chLatin_r, chLatin_n, chColon,
   chLatin_l, chLatin_i, chLatin_b, chLatin_e, chLatin_r, chLatin_t, chLatin_y, chColon,
   chLatin_p, chLatin_a, chLatin_o, chLatin_s, chColon,
   chDigit_2, chDigit_0, chDigit_0, chDigit_3, chDash, chDigit_0, chDigit_8, chNull
 };
 
-const XMLCh SAMLConstants::PAOS_PREFIX[] = UNICODE_LITERAL_4(p,a,o,s);
+const XMLCh samlconstants::PAOS_PREFIX[] = UNICODE_LITERAL_4(p,a,o,s);
 
-const XMLCh SAMLConstants::SAML1_NS[] = // urn:oasis:names:tc:SAML:1.0:assertion
+const XMLCh samlconstants::SAML1_NS[] = // urn:oasis:names:tc:SAML:1.0:assertion
 { chLatin_u, chLatin_r, chLatin_n, chColon, chLatin_o, chLatin_a, chLatin_s, chLatin_i, chLatin_s, chColon,
   chLatin_n, chLatin_a, chLatin_m, chLatin_e, chLatin_s, chColon, chLatin_t, chLatin_c, chColon,
   chLatin_S, chLatin_A, chLatin_M, chLatin_L, chColon, chDigit_1, chPeriod, chDigit_0, chColon,
   chLatin_a, chLatin_s, chLatin_s, chLatin_e, chLatin_r, chLatin_t, chLatin_i, chLatin_o, chLatin_n, chNull
 };
 
-const XMLCh SAMLConstants::SAML1P_NS[] = // urn:oasis:names:tc:SAML:1.0:protocol
+const XMLCh samlconstants::SAML1P_NS[] = // urn:oasis:names:tc:SAML:1.0:protocol
 { chLatin_u, chLatin_r, chLatin_n, chColon, chLatin_o, chLatin_a, chLatin_s, chLatin_i, chLatin_s, chColon,
   chLatin_n, chLatin_a, chLatin_m, chLatin_e, chLatin_s, chColon, chLatin_t, chLatin_c, chColon,
   chLatin_S, chLatin_A, chLatin_M, chLatin_L, chColon, chDigit_1, chPeriod, chDigit_0, chColon,
   chLatin_p, chLatin_r, chLatin_o, chLatin_t, chLatin_o, chLatin_c, chLatin_o, chLatin_l, chNull
 };
 
-const XMLCh SAMLConstants::SAML1_PREFIX[] = UNICODE_LITERAL_4(s,a,m,l);
+const XMLCh samlconstants::SAML1_PREFIX[] = UNICODE_LITERAL_4(s,a,m,l);
 
-const XMLCh SAMLConstants::SAML1P_PREFIX[] = UNICODE_LITERAL_5(s,a,m,l,p);
+const XMLCh samlconstants::SAML1P_PREFIX[] = UNICODE_LITERAL_5(s,a,m,l,p);
 
-const XMLCh SAMLConstants::SAML20_VERSION[] = // 2.0
+const XMLCh samlconstants::SAML20_VERSION[] = // 2.0
 { chDigit_2, chPeriod, chDigit_0, chNull
 };
 
-const XMLCh SAMLConstants::SAML20_NS[] = // urn:oasis:names:tc:SAML:2.0:assertion
+const XMLCh samlconstants::SAML20_NS[] = // urn:oasis:names:tc:SAML:2.0:assertion
 { chLatin_u, chLatin_r, chLatin_n, chColon, chLatin_o, chLatin_a, chLatin_s, chLatin_i, chLatin_s, chColon,
   chLatin_n, chLatin_a, chLatin_m, chLatin_e, chLatin_s, chColon, chLatin_t, chLatin_c, chColon,
   chLatin_S, chLatin_A, chLatin_M, chLatin_L, chColon, chDigit_2, chPeriod, chDigit_0, chColon,
   chLatin_a, chLatin_s, chLatin_s, chLatin_e, chLatin_r, chLatin_t, chLatin_i, chLatin_o, chLatin_n, chNull
 };
 
-const XMLCh SAMLConstants::SAML20P_NS[] = // urn:oasis:names:tc:SAML:2.0:protocol
+const XMLCh samlconstants::SAML20P_NS[] = // urn:oasis:names:tc:SAML:2.0:protocol
 { chLatin_u, chLatin_r, chLatin_n, chColon, chLatin_o, chLatin_a, chLatin_s, chLatin_i, chLatin_s, chColon,
   chLatin_n, chLatin_a, chLatin_m, chLatin_e, chLatin_s, chColon, chLatin_t, chLatin_c, chColon,
   chLatin_S, chLatin_A, chLatin_M, chLatin_L, chColon, chDigit_2, chPeriod, chDigit_0, chColon,
   chLatin_p, chLatin_r, chLatin_o, chLatin_t, chLatin_o, chLatin_c, chLatin_o, chLatin_l, chNull
 };
 
-const XMLCh SAMLConstants::SAML20MD_NS[] = // urn:oasis:names:tc:SAML:2.0:metadata
+const XMLCh samlconstants::SAML20MD_NS[] = // urn:oasis:names:tc:SAML:2.0:metadata
 { chLatin_u, chLatin_r, chLatin_n, chColon, chLatin_o, chLatin_a, chLatin_s, chLatin_i, chLatin_s, chColon,
   chLatin_n, chLatin_a, chLatin_m, chLatin_e, chLatin_s, chColon, chLatin_t, chLatin_c, chColon,
   chLatin_S, chLatin_A, chLatin_M, chLatin_L, chColon, chDigit_2, chPeriod, chDigit_0, chColon,
   chLatin_m, chLatin_e, chLatin_t, chLatin_a, chLatin_d, chLatin_a, chLatin_t, chLatin_a, chNull
 };
 
-const XMLCh SAMLConstants::SAML20AC_NS[] = // urn:oasis:names:tc:SAML:2.0:ac
+const XMLCh samlconstants::SAML20AC_NS[] = // urn:oasis:names:tc:SAML:2.0:ac
 { chLatin_u, chLatin_r, chLatin_n, chColon, chLatin_o, chLatin_a, chLatin_s, chLatin_i, chLatin_s, chColon,
   chLatin_n, chLatin_a, chLatin_m, chLatin_e, chLatin_s, chColon, chLatin_t, chLatin_c, chColon,
   chLatin_S, chLatin_A, chLatin_M, chLatin_L, chColon, chDigit_2, chPeriod, chDigit_0, chColon,
   chLatin_a, chLatin_c, chNull
 };
 
-const XMLCh SAMLConstants::SAML20_PREFIX[] = UNICODE_LITERAL_4(s,a,m,l);
+const XMLCh samlconstants::SAML20_PREFIX[] = UNICODE_LITERAL_4(s,a,m,l);
 
-const XMLCh SAMLConstants::SAML20P_PREFIX[] = UNICODE_LITERAL_5(s,a,m,l,p);
+const XMLCh samlconstants::SAML20P_PREFIX[] = UNICODE_LITERAL_5(s,a,m,l,p);
 
-const XMLCh SAMLConstants::SAML20MD_PREFIX[] = UNICODE_LITERAL_2(m,d);
+const XMLCh samlconstants::SAML20MD_PREFIX[] = UNICODE_LITERAL_2(m,d);
 
-const XMLCh SAMLConstants::SAML20AC_PREFIX[] = UNICODE_LITERAL_2(a,c);
+const XMLCh samlconstants::SAML20AC_PREFIX[] = UNICODE_LITERAL_2(a,c);
 
-const XMLCh SAMLConstants::SAML20ECP_NS[] = // urn:oasis:names:tc:SAML:2.0:profiles:SSO:ecp
+const XMLCh samlconstants::SAML20ECP_NS[] = // urn:oasis:names:tc:SAML:2.0:profiles:SSO:ecp
 { chLatin_u, chLatin_r, chLatin_n, chColon, chLatin_o, chLatin_a, chLatin_s, chLatin_i, chLatin_s, chColon,
   chLatin_n, chLatin_a, chLatin_m, chLatin_e, chLatin_s, chColon, chLatin_t, chLatin_c, chColon,
   chLatin_S, chLatin_A, chLatin_M, chLatin_L, chColon, chDigit_2, chPeriod, chDigit_0, chColon,
@@ -103,9 +103,9 @@ const XMLCh SAMLConstants::SAML20ECP_NS[] = // urn:oasis:names:tc:SAML:2.0:profi
   chLatin_S, chLatin_S, chLatin_O, chColon, chLatin_e, chLatin_c, chLatin_p, chNull
 };
 
-const XMLCh SAMLConstants::SAML20ECP_PREFIX[] = UNICODE_LITERAL_3(e,c,p);
+const XMLCh samlconstants::SAML20ECP_PREFIX[] = UNICODE_LITERAL_3(e,c,p);
 
-const XMLCh SAMLConstants::SAML20DCE_NS[] = // urn:oasis:names:tc:SAML:2.0:profiles:attribute:DCE
+const XMLCh samlconstants::SAML20DCE_NS[] = // urn:oasis:names:tc:SAML:2.0:profiles:attribute:DCE
 { chLatin_u, chLatin_r, chLatin_n, chColon, chLatin_o, chLatin_a, chLatin_s, chLatin_i, chLatin_s, chColon,
   chLatin_n, chLatin_a, chLatin_m, chLatin_e, chLatin_s, chColon, chLatin_t, chLatin_c, chColon,
   chLatin_S, chLatin_A, chLatin_M, chLatin_L, chColon, chDigit_2, chPeriod, chDigit_0, chColon,
@@ -114,9 +114,9 @@ const XMLCh SAMLConstants::SAML20DCE_NS[] = // urn:oasis:names:tc:SAML:2.0:profi
   chLatin_D, chLatin_C, chLatin_E, chNull
 };
 
-const XMLCh SAMLConstants::SAML20DCE_PREFIX[] = UNICODE_LITERAL_3(D,C,E);
+const XMLCh samlconstants::SAML20DCE_PREFIX[] = UNICODE_LITERAL_3(D,C,E);
 
-const XMLCh SAMLConstants::SAML20X500_NS[] = // urn:oasis:names:tc:SAML:2.0:profiles:attribute:X500
+const XMLCh samlconstants::SAML20X500_NS[] = // urn:oasis:names:tc:SAML:2.0:profiles:attribute:X500
 { chLatin_u, chLatin_r, chLatin_n, chColon, chLatin_o, chLatin_a, chLatin_s, chLatin_i, chLatin_s, chColon,
   chLatin_n, chLatin_a, chLatin_m, chLatin_e, chLatin_s, chColon, chLatin_t, chLatin_c, chColon,
   chLatin_S, chLatin_A, chLatin_M, chLatin_L, chColon, chDigit_2, chPeriod, chDigit_0, chColon,
@@ -125,9 +125,9 @@ const XMLCh SAMLConstants::SAML20X500_NS[] = // urn:oasis:names:tc:SAML:2.0:prof
   chLatin_X, chDigit_5, chDigit_0, chDigit_0, chNull
 };
 
-const XMLCh SAMLConstants::SAML20X500_PREFIX[] = { chLatin_x, chDigit_5, chDigit_0, chDigit_0 };
+const XMLCh samlconstants::SAML20X500_PREFIX[] = { chLatin_x, chDigit_5, chDigit_0, chDigit_0 };
 
-const XMLCh SAMLConstants::SAML20XACML_NS[] = // urn:oasis:names:tc:SAML:2.0:profiles:attribute:XACML
+const XMLCh samlconstants::SAML20XACML_NS[] = // urn:oasis:names:tc:SAML:2.0:profiles:attribute:XACML
 { chLatin_u, chLatin_r, chLatin_n, chColon, chLatin_o, chLatin_a, chLatin_s, chLatin_i, chLatin_s, chColon,
   chLatin_n, chLatin_a, chLatin_m, chLatin_e, chLatin_s, chColon, chLatin_t, chLatin_c, chColon,
   chLatin_S, chLatin_A, chLatin_M, chLatin_L, chColon, chDigit_2, chPeriod, chDigit_0, chColon,
@@ -136,9 +136,9 @@ const XMLCh SAMLConstants::SAML20XACML_NS[] = // urn:oasis:names:tc:SAML:2.0:pro
   chLatin_X, chLatin_A, chLatin_C, chLatin_M, chLatin_L, chNull
 };
 
-const XMLCh SAMLConstants::SAML20XACML_PREFIX[] = UNICODE_LITERAL_9(x,a,c,m,l,p,r,o,f);
+const XMLCh samlconstants::SAML20XACML_PREFIX[] = UNICODE_LITERAL_9(x,a,c,m,l,p,r,o,f);
 
-const XMLCh SAMLConstants::SAML1MD_NS[] = // urn:oasis:names:tc:SAML:profiles:v1metadata
+const XMLCh samlconstants::SAML1MD_NS[] = // urn:oasis:names:tc:SAML:profiles:v1metadata
 { chLatin_u, chLatin_r, chLatin_n, chColon, chLatin_o, chLatin_a, chLatin_s, chLatin_i, chLatin_s, chColon,
   chLatin_n, chLatin_a, chLatin_m, chLatin_e, chLatin_s, chColon, chLatin_t, chLatin_c, chColon,
   chLatin_S, chLatin_A, chLatin_M, chLatin_L, chColon,
@@ -146,17 +146,17 @@ const XMLCh SAMLConstants::SAML1MD_NS[] = // urn:oasis:names:tc:SAML:profiles:v1
   chLatin_v, chDigit_1, chLatin_m, chLatin_e, chLatin_t, chLatin_a, chLatin_d, chLatin_a, chLatin_t, chLatin_a, chNull
 };
 
-const XMLCh SAMLConstants::SAML1MD_PREFIX[] =
+const XMLCh samlconstants::SAML1MD_PREFIX[] =
 { chLatin_s, chLatin_a, chLatin_m, chLatin_l, chDigit_1, chLatin_m, chLatin_d, chNull };
 
-const XMLCh SAMLConstants::SAML11_PROTOCOL_ENUM[] = // urn:oasis:names:tc:SAML:1.1:protocol
+const XMLCh samlconstants::SAML11_PROTOCOL_ENUM[] = // urn:oasis:names:tc:SAML:1.1:protocol
 { chLatin_u, chLatin_r, chLatin_n, chColon, chLatin_o, chLatin_a, chLatin_s, chLatin_i, chLatin_s, chColon,
   chLatin_n, chLatin_a, chLatin_m, chLatin_e, chLatin_s, chColon, chLatin_t, chLatin_c, chColon,
   chLatin_S, chLatin_A, chLatin_M, chLatin_L, chColon, chDigit_1, chPeriod, chDigit_1, chColon,
   chLatin_p, chLatin_r, chLatin_o, chLatin_t, chLatin_o, chLatin_c, chLatin_o, chLatin_l, chNull
 };
 
-const XMLCh SAMLConstants::SAML20MD_QUERY_EXT_NS[] = // urn:oasis:names:tc:SAML:metadata:ext:query
+const XMLCh samlconstants::SAML20MD_QUERY_EXT_NS[] = // urn:oasis:names:tc:SAML:metadata:ext:query
 { chLatin_u, chLatin_r, chLatin_n, chColon, chLatin_o, chLatin_a, chLatin_s, chLatin_i, chLatin_s, chColon,
   chLatin_n, chLatin_a, chLatin_m, chLatin_e, chLatin_s, chColon, chLatin_t, chLatin_c, chColon,
   chLatin_S, chLatin_A, chLatin_M, chLatin_L, chColon,
@@ -164,9 +164,9 @@ const XMLCh SAMLConstants::SAML20MD_QUERY_EXT_NS[] = // urn:oasis:names:tc:SAML:
   chLatin_e, chLatin_x, chLatin_t, chColon, chLatin_q, chLatin_u, chLatin_e, chLatin_r, chLatin_y, chNull
 };
 
-const XMLCh SAMLConstants::SAML20MD_QUERY_EXT_PREFIX[] = UNICODE_LITERAL_5(q,u,e,r,y);
+const XMLCh samlconstants::SAML20MD_QUERY_EXT_PREFIX[] = UNICODE_LITERAL_5(q,u,e,r,y);
 
-const XMLCh SAMLConstants::SAML20P_THIRDPARTY_EXT_NS[] = // urn:oasis:names:tc:SAML:protocol:ext:third-party
+const XMLCh samlconstants::SAML20P_THIRDPARTY_EXT_NS[] = // urn:oasis:names:tc:SAML:protocol:ext:third-party
 { chLatin_u, chLatin_r, chLatin_n, chColon, chLatin_o, chLatin_a, chLatin_s, chLatin_i, chLatin_s, chColon,
   chLatin_n, chLatin_a, chLatin_m, chLatin_e, chLatin_s, chColon, chLatin_t, chLatin_c, chColon,
   chLatin_S, chLatin_A, chLatin_M, chLatin_L, chColon,
@@ -175,14 +175,14 @@ const XMLCh SAMLConstants::SAML20P_THIRDPARTY_EXT_NS[] = // urn:oasis:names:tc:S
   chLatin_t, chLatin_h, chLatin_i, chLatin_r, chLatin_d, chDash, chLatin_p, chLatin_a, chLatin_r, chLatin_t, chLatin_y, chNull
 };
 
-const XMLCh SAMLConstants::SAML20P_THIRDPARTY_EXT_PREFIX[] = UNICODE_LITERAL_6(t,h,r,p,t,y);
+const XMLCh samlconstants::SAML20P_THIRDPARTY_EXT_PREFIX[] = UNICODE_LITERAL_6(t,h,r,p,t,y);
 
-const char SAMLConstants::SAML1_PROFILE_BROWSER_ARTIFACT[] = "urn:oasis:names:tc:SAML:1.0:profiles:artifact-01";
+const char samlconstants::SAML1_PROFILE_BROWSER_ARTIFACT[] = "urn:oasis:names:tc:SAML:1.0:profiles:artifact-01";
 
-const char SAMLConstants::SAML1_PROFILE_BROWSER_POST[] = "urn:oasis:names:tc:SAML:1.0:profiles:browser-post";
+const char samlconstants::SAML1_PROFILE_BROWSER_POST[] = "urn:oasis:names:tc:SAML:1.0:profiles:browser-post";
 
-const char SAMLConstants::SAML20_BINDING_HTTP_ARTIFACT[] = "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact";
+const char samlconstants::SAML20_BINDING_HTTP_ARTIFACT[] = "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact";
 
-const char SAMLConstants::SAML20_BINDING_HTTP_POST[] = "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST";
+const char samlconstants::SAML20_BINDING_HTTP_POST[] = "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST";
 
-const char SAMLConstants::SAML20_BINDING_HTTP_REDIRECT[] = "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect";
+const char samlconstants::SAML20_BINDING_HTTP_REDIRECT[] = "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect";

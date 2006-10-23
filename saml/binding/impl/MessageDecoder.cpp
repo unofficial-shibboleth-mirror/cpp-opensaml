@@ -22,7 +22,7 @@
 
 #include "internal.h"
 #include "binding/MessageDecoder.h"
-#include "util/SAMLConstants.h"
+#include "util/samlconstants.h"
 
 using namespace opensaml;
 using namespace xmltooling;
@@ -42,8 +42,8 @@ namespace opensaml {
 void SAML_API opensaml::registerMessageDecoders()
 {
     SAMLConfig& conf=SAMLConfig::getConfig();
-    conf.MessageDecoderManager.registerFactory(SAMLConstants::SAML1_PROFILE_BROWSER_ARTIFACT, saml1p::SAML1ArtifactDecoderFactory);
-    conf.MessageDecoderManager.registerFactory(SAMLConstants::SAML1_PROFILE_BROWSER_POST, saml1p::SAML1POSTDecoderFactory);
-    conf.MessageDecoderManager.registerFactory(SAMLConstants::SAML20_BINDING_HTTP_ARTIFACT, saml2p::SAML2ArtifactDecoderFactory);
-    conf.MessageDecoderManager.registerFactory(SAMLConstants::SAML20_BINDING_HTTP_POST, saml2p::SAML2POSTDecoderFactory);
+    conf.MessageDecoderManager.registerFactory(samlconstants::SAML1_PROFILE_BROWSER_ARTIFACT, saml1p::SAML1ArtifactDecoderFactory);
+    conf.MessageDecoderManager.registerFactory(samlconstants::SAML1_PROFILE_BROWSER_POST, saml1p::SAML1POSTDecoderFactory);
+    conf.MessageDecoderManager.registerFactory(samlconstants::SAML20_BINDING_HTTP_ARTIFACT, saml2p::SAML2ArtifactDecoderFactory);
+    conf.MessageDecoderManager.registerFactory(samlconstants::SAML20_BINDING_HTTP_POST, saml2p::SAML2POSTDecoderFactory);
 }

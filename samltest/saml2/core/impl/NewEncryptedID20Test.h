@@ -60,7 +60,7 @@ public:
     void testChildElementsMarshall() {
         NewEncryptedID* encID=NewEncryptedIDBuilder::buildNewEncryptedID();
         // Do this just so don't have to redeclare the xenc namespace prefix on every child element in the control XML file
-        Namespace* ns = new Namespace(xmltooling::XMLConstants::XMLENC_NS, xmltooling::XMLConstants::XMLENC_PREFIX);
+        Namespace* ns = new Namespace(xmlconstants::XMLENC_NS, xmlconstants::XMLENC_PREFIX);
         encID->addNamespace(*ns);
         encID->setEncryptedData(EncryptedDataBuilder::buildEncryptedData());
         encID->getEncryptedKeys().push_back(EncryptedKeyBuilder::buildEncryptedKey());

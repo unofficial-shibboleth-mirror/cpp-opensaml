@@ -76,8 +76,8 @@ public:
         assertEquals("ID attribute", expectedID, request->getID());
         assertEquals("Version attribute", expectedVersion, request->getVersion());
         TSM_ASSERT_EQUALS("IssueInstant attribute", expectedIssueInstant->getEpoch(), request->getIssueInstant()->getEpoch());
-        TSM_ASSERT_EQUALS("ForceAuthn attribute presence", XMLConstants::XML_BOOL_NULL, request->getForceAuthn());
-        TSM_ASSERT_EQUALS("IsPassive attribute presence", XMLConstants::XML_BOOL_NULL, request->getIsPassive());
+        TSM_ASSERT_EQUALS("ForceAuthn attribute presence", xmlconstants::XML_BOOL_NULL, request->getForceAuthn());
+        TSM_ASSERT_EQUALS("IsPassive attribute presence", xmlconstants::XML_BOOL_NULL, request->getIsPassive());
         TSM_ASSERT_EQUALS("AssertionConsumerServiceIndex attribute presence",false, request->getAssertionConsumerServiceIndex().first);
         TSM_ASSERT_EQUALS("AttributeConsumingServiceIndex attribute presence", false, request->getAttributeConsumingServiceIndex().first);
 
@@ -130,8 +130,8 @@ public:
         TS_ASSERT(request->getConditions()!=NULL);
         TS_ASSERT(request->getRequestedAuthnContext()!=NULL);
         TS_ASSERT(request->getScoping()!=NULL);
-        TSM_ASSERT_EQUALS("ForceAuthn attribute presence", XMLConstants::XML_BOOL_NULL, request->getForceAuthn());
-        TSM_ASSERT_EQUALS("IsPassive attribute presence", XMLConstants::XML_BOOL_NULL, request->getIsPassive());
+        TSM_ASSERT_EQUALS("ForceAuthn attribute presence", xmlconstants::XML_BOOL_NULL, request->getForceAuthn());
+        TSM_ASSERT_EQUALS("IsPassive attribute presence", xmlconstants::XML_BOOL_NULL, request->getIsPassive());
         TSM_ASSERT_EQUALS("AssertionConsumerServiceIndex attribute presence",false, request->getAssertionConsumerServiceIndex().first);
         TSM_ASSERT_EQUALS("AttributeConsumingServiceIndex attribute presence", false, request->getAttributeConsumingServiceIndex().first);
     }
@@ -166,7 +166,7 @@ public:
         request->setID(expectedID);
         request->setIssueInstant(expectedIssueInstant);
         // Do this just so don't have to redeclare the saml namespace prefix on every child element in the control XML file
-        Namespace* ns = new Namespace(opensaml::SAMLConstants::SAML20_NS, opensaml::SAMLConstants::SAML20_PREFIX);
+        Namespace* ns = new Namespace(samlconstants::SAML20_NS, samlconstants::SAML20_PREFIX);
         request->addNamespace(*ns);
         request->setIssuer(IssuerBuilder::buildIssuer());
         request->setSubject(SubjectBuilder::buildSubject());
