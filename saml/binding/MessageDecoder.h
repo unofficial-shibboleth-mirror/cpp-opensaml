@@ -175,14 +175,14 @@ namespace opensaml {
              * Resolves one or more SAML 1.x artifacts into a response containing a set of
              * resolved Assertions. The caller is responsible for the resulting Response. 
              * 
-             * @param authenticated     output flag set to true iff the resolution channel was authenticated
+             * @param securityMech      will be set to identifier of security mechanism that authenticated the resolution 
              * @param artifacts         one or more SAML 1.x artifacts
              * @param idpDescriptor     reference to IdP role of artifact issuer
              * @param trustEngine       optional pointer to X509TrustEngine supplied to MessageDecoder
              * @return the corresponding SAML Assertions wrapped in a Response.
              */
             virtual saml1p::Response* resolve(
-                bool& authenticated,
+                const XMLCh*& securityMech,
                 const std::vector<SAMLArtifact*>& artifacts,
                 const saml2md::IDPSSODescriptor& idpDescriptor,
                 const X509TrustEngine* trustEngine=NULL
@@ -192,14 +192,14 @@ namespace opensaml {
              * Resolves a SAML 2.0 artifact into the corresponding SAML protocol message.
              * The caller is responsible for the resulting ArtifactResponse message.
              * 
-             * @param authenticated     output flag set to true iff the resolution channel was authenticated
+             * @param securityMech      will be set to identifier of security mechanism that authenticated the resolution 
              * @param artifact          reference to a SAML 2.0 artifact
              * @param ssoDescriptor     reference to SSO role of artifact issuer (may be SP or IdP)
              * @param trustEngine       optional pointer to X509TrustEngine supplied to MessageDecoder
              * @return the corresponding SAML protocol message or NULL
              */
             virtual saml2p::ArtifactResponse* resolve(
-                bool& authenticated,
+                const XMLCh*& securityMech,
                 const saml2p::SAML2Artifact& artifact,
                 const saml2md::SSODescriptorType& ssoDescriptor,
                 const X509TrustEngine* trustEngine=NULL
@@ -245,10 +245,9 @@ namespace opensaml {
          * <p>In some cases, a message may be returned but not authenticated. The caller
          * should examine the issuerTrusted output value to establish this.  
          * 
-         * @param relayState        RelayState/TARGET value accompanying message
-         * @param issuer            role descriptor of issuing party
-         * @param issuerTrusted     output flag set to true iff the message was authenticated
-         *                          (signed or obtained via secure backchannel)
+         * @param relayState        will be set to RelayState/TARGET value accompanying message
+         * @param issuer            will be set to role descriptor of issuing party, if known
+         * @param securityMech      will be set to identifier of security mechanism that authenticates the message 
          * @param httpRequest       reference to interface for accessing HTTP message to decode
          * @param metadataProvider  optional MetadataProvider instance to authenticate the message
          * @param role              optional, identifies the role (generally IdP or SP) of the peer who issued the message 
@@ -258,7 +257,7 @@ namespace opensaml {
         virtual xmltooling::XMLObject* decode(
             std::string& relayState,
             const saml2md::RoleDescriptor*& issuer,
-            bool& issuerTrusted,
+            const XMLCh*& securityMech,
             const HTTPRequest& httpRequest,
             const saml2md::MetadataProvider* metadataProvider=NULL,
             const xmltooling::QName* role=NULL,

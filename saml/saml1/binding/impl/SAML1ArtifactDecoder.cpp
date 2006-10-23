@@ -57,7 +57,7 @@ SAML1ArtifactDecoder::~SAML1ArtifactDecoder() {}
 Response* SAML1ArtifactDecoder::decode(
     string& relayState,
     const RoleDescriptor*& issuer,
-    bool& issuerTrusted,
+    const XMLCh*& securityMech,
     const HTTPRequest& httpRequest,
     const MetadataProvider* metadataProvider,
     const QName* role,
@@ -112,7 +112,7 @@ Response* SAML1ArtifactDecoder::decode(
     }
     
     issuer = NULL;
-    issuerTrusted = false;
+    securityMech = false;
     log.debug("attempting to determine source of artifact(s)...");
     const EntityDescriptor* provider=metadataProvider->getEntityDescriptor(artifacts.front());
     if (!provider) {
@@ -143,7 +143,7 @@ Response* SAML1ArtifactDecoder::decode(
     try {
         auto_ptr<Response> response(
             m_artifactResolver->resolve(
-                issuerTrusted,
+                securityMech,
                 artifacts,
                 dynamic_cast<const IDPSSODescriptor&>(*issuer),
                 dynamic_cast<const X509TrustEngine*>(trustEngine)
@@ -151,14 +151,16 @@ Response* SAML1ArtifactDecoder::decode(
             );
         
         if (trustEngine && response->getSignature()) {
-            issuerTrusted = trustEngine->validate(*(response->getSignature()), *issuer, metadataProvider->getKeyResolver());
-            if (!issuerTrusted) {
+            if (!trustEngine->validate(*(response->getSignature()), *issuer, metadataProvider->getKeyResolver())) {
                 log.error("unable to verify signature on message with supplied trust engine");
                 throw BindingException("Message signature failed verification.");
             }
+            else if (!securityMech) {
+                securityMech = samlconstants::SAML1P_NS;
+            }
         }
-        else if (!issuerTrusted) {
-            log.warn("unable to verify integrity of the message, leaving untrusted");
+        else if (!securityMech) {
+            log.warn("unable to authenticate the message, leaving untrusted");
         }
         
         for_each(artifacts.begin(), artifacts.end(), xmltooling::cleanup<SAMLArtifact>());

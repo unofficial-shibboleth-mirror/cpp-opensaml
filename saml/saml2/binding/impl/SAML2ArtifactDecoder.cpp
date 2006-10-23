@@ -59,7 +59,7 @@ SAML2ArtifactDecoder::~SAML2ArtifactDecoder() {}
 XMLObject* SAML2ArtifactDecoder::decode(
     string& relayState,
     const RoleDescriptor*& issuer,
-    bool& issuerTrusted,
+    const XMLCh*& securityMech,
     const HTTPRequest& httpRequest,
     const MetadataProvider* metadataProvider,
     const QName* role,
@@ -113,7 +113,7 @@ XMLObject* SAML2ArtifactDecoder::decode(
     }
     
     issuer = NULL;
-    issuerTrusted = false;
+    securityMech = NULL;
     log.debug("attempting to determine source of artifact...");
     const EntityDescriptor* provider=metadataProvider->getEntityDescriptor(artifact);
     if (!provider) {
@@ -140,7 +140,7 @@ XMLObject* SAML2ArtifactDecoder::decode(
     try {
         auto_ptr<ArtifactResponse> response(
             m_artifactResolver->resolve(
-                issuerTrusted,
+                securityMech,
                 *(artifact2.get()),
                 dynamic_cast<const SSODescriptorType&>(*issuer),
                 dynamic_cast<const X509TrustEngine*>(trustEngine)
@@ -184,24 +184,28 @@ XMLObject* SAML2ArtifactDecoder::decode(
         // Check signatures.
         if (trustEngine) {
             if (response->getSignature()) {
-                issuerTrusted = trustEngine->validate(*(response->getSignature()), *issuer, metadataProvider->getKeyResolver());
-                if (!issuerTrusted) {
+                if (!trustEngine->validate(*(response->getSignature()), *issuer, metadataProvider->getKeyResolver())) {
                     log.error("unable to verify signature on ArtifactResponse message with supplied trust engine");
                     throw BindingException("Message signature failed verification.");
+                }
+                else if (!securityMech) {
+                    securityMech = samlconstants::SAML20P_NS;
                 }
             }
             Signature* sig = (res ? res->getSignature() : req->getSignature());
             if (sig) {
-                issuerTrusted = trustEngine->validate(*sig, *issuer, metadataProvider->getKeyResolver());
-                if (!issuerTrusted) {
+                if (!trustEngine->validate(*sig, *issuer, metadataProvider->getKeyResolver())) {
                     log.error("unable to verify signature on ArtifactResponse payload with supplied trust engine");
                     throw BindingException("Message signature failed verification.");
+                }
+                else if (!securityMech) {
+                    securityMech = samlconstants::SAML20P_NS;
                 }
             }
         }
         
-        if (!issuerTrusted) {
-            log.warn("unable to verify integrity of ArtifactResponse message or payload, leaving untrusted");
+        if (!securityMech) {
+            log.warn("unable to authenticate ArtifactResponse message or payload, leaving untrusted");
         }
         
         // Return the payload only.

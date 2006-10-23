@@ -59,7 +59,7 @@ SAML1POSTDecoder::~SAML1POSTDecoder() {}
 Response* SAML1POSTDecoder::decode(
     string& relayState,
     const RoleDescriptor*& issuer,
-    bool& issuerTrusted,
+    const XMLCh*& securityMech,
     const HTTPRequest& httpRequest,
     const MetadataProvider* metadataProvider,
     const QName* role,
@@ -140,7 +140,7 @@ Response* SAML1POSTDecoder::decode(
          * applied.
          */
         issuer = NULL;
-        issuerTrusted = false;
+        securityMech = NULL;
         log.debug("attempting to establish issuer and integrity of message...");
         const vector<Assertion*>& assertions=const_cast<const Response*>(response)->getAssertions();
         if (!assertions.empty()) {
@@ -155,16 +155,16 @@ Response* SAML1POSTDecoder::decode(
                     );
                 if (issuer) {
                     if (trustEngine && response->getSignature()) {
-                        issuerTrusted = trustEngine->validate(
-                            *(response->getSignature()), *issuer, metadataProvider->getKeyResolver()
-                            );
-                        if (!issuerTrusted) {
+                        if (trustEngine->validate(*(response->getSignature()), *issuer, metadataProvider->getKeyResolver())) {
+                            securityMech = samlconstants::SAML1P_NS;
+                        }
+                        else {
                             log.error("unable to verify signature on message with supplied trust engine");
                             throw BindingException("Message signature failed verification.");
                         }
                     }
                     else {
-                        log.warn("unable to verify integrity of the message, leaving untrusted");
+                        log.warn("unable to authenticate the message, leaving untrusted");
                     }
                 }
                 else {
@@ -176,7 +176,7 @@ Response* SAML1POSTDecoder::decode(
                 }
                 if (log.isDebugEnabled()) {
                     auto_ptr_char iname(assertions.front()->getIssuer());
-                    log.debug("message from (%s), integrity %sverified", iname.get(), issuerTrusted ? "" : "NOT ");
+                    log.debug("message from (%s), integrity %sverified", iname.get(), securityMech ? "" : "NOT ");
                 }
             }
             else {

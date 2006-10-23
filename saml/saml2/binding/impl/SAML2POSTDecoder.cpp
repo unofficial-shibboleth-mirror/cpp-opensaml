@@ -59,7 +59,7 @@ SAML2POSTDecoder::~SAML2POSTDecoder() {}
 XMLObject* SAML2POSTDecoder::decode(
     string& relayState,
     const RoleDescriptor*& issuer,
-    bool& issuerTrusted,
+    const XMLCh*& securityMech,
     const HTTPRequest& httpRequest,
     const MetadataProvider* metadataProvider,
     const QName* role,
@@ -162,7 +162,7 @@ XMLObject* SAML2POSTDecoder::decode(
             log.warn("replay cache was not provided, this is a serious security risk!");
         
         issuer = NULL;
-        issuerTrusted = false;
+        securityMech = false;
         log.debug("attempting to establish issuer and integrity of message...");
         
         // If we can't identify the issuer, we're done, since we can't lookup or verify anything.
@@ -183,14 +183,16 @@ XMLObject* SAML2POSTDecoder::decode(
             issuer=provider->getRoleDescriptor(*role, samlconstants::SAML20P_NS);
             if (issuer) {
                 if (trustEngine && signature) {
-                    issuerTrusted = trustEngine->validate(*signature, *issuer, metadataProvider->getKeyResolver());
-                    if (!issuerTrusted) {
+                    if (!trustEngine->validate(*signature, *issuer, metadataProvider->getKeyResolver())) {
                         log.error("unable to verify signature on message with supplied trust engine");
                         throw BindingException("Message signature failed verification.");
                     }
+                    else {
+                        securityMech = samlconstants::SAML20P_NS;
+                    }
                 }
                 else {
-                    log.warn("unable to verify integrity of the message, leaving untrusted");
+                    log.warn("unable to authenticate the message, leaving untrusted");
                 }
             }
             else {
@@ -198,7 +200,7 @@ XMLObject* SAML2POSTDecoder::decode(
             }
             if (log.isDebugEnabled()) {
                 auto_ptr_char iname(provider->getEntityID());
-                log.debug("message from (%s), integrity %sverified", iname.get(), issuerTrusted ? "" : "NOT ");
+                log.debug("message from (%s), integrity %sverified", iname.get(), securityMech ? "" : "NOT ");
             }
         }
         else {

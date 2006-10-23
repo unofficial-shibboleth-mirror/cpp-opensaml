@@ -25,6 +25,18 @@
 using namespace opensaml::saml1p;
 using namespace opensaml::saml1;
 
+namespace {
+    class SAML_DLLLOCAL _addcert : public binary_function<X509Data*,XSECCryptoX509*,void> {
+    public:
+        void operator()(X509Data* bag, XSECCryptoX509* cert) const {
+            safeBuffer& buf=cert->getDEREncodingSB();
+            X509Certificate* x=X509CertificateBuilder::buildX509Certificate();
+            x->setValue(buf.sbStrToXMLCh());
+            bag->getX509Certificates().push_back(x);
+        }
+    };
+};
+
 class SAML1ArtifactTest : public CxxTest::TestSuite,
     public SAMLBindingBaseTestCase, public MessageEncoder::ArtifactGenerator, public MessageDecoder::ArtifactResolver {
 public:
@@ -59,7 +71,7 @@ public:
             // Decode message.
             string relayState;
             const RoleDescriptor* issuer=NULL;
-            bool trusted=false;
+            const XMLCh* securityMech=NULL;
             QName idprole(samlconstants::SAML20MD_NS, IDPSSODescriptor::LOCAL_NAME);
             auto_ptr<MessageDecoder> decoder(
                 SAMLConfig::getConfig().MessageDecoderManager.newPlugin(samlconstants::SAML1_PROFILE_BROWSER_ARTIFACT, NULL)
@@ -68,21 +80,21 @@ public:
             Locker locker(m_metadata);
             auto_ptr<Response> response(
                 dynamic_cast<Response*>(
-                    decoder->decode(relayState,issuer,trusted,*this,m_metadata,&idprole,m_trust)
+                    decoder->decode(relayState,issuer,securityMech,*this,m_metadata,&idprole,m_trust)
                     )
                 );
             
             // Test the results.
             TSM_ASSERT_EQUALS("TARGET was not the expected result.", relayState, "state");
             TSM_ASSERT("SAML Response not decoded successfully.", response.get());
-            TSM_ASSERT("Message was not verified.", issuer && trusted);
+            TSM_ASSERT("Message was not verified.", issuer && securityMech && securityMech==samlconstants::SAML1P_NS);
             auto_ptr_char entityID(dynamic_cast<const EntityDescriptor*>(issuer->getParent())->getEntityID());
             TSM_ASSERT("Issuer was not expected.", !strcmp(entityID.get(),"https://idp.example.org/"));
             TSM_ASSERT_EQUALS("Assertion count was not correct.", response->getAssertions().size(), 1);
 
             // Trigger a replay.
             TSM_ASSERT_THROWS("Did not catch the replay.", 
-                decoder->decode(relayState,issuer,trusted,*this,m_metadata,&idprole,m_trust),
+                decoder->decode(relayState,issuer,securityMech,*this,m_metadata,&idprole,m_trust),
                 BindingException);
         }
         catch (XMLToolingException& ex) {
@@ -99,8 +111,27 @@ public:
         throw BindingException("Not implemented.");
     }
     
+    Signature* buildSignature(const CredentialResolver* credResolver) const
+    {
+        // Build a Signature.
+        Signature* sig = SignatureBuilder::buildSignature();
+        sig->setSigningKey(credResolver->getKey());
+
+        // Build KeyInfo.
+        const vector<XSECCryptoX509*>& certs = credResolver->getCertificates();
+        if (!certs.empty()) {
+            KeyInfo* keyInfo=KeyInfoBuilder::buildKeyInfo();
+            X509Data* x509Data=X509DataBuilder::buildX509Data();
+            keyInfo->getX509Datas().push_back(x509Data);
+            for_each(certs.begin(),certs.end(),bind1st(_addcert(),x509Data));
+            sig->setKeyInfo(keyInfo);
+        }
+        
+        return sig;
+    }
+
     Response* resolve(
-        bool& authenticated,
+        const XMLCh*& securityMech,
         const vector<SAMLArtifact*>& artifacts,
         const IDPSSODescriptor& idpDescriptor,
         const X509TrustEngine* trustEngine=NULL
@@ -117,14 +148,16 @@ public:
         StatusCode* sc = StatusCodeBuilder::buildStatusCode();
         status->setStatusCode(sc);
         sc->setValue(&StatusCode::SUCCESS);
-        response->marshall();
+        response->setSignature(buildSignature(m_creds));
+        vector<Signature*> sigs(1,response->getSignature());
+        response->marshall((DOMDocument*)NULL,&sigs);
         SchemaValidators.validate(response.get());
-        authenticated = true;
+        securityMech = NULL;
         return response.release();
     }
 
     saml2p::ArtifactResponse* resolve(
-        bool& authenticated,
+        const XMLCh*& securityMech,
         const saml2p::SAML2Artifact& artifact,
         const SSODescriptorType& ssoDescriptor,
         const X509TrustEngine* trustEngine=NULL

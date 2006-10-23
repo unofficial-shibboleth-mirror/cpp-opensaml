@@ -39,7 +39,7 @@ namespace opensaml {
             Response* decode(
                 std::string& relayState,
                 const saml2md::RoleDescriptor*& issuer,
-                bool& issuerTrusted,
+                const XMLCh*& securityMech,
                 const HTTPRequest& httpRequest,
                 const saml2md::MetadataProvider* metadataProvider=NULL,
                 const xmltooling::QName* role=NULL,

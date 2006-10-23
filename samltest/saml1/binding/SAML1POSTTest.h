@@ -66,7 +66,7 @@ public:
             // Decode message.
             string relayState;
             const RoleDescriptor* issuer=NULL;
-            bool trusted=false;
+            const XMLCh* securityMech=NULL;
             QName idprole(samlconstants::SAML20MD_NS, IDPSSODescriptor::LOCAL_NAME);
             auto_ptr<MessageDecoder> decoder(
                 SAMLConfig::getConfig().MessageDecoderManager.newPlugin(samlconstants::SAML1_PROFILE_BROWSER_POST, NULL)
@@ -74,14 +74,14 @@ public:
             Locker locker(m_metadata);
             auto_ptr<Response> response(
                 dynamic_cast<Response*>(
-                    decoder->decode(relayState,issuer,trusted,*this,m_metadata,&idprole,m_trust)
+                    decoder->decode(relayState,issuer,securityMech,*this,m_metadata,&idprole,m_trust)
                     )
                 );
             
             // Test the results.
             TSM_ASSERT_EQUALS("TARGET was not the expected result.", relayState, "state");
             TSM_ASSERT("SAML Response not decoded successfully.", response.get());
-            TSM_ASSERT("Message was not verified.", issuer && trusted);
+            TSM_ASSERT("Message was not verified.", issuer && securityMech && securityMech==samlconstants::SAML1P_NS);
             auto_ptr_char entityID(dynamic_cast<const EntityDescriptor*>(issuer->getParent())->getEntityID());
             TSM_ASSERT("Issuer was not expected.", !strcmp(entityID.get(),"https://idp.example.org/"));
             TSM_ASSERT_EQUALS("Assertion count was not correct.", response->getAssertions().size(), 1);
@@ -128,7 +128,7 @@ public:
             // Decode message.
             string relayState;
             const RoleDescriptor* issuer=NULL;
-            bool trusted=false;
+            const XMLCh* securityMech=NULL;
             QName idprole(samlconstants::SAML20MD_NS, IDPSSODescriptor::LOCAL_NAME);
             auto_ptr<MessageDecoder> decoder(
                 SAMLConfig::getConfig().MessageDecoderManager.newPlugin(samlconstants::SAML1_PROFILE_BROWSER_POST, NULL)
@@ -136,21 +136,21 @@ public:
             Locker locker(m_metadata);
             auto_ptr<Response> response(
                 dynamic_cast<Response*>(
-                    decoder->decode(relayState,issuer,trusted,*this,m_metadata,&idprole)
+                    decoder->decode(relayState,issuer,securityMech,*this,m_metadata,&idprole)
                     )
                 );
             
             // Test the results.
             TSM_ASSERT_EQUALS("TARGET was not the expected result.", relayState, "state");
             TSM_ASSERT("SAML Response not decoded successfully.", response.get());
-            TSM_ASSERT("Message was verified.", issuer && !trusted);
+            TSM_ASSERT("Message was verified.", issuer && !securityMech);
             auto_ptr_char entityID(dynamic_cast<const EntityDescriptor*>(issuer->getParent())->getEntityID());
             TSM_ASSERT("Issuer was not expected.", !strcmp(entityID.get(),"https://idp.example.org/"));
             TSM_ASSERT_EQUALS("Assertion count was not correct.", response->getAssertions().size(), 1);
 
             // Trigger a replay.
             TSM_ASSERT_THROWS("Did not catch the replay.", 
-                decoder->decode(relayState,issuer,trusted,*this,m_metadata,&idprole,m_trust),
+                decoder->decode(relayState,issuer,securityMech,*this,m_metadata,&idprole,m_trust),
                 BindingException);
         }
         catch (XMLToolingException& ex) {
