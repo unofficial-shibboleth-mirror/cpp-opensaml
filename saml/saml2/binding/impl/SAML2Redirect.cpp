@@ -78,6 +78,10 @@ unsigned int opensaml::saml2p::inflate(char* in, unsigned int in_len, ostream& o
         ret = inflate(&z, Z_SYNC_FLUSH);
         switch (ret) {
             case Z_STREAM_END:
+                ret = z.next_out - buf;
+                z.next_out = buf;
+                while (ret--)
+                    out << *(z.next_out++);
                 goto done;
                 
             case Z_OK:  /* avail_out should be 0 now. Time to dump the buffer. */
