@@ -83,11 +83,13 @@ void MessageFlowRule::check(const XMLCh* id, time_t issueInstant) const
     time_t skew = XMLToolingConfig::getConfig().clock_skew_secs;
     time_t now = time(NULL);
     if (issueInstant > now + skew) {
-        log.error("rejected not-yet-valid message, timestamp (%lu), now (%lu)", issueInstant, now + skew);
+        log.errorStream() << "rejected not-yet-valid message, timestamp (" << issueInstant <<
+            "), newest allowed (" << now + skew << ")" << CategoryStream::ENDLINE;
         throw BindingException("Message rejected, was issued in the future.");
     }
     else if (issueInstant < now - skew - m_expires) {
-        log.error("rejected expired message, timestamp (%lu), oldest allowed (%lu)", issueInstant, now - skew - m_expires);
+        log.errorStream() << "rejected expired message, timestamp (" << issueInstant <<
+            "), oldest allowed (" << (now - skew - m_expires) << ")" << CategoryStream::ENDLINE;
         throw BindingException("Message expired, was issued too long ago.");
     }
     
