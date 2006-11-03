@@ -38,7 +38,7 @@ namespace {
 };
 
 class SAML1ArtifactTest : public CxxTest::TestSuite,
-    public SAMLBindingBaseTestCase, public MessageEncoder::ArtifactGenerator, public MessageDecoder::ArtifactResolver {
+        public SAMLBindingBaseTestCase, public MessageEncoder::ArtifactGenerator, public MessageDecoder::ArtifactResolver {
 public:
     void setUp() {
         SAMLBindingBaseTestCase::setUp();
@@ -50,6 +50,9 @@ public:
 
     void testSAML1Artifact() {
         try {
+            QName idprole(samlconstants::SAML20MD_NS, IDPSSODescriptor::LOCAL_NAME);
+            SecurityPolicy policy(m_rules, m_metadata, &idprole, m_trust);
+
             // Read message to use from file.
             string path = data_path + "saml1/binding/SAML1Assertion.xml";
             ifstream in(path.c_str());
@@ -70,32 +73,23 @@ public:
             
             // Decode message.
             string relayState;
-            const RoleDescriptor* issuer=NULL;
-            const XMLCh* securityMech=NULL;
-            QName idprole(samlconstants::SAML20MD_NS, IDPSSODescriptor::LOCAL_NAME);
             auto_ptr<MessageDecoder> decoder(
                 SAMLConfig::getConfig().MessageDecoderManager.newPlugin(samlconstants::SAML1_PROFILE_BROWSER_ARTIFACT, NULL)
                 );
             decoder->setArtifactResolver(this);
             Locker locker(m_metadata);
-            auto_ptr<Response> response(
-                dynamic_cast<Response*>(
-                    decoder->decode(relayState,issuer,securityMech,*this,m_metadata,&idprole,m_trust)
-                    )
-                );
+            auto_ptr<Response> response(dynamic_cast<Response*>(decoder->decode(relayState,*this,policy)));
             
             // Test the results.
             TSM_ASSERT_EQUALS("TARGET was not the expected result.", relayState, "state");
             TSM_ASSERT("SAML Response not decoded successfully.", response.get());
-            TSM_ASSERT("Message was not verified.", issuer && securityMech && securityMech==samlconstants::SAML1P_NS);
-            auto_ptr_char entityID(dynamic_cast<const EntityDescriptor*>(issuer->getParent())->getEntityID());
+            TSM_ASSERT("Message was not verified.", policy.getIssuer()!=NULL);
+            auto_ptr_char entityID(policy.getIssuer()->getName());
             TSM_ASSERT("Issuer was not expected.", !strcmp(entityID.get(),"https://idp.example.org/"));
             TSM_ASSERT_EQUALS("Assertion count was not correct.", response->getAssertions().size(), 1);
 
             // Trigger a replay.
-            TSM_ASSERT_THROWS("Did not catch the replay.", 
-                decoder->decode(relayState,issuer,securityMech,*this,m_metadata,&idprole,m_trust),
-                BindingException);
+            TSM_ASSERT_THROWS("Did not catch the replay.", decoder->decode(relayState,*this,policy), BindingException);
         }
         catch (XMLToolingException& ex) {
             TS_TRACE(ex.what());
@@ -131,10 +125,9 @@ public:
     }
 
     Response* resolve(
-        const XMLCh*& securityMech,
         const vector<SAMLArtifact*>& artifacts,
         const IDPSSODescriptor& idpDescriptor,
-        const X509TrustEngine* trustEngine=NULL
+        SecurityPolicy& policy
         ) const {
         TSM_ASSERT_EQUALS("Too many artifacts.", artifacts.size(), 1);
         XMLObject* xmlObject =
@@ -152,15 +145,13 @@ public:
         vector<Signature*> sigs(1,response->getSignature());
         response->marshall((DOMDocument*)NULL,&sigs);
         SchemaValidators.validate(response.get());
-        securityMech = NULL;
         return response.release();
     }
 
     saml2p::ArtifactResponse* resolve(
-        const XMLCh*& securityMech,
         const saml2p::SAML2Artifact& artifact,
         const SSODescriptorType& ssoDescriptor,
-        const X509TrustEngine* trustEngine=NULL
+        SecurityPolicy& policy
         ) const {
         throw BindingException("Not implemented.");
     }

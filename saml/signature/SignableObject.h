@@ -48,6 +48,13 @@ namespace opensaml {
             return new ContentReference(*this);
         }
         
+        /**
+         * Returns the enveloped Signature from the object.
+         *
+         * @return the enveloped Signature, or NULL
+         */
+        virtual xmlsignature::Signature* getSignature() const=0;
+
     protected:
         SignableObject() {}
     };

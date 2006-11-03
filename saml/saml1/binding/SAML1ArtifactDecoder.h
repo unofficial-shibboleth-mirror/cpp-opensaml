@@ -38,12 +38,8 @@ namespace opensaml {
             
             Response* decode(
                 std::string& relayState,
-                const saml2md::RoleDescriptor*& issuer,
-                const XMLCh*& securityMech,
-                const HTTPRequest& httpRequest,
-                const saml2md::MetadataProvider* metadataProvider=NULL,
-                const xmltooling::QName* role=NULL,
-                const TrustEngine* trustEngine=NULL
+                const GenericRequest& genericRequest,
+                SecurityPolicy& policy
                 ) const;
         };                
 

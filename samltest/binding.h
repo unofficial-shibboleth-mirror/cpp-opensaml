@@ -17,24 +17,28 @@
 #include "internal.h"
 
 #include <saml/SAMLConfig.h>
+#include <saml/binding/HTTPRequest.h>
+#include <saml/binding/HTTPResponse.h>
 #include <saml/binding/MessageDecoder.h>
 #include <saml/binding/MessageEncoder.h>
 #include <saml/binding/URLEncoder.h>
 #include <saml/saml2/metadata/MetadataProvider.h>
-#include <saml/security/X509TrustEngine.h>
+#include <saml/security/TrustEngine.h>
 
 using namespace saml2md;
 using namespace xmlsignature;
 
-class SAMLBindingBaseTestCase : public MessageDecoder::HTTPRequest, public MessageEncoder::HTTPResponse
+class SAMLBindingBaseTestCase : public HTTPRequest, public HTTPResponse
 {
 protected:
     CredentialResolver* m_creds; 
     MetadataProvider* m_metadata;
-    opensaml::X509TrustEngine* m_trust;
+    opensaml::TrustEngine* m_trust;
     map<string,string> m_fields;
     map<string,string> m_headers;
     string m_method,m_url;
+    vector<XSECCryptoX509*> m_clientCerts;
+    vector<const SecurityPolicyRule*> m_rules;
 
 public:
     void setUp() {
@@ -70,9 +74,10 @@ public:
                 FILESYSTEM_CREDENTIAL_RESOLVER,doc2->getDocumentElement()
                 );
                 
-            m_trust = dynamic_cast<X509TrustEngine*>(
-                SAMLConfig::getConfig().TrustEngineManager.newPlugin(EXPLICIT_KEY_SAMLTRUSTENGINE, NULL)
-                );
+            m_trust = SAMLConfig::getConfig().TrustEngineManager.newPlugin(EXPLICIT_KEY_SAMLTRUSTENGINE, NULL);
+
+            m_rules.push_back(SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(MESSAGEFLOW_POLICY_RULE,NULL));
+            m_rules.push_back(SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(MESSAGESIGNING_POLICY_RULE,NULL));
         }
         catch (XMLToolingException& ex) {
             TS_TRACE(ex.what());
@@ -83,6 +88,7 @@ public:
     }
     
     void tearDown() {
+        for_each(m_rules.begin(), m_rules.end(), xmltooling::cleanup<SecurityPolicyRule>());
         delete m_creds;
         delete m_metadata;
         delete m_trust;
@@ -99,7 +105,23 @@ public:
 
     const char* getMethod() const {
         return m_method.c_str();
-    } 
+    }
+
+    const char* getScheme() const {
+        return "https";
+    }
+
+    bool isSecure() const {
+        return true;
+    }
+
+    string getContentType() const {
+        return "application/x-www-form-urlencoded";
+    }
+
+    long getContentLength() const {
+        return -1;
+    }
 
     const char* getRequestURL() const {
         return m_url.c_str();
@@ -115,6 +137,14 @@ public:
     
     string getRemoteUser() const {
         return "";
+    }
+
+    string getRemoteAddr() const {
+        return "127.0.0.1";
+    }
+
+    const std::vector<XSECCryptoX509*>& getClientCertificates() const {
+        return m_clientCerts;
     }
 
     string getHeader(const char* name) const {
@@ -139,6 +169,10 @@ public:
     
     void setHeader(const char* name, const char* value) {
         m_headers[name] = value ? value : "";
+    }
+
+    void setContentType(const char* type) {
+        setHeader("Content-Type", type);
     }
     
     void setCookie(const char* name, const char* value) {
@@ -198,7 +232,7 @@ public:
         return decoded;
     }
     
-    long sendResponse(std::istream& inputStream, int status = 200, const char* contentType = "text/html") {
+    long sendResponse(std::istream& inputStream, long status) {
         m_method="POST";
         string page,line;
         while (getline(inputStream,line))

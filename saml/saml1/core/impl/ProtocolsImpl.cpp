@@ -361,6 +361,9 @@ namespace opensaml {
                 pair<bool,int> v = getMinorVersion();
                 return (!v.first || v.second > 0) ? m_RequestID : NULL;
             }
+            const XMLCh* getID() const {
+                return getRequestID();
+            }
             IMPL_DATETIME_ATTRIB(IssueInstant,0);
             IMPL_TYPED_CHILDREN(RespondWith,m_pos_Signature);
     
@@ -679,6 +682,9 @@ namespace opensaml {
             const XMLCh* getXMLID() const {
                 pair<bool,int> v = getMinorVersion();
                 return (!v.first || v.second > 0) ? m_ResponseID : NULL;
+            }
+            const XMLCh* getID() const {
+                return getResponseID();
             }
             IMPL_STRING_ATTRIB(InResponseTo);
             IMPL_DATETIME_ATTRIB(IssueInstant,0);

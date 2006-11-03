@@ -163,7 +163,7 @@ namespace opensaml {
             /** Searches the ProtocolSupportEnumeration attribute for the indicated protocol. */
             virtual bool hasSupport(const XMLCh* protocol) const=0;
             DECL_STRING_ATTRIB(ErrorURL,ERRORURL);
-            DECL_TYPED_FOREIGN_CHILD(Signature,xmlsignature);
+            DECL_INHERITED_TYPED_FOREIGN_CHILD(Signature,xmlsignature);
             DECL_TYPED_CHILD(Extensions);
             DECL_TYPED_CHILDREN(KeyDescriptor);
             DECL_TYPED_CHILD(Organization);
@@ -322,7 +322,7 @@ namespace opensaml {
                 CacheableSAMLObject,TimeBoundSAMLObject,SAML 2.0 AffiliationDescriptor element);
             DECL_STRING_ATTRIB(ID,ID);
             DECL_STRING_ATTRIB(AffiliationOwnerID,AFFILIATIONOWNERID);
-            DECL_TYPED_FOREIGN_CHILD(Signature,xmlsignature);
+            DECL_INHERITED_TYPED_FOREIGN_CHILD(Signature,xmlsignature);
             DECL_TYPED_CHILD(Extensions);
             DECL_TYPED_CHILDREN(AffiliateMember);
             DECL_TYPED_CHILDREN(KeyDescriptor);
@@ -334,7 +334,7 @@ namespace opensaml {
                 CacheableSAMLObject,TimeBoundSAMLObject,SAML 2.0 EntityDescriptor element);
             DECL_STRING_ATTRIB(ID,ID);
             DECL_STRING_ATTRIB(EntityID,ENTITYID);
-            DECL_TYPED_FOREIGN_CHILD(Signature,xmlsignature);
+            DECL_INHERITED_TYPED_FOREIGN_CHILD(Signature,xmlsignature);
             DECL_TYPED_CHILD(Extensions);
             DECL_TYPED_CHILD(AffiliationDescriptor);
             DECL_TYPED_CHILDREN(RoleDescriptor);
@@ -372,7 +372,7 @@ namespace opensaml {
                 TimeBoundSAMLObject,SAML 2.0 EntitiesDescriptor element);
             DECL_STRING_ATTRIB(ID,ID);
             DECL_STRING_ATTRIB(Name,NAME);
-            DECL_TYPED_FOREIGN_CHILD(Signature,xmlsignature);
+            DECL_INHERITED_TYPED_FOREIGN_CHILD(Signature,xmlsignature);
             DECL_TYPED_CHILD(Extensions);
             DECL_TYPED_CHILDREN(EntityDescriptor);
             DECL_TYPED_CHILDREN(EntitiesDescriptor);

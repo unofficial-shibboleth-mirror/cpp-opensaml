@@ -23,7 +23,7 @@
 #ifndef __saml2_assertions_h__
 #define __saml2_assertions_h__
 
-#include <saml/signature/SignableObject.h>
+#include <saml/RootObject.h>
 #include <saml/util/SAMLConstants.h>
 
 #include <xmltooling/AttributeExtensibleXMLObject.h>
@@ -79,7 +79,7 @@ namespace opensaml {
         BEGIN_XMLOBJECT(SAML_API,EncryptedID,EncryptedElementType,SAML 2.0 EncryptedID element);
         END_XMLOBJECT;
 
-        BEGIN_XMLOBJECT(SAML_API,BaseID,xmltooling::XMLObject,SAML 2.0 BaseIDAbstractType abstract type);
+        BEGIN_XMLOBJECT(SAML_API,BaseID,xmltooling::XMLObject,SAML 2.0 BaseID abstract element);
             DECL_STRING_ATTRIB(NameQualifier,NAMEQUALIFIER);
             DECL_STRING_ATTRIB(SPNameQualifier,SPNAMEQUALIFIER);
         END_XMLOBJECT;
@@ -306,12 +306,29 @@ namespace opensaml {
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
 
-        BEGIN_XMLOBJECT(SAML_API,Assertion,SignableObject,SAML 2.0 Assertion element);
-            DECL_STRING_ATTRIB(Version,VER);
-            DECL_STRING_ATTRIB(ID,ID);
-            DECL_DATETIME_ATTRIB(IssueInstant,ISSUEINSTANT);
-            DECL_TYPED_CHILD(Issuer);
-            DECL_TYPED_FOREIGN_CHILD(Signature,xmlsignature);
+        /**
+         * SAML 2.0 assertion or protocol message.
+         */
+        class SAML_API RootObject : virtual public opensaml::RootObject
+        {
+        protected:
+            RootObject() {}
+        public:
+            virtual ~RootObject() {}
+            
+            /** Gets the Version attribute. */
+            virtual const XMLCh* getVersion() const=0;
+            
+            /** Gets the Issuer. */
+            virtual Issuer* getIssuer() const=0;
+        };
+
+        BEGIN_XMLOBJECT(SAML_API,Assertion,saml2::RootObject,SAML 2.0 Assertion element);
+            DECL_INHERITED_STRING_ATTRIB(Version,VER);
+            DECL_INHERITED_STRING_ATTRIB(ID,ID);
+            DECL_INHERITED_DATETIME_ATTRIB(IssueInstant,ISSUEINSTANT);
+            DECL_INHERITED_TYPED_CHILD(Issuer);
+            DECL_INHERITED_TYPED_FOREIGN_CHILD(Signature,xmlsignature);
             DECL_TYPED_CHILD(Subject);
             DECL_TYPED_CHILD(Conditions);
             DECL_TYPED_CHILD(Advice);

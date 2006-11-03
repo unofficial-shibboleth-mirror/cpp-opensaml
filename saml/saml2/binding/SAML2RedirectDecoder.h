@@ -15,28 +15,26 @@
  */
 
 /**
- * @file saml/saml2/binding/SAML2POSTDecoder.h
+ * @file saml/saml2/binding/SAML2RedirectDecoder.h
  * 
- * SAML 2.0 HTTP POST binding message decoder
+ * SAML 2.0 HTTP Redirect binding message decoder
  */
 
 #include <saml/binding/MessageDecoder.h>
-#include <saml/saml2/core/Assertions.h>
 
 namespace opensaml {
-    
     namespace saml2p {
 
         /**
-         * SAML 2.0 HTTP POST binding message decoder
+         * SAML 2.0 HTTP Redirect binding message decoder
          */
-        class SAML_API SAML2POSTDecoder : public MessageDecoder
+        class SAML_API SAML2RedirectDecoder : public MessageDecoder
         {
         public:
-            SAML2POSTDecoder(const DOMElement* e);
-            virtual ~SAML2POSTDecoder();
+            SAML2RedirectDecoder(const DOMElement* e);
+            virtual ~SAML2RedirectDecoder();
             
-            saml2::RootObject* decode(
+            xmltooling::XMLObject* decode(
                 std::string& relayState,
                 const GenericRequest& genericRequest,
                 SecurityPolicy& policy

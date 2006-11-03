@@ -40,6 +40,7 @@ namespace opensaml {
     class SAML_API MessageEncoder;
     class SAML_API MessageDecoder;
     class SAML_API SAMLArtifact;
+    class SAML_API SecurityPolicyRule;
     class SAML_API TrustEngine;
     class SAML_API URLEncoder;
 
@@ -164,34 +165,25 @@ namespace opensaml {
          */
         virtual std::string hashSHA1(const char* s, bool toHex=false)=0;
 
-        /**
-         * Manages factories for MessageDecoder plugins.
-         */
+        /** Manages factories for MessageDecoder plugins. */
         xmltooling::PluginManager<MessageDecoder,const DOMElement*> MessageDecoderManager;
 
-        /**
-         * Manages factories for MessageEncoder plugins.
-         */
+        /** Manages factories for MessageEncoder plugins. */
         xmltooling::PluginManager<MessageEncoder,const DOMElement*> MessageEncoderManager;        
 
-        /**
-         * Manages factories for SAMLArtifact plugins.
-         */
+        /** Manages factories for SAMLArtifact plugins. */
         xmltooling::PluginManager<SAMLArtifact,const char*> SAMLArtifactManager;
 
-        /**
-         * Manages factories for TrustEngine plugins.
-         */
+        /** Manages factories for SecurityPolicyRule plugins. */
+        xmltooling::PluginManager<SecurityPolicyRule,const DOMElement*> SecurityPolicyRuleManager;
+
+        /** Manages factories for TrustEngine plugins. */
         xmltooling::PluginManager<TrustEngine,const DOMElement*> TrustEngineManager;
 
-        /**
-         * Manages factories for MetadataProvider plugins.
-         */
+        /** Manages factories for MetadataProvider plugins. */
         xmltooling::PluginManager<saml2md::MetadataProvider,const DOMElement*> MetadataProviderManager;
         
-        /**
-         * Manages factories for MetadataFilter plugins.
-         */
+        /** Manages factories for MetadataFilter plugins. */
         xmltooling::PluginManager<saml2md::MetadataFilter,const DOMElement*> MetadataFilterManager;
 
     protected:

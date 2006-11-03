@@ -22,13 +22,13 @@
 
 #include "internal.h"
 #include "exceptions.h"
+#include "binding/HTTPRequest.h"
 #include "saml/binding/SAMLArtifact.h"
+#include "saml2/binding/SAML2Artifact.h"
+#include "saml2/binding/SAML2ArtifactDecoder.h"
 #include "saml2/core/Protocols.h"
 #include "saml2/metadata/Metadata.h"
 #include "saml2/metadata/MetadataProvider.h"
-#include "saml2/binding/SAML2Artifact.h"
-#include "saml2/binding/SAML2ArtifactDecoder.h"
-#include "security/X509TrustEngine.h"
 
 #include <log4cpp/Category.hh>
 #include <xmltooling/util/NDC.h>
@@ -38,7 +38,6 @@ using namespace opensaml::saml2md;
 using namespace opensaml::saml2p;
 using namespace opensaml::saml2;
 using namespace opensaml;
-using namespace xmlsignature;
 using namespace xmltooling;
 using namespace log4cpp;
 using namespace std;
@@ -58,12 +57,8 @@ SAML2ArtifactDecoder::~SAML2ArtifactDecoder() {}
 
 XMLObject* SAML2ArtifactDecoder::decode(
     string& relayState,
-    const RoleDescriptor*& issuer,
-    const XMLCh*& securityMech,
-    const HTTPRequest& httpRequest,
-    const MetadataProvider* metadataProvider,
-    const QName* role,
-    const opensaml::TrustEngine* trustEngine
+    const GenericRequest& genericRequest,
+    SecurityPolicy& policy
     ) const
 {
 #ifdef _DEBUG
@@ -72,23 +67,28 @@ XMLObject* SAML2ArtifactDecoder::decode(
     Category& log = Category::getInstance(SAML_LOGCAT".MessageDecoder.SAML2Artifact");
 
     log.debug("validating input");
-    const char* SAMLart = httpRequest.getParameter("SAMLart");
+    const HTTPRequest* httpRequest=dynamic_cast<const HTTPRequest*>(&genericRequest);
+    if (!httpRequest) {
+        log.error("unable to cast request to HTTPRequest type");
+        return NULL;
+    }
+    const char* SAMLart = httpRequest->getParameter("SAMLart");
     if (!SAMLart)
         return NULL;
-    const char* state = httpRequest.getParameter("RelayState");
+    const char* state = httpRequest->getParameter("RelayState");
     if (state)
         relayState = state;
 
-    if (!m_artifactResolver || !metadataProvider)
+    if (!m_artifactResolver || !policy.getMetadataProvider() || !policy.getRole())
         throw BindingException("Artifact binding requires ArtifactResolver and MetadataProvider implementations be supplied.");
 
     // Import the artifact.
     SAMLArtifact* artifact=NULL;
-    ReplayCache* replayCache = XMLToolingConfig::getConfig().getReplayCache();
     try {
         log.debug("processing encoded artifact (%s)", SAMLart);
         
         // Check replay.
+        ReplayCache* replayCache = XMLToolingConfig::getConfig().getReplayCache();
         if (replayCache) {
             if (!replayCache->check("SAML2Artifact", SAMLart, time(NULL) + (2*XMLToolingConfig::getConfig().clock_skew_secs))) {
                 log.error("replay detected of artifact (%s)", SAMLart);
@@ -112,10 +112,8 @@ XMLObject* SAML2ArtifactDecoder::decode(
         delete artifact;
     }
     
-    issuer = NULL;
-    securityMech = NULL;
     log.debug("attempting to determine source of artifact...");
-    const EntityDescriptor* provider=metadataProvider->getEntityDescriptor(artifact);
+    const EntityDescriptor* provider=policy.getMetadataProvider()->getEntityDescriptor(artifact);
     if (!provider) {
         log.error(
             "metadata lookup failed, unable to determine issuer of artifact (0x%s)",
@@ -130,103 +128,31 @@ XMLObject* SAML2ArtifactDecoder::decode(
     }
     
     log.debug("attempting to find artifact issuing role...");
-    issuer=provider->getRoleDescriptor(*role, samlconstants::SAML20P_NS);
-    if (!issuer || !dynamic_cast<const SSODescriptorType*>(issuer)) {
-        log.error("unable to find compatible SAML role (%s) in metadata", role->toString().c_str());
+    const RoleDescriptor* roledesc=provider->getRoleDescriptor(*(policy.getRole()), samlconstants::SAML20P_NS);
+    if (!roledesc || !dynamic_cast<const SSODescriptorType*>(roledesc)) {
+        log.error("unable to find compatible SAML role (%s) in metadata", policy.getRole()->toString().c_str());
         BindingException ex("Unable to find compatible metadata role for artifact issuer.");
         annotateException(&ex,provider); // throws it
     }
     
     try {
         auto_ptr<ArtifactResponse> response(
-            m_artifactResolver->resolve(
-                securityMech,
-                *(artifact2.get()),
-                dynamic_cast<const SSODescriptorType&>(*issuer),
-                dynamic_cast<const X509TrustEngine*>(trustEngine)
-                )
+            m_artifactResolver->resolve(*(artifact2.get()), dynamic_cast<const SSODescriptorType&>(*roledesc), policy)
             );
         
-        // Check Issuer of outer message.
-        if (!issuerMatches(response->getIssuer(), provider->getEntityID())) {
-            log.error("issuer of ArtifactResponse did not match source of artifact");
-            throw BindingException("Issuer of ArtifactResponse did not match source of artifact.");
-        }
+        policy.evaluate(genericRequest, *(response.get()));
 
-        // Extract payload and check that Issuer.
+        // Extract payload and check that message.
         XMLObject* payload = response->getPayload();
-        RequestAbstractType* req = NULL;
-        StatusResponseType* res = dynamic_cast<StatusResponseType*>(payload);
-        if (!res)
-            req = dynamic_cast<RequestAbstractType*>(payload);
-        if (!res && !req)
-            throw BindingException("ArtifactResponse payload was not a recognized SAML 2.0 protocol message.");
-            
-        if (!issuerMatches(res ? res->getIssuer() : req->getIssuer(), provider->getEntityID())) {
-            log.error("issuer of ArtifactResponse payload did not match source of artifact");
-            throw BindingException("Issuer of ArtifactResponse payload did not match source of artifact.");
-        }
+        policy.evaluate(genericRequest, *payload);
 
-        // Check payload freshness.
-        time_t now = time(NULL);
-        if ((res ? res->getIssueInstant() : req->getIssueInstant())->getEpoch() < now-(2*XMLToolingConfig::getConfig().clock_skew_secs))
-            throw BindingException("Detected expired ArtifactResponse payload.");
-
-        // Check replay.
-        if (replayCache) {
-            auto_ptr_char mid(res ? res->getID() : req->getID());
-            if (!replayCache->check("SAML2ArtifactPayload", mid.get(), now + (2*XMLToolingConfig::getConfig().clock_skew_secs))) {
-                log.error("replay detected of ArtifactResponse payload message ID (%s)", mid.get());
-                throw BindingException("Rejecting replayed ArtifactResponse payload ($1).", params(1,mid.get()));
-            }
-        }
-        
-        // Check signatures.
-        if (trustEngine) {
-            if (response->getSignature()) {
-                if (!trustEngine->validate(*(response->getSignature()), *issuer, metadataProvider->getKeyResolver())) {
-                    log.error("unable to verify signature on ArtifactResponse message with supplied trust engine");
-                    throw BindingException("Message signature failed verification.");
-                }
-                else if (!securityMech) {
-                    securityMech = samlconstants::SAML20P_NS;
-                }
-            }
-            Signature* sig = (res ? res->getSignature() : req->getSignature());
-            if (sig) {
-                if (!trustEngine->validate(*sig, *issuer, metadataProvider->getKeyResolver())) {
-                    log.error("unable to verify signature on ArtifactResponse payload with supplied trust engine");
-                    throw BindingException("Message signature failed verification.");
-                }
-                else if (!securityMech) {
-                    securityMech = samlconstants::SAML20P_NS;
-                }
-            }
-        }
-        
-        if (!securityMech) {
-            log.warn("unable to authenticate ArtifactResponse message or payload, leaving untrusted");
-        }
-        
         // Return the payload only.
         response.release();
         payload->detach(); 
         return payload;
     }
     catch (XMLToolingException& ex) {
-        annotateException(&ex,issuer,false);
+        annotateException(&ex,roledesc,false);
         throw;
     }
 }
-
-bool SAML2ArtifactDecoder::issuerMatches(const Issuer* messageIssuer, const XMLCh* expectedIssuer) const
-{
-    if (messageIssuer && messageIssuer->getName()) {
-        if (messageIssuer->getFormat() && !XMLString::equals(messageIssuer->getFormat(), NameIDType::ENTITY))
-            return false;
-        else if (!XMLString::equals(expectedIssuer, messageIssuer->getName()))
-            return false;
-    }
-    return true;
-}
-

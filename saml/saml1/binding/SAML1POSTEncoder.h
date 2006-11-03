@@ -36,7 +36,7 @@ namespace opensaml {
             virtual ~SAML1POSTEncoder();
             
             long encode(
-                HTTPResponse& httpResponse,
+                GenericResponse& genericResponse,
                 xmltooling::XMLObject* xmlObject,
                 const char* destination,
                 const char* recipientID=NULL,

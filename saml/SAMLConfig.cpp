@@ -125,6 +125,7 @@ bool SAMLInternalConfig::init(bool initXMLTooling)
     registerTrustEngines();
     registerMessageEncoders();
     registerMessageDecoders();
+    registerSecurityPolicyRules();
     
     m_urlEncoder = new URLEncoder();
 
@@ -142,6 +143,7 @@ void SAMLInternalConfig::term(bool termXMLTooling)
     MessageDecoderManager.deregisterFactories();
     MessageEncoderManager.deregisterFactories();
     TrustEngineManager.deregisterFactories();
+    SecurityPolicyRuleManager.deregisterFactories();
     SAMLArtifactManager.deregisterFactories();
     MetadataFilterManager.deregisterFactories();
     MetadataProviderManager.deregisterFactories();

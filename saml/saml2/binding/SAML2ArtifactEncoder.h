@@ -36,7 +36,7 @@ namespace opensaml {
             virtual ~SAML2ArtifactEncoder();
             
             long encode(
-                HTTPResponse& httpResponse,
+                GenericResponse& genericResponse,
                 xmltooling::XMLObject* xmlObject,
                 const char* destination,
                 const char* recipientID=NULL,

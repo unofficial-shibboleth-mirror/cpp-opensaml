@@ -1014,6 +1014,9 @@ namespace opensaml {
                 pair<bool,int> v = getMinorVersion();
                 return (!v.first || v.second > 0) ? m_AssertionID : NULL;
             }
+            const XMLCh* getID() const {
+                return getAssertionID();
+            }
             IMPL_STRING_ATTRIB(Issuer);
             IMPL_DATETIME_ATTRIB(IssueInstant,0);
             IMPL_TYPED_CHILD(Conditions);

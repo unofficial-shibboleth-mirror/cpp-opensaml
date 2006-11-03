@@ -50,14 +50,14 @@ namespace opensaml {
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
 
-        BEGIN_XMLOBJECT(SAML_API,RequestAbstractType,SignableObject,SAML 2.0 RequestAbstractType base type);
-            DECL_STRING_ATTRIB(ID,ID);
-            DECL_STRING_ATTRIB(Version,VER);
-            DECL_DATETIME_ATTRIB(IssueInstant,ISSUEINSTANT);
+        BEGIN_XMLOBJECT(SAML_API,RequestAbstractType,saml2::RootObject,SAML 2.0 RequestAbstractType base type);
+            DECL_INHERITED_STRING_ATTRIB(ID,ID);
+            DECL_INHERITED_STRING_ATTRIB(Version,VER);
+            DECL_INHERITED_DATETIME_ATTRIB(IssueInstant,ISSUEINSTANT);
             DECL_STRING_ATTRIB(Destination,DESTINATION);
             DECL_STRING_ATTRIB(Consent,CONSENT);
-            DECL_TYPED_FOREIGN_CHILD(Issuer,saml2);
-            DECL_TYPED_FOREIGN_CHILD(Signature,xmlsignature);
+            DECL_INHERITED_TYPED_FOREIGN_CHILD(Issuer,saml2);
+            DECL_INHERITED_TYPED_FOREIGN_CHILD(Signature,xmlsignature);
             DECL_TYPED_CHILD(Extensions);
             /** RequestAbstractType local name */
             static const XMLCh TYPE_NAME[];
@@ -140,19 +140,17 @@ namespace opensaml {
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
 
-        BEGIN_XMLOBJECT(SAML_API,StatusResponseType,SignableObject,SAML 2.0 StatusResponseType base type);
-            DECL_STRING_ATTRIB(ID,ID);
+        BEGIN_XMLOBJECT(SAML_API,StatusResponseType,saml2::RootObject,SAML 2.0 StatusResponseType base type);
+            DECL_INHERITED_STRING_ATTRIB(ID,ID);
             DECL_STRING_ATTRIB(InResponseTo,INRESPONSETO);
-            DECL_STRING_ATTRIB(Version,VER);
-            DECL_DATETIME_ATTRIB(IssueInstant,ISSUEINSTANT);
+            DECL_INHERITED_STRING_ATTRIB(Version,VER);
+            DECL_INHERITED_DATETIME_ATTRIB(IssueInstant,ISSUEINSTANT);
             DECL_STRING_ATTRIB(Destination,DESTINATION);
             DECL_STRING_ATTRIB(Consent,CONSENT);
-
-            DECL_TYPED_FOREIGN_CHILD(Issuer,saml2);
-            DECL_TYPED_FOREIGN_CHILD(Signature,xmlsignature);
+            DECL_INHERITED_TYPED_FOREIGN_CHILD(Issuer,saml2);
+            DECL_INHERITED_TYPED_FOREIGN_CHILD(Signature,xmlsignature);
             DECL_TYPED_CHILD(Extensions);
             DECL_TYPED_CHILD(Status);
-
             /** StatusResponseType local name */
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
@@ -174,7 +172,6 @@ namespace opensaml {
             DECL_STRING_ATTRIB(Comparison,COMPARISON);
             DECL_TYPED_FOREIGN_CHILDREN(AuthnContextClassRef,saml2);
             DECL_TYPED_FOREIGN_CHILDREN(AuthnContextDeclRef,saml2);
-
             /** RequestedAuthnContextType local name */
             static const XMLCh TYPE_NAME[];
 

@@ -22,11 +22,11 @@
 
 #include "internal.h"
 #include "exceptions.h"
+#include "binding/HTTPRequest.h"
 #include "saml/binding/SAMLArtifact.h"
 #include "saml1/binding/SAML1ArtifactDecoder.h"
 #include "saml2/metadata/Metadata.h"
 #include "saml2/metadata/MetadataProvider.h"
-#include "security/X509TrustEngine.h"
 
 #include <log4cpp/Category.hh>
 #include <xmltooling/util/NDC.h>
@@ -34,9 +34,7 @@
 
 using namespace opensaml::saml2md;
 using namespace opensaml::saml1p;
-using namespace opensaml::saml1;
 using namespace opensaml;
-using namespace xmlsignature;
 using namespace xmltooling;
 using namespace log4cpp;
 using namespace std;
@@ -56,12 +54,8 @@ SAML1ArtifactDecoder::~SAML1ArtifactDecoder() {}
 
 Response* SAML1ArtifactDecoder::decode(
     string& relayState,
-    const RoleDescriptor*& issuer,
-    const XMLCh*& securityMech,
-    const HTTPRequest& httpRequest,
-    const MetadataProvider* metadataProvider,
-    const QName* role,
-    const opensaml::TrustEngine* trustEngine
+    const GenericRequest& genericRequest,
+    SecurityPolicy& policy
     ) const
 {
 #ifdef _DEBUG
@@ -70,16 +64,21 @@ Response* SAML1ArtifactDecoder::decode(
     Category& log = Category::getInstance(SAML_LOGCAT".MessageDecoder.SAML1Artifact");
 
     log.debug("validating input");
-    if (strcmp(httpRequest.getMethod(),"GET"))
+    const HTTPRequest* httpRequest=dynamic_cast<const HTTPRequest*>(&genericRequest);
+    if (!httpRequest) {
+        log.error("unable to cast request to HTTPRequest type");
+        return NULL;
+    }
+    if (strcmp(httpRequest->getMethod(),"GET"))
         return NULL;
     vector<const char*> SAMLart;
-    const char* TARGET = httpRequest.getParameter("TARGET");
-    if (httpRequest.getParameters("SAMLart", SAMLart)==0 || !TARGET)
+    const char* TARGET = httpRequest->getParameter("TARGET");
+    if (httpRequest->getParameters("SAMLart", SAMLart)==0 || !TARGET)
         return NULL;
     relayState = TARGET;
 
-    if (!m_artifactResolver || !metadataProvider)
-        throw BindingException("Artifact binding requires ArtifactResolver and MetadataProvider implementations be supplied.");
+    if (!m_artifactResolver || !policy.getMetadataProvider() || !policy.getRole())
+        throw BindingException("Artifact profile requires ArtifactResolver and MetadataProvider implementations be supplied.");
 
     // Import the artifacts.
     vector<SAMLArtifact*> artifacts;
@@ -111,10 +110,8 @@ Response* SAML1ArtifactDecoder::decode(
         }
     }
     
-    issuer = NULL;
-    securityMech = false;
     log.debug("attempting to determine source of artifact(s)...");
-    const EntityDescriptor* provider=metadataProvider->getEntityDescriptor(artifacts.front());
+    const EntityDescriptor* provider=policy.getMetadataProvider()->getEntityDescriptor(artifacts.front());
     if (!provider) {
         log.error(
             "metadata lookup failed, unable to determine issuer of artifact (0x%s)",
@@ -130,11 +127,11 @@ Response* SAML1ArtifactDecoder::decode(
     }
     
     log.debug("attempting to find artifact issuing role...");
-    issuer=provider->getRoleDescriptor(*role, samlconstants::SAML11_PROTOCOL_ENUM);
-    if (!issuer)
-        issuer=provider->getRoleDescriptor(*role, samlconstants::SAML10_PROTOCOL_ENUM);
-    if (!issuer || !dynamic_cast<const IDPSSODescriptor*>(issuer)) {
-        log.error("unable to find compatible SAML role (%s) in metadata", role->toString().c_str());
+    const RoleDescriptor* roledesc=provider->getRoleDescriptor(*(policy.getRole()), samlconstants::SAML11_PROTOCOL_ENUM);
+    if (!roledesc)
+        roledesc=provider->getRoleDescriptor(*(policy.getRole()), samlconstants::SAML10_PROTOCOL_ENUM);
+    if (!roledesc || !dynamic_cast<const IDPSSODescriptor*>(roledesc)) {
+        log.error("unable to find compatible SAML role (%s) in metadata", policy.getRole()->toString().c_str());
         for_each(artifacts.begin(), artifacts.end(), xmltooling::cleanup<SAMLArtifact>());
         BindingException ex("Unable to find compatible metadata role for artifact issuer.");
         annotateException(&ex,provider); // throws it
@@ -142,33 +139,17 @@ Response* SAML1ArtifactDecoder::decode(
     
     try {
         auto_ptr<Response> response(
-            m_artifactResolver->resolve(
-                securityMech,
-                artifacts,
-                dynamic_cast<const IDPSSODescriptor&>(*issuer),
-                dynamic_cast<const X509TrustEngine*>(trustEngine)
-                )
+            m_artifactResolver->resolve(artifacts, dynamic_cast<const IDPSSODescriptor&>(*roledesc), policy)
             );
         
-        if (trustEngine && response->getSignature()) {
-            if (!trustEngine->validate(*(response->getSignature()), *issuer, metadataProvider->getKeyResolver())) {
-                log.error("unable to verify signature on message with supplied trust engine");
-                throw BindingException("Message signature failed verification.");
-            }
-            else if (!securityMech) {
-                securityMech = samlconstants::SAML1P_NS;
-            }
-        }
-        else if (!securityMech) {
-            log.warn("unable to authenticate the message, leaving untrusted");
-        }
+        policy.evaluate(genericRequest, *(response.get()));
         
         for_each(artifacts.begin(), artifacts.end(), xmltooling::cleanup<SAMLArtifact>());
         return response.release();
     }
     catch (XMLToolingException& ex) {
         for_each(artifacts.begin(), artifacts.end(), xmltooling::cleanup<SAMLArtifact>());
-        annotateException(&ex,issuer,false);
+        annotateException(&ex,roledesc,false);
         throw;
     }
 }

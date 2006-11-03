@@ -22,23 +22,21 @@
 
 #include "internal.h"
 #include "exceptions.h"
+#include "binding/HTTPRequest.h"
 #include "saml1/core/Assertions.h"
 #include "saml1/binding/SAML1POSTDecoder.h"
 #include "saml2/metadata/Metadata.h"
 #include "saml2/metadata/MetadataProvider.h"
-#include "security/X509TrustEngine.h"
 
 #include <log4cpp/Category.hh>
 #include <xercesc/util/Base64.hpp>
 #include <xmltooling/util/NDC.h>
-#include <xmltooling/util/ReplayCache.h>
 #include <xmltooling/validation/ValidatorSuite.h>
 
 using namespace opensaml::saml2md;
 using namespace opensaml::saml1p;
 using namespace opensaml::saml1;
 using namespace opensaml;
-using namespace xmlsignature;
 using namespace xmltooling;
 using namespace log4cpp;
 using namespace std;
@@ -58,12 +56,8 @@ SAML1POSTDecoder::~SAML1POSTDecoder() {}
 
 Response* SAML1POSTDecoder::decode(
     string& relayState,
-    const RoleDescriptor*& issuer,
-    const XMLCh*& securityMech,
-    const HTTPRequest& httpRequest,
-    const MetadataProvider* metadataProvider,
-    const QName* role,
-    const opensaml::TrustEngine* trustEngine
+    const GenericRequest& genericRequest,
+    SecurityPolicy& policy
     ) const
 {
 #ifdef _DEBUG
@@ -72,10 +66,15 @@ Response* SAML1POSTDecoder::decode(
     Category& log = Category::getInstance(SAML_LOGCAT".MessageDecoder.SAML1POST");
 
     log.debug("validating input");
-    if (strcmp(httpRequest.getMethod(),"POST"))
+    const HTTPRequest* httpRequest=dynamic_cast<const HTTPRequest*>(&genericRequest);
+    if (!httpRequest) {
+        log.error("unable to cast request to HTTPRequest type");
         return NULL;
-    const char* samlResponse = httpRequest.getParameter("SAMLResponse");
-    const char* TARGET = httpRequest.getParameter("TARGET");
+    }
+    if (strcmp(httpRequest->getMethod(),"POST"))
+        return NULL;
+    const char* samlResponse = httpRequest->getParameter("SAMLResponse");
+    const char* TARGET = httpRequest->getParameter("TARGET");
     if (!samlResponse || !TARGET)
         return NULL;
     relayState = TARGET;
@@ -100,14 +99,13 @@ Response* SAML1POSTDecoder::decode(
     if (!response)
         throw BindingException("Decoded message was not a SAML 1.x Response.");
 
-    const EntityDescriptor* provider=NULL;
     try {
         if (!m_validate)
             SchemaValidators.validate(xmlObject.get());
         
         // Check recipient URL.
         auto_ptr_char recipient(response->getRecipient());
-        const char* recipient2 = httpRequest.getRequestURL();
+        const char* recipient2 = httpRequest->getRequestURL();
         if (!recipient.get() || !*(recipient.get())) {
             log.error("response missing Recipient attribute");
             throw BindingException("SAML response did not contain Recipient attribute identifying intended destination.");
@@ -117,98 +115,33 @@ Response* SAML1POSTDecoder::decode(
             throw BindingException("SAML message delivered with POST to incorrect server URL.");
         }
         
-        // Check freshness.
-        time_t now = time(NULL);
-        if (response->getIssueInstant()->getEpoch() < now-(2*XMLToolingConfig::getConfig().clock_skew_secs))
-            throw BindingException("Detected expired POST profile response.");
-        
-        // Check replay.
-        ReplayCache* replayCache = XMLToolingConfig::getConfig().getReplayCache();
-        if (replayCache) {
-            auto_ptr_char id(response->getResponseID());
-            if (!replayCache->check("SAML1POST", id.get(), response->getIssueInstant()->getEpoch() + (2*XMLToolingConfig::getConfig().clock_skew_secs))) {
-                log.error("replay detected of response ID (%s)", id.get());
-                throw BindingException("Rejecting replayed response ID ($1).", params(1,id.get()));
-            }
-        }
-        else
-            log.warn("replay cache was not provided, this is a serious security risk!");
-        
-        /* For SAML 1, the issuer can only be established from any assertions in the message.
-         * Generally, errors aren't delivered like this, so there should be one.
-         * The Issuer attribute is matched against metadata, and then trust checking can be
-         * applied.
-         */
-        issuer = NULL;
-        securityMech = NULL;
-        log.debug("attempting to establish issuer and integrity of message...");
-        const vector<Assertion*>& assertions=const_cast<const Response*>(response)->getAssertions();
-        if (!assertions.empty()) {
-            log.debug("searching metadata for assertion issuer...");
-            provider=metadataProvider ? metadataProvider->getEntityDescriptor(assertions.front()->getIssuer()) : NULL;
-            if (provider) {
-                log.debug("matched assertion issuer against metadata, searching for applicable role...");
-                pair<bool,int> minor = response->getMinorVersion();
-                issuer=provider->getRoleDescriptor(
-                    *role,
-                    (minor.first && minor.second==0) ? samlconstants::SAML10_PROTOCOL_ENUM : samlconstants::SAML11_PROTOCOL_ENUM
-                    );
-                if (issuer) {
-                    if (trustEngine && response->getSignature()) {
-                        if (trustEngine->validate(*(response->getSignature()), *issuer, metadataProvider->getKeyResolver())) {
-                            securityMech = samlconstants::SAML1P_NS;
-                        }
-                        else {
-                            log.error("unable to verify signature on message with supplied trust engine");
-                            throw BindingException("Message signature failed verification.");
-                        }
-                    }
-                    else {
-                        log.warn("unable to authenticate the message, leaving untrusted");
-                    }
-                }
-                else {
-                    log.warn(
-                        "unable to find compatible SAML 1.%d role (%s) in metadata",
-                        (minor.first && minor.second==0) ? 0 : 1,
-                        role->toString().c_str()
-                        );
-                }
-                if (log.isDebugEnabled()) {
-                    auto_ptr_char iname(assertions.front()->getIssuer());
-                    log.debug("message from (%s), integrity %sverified", iname.get(), securityMech ? "" : "NOT ");
-                }
-            }
-            else {
-                auto_ptr_char temp(assertions.front()->getIssuer());
-                log.warn("no metadata found, can't establish identity of issuer (%s)", temp.get());
-            }
-        }
-        else {
-            log.warn("no assertions found, can't establish identity of issuer");
-        }
+        // Run through the policy.
+        policy.evaluate(genericRequest, *response);
     }
     catch (XMLToolingException& ex) {
+        // This is just to maximize the likelihood of attaching a source to the message for support purposes.
+        if (policy.getIssuerMetadata())
+            annotateException(&ex,policy.getIssuerMetadata()); // throws it
+          
         // Check for an Issuer.
-        if (!provider) {
-            const vector<Assertion*>& assertions=const_cast<const Response*>(response)->getAssertions();
-            if (!assertions.empty() || !metadataProvider ||
-                    !(provider=metadataProvider->getEntityDescriptor(assertions.front()->getIssuer(), false))) {
-                // Just record it.
-                auto_ptr_char iname(assertions.front()->getIssuer());
-                if (iname.get())
-                    ex.addProperty("entityID", iname.get());
-                throw;
-            }
+        const EntityDescriptor* provider=NULL;
+        const vector<Assertion*>& assertions=const_cast<const Response*>(response)->getAssertions();
+        if (!assertions.empty() || !policy.getMetadataProvider() ||
+                !(provider=policy.getMetadataProvider()->getEntityDescriptor(assertions.front()->getIssuer(), false))) {
+            // Just record it.
+            auto_ptr_char iname(assertions.front()->getIssuer());
+            if (iname.get())
+                ex.addProperty("entityID", iname.get());
+            throw;
         }
-        if (!issuer) {
+        if (policy.getRole()) {
             pair<bool,int> minor = response->getMinorVersion();
-            issuer=provider->getRoleDescriptor(
-                *role,
+            const RoleDescriptor* roledesc=provider->getRoleDescriptor(
+                *(policy.getRole()),
                 (minor.first && minor.second==0) ? samlconstants::SAML10_PROTOCOL_ENUM : samlconstants::SAML11_PROTOCOL_ENUM
                 );
+            if (roledesc) annotateException(&ex,roledesc); // throws it
         }
-        if (issuer) annotateException(&ex,issuer); // throws it
         annotateException(&ex,provider);  // throws it
     }
 

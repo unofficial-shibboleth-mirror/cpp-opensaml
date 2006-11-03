@@ -137,6 +137,9 @@ namespace samlconstants {
 
     /** SAML 2.0 HTTP-Redirect binding ("urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect") */
     extern SAML_API const char SAML20_BINDING_HTTP_REDIRECT[];
+    
+    /** SAML 2.0 HTTP-Redirect DEFLATE URL encoding ("urn:oasis:names:tc:SAML:2.0:bindings:URL-Encoding:DEFLATE") */
+    extern SAML_API const char SAML20_BINDING_URL_ENCODING_DEFLATE[];
 };
 
 #endif /* __saml_xmlconstants_h__ */

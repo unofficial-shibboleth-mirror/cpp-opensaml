@@ -23,6 +23,7 @@
 #include "internal.h"
 #include "exceptions.h"
 #include "binding/ArtifactMap.h"
+#include "binding/HTTPResponse.h"
 #include "binding/URLEncoder.h"
 #include "saml2/binding/SAML2Artifact.h"
 #include "saml2/binding/SAML2ArtifactEncoder.h"
@@ -64,7 +65,7 @@ SAML2ArtifactEncoder::SAML2ArtifactEncoder(const DOMElement* e)
 SAML2ArtifactEncoder::~SAML2ArtifactEncoder() {}
 
 long SAML2ArtifactEncoder::encode(
-    HTTPResponse& httpResponse,
+    GenericResponse& genericResponse,
     xmltooling::XMLObject* xmlObject,
     const char* destination,
     const char* recipientID,
@@ -77,8 +78,11 @@ long SAML2ArtifactEncoder::encode(
     xmltooling::NDC ndc("encode");
 #endif
     Category& log = Category::getInstance(SAML_LOGCAT".MessageEncoder.SAML2Artifact");
+
     log.debug("validating input");
-    
+    HTTPResponse* httpResponse=dynamic_cast<HTTPResponse*>(&genericResponse);
+    if (!httpResponse)
+        throw BindingException("Unable to cast response interface to HTTPResponse type.");
     if (relayState && strlen(relayState)>80)
         throw BindingException("RelayState cannot exceed 80 bytes in length.");
     
@@ -135,7 +139,7 @@ long SAML2ArtifactEncoder::encode(
         if (relayState)
             loc = loc + "&RelayState=" + escaper->encode(relayState);
         log.debug("message encoded, sending redirect to client");
-        return httpResponse.sendRedirect(loc.c_str());
+        return httpResponse->sendRedirect(loc.c_str());
     }
     else {
         // Push message into template and send result to client. 
@@ -153,6 +157,7 @@ long SAML2ArtifactEncoder::encode(
             params["RelayState"] = relayState;
         stringstream s;
         engine->run(infile, s, params);
-        return httpResponse.sendResponse(s);
+        httpResponse->setContentType("text/html");
+        return httpResponse->sendResponse(s, HTTPResponse::SAML_HTTP_STATUS_OK);
     }
 }

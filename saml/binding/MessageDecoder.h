@@ -23,8 +23,8 @@
 #ifndef __saml_decoder_h__
 #define __saml_decoder_h__
 
-#include <saml/base.h>
-
+#include <saml/binding/GenericRequest.h>
+#include <saml/binding/SecurityPolicy.h>
 #include <xmltooling/XMLObject.h>
 
 namespace opensaml {
@@ -43,7 +43,7 @@ namespace opensaml {
         class SAML_API IDPSSODescriptor;
         class SAML_API RoleDescriptor;
         class SAML_API SSODescriptorType;
-    }
+    };
 
     /**
      * Interface to SAML protocol binding message decoders.
@@ -53,90 +53,6 @@ namespace opensaml {
         MAKE_NONCOPYABLE(MessageDecoder);
     public:
         virtual ~MessageDecoder() {}
-
-        /**
-         * Interface to caller-supplied shim for accessing HTTP request context.
-         * 
-         * <p>To supply information from the surrounding web server environment,
-         * a shim must be supplied in the form of this interface to adapt the
-         * library to different proprietary server APIs.
-         * 
-         * <p>This interface need not be threadsafe.
-         */
-        class SAML_API HTTPRequest {
-            MAKE_NONCOPYABLE(HTTPRequest);
-        protected:
-            HTTPRequest() {}
-        public:
-            virtual ~HTTPRequest() {}
-            
-            /**
-             * Returns the HTTP method of the request (GET, POST, etc.)
-             * 
-             * @return the HTTP method
-             */
-            virtual const char* getMethod() const=0;
-            
-            /**
-             * Returns the complete request URL, including scheme, host, port.
-             * 
-             * @return the request URL
-             */
-            virtual const char* getRequestURL() const=0;
-            
-            /**
-             * Returns the HTTP query string appened to the request. The query
-             * string is returned without any decoding applied, everything found
-             * after the ? delimiter. 
-             * 
-             * @return the query string
-             */
-            virtual const char* getQueryString() const=0;
-
-            /**
-             * Returns the raw HTTP request body. Used to access the body
-             * of a POST that is not in URL-encoded form.
-             * 
-             * @return the request body, or NULL
-             */
-            virtual const char* getRequestBody() const=0;
-            
-            /**
-             * Returns a decoded named parameter value from the query string or form body.
-             * If a parameter has multiple values, only one will be returned.
-             * 
-             * @param name  the name of the parameter to return
-             * @return a single parameter value or NULL
-             */
-            virtual const char* getParameter(const char* name) const=0;
-
-            /**
-             * Returns all of the decoded values of a named parameter from the query string
-             * or form body. All values found will be returned.
-             * 
-             * @param name      the name of the parameter to return
-             * @param values    a vector in which to return pointers to the decoded values
-             * @return  the number of values returned
-             */            
-            virtual std::vector<const char*>::size_type getParameters(
-                const char* name, std::vector<const char*>& values
-                ) const=0;
-
-            /**
-             * Returns the authenticated identity associated with the request
-             * 
-             * @return the authenticated username or an empty string
-             */
-            virtual std::string getRemoteUser() const=0;
-
-            /**
-             * Returns a request header value.
-             * 
-             * @param name  the name of the header to return
-             * @return the header's value, or an empty string
-             */
-            virtual std::string getHeader(const char* name) const=0;
-        };
 
         /**
          * Interface to caller-supplied artifact resolution mechanism.
@@ -173,36 +89,36 @@ namespace opensaml {
             
             /**
              * Resolves one or more SAML 1.x artifacts into a response containing a set of
-             * resolved Assertions. The caller is responsible for the resulting Response. 
+             * resolved Assertions. The caller is responsible for the resulting Response.
+             * The supplied SecurityPolicy is used to access caller-supplied infrastructure
+             * and to pass back the result of authenticating the resolution process. 
              * 
-             * @param securityMech      will be set to identifier of security mechanism that authenticated the resolution 
              * @param artifacts         one or more SAML 1.x artifacts
              * @param idpDescriptor     reference to IdP role of artifact issuer
-             * @param trustEngine       optional pointer to X509TrustEngine supplied to MessageDecoder
+             * @param policy            reference to policy containing rules, MetadataProvider, TrustEngine, etc. 
              * @return the corresponding SAML Assertions wrapped in a Response.
              */
             virtual saml1p::Response* resolve(
-                const XMLCh*& securityMech,
                 const std::vector<SAMLArtifact*>& artifacts,
                 const saml2md::IDPSSODescriptor& idpDescriptor,
-                const X509TrustEngine* trustEngine=NULL
+                SecurityPolicy& policy
                 ) const=0;
 
             /**
              * Resolves a SAML 2.0 artifact into the corresponding SAML protocol message.
              * The caller is responsible for the resulting ArtifactResponse message.
+             * The supplied SecurityPolicy is used to access caller-supplied infrastructure
+             * and to pass back the result of authenticating the resolution process. 
              * 
-             * @param securityMech      will be set to identifier of security mechanism that authenticated the resolution 
              * @param artifact          reference to a SAML 2.0 artifact
              * @param ssoDescriptor     reference to SSO role of artifact issuer (may be SP or IdP)
-             * @param trustEngine       optional pointer to X509TrustEngine supplied to MessageDecoder
+             * @param policy            reference to policy containing rules, MetadataProvider, TrustEngine, etc. 
              * @return the corresponding SAML protocol message or NULL
              */
             virtual saml2p::ArtifactResponse* resolve(
-                const XMLCh*& securityMech,
                 const saml2p::SAML2Artifact& artifact,
                 const saml2md::SSODescriptorType& ssoDescriptor,
-                const X509TrustEngine* trustEngine=NULL
+                SecurityPolicy& policy
                 ) const=0;
         };
 
@@ -233,35 +149,23 @@ namespace opensaml {
         }
 
         /**
-         * Decodes an HTTP request into a SAML protocol message, and returns related
-         * information about the issuer of the message and whether it can be trusted.
-         * If the HTTP request does not contain the information necessary to decode
-         * the request, a NULL will be returned. Errors during the decoding process
-         * will be raised as exceptions.
+         * Decodes a transport request into a SAML protocol message, and evaluates it
+         * against a supplied SecurityPolicy. If the transport request does not contain
+         * the information necessary to decode the request, NULL will be returned.
+         * Errors during the decoding process will be raised as exceptions.
          * 
          * <p>Artifact-based bindings require an ArtifactResolver be set to
          * turn an artifact into the corresponding message.
          * 
-         * <p>In some cases, a message may be returned but not authenticated. The caller
-         * should examine the issuerTrusted output value to establish this.  
-         * 
          * @param relayState        will be set to RelayState/TARGET value accompanying message
-         * @param issuer            will be set to role descriptor of issuing party, if known
-         * @param securityMech      will be set to identifier of security mechanism that authenticates the message 
-         * @param httpRequest       reference to interface for accessing HTTP message to decode
-         * @param metadataProvider  optional MetadataProvider instance to authenticate the message
-         * @param role              optional, identifies the role (generally IdP or SP) of the peer who issued the message 
-         * @param trustEngine       optional TrustEngine to authenticate the message
+         * @param genericRequest    reference to interface for accessing transport request to decode
+         * @param policy            reference to policy containing rules, MetadataProvider, TrustEngine, etc. 
          * @return  the decoded message, or NULL if the decoder did not recognize the request content
          */
         virtual xmltooling::XMLObject* decode(
             std::string& relayState,
-            const saml2md::RoleDescriptor*& issuer,
-            const XMLCh*& securityMech,
-            const HTTPRequest& httpRequest,
-            const saml2md::MetadataProvider* metadataProvider=NULL,
-            const xmltooling::QName* role=NULL,
-            const TrustEngine* trustEngine=NULL
+            const GenericRequest& genericRequest,
+            SecurityPolicy& policy
             ) const=0;
 
     protected:

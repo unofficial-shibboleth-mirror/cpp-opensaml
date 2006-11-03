@@ -23,6 +23,7 @@
 #include "internal.h"
 #include "exceptions.h"
 #include "binding/ArtifactMap.h"
+#include "binding/HTTPResponse.h"
 #include "binding/SAMLArtifact.h"
 #include "binding/URLEncoder.h"
 #include "saml1/binding/SAML1ArtifactEncoder.h"
@@ -53,7 +54,7 @@ SAML1ArtifactEncoder::SAML1ArtifactEncoder(const DOMElement* e) {}
 SAML1ArtifactEncoder::~SAML1ArtifactEncoder() {}
 
 long SAML1ArtifactEncoder::encode(
-    HTTPResponse& httpResponse,
+    GenericResponse& genericResponse,
     XMLObject* xmlObject,
     const char* destination,
     const char* recipientID,
@@ -66,8 +67,11 @@ long SAML1ArtifactEncoder::encode(
     xmltooling::NDC ndc("encode");
 #endif
     Category& log = Category::getInstance(SAML_LOGCAT".MessageEncoder.SAML1Artifact");
+
     log.debug("validating input");
-    
+    HTTPResponse* httpResponse=dynamic_cast<HTTPResponse*>(&genericResponse);
+    if (!httpResponse)
+        throw BindingException("Unable to cast response interface to HTTPResponse type.");
     if (xmlObject->getParent())
         throw BindingException("Cannot encode XML content with parent.");
     Assertion* assertion = dynamic_cast<Assertion*>(xmlObject);
@@ -98,5 +102,5 @@ long SAML1ArtifactEncoder::encode(
     URLEncoder* escaper = SAMLConfig::getConfig().getURLEncoder();
     loc = loc + "SAMLart=" + escaper->encode(artifact->encode().c_str()) + "&TARGET=" + escaper->encode(relayState);
     log.debug("message encoded, sending redirect to client");
-    return httpResponse.sendRedirect(loc.c_str());
+    return httpResponse->sendRedirect(loc.c_str());
 }

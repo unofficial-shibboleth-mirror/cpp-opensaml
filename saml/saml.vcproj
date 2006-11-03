@@ -414,6 +414,10 @@
 							RelativePath=".\saml2\binding\impl\SAML2POSTEncoder.cpp"
 							>
 						</File>
+						<File
+							RelativePath=".\saml2\binding\impl\SAML2Redirect.cpp"
+							>
+						</File>
 					</Filter>
 				</Filter>
 			</Filter>
@@ -468,7 +472,19 @@
 						>
 					</File>
 					<File
+						RelativePath=".\binding\impl\MessageFlowRule.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\binding\impl\MessageSigningRule.cpp"
+						>
+					</File>
+					<File
 						RelativePath=".\binding\impl\SAMLArtifact.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\binding\impl\SecurityPolicy.cpp"
 						>
 					</File>
 					<File
@@ -476,6 +492,34 @@
 						>
 					</File>
 				</Filter>
+			</Filter>
+			<Filter
+				Name="zlib"
+				>
+				<File
+					RelativePath=".\zlib\adler32.c"
+					>
+				</File>
+				<File
+					RelativePath=".\zlib\crc32.c"
+					>
+				</File>
+				<File
+					RelativePath=".\zlib\inffast.c"
+					>
+				</File>
+				<File
+					RelativePath=".\zlib\inflate.c"
+					>
+				</File>
+				<File
+					RelativePath=".\zlib\inftrees.c"
+					>
+				</File>
+				<File
+					RelativePath=".\zlib\zutil.c"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<Filter
@@ -493,6 +537,10 @@
 			</File>
 			<File
 				RelativePath=".\internal.h"
+				>
+			</File>
+			<File
+				RelativePath=".\RootObject.h"
 				>
 			</File>
 			<File
@@ -645,6 +693,14 @@
 						RelativePath=".\saml2\binding\SAML2POSTEncoder.h"
 						>
 					</File>
+					<File
+						RelativePath=".\saml2\binding\SAML2Redirect.h"
+						>
+					</File>
+					<File
+						RelativePath=".\saml2\binding\SAML2RedirectDecoder.h"
+						>
+					</File>
 				</Filter>
 			</Filter>
 			<Filter
@@ -687,6 +743,22 @@
 					>
 				</File>
 				<File
+					RelativePath=".\binding\GenericRequest.h"
+					>
+				</File>
+				<File
+					RelativePath=".\binding\GenericResponse.h"
+					>
+				</File>
+				<File
+					RelativePath=".\binding\HTTPRequest.h"
+					>
+				</File>
+				<File
+					RelativePath=".\binding\HTTPResponse.h"
+					>
+				</File>
+				<File
 					RelativePath=".\binding\MessageDecoder.h"
 					>
 				</File>
@@ -695,11 +767,63 @@
 					>
 				</File>
 				<File
+					RelativePath=".\binding\MessageFlowRule.h"
+					>
+				</File>
+				<File
+					RelativePath=".\binding\MessageSigningRule.h"
+					>
+				</File>
+				<File
 					RelativePath=".\binding\SAMLArtifact.h"
 					>
 				</File>
 				<File
+					RelativePath=".\binding\SecurityPolicy.h"
+					>
+				</File>
+				<File
+					RelativePath=".\binding\SecurityPolicyRule.h"
+					>
+				</File>
+				<File
 					RelativePath=".\binding\URLEncoder.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="zlib"
+				>
+				<File
+					RelativePath=".\zlib\crc32.h"
+					>
+				</File>
+				<File
+					RelativePath=".\zlib\inffast.h"
+					>
+				</File>
+				<File
+					RelativePath=".\zlib\inffixed.h"
+					>
+				</File>
+				<File
+					RelativePath=".\zlib\inflate.h"
+					>
+				</File>
+				<File
+					RelativePath=".\zlib\inftrees.h"
+					>
+				</File>
+				<File
+					RelativePath=".\zlib\zconf.h"
+					>
+				</File>
+				<File
+					RelativePath=".\zlib\zlib.h"
+					>
+				</File>
+				<File
+					RelativePath=".\zlib\zutil.h"
 					>
 				</File>
 			</Filter>

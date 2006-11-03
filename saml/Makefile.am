@@ -28,13 +28,22 @@ libsamlinclude_HEADERS = \
 	base.h \
 	exceptions.h \
 	version.h \
+	RootObject.h \
 	SAMLConfig.h
 
 samlbindinclude_HEADERS = \
 	binding/ArtifactMap.h \
+	binding/GenericRequest.h \
+	binding/GenericResponse.h \
+	binding/HTTPRequest.h \
+	binding/HTTPResponse.h \
 	binding/MessageDecoder.h \
 	binding/MessageEncoder.h \
+	binding/MessageFlowRule.h \
+	binding/MessageSigningRule.h \
 	binding/SAMLArtifact.h \
+	binding/SecurityPolicy.h \
+	binding/SecurityPolicyRule.h \
 	binding/URLEncoder.h
 
 encinclude_HEADERS = \
@@ -95,7 +104,10 @@ libsaml_la_SOURCES = \
 	binding/impl/ArtifactMap.cpp \
 	binding/impl/MessageDecoder.cpp \
 	binding/impl/MessageEncoder.cpp \
+	binding/impl/MessageFlowRule.cpp \
+	binding/impl/MessageSigningRule.cpp \
 	binding/impl/SAMLArtifact.cpp \
+	binding/impl/SecurityPolicy.cpp \
 	binding/impl/URLEncoder.cpp \
 	saml1/core/impl/AssertionsImpl.cpp \
 	saml1/core/impl/AssertionsSchemaValidators.cpp \

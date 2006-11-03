@@ -23,7 +23,7 @@
 #ifndef __saml1_assertions_h__
 #define __saml1_assertions_h__
 
-#include <saml/signature/SignableObject.h>
+#include <saml/RootObject.h>
 #include <saml/util/SAMLConstants.h>
 
 #include <xmltooling/AttributeExtensibleXMLObject.h>
@@ -217,11 +217,11 @@ namespace opensaml {
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
 
-        BEGIN_XMLOBJECT(SAML_API,Assertion,SignableObject,SAML 1.x Assertion element);
+        BEGIN_XMLOBJECT(SAML_API,Assertion,RootObject,SAML 1.x Assertion element);
             DECL_INTEGER_ATTRIB(MinorVersion,MINORVERSION);
             DECL_STRING_ATTRIB(AssertionID,ASSERTIONID);
             DECL_STRING_ATTRIB(Issuer,ISSUER);
-            DECL_DATETIME_ATTRIB(IssueInstant,ISSUEINSTANT);
+            DECL_INHERITED_DATETIME_ATTRIB(IssueInstant,ISSUEINSTANT);
             DECL_TYPED_CHILD(Conditions);
             DECL_TYPED_CHILD(Advice);
             DECL_TYPED_CHILDREN(Statement);
@@ -229,7 +229,7 @@ namespace opensaml {
             DECL_TYPED_CHILDREN(AuthenticationStatement);
             DECL_TYPED_CHILDREN(AttributeStatement);
             DECL_TYPED_CHILDREN(AuthorizationDecisionStatement);
-            DECL_TYPED_FOREIGN_CHILD(Signature,xmlsignature);
+            DECL_INHERITED_TYPED_FOREIGN_CHILD(Signature,xmlsignature);
             /** AssertionType local name */
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
