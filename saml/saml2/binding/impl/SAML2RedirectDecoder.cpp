@@ -98,17 +98,18 @@ XMLObject* SAML2RedirectDecoder::decode(
         throw BindingException("Unable to decode base64 in Redirect binding message.");
     
     // Now we have to inflate it.
-    stringstream str;
-    if (inflate((char*)decoded, x, str)==0) {
+    stringstream s;
+    if (inflate((char*)decoded, x, s)==0) {
         XMLString::release(&decoded);
         throw BindingException("Unable to inflate Redirect binding message.");
     }
-
+    if (log.isDebugEnabled())
+        log.debug("decoded SAML message:\n%s", s.str().c_str());
     XMLString::release(&decoded);
     
     // Parse and bind the document into an XMLObject.
     DOMDocument* doc = (m_validate ? XMLToolingConfig::getConfig().getValidatingParser()
-        : XMLToolingConfig::getConfig().getParser()).parse(str);
+        : XMLToolingConfig::getConfig().getParser()).parse(s);
     XercesJanitor<DOMDocument> janitor(doc);
     auto_ptr<XMLObject> xmlObject(XMLObjectBuilder::buildOneFromElement(doc->getDocumentElement(), true));
     janitor.release();
