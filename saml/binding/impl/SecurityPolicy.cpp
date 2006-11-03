@@ -33,6 +33,7 @@ using namespace std;
 
 namespace opensaml {
     SAML_DLLLOCAL PluginManager<SecurityPolicyRule,const DOMElement*>::Factory MessageFlowRuleFactory;
+    SAML_DLLLOCAL PluginManager<SecurityPolicyRule,const DOMElement*>::Factory MessageRoutingRuleFactory;
     SAML_DLLLOCAL PluginManager<SecurityPolicyRule,const DOMElement*>::Factory MessageSigningRuleFactory;
 };
 
@@ -40,6 +41,7 @@ void SAML_API opensaml::registerSecurityPolicyRules()
 {
     SAMLConfig& conf=SAMLConfig::getConfig();
     conf.SecurityPolicyRuleManager.registerFactory(MESSAGEFLOW_POLICY_RULE, MessageFlowRuleFactory);
+    conf.SecurityPolicyRuleManager.registerFactory(MESSAGEROUTING_POLICY_RULE, MessageRoutingRuleFactory);
     conf.SecurityPolicyRuleManager.registerFactory(MESSAGESIGNING_POLICY_RULE, MessageSigningRuleFactory);
 }
 
@@ -85,7 +87,7 @@ void SecurityPolicy::setIssuer(saml2::Issuer* issuer)
     m_issuer=issuer;
 }
 
-void SecurityPolicy::setIssuerMetadata(const saml2md::RoleDescriptor* issuerRole)
+void SecurityPolicy::setIssuerMetadata(const RoleDescriptor* issuerRole)
 {
     if (issuerRole && m_issuerRole && issuerRole!=m_issuerRole)
         throw BindingException("Externally provided RoleDescriptor conflicts with policy results.");

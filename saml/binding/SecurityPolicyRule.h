@@ -33,6 +33,7 @@ namespace opensaml {
         class SAML_API Issuer;
     };
     namespace saml2md {
+        class SAML_API MetadataProvider;
         class SAML_API RoleDescriptor;
     };
     
@@ -83,13 +84,22 @@ namespace opensaml {
      * 
      * <p>A ReplayCache instance must be available from the runtime, unless
      * a "checkReplay" XML attribute is set to "0" or "false" when instantiating
-     * the policy.
+     * the policy rule.
      * 
      * <p>Messages must have been issued in the past, but no more than 60 seconds ago,
      * or up to a number of seconds set by an "expires" XML attribute when
-     * instantiating the policy.
+     * instantiating the policy rule.
      */
     #define MESSAGEFLOW_POLICY_RULE  "org.opensaml.binding.MessageFlowRule"
+
+    /**
+     * SecurityPolicyRule for ensuring messages are delivered to the right place.
+     * 
+     * <p>Enforcement is mandatory and the message must be explicitly addressed,
+     * unless a "mandatory" XML attribute is set to "0" or "false" when instantiating
+     * the policy rule.
+     */
+    #define MESSAGEROUTING_POLICY_RULE  "org.opensaml.binding.MessageRoutingRule"
 
     /**
      * SecurityPolicyRule for protocol message signing.

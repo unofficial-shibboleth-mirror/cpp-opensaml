@@ -70,7 +70,7 @@ pair<saml2::Issuer*,const saml2md::RoleDescriptor*> MessageFlowRule::evaluate(
         check(obj.getID(), obj.getIssueInstantEpoch());
     }
     catch (bad_cast&) {
-        throw BindingException("Message was not of a recognized SAML root type.");
+        throw BindingException("Message was not of a recognized type.");
     }
     return pair<saml2::Issuer*,const saml2md::RoleDescriptor*>(NULL,NULL);
 }

@@ -418,6 +418,10 @@
 							RelativePath=".\saml2\binding\impl\SAML2Redirect.cpp"
 							>
 						</File>
+						<File
+							RelativePath=".\saml2\binding\impl\SAML2RedirectDecoder.cpp"
+							>
+						</File>
 					</Filter>
 				</Filter>
 			</Filter>
@@ -473,6 +477,10 @@
 					</File>
 					<File
 						RelativePath=".\binding\impl\MessageFlowRule.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\binding\impl\MessageRoutingRule.cpp"
 						>
 					</File>
 					<File
@@ -768,6 +776,10 @@
 				</File>
 				<File
 					RelativePath=".\binding\MessageFlowRule.h"
+					>
+				</File>
+				<File
+					RelativePath=".\binding\MessageRoutingRule.h"
 					>
 				</File>
 				<File

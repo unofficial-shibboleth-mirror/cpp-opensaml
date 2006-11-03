@@ -40,6 +40,7 @@ samlbindinclude_HEADERS = \
 	binding/MessageDecoder.h \
 	binding/MessageEncoder.h \
 	binding/MessageFlowRule.h \
+	binding/MessageRoutingRule.h \
 	binding/MessageSigningRule.h \
 	binding/SAMLArtifact.h \
 	binding/SecurityPolicy.h \
@@ -105,6 +106,7 @@ libsaml_la_SOURCES = \
 	binding/impl/MessageDecoder.cpp \
 	binding/impl/MessageEncoder.cpp \
 	binding/impl/MessageFlowRule.cpp \
+	binding/impl/MessageRoutingRule.cpp \
 	binding/impl/MessageSigningRule.cpp \
 	binding/impl/SAMLArtifact.cpp \
 	binding/impl/SecurityPolicy.cpp \

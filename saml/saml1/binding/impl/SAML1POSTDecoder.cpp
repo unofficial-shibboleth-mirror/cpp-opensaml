@@ -103,18 +103,6 @@ Response* SAML1POSTDecoder::decode(
         if (!m_validate)
             SchemaValidators.validate(xmlObject.get());
         
-        // Check recipient URL.
-        auto_ptr_char recipient(response->getRecipient());
-        const char* recipient2 = httpRequest->getRequestURL();
-        if (!recipient.get() || !*(recipient.get())) {
-            log.error("response missing Recipient attribute");
-            throw BindingException("SAML response did not contain Recipient attribute identifying intended destination.");
-        }
-        else if (!recipient2 || !*recipient2 || strcmp(recipient.get(),recipient2)) {
-            log.error("POST targeted at (%s), but delivered to (%s)", recipient.get(), recipient2 ? recipient2 : "none");
-            throw BindingException("SAML message delivered with POST to incorrect server URL.");
-        }
-        
         // Run through the policy.
         policy.evaluate(genericRequest, *response);
     }
