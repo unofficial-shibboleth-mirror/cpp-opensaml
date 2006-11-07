@@ -92,6 +92,7 @@ public:
     
     void tearDown() {
         for_each(m_rules.begin(), m_rules.end(), xmltooling::cleanup<SecurityPolicyRule>());
+        m_rules.clear();
         delete m_creds;
         delete m_metadata;
         delete m_trust;

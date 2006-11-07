@@ -134,6 +134,9 @@ namespace samlconstants {
 
     /** SAML 2.0 HTTP-POST binding ("urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST") */
     extern SAML_API const char SAML20_BINDING_HTTP_POST[];
+    
+    /** SAML 2.0 HTTP-POST-SimpleSign binding ("urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST-SimpleSign") */
+    extern SAML_API const char SAML20_BINDING_HTTP_POST_SIMPLESIGN[];
 
     /** SAML 2.0 HTTP-Redirect binding ("urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect") */
     extern SAML_API const char SAML20_BINDING_HTTP_REDIRECT[];

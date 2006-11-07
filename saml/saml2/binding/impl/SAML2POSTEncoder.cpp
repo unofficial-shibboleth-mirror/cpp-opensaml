@@ -44,14 +44,19 @@ namespace opensaml {
     namespace saml2p {              
         MessageEncoder* SAML_DLLLOCAL SAML2POSTEncoderFactory(const DOMElement* const & e)
         {
-            return new SAML2POSTEncoder(e);
+            return new SAML2POSTEncoder(e, false);
+        }
+
+        MessageEncoder* SAML_DLLLOCAL SAML2POSTSimpleSignEncoderFactory(const DOMElement* const & e)
+        {
+            return new SAML2POSTEncoder(e, true);
         }
     };
 };
 
 static const XMLCh templat[] = UNICODE_LITERAL_8(t,e,m,p,l,a,t,e);
 
-SAML2POSTEncoder::SAML2POSTEncoder(const DOMElement* e)
+SAML2POSTEncoder::SAML2POSTEncoder(const DOMElement* e, bool simple) : m_simple(simple)
 {
     if (e) {
         auto_ptr_char t(e->getAttributeNS(NULL, templat));
@@ -95,7 +100,8 @@ long SAML2POSTEncoder::encode(
     }
     
     DOMElement* rootElement = NULL;
-    if (credResolver) {
+    vector<Signature*> sigs;
+    if (credResolver && !m_simple) {
         // Signature based on native XML signing.
         if (request ? request->getSignature() : response->getSignature()) {
             log.debug("message already signed, skipping signature operation");
@@ -110,26 +116,47 @@ long SAML2POSTEncoder::encode(
             request ? request->setSignature(sig) : response->setSignature(sig);    
         
             // Sign response while marshalling.
-            vector<Signature*> sigs(1,sig);
-            rootElement = xmlObject->marshall((DOMDocument*)NULL,&sigs);
+            sigs.push_back(sig);
         }
     }
     else {
         log.debug("marshalling the message");
-        rootElement = xmlObject->marshall();
     }
     
-    string xmlbuf;
-    XMLHelper::serialize(rootElement, xmlbuf);
+    rootElement = xmlObject->marshall((DOMDocument*)NULL,&sigs);
+    
+    // Start tracking data.
+    map<string,string> pmap;
+    if (relayState)
+        pmap["RelayState"] = relayState;
+
+    // Base64 the message.
+    string& msg = pmap[(request ? "SAMLRequest" : "SAMLResponse")];
+    XMLHelper::serialize(rootElement, msg);
     unsigned int len=0;
-    XMLByte* out=Base64::encode(reinterpret_cast<const XMLByte*>(xmlbuf.data()),xmlbuf.size(),&len);
-    if (out) {
-        xmlbuf.erase();
-        xmlbuf.append(reinterpret_cast<char*>(out),len);
-        XMLString::release(&out);
-    }
-    else {
+    XMLByte* out=Base64::encode(reinterpret_cast<const XMLByte*>(msg.data()),msg.size(),&len);
+    if (!out)
         throw BindingException("Base64 encoding of XML failed.");
+    msg.erase();
+    msg.append(reinterpret_cast<char*>(out),len);
+    XMLString::release(&out);
+    
+    if (credResolver && m_simple) {
+        log.debug("applying simple signature to message data");
+        string input = (request ? "SAMLRequest=" : "SAMLResponse=") + msg;
+        if (relayState)
+            input = input + "&RelayState=" + relayState;
+        if (!sigAlgorithm)
+            sigAlgorithm = DSIGConstants::s_unicodeStrURIRSA_SHA1;
+        auto_ptr_char alg(sigAlgorithm);
+        pmap["SigAlg"] = alg.get();
+        input = input + "&SigAlg=" + alg.get();
+
+        char sigbuf[1024];
+        memset(sigbuf,0,sizeof(sigbuf));
+        auto_ptr<XSECCryptoKey> key(credResolver->getKey());
+        Signature::createRawSignature(key.get(), sigAlgorithm, input.c_str(), input.length(), sigbuf, sizeof(sigbuf)-1);
+        pmap["Signature"] = sigbuf;
     }
     
     // Push message into template and send result to client.
@@ -140,13 +167,9 @@ long SAML2POSTEncoder::encode(
     ifstream infile(m_template.c_str());
     if (!infile)
         throw BindingException("Failed to open HTML template for POST message ($1).", params(1,m_template.c_str()));
-    map<string,string> params;
-    params["action"] = destination;
-    params[request ? "SAMLRequest" : "SAMLResponse"] = xmlbuf;
-    if (relayState)
-        params["RelayState"] = relayState;
+    pmap["action"] = destination;
     stringstream s;
-    engine->run(infile, s, params);
+    engine->run(infile, s, pmap);
     httpResponse->setContentType("text/html");
     long ret = httpResponse->sendResponse(s, HTTPResponse::SAML_HTTP_STATUS_OK);
 

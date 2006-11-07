@@ -185,6 +185,8 @@ const char samlconstants::SAML20_BINDING_HTTP_ARTIFACT[] = "urn:oasis:names:tc:S
 
 const char samlconstants::SAML20_BINDING_HTTP_POST[] = "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST";
 
+const char samlconstants::SAML20_BINDING_HTTP_POST_SIMPLESIGN[] = "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST-SimpleSign";
+
 const char samlconstants::SAML20_BINDING_HTTP_REDIRECT[] = "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect";
 
 const char samlconstants::SAML20_BINDING_URL_ENCODING_DEFLATE[] = "urn:oasis:names:tc:SAML:2.0:bindings:URL-Encoding:DEFLATE";

@@ -125,24 +125,41 @@ pair<saml2::Issuer*,const saml2md::RoleDescriptor*> SimpleSigningRule::evaluate(
             return ret;
         }
 
-        // We have to construct a string containing the signature input by accessing the
-        // request directly. We can't use the decoded parameters because we need the raw
-        // data and URL-encoding isn't canonical.
         string input;
+        const char* pch;
         const HTTPRequest& httpRequest = dynamic_cast<const HTTPRequest&>(request);
-        const char* raw =
-            (!strcmp(httpRequest.getMethod(), "GET")) ? httpRequest.getQueryString() : httpRequest.getRequestBody();
-        if (!appendParameter(input, raw, "SAMLRequest="))
-            appendParameter(input, raw, "SAMLResponse=");
-        appendParameter(input, raw, "RelayState=");
-        appendParameter(input, raw, "SigAlg=");
+        if (!strcmp(httpRequest.getMethod(), "GET")) {
+            // We have to construct a string containing the signature input by accessing the
+            // request directly. We can't use the decoded parameters because we need the raw
+            // data and URL-encoding isn't canonical.
+            pch = httpRequest.getQueryString();
+            if (!appendParameter(input, pch, "SAMLRequest="))
+                appendParameter(input, pch, "SAMLResponse=");
+            appendParameter(input, pch, "RelayState=");
+            appendParameter(input, pch, "SigAlg=");
+        }
+        else {
+            // With POST, the input string is concatenated from the decoded form controls.
+            // GET should be this way too, but I messed up the spec, sorry.
+            pch = httpRequest.getParameter("SAMLRequest");
+            if (pch)
+                input = string("SAMLRequest=") + pch;
+            else {
+                pch = httpRequest.getParameter("SAMLResponse");
+                input = string("SAMLResponse=") + pch;
+            }
+            pch = httpRequest.getParameter("RelayState");
+            if (pch)
+                input = input + "&RelayState=" + pch;
+            input = input + "&SigAlg=" + sigAlgorithm;
+        }
 
         // Check for KeyInfo, but defensively (we might be able to run without it).
         KeyInfo* keyInfo=NULL;
-        const char* k = request.getParameter("KeyInfo");
-        if (k) {
+        pch = request.getParameter("KeyInfo");
+        if (pch) {
             try {
-                istringstream kstrm(k);
+                istringstream kstrm(pch);
                 DOMDocument* doc = XMLToolingConfig::getConfig().getParser().parse(kstrm);
                 XercesJanitor<DOMDocument> janitor(doc);
                 XMLObject* kxml = XMLObjectBuilder::buildOneFromElement(doc->getDocumentElement(), true);

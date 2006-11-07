@@ -17,7 +17,7 @@
 /**
  * @file saml/saml2/binding/SAML2POSTEncoder.h
  * 
- * SAML 2.0 HTTP-POST binding message encoder
+ * SAML 2.0 HTTP-POST (and -SimpleSign) binding message encoder
  */
 
 #include <saml/binding/MessageEncoder.h>
@@ -27,12 +27,12 @@ namespace opensaml {
     namespace saml2p {
 
         /**
-         * SAML 2.0 HTTP-POST binding message encoder
+         * SAML 2.0 HTTP-POST (and -SimpleSign) binding message encoder
          */
         class SAML_API SAML2POSTEncoder : public MessageEncoder
         {
         public:
-            SAML2POSTEncoder(const DOMElement* e);
+            SAML2POSTEncoder(const DOMElement* e, bool simple=false);
             virtual ~SAML2POSTEncoder();
             
             long encode(
@@ -48,6 +48,9 @@ namespace opensaml {
         protected:        
             /** Pathname of HTML template for transmission of message via POST. */
             std::string m_template;
+            
+            /** Flag controls signing behavior (XML vs. "simple") */
+            bool m_simple;
         };
 
     };
