@@ -63,10 +63,11 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="..\..\cpp-xmltooling\Debug\xmltooling_1D.lib xerces-c_2D.lib xsec_1D.lib log4cppD.lib libeay32_0_9_8D.lib"
-				OutputFile="$(OutDir)\$(ProjectName)_6D.dll"
+				OutputFile="$(OutDir)\$(ProjectName)2_0D.dll"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
 				SubSystem="2"
+				ImportLibrary="$(TargetDir)$(ProjectName)2D.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -139,12 +140,13 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="..\..\cpp-xmltooling\Release\xmltooling_1.lib xerces-c_2.lib xsec_1.lib log4cpp.lib libeay32_0_9_8.lib"
-				OutputFile="$(OutDir)\$(ProjectName)_6.dll"
+				OutputFile="$(OutDir)\$(ProjectName)2_0.dll"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
+				ImportLibrary="$(TargetDir)$(ProjectName)2.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -422,6 +424,10 @@
 							RelativePath=".\saml2\binding\impl\SAML2RedirectDecoder.cpp"
 							>
 						</File>
+						<File
+							RelativePath=".\saml2\binding\impl\SAML2RedirectEncoder.cpp"
+							>
+						</File>
 					</Filter>
 				</Filter>
 			</Filter>
@@ -496,6 +502,10 @@
 						>
 					</File>
 					<File
+						RelativePath=".\binding\impl\SimpleSigningRule.cpp"
+						>
+					</File>
+					<File
 						RelativePath=".\binding\impl\URLEncoder.cpp"
 						>
 					</File>
@@ -509,7 +519,15 @@
 					>
 				</File>
 				<File
+					RelativePath=".\zlib\compress.c"
+					>
+				</File>
+				<File
 					RelativePath=".\zlib\crc32.c"
+					>
+				</File>
+				<File
+					RelativePath=".\zlib\deflate.c"
 					>
 				</File>
 				<File
@@ -522,6 +540,10 @@
 				</File>
 				<File
 					RelativePath=".\zlib\inftrees.c"
+					>
+				</File>
+				<File
+					RelativePath=".\zlib\trees.c"
 					>
 				</File>
 				<File
@@ -709,6 +731,10 @@
 						RelativePath=".\saml2\binding\SAML2RedirectDecoder.h"
 						>
 					</File>
+					<File
+						RelativePath=".\saml2\binding\SAML2RedirectEncoder.h"
+						>
+					</File>
 				</Filter>
 			</Filter>
 			<Filter
@@ -799,6 +825,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\binding\SimpleSigningRule.h"
+					>
+				</File>
+				<File
 					RelativePath=".\binding\URLEncoder.h"
 					>
 				</File>
@@ -808,6 +838,10 @@
 				>
 				<File
 					RelativePath=".\zlib\crc32.h"
+					>
+				</File>
+				<File
+					RelativePath=".\zlib\deflate.h"
 					>
 				</File>
 				<File
@@ -824,6 +858,10 @@
 				</File>
 				<File
 					RelativePath=".\zlib\inftrees.h"
+					>
+				</File>
+				<File
+					RelativePath=".\zlib\trees.h"
 					>
 				</File>
 				<File

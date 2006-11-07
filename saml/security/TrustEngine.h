@@ -65,9 +65,37 @@ namespace opensaml {
          * @param sig           reference to a signature object to validate
          * @param role          metadata role supplying key information
          * @param keyResolver   optional externally supplied KeyResolver, or NULL
+         * @return  true iff the signature validates
          */
         virtual bool validate(
             xmlsignature::Signature& sig,
+            const saml2md::RoleDescriptor& role,
+            const xmlsignature::KeyResolver* keyResolver=NULL
+            ) const=0;
+
+        /**
+         * Determines whether a raw signature is correct and valid with respect to
+         * the information known about the signer.
+         * 
+         * <p>A custom KeyResolver can be supplied from outside the TrustEngine.
+         * Alternatively, one may be specified to the plugin constructor.
+         * A non-caching, inline resolver will be used as a fallback.
+         * 
+         * @param sigAlgorithm  XML Signature identifier for the algorithm used
+         * @param sig           null-terminated base64-encoded signature value
+         * @param keyInfo       KeyInfo object accompanying the signature, if any
+         * @param in            the input data over which the signature was created
+         * @param in_len        size of input data in bytes
+         * @param role          metadata role supplying key information
+         * @param keyResolver   optional externally supplied KeyResolver, or NULL
+         * @return  true iff the signature validates
+         */
+        virtual bool validate(
+            const XMLCh* sigAlgorithm,
+            const char* sig,
+            xmlsignature::KeyInfo* keyInfo,
+            const char* in,
+            unsigned int in_len,
             const saml2md::RoleDescriptor& role,
             const xmlsignature::KeyResolver* keyResolver=NULL
             ) const=0;

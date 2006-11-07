@@ -44,6 +44,46 @@ namespace {
     };
 };
 
+char* opensaml::saml2p::deflate(char* in, unsigned int in_len, unsigned int* out_len)
+{
+#ifdef _DEBUG
+    xmltooling::NDC ndc("deflate");
+#endif
+    Category& log = Category::getInstance(SAML_LOGCAT".MessageDecoder.SAML2Redirect.zlib");
+
+    z_stream z;
+    memset(&z, 0, sizeof(z_stream));
+    
+    z.zalloc = saml_zalloc;
+    z.zfree = saml_zfree;
+    z.opaque = NULL;
+    z.next_in = (Bytef*)in;
+    z.avail_in = in_len;
+    *out_len = 0;
+
+    int ret = deflateInit2(&z, 9, Z_DEFLATED, -15, 9, Z_DEFAULT_STRATEGY);
+    if (ret != Z_OK) {
+        log.error("zlib deflateInit2 failed with error code (%d)", ret);
+        return NULL;
+    }
+  
+    int dlen = in_len + (in_len >> 8) + 12;  /* orig_size * 1.001 + 12 */
+    char* out = new char[dlen];
+    z.next_out = (Bytef*)out;
+    z.avail_out = dlen;
+  
+    ret = deflate(&z, Z_FINISH);
+    if (ret != Z_STREAM_END) {
+    deflateEnd(&z);
+        log.error("zlib deflateInit2 failed with error code (%d)", ret);
+        delete[] out;
+    }
+  
+    *out_len = z.total_out;
+    deflateEnd(&z);
+    return out;
+}
+
 unsigned int opensaml::saml2p::inflate(char* in, unsigned int in_len, ostream& out)
 {
 #ifdef _DEBUG
@@ -68,7 +108,7 @@ unsigned int opensaml::saml2p::inflate(char* in, unsigned int in_len, ostream& o
   
     int ret = inflateInit2(&z, -15);
     if (ret != Z_OK) {
-        log.error("zlib inflateInit failed with error code (%d)", ret);
+        log.error("zlib inflateInit2 failed with error code (%d)", ret);
         delete[] buf;
         return 0;
     }

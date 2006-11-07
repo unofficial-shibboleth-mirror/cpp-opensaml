@@ -102,12 +102,20 @@ namespace opensaml {
     #define MESSAGEROUTING_POLICY_RULE  "org.opensaml.binding.MessageRoutingRule"
 
     /**
-     * SecurityPolicyRule for protocol message signing.
+     * SecurityPolicyRule for protocol message XML signing.
      * 
-     * Allows the message issuer to be authenticated using an XML or binding-specific
-     * digital signature over the message. The transport layer is not considered.
+     * Allows the message issuer to be authenticated using an XML digital signature
+     * over the message. The transport layer is not considered.
      */
     #define MESSAGESIGNING_POLICY_RULE  "org.opensaml.binding.MessageSigningRule"
+
+    /**
+     * SecurityPolicyRule for protocol message "blob" signing.
+     * 
+     * Allows the message issuer to be authenticated using a non-XML digital signature
+     * over the message body. The transport layer is not considered.
+     */
+    #define SIMPLESIGNING_POLICY_RULE  "org.opensaml.binding.SimpleSigningRule"
 };
 
 #endif /* __saml_secrule_h__ */

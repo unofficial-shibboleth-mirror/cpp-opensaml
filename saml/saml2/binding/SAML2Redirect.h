@@ -25,8 +25,26 @@
 
 namespace opensaml {
     namespace saml2p {
+        /**
+         * Deflates data in accordance with RFC1951. The caller must free the
+         * resulting buffer using delete[]
+         * 
+         * @param in        the data to compress
+         * @param in_len    length of input data
+         * @param out_len   will contain the length of the resulting data
+         * @return  allocated buffer of out_len bytes containing deflated data
+         */
+        char* deflate(char* in, unsigned int in_len, unsigned int* out_len);
         
-        unsigned int inflate(char* in, unsigned int inlen, std::ostream& out);
-        
+        /**
+         * Inflates data compressed in accordance with RFC1951 and sends the
+         * results to an output stream.
+         * 
+         * @param in        the data to inflate
+         * @param in_len    length of input data
+         * @param out       reference to output stream to receive data
+         * @return  number of bytes written to stream
+         */
+        unsigned int inflate(char* in, unsigned int in_len, std::ostream& out);
     };
 };

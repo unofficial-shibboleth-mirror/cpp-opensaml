@@ -45,6 +45,7 @@ samlbindinclude_HEADERS = \
 	binding/SAMLArtifact.h \
 	binding/SecurityPolicy.h \
 	binding/SecurityPolicyRule.h \
+	binding/SimpleSigningRule.h \
 	binding/URLEncoder.h
 
 encinclude_HEADERS = \
@@ -87,7 +88,10 @@ saml2bindinclude_HEADERS = \
 	saml2/binding/SAML2ArtifactDecoder.h \
 	saml2/binding/SAML2ArtifactEncoder.h \
 	saml2/binding/SAML2POSTDecoder.h \
-	saml2/binding/SAML2POSTEncoder.h
+	saml2/binding/SAML2POSTEncoder.h \
+	saml2/binding/SAML2Redirect.h \
+	saml2/binding/SAML2RedirectDecoder.h \
+	saml2/binding/SAML2RedirectEncoder.h
 
 saml2mdinclude_HEADERS = \
 	saml2/metadata/AbstractMetadataProvider.h \
@@ -110,6 +114,7 @@ libsaml_la_SOURCES = \
 	binding/impl/MessageSigningRule.cpp \
 	binding/impl/SAMLArtifact.cpp \
 	binding/impl/SecurityPolicy.cpp \
+	binding/impl/SimpleSigningRule.cpp \
 	binding/impl/URLEncoder.cpp \
 	saml1/core/impl/AssertionsImpl.cpp \
 	saml1/core/impl/AssertionsSchemaValidators.cpp \
@@ -141,6 +146,9 @@ libsaml_la_SOURCES = \
 	saml2/binding/impl/SAML2ArtifactEncoder.cpp \
 	saml2/binding/impl/SAML2POSTDecoder.cpp \
 	saml2/binding/impl/SAML2POSTEncoder.cpp \
+	saml2/binding/impl/SAML2Redirect.cpp \
+	saml2/binding/impl/SAML2RedirectDecoder.cpp \
+	saml2/binding/impl/SAML2RedirectEncoder.cpp \
 	encryption/EncryptedKeyResolver.cpp \
 	security/impl/TrustEngine.cpp \
 	security/impl/AbstractPKIXTrustEngine.cpp \

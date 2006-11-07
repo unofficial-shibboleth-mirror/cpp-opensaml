@@ -60,6 +60,15 @@ namespace opensaml {
             const KeyResolver* keyResolver=NULL
             ) const;
         virtual bool validate(
+            const XMLCh* sigAlgorithm,
+            const char* sig,
+            KeyInfo* keyInfo,
+            const char* in,
+            unsigned int in_len,
+            const RoleDescriptor& role,
+            const KeyResolver* keyResolver=NULL
+            ) const;
+        virtual bool validate(
             XSECCryptoX509* certEE,
             const vector<XSECCryptoX509*>& certChain,
             const RoleDescriptor& role,
@@ -103,6 +112,20 @@ bool ExplicitKeyTrustEngine::validate(
 
     MetadataKeyInfoIterator keys(role);
     return static_cast<xmltooling::TrustEngine*>(m_engine)->validate(sig,keys,keyResolver);
+}
+
+bool ExplicitKeyTrustEngine::validate(
+    const XMLCh* sigAlgorithm,
+    const char* sig,
+    KeyInfo* keyInfo,
+    const char* in,
+    unsigned int in_len,
+    const RoleDescriptor& role,
+    const KeyResolver* keyResolver
+    ) const
+{
+    MetadataKeyInfoIterator keys(role);
+    return static_cast<xmltooling::TrustEngine*>(m_engine)->validate(sigAlgorithm,sig,keyInfo,in,in_len,keys,keyResolver);
 }
 
 bool ExplicitKeyTrustEngine::validate(

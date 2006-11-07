@@ -36,7 +36,7 @@ protected:
     opensaml::TrustEngine* m_trust;
     map<string,string> m_fields;
     map<string,string> m_headers;
-    string m_method,m_url;
+    string m_method,m_url,m_query;
     vector<XSECCryptoX509*> m_clientCerts;
     vector<const SecurityPolicyRule*> m_rules;
 
@@ -49,6 +49,7 @@ public:
         m_headers.clear();
         m_method.erase();
         m_url.erase();
+        m_query.erase();
 
         try {
             string config = data_path + "binding/ExampleMetadataProvider.xml";
@@ -77,7 +78,9 @@ public:
             m_trust = SAMLConfig::getConfig().TrustEngineManager.newPlugin(EXPLICIT_KEY_SAMLTRUSTENGINE, NULL);
 
             m_rules.push_back(SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(MESSAGEFLOW_POLICY_RULE,NULL));
+            m_rules.push_back(SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(MESSAGEROUTING_POLICY_RULE,NULL));
             m_rules.push_back(SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(MESSAGESIGNING_POLICY_RULE,NULL));
+            m_rules.push_back(SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(SIMPLESIGNING_POLICY_RULE,NULL));
         }
         catch (XMLToolingException& ex) {
             TS_TRACE(ex.what());
@@ -99,6 +102,7 @@ public:
         m_headers.clear();
         m_method.erase();
         m_url.erase();
+        m_query.erase();
     }
 
     // HTTPRequest methods
@@ -132,7 +136,7 @@ public:
     }
     
     const char* getQueryString() const {
-        return NULL;
+        return m_query.c_str();
     }
     
     string getRemoteUser() const {
@@ -188,6 +192,7 @@ public:
         char* pch = strchr(dup,'?');
         if (pch) {
             *pch++=0;
+            m_query = pch;
             char* name=pch;
             while (name && *name) {
                 pch=strchr(pch,'=');

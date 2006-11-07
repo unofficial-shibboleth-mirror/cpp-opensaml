@@ -35,6 +35,7 @@ namespace opensaml {
     SAML_DLLLOCAL PluginManager<SecurityPolicyRule,const DOMElement*>::Factory MessageFlowRuleFactory;
     SAML_DLLLOCAL PluginManager<SecurityPolicyRule,const DOMElement*>::Factory MessageRoutingRuleFactory;
     SAML_DLLLOCAL PluginManager<SecurityPolicyRule,const DOMElement*>::Factory MessageSigningRuleFactory;
+    SAML_DLLLOCAL PluginManager<SecurityPolicyRule,const DOMElement*>::Factory SimpleSigningRuleFactory;
 };
 
 void SAML_API opensaml::registerSecurityPolicyRules()
@@ -43,6 +44,7 @@ void SAML_API opensaml::registerSecurityPolicyRules()
     conf.SecurityPolicyRuleManager.registerFactory(MESSAGEFLOW_POLICY_RULE, MessageFlowRuleFactory);
     conf.SecurityPolicyRuleManager.registerFactory(MESSAGEROUTING_POLICY_RULE, MessageRoutingRuleFactory);
     conf.SecurityPolicyRuleManager.registerFactory(MESSAGESIGNING_POLICY_RULE, MessageSigningRuleFactory);
+    conf.SecurityPolicyRuleManager.registerFactory(SIMPLESIGNING_POLICY_RULE, SimpleSigningRuleFactory);
 }
 
 SecurityPolicy::~SecurityPolicy()

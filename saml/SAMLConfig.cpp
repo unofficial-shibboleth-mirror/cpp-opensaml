@@ -199,9 +199,8 @@ string SAMLInternalConfig::hashSHA1(const char* s, bool toHex)
 
     auto_ptr<XSECCryptoHash> hasher(XSECPlatformUtils::g_cryptoProvider->hashSHA1());
     if (hasher.get()) {
-        auto_ptr<char> dup(strdup(s));
         unsigned char buf[21];
-        hasher->hash(reinterpret_cast<unsigned char*>(dup.get()),strlen(dup.get()));
+        hasher->hash(reinterpret_cast<unsigned char*>(const_cast<char*>(s)),strlen(s));
         if (hasher->finish(buf,20)==20) {
             string ret;
             if (toHex) {

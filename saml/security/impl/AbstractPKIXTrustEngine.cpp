@@ -370,3 +370,51 @@ bool AbstractPKIXTrustEngine::validate(Signature& sig, const RoleDescriptor& rol
     log.error("failed to verify signature with embedded certificates");
     return false;
 }
+
+bool AbstractPKIXTrustEngine::validate(
+    const XMLCh* sigAlgorithm,
+    const char* sig,
+    KeyInfo* keyInfo,
+    const char* in,
+    unsigned int in_len,
+    const RoleDescriptor& role,
+    const KeyResolver* keyResolver
+    ) const
+{
+#ifdef _DEBUG
+    NDC ndc("validate");
+#endif
+    Category& log=Category::getInstance(SAML_LOGCAT".TrustEngine");
+
+    // Pull the certificate chain out of the KeyInfo using an inline KeyResolver.
+    KeyResolver::ResolvedCertificates certs;
+    if (!keyInfo || 0==m_inlineResolver->resolveCertificates(keyInfo, certs)) {
+        log.error("unable to perform PKIX validation, KeyInfo does not contain any certificates");
+        return false;
+    }
+
+    log.debug("validating signature using certificate from within KeyInfo");
+
+    // Find and save off a pointer to the certificate that unlocks the object.
+    // Most of the time, this will be the first one anyway.
+    XSECCryptoX509* certEE=NULL;
+    SignatureValidator keyValidator;
+    for (vector<XSECCryptoX509*>::const_iterator i=certs.v().begin(); !certEE && i!=certs.v().end(); ++i) {
+        try {
+            auto_ptr<XSECCryptoKey> key((*i)->clonePublicKey());
+            if (Signature::verifyRawSignature(key.get(), sigAlgorithm, sig, in, in_len)) {
+                log.info("signature verified with key inside signature, attempting certificate validation...");
+                certEE=(*i);
+            }
+        }
+        catch (SignatureException&) {
+            // trap failures
+        }
+    }
+    
+    if (certEE)
+        return validate(certEE,certs.v(),role,true,keyResolver);
+        
+    log.error("failed to verify signature with embedded certificates");
+    return false;
+}

@@ -91,6 +91,7 @@ samltest_h = \
     saml2/core/impl/Terminate20Test.h \
     saml2/binding/SAML2ArtifactTest.h \
     saml2/binding/SAML2POSTTest.h \
+    saml2/binding/SAML2RedirectTest.h \
     saml2/metadata/FilesystemMetadataProviderTest.h
 
 noinst_HEADERS = \

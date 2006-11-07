@@ -83,6 +83,15 @@ namespace opensaml {
             const xmlsignature::KeyResolver* keyResolver=NULL
             ) const;
         virtual bool validate(
+            const XMLCh* sigAlgorithm,
+            const char* sig,
+            xmlsignature::KeyInfo* keyInfo,
+            const char* in,
+            unsigned int in_len,
+            const saml2md::RoleDescriptor& role,
+            const xmlsignature::KeyResolver* keyResolver=NULL
+            ) const;
+        virtual bool validate(
             XSECCryptoX509* certEE,
             const std::vector<XSECCryptoX509*>& certChain,
             const saml2md::RoleDescriptor& role,

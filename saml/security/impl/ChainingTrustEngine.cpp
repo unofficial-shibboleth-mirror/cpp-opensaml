@@ -84,6 +84,23 @@ bool ChainingTrustEngine::validate(
 }
 
 bool ChainingTrustEngine::validate(
+    const XMLCh* sigAlgorithm,
+    const char* sig,
+    KeyInfo* keyInfo,
+    const char* in,
+    unsigned int in_len,
+    const RoleDescriptor& role,
+    const KeyResolver* keyResolver
+    ) const
+{
+    for (vector<X509TrustEngine*>::const_iterator i=m_engines.begin(); i!=m_engines.end(); ++i) {
+        if (static_cast<TrustEngine*>(*i)->validate(sigAlgorithm, sig, keyInfo, in, in_len, role, keyResolver))
+            return true;
+    }
+    return false;
+}
+
+bool ChainingTrustEngine::validate(
     XSECCryptoX509* certEE,
     const vector<XSECCryptoX509*>& certChain,
     const RoleDescriptor& role,
