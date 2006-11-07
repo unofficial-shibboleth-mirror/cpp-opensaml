@@ -32,9 +32,6 @@
 #include <sstream>
 #include <log4cpp/Category.hh>
 #include <xercesc/util/Base64.hpp>
-#include <xsec/enc/XSECCryptoException.hpp>
-#include <xsec/enc/XSECCryptoProvider.hpp>
-#include <xsec/framework/XSECException.hpp>
 #include <xmltooling/util/NDC.h>
 
 using namespace opensaml::saml2p;
@@ -119,20 +116,11 @@ long SAML2RedirectEncoder::encode(
         auto_ptr_char alg(sigAlgorithm);
         xmlbuf = xmlbuf + "&SigAlg=" + escaper->encode(alg.get());
 
-        try {
-            char sigbuf[1024];
-            memset(sigbuf,0,sizeof(sigbuf));
-            auto_ptr<XSECCryptoKey> key(credResolver->getKey());
-            Signature::createRawSignature(key.get(), sigAlgorithm, xmlbuf.c_str(), xmlbuf.length(), sigbuf, sizeof(sigbuf)-1);
-            xmlbuf = xmlbuf + "&Signature=" + escaper->encode(sigbuf);
-        }
-        catch(XSECException& e) {
-            auto_ptr_char temp(e.getMsg());
-            throw SignatureException(string("Caught an XMLSecurity exception while signing: ") + temp.get());
-        }
-        catch(XSECCryptoException& e) {
-            throw SignatureException(string("Caught an XMLSecurity exception while signing: ") + e.getMsg());
-        }
+        char sigbuf[1024];
+        memset(sigbuf,0,sizeof(sigbuf));
+        auto_ptr<XSECCryptoKey> key(credResolver->getKey());
+        Signature::createRawSignature(key.get(), sigAlgorithm, xmlbuf.c_str(), xmlbuf.length(), sigbuf, sizeof(sigbuf)-1);
+        xmlbuf = xmlbuf + "&Signature=" + escaper->encode(sigbuf);
     }
     
     // Generate redirect.
