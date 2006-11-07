@@ -64,7 +64,7 @@ public:
                     samlconstants::SAML1_PROFILE_BROWSER_POST, encoder_config->getDocumentElement()
                     )
                 );
-            encoder->encode(*this,toSend.get(),"https://sp.example.org/SAML/POST","https://sp.example.org/","state",m_creds);
+            encoder->encode(*this,toSend.get(),"https://sp.example.org/SAML/SSO","https://sp.example.org/","state",m_creds);
             toSend.release();
             
             // Decode message.

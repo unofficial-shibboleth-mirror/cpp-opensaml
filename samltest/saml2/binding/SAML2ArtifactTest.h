@@ -58,7 +58,7 @@ public:
                 SAMLConfig::getConfig().MessageEncoderManager.newPlugin(samlconstants::SAML20_BINDING_HTTP_ARTIFACT, NULL)
                 );
             encoder->setArtifactGenerator(this);
-            encoder->encode(*this,toSend.get(),"https://sp.example.org/SAML/Artifact","https://sp.example.org/","state",m_creds);
+            encoder->encode(*this,toSend.get(),"https://sp.example.org/SAML/SSO","https://sp.example.org/","state",m_creds);
             toSend.release();
             
             // Decode message.
