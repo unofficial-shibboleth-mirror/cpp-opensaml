@@ -43,7 +43,25 @@ namespace opensaml {
             const xmltooling::QName* role,
             const TrustEngine* trustEngine
             ) const;
+
+        /**
+         * Controls whether rule executes replay checking.
+         * 
+         * @param checkReplay  replay checking value to set
+         */
+        void setCheckReplay(bool checkReplay) {
+            m_checkReplay = checkReplay;
+        }
     
+        /**
+         * Controls maximum elapsed time between message issue and rule execution.
+         * 
+         * @param expires  maximum elapsed time in seconds
+         */
+        void setExpires(time_t expires) {
+            m_expires = expires;
+        }
+
     protected:
         /**
          * Performs the check.

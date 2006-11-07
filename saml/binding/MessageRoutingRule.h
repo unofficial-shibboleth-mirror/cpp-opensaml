@@ -52,6 +52,16 @@ namespace opensaml {
             const TrustEngine* trustEngine
             ) const;
     
+        /**
+         * Controls whether rule insists on presence of destination address in
+         * the message.
+         * 
+         * @param mandatory  flag value to set
+         */
+        void setMandatory(bool mandatory) {
+            m_mandatory = mandatory;
+        }
+        
     protected:
         /**
          * Examines the message and/or its contents and extracts the destination
