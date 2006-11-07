@@ -45,12 +45,12 @@ namespace opensaml {
 
 static const XMLCh mandatory[] = UNICODE_LITERAL_9(m,a,n,d,a,t,o,r,y);
 
-MessageRoutingRule::MessageRoutingRule(const DOMElement* e) : m_mandatory(true)
+MessageRoutingRule::MessageRoutingRule(const DOMElement* e) : m_mandatory(false)
 {
     if (e) {
         const XMLCh* attr = e->getAttributeNS(NULL, mandatory);
-        if (attr && (*attr==chLatin_f || *attr==chDigit_0))
-            m_mandatory = false;
+        if (attr && (*attr==chLatin_t || *attr==chDigit_1))
+            m_mandatory = true;
     }
 }
 

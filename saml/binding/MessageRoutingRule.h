@@ -33,6 +33,14 @@ namespace opensaml {
     class SAML_API MessageRoutingRule : public SecurityPolicyRule
     {
     public:
+        /**
+         * Constructor.
+         * 
+         * If an XML attribute named mandatory is set to "true" or "1", then
+         * a destination address <strong>MUST</strong> be present in the message.
+         * 
+         * @param e DOM tree to initialize rule
+         */
         MessageRoutingRule(const DOMElement* e);
         virtual ~MessageRoutingRule() {}
         
