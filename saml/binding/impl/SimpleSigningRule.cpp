@@ -43,6 +43,8 @@ using namespace xmltooling;
 using namespace log4cpp;
 using namespace std;
 
+using xmlsignature::KeyInfo;
+
 namespace opensaml {
     SecurityPolicyRule* SAML_DLLLOCAL SimpleSigningRuleFactory(const DOMElement* const & e)
     {
@@ -135,8 +137,28 @@ pair<saml2::Issuer*,const saml2md::RoleDescriptor*> SimpleSigningRule::evaluate(
         appendParameter(input, raw, "RelayState=");
         appendParameter(input, raw, "SigAlg=");
 
+        // Check for KeyInfo, but defensively (we might be able to run without it).
+        KeyInfo* keyInfo=NULL;
+        const char* k = request.getParameter("KeyInfo");
+        if (k) {
+            try {
+                istringstream kstrm(k);
+                DOMDocument* doc = XMLToolingConfig::getConfig().getParser().parse(kstrm);
+                XercesJanitor<DOMDocument> janitor(doc);
+                XMLObject* kxml = XMLObjectBuilder::buildOneFromElement(doc->getDocumentElement(), true);
+                janitor.release();
+                if (!(keyInfo=dynamic_cast<KeyInfo*>(kxml)))
+                    delete kxml;
+            }
+            catch (XMLToolingException& ex) {
+                log.warn("Failed to load KeyInfo from message: %s", ex.what());
+            }
+        }
+        
+        auto_ptr<KeyInfo> kjanitor(keyInfo);
         auto_ptr_XMLCh alg(sigAlgorithm);
-        if (!trustEngine->validate(alg.get(), signature, NULL, input.c_str(), input.length(), *roledesc, metadataProvider->getKeyResolver())) {
+        
+        if (!trustEngine->validate(alg.get(), signature, keyInfo, input.c_str(), input.length(), *roledesc, metadataProvider->getKeyResolver())) {
             log.error("unable to verify signature on message with supplied trust engine");
             return ret;
         }
