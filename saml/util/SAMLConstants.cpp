@@ -15,14 +15,14 @@
  */
 
 /**
- * samlconstants.cpp
+ * SAMLConstants.cpp
  * 
  * SAML XML namespace constants 
  */
 
 
 #include "internal.h"
-#include "util/samlconstants.h"
+#include "util/SAMLConstants.h"
 #include <xercesc/util/XMLUniDefs.hpp>
 
 using namespace xercesc;

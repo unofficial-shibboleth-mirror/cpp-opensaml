@@ -22,7 +22,7 @@
 
 #include "internal.h"
 #include "binding/MessageEncoder.h"
-#include "util/samlconstants.h"
+#include "util/SAMLConstants.h"
 
 #include <xmltooling/signature/KeyInfo.h>
 #include <xmltooling/signature/Signature.h>

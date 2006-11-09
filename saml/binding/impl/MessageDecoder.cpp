@@ -22,7 +22,7 @@
 
 #include "internal.h"
 #include "binding/MessageDecoder.h"
-#include "util/samlconstants.h"
+#include "util/SAMLConstants.h"
 
 using namespace opensaml;
 using namespace xmltooling;
