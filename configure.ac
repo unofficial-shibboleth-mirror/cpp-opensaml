@@ -80,6 +80,21 @@ AC_EGREP_HEADER([CURLOPT_SSL_CTX_FUNCTION], [curl/curl.h],
 		[AC_MSG_RESULT(yes)],
 		[AC_MSG_ERROR([need libcurl that supports CURLOPT_SSL_CTX_FUNCTION])])
 
+# zlib settings
+AC_ARG_WITH(zlib,
+	AC_HELP_STRING([--with-zlib=PATH], [where zlib is installed]),
+	[
+		if test -d "$withval"; then
+			CPPFLAGS="${CPPFLAGS} -I$withval/include"
+			LDFLAGS="${LDFLAGS} -L$withval/lib"
+		fi
+	]
+)
+AC_CHECK_HEADER(zlib.h,
+	AC_CHECK_LIB(z, deflateInit2, ,
+		AC_MSG_ERROR([zlib library not found, may need to use --with-zlib option])),
+	AC_MSG_ERROR([zlib headers not found, may need to use --with-zlib option]))
+
 AC_LANG(C++)
 
 # C++ requirements
