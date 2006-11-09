@@ -74,7 +74,8 @@ pair<saml2::Issuer*,const saml2md::RoleDescriptor*> SimpleSigningRule::evaluate(
     const XMLObject& message,
     const MetadataProvider* metadataProvider,
     const QName* role,
-    const opensaml::TrustEngine* trustEngine
+    const opensaml::TrustEngine* trustEngine,
+    const MessageExtractor& extractor
     ) const
 {
     Category& log=Category::getInstance(SAML_LOGCAT".SecurityPolicyRule.SimpleSigning");
@@ -101,7 +102,7 @@ pair<saml2::Issuer*,const saml2md::RoleDescriptor*> SimpleSigningRule::evaluate(
 
     try {
         log.debug("extracting issuer from message");
-        pair<saml2::Issuer*,const XMLCh*> issuerInfo = getIssuerAndProtocol(message);
+        pair<saml2::Issuer*,const XMLCh*> issuerInfo = extractor.getIssuerAndProtocol(message);
         
         auto_ptr<saml2::Issuer> issuer(issuerInfo.first);
         if (!issuerInfo.first || !issuerInfo.second ||
@@ -193,31 +194,4 @@ pair<saml2::Issuer*,const saml2md::RoleDescriptor*> SimpleSigningRule::evaluate(
         log.warn("caught a bad_cast while extracting issuer");
     }
     return ret;
-}
-
-pair<saml2::Issuer*,const XMLCh*> SimpleSigningRule::getIssuerAndProtocol(const XMLObject& message) const
-{
-    // We just let any bad casts throw here.
-
-    // Shortcuts some of the casting.
-    const XMLCh* ns = message.getElementQName().getNamespaceURI();
-    if (ns) {
-        if (XMLString::equals(ns, samlconstants::SAML20P_NS) || XMLString::equals(ns, samlconstants::SAML20_NS)) {
-            // 2.0 namespace should be castable to a specialized 2.0 root.
-            const saml2::RootObject& root = dynamic_cast<const saml2::RootObject&>(message);
-            saml2::Issuer* issuer = root.getIssuer();
-            if (issuer && issuer->getName()) {
-                return make_pair(issuer->cloneIssuer(), samlconstants::SAML20P_NS);
-            }
-            
-            // No issuer in the message, so we have to try the Response approach. 
-            const vector<saml2::Assertion*>& assertions = dynamic_cast<const saml2p::Response&>(message).getAssertions();
-            if (!assertions.empty()) {
-                issuer = assertions.front()->getIssuer();
-                if (issuer && issuer->getName())
-                    return make_pair(issuer->cloneIssuer(), samlconstants::SAML20P_NS);
-            }
-        }
-    }
-    return pair<saml2::Issuer*,const XMLCh*>(NULL,NULL);
 }

@@ -52,6 +52,27 @@ namespace opensaml {
     public:
         virtual ~SecurityPolicyRule() {}
 
+        /** Allows override of code for extracting saml2:Issuer and protocol information. */
+        class SAML_API MessageExtractor {
+            MAKE_NONCOPYABLE(MessageExtractor);
+        public:
+            MessageExtractor() {}
+            virtual ~MessageExtractor() {}
+            
+            /**
+             * Examines the message and/or its contents and extracts the issuer's claimed
+             * identity along with a protocol identifier. Conventions may be needed
+             * to properly encode non-SAML2 issuer information into a compatible form. 
+             * 
+             * <p>The caller is responsible for freeing the Issuer object.
+             * 
+             * @param message       message to examine
+             * @return  a pair consisting of a SAML 2.0 Issuer object and a protocol constant.
+             * @throws std::bad_cast thrown if the message is not of an expected type
+             */
+            virtual std::pair<saml2::Issuer*,const XMLCh*> getIssuerAndProtocol(const xmltooling::XMLObject& message) const;
+        };
+
         /**
          * Evaluates the rule against the given request and message. If an Issuer is
          * returned, the caller is responsible for freeing the Issuer object.
@@ -61,6 +82,7 @@ namespace opensaml {
          * @param metadataProvider  locked MetadataProvider instance to authenticate the message
          * @param role              identifies the role (generally IdP or SP) of the peer who issued the message 
          * @param trustEngine       TrustEngine to authenticate the message
+         * @param extractor         MessageExtractor to use in examining message
          * @return the identity of the message issuer, in two forms, or NULL
          * 
          * @throws BindingException thrown if the request/message do not meet the requirements of this rule
@@ -70,7 +92,8 @@ namespace opensaml {
             const xmltooling::XMLObject& message,
             const saml2md::MetadataProvider* metadataProvider,
             const xmltooling::QName* role,
-            const TrustEngine* trustEngine
+            const TrustEngine* trustEngine,
+            const MessageExtractor& extractor
             ) const=0;
     };
 

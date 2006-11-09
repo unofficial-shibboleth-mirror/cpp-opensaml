@@ -24,8 +24,6 @@
 #include "exceptions.h"
 #include "RootObject.h"
 #include "binding/XMLSigningRule.h"
-#include "saml1/core/Assertions.h"
-#include "saml1/core/Protocols.h"
 #include "saml2/core/Protocols.h"
 #include "saml2/metadata/Metadata.h"
 #include "saml2/metadata/MetadataProvider.h"
@@ -53,7 +51,8 @@ pair<saml2::Issuer*,const saml2md::RoleDescriptor*> XMLSigningRule::evaluate(
     const XMLObject& message,
     const MetadataProvider* metadataProvider,
     const QName* role,
-    const opensaml::TrustEngine* trustEngine
+    const opensaml::TrustEngine* trustEngine,
+    const MessageExtractor& extractor
     ) const
 {
     Category& log=Category::getInstance(SAML_LOGCAT".SecurityPolicyRule.XMLSigning");
@@ -74,7 +73,7 @@ pair<saml2::Issuer*,const saml2md::RoleDescriptor*> XMLSigningRule::evaluate(
         }
         
         log.debug("extracting issuer from message");
-        pair<saml2::Issuer*,const XMLCh*> issuerInfo = getIssuerAndProtocol(message);
+        pair<saml2::Issuer*,const XMLCh*> issuerInfo = extractor.getIssuerAndProtocol(message);
         
         auto_ptr<saml2::Issuer> issuer(issuerInfo.first);
         if (!issuerInfo.first || !issuerInfo.second ||
@@ -116,62 +115,4 @@ pair<saml2::Issuer*,const saml2md::RoleDescriptor*> XMLSigningRule::evaluate(
         log.warn("caught a bad_cast while extracting issuer");
     }
     return ret;
-}
-
-pair<saml2::Issuer*,const XMLCh*> XMLSigningRule::getIssuerAndProtocol(const XMLObject& message) const
-{
-    // We just let any bad casts throw here.
-    
-    saml2::Issuer* issuer;
-
-    // Shortcuts some of the casting.
-    const XMLCh* ns = message.getElementQName().getNamespaceURI();
-    if (ns) {
-        if (XMLString::equals(ns, samlconstants::SAML20P_NS) || XMLString::equals(ns, samlconstants::SAML20_NS)) {
-            // 2.0 namespace should be castable to a specialized 2.0 root.
-            const saml2::RootObject& root = dynamic_cast<const saml2::RootObject&>(message);
-            issuer = root.getIssuer();
-            if (issuer && issuer->getName()) {
-                return make_pair(issuer->cloneIssuer(), samlconstants::SAML20P_NS);
-            }
-            
-            // No issuer in the message, so we have to try the Response approach. 
-            const vector<saml2::Assertion*>& assertions = dynamic_cast<const saml2p::Response&>(message).getAssertions();
-            if (!assertions.empty()) {
-                issuer = assertions.front()->getIssuer();
-                if (issuer && issuer->getName())
-                    return make_pair(issuer->cloneIssuer(), samlconstants::SAML20P_NS);
-            }
-        }
-        else if (XMLString::equals(ns, samlconstants::SAML1P_NS)) {
-            // Should be a samlp:Response, at least in OpenSAML.
-            const vector<saml1::Assertion*>& assertions = dynamic_cast<const saml1p::Response&>(message).getAssertions();
-            if (!assertions.empty()) {
-                const saml1::Assertion* a = assertions.front();
-                if (a->getIssuer()) {
-                    issuer = saml2::IssuerBuilder::buildIssuer();
-                    issuer->setName(a->getIssuer());
-                    pair<bool,int> minor = a->getMinorVersion();
-                    return make_pair(
-                        issuer,
-                        (minor.first && minor.second==0) ? samlconstants::SAML10_PROTOCOL_ENUM : samlconstants::SAML11_PROTOCOL_ENUM
-                        );
-                }
-            }
-        }
-        else if (XMLString::equals(ns, samlconstants::SAML1_NS)) {
-            // Should be a saml:Assertion.
-            const saml1::Assertion& a = dynamic_cast<const saml1::Assertion&>(message);
-            if (a.getIssuer()) {
-                issuer = saml2::IssuerBuilder::buildIssuer();
-                issuer->setName(a.getIssuer());
-                pair<bool,int> minor = a.getMinorVersion();
-                return make_pair(
-                    issuer,
-                    (minor.first && minor.second==0) ? samlconstants::SAML10_PROTOCOL_ENUM : samlconstants::SAML11_PROTOCOL_ENUM
-                    );
-            }
-        }
-    }
-    return pair<saml2::Issuer*,const XMLCh*>(NULL,NULL);
 }

@@ -62,7 +62,8 @@ pair<saml2::Issuer*,const saml2md::RoleDescriptor*> MessageFlowRule::evaluate(
     const XMLObject& message,
     const saml2md::MetadataProvider* metadataProvider,
     const QName* role,
-    const opensaml::TrustEngine* trustEngine
+    const opensaml::TrustEngine* trustEngine,
+    const MessageExtractor& extractor
     ) const
 {
     try {
