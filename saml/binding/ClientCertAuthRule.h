@@ -15,9 +15,9 @@
  */
 
 /**
- * @file saml/binding/XMLSigningRule.h
+ * @file saml/binding/ClientCertAuthRule.h
  * 
- * XML Signature checking SecurityPolicyRule
+ * TLS client authentication SecurityPolicyRule
  */
 
 #include <saml/binding/SecurityPolicyRule.h>
@@ -25,13 +25,13 @@
 
 namespace opensaml {
     /**
-     * XML Signature checking SecurityPolicyRule
+     * TLS client authentication SecurityPolicyRule
      */
-    class SAML_API XMLSigningRule : public SecurityPolicyRule
+    class SAML_API ClientCertAuthRule : public SecurityPolicyRule
     {
     public:
-        XMLSigningRule(const DOMElement* e) {}
-        virtual ~XMLSigningRule() {}
+        ClientCertAuthRule(const DOMElement* e) {}
+        virtual ~ClientCertAuthRule() {}
         
         std::pair<saml2::Issuer*,const saml2md::RoleDescriptor*> evaluate(
             const GenericRequest& request,

@@ -103,6 +103,14 @@ namespace opensaml {
     void SAML_API registerSecurityPolicyRules();
 
     /**
+     * SecurityPolicyRule for TLS client certificate authentication.
+     * 
+     * Requires that messages carry information about the issuer, and then
+     * evaluates the claimed certificates against the issuer's metadata.
+     */
+    #define CLIENTCERTAUTH_POLICY_RULE  "org.opensaml.binding.ClientCertAuthRule"
+
+    /**
      * SecurityPolicyRule for replay detection and freshness checking.
      * 
      * <p>A ReplayCache instance must be available from the runtime, unless

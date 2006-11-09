@@ -33,6 +33,7 @@ libsamlinclude_HEADERS = \
 
 samlbindinclude_HEADERS = \
 	binding/ArtifactMap.h \
+	binding/ClientCertAuthRule.h \
 	binding/GenericRequest.h \
 	binding/GenericResponse.h \
 	binding/HTTPRequest.h \
@@ -106,6 +107,7 @@ noinst_HEADERS = \
 libsaml_la_SOURCES = \
 	SAMLConfig.cpp \
 	binding/impl/ArtifactMap.cpp \
+	binding/impl/ClientCertAuthRule.cpp \
 	binding/impl/MessageDecoder.cpp \
 	binding/impl/MessageEncoder.cpp \
 	binding/impl/MessageFlowRule.cpp \

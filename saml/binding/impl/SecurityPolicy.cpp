@@ -35,6 +35,7 @@ using namespace xmltooling;
 using namespace std;
 
 namespace opensaml {
+    SAML_DLLLOCAL PluginManager<SecurityPolicyRule,const DOMElement*>::Factory ClientCertAuthRuleFactory;
     SAML_DLLLOCAL PluginManager<SecurityPolicyRule,const DOMElement*>::Factory MessageFlowRuleFactory;
     SAML_DLLLOCAL PluginManager<SecurityPolicyRule,const DOMElement*>::Factory SimpleSigningRuleFactory;
     SAML_DLLLOCAL PluginManager<SecurityPolicyRule,const DOMElement*>::Factory XMLSigningRuleFactory;
@@ -43,6 +44,7 @@ namespace opensaml {
 void SAML_API opensaml::registerSecurityPolicyRules()
 {
     SAMLConfig& conf=SAMLConfig::getConfig();
+    conf.SecurityPolicyRuleManager.registerFactory(CLIENTCERTAUTH_POLICY_RULE, ClientCertAuthRuleFactory);
     conf.SecurityPolicyRuleManager.registerFactory(MESSAGEFLOW_POLICY_RULE, MessageFlowRuleFactory);
     conf.SecurityPolicyRuleManager.registerFactory(SIMPLESIGNING_POLICY_RULE, SimpleSigningRuleFactory);
     conf.SecurityPolicyRuleManager.registerFactory(XMLSIGNING_POLICY_RULE, XMLSigningRuleFactory);

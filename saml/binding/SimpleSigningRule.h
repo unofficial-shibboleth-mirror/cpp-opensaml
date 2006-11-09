@@ -27,9 +27,6 @@ namespace opensaml {
     /**
      * Blob-oriented signature checking SecurityPolicyRule for
      * bindings that support non-XML signature techniques.
-     * 
-     * Subclasses can provide support for additional message types
-     * by overriding the issuer derivation method.
      */
     class SAML_API SimpleSigningRule : public SecurityPolicyRule
     {

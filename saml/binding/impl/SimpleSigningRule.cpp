@@ -22,10 +22,8 @@
 
 #include "internal.h"
 #include "exceptions.h"
-#include "RootObject.h"
 #include "binding/HTTPRequest.h"
 #include "binding/SimpleSigningRule.h"
-#include "saml2/core/Protocols.h"
 #include "saml2/metadata/Metadata.h"
 #include "saml2/metadata/MetadataProvider.h"
 #include "security/TrustEngine.h"
@@ -69,7 +67,7 @@ namespace opensaml {
 };
 
 
-pair<saml2::Issuer*,const saml2md::RoleDescriptor*> SimpleSigningRule::evaluate(
+pair<saml2::Issuer*,const RoleDescriptor*> SimpleSigningRule::evaluate(
     const GenericRequest& request,
     const XMLObject& message,
     const MetadataProvider* metadataProvider,
@@ -119,7 +117,7 @@ pair<saml2::Issuer*,const saml2md::RoleDescriptor*> SimpleSigningRule::evaluate(
             return ret;
         }
 
-        log.debug("matched assertion issuer against metadata, searching for applicable role...");
+        log.debug("matched message issuer against metadata, searching for applicable role...");
         const RoleDescriptor* roledesc=entity->getRoleDescriptor(*role, issuerInfo.second);
         if (!roledesc) {
             log.warn("unable to find compatible role (%s) in metadata", role->toString().c_str());

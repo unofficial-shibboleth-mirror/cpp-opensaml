@@ -474,6 +474,10 @@
 						>
 					</File>
 					<File
+						RelativePath=".\binding\impl\ClientCertAuthRule.cpp"
+						>
+					</File>
+					<File
 						RelativePath=".\binding\impl\MessageDecoder.cpp"
 						>
 					</File>
@@ -770,6 +774,10 @@
 				>
 				<File
 					RelativePath=".\binding\ArtifactMap.h"
+					>
+				</File>
+				<File
+					RelativePath=".\binding\ClientCertAuthRule.h"
 					>
 				</File>
 				<File

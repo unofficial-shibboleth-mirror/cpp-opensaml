@@ -15,18 +15,17 @@
  */
 
 /**
- * XMLSigningRule.cpp
+ * ClientCertAuthRule.cpp
  * 
  * XML Signature checking SecurityPolicyRule
  */
 
 #include "internal.h"
 #include "exceptions.h"
-#include "binding/XMLSigningRule.h"
-#include "saml2/core/Assertions.h"
+#include "binding/ClientCertAuthRule.h"
 #include "saml2/metadata/Metadata.h"
 #include "saml2/metadata/MetadataProvider.h"
-#include "security/TrustEngine.h"
+#include "security/X509TrustEngine.h"
 
 #include <xmltooling/util/NDC.h>
 #include <xmltooling/util/ReplayCache.h>
@@ -39,13 +38,13 @@ using namespace log4cpp;
 using namespace std;
 
 namespace opensaml {
-    SecurityPolicyRule* SAML_DLLLOCAL XMLSigningRuleFactory(const DOMElement* const & e)
+    SecurityPolicyRule* SAML_DLLLOCAL ClientCertAuthRuleFactory(const DOMElement* const & e)
     {
-        return new XMLSigningRule(e);
+        return new ClientCertAuthRule(e);
     }
 };
 
-pair<saml2::Issuer*,const RoleDescriptor*> XMLSigningRule::evaluate(
+pair<saml2::Issuer*,const RoleDescriptor*> ClientCertAuthRule::evaluate(
     const GenericRequest& request,
     const XMLObject& message,
     const MetadataProvider* metadataProvider,
@@ -54,23 +53,24 @@ pair<saml2::Issuer*,const RoleDescriptor*> XMLSigningRule::evaluate(
     const MessageExtractor& extractor
     ) const
 {
-    Category& log=Category::getInstance(SAML_LOGCAT".SecurityPolicyRule.XMLSigning");
-    log.debug("evaluating message signing policy");
+    Category& log=Category::getInstance(SAML_LOGCAT".SecurityPolicyRule.ClientCertAuth");
+    log.debug("evaluating client certificate authentication policy");
     
     pair<saml2::Issuer*,const RoleDescriptor*> ret = pair<saml2::Issuer*,const RoleDescriptor*>(NULL,NULL);  
     
-    if (!metadataProvider || !role || !trustEngine) {
-        log.debug("ignoring message, no metadata or trust information supplied");
+    const opensaml::X509TrustEngine* x509trust;
+    if (!metadataProvider || !role || !(x509trust=dynamic_cast<const opensaml::X509TrustEngine*>(trustEngine))) {
+        log.debug("ignoring message, no metadata or X509TrustEngine supplied");
+        return ret;
+    }
+    
+    const std::vector<XSECCryptoX509*>& chain = request.getClientCertificates();
+    if (chain.empty()) {
+        log.debug("ignoring message, no client certificates in request");
         return ret;
     }
     
     try {
-        const RootObject& root = dynamic_cast<const RootObject&>(message);
-        if (!root.getSignature()) {
-            log.debug("ignoring unsigned message");
-            return ret;
-        }
-        
         log.debug("extracting issuer from message");
         pair<saml2::Issuer*,const XMLCh*> issuerInfo = extractor.getIssuerAndProtocol(message);
         
@@ -96,8 +96,8 @@ pair<saml2::Issuer*,const RoleDescriptor*> XMLSigningRule::evaluate(
             return ret;
         }
 
-        if (!trustEngine->validate(*(root.getSignature()), *roledesc, metadataProvider->getKeyResolver())) {
-            log.error("unable to verify signature on message with supplied trust engine");
+        if (!x509trust->validate(chain.front(), chain, *roledesc, true, metadataProvider->getKeyResolver())) {
+            log.error("unable to verify certificate chain with supplied trust engine");
             return ret;
         }
 
