@@ -114,14 +114,36 @@ XMLObject* SAML2RedirectDecoder::decode(
     auto_ptr<XMLObject> xmlObject(XMLObjectBuilder::buildOneFromElement(doc->getDocumentElement(), true));
     janitor.release();
 
-    saml2::RootObject* root = dynamic_cast<saml2::RootObject*>(xmlObject.get());
-    if (!root)
-        throw BindingException("XML content for SAML 2.0 HTTP-POST Decoder must be a SAML 2.0 protocol message.");
+    saml2::RootObject* root = NULL;
+    StatusResponseType* response = NULL;
+    RequestAbstractType* request = dynamic_cast<RequestAbstractType*>(xmlObject.get());
+    if (!request) {
+        response = dynamic_cast<StatusResponseType*>(xmlObject.get());
+        if (!response)
+            throw BindingException("XML content for SAML 2.0 HTTP-POST Decoder must be a SAML 2.0 protocol message.");
+        root = static_cast<saml2::RootObject*>(response);
+    }
+    else {
+        root = static_cast<saml2::RootObject*>(request);
+    }
+    
     
     try {
         if (!m_validate)
             SchemaValidators.validate(xmlObject.get());
         
+        // Check destination URL.
+        auto_ptr_char dest(request ? request->getDestination() : response->getDestination());
+        const char* dest2 = httpRequest->getRequestURL();
+        if ((root->getSignature() || httpRequest->getParameter("Signature")) && !dest.get() || !*(dest.get())) {
+            log.error("signed SAML message missing Destination attribute");
+            throw BindingException("Signed SAML message missing Destination attribute identifying intended destination.");
+        }
+        else if (dest.get() && (!dest2 || !*dest2 || strcmp(dest.get(),dest2))) {
+            log.error("Redirect targeted at (%s), but delivered to (%s)", dest.get(), dest2 ? dest2 : "none");
+            throw BindingException("SAML message delivered with Redirect to incorrect server URL.");
+        }
+
         // Run through the policy.
         policy.evaluate(genericRequest, *root);
     }

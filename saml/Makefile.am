@@ -40,13 +40,12 @@ samlbindinclude_HEADERS = \
 	binding/MessageDecoder.h \
 	binding/MessageEncoder.h \
 	binding/MessageFlowRule.h \
-	binding/MessageRoutingRule.h \
-	binding/MessageSigningRule.h \
 	binding/SAMLArtifact.h \
 	binding/SecurityPolicy.h \
 	binding/SecurityPolicyRule.h \
 	binding/SimpleSigningRule.h \
-	binding/URLEncoder.h
+	binding/URLEncoder.h \
+	binding/XMLSigningRule.h
 
 encinclude_HEADERS = \
 	encryption/EncryptedKeyResolver.h
@@ -110,12 +109,11 @@ libsaml_la_SOURCES = \
 	binding/impl/MessageDecoder.cpp \
 	binding/impl/MessageEncoder.cpp \
 	binding/impl/MessageFlowRule.cpp \
-	binding/impl/MessageRoutingRule.cpp \
-	binding/impl/MessageSigningRule.cpp \
 	binding/impl/SAMLArtifact.cpp \
 	binding/impl/SecurityPolicy.cpp \
 	binding/impl/SimpleSigningRule.cpp \
 	binding/impl/URLEncoder.cpp \
+	binding/impl/XMLSigningRule.cpp \
 	saml1/core/impl/AssertionsImpl.cpp \
 	saml1/core/impl/AssertionsSchemaValidators.cpp \
 	saml1/core/impl/ProtocolsImpl.cpp \

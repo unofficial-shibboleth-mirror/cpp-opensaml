@@ -93,13 +93,12 @@ namespace opensaml {
     #define MESSAGEFLOW_POLICY_RULE  "org.opensaml.binding.MessageFlowRule"
 
     /**
-     * SecurityPolicyRule for ensuring messages are delivered to the right place.
+     * SecurityPolicyRule for protocol message "blob" signing.
      * 
-     * <p>Enforcement is mandatory and the message must be explicitly addressed,
-     * unless a "mandatory" XML attribute is set to "0" or "false" when instantiating
-     * the policy rule.
+     * Allows the message issuer to be authenticated using a non-XML digital signature
+     * over the message body. The transport layer is not considered.
      */
-    #define MESSAGEROUTING_POLICY_RULE  "org.opensaml.binding.MessageRoutingRule"
+    #define SIMPLESIGNING_POLICY_RULE  "org.opensaml.binding.SimpleSigningRule"
 
     /**
      * SecurityPolicyRule for protocol message XML signing.
@@ -107,15 +106,7 @@ namespace opensaml {
      * Allows the message issuer to be authenticated using an XML digital signature
      * over the message. The transport layer is not considered.
      */
-    #define MESSAGESIGNING_POLICY_RULE  "org.opensaml.binding.MessageSigningRule"
-
-    /**
-     * SecurityPolicyRule for protocol message "blob" signing.
-     * 
-     * Allows the message issuer to be authenticated using a non-XML digital signature
-     * over the message body. The transport layer is not considered.
-     */
-    #define SIMPLESIGNING_POLICY_RULE  "org.opensaml.binding.SimpleSigningRule"
+    #define XMLSIGNING_POLICY_RULE  "org.opensaml.binding.XMLSigningRule"
 };
 
 #endif /* __saml_secrule_h__ */

@@ -15,7 +15,7 @@
  */
 
 /**
- * MessageSigningRule.cpp
+ * XMLSigningRule.cpp
  * 
  * XML Signature checking SecurityPolicyRule
  */
@@ -23,7 +23,7 @@
 #include "internal.h"
 #include "exceptions.h"
 #include "RootObject.h"
-#include "binding/MessageSigningRule.h"
+#include "binding/XMLSigningRule.h"
 #include "saml1/core/Assertions.h"
 #include "saml1/core/Protocols.h"
 #include "saml2/core/Protocols.h"
@@ -42,13 +42,13 @@ using namespace log4cpp;
 using namespace std;
 
 namespace opensaml {
-    SecurityPolicyRule* SAML_DLLLOCAL MessageSigningRuleFactory(const DOMElement* const & e)
+    SecurityPolicyRule* SAML_DLLLOCAL XMLSigningRuleFactory(const DOMElement* const & e)
     {
-        return new MessageSigningRule(e);
+        return new XMLSigningRule(e);
     }
 };
 
-pair<saml2::Issuer*,const saml2md::RoleDescriptor*> MessageSigningRule::evaluate(
+pair<saml2::Issuer*,const saml2md::RoleDescriptor*> XMLSigningRule::evaluate(
     const GenericRequest& request,
     const XMLObject& message,
     const MetadataProvider* metadataProvider,
@@ -56,7 +56,7 @@ pair<saml2::Issuer*,const saml2md::RoleDescriptor*> MessageSigningRule::evaluate
     const opensaml::TrustEngine* trustEngine
     ) const
 {
-    Category& log=Category::getInstance(SAML_LOGCAT".SecurityPolicyRule.MessageSigning");
+    Category& log=Category::getInstance(SAML_LOGCAT".SecurityPolicyRule.XMLSigning");
     log.debug("evaluating message signing policy");
     
     pair<saml2::Issuer*,const RoleDescriptor*> ret = pair<saml2::Issuer*,const RoleDescriptor*>(NULL,NULL);  
@@ -118,7 +118,7 @@ pair<saml2::Issuer*,const saml2md::RoleDescriptor*> MessageSigningRule::evaluate
     return ret;
 }
 
-pair<saml2::Issuer*,const XMLCh*> MessageSigningRule::getIssuerAndProtocol(const XMLObject& message) const
+pair<saml2::Issuer*,const XMLCh*> XMLSigningRule::getIssuerAndProtocol(const XMLObject& message) const
 {
     // We just let any bad casts throw here.
     

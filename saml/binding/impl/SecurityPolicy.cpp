@@ -33,22 +33,23 @@ using namespace std;
 
 namespace opensaml {
     SAML_DLLLOCAL PluginManager<SecurityPolicyRule,const DOMElement*>::Factory MessageFlowRuleFactory;
-    SAML_DLLLOCAL PluginManager<SecurityPolicyRule,const DOMElement*>::Factory MessageRoutingRuleFactory;
-    SAML_DLLLOCAL PluginManager<SecurityPolicyRule,const DOMElement*>::Factory MessageSigningRuleFactory;
     SAML_DLLLOCAL PluginManager<SecurityPolicyRule,const DOMElement*>::Factory SimpleSigningRuleFactory;
+    SAML_DLLLOCAL PluginManager<SecurityPolicyRule,const DOMElement*>::Factory XMLSigningRuleFactory;
 };
 
 void SAML_API opensaml::registerSecurityPolicyRules()
 {
     SAMLConfig& conf=SAMLConfig::getConfig();
     conf.SecurityPolicyRuleManager.registerFactory(MESSAGEFLOW_POLICY_RULE, MessageFlowRuleFactory);
-    conf.SecurityPolicyRuleManager.registerFactory(MESSAGEROUTING_POLICY_RULE, MessageRoutingRuleFactory);
-    conf.SecurityPolicyRuleManager.registerFactory(MESSAGESIGNING_POLICY_RULE, MessageSigningRuleFactory);
     conf.SecurityPolicyRuleManager.registerFactory(SIMPLESIGNING_POLICY_RULE, SimpleSigningRuleFactory);
+    conf.SecurityPolicyRuleManager.registerFactory(XMLSIGNING_POLICY_RULE, XMLSigningRuleFactory);
 }
+
+SecurityPolicy::IssuerMatchingPolicy SecurityPolicy::m_defaultMatching;
 
 SecurityPolicy::~SecurityPolicy()
 {
+    delete m_matchingPolicy;
     delete m_issuer;
 }
 
@@ -62,7 +63,7 @@ void SecurityPolicy::evaluate(const GenericRequest& request, const XMLObject& me
         // Make sure returned issuer doesn't conflict.
          
         if (ident.first) {
-            if (!issuerMatches(ident.first, m_issuer)) {
+            if (!(m_matchingPolicy ? m_matchingPolicy : &m_defaultMatching)->issuerMatches(ident.first, m_issuer)) {
                 delete ident.first;
                 throw BindingException("Policy rules returned differing Issuers.");
             }
@@ -80,7 +81,7 @@ void SecurityPolicy::evaluate(const GenericRequest& request, const XMLObject& me
 
 void SecurityPolicy::setIssuer(saml2::Issuer* issuer)
 {
-    if (!issuerMatches(issuer, m_issuer)) {
+    if (!((m_matchingPolicy ? m_matchingPolicy : &m_defaultMatching))->issuerMatches(issuer, m_issuer)) {
         delete issuer;
         throw BindingException("Externally provided Issuer conflicts with policy results.");
     }
@@ -96,7 +97,7 @@ void SecurityPolicy::setIssuerMetadata(const RoleDescriptor* issuerRole)
     m_issuerRole=issuerRole;
 }
 
-bool SecurityPolicy::issuerMatches(const Issuer* issuer1, const Issuer* issuer2) const
+bool SecurityPolicy::IssuerMatchingPolicy::issuerMatches(const Issuer* issuer1, const Issuer* issuer2) const
 {
     // NULL matches anything for the purposes of this interface.
     if (!issuer1 || !issuer2)

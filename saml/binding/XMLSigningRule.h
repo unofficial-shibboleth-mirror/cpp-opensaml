@@ -15,7 +15,7 @@
  */
 
 /**
- * @file saml/binding/MessageSigningRule.h
+ * @file saml/binding/XMLSigningRule.h
  * 
  * XML Signature checking SecurityPolicyRule
  */
@@ -30,11 +30,11 @@ namespace opensaml {
      * Subclasses can provide support for additional message types
      * by overriding the issuer derivation method.
      */
-    class SAML_API MessageSigningRule : public SecurityPolicyRule
+    class SAML_API XMLSigningRule : public SecurityPolicyRule
     {
     public:
-        MessageSigningRule(const DOMElement* e) {}
-        virtual ~MessageSigningRule() {}
+        XMLSigningRule(const DOMElement* e) {}
+        virtual ~XMLSigningRule() {}
         
         std::pair<saml2::Issuer*,const saml2md::RoleDescriptor*> evaluate(
             const GenericRequest& request,

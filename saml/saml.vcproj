@@ -486,14 +486,6 @@
 						>
 					</File>
 					<File
-						RelativePath=".\binding\impl\MessageRoutingRule.cpp"
-						>
-					</File>
-					<File
-						RelativePath=".\binding\impl\MessageSigningRule.cpp"
-						>
-					</File>
-					<File
 						RelativePath=".\binding\impl\SAMLArtifact.cpp"
 						>
 					</File>
@@ -507,6 +499,10 @@
 					</File>
 					<File
 						RelativePath=".\binding\impl\URLEncoder.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\binding\impl\XMLSigningRule.cpp"
 						>
 					</File>
 				</Filter>
@@ -805,14 +801,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\binding\MessageRoutingRule.h"
-					>
-				</File>
-				<File
-					RelativePath=".\binding\MessageSigningRule.h"
-					>
-				</File>
-				<File
 					RelativePath=".\binding\SAMLArtifact.h"
 					>
 				</File>
@@ -830,6 +818,10 @@
 				</File>
 				<File
 					RelativePath=".\binding\URLEncoder.h"
+					>
+				</File>
+				<File
+					RelativePath=".\binding\XMLSigningRule.h"
 					>
 				</File>
 			</Filter>
