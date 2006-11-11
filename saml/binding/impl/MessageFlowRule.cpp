@@ -24,6 +24,7 @@
 #include "exceptions.h"
 #include "RootObject.h"
 #include "binding/MessageFlowRule.h"
+#include "util/SAMLConstants.h"
 
 #include <xmltooling/util/NDC.h>
 #include <xmltooling/util/ReplayCache.h>
@@ -62,16 +63,24 @@ pair<saml2::Issuer*,const saml2md::RoleDescriptor*> MessageFlowRule::evaluate(
     const XMLObject& message,
     const saml2md::MetadataProvider* metadataProvider,
     const QName* role,
-    const opensaml::TrustEngine* trustEngine,
-    const MessageExtractor& extractor
+    const opensaml::TrustEngine* trustEngine
     ) const
 {
+    Category& log=Category::getInstance(SAML_LOGCAT".SecurityPolicyRule.MessageFlow");
+    log.debug("evaluating message flow policy");
+
     try {
-        const RootObject& obj = dynamic_cast<const RootObject&>(message);
-        check(obj.getID(), obj.getIssueInstantEpoch());
+        const XMLCh* ns = message.getElementQName().getNamespaceURI();
+        if (ns && (XMLString::equals(ns, samlconstants::SAML20P_NS) || XMLString::equals(ns, samlconstants::SAML1P_NS))) {
+            const RootObject& obj = dynamic_cast<const RootObject&>(message);
+            check(obj.getID(), obj.getIssueInstantEpoch());
+        }
+        else {
+            log.debug("ignoring unrecognized message type");
+        }
     }
     catch (bad_cast&) {
-        throw BindingException("Message was not of a recognized type.");
+        log.warn("caught a bad_cast while extracting issuer");
     }
     return pair<saml2::Issuer*,const saml2md::RoleDescriptor*>(NULL,NULL);
 }

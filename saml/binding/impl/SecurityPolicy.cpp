@@ -52,11 +52,8 @@ void SAML_API opensaml::registerSecurityPolicyRules()
 
 SecurityPolicy::IssuerMatchingPolicy SecurityPolicy::m_defaultMatching;
 
-SecurityPolicyRule::MessageExtractor SecurityPolicy::m_defaultExtractor;
-
 SecurityPolicy::~SecurityPolicy()
 {
-    delete m_extractor;
     delete m_matchingPolicy;
     delete m_issuer;
 }
@@ -66,8 +63,7 @@ void SecurityPolicy::evaluate(const GenericRequest& request, const XMLObject& me
     for (vector<const SecurityPolicyRule*>::const_iterator i=m_rules.begin(); i!=m_rules.end(); ++i) {
 
         // Run the rule...
-        pair<Issuer*,const RoleDescriptor*> ident =
-            (*i)->evaluate(request,message,m_metadata,&m_role,m_trust,getMessageExtractor());
+        pair<Issuer*,const RoleDescriptor*> ident = (*i)->evaluate(request,message,m_metadata,&m_role,m_trust);
 
         // Make sure returned issuer doesn't conflict.
          
@@ -133,63 +129,4 @@ bool SecurityPolicy::IssuerMatchingPolicy::issuerMatches(const Issuer* issuer1, 
         return false;
     
     return true;
-}
-
-
-pair<saml2::Issuer*,const XMLCh*> SecurityPolicyRule::MessageExtractor::getIssuerAndProtocol(const XMLObject& message) const
-{
-    // We just let any bad casts throw here.
-    
-    saml2::Issuer* issuer;
-
-    // Shortcuts some of the casting.
-    const XMLCh* ns = message.getElementQName().getNamespaceURI();
-    if (ns) {
-        if (XMLString::equals(ns, samlconstants::SAML20P_NS) || XMLString::equals(ns, samlconstants::SAML20_NS)) {
-            // 2.0 namespace should be castable to a specialized 2.0 root.
-            const saml2::RootObject& root = dynamic_cast<const saml2::RootObject&>(message);
-            issuer = root.getIssuer();
-            if (issuer && issuer->getName()) {
-                return make_pair(issuer->cloneIssuer(), samlconstants::SAML20P_NS);
-            }
-            
-            // No issuer in the message, so we have to try the Response approach. 
-            const vector<saml2::Assertion*>& assertions = dynamic_cast<const saml2p::Response&>(message).getAssertions();
-            if (!assertions.empty()) {
-                issuer = assertions.front()->getIssuer();
-                if (issuer && issuer->getName())
-                    return make_pair(issuer->cloneIssuer(), samlconstants::SAML20P_NS);
-            }
-        }
-        else if (XMLString::equals(ns, samlconstants::SAML1P_NS)) {
-            // Should be a samlp:Response, at least in OpenSAML.
-            const vector<saml1::Assertion*>& assertions = dynamic_cast<const saml1p::Response&>(message).getAssertions();
-            if (!assertions.empty()) {
-                const saml1::Assertion* a = assertions.front();
-                if (a->getIssuer()) {
-                    issuer = saml2::IssuerBuilder::buildIssuer();
-                    issuer->setName(a->getIssuer());
-                    pair<bool,int> minor = a->getMinorVersion();
-                    return make_pair(
-                        issuer,
-                        (minor.first && minor.second==0) ? samlconstants::SAML10_PROTOCOL_ENUM : samlconstants::SAML11_PROTOCOL_ENUM
-                        );
-                }
-            }
-        }
-        else if (XMLString::equals(ns, samlconstants::SAML1_NS)) {
-            // Should be a saml:Assertion.
-            const saml1::Assertion& a = dynamic_cast<const saml1::Assertion&>(message);
-            if (a.getIssuer()) {
-                issuer = saml2::IssuerBuilder::buildIssuer();
-                issuer->setName(a.getIssuer());
-                pair<bool,int> minor = a.getMinorVersion();
-                return make_pair(
-                    issuer,
-                    (minor.first && minor.second==0) ? samlconstants::SAML10_PROTOCOL_ENUM : samlconstants::SAML11_PROTOCOL_ENUM
-                    );
-            }
-        }
-    }
-    return pair<saml2::Issuer*,const XMLCh*>(NULL,NULL);
 }

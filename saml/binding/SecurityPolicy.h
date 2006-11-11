@@ -62,8 +62,8 @@ namespace opensaml {
             const saml2md::MetadataProvider* metadataProvider=NULL,
             const xmltooling::QName* role=NULL,
             const TrustEngine* trustEngine=NULL
-            ) : m_issuer(NULL), m_issuerRole(NULL), m_matchingPolicy(NULL), m_extractor(NULL),
-                m_metadata(metadataProvider), m_role(role ? *role : xmltooling::QName()), m_trust(trustEngine) {
+            ) : m_issuer(NULL), m_issuerRole(NULL), m_matchingPolicy(NULL), m_metadata(metadataProvider),
+                m_role(role ? *role : xmltooling::QName()), m_trust(trustEngine) {
         }
 
         /**
@@ -80,8 +80,8 @@ namespace opensaml {
             const saml2md::MetadataProvider* metadataProvider=NULL,
             const xmltooling::QName* role=NULL,
             const TrustEngine* trustEngine=NULL
-            ) : m_issuer(NULL), m_issuerRole(NULL), m_matchingPolicy(NULL), m_extractor(NULL), m_rules(rules),
-                m_metadata(metadataProvider), m_role(role ? *role : xmltooling::QName()), m_trust(trustEngine) {
+            ) : m_issuer(NULL), m_issuerRole(NULL), m_matchingPolicy(NULL), m_rules(rules), m_metadata(metadataProvider),
+                m_role(role ? *role : xmltooling::QName()), m_trust(trustEngine) {
         }
 
         virtual ~SecurityPolicy();
@@ -238,42 +238,15 @@ namespace opensaml {
             m_matchingPolicy = matchingPolicy;
         }
 
-        /**
-         * Returns the MessageExtractor in effect.
-         * 
-         * @return the effective MessageExtractor
-         */
-        const SecurityPolicyRule::MessageExtractor& getMessageExtractor() const {
-            return m_extractor ? *m_extractor : m_defaultExtractor;
-        }
-
-        /**
-         * Sets the MessageExtractor in effect. Setting no extractor will
-         * cause the default extractor to be used.
-         * 
-         * <p>The extractor will be freed by the SecurityPolicy.
-         * 
-         * @param extractor the MessageExtractor to use
-         */
-        void setMessageExtractor(SecurityPolicyRule::MessageExtractor* extractor) {
-            delete m_extractor;
-            m_extractor = extractor;
-        }
-
     protected:
         /** A shared matching object that just supports the default matching rules. */
         static IssuerMatchingPolicy m_defaultMatching;
-
-        /** A shared extractor object that just supports the default SAML message types. */
-        static SecurityPolicyRule::MessageExtractor m_defaultExtractor;
 
     private:
         saml2::Issuer* m_issuer;
         const saml2md::RoleDescriptor* m_issuerRole;
         
         IssuerMatchingPolicy* m_matchingPolicy;
-        SecurityPolicyRule::MessageExtractor* m_extractor;
-
         std::vector<const SecurityPolicyRule*> m_rules;
         const saml2md::MetadataProvider* m_metadata;
         xmltooling::QName m_role;

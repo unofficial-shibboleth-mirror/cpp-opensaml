@@ -26,6 +26,9 @@
 namespace opensaml {
     /**
      * XML Signature checking SecurityPolicyRule
+     * 
+     * Subclasses can provide support for additional message types
+     * by overriding the issuer derivation method.
      */
     class SAML_API XMLSigningRule : public SecurityPolicyRule
     {
@@ -38,9 +41,22 @@ namespace opensaml {
             const xmltooling::XMLObject& message,
             const saml2md::MetadataProvider* metadataProvider,
             const xmltooling::QName* role,
-            const TrustEngine* trustEngine,
-            const MessageExtractor& extractor
+            const TrustEngine* trustEngine
             ) const;
+    
+    protected:
+        /**
+         * Examines the message and/or its contents and extracts the issuer's claimed
+         * identity along with a protocol identifier. The two together can be used to
+         * locate metadata to use in validating the signature. Conventions may be needed
+         * to properly encode non-SAML2 issuer information into a compatible form. 
+         * 
+         * <p>The caller is responsible for freeing the Issuer object.
+         * 
+         * @param message       message to examine
+         * @return  a pair consisting of a SAML 2.0 Issuer object and a protocol constant.
+         */
+        virtual std::pair<saml2::Issuer*,const XMLCh*> getIssuerAndProtocol(const xmltooling::XMLObject& message) const;
     };
     
 };
