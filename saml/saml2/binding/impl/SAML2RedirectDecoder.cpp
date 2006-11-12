@@ -54,8 +54,6 @@ namespace opensaml {
 
 SAML2RedirectDecoder::SAML2RedirectDecoder(const DOMElement* e) {}
 
-SAML2RedirectDecoder::~SAML2RedirectDecoder() {}
-
 XMLObject* SAML2RedirectDecoder::decode(
     string& relayState,
     const GenericRequest& genericRequest,

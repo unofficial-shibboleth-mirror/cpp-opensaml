@@ -15,25 +15,25 @@
  */
 
 /**
- * @file saml/saml2/binding/SAML2ArtifactEncoder.h
+ * @file saml/saml1/binding/SAML1SOAPEncoder.h
  * 
- * SAML 2.0 HTTP-Artifact binding message encoder
+ * SAML 1.x SOAP binding message encoder
  */
 
 #include <saml/binding/MessageEncoder.h>
 
 
 namespace opensaml {
-    namespace saml2p {
+    namespace saml1p {
 
         /**
-         * SAML 2.0 HTTP-Artifact binding message encoder
+         * SAML 1.x POST binding/profile message encoder
          */
-        class SAML_API SAML2ArtifactEncoder : public MessageEncoder
+        class SAML_API SAML1SOAPEncoder : public MessageEncoder
         {
         public:
-            SAML2ArtifactEncoder(const DOMElement* e);
-            virtual ~SAML2ArtifactEncoder() {}
+            SAML1SOAPEncoder(const DOMElement* e);
+            virtual ~SAML1SOAPEncoder() {}
             
             long encode(
                 GenericResponse& genericResponse,
@@ -44,10 +44,6 @@ namespace opensaml {
                 const xmlsignature::CredentialResolver* credResolver=NULL,
                 const XMLCh* sigAlgorithm=NULL
                 ) const;
-        
-        protected:
-            /** Pathname of HTML template for transmission of message via POST. */
-            std::string m_template; 
         };
 
     };

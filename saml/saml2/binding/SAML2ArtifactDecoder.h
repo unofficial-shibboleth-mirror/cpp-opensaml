@@ -37,7 +37,7 @@ namespace opensaml {
         {
         public:
             SAML2ArtifactDecoder(const DOMElement* e);
-            virtual ~SAML2ArtifactDecoder();
+            virtual ~SAML2ArtifactDecoder() {}
             
             xmltooling::XMLObject* decode(
                 std::string& relayState,

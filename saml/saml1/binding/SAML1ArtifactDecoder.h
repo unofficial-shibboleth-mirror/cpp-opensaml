@@ -34,7 +34,7 @@ namespace opensaml {
         {
         public:
             SAML1ArtifactDecoder(const DOMElement* e);
-            virtual ~SAML1ArtifactDecoder();
+            virtual ~SAML1ArtifactDecoder() {}
             
             Response* decode(
                 std::string& relayState,

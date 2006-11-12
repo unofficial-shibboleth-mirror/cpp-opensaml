@@ -34,7 +34,7 @@ namespace opensaml {
         {
         public:
             SAML2POSTDecoder(const DOMElement* e);
-            virtual ~SAML2POSTDecoder();
+            virtual ~SAML2POSTDecoder() {}
             
             saml2::RootObject* decode(
                 std::string& relayState,

@@ -62,8 +62,6 @@ SAML2ArtifactEncoder::SAML2ArtifactEncoder(const DOMElement* e)
     }
 }
 
-SAML2ArtifactEncoder::~SAML2ArtifactEncoder() {}
-
 long SAML2ArtifactEncoder::encode(
     GenericResponse& genericResponse,
     xmltooling::XMLObject* xmlObject,
@@ -158,6 +156,6 @@ long SAML2ArtifactEncoder::encode(
         stringstream s;
         engine->run(infile, s, params);
         httpResponse->setContentType("text/html");
-        return httpResponse->sendResponse(s, HTTPResponse::SAML_HTTP_STATUS_OK);
+        return httpResponse->sendResponse(s);
     }
 }

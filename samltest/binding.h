@@ -237,6 +237,14 @@ public:
         return decoded;
     }
     
+    long sendResponse(std::istream& inputStream) {
+        return sendResponse(inputStream, HTTPResponse::SAML_HTTP_STATUS_OK);
+    }
+
+    long sendError(std::istream& inputStream) {
+        return sendResponse(inputStream, HTTPResponse::SAML_HTTP_STATUS_ERROR);
+    }
+
     long sendResponse(std::istream& inputStream, long status) {
         m_method="POST";
         string page,line;

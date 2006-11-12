@@ -49,6 +49,24 @@ namespace opensaml {
         virtual void setContentType(const char* type=NULL)=0;
 
         /**
+         * Sends a completed response to the client along with a
+         * transport-specific "OK" indication. Used for "normal" responses.
+         * 
+         * @param inputStream   reference to source of response data
+         * @return a result code to return from the calling MessageEncoder
+         */
+        virtual long sendResponse(std::istream& inputStream)=0;
+
+        /**
+         * Sends an "error" response to the client along with a
+         * transport-specific error indication.
+         * 
+         * @param inputStream   reference to source of response data
+         * @return a result code to return from the calling MessageEncoder
+         */
+        virtual long sendError(std::istream& inputStream)=0;
+
+        /**
          * Sends a completed response to the client.
          * 
          * @param inputStream   reference to source of response data

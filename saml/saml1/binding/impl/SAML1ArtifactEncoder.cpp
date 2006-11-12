@@ -51,8 +51,6 @@ namespace opensaml {
 
 SAML1ArtifactEncoder::SAML1ArtifactEncoder(const DOMElement* e) {}
 
-SAML1ArtifactEncoder::~SAML1ArtifactEncoder() {}
-
 long SAML1ArtifactEncoder::encode(
     GenericResponse& genericResponse,
     XMLObject* xmlObject,

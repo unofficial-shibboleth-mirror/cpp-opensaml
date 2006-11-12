@@ -53,8 +53,6 @@ namespace opensaml {
 
 SAML2ArtifactDecoder::SAML2ArtifactDecoder(const DOMElement* e) {}
 
-SAML2ArtifactDecoder::~SAML2ArtifactDecoder() {}
-
 XMLObject* SAML2ArtifactDecoder::decode(
     string& relayState,
     const GenericRequest& genericRequest,

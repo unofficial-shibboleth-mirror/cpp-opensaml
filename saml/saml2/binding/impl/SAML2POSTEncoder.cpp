@@ -22,7 +22,6 @@
 
 #include "internal.h"
 #include "exceptions.h"
-#include "binding/HTTPResponse.h"
 #include "saml2/binding/SAML2POSTEncoder.h"
 #include "saml2/core/Protocols.h"
 
@@ -67,8 +66,6 @@ SAML2POSTEncoder::SAML2POSTEncoder(const DOMElement* e, bool simple) : m_simple(
         throw XMLToolingException("SAML2POSTEncoder requires template attribute.");
 }
 
-SAML2POSTEncoder::~SAML2POSTEncoder() {}
-
 long SAML2POSTEncoder::encode(
     GenericResponse& genericResponse,
     XMLObject* xmlObject,
@@ -85,9 +82,6 @@ long SAML2POSTEncoder::encode(
     Category& log = Category::getInstance(SAML_LOGCAT".MessageEncoder.SAML2POST");
 
     log.debug("validating input");
-    HTTPResponse* httpResponse=dynamic_cast<HTTPResponse*>(&genericResponse);
-    if (!httpResponse)
-        throw BindingException("Unable to cast response interface to HTTPResponse type.");
     if (xmlObject->getParent())
         throw BindingException("Cannot encode XML content with parent.");
     
@@ -170,8 +164,8 @@ long SAML2POSTEncoder::encode(
     pmap["action"] = destination;
     stringstream s;
     engine->run(infile, s, pmap);
-    httpResponse->setContentType("text/html");
-    long ret = httpResponse->sendResponse(s, HTTPResponse::SAML_HTTP_STATUS_OK);
+    genericResponse.setContentType("text/html");
+    long ret = genericResponse.sendResponse(s);
 
     // Cleanup by destroying XML.
     delete xmlObject;

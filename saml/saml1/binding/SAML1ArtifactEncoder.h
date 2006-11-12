@@ -33,7 +33,7 @@ namespace opensaml {
         {
         public:
             SAML1ArtifactEncoder(const DOMElement* e);
-            virtual ~SAML1ArtifactEncoder();
+            virtual ~SAML1ArtifactEncoder() {}
             
             long encode(
                 GenericResponse& genericResponse,

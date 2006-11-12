@@ -257,6 +257,10 @@
 							>
 						</File>
 						<File
+							RelativePath=".\saml1\binding\impl\SAML1SOAPEncoder.cpp"
+							>
+						</File>
+						<File
 							RelativePath=".\saml1\binding\impl\SAMLArtifactType0001.cpp"
 							>
 						</File>
@@ -637,6 +641,10 @@
 					</File>
 					<File
 						RelativePath=".\saml1\binding\SAML1SOAPDecoder.h"
+						>
+					</File>
+					<File
+						RelativePath=".\saml1\binding\SAML1SOAPEncoder.h"
 						>
 					</File>
 					<File

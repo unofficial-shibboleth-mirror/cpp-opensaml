@@ -52,8 +52,6 @@ namespace opensaml {
 
 SAML2POSTDecoder::SAML2POSTDecoder(const DOMElement* e) {}
 
-SAML2POSTDecoder::~SAML2POSTDecoder() {}
-
 saml2::RootObject* SAML2POSTDecoder::decode(
     std::string& relayState,
     const GenericRequest& genericRequest,

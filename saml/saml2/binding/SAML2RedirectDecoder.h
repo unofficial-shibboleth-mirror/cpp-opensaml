@@ -32,7 +32,7 @@ namespace opensaml {
         {
         public:
             SAML2RedirectDecoder(const DOMElement* e);
-            virtual ~SAML2RedirectDecoder();
+            virtual ~SAML2RedirectDecoder() {}
             
             xmltooling::XMLObject* decode(
                 std::string& relayState,

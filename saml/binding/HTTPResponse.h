@@ -71,7 +71,8 @@ namespace opensaml {
         /** Some common HTTP status codes. */
         enum status_t {
             SAML_HTTP_STATUS_OK = 200,
-            SAML_HTTP_STATUS_MOVED = 302
+            SAML_HTTP_STATUS_MOVED = 302,
+            SAML_HTTP_STATUS_ERROR = 500
         };
     };
 };

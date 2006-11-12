@@ -33,7 +33,7 @@ namespace opensaml {
         {
         public:
             SAML2POSTEncoder(const DOMElement* e, bool simple=false);
-            virtual ~SAML2POSTEncoder();
+            virtual ~SAML2POSTEncoder() {}
             
             long encode(
                 GenericResponse& genericResponse,
