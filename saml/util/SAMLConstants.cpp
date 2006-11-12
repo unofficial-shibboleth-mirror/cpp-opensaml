@@ -177,9 +177,13 @@ const XMLCh samlconstants::SAML20P_THIRDPARTY_EXT_NS[] = // urn:oasis:names:tc:S
 
 const XMLCh samlconstants::SAML20P_THIRDPARTY_EXT_PREFIX[] = UNICODE_LITERAL_6(t,h,r,p,t,y);
 
+const char samlconstants::SAML1_BINDING_SOAP[] = "urn:oasis:names:tc:SAML:1.0:bindings:SOAP-binding";
+
 const char samlconstants::SAML1_PROFILE_BROWSER_ARTIFACT[] = "urn:oasis:names:tc:SAML:1.0:profiles:artifact-01";
 
 const char samlconstants::SAML1_PROFILE_BROWSER_POST[] = "urn:oasis:names:tc:SAML:1.0:profiles:browser-post";
+
+const char samlconstants::SAML20_BINDING_SOAP[] = "urn:oasis:names:tc:SAML:2.0:bindings:SOAP";
 
 const char samlconstants::SAML20_BINDING_HTTP_ARTIFACT[] = "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact";
 

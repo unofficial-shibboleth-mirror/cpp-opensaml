@@ -253,6 +253,10 @@
 							>
 						</File>
 						<File
+							RelativePath=".\saml1\binding\impl\SAML1SOAPDecoder.cpp"
+							>
+						</File>
+						<File
 							RelativePath=".\saml1\binding\impl\SAMLArtifactType0001.cpp"
 							>
 						</File>
@@ -426,6 +430,10 @@
 						</File>
 						<File
 							RelativePath=".\saml2\binding\impl\SAML2RedirectEncoder.cpp"
+							>
+						</File>
+						<File
+							RelativePath=".\saml2\binding\impl\SAML2SOAPDecoder.cpp"
 							>
 						</File>
 					</Filter>
@@ -628,6 +636,10 @@
 						>
 					</File>
 					<File
+						RelativePath=".\saml1\binding\SAML1SOAPDecoder.h"
+						>
+					</File>
+					<File
 						RelativePath=".\saml1\binding\SAMLArtifactType0001.h"
 						>
 					</File>
@@ -733,6 +745,10 @@
 					</File>
 					<File
 						RelativePath=".\saml2\binding\SAML2RedirectEncoder.h"
+						>
+					</File>
+					<File
+						RelativePath=".\saml2\binding\SAML2SOAPDecoder.h"
 						>
 					</File>
 				</Filter>

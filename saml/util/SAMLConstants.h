@@ -123,12 +123,18 @@ namespace samlconstants {
     /** SAML Third-Party Request Protocol Extension QName prefix ("query") */
     extern SAML_API const XMLCh SAML20P_THIRDPARTY_EXT_PREFIX[];
 
-    /** SAML 1.x Browser Artifact profile ("urn:oasis:names:tc:SAML:1.0:profiles:artifact-01")*/
+    /** SAML 1.x SOAP binding ("urn:oasis:names:tc:SAML:1.0:bindings:SOAP-binding") */
+    extern SAML_API const char SAML1_BINDING_SOAP[];
+
+    /** SAML 1.x Browser Artifact profile ("urn:oasis:names:tc:SAML:1.0:profiles:artifact-01") */
     extern SAML_API const char SAML1_PROFILE_BROWSER_ARTIFACT[];
 
     /** SAML 1.x Browser POST profile ("urn:oasis:names:tc:SAML:1.0:profiles:browser-post") */
     extern SAML_API const char SAML1_PROFILE_BROWSER_POST[];
     
+    /** SAML 2.0 SOAP binding ("urn:oasis:names:tc:SAML:2.0:bindings:SOAP") */
+    extern SAML_API const char SAML20_BINDING_SOAP[];
+
     /** SAML 2.0 HTTP-Artifact binding ("urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact") */
     extern SAML_API const char SAML20_BINDING_HTTP_ARTIFACT[];
 

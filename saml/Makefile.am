@@ -76,7 +76,8 @@ saml1bindinclude_HEADERS = \
 	saml1/binding/SAML1ArtifactDecoder.h \
 	saml1/binding/SAML1ArtifactEncoder.h \
 	saml1/binding/SAML1POSTDecoder.h \
-	saml1/binding/SAML1POSTEncoder.h
+	saml1/binding/SAML1POSTEncoder.h \
+	saml1/binding/SAML1SOAPDecoder.h
 
 saml2coreinclude_HEADERS = \
 	saml2/core/Assertions.h \
@@ -91,7 +92,8 @@ saml2bindinclude_HEADERS = \
 	saml2/binding/SAML2POSTEncoder.h \
 	saml2/binding/SAML2Redirect.h \
 	saml2/binding/SAML2RedirectDecoder.h \
-	saml2/binding/SAML2RedirectEncoder.h
+	saml2/binding/SAML2RedirectEncoder.h \
+	saml2/binding/SAML2SOAPDecoder.h
 
 saml2mdinclude_HEADERS = \
 	saml2/metadata/AbstractMetadataProvider.h \
@@ -126,6 +128,7 @@ libsaml_la_SOURCES = \
 	saml1/binding/impl/SAML1ArtifactEncoder.cpp \
 	saml1/binding/impl/SAML1POSTDecoder.cpp \
 	saml1/binding/impl/SAML1POSTEncoder.cpp \
+	saml1/binding/impl/SAML1SOAPDecoder.cpp \
 	saml2/core/impl/Assertions20Impl.cpp \
 	saml2/core/impl/Assertions20SchemaValidators.cpp \
 	saml2/core/impl/Protocols20Impl.cpp \
@@ -149,6 +152,7 @@ libsaml_la_SOURCES = \
 	saml2/binding/impl/SAML2Redirect.cpp \
 	saml2/binding/impl/SAML2RedirectDecoder.cpp \
 	saml2/binding/impl/SAML2RedirectEncoder.cpp \
+	saml2/binding/impl/SAML2SOAPDecoder.cpp \
 	encryption/EncryptedKeyResolver.cpp \
 	security/impl/TrustEngine.cpp \
 	security/impl/AbstractPKIXTrustEngine.cpp \
