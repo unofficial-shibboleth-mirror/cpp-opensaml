@@ -94,7 +94,8 @@ saml2bindinclude_HEADERS = \
 	saml2/binding/SAML2Redirect.h \
 	saml2/binding/SAML2RedirectDecoder.h \
 	saml2/binding/SAML2RedirectEncoder.h \
-	saml2/binding/SAML2SOAPDecoder.h
+	saml2/binding/SAML2SOAPDecoder.h \
+	saml2/binding/SAML2SOAPEncoder.h
 
 saml2mdinclude_HEADERS = \
 	saml2/metadata/AbstractMetadataProvider.h \
@@ -155,6 +156,7 @@ libsaml_la_SOURCES = \
 	saml2/binding/impl/SAML2RedirectDecoder.cpp \
 	saml2/binding/impl/SAML2RedirectEncoder.cpp \
 	saml2/binding/impl/SAML2SOAPDecoder.cpp \
+	saml2/binding/impl/SAML2SOAPEncoder.cpp \
 	encryption/EncryptedKeyResolver.cpp \
 	security/impl/TrustEngine.cpp \
 	security/impl/AbstractPKIXTrustEngine.cpp \

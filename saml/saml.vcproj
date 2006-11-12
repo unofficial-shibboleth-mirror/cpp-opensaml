@@ -440,6 +440,10 @@
 							RelativePath=".\saml2\binding\impl\SAML2SOAPDecoder.cpp"
 							>
 						</File>
+						<File
+							RelativePath=".\saml2\binding\impl\SAML2SOAPEncoder.cpp"
+							>
+						</File>
 					</Filter>
 				</Filter>
 			</Filter>
@@ -757,6 +761,10 @@
 					</File>
 					<File
 						RelativePath=".\saml2\binding\SAML2SOAPDecoder.h"
+						>
+					</File>
+					<File
+						RelativePath=".\saml2\binding\SAML2SOAPEncoder.h"
 						>
 					</File>
 				</Filter>

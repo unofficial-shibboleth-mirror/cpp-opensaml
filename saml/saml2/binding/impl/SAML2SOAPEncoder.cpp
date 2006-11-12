@@ -15,23 +15,23 @@
  */
 
 /**
- * SAML1SOAPEncoder.cpp
+ * SAML2SOAPEncoder.cpp
  * 
- * SAML 1.x SOAP binding message encoder
+ * SAML 2.0 SOAP binding message encoder
  */
 
 #include "internal.h"
 #include "exceptions.h"
 #include "binding/HTTPResponse.h"
-#include "saml1/binding/SAML1SOAPEncoder.h"
-#include "saml1/core/Protocols.h"
+#include "saml2/binding/SAML2SOAPEncoder.h"
+#include "saml2/core/Protocols.h"
 
 #include <sstream>
 #include <log4cpp/Category.hh>
 #include <xmltooling/util/NDC.h>
 #include <xmltooling/soap/SOAP.h>
 
-using namespace opensaml::saml1p;
+using namespace opensaml::saml2p;
 using namespace opensaml;
 using namespace xmlsignature;
 using namespace soap11;
@@ -40,17 +40,17 @@ using namespace log4cpp;
 using namespace std;
 
 namespace opensaml {
-    namespace saml1p {              
-        MessageEncoder* SAML_DLLLOCAL SAML1SOAPEncoderFactory(const DOMElement* const & e)
+    namespace saml2p {              
+        MessageEncoder* SAML_DLLLOCAL SAML2SOAPEncoderFactory(const DOMElement* const & e)
         {
-            return new SAML1SOAPEncoder(e);
+            return new SAML2SOAPEncoder(e);
         }
     };
 };
 
-SAML1SOAPEncoder::SAML1SOAPEncoder(const DOMElement* e) {}
+SAML2SOAPEncoder::SAML2SOAPEncoder(const DOMElement* e) {}
 
-long SAML1SOAPEncoder::encode(
+long SAML2SOAPEncoder::encode(
     GenericResponse& genericResponse,
     XMLObject* xmlObject,
     const char* destination,
@@ -77,7 +77,7 @@ long SAML1SOAPEncoder::encode(
     }
 
     DOMElement* rootElement = NULL;
-    Response* response = dynamic_cast<Response*>(xmlObject);
+    StatusResponseType* response = dynamic_cast<StatusResponseType*>(xmlObject);
     if (response) {
         try {
             Envelope* env = EnvelopeBuilder::buildEnvelope();
@@ -179,5 +179,5 @@ long SAML1SOAPEncoder::encode(
         return ret;
     }
 
-    throw BindingException("XML content for SAML 1.x SOAP Encoder must be a SAML 1.x <Response> or SOAP Fault/Envelope.");
+    throw BindingException("XML content for SAML 2.0 SOAP Encoder must be a SAML 2.0 response or SOAP Fault/Envelope.");
 }

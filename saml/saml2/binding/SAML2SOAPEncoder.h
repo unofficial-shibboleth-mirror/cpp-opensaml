@@ -15,25 +15,25 @@
  */
 
 /**
- * @file saml/saml1/binding/SAML1SOAPEncoder.h
+ * @file saml/saml2/binding/SAML2SOAPEncoder.h
  * 
- * SAML 1.x SOAP binding message encoder
+ * SAML 2.0 SOAP binding message encoder
  */
 
 #include <saml/binding/MessageEncoder.h>
 
 
 namespace opensaml {
-    namespace saml1p {
+    namespace saml2p {
 
         /**
-         * SAML 1.x POST binding message encoder
+         * SAML 2.0 POST binding message encoder
          */
-        class SAML_API SAML1SOAPEncoder : public MessageEncoder
+        class SAML_API SAML2SOAPEncoder : public MessageEncoder
         {
         public:
-            SAML1SOAPEncoder(const DOMElement* e);
-            virtual ~SAML1SOAPEncoder() {}
+            SAML2SOAPEncoder(const DOMElement* e);
+            virtual ~SAML2SOAPEncoder() {}
             
             long encode(
                 GenericResponse& genericResponse,
