@@ -30,7 +30,6 @@
 namespace opensaml {
     
     class SAML_API SAMLArtifact;
-    class SAML_API X509TrustEngine;
     namespace saml1p {
         class SAML_API Response;
     };

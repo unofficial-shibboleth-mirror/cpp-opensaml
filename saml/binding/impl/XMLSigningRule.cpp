@@ -28,7 +28,7 @@
 #include "saml2/core/Protocols.h"
 #include "saml2/metadata/Metadata.h"
 #include "saml2/metadata/MetadataProvider.h"
-#include "security/TrustEngine.h"
+#include "signature/SignatureProfileValidator.h"
 
 #include <xmltooling/util/NDC.h>
 #include <xmltooling/util/ReplayCache.h>
@@ -52,7 +52,7 @@ pair<saml2::Issuer*,const RoleDescriptor*> XMLSigningRule::evaluate(
     const XMLObject& message,
     const MetadataProvider* metadataProvider,
     const QName* role,
-    const opensaml::TrustEngine* trustEngine
+    const TrustEngine* trustEngine
     ) const
 {
     Category& log=Category::getInstance(SAML_LOGCAT".SecurityPolicyRule.XMLSigning");
@@ -71,6 +71,17 @@ pair<saml2::Issuer*,const RoleDescriptor*> XMLSigningRule::evaluate(
             log.debug("ignoring unsigned or unrecognized message");
             return ret;
         }
+        
+        log.debug("validating signature profile");
+        try {
+            SignatureProfileValidator sigval;
+            sigval.validate(signable->getSignature());
+        }
+        catch (ValidationException& ve) {
+            log.error("signature profile failed to validate: %s", ve.what());
+            return ret;
+        }
+        
         
         log.debug("extracting issuer from message");
         pair<saml2::Issuer*,const XMLCh*> issuerInfo = getIssuerAndProtocol(message);

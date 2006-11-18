@@ -63,7 +63,7 @@ pair<saml2::Issuer*,const saml2md::RoleDescriptor*> MessageFlowRule::evaluate(
     const XMLObject& message,
     const saml2md::MetadataProvider* metadataProvider,
     const QName* role,
-    const opensaml::TrustEngine* trustEngine
+    const TrustEngine* trustEngine
     ) const
 {
     Category& log=Category::getInstance(SAML_LOGCAT".SecurityPolicyRule.MessageFlow");

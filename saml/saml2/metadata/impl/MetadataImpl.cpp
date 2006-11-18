@@ -23,6 +23,7 @@
 #include "internal.h"
 #include "exceptions.h"
 #include "saml2/metadata/Metadata.h"
+#include "saml2/metadata/MetadataKeyInfoIterator.h"
 
 #include <xmltooling/AbstractComplexElement.h>
 #include <xmltooling/AbstractElementProxy.h>
@@ -954,6 +955,23 @@ namespace opensaml {
                 // Sync content reference back up.
                 if (m_Signature)
                     m_Signature->setContentReference(new opensaml::ContentReference(*this));
+            }
+            
+            KeyInfoIterator* getKeyInfoIterator() const {
+                return new MetadataKeyInfoIterator(*this);
+            }
+
+            std::string getName() const {
+                const EntityDescriptor* parent = dynamic_cast<const EntityDescriptor*>(getParent());
+                if (parent) {
+                    char* ch = toUTF8(parent->getEntityID());
+                    if (ch) {
+                        string s(ch);
+                        delete[] ch;
+                        return s;
+                    }
+                }
+                return "";
             }
             
             IMPL_ID_ATTRIB(ID);

@@ -42,7 +42,7 @@ namespace opensaml {
             const xmltooling::XMLObject& message,
             const saml2md::MetadataProvider* metadataProvider,
             const xmltooling::QName* role,
-            const TrustEngine* trustEngine
+            const xmltooling::TrustEngine* trustEngine
             ) const;
     
     protected:

@@ -25,8 +25,8 @@
 #include "binding/ClientCertAuthRule.h"
 #include "saml2/metadata/Metadata.h"
 #include "saml2/metadata/MetadataProvider.h"
-#include "security/X509TrustEngine.h"
 
+#include <xmltooling/security/X509TrustEngine.h>
 #include <xmltooling/util/NDC.h>
 #include <xmltooling/util/ReplayCache.h>
 #include <log4cpp/Category.hh>
@@ -49,7 +49,7 @@ pair<saml2::Issuer*,const RoleDescriptor*> ClientCertAuthRule::evaluate(
     const XMLObject& message,
     const MetadataProvider* metadataProvider,
     const QName* role,
-    const opensaml::TrustEngine* trustEngine
+    const TrustEngine* trustEngine
     ) const
 {
     Category& log=Category::getInstance(SAML_LOGCAT".SecurityPolicyRule.ClientCertAuth");
@@ -57,8 +57,8 @@ pair<saml2::Issuer*,const RoleDescriptor*> ClientCertAuthRule::evaluate(
     
     pair<saml2::Issuer*,const RoleDescriptor*> ret = pair<saml2::Issuer*,const RoleDescriptor*>(NULL,NULL);  
     
-    const opensaml::X509TrustEngine* x509trust;
-    if (!metadataProvider || !role || !(x509trust=dynamic_cast<const opensaml::X509TrustEngine*>(trustEngine))) {
+    const X509TrustEngine* x509trust;
+    if (!metadataProvider || !role || !(x509trust=dynamic_cast<const X509TrustEngine*>(trustEngine))) {
         log.debug("ignoring message, no metadata or X509TrustEngine supplied");
         return ret;
     }

@@ -27,7 +27,6 @@
 #include "saml2/core/Protocols.h"
 #include "saml2/metadata/Metadata.h"
 #include "saml2/metadata/MetadataProvider.h"
-#include "security/TrustEngine.h"
 
 #include <log4cpp/Category.hh>
 #include <xmltooling/util/NDC.h>
@@ -73,7 +72,7 @@ pair<saml2::Issuer*,const RoleDescriptor*> SimpleSigningRule::evaluate(
     const XMLObject& message,
     const MetadataProvider* metadataProvider,
     const QName* role,
-    const opensaml::TrustEngine* trustEngine
+    const TrustEngine* trustEngine
     ) const
 {
     Category& log=Category::getInstance(SAML_LOGCAT".SecurityPolicyRule.SimpleSigning");

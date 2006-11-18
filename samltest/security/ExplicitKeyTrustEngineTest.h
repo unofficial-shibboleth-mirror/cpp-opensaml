@@ -16,8 +16,10 @@
 
 #include "internal.h"
 #include <saml/SAMLConfig.h>
-#include <saml/security/TrustEngine.h>
+#include <saml/saml2/core/Assertions.h>
+#include <saml/saml2/metadata/Metadata.h>
 #include <saml/saml2/metadata/MetadataProvider.h>
+#include <xmltooling/security/TrustEngine.h>
 
 using namespace opensaml::saml2;
 using namespace opensaml::saml2md;
@@ -57,8 +59,8 @@ public:
         }
         
         // Build trust engine.
-        auto_ptr<opensaml::TrustEngine> trustEngine(
-            SAMLConfig::getConfig().TrustEngineManager.newPlugin(EXPLICIT_KEY_SAMLTRUSTENGINE, NULL)
+        auto_ptr<TrustEngine> trustEngine(
+            XMLToolingConfig::getConfig().TrustEngineManager.newPlugin(EXPLICIT_KEY_TRUSTENGINE, NULL)
             );
         
         // Get signed assertion.

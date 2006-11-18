@@ -41,7 +41,6 @@ namespace opensaml {
     class SAML_API MessageDecoder;
     class SAML_API SAMLArtifact;
     class SAML_API SecurityPolicyRule;
-    class SAML_API TrustEngine;
     class SAML_API URLEncoder;
 
     namespace saml2md {
@@ -176,9 +175,6 @@ namespace opensaml {
 
         /** Manages factories for SecurityPolicyRule plugins. */
         xmltooling::PluginManager<SecurityPolicyRule,const DOMElement*> SecurityPolicyRuleManager;
-
-        /** Manages factories for TrustEngine plugins. */
-        xmltooling::PluginManager<TrustEngine,const DOMElement*> TrustEngineManager;
 
         /** Manages factories for MetadataProvider plugins. */
         xmltooling::PluginManager<saml2md::MetadataProvider,const DOMElement*> MetadataProviderManager;

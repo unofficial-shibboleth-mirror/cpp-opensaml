@@ -76,8 +76,6 @@
 <pathentry excluding="impl/" kind="src" path="saml/saml2/binding"/>
 <pathentry kind="src" path="saml/saml2/binding/impl"/>
 <pathentry kind="src" path="saml/encryption"/>
-<pathentry excluding="impl/" kind="src" path="saml/security"/>
-<pathentry kind="src" path="saml/security/impl"/>
 <pathentry kind="src" path="saml/signature"/>
 <pathentry kind="src" path="saml/util"/>
 <pathentry kind="src" path="samltest/signature"/>

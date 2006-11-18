@@ -61,7 +61,7 @@ namespace opensaml {
         SecurityPolicy(
             const saml2md::MetadataProvider* metadataProvider=NULL,
             const xmltooling::QName* role=NULL,
-            const TrustEngine* trustEngine=NULL
+            const xmltooling::TrustEngine* trustEngine=NULL
             ) : m_issuer(NULL), m_issuerRole(NULL), m_matchingPolicy(NULL), m_metadata(metadataProvider),
                 m_role(role ? *role : xmltooling::QName()), m_trust(trustEngine) {
         }
@@ -79,7 +79,7 @@ namespace opensaml {
             const std::vector<const SecurityPolicyRule*>& rules,
             const saml2md::MetadataProvider* metadataProvider=NULL,
             const xmltooling::QName* role=NULL,
-            const TrustEngine* trustEngine=NULL
+            const xmltooling::TrustEngine* trustEngine=NULL
             ) : m_issuer(NULL), m_issuerRole(NULL), m_matchingPolicy(NULL), m_rules(rules), m_metadata(metadataProvider),
                 m_role(role ? *role : xmltooling::QName()), m_trust(trustEngine) {
         }
@@ -109,7 +109,7 @@ namespace opensaml {
          * 
          * @return the supplied TrustEngine or NULL
          */
-        const TrustEngine* getTrustEngine() const {
+        const xmltooling::TrustEngine* getTrustEngine() const {
             return m_trust;
         }
 
@@ -146,7 +146,7 @@ namespace opensaml {
          * 
          * @param trust a TrustEngine or NULL
          */
-        void setTrustEngine(const TrustEngine* trust) {
+        void setTrustEngine(const xmltooling::TrustEngine* trust) {
             m_trust = trust;
         }
 
@@ -250,7 +250,7 @@ namespace opensaml {
         std::vector<const SecurityPolicyRule*> m_rules;
         const saml2md::MetadataProvider* m_metadata;
         xmltooling::QName m_role;
-        const TrustEngine* m_trust;
+        const xmltooling::TrustEngine* m_trust;
     };
 
 };

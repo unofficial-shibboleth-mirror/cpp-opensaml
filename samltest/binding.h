@@ -22,10 +22,11 @@
 #include <saml/binding/MessageDecoder.h>
 #include <saml/binding/MessageEncoder.h>
 #include <saml/binding/URLEncoder.h>
+#include <saml/saml2/metadata/Metadata.h>
 #include <saml/saml2/metadata/MetadataProvider.h>
-#include <saml/security/TrustEngine.h>
+#include <xmltooling/security/TrustEngine.h>
 
-using namespace saml2md;
+using namespace opensaml::saml2md;
 using namespace xmlsignature;
 
 class SAMLBindingBaseTestCase : public HTTPRequest, public HTTPResponse
@@ -33,7 +34,7 @@ class SAMLBindingBaseTestCase : public HTTPRequest, public HTTPResponse
 protected:
     CredentialResolver* m_creds; 
     MetadataProvider* m_metadata;
-    opensaml::TrustEngine* m_trust;
+    TrustEngine* m_trust;
     map<string,string> m_fields;
     map<string,string> m_headers;
     string m_method,m_url,m_query;
@@ -75,7 +76,7 @@ public:
                 FILESYSTEM_CREDENTIAL_RESOLVER,doc2->getDocumentElement()
                 );
                 
-            m_trust = SAMLConfig::getConfig().TrustEngineManager.newPlugin(EXPLICIT_KEY_SAMLTRUSTENGINE, NULL);
+            m_trust = XMLToolingConfig::getConfig().TrustEngineManager.newPlugin(EXPLICIT_KEY_TRUSTENGINE, NULL);
 
             m_rules.push_back(SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(MESSAGEFLOW_POLICY_RULE,NULL));
             m_rules.push_back(SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(SIMPLESIGNING_POLICY_RULE,NULL));

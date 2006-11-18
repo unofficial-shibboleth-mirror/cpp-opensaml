@@ -16,8 +16,9 @@
 
 #include "internal.h"
 #include <saml/SAMLConfig.h>
-#include <saml/security/AbstractPKIXTrustEngine.h>
+#include <saml/saml2/metadata/Metadata.h>
 #include <saml/saml2/metadata/MetadataProvider.h>
+#include <xmltooling/security/AbstractPKIXTrustEngine.h>
 
 using namespace opensaml::saml2;
 using namespace opensaml::saml2md;
@@ -70,7 +71,8 @@ namespace {
             }
         };
     
-        PKIXValidationInfoIterator* getPKIXValidationInfoIterator(const RoleDescriptor& role) const {
+        PKIXValidationInfoIterator* getPKIXValidationInfoIterator(const KeyInfoSource& keyInfoSource) const {
+            dynamic_cast<const RoleDescriptor&>(keyInfoSource);
             return new SampleIterator();
         }
     };
@@ -110,7 +112,7 @@ public:
         }
         
         // Build trust engine.
-        auto_ptr<opensaml::TrustEngine> trustEngine(new SampleTrustEngine());
+        auto_ptr<TrustEngine> trustEngine(new SampleTrustEngine());
         
         // Get signed assertion.
         config = data_path + "signature/SAML2Assertion.xml";

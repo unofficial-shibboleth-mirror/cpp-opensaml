@@ -25,10 +25,9 @@
 
 #include <saml/binding/GenericRequest.h>
 #include <xmltooling/XMLObject.h>
+#include <xmltooling/security/TrustEngine.h>
 
 namespace opensaml {
-    class SAML_API TrustEngine;
-    
     namespace saml2 {
         class SAML_API Issuer;
     };
@@ -71,7 +70,7 @@ namespace opensaml {
             const xmltooling::XMLObject& message,
             const saml2md::MetadataProvider* metadataProvider,
             const xmltooling::QName* role,
-            const TrustEngine* trustEngine
+            const xmltooling::TrustEngine* trustEngine
             ) const=0;
     };
 

@@ -51,13 +51,6 @@ samlbindinclude_HEADERS = \
 encinclude_HEADERS = \
 	encryption/EncryptedKeyResolver.h
 
-secinclude_HEADERS = \
-	security/AbstractPKIXTrustEngine.h \
-	security/MetadataKeyInfoIterator.h \
-	security/ChainingTrustEngine.h \
-	security/TrustEngine.h \
-	security/X509TrustEngine.h
-
 siginclude_HEADERS = \
 	signature/ContentReference.h \
 	signature/SignableObject.h \
@@ -102,6 +95,7 @@ saml2mdinclude_HEADERS = \
 	saml2/metadata/ChainingMetadataProvider.h \
 	saml2/metadata/Metadata.h \
 	saml2/metadata/MetadataFilter.h \
+	saml2/metadata/MetadataKeyInfoIterator.h \
 	saml2/metadata/MetadataProvider.h \
 	saml2/metadata/ObservableMetadataProvider.h
 
@@ -158,10 +152,6 @@ libsaml_la_SOURCES = \
 	saml2/binding/impl/SAML2SOAPDecoder.cpp \
 	saml2/binding/impl/SAML2SOAPEncoder.cpp \
 	encryption/EncryptedKeyResolver.cpp \
-	security/impl/TrustEngine.cpp \
-	security/impl/AbstractPKIXTrustEngine.cpp \
-	security/impl/ChainingTrustEngine.cpp \
-	security/impl/ExplicitKeyTrustEngine.cpp \
 	signature/ContentReference.cpp \
 	signature/SignatureProfileValidator.cpp \
 	util/SAMLConstants.cpp

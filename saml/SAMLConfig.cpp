@@ -34,7 +34,6 @@
 #include "saml2/core/Protocols.h"
 #include "saml2/metadata/Metadata.h"
 #include "saml2/metadata/MetadataProvider.h"
-#include "security/TrustEngine.h"
 #include "util/SAMLConstants.h"
 
 #include <xmltooling/XMLToolingConfig.h>
@@ -122,7 +121,6 @@ bool SAMLInternalConfig::init(bool initXMLTooling)
     saml2md::registerMetadataProviders();
     saml2md::registerMetadataFilters();
     registerSAMLArtifacts();
-    registerTrustEngines();
     registerMessageEncoders();
     registerMessageDecoders();
     registerSecurityPolicyRules();
@@ -142,7 +140,6 @@ void SAMLInternalConfig::term(bool termXMLTooling)
 
     MessageDecoderManager.deregisterFactories();
     MessageEncoderManager.deregisterFactories();
-    TrustEngineManager.deregisterFactories();
     SecurityPolicyRuleManager.deregisterFactories();
     SAMLArtifactManager.deregisterFactories();
     MetadataFilterManager.deregisterFactories();

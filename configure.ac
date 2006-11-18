@@ -57,29 +57,6 @@ AC_CHECK_FUNCS([strchr strdup strstr])
 
 AC_CHECK_SIZEOF(time_t)
 
-# libcurl settings
-AC_PATH_PROG(CURL_CONFIG,curl-config)
-AC_ARG_WITH(curl,
-    AC_HELP_STRING([--with-curl=PATH], [where curl-config is installed]),
-    [
-    CURL_CONFIG="${with_curl}"
-    if ! test -f "${CURL_CONFIG}" ; then
-    	CURL_CONFIG="${with_curl}/bin/curl-config"
-    fi
-    ])
-if test -f "${CURL_CONFIG}" ; then
-    LDFLAGS="`${CURL_CONFIG} --libs` $LDFLAGS"
-    CPPFLAGS="`${CURL_CONFIG} --cflags` $CPPFLAGS"
-else
-    AC_MSG_ERROR([curl-config not found, may need to use --with-curl option])
-fi
-AC_CHECK_HEADER([curl/curl.h],,AC_MSG_ERROR([unable to find libcurl header files]))
-AC_CHECK_LIB([curl],[curl_global_init],,AC_MSG_ERROR([unable to link with libcurl]))
-AC_MSG_CHECKING([for CURLOPT_SSL_CTX_FUNCTION in curl.h])
-AC_EGREP_HEADER([CURLOPT_SSL_CTX_FUNCTION], [curl/curl.h],
-		[AC_MSG_RESULT(yes)],
-		[AC_MSG_ERROR([need libcurl that supports CURLOPT_SSL_CTX_FUNCTION])])
-
 # zlib settings
 AC_ARG_WITH(zlib,
 	AC_HELP_STRING([--with-zlib=PATH], [where zlib is installed]),
