@@ -36,7 +36,7 @@ namespace opensaml {
             SAML1ArtifactDecoder(const DOMElement* e);
             virtual ~SAML1ArtifactDecoder() {}
             
-            Response* decode(
+            xmltooling::XMLObject* decode(
                 std::string& relayState,
                 const GenericRequest& genericRequest,
                 SecurityPolicy& policy

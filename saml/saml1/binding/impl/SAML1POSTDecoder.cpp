@@ -52,7 +52,7 @@ namespace opensaml {
 
 SAML1POSTDecoder::SAML1POSTDecoder(const DOMElement* e) {}
 
-Response* SAML1POSTDecoder::decode(
+XMLObject* SAML1POSTDecoder::decode(
     string& relayState,
     const GenericRequest& genericRequest,
     SecurityPolicy& policy

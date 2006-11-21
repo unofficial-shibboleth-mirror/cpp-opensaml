@@ -50,7 +50,7 @@ namespace opensaml {
 
 SAML1ArtifactDecoder::SAML1ArtifactDecoder(const DOMElement* e) {}
 
-Response* SAML1ArtifactDecoder::decode(
+XMLObject* SAML1ArtifactDecoder::decode(
     string& relayState,
     const GenericRequest& genericRequest,
     SecurityPolicy& policy

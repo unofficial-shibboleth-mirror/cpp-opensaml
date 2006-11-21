@@ -36,7 +36,7 @@ namespace opensaml {
             SAML2SOAPDecoder(const DOMElement* e);
             virtual ~SAML2SOAPDecoder() {}
             
-            RequestAbstractType* decode(
+            xmltooling::XMLObject* decode(
                 std::string& relayState,
                 const GenericRequest& genericRequest,
                 SecurityPolicy& policy

@@ -434,7 +434,11 @@ namespace opensaml {
         public:
             virtual ~localizedNameTypeBuilder() {}
             /** Builder that allows element/type override. */
+#ifdef HAVE_COVARIANT_RETURNS
             virtual localizedNameType* buildObject(
+#else
+            virtual xmltooling::XMLObject* buildObject(
+#endif
                 const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=NULL, const xmltooling::QName* schemaType=NULL
                 ) const;
         
@@ -445,7 +449,11 @@ namespace opensaml {
                     );
                 if (b) {
                     xmltooling::QName schemaType(samlconstants::SAML20MD_NS,localizedNameType::TYPE_NAME,samlconstants::SAML20MD_PREFIX);
+#ifdef HAVE_COVARIANT_RETURNS
                     return b->buildObject(nsURI, localName, prefix, &schemaType);
+#else
+                    return dynamic_cast<localizedNameType*>(b->buildObject(nsURI, localName, prefix, &schemaType));
+#endif
                 }
                 throw xmltooling::XMLObjectException("Unable to obtain typed builder for localizedNameType.");
             }
@@ -460,7 +468,11 @@ namespace opensaml {
         public:
             virtual ~localizedURITypeBuilder() {}
             /** Builder that allows element/type override. */
+#ifdef HAVE_COVARIANT_RETURNS
             virtual localizedURIType* buildObject(
+#else
+            virtual xmltooling::XMLObject* buildObject(
+#endif
                 const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=NULL, const xmltooling::QName* schemaType=NULL
                 ) const;
         
@@ -471,7 +483,11 @@ namespace opensaml {
                     );
                 if (b) {
                     xmltooling::QName schemaType(samlconstants::SAML20MD_NS,localizedURIType::TYPE_NAME,samlconstants::SAML20MD_PREFIX);
+#ifdef HAVE_COVARIANT_RETURNS
                     return b->buildObject(nsURI, localName, prefix, &schemaType);
+#else
+                    return dynamic_cast<localizedURIType*>(b->buildObject(nsURI, localName, prefix, &schemaType));
+#endif
                 }
                 throw xmltooling::XMLObjectException("Unable to obtain typed builder for localizedURIType.");
             }
@@ -486,7 +502,11 @@ namespace opensaml {
         public:
             virtual ~EndpointTypeBuilder() {}
             /** Builder that allows element/type override. */
+#ifdef HAVE_COVARIANT_RETURNS
             virtual EndpointType* buildObject(
+#else
+            virtual xmltooling::XMLObject* buildObject(
+#endif
                 const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=NULL, const xmltooling::QName* schemaType=NULL
                 ) const;
         
@@ -497,7 +517,11 @@ namespace opensaml {
                     );
                 if (b) {
                     xmltooling::QName schemaType(samlconstants::SAML20MD_NS,EndpointType::TYPE_NAME,samlconstants::SAML20MD_PREFIX);
+#ifdef HAVE_COVARIANT_RETURNS
                     return b->buildObject(nsURI, localName, prefix, &schemaType);
+#else
+                    return dynamic_cast<EndpointType*>(b->buildObject(nsURI, localName, prefix, &schemaType));
+#endif
                 }
                 throw xmltooling::XMLObjectException("Unable to obtain typed builder for EndpointType.");
             }
@@ -512,7 +536,11 @@ namespace opensaml {
         public:
             virtual ~IndexedEndpointTypeBuilder() {}
             /** Builder that allows element/type override. */
+#ifdef HAVE_COVARIANT_RETURNS
             virtual IndexedEndpointType* buildObject(
+#else
+            virtual xmltooling::XMLObject* buildObject(
+#endif
                 const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=NULL, const xmltooling::QName* schemaType=NULL
                 ) const;
         
@@ -523,7 +551,11 @@ namespace opensaml {
                     );
                 if (b) {
                     xmltooling::QName schemaType(samlconstants::SAML20MD_NS,IndexedEndpointType::TYPE_NAME,samlconstants::SAML20MD_PREFIX);
+#ifdef HAVE_COVARIANT_RETURNS
                     return b->buildObject(nsURI, localName, prefix, &schemaType);
+#else
+                    return dynamic_cast<IndexedEndpointType*>(b->buildObject(nsURI, localName, prefix, &schemaType));
+#endif
                 }
                 throw xmltooling::XMLObjectException("Unable to obtain typed builder for IndexedEndpointType.");
             }
@@ -539,7 +571,11 @@ namespace opensaml {
         public:
             virtual ~AuthnQueryDescriptorTypeBuilder() {}
             /** Default builder. */
+#ifdef HAVE_COVARIANT_RETURNS
             virtual AuthnQueryDescriptorType* buildObject() const {
+#else
+            virtual xmltooling::XMLObject* buildObject() const {
+#endif
                 xmltooling::QName schemaType(
                     samlconstants::SAML20_NS,AuthnQueryDescriptorType::TYPE_NAME,samlconstants::SAML20MD_QUERY_EXT_PREFIX
                     );
@@ -548,7 +584,11 @@ namespace opensaml {
                     );
             }
             /** Builder that allows element/type override. */
+#ifdef HAVE_COVARIANT_RETURNS
             virtual AuthnQueryDescriptorType* buildObject(
+#else
+            virtual xmltooling::XMLObject* buildObject(
+#endif
                 const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=NULL, const xmltooling::QName* schemaType=NULL
                 ) const;
         
@@ -557,8 +597,13 @@ namespace opensaml {
                 const AuthnQueryDescriptorTypeBuilder* b = dynamic_cast<const AuthnQueryDescriptorTypeBuilder*>(
                     XMLObjectBuilder::getBuilder(xmltooling::QName(samlconstants::SAML20MD_QUERY_EXT_NS,AuthnQueryDescriptorType::TYPE_NAME))
                     );
-                if (b)
+                if (b) {
+#ifdef HAVE_COVARIANT_RETURNS
                     return b->buildObject();
+#else
+                    return dynamic_cast<AuthnQueryDescriptorType*>(b->buildObject());
+#endif
+                }
                 throw xmltooling::XMLObjectException("Unable to obtain typed builder for AuthnQueryDescriptorType.");
             }
         };
@@ -573,7 +618,11 @@ namespace opensaml {
         public:
             virtual ~AttributeQueryDescriptorTypeBuilder() {}
             /** Default builder. */
+#ifdef HAVE_COVARIANT_RETURNS
             virtual AttributeQueryDescriptorType* buildObject() const {
+#else
+            virtual xmltooling::XMLObject* buildObject() const {
+#endif
                 xmltooling::QName schemaType(
                     samlconstants::SAML20_NS,AttributeQueryDescriptorType::TYPE_NAME,samlconstants::SAML20MD_QUERY_EXT_PREFIX
                     );
@@ -582,7 +631,11 @@ namespace opensaml {
                     );
             }
             /** Builder that allows element/type override. */
+#ifdef HAVE_COVARIANT_RETURNS
             virtual AttributeQueryDescriptorType* buildObject(
+#else
+            virtual xmltooling::XMLObject* buildObject(
+#endif
                 const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=NULL, const xmltooling::QName* schemaType=NULL
                 ) const;
         
@@ -591,8 +644,13 @@ namespace opensaml {
                 const AttributeQueryDescriptorTypeBuilder* b = dynamic_cast<const AttributeQueryDescriptorTypeBuilder*>(
                     XMLObjectBuilder::getBuilder(xmltooling::QName(samlconstants::SAML20MD_QUERY_EXT_NS,AttributeQueryDescriptorType::TYPE_NAME))
                     );
-                if (b)
+                if (b) {
+#ifdef HAVE_COVARIANT_RETURNS
                     return b->buildObject();
+#else
+                    return dynamic_cast<AttributeQueryDescriptorType*>(b->buildObject());
+#endif
+                }
                 throw xmltooling::XMLObjectException("Unable to obtain typed builder for AttributeQueryDescriptorType.");
             }
         };
@@ -607,7 +665,11 @@ namespace opensaml {
         public:
             virtual ~AuthzDecisionQueryDescriptorTypeBuilder() {}
             /** Default builder. */
+#ifdef HAVE_COVARIANT_RETURNS
             virtual AuthzDecisionQueryDescriptorType* buildObject() const {
+#else
+            virtual xmltooling::XMLObject* buildObject() const {
+#endif
                 xmltooling::QName schemaType(
                     samlconstants::SAML20_NS,AuthzDecisionQueryDescriptorType::TYPE_NAME,samlconstants::SAML20MD_QUERY_EXT_PREFIX
                     );
@@ -616,7 +678,11 @@ namespace opensaml {
                     );
             }
             /** Builder that allows element/type override. */
+#ifdef HAVE_COVARIANT_RETURNS
             virtual AuthzDecisionQueryDescriptorType* buildObject(
+#else
+            virtual xmltooling::XMLObject* buildObject(
+#endif
                 const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=NULL, const xmltooling::QName* schemaType=NULL
                 ) const;
         
@@ -625,8 +691,13 @@ namespace opensaml {
                 const AuthzDecisionQueryDescriptorTypeBuilder* b = dynamic_cast<const AuthzDecisionQueryDescriptorTypeBuilder*>(
                     XMLObjectBuilder::getBuilder(xmltooling::QName(samlconstants::SAML20MD_QUERY_EXT_NS,AuthzDecisionQueryDescriptorType::TYPE_NAME))
                     );
-                if (b)
+                if (b) {
+#ifdef HAVE_COVARIANT_RETURNS
                     return b->buildObject();
+#else
+                    return dynamic_cast<AuthzDecisionQueryDescriptorType*>(b->buildObject());
+#endif
+                }
                 throw xmltooling::XMLObjectException("Unable to obtain typed builder for AuthzDecisionQueryDescriptorType.");
             }
         };

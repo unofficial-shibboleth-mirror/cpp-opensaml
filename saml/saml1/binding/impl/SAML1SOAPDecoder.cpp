@@ -47,7 +47,7 @@ namespace opensaml {
 
 SAML1SOAPDecoder::SAML1SOAPDecoder(const DOMElement* e) {}
 
-Request* SAML1SOAPDecoder::decode(
+XMLObject* SAML1SOAPDecoder::decode(
     string& relayState,
     const GenericRequest& genericRequest,
     SecurityPolicy& policy

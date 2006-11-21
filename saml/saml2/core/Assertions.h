@@ -380,7 +380,11 @@ namespace opensaml {
         public:
             virtual ~NameIDTypeBuilder() {}
             /** Builder that allows element/type override. */
+#ifdef HAVE_COVARIANT_RETURNS
             virtual NameIDType* buildObject(
+#else
+            virtual xmltooling::XMLObject* buildObject(
+#endif
                 const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=NULL, const xmltooling::QName* schemaType=NULL
                 ) const;
         
@@ -391,7 +395,11 @@ namespace opensaml {
                     );
                 if (b) {
                     xmltooling::QName schemaType(samlconstants::SAML20_NS,NameIDType::TYPE_NAME,samlconstants::SAML20_PREFIX);
+#ifdef HAVE_COVARIANT_RETURNS
                     return b->buildObject(nsURI, localName, prefix, &schemaType);
+#else
+                    return dynamic_cast<NameIDType*>(b->buildObject(nsURI, localName, prefix, &schemaType));
+#endif
                 }
                 throw xmltooling::XMLObjectException("Unable to obtain typed builder for NameIDType.");
             }
@@ -407,7 +415,11 @@ namespace opensaml {
         public:
             virtual ~KeyInfoConfirmationDataTypeBuilder() {}
             /** Default builder. */
+#ifdef HAVE_COVARIANT_RETURNS
             virtual KeyInfoConfirmationDataType* buildObject() const {
+#else
+            virtual xmltooling::XMLObject* buildObject() const {
+#endif
                 xmltooling::QName schemaType(
                     samlconstants::SAML20_NS,KeyInfoConfirmationDataType::TYPE_NAME,samlconstants::SAML20_PREFIX
                     );
@@ -416,7 +428,11 @@ namespace opensaml {
                     );
             }
             /** Builder that allows element/type override. */
+#ifdef HAVE_COVARIANT_RETURNS
             virtual KeyInfoConfirmationDataType* buildObject(
+#else
+            virtual xmltooling::XMLObject* buildObject(
+#endif
                 const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=NULL, const xmltooling::QName* schemaType=NULL
                 ) const;
         
@@ -426,7 +442,11 @@ namespace opensaml {
                     XMLObjectBuilder::getBuilder(xmltooling::QName(samlconstants::SAML20_NS,KeyInfoConfirmationDataType::TYPE_NAME))
                     );
                 if (b)
+#ifdef HAVE_COVARIANT_RETURNS
                     return b->buildObject();
+#else
+                    return dynamic_cast<KeyInfoConfirmationDataType*>(b->buildObject());
+#endif
                 throw xmltooling::XMLObjectException("Unable to obtain typed builder for KeyInfoConfirmationDataType.");
             }
         };

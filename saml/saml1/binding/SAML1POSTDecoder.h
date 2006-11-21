@@ -36,7 +36,7 @@ namespace opensaml {
             SAML1POSTDecoder(const DOMElement* e);
             virtual ~SAML1POSTDecoder() {}
             
-            Response* decode(
+            xmltooling::XMLObject* decode(
                 std::string& relayState,
                 const GenericRequest& genericRequest,
                 SecurityPolicy& policy

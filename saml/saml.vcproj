@@ -223,14 +223,6 @@
 					</Filter>
 				</Filter>
 				<Filter
-					Name="profile"
-					>
-					<Filter
-						Name="impl"
-						>
-					</Filter>
-				</Filter>
-				<Filter
 					Name="binding"
 					>
 					<Filter
@@ -597,10 +589,6 @@
 					</File>
 				</Filter>
 				<Filter
-					Name="profile"
-					>
-				</Filter>
-				<Filter
 					Name="binding"
 					>
 					<File
@@ -688,7 +676,7 @@
 						>
 					</File>
 					<File
-						RelativePath=".\security\MetadataKeyInfoIterator.h"
+						RelativePath=".\saml2\metadata\MetadataKeyInfoIterator.h"
 						>
 					</File>
 					<File
