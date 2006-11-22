@@ -106,9 +106,8 @@ long SAML2SOAPEncoder::encode(
                 rootElement = env->marshall();
             }
             
-            string xmlbuf;
-            XMLHelper::serialize(rootElement, xmlbuf);
-            istringstream s(xmlbuf);
+            stringstream s;
+            s << *rootElement;
             log.debug("sending serialized response");
             long ret = genericResponse.sendResponse(s);
         
