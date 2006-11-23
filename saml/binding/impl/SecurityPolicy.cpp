@@ -58,12 +58,12 @@ SecurityPolicy::~SecurityPolicy()
     delete m_issuer;
 }
 
-void SecurityPolicy::evaluate(const GenericRequest& request, const XMLObject& message)
+void SecurityPolicy::evaluate(const XMLObject& message, const GenericRequest* request)
 {
     for (vector<const SecurityPolicyRule*>::const_iterator i=m_rules.begin(); i!=m_rules.end(); ++i) {
 
         // Run the rule...
-        pair<Issuer*,const RoleDescriptor*> ident = (*i)->evaluate(request,message,m_metadata,&m_role,m_trust);
+        pair<Issuer*,const RoleDescriptor*> ident = (*i)->evaluate(message,request,m_metadata,&m_role,m_trust);
 
         // Make sure returned issuer doesn't conflict.
          

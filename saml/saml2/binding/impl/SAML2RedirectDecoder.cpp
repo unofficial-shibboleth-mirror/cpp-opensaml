@@ -143,7 +143,7 @@ XMLObject* SAML2RedirectDecoder::decode(
         }
 
         // Run through the policy.
-        policy.evaluate(genericRequest, *root);
+        policy.evaluate(*root, &genericRequest);
     }
     catch (XMLToolingException& ex) {
         // This is just to maximize the likelihood of attaching a source to the message for support purposes.
@@ -170,6 +170,5 @@ XMLObject* SAML2RedirectDecoder::decode(
         annotateException(&ex,provider);  // throws it
     }
 
-    xmlObject.release();
-    return root;
+    return xmlObject.release();
 }

@@ -48,8 +48,8 @@ namespace opensaml {
 };
 
 pair<saml2::Issuer*,const RoleDescriptor*> XMLSigningRule::evaluate(
-    const GenericRequest& request,
     const XMLObject& message,
+    const GenericRequest* request,
     const MetadataProvider* metadataProvider,
     const QName* role,
     const TrustEngine* trustEngine

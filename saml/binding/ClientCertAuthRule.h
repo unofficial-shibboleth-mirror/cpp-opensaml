@@ -34,8 +34,8 @@ namespace opensaml {
         virtual ~ClientCertAuthRule() {}
         
         std::pair<saml2::Issuer*,const saml2md::RoleDescriptor*> evaluate(
-            const GenericRequest& request,
             const xmltooling::XMLObject& message,
+            const GenericRequest* request,
             const saml2md::MetadataProvider* metadataProvider,
             const xmltooling::QName* role,
             const xmltooling::TrustEngine* trustEngine

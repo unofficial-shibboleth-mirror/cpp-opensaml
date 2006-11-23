@@ -45,6 +45,7 @@ samlbindinclude_HEADERS = \
 	binding/SecurityPolicy.h \
 	binding/SecurityPolicyRule.h \
 	binding/SimpleSigningRule.h \
+	binding/SOAPClient.h \
 	binding/URLEncoder.h \
 	binding/XMLSigningRule.h
 
@@ -112,6 +113,7 @@ libsaml_la_SOURCES = \
 	binding/impl/SAMLArtifact.cpp \
 	binding/impl/SecurityPolicy.cpp \
 	binding/impl/SimpleSigningRule.cpp \
+	binding/impl/SOAPClient.cpp \
 	binding/impl/URLEncoder.cpp \
 	binding/impl/XMLSigningRule.cpp \
 	saml1/core/impl/AssertionsImpl.cpp \

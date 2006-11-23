@@ -114,7 +114,7 @@ XMLObject* SAML1POSTDecoder::decode(
         }
         
         // Run through the policy.
-        policy.evaluate(genericRequest, *response);
+        policy.evaluate(*response, &genericRequest);
     }
     catch (XMLToolingException& ex) {
         // This is just to maximize the likelihood of attaching a source to the message for support purposes.

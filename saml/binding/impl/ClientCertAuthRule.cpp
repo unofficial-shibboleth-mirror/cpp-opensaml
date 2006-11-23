@@ -45,8 +45,8 @@ namespace opensaml {
 };
 
 pair<saml2::Issuer*,const RoleDescriptor*> ClientCertAuthRule::evaluate(
-    const GenericRequest& request,
     const XMLObject& message,
+    const GenericRequest* request,
     const MetadataProvider* metadataProvider,
     const QName* role,
     const TrustEngine* trustEngine
@@ -55,7 +55,11 @@ pair<saml2::Issuer*,const RoleDescriptor*> ClientCertAuthRule::evaluate(
     Category& log=Category::getInstance(SAML_LOGCAT".SecurityPolicyRule.ClientCertAuth");
     log.debug("evaluating client certificate authentication policy");
     
-    pair<saml2::Issuer*,const RoleDescriptor*> ret = pair<saml2::Issuer*,const RoleDescriptor*>(NULL,NULL);  
+    pair<saml2::Issuer*,const RoleDescriptor*> ret = pair<saml2::Issuer*,const RoleDescriptor*>(NULL,NULL);
+    if (!request) {
+        log.debug("ignoring message, no protocol request available");
+        return ret;
+    }  
     
     const X509TrustEngine* x509trust;
     if (!metadataProvider || !role || !(x509trust=dynamic_cast<const X509TrustEngine*>(trustEngine))) {
@@ -63,7 +67,7 @@ pair<saml2::Issuer*,const RoleDescriptor*> ClientCertAuthRule::evaluate(
         return ret;
     }
     
-    const std::vector<XSECCryptoX509*>& chain = request.getClientCertificates();
+    const std::vector<XSECCryptoX509*>& chain = request->getClientCertificates();
     if (chain.empty()) {
         log.debug("ignoring message, no client certificates in request");
         return ret;

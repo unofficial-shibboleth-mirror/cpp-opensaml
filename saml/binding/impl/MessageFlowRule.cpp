@@ -59,8 +59,8 @@ MessageFlowRule::MessageFlowRule(const DOMElement* e)
 }
 
 pair<saml2::Issuer*,const saml2md::RoleDescriptor*> MessageFlowRule::evaluate(
-    const GenericRequest& request,
     const XMLObject& message,
+    const GenericRequest* request,
     const saml2md::MetadataProvider* metadataProvider,
     const QName* role,
     const TrustEngine* trustEngine

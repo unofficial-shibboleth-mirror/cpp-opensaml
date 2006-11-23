@@ -68,8 +68,8 @@ namespace opensaml {
 
 
 pair<saml2::Issuer*,const RoleDescriptor*> SimpleSigningRule::evaluate(
-    const GenericRequest& request,
     const XMLObject& message,
+    const GenericRequest* request,
     const MetadataProvider* metadataProvider,
     const QName* role,
     const TrustEngine* trustEngine
@@ -80,18 +80,24 @@ pair<saml2::Issuer*,const RoleDescriptor*> SimpleSigningRule::evaluate(
     
     pair<saml2::Issuer*,const RoleDescriptor*> ret = pair<saml2::Issuer*,const RoleDescriptor*>(NULL,NULL);  
     
+    const HTTPRequest* httpRequest = dynamic_cast<const HTTPRequest*>(request);
+    if (!request || !httpRequest) {
+        log.debug("ignoring message, no HTTP protocol request available");
+        return ret;
+    }
+
     if (!metadataProvider || !role || !trustEngine) {
         log.debug("ignoring message, no metadata supplied");
         return ret;
     }
     
-    const char* signature = request.getParameter("Signature");
+    const char* signature = request->getParameter("Signature");
     if (!signature) {
         log.debug("ignoring unsigned message");
         return ret;
     }
     
-    const char* sigAlgorithm = request.getParameter("SigAlg");
+    const char* sigAlgorithm = request->getParameter("SigAlg");
     if (!sigAlgorithm) {
         log.error("SigAlg parameter not found, no way to verify the signature");
         return ret;
@@ -125,12 +131,11 @@ pair<saml2::Issuer*,const RoleDescriptor*> SimpleSigningRule::evaluate(
 
         string input;
         const char* pch;
-        const HTTPRequest& httpRequest = dynamic_cast<const HTTPRequest&>(request);
-        if (!strcmp(httpRequest.getMethod(), "GET")) {
+        if (!strcmp(httpRequest->getMethod(), "GET")) {
             // We have to construct a string containing the signature input by accessing the
             // request directly. We can't use the decoded parameters because we need the raw
             // data and URL-encoding isn't canonical.
-            pch = httpRequest.getQueryString();
+            pch = httpRequest->getQueryString();
             if (!appendParameter(input, pch, "SAMLRequest="))
                 appendParameter(input, pch, "SAMLResponse=");
             appendParameter(input, pch, "RelayState=");
@@ -139,14 +144,14 @@ pair<saml2::Issuer*,const RoleDescriptor*> SimpleSigningRule::evaluate(
         else {
             // With POST, the input string is concatenated from the decoded form controls.
             // GET should be this way too, but I messed up the spec, sorry.
-            pch = httpRequest.getParameter("SAMLRequest");
+            pch = httpRequest->getParameter("SAMLRequest");
             if (pch)
                 input = string("SAMLRequest=") + pch;
             else {
-                pch = httpRequest.getParameter("SAMLResponse");
+                pch = httpRequest->getParameter("SAMLResponse");
                 input = string("SAMLResponse=") + pch;
             }
-            pch = httpRequest.getParameter("RelayState");
+            pch = httpRequest->getParameter("RelayState");
             if (pch)
                 input = input + "&RelayState=" + pch;
             input = input + "&SigAlg=" + sigAlgorithm;
@@ -154,7 +159,7 @@ pair<saml2::Issuer*,const RoleDescriptor*> SimpleSigningRule::evaluate(
 
         // Check for KeyInfo, but defensively (we might be able to run without it).
         KeyInfo* keyInfo=NULL;
-        pch = request.getParameter("KeyInfo");
+        pch = request->getParameter("KeyInfo");
         if (pch) {
             try {
                 istringstream kstrm(pch);

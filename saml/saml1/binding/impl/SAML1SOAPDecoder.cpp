@@ -91,8 +91,8 @@ XMLObject* SAML1SOAPDecoder::decode(
         Request* request = dynamic_cast<Request*>(body->getXMLObjects().front());
         if (request) {
             // Run through the policy at two layers.
-            policy.evaluate(genericRequest, *env);
-            policy.evaluate(genericRequest, *request);
+            policy.evaluate(*env, &genericRequest);
+            policy.evaluate(*request, &genericRequest);
             xmlObject.release();
             body->detach(); // frees Envelope
             request->detach();   // frees Body

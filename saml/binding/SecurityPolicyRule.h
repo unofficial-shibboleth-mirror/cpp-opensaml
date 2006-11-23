@@ -55,8 +55,8 @@ namespace opensaml {
          * Evaluates the rule against the given request and message. If an Issuer is
          * returned, the caller is responsible for freeing the Issuer object.
          * 
-         * @param request           the protocol request
          * @param message           the incoming message
+         * @param request           the protocol request
          * @param metadataProvider  locked MetadataProvider instance to authenticate the message
          * @param role              identifies the role (generally IdP or SP) of the peer who issued the message 
          * @param trustEngine       TrustEngine to authenticate the message
@@ -66,8 +66,8 @@ namespace opensaml {
          * @throws BindingException thrown if the request/message do not meet the requirements of this rule
          */
         virtual std::pair<saml2::Issuer*,const saml2md::RoleDescriptor*> evaluate(
-            const GenericRequest& request,
             const xmltooling::XMLObject& message,
+            const GenericRequest* request,
             const saml2md::MetadataProvider* metadataProvider,
             const xmltooling::QName* role,
             const xmltooling::TrustEngine* trustEngine

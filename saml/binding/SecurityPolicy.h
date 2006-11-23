@@ -151,16 +151,15 @@ namespace opensaml {
         }
 
         /**
-         * Evaluates the rule against the given request and message,
+         * Evaluates the policy against the given request and message,
          * possibly populating issuer information in the policy object.
          * 
-         * @param request           the protocol request
          * @param message           the incoming message
-         * @return the identity of the message issuer, in one or more of two forms, or NULL
+         * @param request           the protocol request
          * 
-         * @throws BindingException thrown if the request/message do not meet the requirements of this rule
+         * @throws BindingException thrown if the request/message do not meet the requirements of this policy
          */
-        void evaluate(const GenericRequest& request, const xmltooling::XMLObject& message);
+        void evaluate(const xmltooling::XMLObject& message, const GenericRequest* request=NULL);
 
         /**
          * Gets the issuer of the message as determined by the registered policies.
