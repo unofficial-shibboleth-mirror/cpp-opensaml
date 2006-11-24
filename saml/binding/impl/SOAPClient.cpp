@@ -22,12 +22,14 @@
 
 #include "internal.h"
 #include "exceptions.h"
+#include "version.h"
 #include "binding/SOAPClient.h"
 #include "saml2/metadata/Metadata.h"
 #include "saml2/metadata/MetadataProvider.h"
 
 #include <xmltooling/security/X509TrustEngine.h>
 #include <xmltooling/soap/SOAP.h>
+#include <xmltooling/soap/HTTPSOAPTransport.h>
 
 using namespace opensaml::saml2;
 using namespace opensaml::saml2md;
@@ -48,6 +50,15 @@ void SOAPClient::send(const soap11::Envelope* env, const KeyInfoSource& peer, co
 
 void SOAPClient::prepareTransport(const xmltooling::SOAPTransport& transport)
 {
+    const HTTPSOAPTransport* http = dynamic_cast<const HTTPSOAPTransport*>(&transport);
+    if (http) {
+        http->setRequestHeader("SOAPAction", "http://www.oasis-open.org/committees/security");
+        http->setRequestHeader("Shibboleth", PACKAGE_VERSION);
+        http->setRequestHeader("Xerces-C", XERCES_FULLVERSIONDOT);
+        http->setRequestHeader("XML-Security-C", XSEC_VERSION);
+        http->setRequestHeader("OpenSAML-C", OPENSAML_FULLVERSIONDOT);
+    }
+    
     const X509TrustEngine* engine = dynamic_cast<const X509TrustEngine*>(m_policy.getTrustEngine());
     if (engine) {
         const MetadataProvider* metadata = m_policy.getMetadataProvider();
