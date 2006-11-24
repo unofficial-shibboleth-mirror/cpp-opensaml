@@ -53,7 +53,6 @@ void SOAPClient::prepareTransport(const xmltooling::SOAPTransport& transport)
     const HTTPSOAPTransport* http = dynamic_cast<const HTTPSOAPTransport*>(&transport);
     if (http) {
         http->setRequestHeader("SOAPAction", "http://www.oasis-open.org/committees/security");
-        http->setRequestHeader("Shibboleth", PACKAGE_VERSION);
         http->setRequestHeader("Xerces-C", XERCES_FULLVERSIONDOT);
         http->setRequestHeader("XML-Security-C", XSEC_VERSION);
         http->setRequestHeader("OpenSAML-C", OPENSAML_FULLVERSIONDOT);
