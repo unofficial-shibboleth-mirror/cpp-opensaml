@@ -245,6 +245,10 @@
 							>
 						</File>
 						<File
+							RelativePath=".\saml1\binding\impl\SAML1SOAPClient.cpp"
+							>
+						</File>
+						<File
 							RelativePath=".\saml1\binding\impl\SAML1SOAPDecoder.cpp"
 							>
 						</File>
@@ -609,6 +613,10 @@
 					</File>
 					<File
 						RelativePath=".\saml1\binding\SAML1POSTEncoder.h"
+						>
+					</File>
+					<File
+						RelativePath=".\saml1\binding\SAML1SOAPClient.h"
 						>
 					</File>
 					<File

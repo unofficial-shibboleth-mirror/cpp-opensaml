@@ -72,7 +72,8 @@ saml1bindinclude_HEADERS = \
 	saml1/binding/SAML1POSTDecoder.h \
 	saml1/binding/SAML1POSTEncoder.h \
 	saml1/binding/SAML1SOAPDecoder.h \
-	saml1/binding/SAML1SOAPEncoder.h
+	saml1/binding/SAML1SOAPEncoder.h \
+	saml1/binding/SAML1SOAPClient.h
 
 saml2coreinclude_HEADERS = \
 	saml2/core/Assertions.h \
@@ -128,6 +129,7 @@ libsaml_la_SOURCES = \
 	saml1/binding/impl/SAML1POSTEncoder.cpp \
 	saml1/binding/impl/SAML1SOAPDecoder.cpp \
 	saml1/binding/impl/SAML1SOAPEncoder.cpp \
+	saml1/binding/impl/SAML1SOAPClient.cpp \
 	saml2/core/impl/Assertions20Impl.cpp \
 	saml2/core/impl/Assertions20SchemaValidators.cpp \
 	saml2/core/impl/Protocols20Impl.cpp \
