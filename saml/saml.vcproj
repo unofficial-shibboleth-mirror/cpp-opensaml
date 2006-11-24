@@ -433,6 +433,10 @@
 							>
 						</File>
 						<File
+							RelativePath=".\saml2\binding\impl\SAML2SOAPClient.cpp"
+							>
+						</File>
+						<File
 							RelativePath=".\saml2\binding\impl\SAML2SOAPDecoder.cpp"
 							>
 						</File>
@@ -737,6 +741,10 @@
 					</File>
 					<File
 						RelativePath=".\saml2\binding\SAML2RedirectEncoder.h"
+						>
+					</File>
+					<File
+						RelativePath=".\saml2\binding\SAML2SOAPClient.h"
 						>
 					</File>
 					<File

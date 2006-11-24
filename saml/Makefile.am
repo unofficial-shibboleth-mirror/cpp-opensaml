@@ -90,8 +90,9 @@ saml2bindinclude_HEADERS = \
 	saml2/binding/SAML2RedirectDecoder.h \
 	saml2/binding/SAML2RedirectEncoder.h \
 	saml2/binding/SAML2SOAPDecoder.h \
-	saml2/binding/SAML2SOAPEncoder.h
-
+	saml2/binding/SAML2SOAPEncoder.h \
+	saml2/binding/SAML2SOAPClient.h
+	
 saml2mdinclude_HEADERS = \
 	saml2/metadata/AbstractMetadataProvider.h \
 	saml2/metadata/ChainingMetadataProvider.h \
@@ -155,6 +156,7 @@ libsaml_la_SOURCES = \
 	saml2/binding/impl/SAML2RedirectEncoder.cpp \
 	saml2/binding/impl/SAML2SOAPDecoder.cpp \
 	saml2/binding/impl/SAML2SOAPEncoder.cpp \
+	saml2/binding/impl/SAML2SOAPClient.cpp \
 	encryption/EncryptedKeyResolver.cpp \
 	signature/ContentReference.cpp \
 	signature/SignatureProfileValidator.cpp \
