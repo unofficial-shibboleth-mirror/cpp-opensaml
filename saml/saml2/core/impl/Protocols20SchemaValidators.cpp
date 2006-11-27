@@ -85,7 +85,7 @@ namespace opensaml {
         BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,Extensions);
             if (!ptr->hasChildren())
                 throw ValidationException("Extensions must have at least one child element.");
-            const list<XMLObject*>& anys=ptr->getXMLObjects();
+            const vector<XMLObject*>& anys=ptr->getUnknownXMLObjects();
             for_each(anys.begin(),anys.end(),checkWildcardNS());
         END_XMLOBJECTVALIDATOR;
 

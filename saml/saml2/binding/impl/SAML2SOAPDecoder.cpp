@@ -88,7 +88,7 @@ XMLObject* SAML2SOAPDecoder::decode(
     
     Body* body = env->getBody();
     if (body && body->hasChildren()) {
-        RequestAbstractType* request = dynamic_cast<RequestAbstractType*>(body->getXMLObjects().front());
+        RequestAbstractType* request = dynamic_cast<RequestAbstractType*>(body->getUnknownXMLObjects().front());
         if (request) {
             // Run through the policy at two layers.
             policy.evaluate(*env, &genericRequest);

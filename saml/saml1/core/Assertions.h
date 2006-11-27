@@ -26,7 +26,6 @@
 #include <saml/RootObject.h>
 #include <saml/util/SAMLConstants.h>
 
-#include <xmltooling/AttributeExtensibleXMLObject.h>
 #include <xmltooling/ElementProxy.h>
 #include <xmltooling/XMLObjectBuilder.h>
 #include <xmltooling/signature/KeyInfo.h>
@@ -91,7 +90,7 @@ namespace opensaml {
             static const XMLCh WIN_DOMAIN_QUALIFIED[];
         END_XMLOBJECT;
 
-        BEGIN_XMLOBJECT2(SAML_API,SubjectConfirmationData,xmltooling::ElementProxy,xmltooling::AttributeExtensibleXMLObject,SAML 1.x SubjectConfirmationData element);
+        BEGIN_XMLOBJECT(SAML_API,SubjectConfirmationData,xmltooling::ElementProxy,SAML 1.x SubjectConfirmationData element);
         END_XMLOBJECT;
         
         BEGIN_XMLOBJECT(SAML_API,SubjectConfirmation,xmltooling::XMLObject,SAML 1.x SubjectConfirmation element);
@@ -200,7 +199,7 @@ namespace opensaml {
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
 
-        BEGIN_XMLOBJECT2(SAML_API,AttributeValue,xmltooling::ElementProxy,xmltooling::AttributeExtensibleXMLObject,SAML 1.x AttributeValue element);
+        BEGIN_XMLOBJECT(SAML_API,AttributeValue,xmltooling::ElementProxy,SAML 1.x AttributeValue element);
         END_XMLOBJECT;
 
         BEGIN_XMLOBJECT(SAML_API,AttributeStatement,SubjectStatement,SAML 1.x AttributeStatement element);
@@ -209,10 +208,9 @@ namespace opensaml {
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
 
-        BEGIN_XMLOBJECT(SAML_API,Advice,xmltooling::XMLObject,SAML 1.x Advice element);
+        BEGIN_XMLOBJECT(SAML_API,Advice,xmltooling::ElementExtensibleXMLObject,SAML 1.x Advice element);
             DECL_TYPED_CHILDREN(AssertionIDReference);
             DECL_TYPED_CHILDREN(Assertion);
-            DECL_XMLOBJECT_CHILDREN(Other);
             /** AdviceType local name */
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;

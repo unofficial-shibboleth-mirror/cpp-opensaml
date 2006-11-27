@@ -26,8 +26,6 @@
 #include <saml/RootObject.h>
 #include <saml/util/SAMLConstants.h>
 
-#include <xmltooling/AttributeExtensibleXMLObject.h>
-#include <xmltooling/ElementProxy.h>
 #include <xmltooling/XMLObjectBuilder.h>
 #include <xmltooling/encryption/Encryption.h>
 #include <xmltooling/signature/KeyResolver.h>
@@ -148,7 +146,7 @@ namespace opensaml {
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
 
-        BEGIN_XMLOBJECT2(SAML_API,SubjectConfirmationData,xmltooling::ElementProxy,xmltooling::AttributeExtensibleXMLObject,SAML 2.0 SubjectConfirmationData element);
+        BEGIN_XMLOBJECT(SAML_API,SubjectConfirmationData,xmltooling::ElementProxy,SAML 2.0 SubjectConfirmationData element);
             DECL_DATETIME_ATTRIB(NotBefore,NOTBEFORE);
             DECL_DATETIME_ATTRIB(NotOnOrAfter,NOTONORAFTER);
             DECL_STRING_ATTRIB(Recipient,RECIPIENT);
@@ -265,7 +263,7 @@ namespace opensaml {
             static const XMLCh DECISION_INDETERMINATE[];
         END_XMLOBJECT;
 
-        BEGIN_XMLOBJECT2(SAML_API,AttributeValue,xmltooling::ElementProxy,xmltooling::AttributeExtensibleXMLObject,SAML 2.0 AttributeValue element);
+        BEGIN_XMLOBJECT(SAML_API,AttributeValue,xmltooling::ElementProxy,SAML 2.0 AttributeValue element);
         END_XMLOBJECT;
 
         BEGIN_XMLOBJECT(SAML_API,Attribute,xmltooling::AttributeExtensibleXMLObject,SAML 2.0 Attribute element);
@@ -296,12 +294,11 @@ namespace opensaml {
         BEGIN_XMLOBJECT(SAML_API,EncryptedAssertion,EncryptedElementType,SAML 2.0 EncryptedAssertion element);
         END_XMLOBJECT;
 
-        BEGIN_XMLOBJECT(SAML_API,Advice,xmltooling::XMLObject,SAML 2.0 Advice element);
+        BEGIN_XMLOBJECT(SAML_API,Advice,xmltooling::ElementExtensibleXMLObject,SAML 2.0 Advice element);
             DECL_TYPED_CHILDREN(AssertionIDRef);
             DECL_TYPED_CHILDREN(AssertionURIRef);
             DECL_TYPED_CHILDREN(Assertion);
             DECL_TYPED_CHILDREN(EncryptedAssertion);
-            DECL_XMLOBJECT_CHILDREN(Other);
             /** AdviceType local name */
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;

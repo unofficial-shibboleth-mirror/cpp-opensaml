@@ -26,7 +26,6 @@
 #include "saml2/core/Assertions.h"
 
 #include <xmltooling/AbstractComplexElement.h>
-#include <xmltooling/AbstractElementProxy.h>
 #include <xmltooling/AbstractSimpleElement.h>
 #include <xmltooling/encryption/Decrypter.h>
 #include <xmltooling/impl/AnyElement.h>
@@ -546,11 +545,8 @@ namespace opensaml {
                 setInResponseTo(src.getInResponseTo());
                 setAddress(src.getAddress());
                 VectorOf(KeyInfo) v=getKeyInfos();
-                for (vector<KeyInfo*>::const_iterator i=src.m_KeyInfos.begin(); i!=src.m_KeyInfos.end(); i++) {
-                    if (*i) {
-                        v.push_back((*i)->cloneKeyInfo());
-                    }
-                }
+                for (vector<KeyInfo*>::const_iterator i=src.m_KeyInfos.begin(); i!=src.m_KeyInfos.end(); ++i)
+                    v.push_back((*i)->cloneKeyInfo());
             }
             
             IMPL_XMLOBJECT_CLONE(KeyInfoConfirmationDataType);
@@ -1301,7 +1297,7 @@ namespace opensaml {
                             continue;
                         }
 
-                        getOthers().push_back((*i)->clone());
+                        getUnknownXMLObjects().push_back((*i)->clone());
                     }
                 }
             }
@@ -1311,7 +1307,7 @@ namespace opensaml {
             IMPL_TYPED_CHILDREN(AssertionURIRef,m_children.end());
             IMPL_TYPED_CHILDREN(Assertion,m_children.end());
             IMPL_TYPED_CHILDREN(EncryptedAssertion,m_children.end());
-            IMPL_XMLOBJECT_CHILDREN(Other,m_children.end());
+            IMPL_XMLOBJECT_CHILDREN(UnknownXMLObject,m_children.end());
     
         protected:
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
@@ -1323,7 +1319,7 @@ namespace opensaml {
                 // Unknown child.
                 const XMLCh* nsURI=root->getNamespaceURI();
                 if (!XMLString::equals(nsURI,SAML20_NS) && nsURI && *nsURI) {
-                    getOthers().push_back(childXMLObject);
+                    getUnknownXMLObjects().push_back(childXMLObject);
                     return;
                 }
                 

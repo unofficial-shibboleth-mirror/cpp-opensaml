@@ -25,7 +25,6 @@
 #include "saml1/core/Assertions.h"
 
 #include <xmltooling/AbstractComplexElement.h>
-#include <xmltooling/AbstractElementProxy.h>
 #include <xmltooling/AbstractSimpleElement.h>
 #include <xmltooling/impl/AnyElement.h>
 #include <xmltooling/io/AbstractXMLObjectMarshaller.h>
@@ -879,7 +878,7 @@ namespace opensaml {
                             continue;
                         }
     
-                        getOthers().push_back((*i)->clone());
+                        getUnknownXMLObjects().push_back((*i)->clone());
                     }
                 }
             }
@@ -887,7 +886,7 @@ namespace opensaml {
             IMPL_XMLOBJECT_CLONE(Advice);
             IMPL_TYPED_CHILDREN(AssertionIDReference,m_children.end());
             IMPL_TYPED_CHILDREN(Assertion,m_children.end());
-            IMPL_XMLOBJECT_CHILDREN(Other,m_children.end());
+            IMPL_XMLOBJECT_CHILDREN(UnknownXMLObject,m_children.end());
     
         protected:
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
@@ -897,7 +896,7 @@ namespace opensaml {
                 // Unknown child.
                 const XMLCh* nsURI=root->getNamespaceURI();
                 if (!XMLString::equals(nsURI,SAML1_NS) && nsURI && *nsURI) {
-                    getOthers().push_back(childXMLObject);
+                    getUnknownXMLObjects().push_back(childXMLObject);
                     return;
                 }
                 

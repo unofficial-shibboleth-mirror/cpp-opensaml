@@ -26,7 +26,6 @@
 #include "saml1/core/Protocols.h"
 
 #include <xmltooling/AbstractComplexElement.h>
-#include <xmltooling/AbstractElementProxy.h>
 #include <xmltooling/AbstractSimpleElement.h>
 #include <xmltooling/impl/AnyElement.h>
 #include <xmltooling/io/AbstractXMLObjectMarshaller.h>
@@ -544,20 +543,17 @@ namespace opensaml {
                 
             StatusDetailImpl(const StatusDetailImpl& src)
                     : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
-                VectorOf(XMLObject) v=getDetails();
-                for (vector<XMLObject*>::const_iterator i=src.m_Details.begin(); i!=src.m_Details.end(); i++) {
-                    if (*i) {
-                        v.push_back((*i)->clone());
-                    }
-                }
+                VectorOf(XMLObject) v=getUnknownXMLObjects();
+                for (vector<XMLObject*>::const_iterator i=src.m_UnknownXMLObjects.begin(); i!=src.m_UnknownXMLObjects.end(); ++i)
+                    v.push_back((*i)->clone());
             }
             
             IMPL_XMLOBJECT_CLONE(StatusDetail);
-            IMPL_XMLOBJECT_CHILDREN(Detail,m_children.end());
+            IMPL_XMLOBJECT_CHILDREN(UnknownXMLObject,m_children.end());
     
         protected:
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                getDetails().push_back(childXMLObject);
+                getUnknownXMLObjects().push_back(childXMLObject);
             }
         };
 

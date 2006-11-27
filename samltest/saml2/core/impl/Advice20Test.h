@@ -44,7 +44,7 @@ public:
         TSM_ASSERT_EQUALS("# of AssertionURIRef child elements", 0, advice->getAssertionURIRefs().size());
         TSM_ASSERT_EQUALS("# of Assertion child elements", 0, advice->getAssertions().size());
         TSM_ASSERT_EQUALS("# of EncryptedAssertion child elements", 0, advice->getEncryptedAssertions().size());
-        TSM_ASSERT_EQUALS("# of Other child elements", 0, advice->getOthers().size());
+        TSM_ASSERT_EQUALS("# of Other child elements", 0, advice->getUnknownXMLObjects().size());
     }
 
     void testChildElementsUnmarshall() {
@@ -56,7 +56,7 @@ public:
         TSM_ASSERT_EQUALS("# of AssertionURIRef child elements", 2, advice->getAssertionURIRefs().size());
         TSM_ASSERT_EQUALS("# of Assertion child elements", 2, advice->getAssertions().size());
         TSM_ASSERT_EQUALS("# of EncryptedAssertion child elements", 1, advice->getEncryptedAssertions().size());
-        TSM_ASSERT_EQUALS("# of Other child elements", 0, advice->getOthers().size());
+        TSM_ASSERT_EQUALS("# of Other child elements", 0, advice->getUnknownXMLObjects().size());
     }
 
     void testSingleElementMarshall() {

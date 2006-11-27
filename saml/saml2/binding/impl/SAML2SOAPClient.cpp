@@ -42,7 +42,7 @@ void SAML2SOAPClient::sendSAML(RequestAbstractType* request, const RoleDescripto
     Envelope* env = EnvelopeBuilder::buildEnvelope();
     Body* body = BodyBuilder::buildBody();
     env->setBody(body);
-    body->getXMLObjects().push_back(request);
+    body->getUnknownXMLObjects().push_back(request);
     try {
         send(env, peer, endpoint);
         m_correlate = XMLString::replicate(request->getID());
@@ -64,7 +64,7 @@ StatusResponseType* SAML2SOAPClient::receiveSAML()
         Body* body = env->getBody();
         if (body && body->hasChildren()) {
             // Check for SAML Response.
-            StatusResponseType* response = dynamic_cast<StatusResponseType*>(body->getXMLObjects().front());
+            StatusResponseType* response = dynamic_cast<StatusResponseType*>(body->getUnknownXMLObjects().front());
             if (response) {
                 
                 // Check InResponseTo.

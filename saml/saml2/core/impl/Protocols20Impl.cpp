@@ -26,7 +26,6 @@
 #include "saml2/core/Protocols.h"
 
 #include <xmltooling/AbstractComplexElement.h>
-#include <xmltooling/AbstractElementProxy.h>
 #include <xmltooling/AbstractSimpleElement.h>
 #include <xmltooling/encryption/Decrypter.h>
 #include <xmltooling/impl/AnyElement.h>
@@ -69,7 +68,7 @@ namespace opensaml {
 
         //TODO need unit test for this, using objects from another namespace
         class SAML_DLLLOCAL ExtensionsImpl : public virtual Extensions,
-             public AbstractElementProxy,
+             public AbstractComplexElement,
              public AbstractDOMCachingXMLObject,
              public AbstractXMLObjectMarshaller,
              public AbstractXMLObjectUnmarshaller
@@ -82,22 +81,21 @@ namespace opensaml {
             }
                 
             ExtensionsImpl(const ExtensionsImpl& src)
-                    : AbstractXMLObject(src), AbstractElementProxy(src), AbstractDOMCachingXMLObject(src) {
-                for (list<XMLObject*>::const_iterator i=src.m_children.begin(); i!=src.m_children.end(); i++) {
-                    if (*i) {
-                        getXMLObjects().push_back((*i)->clone());
-                    }
-                }
+                    : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
+                VectorOf(XMLObject) v=getUnknownXMLObjects();
+                for (vector<XMLObject*>::const_iterator i=src.m_UnknownXMLObjects.begin(); i!=src.m_UnknownXMLObjects.end(); ++i)
+                    v.push_back((*i)->clone());
             }
             
             IMPL_XMLOBJECT_CLONE(Extensions);
+            IMPL_XMLOBJECT_CHILDREN(UnknownXMLObject,m_children.end());
     
         protected:
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
                 // Unknown child.
                 const XMLCh* nsURI=root->getNamespaceURI();
                 if (!XMLString::equals(nsURI,SAML20P_NS) && nsURI && *nsURI) {
-                    getXMLObjects().push_back(childXMLObject);
+                    getUnknownXMLObjects().push_back(childXMLObject);
                     return;
                 }
                 
@@ -169,21 +167,17 @@ namespace opensaml {
 
                 StatusDetailImpl(const StatusDetailImpl& src)
                         : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
-                    VectorOf(XMLObject) v=getDetails();
-                    for (vector<XMLObject*>::const_iterator i=src.m_Details.begin(); i!=src.m_Details.end(); i++) {
-                        if (*i) {
-                            v.push_back((*i)->clone());
-                        }
-                    }
+                    VectorOf(XMLObject) v=getUnknownXMLObjects();
+                    for (vector<XMLObject*>::const_iterator i=src.m_UnknownXMLObjects.begin(); i!=src.m_UnknownXMLObjects.end(); ++i)
+                        v.push_back((*i)->clone());
                 }
 
                 IMPL_XMLOBJECT_CLONE(StatusDetail);
-                IMPL_XMLOBJECT_CHILDREN(Detail,m_children.end());
+                IMPL_XMLOBJECT_CHILDREN(UnknownXMLObject,m_children.end());
 
             protected:
                 void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                    getDetails().push_back(childXMLObject);
-                    AbstractXMLObjectUnmarshaller::processChildElement(childXMLObject,root);
+                    getUnknownXMLObjects().push_back(childXMLObject);
                 }
         };
 

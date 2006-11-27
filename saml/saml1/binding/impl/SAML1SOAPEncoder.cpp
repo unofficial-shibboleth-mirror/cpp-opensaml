@@ -83,7 +83,7 @@ long SAML1SOAPEncoder::encode(
             Envelope* env = EnvelopeBuilder::buildEnvelope();
             Body* body = BodyBuilder::buildBody();
             env->setBody(body);
-            body->getXMLObjects().push_back(response);
+            body->getUnknownXMLObjects().push_back(response);
             if (credResolver ) {
                 if (response->getSignature()) {
                     log.debug("response already signed, skipping signature operation");
@@ -133,7 +133,7 @@ long SAML1SOAPEncoder::encode(
             Envelope* env = EnvelopeBuilder::buildEnvelope();
             Body* body = BodyBuilder::buildBody();
             env->setBody(body);
-            body->getXMLObjects().push_back(fault);
+            body->getUnknownXMLObjects().push_back(fault);
             rootElement = env->marshall();
     
             string xmlbuf;
@@ -165,7 +165,7 @@ long SAML1SOAPEncoder::encode(
         bool error =
             (env->getBody() &&
                 env->getBody()->hasChildren() &&
-                    dynamic_cast<Fault*>(env->getBody()->getXMLObjects().front()));
+                    dynamic_cast<Fault*>(env->getBody()->getUnknownXMLObjects().front()));
 
         string xmlbuf;
         XMLHelper::serialize(rootElement, xmlbuf);

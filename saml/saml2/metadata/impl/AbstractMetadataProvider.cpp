@@ -83,9 +83,9 @@ void AbstractMetadataProvider::index(EntityDescriptor* site, time_t validUntil)
         if ((*i)->hasSupport(samlconstants::SAML10_PROTOCOL_ENUM) || (*i)->hasSupport(samlconstants::SAML11_PROTOCOL_ENUM)) {
             // Check for SourceID extension element.
             const Extensions* exts=(*i)->getExtensions();
-            if (exts) {
-                const list<XMLObject*>& children=exts->getXMLObjects();
-                for (list<XMLObject*>::const_iterator ext=children.begin(); ext!=children.end(); ext++) {
+            if (exts && exts->hasChildren()) {
+                const vector<XMLObject*>& children=exts->getUnknownXMLObjects();
+                for (vector<XMLObject*>::const_iterator ext=children.begin(); ext!=children.end(); ++ext) {
                     SourceID* sid=dynamic_cast<SourceID*>(*ext);
                     if (sid) {
                         auto_ptr_char sourceid(sid->getID());

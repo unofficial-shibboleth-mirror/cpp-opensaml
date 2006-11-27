@@ -26,7 +26,6 @@
 #include "saml2/metadata/MetadataKeyInfoIterator.h"
 
 #include <xmltooling/AbstractComplexElement.h>
-#include <xmltooling/AbstractElementProxy.h>
 #include <xmltooling/AbstractSimpleElement.h>
 #include <xmltooling/impl/AnyElement.h>
 #include <xmltooling/io/AbstractXMLObjectMarshaller.h>
@@ -239,7 +238,7 @@ namespace opensaml {
         };
 
         class SAML_DLLLOCAL ExtensionsImpl : public virtual Extensions,
-            public AbstractElementProxy,
+            public AbstractComplexElement,
             public AbstractDOMCachingXMLObject,
             public AbstractXMLObjectMarshaller,
             public AbstractXMLObjectUnmarshaller
@@ -252,22 +251,21 @@ namespace opensaml {
             }
                 
             ExtensionsImpl(const ExtensionsImpl& src)
-                    : AbstractXMLObject(src), AbstractElementProxy(src), AbstractDOMCachingXMLObject(src) {
-                for (list<XMLObject*>::const_iterator i=src.m_children.begin(); i!=src.m_children.end(); i++) {
-                    if (*i) {
-                        getXMLObjects().push_back((*i)->clone());
-                    }
-                }
+                    : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
+                VectorOf(XMLObject) v=getUnknownXMLObjects();
+                for (vector<XMLObject*>::const_iterator i=src.m_UnknownXMLObjects.begin(); i!=src.m_UnknownXMLObjects.end(); ++i)
+                    v.push_back((*i)->clone());
             }
             
             IMPL_XMLOBJECT_CLONE(Extensions);
+            IMPL_XMLOBJECT_CHILDREN(UnknownXMLObject,m_children.end());
     
         protected:
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
                 // Unknown child.
                 const XMLCh* nsURI=root->getNamespaceURI();
                 if (!XMLString::equals(nsURI,SAML20MD_NS) && nsURI && *nsURI) {
-                    getXMLObjects().push_back(childXMLObject);
+                    getUnknownXMLObjects().push_back(childXMLObject);
                     return;
                 }
                 
@@ -557,8 +555,8 @@ namespace opensaml {
         };
 
         class SAML_DLLLOCAL EndpointTypeImpl : public virtual EndpointType,
-            public AbstractElementProxy,
             public AbstractAttributeExtensibleXMLObject,
+            public AbstractComplexElement,
             public AbstractDOMCachingXMLObject,
             public AbstractXMLObjectMarshaller,
             public AbstractXMLObjectUnmarshaller
@@ -584,22 +582,23 @@ namespace opensaml {
             }
                 
             EndpointTypeImpl(const EndpointTypeImpl& src)
-                    : AbstractXMLObject(src), AbstractElementProxy(src),
-                        AbstractAttributeExtensibleXMLObject(src), AbstractDOMCachingXMLObject(src) {
+                    : AbstractXMLObject(src),
+                        AbstractAttributeExtensibleXMLObject(src),
+                        AbstractComplexElement(src),
+                        AbstractDOMCachingXMLObject(src) {
                 setBinding(src.getBinding());
                 setLocation(src.getLocation());
                 setResponseLocation(src.getResponseLocation());
-                for (list<XMLObject*>::const_iterator i=src.m_children.begin(); i!=src.m_children.end(); i++) {
-                    if (*i) {
-                        getXMLObjects().push_back((*i)->clone());
-                    }
-                }
+                VectorOf(XMLObject) v=getUnknownXMLObjects();
+                for (vector<XMLObject*>::const_iterator i=src.m_UnknownXMLObjects.begin(); i!=src.m_UnknownXMLObjects.end(); ++i)
+                    v.push_back((*i)->clone());
             }
             
             IMPL_XMLOBJECT_CLONE(EndpointType);
             IMPL_STRING_ATTRIB(Binding);
             IMPL_STRING_ATTRIB(Location);
             IMPL_STRING_ATTRIB(ResponseLocation);
+            IMPL_XMLOBJECT_CHILDREN(UnknownXMLObject,m_children.end());
     
             void setAttribute(const QName& qualifiedName, const XMLCh* value, bool ID=false) {
                 if (!qualifiedName.hasNamespaceURI()) {
@@ -630,7 +629,7 @@ namespace opensaml {
                 // Unknown child.
                 const XMLCh* nsURI=root->getNamespaceURI();
                 if (!XMLString::equals(nsURI,SAML20MD_NS) && nsURI && *nsURI) {
-                    getXMLObjects().push_back(childXMLObject);
+                    getUnknownXMLObjects().push_back(childXMLObject);
                     return;
                 }
                 AbstractXMLObjectUnmarshaller::processChildElement(childXMLObject,root);

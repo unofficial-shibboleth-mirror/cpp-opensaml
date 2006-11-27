@@ -45,7 +45,7 @@ namespace opensaml {
 
         DECL_XMLOBJECT_SIMPLE(SAML_API,RespondTo,Name,SAML 2.0 third-party request RespondTo extension element);
 
-        BEGIN_XMLOBJECT(SAML_API,Extensions,xmltooling::ElementProxy,SAML 2.0 protocol Extensions element);
+        BEGIN_XMLOBJECT(SAML_API,Extensions,xmltooling::ElementExtensibleXMLObject,SAML 2.0 protocol Extensions element);
             /** ExtensionsType local name */
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
@@ -126,8 +126,7 @@ namespace opensaml {
             /*@{*/
         END_XMLOBJECT;
 
-        BEGIN_XMLOBJECT(SAML_API,StatusDetail,xmltooling::XMLObject,SAML 2.0 StatusDetail element);
-            DECL_XMLOBJECT_CHILDREN(Detail);
+        BEGIN_XMLOBJECT(SAML_API,StatusDetail,xmltooling::ElementExtensibleXMLObject,SAML 2.0 StatusDetail element);
             /** StatusDetailType local name */
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;

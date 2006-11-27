@@ -26,8 +26,6 @@
 #include <saml/RootObject.h>
 #include <saml/util/SAMLConstants.h>
 
-#include <xmltooling/AttributeExtensibleXMLObject.h>
-#include <xmltooling/ElementProxy.h>
 #include <xmltooling/XMLObjectBuilder.h>
 #include <xmltooling/signature/KeyInfo.h>
 #include <xmltooling/signature/Signature.h>
@@ -128,8 +126,7 @@ namespace opensaml {
             static xmltooling::QName VERSIONMISMATCH;
         END_XMLOBJECT;
 
-        BEGIN_XMLOBJECT(SAML_API,StatusDetail,xmltooling::XMLObject,SAML 1.x StatusDetail element);
-            DECL_XMLOBJECT_CHILDREN(Detail);
+        BEGIN_XMLOBJECT(SAML_API,StatusDetail,xmltooling::ElementExtensibleXMLObject,SAML 1.x StatusDetail element);
             /** StatusDetailType local name */
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;

@@ -172,7 +172,7 @@ namespace opensaml {
         };
 
         BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,Advice);
-            const vector<XMLObject*>& anys=ptr->getOthers();
+            const vector<XMLObject*>& anys=ptr->getUnknownXMLObjects();
             for_each(anys.begin(),anys.end(),checkWildcardNS());
         END_XMLOBJECTVALIDATOR;
 

@@ -103,7 +103,7 @@ namespace opensaml {
             DECL_SIMPLE_CONTENT(URL);
         END_XMLOBJECT;
         
-        BEGIN_XMLOBJECT(SAML_API,Extensions,xmltooling::ElementProxy,SAML 2.0 Extensions element);
+        BEGIN_XMLOBJECT(SAML_API,Extensions,xmltooling::ElementExtensibleXMLObject,SAML 2.0 Extensions element);
             /** ExtensionsType local name */
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
@@ -173,7 +173,7 @@ namespace opensaml {
             DECL_TYPED_CHILDREN(ContactPerson);
         END_XMLOBJECT;
 
-        BEGIN_XMLOBJECT2(SAML_API,EndpointType,xmltooling::ElementProxy,xmltooling::AttributeExtensibleXMLObject,SAML 2.0 EndpointType type);
+        BEGIN_XMLOBJECT(SAML_API,EndpointType,xmltooling::ElementProxy,SAML 2.0 EndpointType type);
             DECL_STRING_ATTRIB(Binding,BINDING);
             DECL_STRING_ATTRIB(Location,LOCATION);
             DECL_STRING_ATTRIB(ResponseLocation,RESPONSELOCATION);
