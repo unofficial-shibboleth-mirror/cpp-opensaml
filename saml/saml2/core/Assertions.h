@@ -202,7 +202,7 @@ namespace opensaml {
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
 
-        BEGIN_XMLOBJECT2(SAML_API,AuthnContextDecl,xmltooling::ElementProxy,xmltooling::AttributeExtensibleXMLObject,SAML 2.0 AuthnContextDecl element);
+        BEGIN_XMLOBJECT(SAML_API,AuthnContextDecl,xmltooling::ElementProxy,SAML 2.0 AuthnContextDecl element);
         END_XMLOBJECT;
 
         BEGIN_XMLOBJECT(SAML_API,AuthnContext,xmltooling::XMLObject,SAML 2.0 AuthnContext element);
