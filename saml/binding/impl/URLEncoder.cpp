@@ -67,8 +67,8 @@ string URLEncoder::encode(const char* s) const
     for (; *s; s++) {
         if (isBad(*s)) {
             ret+='%';
-            ret+=hexchar(*s >> 4);
-            ret+=hexchar(*s & 0x0F);
+            ret+=hexchar((unsigned char)*s >> 4);
+            ret+=hexchar((unsigned char)*s & 0x0F);
         }
         else
             ret+=*s;
