@@ -58,6 +58,7 @@ siginclude_HEADERS = \
 	signature/SignatureProfileValidator.h
 
 utilinclude_HEADERS = \
+	util/CommonDomainCookie.h \
 	util/SAMLConstants.h
 
 saml1coreinclude_HEADERS = \
@@ -160,6 +161,7 @@ libsaml_la_SOURCES = \
 	encryption/EncryptedKeyResolver.cpp \
 	signature/ContentReference.cpp \
 	signature/SignatureProfileValidator.cpp \
+	util/CommonDomainCookie.cpp \
 	util/SAMLConstants.cpp
 
 # this is different from the project version
