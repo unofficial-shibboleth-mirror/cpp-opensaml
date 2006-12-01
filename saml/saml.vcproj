@@ -62,7 +62,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="..\..\cpp-xmltooling\Debug\xmltooling_1D.lib xerces-c_2D.lib xsec_1D.lib log4cppD.lib libeay32_0_9_8D.lib"
+				AdditionalDependencies="..\..\cpp-xmltooling\Debug\xmltooling1D.lib xerces-c_2D.lib xsec_1D.lib log4cppD.lib libeay32_0_9_8D.lib"
 				OutputFile="$(OutDir)\$(ProjectName)2_0D.dll"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
@@ -139,7 +139,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="..\..\cpp-xmltooling\Release\xmltooling_1.lib xerces-c_2.lib xsec_1.lib log4cpp.lib libeay32_0_9_8.lib"
+				AdditionalDependencies="..\..\cpp-xmltooling\Release\xmltooling1.lib xerces-c_2.lib xsec_1.lib log4cpp.lib libeay32_0_9_8.lib"
 				OutputFile="$(OutDir)\$(ProjectName)2_0.dll"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
