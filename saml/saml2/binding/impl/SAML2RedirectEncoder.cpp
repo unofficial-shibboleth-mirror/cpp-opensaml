@@ -63,7 +63,7 @@ long SAML2RedirectEncoder::encode(
 #ifdef _DEBUG
     xmltooling::NDC ndc("encode");
 #endif
-    Category& log = Category::getInstance(SAML_LOGCAT".MessageEncoder.SAML2POST");
+    Category& log = Category::getInstance(SAML_LOGCAT".MessageEncoder.SAML2Redirect");
 
     log.debug("validating input");
     HTTPResponse* httpResponse=dynamic_cast<HTTPResponse*>(&genericResponse);
