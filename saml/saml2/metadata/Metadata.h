@@ -349,6 +349,9 @@ namespace opensaml {
             DECL_TYPED_CHILDREN(AuthnQueryDescriptorType);
             DECL_TYPED_CHILDREN(AttributeQueryDescriptorType);
             DECL_TYPED_CHILDREN(AuthzDecisionQueryDescriptorType);
+            DECL_TYPED_CHILD(Organization);
+            DECL_TYPED_CHILDREN(ContactPerson);
+            DECL_TYPED_CHILDREN(AdditionalMetadataLocation);
             /** Finds an IDP role supporting a given protocol. */
             virtual const IDPSSODescriptor* getIDPSSODescriptor(const XMLCh* protocol) const=0;
             /** Finds an SP role supporting a given protocol. */
