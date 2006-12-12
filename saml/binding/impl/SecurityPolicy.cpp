@@ -22,11 +22,8 @@
 
 #include "internal.h"
 #include "exceptions.h"
-#include "binding/SecurityPolicy.h"
-#include "saml1/core/Assertions.h"
-#include "saml1/core/Protocols.h"
+#include "binding/SecurityPolicyRule.h"
 #include "saml2/core/Assertions.h"
-#include "saml2/core/Protocols.h"
 
 using namespace opensaml::saml2md;
 using namespace opensaml::saml2;
@@ -37,6 +34,8 @@ using namespace std;
 namespace opensaml {
     SAML_DLLLOCAL PluginManager<SecurityPolicyRule,const DOMElement*>::Factory ClientCertAuthRuleFactory;
     SAML_DLLLOCAL PluginManager<SecurityPolicyRule,const DOMElement*>::Factory MessageFlowRuleFactory;
+    SAML_DLLLOCAL PluginManager<SecurityPolicyRule,const DOMElement*>::Factory SAML1MessageRuleFactory;
+    SAML_DLLLOCAL PluginManager<SecurityPolicyRule,const DOMElement*>::Factory SAML2MessageRuleFactory;
     SAML_DLLLOCAL PluginManager<SecurityPolicyRule,const DOMElement*>::Factory SimpleSigningRuleFactory;
     SAML_DLLLOCAL PluginManager<SecurityPolicyRule,const DOMElement*>::Factory XMLSigningRuleFactory;
 };
@@ -46,6 +45,8 @@ void SAML_API opensaml::registerSecurityPolicyRules()
     SAMLConfig& conf=SAMLConfig::getConfig();
     conf.SecurityPolicyRuleManager.registerFactory(CLIENTCERTAUTH_POLICY_RULE, ClientCertAuthRuleFactory);
     conf.SecurityPolicyRuleManager.registerFactory(MESSAGEFLOW_POLICY_RULE, MessageFlowRuleFactory);
+    conf.SecurityPolicyRuleManager.registerFactory(SAML1MESSAGE_POLICY_RULE, SAML1MessageRuleFactory);
+    conf.SecurityPolicyRuleManager.registerFactory(SAML2MESSAGE_POLICY_RULE, SAML2MessageRuleFactory);
     conf.SecurityPolicyRuleManager.registerFactory(SIMPLESIGNING_POLICY_RULE, SimpleSigningRuleFactory);
     conf.SecurityPolicyRuleManager.registerFactory(XMLSIGNING_POLICY_RULE, XMLSigningRuleFactory);
 }
@@ -54,41 +55,32 @@ SecurityPolicy::IssuerMatchingPolicy SecurityPolicy::m_defaultMatching;
 
 SecurityPolicy::~SecurityPolicy()
 {
-    delete m_matchingPolicy;
+    reset();
+}
+
+void SecurityPolicy::reset()
+{
+    delete m_messageQName;
+    XMLString::release(&m_messageID);
     delete m_issuer;
+    m_messageQName=NULL;
+    m_messageID=NULL;
+    m_issueInstant=0;
+    m_issuer=NULL;
+    m_issuerRole=NULL;
 }
 
 void SecurityPolicy::evaluate(const XMLObject& message, const GenericRequest* request)
 {
-    for (vector<const SecurityPolicyRule*>::const_iterator i=m_rules.begin(); i!=m_rules.end(); ++i) {
-
-        // Run the rule...
-        pair<Issuer*,const RoleDescriptor*> ident = (*i)->evaluate(message,request,m_metadata,&m_role,m_trust);
-
-        // Make sure returned issuer doesn't conflict.
-         
-        if (ident.first) {
-            if (!getIssuerMatchingPolicy().issuerMatches(ident.first, m_issuer)) {
-                delete ident.first;
-                throw BindingException("Policy rules returned differing Issuers.");
-            }
-            delete m_issuer;
-            m_issuer=ident.first;
-        }
-
-        if (ident.second) {
-            if (m_issuerRole && ident.second!=m_issuerRole)
-                throw BindingException("Policy rules returned differing issuer RoleDescriptors.");
-            m_issuerRole=ident.second;
-        }
-    }
+    for (vector<const SecurityPolicyRule*>::const_iterator i=m_rules.begin(); i!=m_rules.end(); ++i)
+        (*i)->evaluate(message,request,*this);
 }
 
 void SecurityPolicy::setIssuer(saml2::Issuer* issuer)
 {
     if (!getIssuerMatchingPolicy().issuerMatches(issuer, m_issuer)) {
         delete issuer;
-        throw BindingException("Externally provided Issuer conflicts with policy results.");
+        throw BindingException("A rule supplied an Issuer that conflicts with previous results.");
     }
     
     delete m_issuer;
@@ -98,7 +90,7 @@ void SecurityPolicy::setIssuer(saml2::Issuer* issuer)
 void SecurityPolicy::setIssuerMetadata(const RoleDescriptor* issuerRole)
 {
     if (issuerRole && m_issuerRole && issuerRole!=m_issuerRole)
-        throw BindingException("Externally provided RoleDescriptor conflicts with policy results.");
+        throw BindingException("A rule supplied a RoleDescriptor that conflicts with previous results.");
     m_issuerRole=issuerRole;
 }
 

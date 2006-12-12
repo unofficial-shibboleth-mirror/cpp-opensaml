@@ -15,25 +15,26 @@
  */
 
 /**
- * @file saml/binding/XMLSigningRule.h
+ * @file saml/saml1/binding/SAML1MessageRule.h
  * 
- * XML Signature checking SecurityPolicyRule
+ * SAML 1.x message extraction rule
  */
 
 #include <saml/binding/SecurityPolicyRule.h>
 
 
 namespace opensaml {
-    /**
-     * XML Signature checking SecurityPolicyRule
-     */
-    class SAML_API XMLSigningRule : public SecurityPolicyRule
-    {
-    public:
-        XMLSigningRule(const DOMElement* e) {}
-        virtual ~XMLSigningRule() {}
-        
-        void evaluate(const xmltooling::XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const;
+    namespace saml1p {
+        /**
+         * SAML 1.x message extraction rule
+         */
+        class SAML_API SAML1MessageRule : public SecurityPolicyRule
+        {
+        public:
+            SAML1MessageRule(const DOMElement* e) {}
+            virtual ~SAML1MessageRule() {}
+            
+            void evaluate(const xmltooling::XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const;
+        };
     };
-    
 };

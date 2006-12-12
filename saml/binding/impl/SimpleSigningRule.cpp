@@ -24,16 +24,11 @@
 #include "exceptions.h"
 #include "binding/HTTPRequest.h"
 #include "binding/SimpleSigningRule.h"
-#include "saml2/core/Protocols.h"
+#include "saml2/core/Assertions.h"
 #include "saml2/metadata/Metadata.h"
 #include "saml2/metadata/MetadataProvider.h"
 
 #include <log4cpp/Category.hh>
-#include <xmltooling/util/NDC.h>
-#include <xmltooling/util/ReplayCache.h>
-#include <xsec/enc/XSECCryptoException.hpp>
-#include <xsec/enc/XSECCryptoProvider.hpp>
-#include <xsec/framework/XSECException.hpp>
 
 using namespace opensaml::saml2md;
 using namespace opensaml;
@@ -67,159 +62,94 @@ namespace opensaml {
 };
 
 
-pair<saml2::Issuer*,const RoleDescriptor*> SimpleSigningRule::evaluate(
-    const XMLObject& message,
-    const GenericRequest* request,
-    const MetadataProvider* metadataProvider,
-    const QName* role,
-    const TrustEngine* trustEngine
-    ) const
+void SimpleSigningRule::evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const
 {
     Category& log=Category::getInstance(SAML_LOGCAT".SecurityPolicyRule.SimpleSigning");
     log.debug("evaluating simple signing policy");
     
-    pair<saml2::Issuer*,const RoleDescriptor*> ret = pair<saml2::Issuer*,const RoleDescriptor*>(NULL,NULL);  
-    
+    if (!policy.getIssuerMetadata()) {
+        log.debug("ignoring message, no issuer metadata supplied");
+        return;
+    }
+    else if (!policy.getTrustEngine()) {
+        log.debug("ignoring message, no TrustEngine supplied");
+        return;
+    }
+
     const HTTPRequest* httpRequest = dynamic_cast<const HTTPRequest*>(request);
     if (!request || !httpRequest) {
         log.debug("ignoring message, no HTTP protocol request available");
-        return ret;
+        return;
     }
 
-    if (!metadataProvider || !role || !trustEngine) {
-        log.debug("ignoring message, no metadata supplied");
-        return ret;
-    }
-    
     const char* signature = request->getParameter("Signature");
     if (!signature) {
         log.debug("ignoring unsigned message");
-        return ret;
+        return;
     }
     
     const char* sigAlgorithm = request->getParameter("SigAlg");
     if (!sigAlgorithm) {
         log.error("SigAlg parameter not found, no way to verify the signature");
-        return ret;
+        return;
     }
 
-    try {
-        log.debug("extracting issuer from message");
-        pair<saml2::Issuer*,const XMLCh*> issuerInfo = getIssuerAndProtocol(message);
-        
-        auto_ptr<saml2::Issuer> issuer(issuerInfo.first);
-        if (!issuerInfo.first || !issuerInfo.second ||
-                (issuer->getFormat() && !XMLString::equals(issuer->getFormat(), saml2::NameIDType::ENTITY))) {
-            log.warn("issuer identity not estabished, or was not an entityID");
-            return ret;
-        }
-        
-        log.debug("searching metadata for message issuer...");
-        const EntityDescriptor* entity = metadataProvider->getEntityDescriptor(issuer->getName());
-        if (!entity) {
-            auto_ptr_char temp(issuer->getName());
-            log.warn("no metadata found, can't establish identity of issuer (%s)", temp.get());
-            return ret;
-        }
-
-        log.debug("matched message issuer against metadata, searching for applicable role...");
-        const RoleDescriptor* roledesc=entity->getRoleDescriptor(*role, issuerInfo.second);
-        if (!roledesc) {
-            log.warn("unable to find compatible role (%s) in metadata", role->toString().c_str());
-            return ret;
-        }
-
-        string input;
-        const char* pch;
-        if (!strcmp(httpRequest->getMethod(), "GET")) {
-            // We have to construct a string containing the signature input by accessing the
-            // request directly. We can't use the decoded parameters because we need the raw
-            // data and URL-encoding isn't canonical.
-            pch = httpRequest->getQueryString();
-            if (!appendParameter(input, pch, "SAMLRequest="))
-                appendParameter(input, pch, "SAMLResponse=");
-            appendParameter(input, pch, "RelayState=");
-            appendParameter(input, pch, "SigAlg=");
-        }
+    string input;
+    const char* pch;
+    if (!strcmp(httpRequest->getMethod(), "GET")) {
+        // We have to construct a string containing the signature input by accessing the
+        // request directly. We can't use the decoded parameters because we need the raw
+        // data and URL-encoding isn't canonical.
+        pch = httpRequest->getQueryString();
+        if (!appendParameter(input, pch, "SAMLRequest="))
+            appendParameter(input, pch, "SAMLResponse=");
+        appendParameter(input, pch, "RelayState=");
+        appendParameter(input, pch, "SigAlg=");
+    }
+    else {
+        // With POST, the input string is concatenated from the decoded form controls.
+        // GET should be this way too, but I messed up the spec, sorry.
+        pch = httpRequest->getParameter("SAMLRequest");
+        if (pch)
+            input = string("SAMLRequest=") + pch;
         else {
-            // With POST, the input string is concatenated from the decoded form controls.
-            // GET should be this way too, but I messed up the spec, sorry.
-            pch = httpRequest->getParameter("SAMLRequest");
-            if (pch)
-                input = string("SAMLRequest=") + pch;
-            else {
-                pch = httpRequest->getParameter("SAMLResponse");
-                input = string("SAMLResponse=") + pch;
-            }
-            pch = httpRequest->getParameter("RelayState");
-            if (pch)
-                input = input + "&RelayState=" + pch;
-            input = input + "&SigAlg=" + sigAlgorithm;
+            pch = httpRequest->getParameter("SAMLResponse");
+            input = string("SAMLResponse=") + pch;
         }
-
-        // Check for KeyInfo, but defensively (we might be able to run without it).
-        KeyInfo* keyInfo=NULL;
-        pch = request->getParameter("KeyInfo");
-        if (pch) {
-            try {
-                istringstream kstrm(pch);
-                DOMDocument* doc = XMLToolingConfig::getConfig().getParser().parse(kstrm);
-                XercesJanitor<DOMDocument> janitor(doc);
-                XMLObject* kxml = XMLObjectBuilder::buildOneFromElement(doc->getDocumentElement(), true);
-                janitor.release();
-                if (!(keyInfo=dynamic_cast<KeyInfo*>(kxml)))
-                    delete kxml;
-            }
-            catch (XMLToolingException& ex) {
-                log.warn("Failed to load KeyInfo from message: %s", ex.what());
-            }
-        }
-        
-        auto_ptr<KeyInfo> kjanitor(keyInfo);
-        auto_ptr_XMLCh alg(sigAlgorithm);
-        
-        if (!trustEngine->validate(alg.get(), signature, keyInfo, input.c_str(), input.length(), *roledesc, metadataProvider->getKeyResolver())) {
-            log.error("unable to verify signature on message with supplied trust engine");
-            return ret;
-        }
-
-        if (log.isDebugEnabled()) {
-            auto_ptr_char iname(entity->getEntityID());
-            log.debug("message from (%s), signature verified", iname.get());
-        }
-        
-        ret.first = issuer.release();
-        ret.second = roledesc;
+        pch = httpRequest->getParameter("RelayState");
+        if (pch)
+            input = input + "&RelayState=" + pch;
+        input = input + "&SigAlg=" + sigAlgorithm;
     }
-    catch (bad_cast&) {
-        // Just trap it.
-        log.warn("caught a bad_cast while extracting issuer");
-    }
-    return ret;
-}
 
-pair<saml2::Issuer*,const XMLCh*> SimpleSigningRule::getIssuerAndProtocol(const XMLObject& message) const
-{
-    // We just let any bad casts throw here.
-
-    // Shortcuts some of the casting.
-    const XMLCh* ns = message.getElementQName().getNamespaceURI();
-    if (ns) {
-        if (XMLString::equals(ns, samlconstants::SAML20P_NS)) {
-            // 2.0 namespace should be castable to a specialized 2.0 root.
-            const saml2::RootObject& root = dynamic_cast<const saml2::RootObject&>(message);
-            saml2::Issuer* issuer = root.getIssuer();
-            if (issuer && issuer->getName())
-                return make_pair(issuer->cloneIssuer(), samlconstants::SAML20P_NS);
-            
-            // No issuer in the message, so we have to try the Response approach. 
-            const vector<saml2::Assertion*>& assertions = dynamic_cast<const saml2p::Response&>(message).getAssertions();
-            if (!assertions.empty()) {
-                issuer = assertions.front()->getIssuer();
-                if (issuer && issuer->getName())
-                    return make_pair(issuer->cloneIssuer(), samlconstants::SAML20P_NS);
-            }
+    // Check for KeyInfo, but defensively (we might be able to run without it).
+    KeyInfo* keyInfo=NULL;
+    pch = request->getParameter("KeyInfo");
+    if (pch) {
+        try {
+            istringstream kstrm(pch);
+            DOMDocument* doc = XMLToolingConfig::getConfig().getParser().parse(kstrm);
+            XercesJanitor<DOMDocument> janitor(doc);
+            XMLObject* kxml = XMLObjectBuilder::buildOneFromElement(doc->getDocumentElement(), true);
+            janitor.release();
+            if (!(keyInfo=dynamic_cast<KeyInfo*>(kxml)))
+                delete kxml;
+        }
+        catch (XMLToolingException& ex) {
+            log.warn("Failed to load KeyInfo from message: %s", ex.what());
         }
     }
-    return pair<saml2::Issuer*,const XMLCh*>(NULL,NULL);
+    
+    auto_ptr<KeyInfo> kjanitor(keyInfo);
+    auto_ptr_XMLCh alg(sigAlgorithm);
+    
+    if (!policy.getTrustEngine()->validate(
+            alg.get(), signature, keyInfo, input.c_str(), input.length(),
+            *(policy.getIssuerMetadata()), policy.getMetadataProvider()->getKeyResolver()
+            )) {
+        log.error("unable to verify message signature with supplied trust engine");
+        return;
+    }
+
+    log.debug("signature verified against message issuer");
 }

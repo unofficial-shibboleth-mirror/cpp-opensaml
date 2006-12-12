@@ -97,52 +97,23 @@ XMLObject* SAML1POSTDecoder::decode(
     if (!response)
         throw BindingException("Decoded message was not a SAML 1.x Response.");
 
-    try {
-        if (!m_validate)
-            SchemaValidators.validate(xmlObject.get());
-        
-        // Check recipient URL.
-        auto_ptr_char recipient(response->getRecipient());
-        const char* recipient2 = httpRequest->getRequestURL();
-        if (!recipient.get() || !*(recipient.get())) {
-            log.error("response missing Recipient attribute");
-            throw BindingException("SAML response did not contain Recipient attribute identifying intended destination.");
-        }
-        else if (!recipient2 || !*recipient2 || strcmp(recipient.get(),recipient2)) {
-            log.error("POST targeted at (%s), but delivered to (%s)", recipient.get(), recipient2 ? recipient2 : "none");
-            throw BindingException("SAML message delivered with POST to incorrect server URL.");
-        }
-        
-        // Run through the policy.
-        policy.evaluate(*response, &genericRequest);
+    if (!m_validate)
+        SchemaValidators.validate(xmlObject.get());
+    
+    // Check recipient URL.
+    auto_ptr_char recipient(response->getRecipient());
+    const char* recipient2 = httpRequest->getRequestURL();
+    if (!recipient.get() || !*(recipient.get())) {
+        log.error("response missing Recipient attribute");
+        throw BindingException("SAML response did not contain Recipient attribute identifying intended destination.");
     }
-    catch (XMLToolingException& ex) {
-        // This is just to maximize the likelihood of attaching a source to the message for support purposes.
-        if (policy.getIssuerMetadata())
-            annotateException(&ex,policy.getIssuerMetadata()); // throws it
-          
-        // Check for an Issuer.
-        const EntityDescriptor* provider=NULL;
-        const vector<Assertion*>& assertions=const_cast<const Response*>(response)->getAssertions();
-        if (!assertions.empty() || !policy.getMetadataProvider() ||
-                !(provider=policy.getMetadataProvider()->getEntityDescriptor(assertions.front()->getIssuer(), false))) {
-            // Just record it.
-            auto_ptr_char iname(assertions.front()->getIssuer());
-            if (iname.get())
-                ex.addProperty("entityID", iname.get());
-            throw;
-        }
-        if (policy.getRole()) {
-            pair<bool,int> minor = response->getMinorVersion();
-            const RoleDescriptor* roledesc=provider->getRoleDescriptor(
-                *(policy.getRole()),
-                (minor.first && minor.second==0) ? samlconstants::SAML10_PROTOCOL_ENUM : samlconstants::SAML11_PROTOCOL_ENUM
-                );
-            if (roledesc) annotateException(&ex,roledesc); // throws it
-        }
-        annotateException(&ex,provider);  // throws it
+    else if (!recipient2 || !*recipient2 || strcmp(recipient.get(),recipient2)) {
+        log.error("POST targeted at (%s), but delivered to (%s)", recipient.get(), recipient2 ? recipient2 : "none");
+        throw BindingException("SAML message delivered with POST to incorrect server URL.");
     }
+    
+    // Run through the policy.
+    policy.evaluate(*response, &genericRequest);
 
-    xmlObject.release();
-    return response;
+    return xmlObject.release();
 }

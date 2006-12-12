@@ -28,6 +28,7 @@
 #include "binding/MessageDecoder.h"
 #include "binding/MessageEncoder.h"
 #include "binding/SAMLArtifact.h"
+#include "binding/SecurityPolicyRule.h"
 #include "binding/URLEncoder.h"
 #include "saml1/core/Assertions.h"
 #include "saml1/core/Protocols.h"

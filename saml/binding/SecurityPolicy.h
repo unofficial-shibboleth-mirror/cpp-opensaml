@@ -23,8 +23,12 @@
 #ifndef __saml_secpol_h__
 #define __saml_secpol_h__
 
-#include <saml/binding/SecurityPolicyRule.h>
+#include <saml/binding/GenericRequest.h>
+
+#include <ctime>
 #include <vector>
+#include <xmltooling/XMLObject.h>
+#include <xmltooling/security/TrustEngine.h>
 
 #if defined (_MSC_VER)
     #pragma warning( push )
@@ -33,9 +37,15 @@
 
 namespace opensaml {
 
+    namespace saml2 {
+        class SAML_API Issuer;
+    };
     namespace saml2md {
         class SAML_API MetadataProvider;
+        class SAML_API RoleDescriptor;
     };
+    
+    class SAML_API SecurityPolicyRule;
     
     /**
      * A policy used to verify the security of an incoming message.
@@ -53,7 +63,7 @@ namespace opensaml {
     public:
         /**
          * Constructor for policy.
-         *
+         * 
          * @param metadataProvider  locked MetadataProvider instance
          * @param role              identifies the role (generally IdP or SP) of the policy peer 
          * @param trustEngine       TrustEngine to authenticate policy peer
@@ -62,8 +72,10 @@ namespace opensaml {
             const saml2md::MetadataProvider* metadataProvider=NULL,
             const xmltooling::QName* role=NULL,
             const xmltooling::TrustEngine* trustEngine=NULL
-            ) : m_issuer(NULL), m_issuerRole(NULL), m_matchingPolicy(NULL), m_metadata(metadataProvider),
-                m_role(role ? *role : xmltooling::QName()), m_trust(trustEngine) {
+            ) : m_messageQName(NULL), m_messageID(NULL), m_issueInstant(0), m_issuer(NULL), m_issuerRole(NULL),
+                m_matchingPolicy(NULL), m_metadata(metadataProvider), m_role(NULL), m_trust(trustEngine) {
+            if (role)
+                m_role = new xmltooling::QName(*role);
         }
 
         /**
@@ -80,8 +92,10 @@ namespace opensaml {
             const saml2md::MetadataProvider* metadataProvider=NULL,
             const xmltooling::QName* role=NULL,
             const xmltooling::TrustEngine* trustEngine=NULL
-            ) : m_issuer(NULL), m_issuerRole(NULL), m_matchingPolicy(NULL), m_rules(rules), m_metadata(metadataProvider),
-                m_role(role ? *role : xmltooling::QName()), m_trust(trustEngine) {
+            ) : m_messageQName(NULL), m_messageID(NULL), m_issueInstant(0), m_issuer(NULL), m_issuerRole(NULL),
+                m_matchingPolicy(NULL), m_rules(rules), m_metadata(metadataProvider), m_role(NULL), m_trust(trustEngine) {
+            if (role)
+                m_role = new xmltooling::QName(*role);
         }
 
         virtual ~SecurityPolicy();
@@ -101,7 +115,7 @@ namespace opensaml {
          * @return the peer role element/type, or an empty QName
          */
         const xmltooling::QName* getRole() const {
-            return &m_role;
+            return m_role;
         }
 
         /**
@@ -138,7 +152,8 @@ namespace opensaml {
          * @param role the peer role element/type or NULL
          */
         void setRole(const xmltooling::QName* role) {
-            m_role = (role ? *role : xmltooling::QName());
+            delete m_role;
+            m_role = role ? new xmltooling::QName(*role) : NULL;
         }
 
         /**
@@ -152,7 +167,7 @@ namespace opensaml {
 
         /**
          * Evaluates the policy against the given request and message,
-         * possibly populating issuer information in the policy object.
+         * possibly populating message information in the policy object.
          * 
          * @param message           the incoming message
          * @param request           the protocol request
@@ -160,6 +175,38 @@ namespace opensaml {
          * @throws BindingException thrown if the request/message do not meet the requirements of this policy
          */
         void evaluate(const xmltooling::XMLObject& message, const GenericRequest* request=NULL);
+
+        /**
+         * Resets the policy object and clears any per-message state.
+         */
+        void reset();
+        
+        /**
+         * Returns the message element/type as determined by the registered policies.
+         * 
+         * @return message element/type as determined by the registered policies
+         */
+        const xmltooling::QName* getMessageQName() const {
+            return m_messageQName;
+        }
+
+        /**
+         * Returns the message identifier as determined by the registered policies.
+         * 
+         * @return message identifier as determined by the registered policies
+         */
+        const XMLCh* getMessageID() const {
+            return m_messageID;
+        }
+
+        /**
+         * Returns the message timestamp as determined by the registered policies.
+         * 
+         * @return message timestamp as determined by the registered policies
+         */
+        time_t getIssueInstant() const {
+            return m_issueInstant;
+        }
 
         /**
          * Gets the issuer of the message as determined by the registered policies.
@@ -180,7 +227,36 @@ namespace opensaml {
         }
 
         /**
-         * Sets the issuer of the message as determined by external factors.
+         * Sets the message element/type as determined by the registered policies.
+         * 
+         * @param messageQName message element/type
+         */
+        void setMessageQName(const xmltooling::QName* messageQName) {
+            delete m_messageQName;
+            m_messageQName = messageQName ? new xmltooling::QName(*messageQName) : NULL;
+        }
+
+        /**
+         * Sets the message identifier as determined by the registered policies.
+         * 
+         * @param id message identifier
+         */
+        void setMessageID(const XMLCh* id) {
+            XMLString::release(&m_messageID);
+            m_messageID = XMLString::replicate(id);
+        }
+
+        /**
+         * Sets the message timestamp as determined by the registered policies.
+         * 
+         * @param issueInstant message timestamp
+         */
+        void setIssueInstant(time_t issueInstant) {
+            m_issueInstant = issueInstant;
+        }
+
+        /**
+         * Sets the issuer of the message as determined by the registered policies.
          * The policy object takes ownership of the Issuer object.
          * 
          * @param issuer issuer of the message
@@ -242,13 +318,18 @@ namespace opensaml {
         static IssuerMatchingPolicy m_defaultMatching;
 
     private:
+        // information extracted from message 
+        xmltooling::QName* m_messageQName;
+        XMLCh* m_messageID;
+        time_t m_issueInstant;
         saml2::Issuer* m_issuer;
         const saml2md::RoleDescriptor* m_issuerRole;
         
+        // components governing policy rules
         IssuerMatchingPolicy* m_matchingPolicy;
         std::vector<const SecurityPolicyRule*> m_rules;
         const saml2md::MetadataProvider* m_metadata;
-        xmltooling::QName m_role;
+        xmltooling::QName* m_role;
         const xmltooling::TrustEngine* m_trust;
     };
 

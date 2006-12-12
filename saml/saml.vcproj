@@ -241,6 +241,10 @@
 							>
 						</File>
 						<File
+							RelativePath=".\saml1\binding\impl\SAML1MessageRule.cpp"
+							>
+						</File>
+						<File
 							RelativePath=".\saml1\binding\impl\SAML1POSTDecoder.cpp"
 							>
 						</File>
@@ -415,6 +419,10 @@
 									XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
 								/>
 							</FileConfiguration>
+						</File>
+						<File
+							RelativePath=".\saml2\binding\impl\SAML2MessageRule.cpp"
+							>
 						</File>
 						<File
 							RelativePath=".\saml2\binding\impl\SAML2POSTDecoder.cpp"
@@ -620,6 +628,10 @@
 						>
 					</File>
 					<File
+						RelativePath=".\saml1\binding\SAML1MessageRule.h"
+						>
+					</File>
+					<File
 						RelativePath=".\saml1\binding\SAML1POSTDecoder.h"
 						>
 					</File>
@@ -729,6 +741,10 @@
 					</File>
 					<File
 						RelativePath=".\saml2\binding\SAML2ArtifactType0004.h"
+						>
+					</File>
+					<File
+						RelativePath=".\saml2\binding\SAML2MessageRule.h"
 						>
 					</File>
 					<File

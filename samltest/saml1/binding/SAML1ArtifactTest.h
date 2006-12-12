@@ -51,7 +51,7 @@ public:
     void testSAML1Artifact() {
         try {
             QName idprole(samlconstants::SAML20MD_NS, IDPSSODescriptor::LOCAL_NAME);
-            SecurityPolicy policy(m_rules, m_metadata, &idprole, m_trust);
+            SecurityPolicy policy(m_rules1, m_metadata, &idprole, m_trust);
 
             // Read message to use from file.
             string path = data_path + "saml1/binding/SAML1Assertion.xml";
@@ -89,6 +89,7 @@ public:
             TSM_ASSERT_EQUALS("Assertion count was not correct.", response->getAssertions().size(), 1);
 
             // Trigger a replay.
+            policy.reset();
             TSM_ASSERT_THROWS("Did not catch the replay.", decoder->decode(relayState,*this,policy), BindingException);
         }
         catch (XMLToolingException& ex) {

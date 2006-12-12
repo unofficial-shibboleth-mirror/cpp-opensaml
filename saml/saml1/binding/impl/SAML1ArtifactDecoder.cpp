@@ -123,6 +123,12 @@ XMLObject* SAML1ArtifactDecoder::decode(
         auto_ptr_char issuer(provider->getEntityID());
         log.debug("lookup succeeded, artifact issued by (%s)", issuer.get());
     }
+
+    // Mock up an Issuer object for the policy.
+    auto_ptr<saml2::Issuer> issuer(saml2::IssuerBuilder::buildIssuer());
+    issuer->setName(provider->getEntityID());
+    policy.setIssuer(issuer.get());
+    issuer.release();   // owned by policy now
     
     log.debug("attempting to find artifact issuing role...");
     const RoleDescriptor* roledesc=provider->getRoleDescriptor(*(policy.getRole()), samlconstants::SAML11_PROTOCOL_ENUM);
@@ -131,9 +137,9 @@ XMLObject* SAML1ArtifactDecoder::decode(
     if (!roledesc || !dynamic_cast<const IDPSSODescriptor*>(roledesc)) {
         log.error("unable to find compatible SAML role (%s) in metadata", policy.getRole()->toString().c_str());
         for_each(artifacts.begin(), artifacts.end(), xmltooling::cleanup<SAMLArtifact>());
-        BindingException ex("Unable to find compatible metadata role for artifact issuer.");
-        annotateException(&ex,provider); // throws it
+        throw BindingException("Unable to find compatible metadata role for artifact issuer.");
     }
+    policy.setIssuerMetadata(roledesc);
     
     try {
         auto_ptr<Response> response(
@@ -145,9 +151,8 @@ XMLObject* SAML1ArtifactDecoder::decode(
         for_each(artifacts.begin(), artifacts.end(), xmltooling::cleanup<SAMLArtifact>());
         return response.release();
     }
-    catch (XMLToolingException& ex) {
+    catch (XMLToolingException&) {
         for_each(artifacts.begin(), artifacts.end(), xmltooling::cleanup<SAMLArtifact>());
-        annotateException(&ex,roledesc,false);
         throw;
     }
 }

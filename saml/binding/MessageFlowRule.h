@@ -27,8 +27,8 @@ namespace opensaml {
     /**
      * SAML replay and freshness checking SecurityPolicyRule
      * 
-     * Subclasses can provide support for additional message types
-     * by overriding the main method and then calling the check method.
+     * Some form of message rule to extract ID and timestamp must be
+     * run prior to this rule.
      */
     class SAML_API MessageFlowRule : public SecurityPolicyRule
     {
@@ -36,13 +36,7 @@ namespace opensaml {
         MessageFlowRule(const DOMElement* e);
         virtual ~MessageFlowRule() {}
         
-        std::pair<saml2::Issuer*,const saml2md::RoleDescriptor*> evaluate(
-            const xmltooling::XMLObject& message,
-            const GenericRequest* request,
-            const saml2md::MetadataProvider* metadataProvider,
-            const xmltooling::QName* role,
-            const xmltooling::TrustEngine* trustEngine
-            ) const;
+        void evaluate(const xmltooling::XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const;
 
         /**
          * Controls whether rule executes replay checking.
@@ -61,17 +55,6 @@ namespace opensaml {
         void setExpires(time_t expires) {
             m_expires = expires;
         }
-
-    protected:
-        /**
-         * Performs the check.
-         * 
-         * @param id            message identifier
-         * @param issueInstant  timestamp of protocol message
-         * 
-         * @exception BindingException  raised if a check fails  
-         */
-        void check(const XMLCh* id, time_t issueInstant) const;
     
     private:
         bool m_checkReplay;

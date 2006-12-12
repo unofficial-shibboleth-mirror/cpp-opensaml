@@ -23,18 +23,9 @@
 #ifndef __saml_secrule_h__
 #define __saml_secrule_h__
 
-#include <saml/binding/GenericRequest.h>
-#include <xmltooling/XMLObject.h>
-#include <xmltooling/security/TrustEngine.h>
+#include <saml/binding/SecurityPolicy.h>
 
 namespace opensaml {
-    namespace saml2 {
-        class SAML_API Issuer;
-    };
-    namespace saml2md {
-        class SAML_API MetadataProvider;
-        class SAML_API RoleDescriptor;
-    };
     
     /**
      * A rule that a protocol request and message must meet in order to be valid and secure.
@@ -55,22 +46,14 @@ namespace opensaml {
          * Evaluates the rule against the given request and message. If an Issuer is
          * returned, the caller is responsible for freeing the Issuer object.
          * 
-         * @param message           the incoming message
-         * @param request           the protocol request
-         * @param metadataProvider  locked MetadataProvider instance to authenticate the message
-         * @param role              identifies the role (generally IdP or SP) of the peer who issued the message 
-         * @param trustEngine       TrustEngine to authenticate the message
-         * @param extractor         MessageExtractor to use in examining message
-         * @return the identity of the message issuer, in two forms, or NULL
+         * @param message   the incoming message
+         * @param request   the protocol request
+         * @param policy    SecurityPolicy to provide various components and track message data
          * 
          * @throws BindingException thrown if the request/message do not meet the requirements of this rule
          */
-        virtual std::pair<saml2::Issuer*,const saml2md::RoleDescriptor*> evaluate(
-            const xmltooling::XMLObject& message,
-            const GenericRequest* request,
-            const saml2md::MetadataProvider* metadataProvider,
-            const xmltooling::QName* role,
-            const xmltooling::TrustEngine* trustEngine
+        virtual void evaluate(
+            const xmltooling::XMLObject& message, const GenericRequest* request, SecurityPolicy& policy
             ) const=0;
     };
 
@@ -80,10 +63,23 @@ namespace opensaml {
     void SAML_API registerSecurityPolicyRules();
 
     /**
+     * SecurityPolicyRule for processing SAML 1.x messages.
+     * 
+     * Extracts message ID, timestamp, and issuer information.
+     */
+    #define SAML1MESSAGE_POLICY_RULE  "org.opensaml.saml1.binding.SAML1MessageRule"
+
+    /**
+     * SecurityPolicyRule for processing SAML 2.0 messages.
+     * 
+     * Extracts message ID, timestamp, and issuer information.
+     */
+    #define SAML2MESSAGE_POLICY_RULE  "org.opensaml.saml2.binding.SAML2MessageRule"
+
+    /**
      * SecurityPolicyRule for TLS client certificate authentication.
      * 
-     * Requires that messages carry information about the issuer, and then
-     * evaluates the claimed certificates against the issuer's metadata.
+     * Evaluates client certificates against the issuer's metadata.
      */
     #define CLIENTCERTAUTH_POLICY_RULE  "org.opensaml.binding.ClientCertAuthRule"
 

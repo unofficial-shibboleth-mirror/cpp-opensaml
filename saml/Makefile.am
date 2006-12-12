@@ -74,7 +74,8 @@ saml1bindinclude_HEADERS = \
 	saml1/binding/SAML1POSTEncoder.h \
 	saml1/binding/SAML1SOAPDecoder.h \
 	saml1/binding/SAML1SOAPEncoder.h \
-	saml1/binding/SAML1SOAPClient.h
+	saml1/binding/SAML1SOAPClient.h \
+	saml1/binding/SAML1MessageRule.h
 
 saml2coreinclude_HEADERS = \
 	saml2/core/Assertions.h \
@@ -92,7 +93,8 @@ saml2bindinclude_HEADERS = \
 	saml2/binding/SAML2RedirectEncoder.h \
 	saml2/binding/SAML2SOAPDecoder.h \
 	saml2/binding/SAML2SOAPEncoder.h \
-	saml2/binding/SAML2SOAPClient.h
+	saml2/binding/SAML2SOAPClient.h  \
+	saml1/binding/SAML2MessageRule.h
 	
 saml2mdinclude_HEADERS = \
 	saml2/metadata/AbstractMetadataProvider.h \
@@ -132,6 +134,7 @@ libsaml_la_SOURCES = \
 	saml1/binding/impl/SAML1SOAPDecoder.cpp \
 	saml1/binding/impl/SAML1SOAPEncoder.cpp \
 	saml1/binding/impl/SAML1SOAPClient.cpp \
+	saml1/binding/impl/SAML1MessageRule.cpp \
 	saml2/core/impl/Assertions20Impl.cpp \
 	saml2/core/impl/Assertions20SchemaValidators.cpp \
 	saml2/core/impl/Protocols20Impl.cpp \
@@ -158,6 +161,7 @@ libsaml_la_SOURCES = \
 	saml2/binding/impl/SAML2SOAPDecoder.cpp \
 	saml2/binding/impl/SAML2SOAPEncoder.cpp \
 	saml2/binding/impl/SAML2SOAPClient.cpp \
+	saml2/binding/impl/SAML2MessageRule.cpp \
 	encryption/EncryptedKeyResolver.cpp \
 	signature/ContentReference.cpp \
 	signature/SignatureProfileValidator.cpp \

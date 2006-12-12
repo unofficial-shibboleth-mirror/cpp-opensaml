@@ -22,13 +22,11 @@
 
 #include "internal.h"
 #include "exceptions.h"
-#include "RootObject.h"
 #include "binding/MessageFlowRule.h"
-#include "util/SAMLConstants.h"
 
-#include <xmltooling/util/NDC.h>
-#include <xmltooling/util/ReplayCache.h>
 #include <log4cpp/Category.hh>
+#include <xmltooling/util/ReplayCache.h>
+#include <xercesc/util/XMLUniDefs.hpp>
 
 using namespace opensaml;
 using namespace xmltooling;
@@ -58,37 +56,16 @@ MessageFlowRule::MessageFlowRule(const DOMElement* e)
     }
 }
 
-pair<saml2::Issuer*,const saml2md::RoleDescriptor*> MessageFlowRule::evaluate(
-    const XMLObject& message,
-    const GenericRequest* request,
-    const saml2md::MetadataProvider* metadataProvider,
-    const QName* role,
-    const TrustEngine* trustEngine
-    ) const
-{
-    Category& log=Category::getInstance(SAML_LOGCAT".SecurityPolicyRule.MessageFlow");
-    log.debug("evaluating message flow policy");
-
-    try {
-        const XMLCh* ns = message.getElementQName().getNamespaceURI();
-        if (ns && (XMLString::equals(ns, samlconstants::SAML20P_NS) || XMLString::equals(ns, samlconstants::SAML1P_NS))) {
-            const RootObject& obj = dynamic_cast<const RootObject&>(message);
-            check(obj.getID(), obj.getIssueInstantEpoch());
-        }
-        else {
-            log.debug("ignoring unrecognized message type");
-        }
-    }
-    catch (bad_cast&) {
-        log.warn("caught a bad_cast while extracting issuer");
-    }
-    return pair<saml2::Issuer*,const saml2md::RoleDescriptor*>(NULL,NULL);
-}
-
-void MessageFlowRule::check(const XMLCh* id, time_t issueInstant) const
+void MessageFlowRule::evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const
 {
     Category& log=Category::getInstance(SAML_LOGCAT".SecurityPolicyRule.MessageFlow");
     log.debug("evaluating message flow policy (replay checking %s, expiration %lu)", m_checkReplay ? "on" : "off", m_expires);
+
+    time_t issueInstant = policy.getIssueInstant();
+    if (issueInstant == 0) {
+        log.error("unknown message timestamp");
+        throw BindingException("Message rejected, no timestamp available.");
+    }
     
     time_t skew = XMLToolingConfig::getConfig().clock_skew_secs;
     time_t now = time(NULL);
@@ -105,12 +82,13 @@ void MessageFlowRule::check(const XMLCh* id, time_t issueInstant) const
     
     // Check replay.
     if (m_checkReplay) {
+        const XMLCh* id = policy.getMessageID();
         ReplayCache* replayCache = XMLToolingConfig::getConfig().getReplayCache();
         if (!replayCache)
-            throw BindingException("No ReplayCache instance available.");
+            throw BindingException("Message rejected, no ReplayCache instance available.");
         else if (!id)
-            throw BindingException("Message did not contain an identifier.");
-        auto_ptr_char temp(id);  
+            throw BindingException("Message rejected, did not contain an identifier.");
+        auto_ptr_char temp(id);
         if (!replayCache->check("SAML", temp.get(), issueInstant + skew + m_expires)) {
             log.error("replay detected of message ID (%s)", temp.get());
             throw BindingException("Rejecting replayed message ID ($1).", params(1,temp.get()));

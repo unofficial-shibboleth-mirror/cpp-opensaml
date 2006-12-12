@@ -124,33 +124,33 @@ XMLObject* SAML2ArtifactDecoder::decode(
         auto_ptr_char issuer(provider->getEntityID());
         log.debug("lookup succeeded, artifact issued by (%s)", issuer.get());
     }
+
+    // Mock up an Issuer object for the policy.
+    auto_ptr<Issuer> issuer(IssuerBuilder::buildIssuer());
+    issuer->setName(provider->getEntityID());
+    policy.setIssuer(issuer.get());
+    issuer.release();   // owned by policy now
     
     log.debug("attempting to find artifact issuing role...");
     const RoleDescriptor* roledesc=provider->getRoleDescriptor(*(policy.getRole()), samlconstants::SAML20P_NS);
     if (!roledesc || !dynamic_cast<const SSODescriptorType*>(roledesc)) {
         log.error("unable to find compatible SAML role (%s) in metadata", policy.getRole()->toString().c_str());
-        BindingException ex("Unable to find compatible metadata role for artifact issuer.");
-        annotateException(&ex,provider); // throws it
+        throw BindingException("Unable to find compatible metadata role for artifact issuer.");
     }
+    policy.setIssuerMetadata(roledesc);
     
-    try {
-        auto_ptr<ArtifactResponse> response(
-            m_artifactResolver->resolve(*(artifact2.get()), dynamic_cast<const SSODescriptorType&>(*roledesc), policy)
-            );
-        
-        policy.evaluate(*(response.get()), &genericRequest);
+    auto_ptr<ArtifactResponse> response(
+        m_artifactResolver->resolve(*(artifact2.get()), dynamic_cast<const SSODescriptorType&>(*roledesc), policy)
+        );
+    
+    policy.evaluate(*(response.get()), &genericRequest);
 
-        // Extract payload and check that message.
-        XMLObject* payload = response->getPayload();
-        policy.evaluate(*payload, &genericRequest);
+    // Extract payload and check that message.
+    XMLObject* payload = response->getPayload();
+    policy.evaluate(*payload, &genericRequest);
 
-        // Return the payload only.
-        response.release();
-        payload->detach(); 
-        return payload;
-    }
-    catch (XMLToolingException& ex) {
-        annotateException(&ex,roledesc,false);
-        throw;
-    }
+    // Return the payload only.
+    response.release();
+    payload->detach(); 
+    return payload;
 }

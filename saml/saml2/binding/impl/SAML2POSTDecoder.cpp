@@ -111,59 +111,22 @@ XMLObject* SAML2POSTDecoder::decode(
         root = static_cast<saml2::RootObject*>(request);
     }
     
-    try {
-        if (!m_validate)
-            SchemaValidators.validate(xmlObject.get());
-        
-        // Check destination URL.
-        auto_ptr_char dest(request ? request->getDestination() : response->getDestination());
-        const char* dest2 = httpRequest->getRequestURL();
-        if ((root->getSignature() || httpRequest->getParameter("Signature")) && !dest.get() || !*(dest.get())) {
-            log.error("signed SAML message missing Destination attribute");
-            throw BindingException("Signed SAML message missing Destination attribute identifying intended destination.");
-        }
-        else if (dest.get() && (!dest2 || !*dest2 || strcmp(dest.get(),dest2))) {
-            log.error("POST targeted at (%s), but delivered to (%s)", dest.get(), dest2 ? dest2 : "none");
-            throw BindingException("SAML message delivered with POST to incorrect server URL.");
-        }
-        
-        // Run through the policy.
-        policy.evaluate(*root, &genericRequest);
-    }
-    catch (XMLToolingException& ex) {
-        // This is just to maximize the likelihood of attaching a source to the message for support purposes.
-        if (policy.getIssuerMetadata())
-            annotateException(&ex,policy.getIssuerMetadata()); // throws it
-
-        const Issuer* claimedIssuer = root->getIssuer();
-        if (!claimedIssuer) {
-            // Check for assertions.
-            const Response* assbag = dynamic_cast<Response*>(response);
-            if (assbag) {
-                const vector<Assertion*>& assertions=assbag->getAssertions();
-                if (!assertions.empty())
-                    claimedIssuer = assertions.front()->getIssuer();
-            }
-        }
+    if (!m_validate)
+        SchemaValidators.validate(xmlObject.get());
     
-        if (!claimedIssuer || !claimedIssuer->getName())
-            throw;
-        const EntityDescriptor* provider=NULL;
-        if (!policy.getMetadataProvider() ||
-                !(provider=policy.getMetadataProvider()->getEntityDescriptor(claimedIssuer->getName(), false))) {
-            // Just record it.
-            auto_ptr_char iname(claimedIssuer->getName());
-            if (iname.get())
-                ex.addProperty("entityID", iname.get());
-            throw;
-        }
-
-        if (policy.getRole()) {
-            const RoleDescriptor* roledesc=provider->getRoleDescriptor(*(policy.getRole()), samlconstants::SAML20P_NS);
-            if (roledesc) annotateException(&ex,roledesc); // throws it
-        }
-        annotateException(&ex,provider);  // throws it
+    // Check destination URL.
+    auto_ptr_char dest(request ? request->getDestination() : response->getDestination());
+    const char* dest2 = httpRequest->getRequestURL();
+    if ((root->getSignature() || httpRequest->getParameter("Signature")) && !dest.get() || !*(dest.get())) {
+        log.error("signed SAML message missing Destination attribute");
+        throw BindingException("Signed SAML message missing Destination attribute identifying intended destination.");
     }
-
+    else if (dest.get() && (!dest2 || !*dest2 || strcmp(dest.get(),dest2))) {
+        log.error("POST targeted at (%s), but delivered to (%s)", dest.get(), dest2 ? dest2 : "none");
+        throw BindingException("SAML message delivered with POST to incorrect server URL.");
+    }
+    
+    // Run through the policy.
+    policy.evaluate(*root, &genericRequest);
     return xmlObject.release();
 }
