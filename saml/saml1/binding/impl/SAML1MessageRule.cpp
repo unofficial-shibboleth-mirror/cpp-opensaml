@@ -53,16 +53,17 @@ void SAML1MessageRule::evaluate(const XMLObject& message, const GenericRequest* 
     
     const QName& q = message.getElementQName(); 
     policy.setMessageQName(&q);
+
+    if (!XMLString::equals(q.getNamespaceURI(), samlconstants::SAML1P_NS)) {
+        log.debug("not a SAML 1.x protocol message");
+        return;
+    }
+
     
     try {
         const RootObject& samlRoot = dynamic_cast<const RootObject&>(message);
         policy.setMessageID(samlRoot.getID());
         policy.setIssueInstant(samlRoot.getIssueInstantEpoch());
-
-        if (!XMLString::equals(q.getNamespaceURI(), samlconstants::SAML1P_NS)) {
-            log.warn("not a SAML 1.x protocol message");
-            throw BindingException("Message was not a recognized SAML 1.x protocol element.");
-        }
 
         log.debug("extracting issuer from message");
 

@@ -122,6 +122,7 @@ public:
         sc->setValue(StatusCode::SUCCESS);
         response->marshall();
         SchemaValidators.validate(response.get());
+        policy.evaluate(*(response.get()), this);
         return response.release();
     }
 };

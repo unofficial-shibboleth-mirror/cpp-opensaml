@@ -52,27 +52,26 @@ void SAML2MessageRule::evaluate(const XMLObject& message, const GenericRequest* 
     const QName& q = message.getElementQName(); 
     policy.setMessageQName(&q);
     
+    if (!XMLString::equals(q.getNamespaceURI(), samlconstants::SAML20P_NS)) {
+        log.debug("not a SAML 2.0 protocol message");
+        return;
+    }
+
     try {
-        const opensaml::RootObject& samlRoot = dynamic_cast<const opensaml::RootObject&>(message);
+        const saml2::RootObject& samlRoot = dynamic_cast<const saml2::RootObject&>(message);
         policy.setMessageID(samlRoot.getID());
         policy.setIssueInstant(samlRoot.getIssueInstantEpoch());
 
-        if (!XMLString::equals(q.getNamespaceURI(), samlconstants::SAML20P_NS)) {
-            log.warn("not a SAML 2.0 protocol message");
-            throw BindingException("Message was not a recognized SAML 2.0 protocol element.");
-        }
-
         log.debug("extracting issuer from message");
-        const saml2::RootObject& saml2Root = dynamic_cast<const saml2::RootObject&>(samlRoot);
-        Issuer* issuer = saml2Root.getIssuer();
+        Issuer* issuer = samlRoot.getIssuer();
         if (issuer && issuer->getName()) {
             auto_ptr<Issuer> copy(issuer->cloneIssuer());
             policy.setIssuer(copy.get());
             copy.release();
         }
-        else {
+        else if (XMLString::equals(q.getLocalPart(), Response::LOCAL_NAME)) {
             // No issuer in the message, so we have to try the Response approach. 
-            const vector<Assertion*>& assertions = dynamic_cast<const Response&>(saml2Root).getAssertions();
+            const vector<Assertion*>& assertions = dynamic_cast<const Response&>(samlRoot).getAssertions();
             if (!assertions.empty()) {
                 issuer = assertions.front()->getIssuer();
                 if (issuer && issuer->getName()) {

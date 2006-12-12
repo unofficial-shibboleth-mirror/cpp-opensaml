@@ -146,6 +146,7 @@ public:
         vector<Signature*> sigs(1,response->getSignature());
         response->marshall((DOMDocument*)NULL,&sigs);
         SchemaValidators.validate(response.get());
+        policy.evaluate(*(response.get()), this);
         return response.release();
     }
 

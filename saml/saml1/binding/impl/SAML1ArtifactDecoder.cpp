@@ -146,7 +146,7 @@ XMLObject* SAML1ArtifactDecoder::decode(
             m_artifactResolver->resolve(artifacts, dynamic_cast<const IDPSSODescriptor&>(*roledesc), policy)
             );
         
-        policy.evaluate(*(response.get()), &genericRequest);
+        // The policy should be enforced against the Response by the resolve step.
         
         for_each(artifacts.begin(), artifacts.end(), xmltooling::cleanup<SAMLArtifact>());
         return response.release();
