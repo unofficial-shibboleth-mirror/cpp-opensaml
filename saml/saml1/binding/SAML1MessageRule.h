@@ -34,7 +34,7 @@ namespace opensaml {
             SAML1MessageRule(const DOMElement* e) {}
             virtual ~SAML1MessageRule() {}
             
-            void evaluate(const xmltooling::XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const;
+            bool evaluate(const xmltooling::XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const;
         };
     };
 };

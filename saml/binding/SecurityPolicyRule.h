@@ -43,16 +43,20 @@ namespace opensaml {
         virtual ~SecurityPolicyRule() {}
 
         /**
-         * Evaluates the rule against the given request and message. If an Issuer is
-         * returned, the caller is responsible for freeing the Issuer object.
+         * Evaluates the rule against the given request and message.
+         * 
+         * <p>Exceptions should be reserved for fatal request processing errors;
+         * otherwise rules should return false to indicate they were not applicable
+         * or unsuccessful.
          * 
          * @param message   the incoming message
          * @param request   the protocol request
          * @param policy    SecurityPolicy to provide various components and track message data
+         * @return  true iff the rule ran successfully, false otherwise
          * 
-         * @throws BindingException thrown if the request/message do not meet the requirements of this rule
+         * @throws BindingException thrown if the request/message is invalid in some way
          */
-        virtual void evaluate(
+        virtual bool evaluate(
             const xmltooling::XMLObject& message, const GenericRequest* request, SecurityPolicy& policy
             ) const=0;
     };

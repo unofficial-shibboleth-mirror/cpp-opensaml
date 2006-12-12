@@ -36,7 +36,7 @@ namespace opensaml {
         MessageFlowRule(const DOMElement* e);
         virtual ~MessageFlowRule() {}
         
-        void evaluate(const xmltooling::XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const;
+        bool evaluate(const xmltooling::XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const;
 
         /**
          * Controls whether rule executes replay checking.

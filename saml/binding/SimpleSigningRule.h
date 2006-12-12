@@ -34,7 +34,7 @@ namespace opensaml {
         SimpleSigningRule(const DOMElement* e) {}
         virtual ~SimpleSigningRule() {}
         
-        void evaluate(const xmltooling::XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const;
+        bool evaluate(const xmltooling::XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const;
     };
     
 };

@@ -33,6 +33,6 @@ namespace opensaml {
         ClientCertAuthRule(const DOMElement* e) {}
         virtual ~ClientCertAuthRule() {}
         
-        void evaluate(const xmltooling::XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const;
+        bool evaluate(const xmltooling::XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const;
     };
 };

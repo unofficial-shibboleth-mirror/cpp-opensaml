@@ -56,7 +56,7 @@ MessageFlowRule::MessageFlowRule(const DOMElement* e)
     }
 }
 
-void MessageFlowRule::evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const
+bool MessageFlowRule::evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const
 {
     Category& log=Category::getInstance(SAML_LOGCAT".SecurityPolicyRule.MessageFlow");
     log.debug("evaluating message flow policy (replay checking %s, expiration %lu)", m_checkReplay ? "on" : "off", m_expires);
@@ -94,4 +94,6 @@ void MessageFlowRule::evaluate(const XMLObject& message, const GenericRequest* r
             throw BindingException("Rejecting replayed message ID ($1).", params(1,temp.get()));
         }
     }
+
+    return true;
 }

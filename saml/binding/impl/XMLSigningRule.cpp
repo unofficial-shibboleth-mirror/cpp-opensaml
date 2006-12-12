@@ -43,24 +43,24 @@ namespace opensaml {
     }
 };
 
-void XMLSigningRule::evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const
+bool XMLSigningRule::evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const
 {
     Category& log=Category::getInstance(SAML_LOGCAT".SecurityPolicyRule.XMLSigning");
     log.debug("evaluating message signing policy");
     
     if (!policy.getIssuerMetadata()) {
         log.debug("ignoring message, no issuer metadata supplied");
-        return;
+        return false;
     }
     else if (!policy.getTrustEngine()) {
         log.debug("ignoring message, no TrustEngine supplied");
-        return;
+        return false;
     }
     
     const SignableObject* signable = dynamic_cast<const SignableObject*>(&message);
     if (!signable || !signable->getSignature()) {
         log.debug("ignoring unsigned or unrecognized message");
-        return;
+        return false;
     }
     
     log.debug("validating signature profile");
@@ -70,15 +70,16 @@ void XMLSigningRule::evaluate(const XMLObject& message, const GenericRequest* re
     }
     catch (ValidationException& ve) {
         log.error("signature profile failed to validate: %s", ve.what());
-        return;
+        return false;
     }
     
     if (!policy.getTrustEngine()->validate(
             *(signable->getSignature()), *(policy.getIssuerMetadata()), policy.getMetadataProvider()->getKeyResolver()
             )) {
         log.error("unable to verify message signature with supplied trust engine");
-        return;
+        return false;
     }
 
     log.debug("signature verified against message issuer");
+    return true;
 }

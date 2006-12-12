@@ -33,7 +33,7 @@ namespace opensaml {
         XMLSigningRule(const DOMElement* e) {}
         virtual ~XMLSigningRule() {}
         
-        void evaluate(const xmltooling::XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const;
+        bool evaluate(const xmltooling::XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const;
     };
     
 };
