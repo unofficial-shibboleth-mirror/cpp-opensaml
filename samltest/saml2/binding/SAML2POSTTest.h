@@ -78,7 +78,7 @@ public:
             // Test the results.
             TSM_ASSERT_EQUALS("RelayState was not the expected result.", relayState, "state");
             TSM_ASSERT("SAML Response not decoded successfully.", response.get());
-            TSM_ASSERT("Message was not verified.", policy.getIssuer()!=NULL);
+            TSM_ASSERT("Message was not verified.", policy.isSecure());
             auto_ptr_char entityID(policy.getIssuer()->getName());
             TSM_ASSERT("Issuer was not expected.", !strcmp(entityID.get(),"https://idp.example.org/"));
             TSM_ASSERT_EQUALS("Assertion count was not correct.", response->getAssertions().size(), 1);
@@ -140,7 +140,7 @@ public:
             // Test the results.
             TSM_ASSERT_EQUALS("RelayState was not the expected result.", relayState, "state");
             TSM_ASSERT("SAML Response not decoded successfully.", response.get());
-            TSM_ASSERT("Message was not verified.", policy.getIssuer()!=NULL);
+            TSM_ASSERT("Message was not verified.", policy.isSecure());
             auto_ptr_char entityID(policy.getIssuer()->getName());
             TSM_ASSERT("Issuer was not expected.", !strcmp(entityID.get(),"https://idp.example.org/"));
             TSM_ASSERT_EQUALS("Assertion count was not correct.", response->getAssertions().size(), 1);

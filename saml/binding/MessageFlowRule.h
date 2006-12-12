@@ -20,6 +20,9 @@
  * SAML replay and freshness checking SecurityPolicyRule
  */
 
+#ifndef __saml_flowrule_h__
+#define __saml_flowrule_h__
+
 #include <saml/binding/SecurityPolicyRule.h>
 
 
@@ -36,7 +39,7 @@ namespace opensaml {
         MessageFlowRule(const DOMElement* e);
         virtual ~MessageFlowRule() {}
         
-        bool evaluate(const xmltooling::XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const;
+        void evaluate(const xmltooling::XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const;
 
         /**
          * Controls whether rule executes replay checking.
@@ -62,3 +65,5 @@ namespace opensaml {
     };
     
 };
+
+#endif /* __saml_flowrule_h__ */

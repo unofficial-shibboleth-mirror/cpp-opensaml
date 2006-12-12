@@ -47,7 +47,7 @@ namespace opensaml {
     }
 };
 
-bool SAML1MessageRule::evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const
+void SAML1MessageRule::evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const
 {
     Category& log=Category::getInstance(SAML_LOGCAT".SecurityPolicyRule.SAML1Message");
     
@@ -87,7 +87,7 @@ bool SAML1MessageRule::evaluate(const XMLObject& message, const GenericRequest* 
         
         if (!protocol) {
             log.warn("issuer identity not extracted");
-            return false;
+            return;
         }
 
         if (log.isDebugEnabled()) {
@@ -101,23 +101,20 @@ bool SAML1MessageRule::evaluate(const XMLObject& message, const GenericRequest* 
             if (!entity) {
                 auto_ptr_char temp(policy.getIssuer()->getName());
                 log.warn("no metadata found, can't establish identity of issuer (%s)", temp.get());
-                return false;
+                return;
             }
     
             log.debug("matched message issuer against metadata, searching for applicable role...");
             const RoleDescriptor* roledesc=entity->getRoleDescriptor(*policy.getRole(), protocol);
             if (!roledesc) {
                 log.warn("unable to find compatible role (%s) in metadata", policy.getRole()->toString().c_str());
-                return false;
+                return;
             }
             policy.setIssuerMetadata(roledesc);
-            return true;
         }
     }
     catch (bad_cast&) {
         // Just trap it.
         log.warn("caught a bad_cast while examining message");
     }
-
-    return false;
 }

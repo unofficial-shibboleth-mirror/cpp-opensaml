@@ -45,7 +45,7 @@ namespace opensaml {
     }
 };
 
-bool SAML2MessageRule::evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const
+void SAML2MessageRule::evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const
 {
     Category& log=Category::getInstance(SAML_LOGCAT".SecurityPolicyRule.SAML2Message");
     
@@ -85,7 +85,7 @@ bool SAML2MessageRule::evaluate(const XMLObject& message, const GenericRequest* 
 
         if (!policy.getIssuer()) {
             log.warn("issuer identity not extracted");
-            return false;
+            return;
         }
 
         if (log.isDebugEnabled()) {
@@ -96,7 +96,7 @@ bool SAML2MessageRule::evaluate(const XMLObject& message, const GenericRequest* 
         if (policy.getMetadataProvider() && policy.getRole()) {
             if (policy.getIssuer()->getFormat() && !XMLString::equals(policy.getIssuer()->getFormat(), saml2::NameIDType::ENTITY)) {
                 log.warn("non-system entity issuer, skipping metadata lookup");
-                return false;
+                return;
             }
             
             log.debug("searching metadata for message issuer...");
@@ -104,23 +104,20 @@ bool SAML2MessageRule::evaluate(const XMLObject& message, const GenericRequest* 
             if (!entity) {
                 auto_ptr_char temp(policy.getIssuer()->getName());
                 log.warn("no metadata found, can't establish identity of issuer (%s)", temp.get());
-                return false;
+                return;
             }
     
             log.debug("matched message issuer against metadata, searching for applicable role...");
             const RoleDescriptor* roledesc=entity->getRoleDescriptor(*policy.getRole(), samlconstants::SAML20P_NS);
             if (!roledesc) {
                 log.warn("unable to find compatible role (%s) in metadata", policy.getRole()->toString().c_str());
-                return false;
+                return;
             }
             policy.setIssuerMetadata(roledesc);
-            return true;
         }
     }
     catch (bad_cast&) {
         // Just trap it.
         log.warn("caught a bad_cast while examining message");
     }
-
-    return false;
 }

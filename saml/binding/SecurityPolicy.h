@@ -72,7 +72,7 @@ namespace opensaml {
             const saml2md::MetadataProvider* metadataProvider=NULL,
             const xmltooling::QName* role=NULL,
             const xmltooling::TrustEngine* trustEngine=NULL
-            ) : m_messageQName(NULL), m_messageID(NULL), m_issueInstant(0), m_issuer(NULL), m_issuerRole(NULL),
+            ) : m_messageQName(NULL), m_messageID(NULL), m_issueInstant(0), m_issuer(NULL), m_issuerRole(NULL), m_secure(false),
                 m_matchingPolicy(NULL), m_metadata(metadataProvider), m_role(NULL), m_trust(trustEngine) {
             if (role)
                 m_role = new xmltooling::QName(*role);
@@ -92,7 +92,7 @@ namespace opensaml {
             const saml2md::MetadataProvider* metadataProvider=NULL,
             const xmltooling::QName* role=NULL,
             const xmltooling::TrustEngine* trustEngine=NULL
-            ) : m_messageQName(NULL), m_messageID(NULL), m_issueInstant(0), m_issuer(NULL), m_issuerRole(NULL),
+            ) : m_messageQName(NULL), m_messageID(NULL), m_issueInstant(0), m_issuer(NULL), m_issuerRole(NULL), m_secure(false),
                 m_matchingPolicy(NULL), m_rules(rules), m_metadata(metadataProvider), m_role(NULL), m_trust(trustEngine) {
             if (role)
                 m_role = new xmltooling::QName(*role);
@@ -171,8 +171,8 @@ namespace opensaml {
          * 
          * @param message           the incoming message
          * @param request           the protocol request
-         * 
-         * @throws BindingException thrown if the request/message do not meet the requirements of this policy
+         *
+         * @throws BindingException raised if the message/request is invalid according to the supplied rules
          */
         void evaluate(const xmltooling::XMLObject& message, const GenericRequest* request=NULL);
 
@@ -227,6 +227,15 @@ namespace opensaml {
         }
 
         /**
+         * Returns the security status as determined by the registered policies.
+         * 
+         * @return true iff a SecurityPolicyRule has indicated the issuer/message has been authenticated 
+         */
+        bool isSecure() const {
+            return m_secure;
+        }
+
+        /**
          * Sets the message element/type as determined by the registered policies.
          * 
          * @param messageQName message element/type
@@ -269,6 +278,15 @@ namespace opensaml {
          * @param issuerRole metadata for the role the issuer is operating in
          */
         void setIssuerMetadata(const saml2md::RoleDescriptor* issuerRole);
+
+        /**
+         * Sets the security status as determined by the registered policies.
+         * 
+         * @param secure indicates whether the issuer/message has been authenticated
+         */
+        void setSecure(bool secure) {
+            m_secure = secure;
+        }
         
         /** Allows override of rules for comparing saml2:Issuer information. */
         class SAML_API IssuerMatchingPolicy {
@@ -324,6 +342,7 @@ namespace opensaml {
         time_t m_issueInstant;
         saml2::Issuer* m_issuer;
         const saml2md::RoleDescriptor* m_issuerRole;
+        bool m_secure;
         
         // components governing policy rules
         IssuerMatchingPolicy* m_matchingPolicy;

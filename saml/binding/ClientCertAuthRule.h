@@ -20,6 +20,9 @@
  * TLS client authentication SecurityPolicyRule
  */
 
+#ifndef __saml_certrule_h__
+#define __saml_certrule_h__
+
 #include <saml/binding/SecurityPolicyRule.h>
 
 
@@ -33,6 +36,8 @@ namespace opensaml {
         ClientCertAuthRule(const DOMElement* e) {}
         virtual ~ClientCertAuthRule() {}
         
-        bool evaluate(const xmltooling::XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const;
+        void evaluate(const xmltooling::XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const;
     };
 };
+
+#endif /* __saml_certrule_h__ */

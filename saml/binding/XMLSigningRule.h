@@ -20,6 +20,9 @@
  * XML Signature checking SecurityPolicyRule
  */
 
+#ifndef __saml_xmlsignrule_h__
+#define __saml_xmlsignrule_h__
+
 #include <saml/binding/SecurityPolicyRule.h>
 
 
@@ -33,7 +36,9 @@ namespace opensaml {
         XMLSigningRule(const DOMElement* e) {}
         virtual ~XMLSigningRule() {}
         
-        bool evaluate(const xmltooling::XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const;
+        void evaluate(const xmltooling::XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const;
     };
     
 };
+
+#endif /* __saml_xmlsignrule_h__ */

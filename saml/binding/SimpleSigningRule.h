@@ -20,6 +20,9 @@
  * Blob-oriented signature checking SecurityPolicyRule
  */
 
+#ifndef __saml_simplesignrule_h__
+#define __saml_simplesignrule_h__
+
 #include <saml/binding/SecurityPolicyRule.h>
 
 
@@ -34,7 +37,9 @@ namespace opensaml {
         SimpleSigningRule(const DOMElement* e) {}
         virtual ~SimpleSigningRule() {}
         
-        bool evaluate(const xmltooling::XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const;
+        void evaluate(const xmltooling::XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const;
     };
     
 };
+
+#endif /* __saml_simplesignrule_h__ */

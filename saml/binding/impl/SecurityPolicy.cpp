@@ -68,6 +68,7 @@ void SecurityPolicy::reset()
     m_issueInstant=0;
     m_issuer=NULL;
     m_issuerRole=NULL;
+    m_secure=false;
 }
 
 void SecurityPolicy::evaluate(const XMLObject& message, const GenericRequest* request)

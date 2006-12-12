@@ -78,6 +78,7 @@ soap11::Envelope* SOAPClient::receive()
                 issuer->setName(parent->getEntityID());
                 m_policy.setIssuer(issuer);
                 m_policy.setIssuerMetadata(m_peer);
+                m_policy.setSecure(true);
             }
         }
         m_policy.evaluate(*(env.get()));

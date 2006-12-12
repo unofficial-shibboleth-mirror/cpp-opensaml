@@ -20,6 +20,9 @@
  * SAML 2.0 message extraction rule
  */
 
+#ifndef __saml_2msgrule_h__
+#define __saml_2msgrule_h__
+
 #include <saml/binding/SecurityPolicyRule.h>
 
 
@@ -34,7 +37,9 @@ namespace opensaml {
             SAML2MessageRule(const DOMElement* e) {}
             virtual ~SAML2MessageRule() {}
             
-            bool evaluate(const xmltooling::XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const;
+            void evaluate(const xmltooling::XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const;
         };
     };
 };
+
+#endif /* __saml_2msgrule_h__ */

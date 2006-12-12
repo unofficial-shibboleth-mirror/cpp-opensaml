@@ -17,7 +17,7 @@
 /**
  * ClientCertAuthRule.cpp
  * 
- * XML Signature checking SecurityPolicyRule
+ * TLS client authentication SecurityPolicyRule
  */
 
 #include "internal.h"
@@ -43,38 +43,38 @@ namespace opensaml {
     }
 };
 
-bool ClientCertAuthRule::evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const
+void ClientCertAuthRule::evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const
 {
     Category& log=Category::getInstance(SAML_LOGCAT".SecurityPolicyRule.ClientCertAuth");
     log.debug("evaluating client certificate authentication policy");
     
     if (!request) {
         log.debug("ignoring message, no protocol request available");
-        return false;
+        return;
     }
     else if (!policy.getIssuerMetadata()) {
         log.debug("ignoring message, no issuer metadata supplied");
-        return false;
+        return;
     }
 
     const X509TrustEngine* x509trust;
     if (!(x509trust=dynamic_cast<const X509TrustEngine*>(policy.getTrustEngine()))) {
         log.debug("ignoring message, no X509TrustEngine supplied");
-        return false;
+        return;
     }
     
     const std::vector<XSECCryptoX509*>& chain = request->getClientCertificates();
     if (chain.empty()) {
         log.debug("ignoring message, no client certificates in request");
-        return false;
+        return;
     }
     
     if (!x509trust->validate(chain.front(), chain, *(policy.getIssuerMetadata()), true,
             policy.getMetadataProvider()->getKeyResolver())) {
         log.error("unable to verify certificate chain with supplied trust engine");
-        return false;
+        return;
     }
     
     log.debug("client certificate verified against message issuer");
-    return true;
+    policy.setSecure(true);
 }

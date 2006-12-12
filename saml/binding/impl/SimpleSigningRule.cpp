@@ -62,36 +62,36 @@ namespace opensaml {
 };
 
 
-bool SimpleSigningRule::evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const
+void SimpleSigningRule::evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const
 {
     Category& log=Category::getInstance(SAML_LOGCAT".SecurityPolicyRule.SimpleSigning");
     log.debug("evaluating simple signing policy");
     
     if (!policy.getIssuerMetadata()) {
         log.debug("ignoring message, no issuer metadata supplied");
-        return false;
+        return;
     }
     else if (!policy.getTrustEngine()) {
         log.debug("ignoring message, no TrustEngine supplied");
-        return false;
+        return;
     }
 
     const HTTPRequest* httpRequest = dynamic_cast<const HTTPRequest*>(request);
     if (!request || !httpRequest) {
         log.debug("ignoring message, no HTTP protocol request available");
-        return false;
+        return;
     }
 
     const char* signature = request->getParameter("Signature");
     if (!signature) {
         log.debug("ignoring unsigned message");
-        return false;
+        return;
     }
     
     const char* sigAlgorithm = request->getParameter("SigAlg");
     if (!sigAlgorithm) {
         log.error("SigAlg parameter not found, no way to verify the signature");
-        return false;
+        return;
     }
 
     string input;
@@ -148,9 +148,9 @@ bool SimpleSigningRule::evaluate(const XMLObject& message, const GenericRequest*
             *(policy.getIssuerMetadata()), policy.getMetadataProvider()->getKeyResolver()
             )) {
         log.error("unable to verify message signature with supplied trust engine");
-        return false;
+        return;
     }
 
     log.debug("signature verified against message issuer");
-    return true;
+    policy.setSecure(true);
 }
