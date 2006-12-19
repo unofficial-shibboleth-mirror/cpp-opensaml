@@ -67,9 +67,9 @@ extern "C" void SAML_API xmltooling_extension_term()
     SAMLConfig::getConfig().term(false);
 }
 
-DECL_EXCEPTION_FACTORY(ArtifactException,opensaml);
-DECL_EXCEPTION_FACTORY(MetadataFilterException,opensaml::saml2md);
-DECL_EXCEPTION_FACTORY(BindingException,opensaml);
+DECL_XMLTOOLING_EXCEPTION_FACTORY(ArtifactException,opensaml);
+DECL_XMLTOOLING_EXCEPTION_FACTORY(MetadataFilterException,opensaml::saml2md);
+DECL_XMLTOOLING_EXCEPTION_FACTORY(BindingException,opensaml);
 
 namespace opensaml {
    SAMLInternalConfig g_config;
@@ -110,9 +110,9 @@ bool SAMLInternalConfig::init(bool initXMLTooling)
         log.debug("XMLTooling library initialized");
     }
 
-    REGISTER_EXCEPTION_FACTORY(ArtifactException,opensaml);
-    REGISTER_EXCEPTION_FACTORY(MetadataFilterException,opensaml::saml2md);
-    REGISTER_EXCEPTION_FACTORY(BindingException,opensaml);
+    REGISTER_XMLTOOLING_EXCEPTION_FACTORY(ArtifactException,opensaml);
+    REGISTER_XMLTOOLING_EXCEPTION_FACTORY(MetadataFilterException,opensaml::saml2md);
+    REGISTER_XMLTOOLING_EXCEPTION_FACTORY(BindingException,opensaml);
 
     saml1::registerAssertionClasses();
     saml1p::registerProtocolClasses();
