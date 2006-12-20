@@ -148,11 +148,11 @@ long SAML2ArtifactEncoder::encode(
         ifstream infile(m_template.c_str());
         if (!infile)
             throw BindingException("Failed to open HTML template for POST response ($1).", params(1,m_template.c_str()));
-        map<string,string> params;
-        params["action"] = destination;
-        params["SAMLart"] = artifact->encode();
+        TemplateEngine::TemplateParameters params;
+        params.m_map["action"] = destination;
+        params.m_map["SAMLart"] = artifact->encode();
         if (relayState)
-            params["RelayState"] = relayState;
+            params.m_map["RelayState"] = relayState;
         stringstream s;
         engine->run(infile, s, params);
         httpResponse->setContentType("text/html");

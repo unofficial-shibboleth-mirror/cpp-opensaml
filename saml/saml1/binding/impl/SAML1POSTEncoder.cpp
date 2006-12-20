@@ -129,10 +129,10 @@ long SAML1POSTEncoder::encode(
     ifstream infile(m_template.c_str());
     if (!infile)
         throw BindingException("Failed to open HTML template for POST response ($1).", params(1,m_template.c_str()));
-    map<string,string> params;
-    params["action"] = destination;
-    params["SAMLResponse"] = xmlbuf;
-    params["TARGET"] = relayState;
+    TemplateEngine::TemplateParameters params;
+    params.m_map["action"] = destination;
+    params.m_map["SAMLResponse"] = xmlbuf;
+    params.m_map["TARGET"] = relayState;
     stringstream s;
     engine->run(infile, s, params);
     genericResponse.setContentType("text/html");

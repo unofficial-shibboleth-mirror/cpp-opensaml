@@ -120,12 +120,12 @@ long SAML2POSTEncoder::encode(
     rootElement = xmlObject->marshall((DOMDocument*)NULL,&sigs);
     
     // Start tracking data.
-    map<string,string> pmap;
+    TemplateEngine::TemplateParameters pmap;
     if (relayState)
-        pmap["RelayState"] = relayState;
+        pmap.m_map["RelayState"] = relayState;
 
     // Base64 the message.
-    string& msg = pmap[(request ? "SAMLRequest" : "SAMLResponse")];
+    string& msg = pmap.m_map[(request ? "SAMLRequest" : "SAMLResponse")];
     XMLHelper::serialize(rootElement, msg);
     unsigned int len=0;
     XMLByte* out=Base64::encode(reinterpret_cast<const XMLByte*>(msg.data()),msg.size(),&len);
@@ -143,14 +143,14 @@ long SAML2POSTEncoder::encode(
         if (!sigAlgorithm)
             sigAlgorithm = DSIGConstants::s_unicodeStrURIRSA_SHA1;
         auto_ptr_char alg(sigAlgorithm);
-        pmap["SigAlg"] = alg.get();
+        pmap.m_map["SigAlg"] = alg.get();
         input = input + "&SigAlg=" + alg.get();
 
         char sigbuf[1024];
         memset(sigbuf,0,sizeof(sigbuf));
         auto_ptr<XSECCryptoKey> key(credResolver->getKey());
         Signature::createRawSignature(key.get(), sigAlgorithm, input.c_str(), input.length(), sigbuf, sizeof(sigbuf)-1);
-        pmap["Signature"] = sigbuf;
+        pmap.m_map["Signature"] = sigbuf;
     }
     
     // Push message into template and send result to client.
@@ -161,7 +161,7 @@ long SAML2POSTEncoder::encode(
     ifstream infile(m_template.c_str());
     if (!infile)
         throw BindingException("Failed to open HTML template for POST message ($1).", params(1,m_template.c_str()));
-    pmap["action"] = destination;
+    pmap.m_map["action"] = destination;
     stringstream s;
     engine->run(infile, s, pmap);
     genericResponse.setContentType("text/html");
