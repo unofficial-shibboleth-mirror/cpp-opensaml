@@ -36,7 +36,8 @@ namespace {
             KeyResolver* m_resolver;
             bool m_done;
         public:
-            SampleIterator() : m_resolver(NULL), m_done(false) {
+            SampleIterator(const KeyResolver& keyResolver)
+                    : PKIXValidationInfoIterator(keyResolver), m_resolver(NULL), m_done(false) {
                 string config = data_path + "security/FilesystemKeyResolver.xml";
                 ifstream in(config.c_str());
                 DOMDocument* doc=XMLToolingConfig::getConfig().getParser().parse(in);
@@ -71,9 +72,12 @@ namespace {
             }
         };
     
-        PKIXValidationInfoIterator* getPKIXValidationInfoIterator(const KeyInfoSource& keyInfoSource) const {
+        PKIXValidationInfoIterator* getPKIXValidationInfoIterator(
+            const KeyInfoSource& keyInfoSource,
+            const KeyResolver& keyResolver
+            ) const {
             dynamic_cast<const RoleDescriptor&>(keyInfoSource);
-            return new SampleIterator();
+            return new SampleIterator(keyResolver);
         }
     };
 };
