@@ -34,6 +34,9 @@ namespace opensaml {
     };
     
     DECL_XMLTOOLING_EXCEPTION(BindingException,SAML_EXCEPTIONAPI(SAML_API),opensaml,xmltooling::XMLToolingException,Exceptions in SAML binding processing);
+    DECL_XMLTOOLING_EXCEPTION(ProfileException,SAML_EXCEPTIONAPI(SAML_API),opensaml,xmltooling::ValidationException,Exceptions in SAML profile processing);
+    DECL_XMLTOOLING_EXCEPTION(FatalProfileException,SAML_EXCEPTIONAPI(SAML_API),opensaml,ProfileException,Fatal exceptions in SAML profile processing);
+    DECL_XMLTOOLING_EXCEPTION(RetryableProfileException,SAML_EXCEPTIONAPI(SAML_API),opensaml,ProfileException,Non-fatal exceptions in SAML profile processing);
 
     /**
      * Attaches metadata-derived information as exception properties and optionally
