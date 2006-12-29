@@ -107,7 +107,7 @@ namespace samlconstants {
 
 #ifndef SAML10_PROTOCOL_ENUM
     /** SAML 1.0 Protocol Enumeration constant ("urn:oasis:names:tc:SAML:1.0:protocol") */
-    #define SAML10_PROTOCOL_ENUM SAML1P_NS
+    #define SAML10_PROTOCOL_ENUM samlconstants::SAML1P_NS
 #endif
     
     /** SAML 1.1 Protocol Enumeration constant ("urn:oasis:names:tc:SAML:1.1:protocol") */
