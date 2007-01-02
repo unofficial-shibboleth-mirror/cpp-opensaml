@@ -105,10 +105,8 @@ namespace samlconstants {
     /** SAML 1.x Metadata Profile QName prefix ("saml1md") */
     extern SAML_API const XMLCh SAML1MD_PREFIX[];
 
-#ifndef SAML10_PROTOCOL_ENUM
     /** SAML 1.0 Protocol Enumeration constant ("urn:oasis:names:tc:SAML:1.0:protocol") */
-    #define SAML10_PROTOCOL_ENUM samlconstants::SAML1P_NS
-#endif
+    extern SAML_API const XMLCh SAML10_PROTOCOL_ENUM[];
     
     /** SAML 1.1 Protocol Enumeration constant ("urn:oasis:names:tc:SAML:1.1:protocol") */
     extern SAML_API const XMLCh SAML11_PROTOCOL_ENUM[];

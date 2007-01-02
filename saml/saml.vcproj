@@ -704,6 +704,10 @@
 						>
 					</File>
 					<File
+						RelativePath=".\saml2\metadata\EndpointManager.h"
+						>
+					</File>
+					<File
 						RelativePath=".\saml2\metadata\Metadata.h"
 						>
 					</File>

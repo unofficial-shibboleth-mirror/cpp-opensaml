@@ -149,6 +149,13 @@ const XMLCh samlconstants::SAML1MD_NS[] = // urn:oasis:names:tc:SAML:profiles:v1
 const XMLCh samlconstants::SAML1MD_PREFIX[] =
 { chLatin_s, chLatin_a, chLatin_m, chLatin_l, chDigit_1, chLatin_m, chLatin_d, chNull };
 
+const XMLCh samlconstants::SAML10_PROTOCOL_ENUM[] = // urn:oasis:names:tc:SAML:1.0:protocol
+{ chLatin_u, chLatin_r, chLatin_n, chColon, chLatin_o, chLatin_a, chLatin_s, chLatin_i, chLatin_s, chColon,
+  chLatin_n, chLatin_a, chLatin_m, chLatin_e, chLatin_s, chColon, chLatin_t, chLatin_c, chColon,
+  chLatin_S, chLatin_A, chLatin_M, chLatin_L, chColon, chDigit_1, chPeriod, chDigit_0, chColon,
+  chLatin_p, chLatin_r, chLatin_o, chLatin_t, chLatin_o, chLatin_c, chLatin_o, chLatin_l, chNull
+};
+
 const XMLCh samlconstants::SAML11_PROTOCOL_ENUM[] = // urn:oasis:names:tc:SAML:1.1:protocol
 { chLatin_u, chLatin_r, chLatin_n, chColon, chLatin_o, chLatin_a, chLatin_s, chLatin_i, chLatin_s, chColon,
   chLatin_n, chLatin_a, chLatin_m, chLatin_e, chLatin_s, chColon, chLatin_t, chLatin_c, chColon,
