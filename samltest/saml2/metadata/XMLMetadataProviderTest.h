@@ -23,7 +23,7 @@
 using namespace opensaml::saml2md;
 using namespace opensaml::saml2p;
 
-class FilesystemMetadataProviderTest : public CxxTest::TestSuite, public SAMLObjectBaseTestCase {
+class XMLMetadataProviderTest : public CxxTest::TestSuite, public SAMLObjectBaseTestCase {
     XMLCh* entityID;
     XMLCh* entityID2;
     XMLCh* supportedProtocol;
@@ -46,8 +46,8 @@ public:
         SAMLObjectBaseTestCase::tearDown();
     }
 
-    void testFilesystemProvider() {
-        string config = data_path + "saml2/metadata/FilesystemMetadataProvider.xml";
+    void testXMLProvider() {
+        string config = data_path + "saml2/metadata/XMLMetadataProvider.xml";
         ifstream in(config.c_str());
         DOMDocument* doc=XMLToolingConfig::getConfig().getParser().parse(in);
         XercesJanitor<DOMDocument> janitor(doc);
@@ -58,7 +58,7 @@ public:
         doc->getDocumentElement()->setAttributeNS(NULL,path.get(),file.get());
 
         auto_ptr<MetadataProvider> metadataProvider(
-            SAMLConfig::getConfig().MetadataProviderManager.newPlugin(FILESYSTEM_METADATA_PROVIDER,doc->getDocumentElement())
+            SAMLConfig::getConfig().MetadataProviderManager.newPlugin(XML_METADATA_PROVIDER,doc->getDocumentElement())
             );
         try {
             metadataProvider->init();
@@ -84,8 +84,8 @@ public:
         assertEquals("Entity's ID does not match requested ID", entityID, descriptor->getEntityID());
     }
 
-    void testFilesystemWithBlacklists() {
-        string config = data_path + "saml2/metadata/FilesystemWithBlacklists.xml";
+    void testXMLWithBlacklists() {
+        string config = data_path + "saml2/metadata/XMLWithBlacklists.xml";
         ifstream in(config.c_str());
         DOMDocument* doc=XMLToolingConfig::getConfig().getParser().parse(in);
         XercesJanitor<DOMDocument> janitor(doc);
@@ -96,7 +96,7 @@ public:
         doc->getDocumentElement()->setAttributeNS(NULL,path.get(),file.get());
 
         auto_ptr<MetadataProvider> metadataProvider(
-            SAMLConfig::getConfig().MetadataProviderManager.newPlugin(FILESYSTEM_METADATA_PROVIDER,doc->getDocumentElement())
+            SAMLConfig::getConfig().MetadataProviderManager.newPlugin(XML_METADATA_PROVIDER,doc->getDocumentElement())
             );
         try {
             metadataProvider->init();
@@ -114,8 +114,8 @@ public:
         assertEquals("Entity's ID does not match requested ID", entityID2, descriptor->getEntityID());
     }
 
-    void testFilesystemWithWhitelists() {
-        string config = data_path + "saml2/metadata/FilesystemWithWhitelists.xml";
+    void testXMLWithWhitelists() {
+        string config = data_path + "saml2/metadata/XMLWithWhitelists.xml";
         ifstream in(config.c_str());
         DOMDocument* doc=XMLToolingConfig::getConfig().getParser().parse(in);
         XercesJanitor<DOMDocument> janitor(doc);
@@ -126,7 +126,7 @@ public:
         doc->getDocumentElement()->setAttributeNS(NULL,path.get(),file.get());
 
         auto_ptr<MetadataProvider> metadataProvider(
-            SAMLConfig::getConfig().MetadataProviderManager.newPlugin(FILESYSTEM_METADATA_PROVIDER,doc->getDocumentElement())
+            SAMLConfig::getConfig().MetadataProviderManager.newPlugin(XML_METADATA_PROVIDER,doc->getDocumentElement())
             );
         try {
             metadataProvider->init();

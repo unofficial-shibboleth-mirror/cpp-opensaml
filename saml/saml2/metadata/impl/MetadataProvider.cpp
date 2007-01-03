@@ -36,7 +36,7 @@ using namespace std;
 
 namespace opensaml {
     namespace saml2md {
-        SAML_DLLLOCAL PluginManager<MetadataProvider,const DOMElement*>::Factory FilesystemMetadataProviderFactory;
+        SAML_DLLLOCAL PluginManager<MetadataProvider,const DOMElement*>::Factory XMLMetadataProviderFactory;
         SAML_DLLLOCAL PluginManager<MetadataProvider,const DOMElement*>::Factory ChainingMetadataProviderFactory;
         SAML_DLLLOCAL PluginManager<MetadataFilter,const DOMElement*>::Factory BlacklistMetadataFilterFactory;
         SAML_DLLLOCAL PluginManager<MetadataFilter,const DOMElement*>::Factory WhitelistMetadataFilterFactory;
@@ -47,10 +47,10 @@ namespace opensaml {
 void SAML_API opensaml::saml2md::registerMetadataProviders()
 {
     SAMLConfig& conf=SAMLConfig::getConfig();
-    conf.MetadataProviderManager.registerFactory(FILESYSTEM_METADATA_PROVIDER, FilesystemMetadataProviderFactory);
+    conf.MetadataProviderManager.registerFactory(XML_METADATA_PROVIDER, XMLMetadataProviderFactory);
     conf.MetadataProviderManager.registerFactory(CHAINING_METADATA_PROVIDER, ChainingMetadataProviderFactory);
-    conf.MetadataProviderManager.registerFactory("edu.internet2.middleware.shibboleth.metadata.provider.XMLMetadata", FilesystemMetadataProviderFactory);
-    conf.MetadataProviderManager.registerFactory("edu.internet2.middleware.shibboleth.common.provider.XMLMetadata", FilesystemMetadataProviderFactory);
+    conf.MetadataProviderManager.registerFactory("edu.internet2.middleware.shibboleth.metadata.provider.XMLMetadata", XMLMetadataProviderFactory);
+    conf.MetadataProviderManager.registerFactory("edu.internet2.middleware.shibboleth.common.provider.XMLMetadata", XMLMetadataProviderFactory);
 }
 
 void SAML_API opensaml::saml2md::registerMetadataFilters()

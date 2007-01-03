@@ -92,7 +92,7 @@ samltest_h = \
     saml2/binding/SAML2ArtifactTest.h \
     saml2/binding/SAML2POSTTest.h \
     saml2/binding/SAML2RedirectTest.h \
-    saml2/metadata/FilesystemMetadataProviderTest.h
+    saml2/metadata/XMLMetadataProviderTest.h
 
 noinst_HEADERS = \
 	binding.h \

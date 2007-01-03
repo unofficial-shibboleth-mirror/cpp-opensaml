@@ -66,7 +66,7 @@ public:
             doc->getDocumentElement()->setAttributeNS(NULL,path.get(),file.get());
     
             m_metadata = SAMLConfig::getConfig().MetadataProviderManager.newPlugin(
-                FILESYSTEM_METADATA_PROVIDER,doc->getDocumentElement()
+                XML_METADATA_PROVIDER,doc->getDocumentElement()
                 );
             m_metadata->init();
 

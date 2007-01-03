@@ -204,8 +204,8 @@ namespace opensaml {
          */
         void SAML_API registerMetadataProviders();
         
-        /** MetadataProvider based on local XML files */
-        #define FILESYSTEM_METADATA_PROVIDER  "org.opensaml.saml2.metadata.provider.FilesystemMetadataProvider"
+        /** MetadataProvider based on local or remote XML file */
+        #define XML_METADATA_PROVIDER  "org.opensaml.saml2.metadata.provider.XMLMetadataProvider"
 
         /** MetadataProvider that wraps a sequence of metadata providers. */
         #define CHAINING_METADATA_PROVIDER  "org.opensaml.saml2.metadata.provider.ChainingMetadataProvider"

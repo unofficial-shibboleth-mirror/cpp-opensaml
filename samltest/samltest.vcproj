@@ -530,7 +530,7 @@
 					Name="metadata"
 					>
 					<File
-						RelativePath=".\saml2\metadata\FilesystemMetadataProviderTest.cpp"
+						RelativePath=".\saml2\metadata\XMLMetadataProviderTest.cpp"
 						>
 					</File>
 				</Filter>
@@ -2346,7 +2346,7 @@
 					Name="metadata"
 					>
 					<File
-						RelativePath=".\saml2\metadata\FilesystemMetadataProviderTest.h"
+						RelativePath=".\saml2\metadata\XMLMetadataProviderTest.h"
 						>
 						<FileConfiguration
 							Name="Debug|Win32"

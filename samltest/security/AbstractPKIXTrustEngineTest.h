@@ -93,7 +93,7 @@ public:
     }
 
     void testExplicitKeyTrustEngine() {
-        string config = data_path + "security/FilesystemMetadataProvider.xml";
+        string config = data_path + "security/XMLMetadataProvider.xml";
         ifstream in(config.c_str());
         DOMDocument* doc=XMLToolingConfig::getConfig().getParser().parse(in);
         XercesJanitor<DOMDocument> janitor(doc);
@@ -105,7 +105,7 @@ public:
 
         // Build metadata provider.
         auto_ptr<MetadataProvider> metadataProvider(
-            SAMLConfig::getConfig().MetadataProviderManager.newPlugin(FILESYSTEM_METADATA_PROVIDER,doc->getDocumentElement())
+            SAMLConfig::getConfig().MetadataProviderManager.newPlugin(XML_METADATA_PROVIDER,doc->getDocumentElement())
             );
         try {
             metadataProvider->init();

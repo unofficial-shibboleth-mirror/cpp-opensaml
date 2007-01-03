@@ -143,13 +143,13 @@ libsaml_la_SOURCES = \
 	saml2/metadata/impl/AbstractMetadataProvider.cpp \
 	saml2/metadata/impl/BlacklistMetadataFilter.cpp \
 	saml2/metadata/impl/ChainingMetadataProvider.cpp \
-	saml2/metadata/impl/FilesystemMetadataProvider.cpp \
 	saml2/metadata/impl/MetadataImpl.cpp \
 	saml2/metadata/impl/MetadataProvider.cpp \
 	saml2/metadata/impl/MetadataSchemaValidators.cpp \
 	saml2/metadata/impl/ObservableMetadataProvider.cpp \
 	saml2/metadata/impl/SignatureMetadataFilter.cpp \
 	saml2/metadata/impl/WhitelistMetadataFilter.cpp \
+	saml2/metadata/impl/XMLMetadataProvider.cpp \
 	saml2/binding/impl/SAML2Artifact.cpp \
 	saml2/binding/impl/SAML2ArtifactType0004.cpp \
 	saml2/binding/impl/SAML2ArtifactDecoder.cpp \
