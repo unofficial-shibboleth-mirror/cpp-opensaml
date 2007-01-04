@@ -27,7 +27,6 @@
 #include <log4cpp/Category.hh>
 #include <xmltooling/util/NDC.h>
 #include <xmltooling/util/ReloadableXMLFile.h>
-#include <xmltooling/util/XMLConstants.h>
 
 using namespace opensaml::saml2md;
 using namespace xmltooling;
@@ -54,10 +53,16 @@ namespace opensaml {
                 load(); // guarantees an exception or the metadata is loaded
             }
             
-            pair<bool,DOMElement*> load();
-
             const XMLObject* getMetadata() const {
                 return m_object;
+            }
+
+        protected:
+            pair<bool,DOMElement*> load();
+
+            bool isValid() const {
+                const TimeBoundSAMLObject* bound=dynamic_cast<const TimeBoundSAMLObject*>(m_object);
+                return bound ? bound->isValid() : false;
             }
 
         private:
@@ -80,40 +85,34 @@ namespace opensaml {
 
 pair<bool,DOMElement*> XMLMetadataProvider::load()
 {
-#ifdef _DEBUG
-    NDC ndc("load");
-#endif
+    // Load from source using base class.
+    pair<bool,DOMElement*> raw = ReloadableXMLFile::load();
     
-    try {
-        // Load from source using base class.
-        pair<bool,DOMElement*> raw = ReloadableXMLFile::load();
-        
-        // If we own it, wrap it for now.
-        XercesJanitor<DOMDocument> docjanitor(raw.first ? raw.second->getOwnerDocument() : NULL);
-                
-        // Unmarshall objects, binding the document.
-        XMLObject* xmlObject=XMLObjectBuilder::buildOneFromElement(raw.second, true);
-        docjanitor.release();
-        
-        // Preprocess the metadata.
-        auto_ptr<XMLObject> xmlObjectPtr(xmlObject);
-        doFilters(*xmlObject);
-        xmlObjectPtr->releaseThisAndChildrenDOM();
-        xmlObjectPtr->setDocument(NULL);
-        
-        // Swap it in.
-        bool changed = m_object!=NULL;
-        delete m_object;
-        m_object = xmlObjectPtr.release();
-        index();
-        if (changed)
-            emitChangeEvent();
-        return make_pair(false,(DOMElement*)NULL);
-    }
-    catch (XMLToolingException& e) {
-        Category::getInstance(SAML_LOGCAT".Metadata").error("error while loading metadata: %s", e.what());
-        throw;
-    }
+    // If we own it, wrap it for now.
+    XercesJanitor<DOMDocument> docjanitor(raw.first ? raw.second->getOwnerDocument() : NULL);
+            
+    // Unmarshall objects, binding the document.
+    auto_ptr<XMLObject> xmlObject(XMLObjectBuilder::buildOneFromElement(raw.second, true));
+    docjanitor.release();
+
+    if (!dynamic_cast<const EntitiesDescriptor*>(xmlObject.get()) && !dynamic_cast<const EntityDescriptor*>(xmlObject.get()))
+        throw MetadataException(
+            "Root of metadata instance not recognized: $1", params(1,xmlObject->getElementQName().toString().c_str())
+            );
+    
+    // Preprocess the metadata.
+    doFilters(*xmlObject.get());
+    xmlObject->releaseThisAndChildrenDOM();
+    xmlObject->setDocument(NULL);
+    
+    // Swap it in.
+    bool changed = m_object!=NULL;
+    delete m_object;
+    m_object = xmlObject.release();
+    index();
+    if (changed)
+        emitChangeEvent();
+    return make_pair(false,(DOMElement*)NULL);
 }
 
 void XMLMetadataProvider::index()
