@@ -51,12 +51,19 @@ namespace opensaml {
         virtual const char* getMethod() const=0;
         
         /**
-         * Returns the complete request URL, including scheme, host, port.
+         * Returns the request URI.
+         * 
+         * @return the request URI
+         */
+        virtual const char* getRequestURI() const=0;
+        
+        /**
+         * Returns the complete request URL, including scheme, host, port, and URI.
          * 
          * @return the request URL
          */
         virtual const char* getRequestURL() const=0;
-        
+
         /**
          * Returns the HTTP query string appened to the request. The query
          * string is returned without any decoding applied, everything found

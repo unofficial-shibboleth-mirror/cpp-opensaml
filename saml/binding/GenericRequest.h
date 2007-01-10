@@ -58,6 +58,20 @@ namespace opensaml {
         virtual bool isSecure() const=0;
         
         /**
+         * Returns hostname of service that received request.
+         * 
+         * @return hostname of service
+         */
+        virtual const char* getHostname() const=0;
+
+        /**
+         * Returns incoming port.
+         * 
+         * @return  incoming port 
+         */
+        virtual int getPort() const=0;
+        
+        /**
          * Returns the MIME type of the request, if known.
          * 
          * @return the MIME type, or an empty string

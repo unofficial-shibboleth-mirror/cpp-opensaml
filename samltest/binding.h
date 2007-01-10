@@ -130,12 +130,24 @@ public:
         return true;
     }
 
+    const char* getHostname() const {
+        return "localhost";
+    }
+
+    int getPort() const {
+        return 443;
+    }
+
     string getContentType() const {
         return "application/x-www-form-urlencoded";
     }
 
     long getContentLength() const {
         return -1;
+    }
+
+    const char* getRequestURI() const {
+        return "/";
     }
 
     const char* getRequestURL() const {
