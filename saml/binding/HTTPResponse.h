@@ -72,6 +72,8 @@ namespace opensaml {
         enum status_t {
             SAML_HTTP_STATUS_OK = 200,
             SAML_HTTP_STATUS_MOVED = 302,
+            SAML_HTTP_STATUS_FORBIDDEN = 403,
+            SAML_HTTP_STATUS_NOTFOUND = 404,
             SAML_HTTP_STATUS_ERROR = 500
         };
     };
