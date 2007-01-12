@@ -42,7 +42,11 @@ namespace opensaml {
         HTTPRequest() {}
     public:
         virtual ~HTTPRequest() {}
-        
+
+        bool isSecure() const {
+            return strcmp(getScheme(),"https")==0;
+        }
+          
         /**
          * Returns the HTTP method of the request (GET, POST, etc.)
          * 

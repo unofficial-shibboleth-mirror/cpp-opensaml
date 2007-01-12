@@ -126,10 +126,6 @@ public:
         return "https";
     }
 
-    bool isSecure() const {
-        return true;
-    }
-
     const char* getHostname() const {
         return "localhost";
     }
