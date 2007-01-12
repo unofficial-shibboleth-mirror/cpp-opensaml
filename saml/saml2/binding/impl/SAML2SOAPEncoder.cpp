@@ -72,8 +72,8 @@ long SAML2SOAPEncoder::encode(
     genericResponse.setContentType("text/xml");
     HTTPResponse* httpResponse = dynamic_cast<HTTPResponse*>(&genericResponse);
     if (httpResponse) {
-        httpResponse->setHeader("Cache-Control", "no-cache, no-store, must-revalidate, private");
-        httpResponse->setHeader("Pragma", "no-cache");
+        httpResponse->setResponseHeader("Cache-Control", "no-cache, no-store, must-revalidate, private");
+        httpResponse->setResponseHeader("Pragma", "no-cache");
     }
 
     DOMElement* rootElement = NULL;

@@ -49,7 +49,7 @@ namespace opensaml {
          * @param name  header name
          * @param value value to set, or NULL to clear
          */
-        virtual void setHeader(const char* name, const char* value)=0;
+        virtual void setResponseHeader(const char* name, const char* value)=0;
 
         /**
          * Sets a client cookie.

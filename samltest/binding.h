@@ -190,12 +190,12 @@ public:
     
     // HTTPResponse methods
     
-    void setHeader(const char* name, const char* value) {
+    void setResponseHeader(const char* name, const char* value) {
         m_headers[name] = value ? value : "";
     }
 
     void setContentType(const char* type) {
-        setHeader("Content-Type", type);
+        setResponseHeader("Content-Type", type);
     }
     
     void setCookie(const char* name, const char* value) {
@@ -256,14 +256,6 @@ public:
         return decoded;
     }
     
-    long sendResponse(std::istream& inputStream) {
-        return sendResponse(inputStream, HTTPResponse::SAML_HTTP_STATUS_OK);
-    }
-
-    long sendError(std::istream& inputStream) {
-        return sendResponse(inputStream, HTTPResponse::SAML_HTTP_STATUS_ERROR);
-    }
-
     long sendResponse(std::istream& inputStream, long status) {
         m_method="POST";
         string page,line;
