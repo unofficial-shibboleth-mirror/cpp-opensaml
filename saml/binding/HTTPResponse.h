@@ -43,6 +43,10 @@ namespace opensaml {
     public:
         virtual ~HTTPResponse() {}
         
+        void setContentType(const char* type) {
+            setResponseHeader("Content-Type", type);
+        }
+        
         /**
          * Sets or clears a response header.
          * 
@@ -57,7 +61,11 @@ namespace opensaml {
          * @param name  cookie name
          * @param value value to set, or NULL to clear
          */
-        virtual void setCookie(const char* name, const char* value)=0;
+        virtual void setCookie(const char* name, const char* value) {
+            std::string cookie(name);
+            cookie = cookie + '=' + value;
+            setResponseHeader("Set-Cookie", cookie.c_str());
+        }
         
         /**
          * Redirect the client to the specified URL and complete the response.

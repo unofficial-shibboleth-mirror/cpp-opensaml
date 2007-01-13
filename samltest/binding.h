@@ -194,14 +194,6 @@ public:
         m_headers[name] = value ? value : "";
     }
 
-    void setContentType(const char* type) {
-        setResponseHeader("Content-Type", type);
-    }
-    
-    void setCookie(const char* name, const char* value) {
-        m_headers["Set-Cookie"] = string(name) + "=" + (value ? value : "");
-    }
-    
     // The amount of error checking missing from this is incredible, but as long
     // as the test data isn't unexpected or malformed, it should work.
     
