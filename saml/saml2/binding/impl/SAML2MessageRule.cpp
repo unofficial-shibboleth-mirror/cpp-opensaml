@@ -15,9 +15,9 @@
  */
 
 /**
- * SAML1MessageRule.cpp
+ * SAML2MessageRule.cpp
  * 
- * SAML 1.x message extraction rule
+ * SAML 2.0 message extraction rule
  */
 
 #include "internal.h"
