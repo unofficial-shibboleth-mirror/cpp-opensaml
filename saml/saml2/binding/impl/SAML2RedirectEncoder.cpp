@@ -77,7 +77,7 @@ long SAML2RedirectEncoder::encode(
     if (!request) {
         response = dynamic_cast<StatusResponseType*>(xmlObject);
         if (!response)
-            throw BindingException("XML content for SAML 2.0 HTTP-POST Encoder must be a SAML 2.0 protocol message.");
+            throw BindingException("XML content for SAML 2.0 HTTP-Redirect Encoder must be a SAML 2.0 protocol message.");
     }
     
     // Check for XML signature.
