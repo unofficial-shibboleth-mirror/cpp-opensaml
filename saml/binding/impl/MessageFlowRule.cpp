@@ -61,35 +61,38 @@ void MessageFlowRule::evaluate(const XMLObject& message, const GenericRequest* r
     Category& log=Category::getInstance(SAML_LOGCAT".SecurityPolicyRule.MessageFlow");
     log.debug("evaluating message flow policy (replay checking %s, expiration %lu)", m_checkReplay ? "on" : "off", m_expires);
 
+    time_t now = time(NULL);
+    time_t skew = XMLToolingConfig::getConfig().clock_skew_secs;
     time_t issueInstant = policy.getIssueInstant();
     if (issueInstant == 0) {
-        log.error("unknown message timestamp");
-        throw BindingException("Message rejected, no timestamp available.");
+        log.info("unknown message timestamp, assuming current time for replay checking");
+        issueInstant = now;
     }
-    
-    time_t skew = XMLToolingConfig::getConfig().clock_skew_secs;
-    time_t now = time(NULL);
-    if (issueInstant > now + skew) {
-        log.errorStream() << "rejected not-yet-valid message, timestamp (" << issueInstant <<
-            "), newest allowed (" << now + skew << ")" << CategoryStream::ENDLINE;
-        throw BindingException("Message rejected, was issued in the future.");
-    }
-    else if (issueInstant < now - skew - m_expires) {
-        log.errorStream() << "rejected expired message, timestamp (" << issueInstant <<
-            "), oldest allowed (" << (now - skew - m_expires) << ")" << CategoryStream::ENDLINE;
-        throw BindingException("Message expired, was issued too long ago.");
+    else {
+        if (issueInstant > now + skew) {
+            log.errorStream() << "rejected not-yet-valid message, timestamp (" << issueInstant <<
+                "), newest allowed (" << now + skew << ")" << CategoryStream::ENDLINE;
+            throw BindingException("Message rejected, was issued in the future.");
+        }
+        else if (issueInstant < now - skew - m_expires) {
+            log.errorStream() << "rejected expired message, timestamp (" << issueInstant <<
+                "), oldest allowed (" << (now - skew - m_expires) << ")" << CategoryStream::ENDLINE;
+            throw BindingException("Message expired, was issued too long ago.");
+        }
     }
     
     // Check replay.
     if (m_checkReplay) {
         const XMLCh* id = policy.getMessageID();
+        if (!id || !*id) {
+            log.info("unknown message ID, no replay check possible");
+            return;
+        }
         ReplayCache* replayCache = XMLToolingConfig::getConfig().getReplayCache();
         if (!replayCache)
             throw BindingException("Message rejected, no ReplayCache instance available.");
-        else if (!id)
-            throw BindingException("Message rejected, did not contain an identifier.");
         auto_ptr_char temp(id);
-        if (!replayCache->check("SAML", temp.get(), issueInstant + skew + m_expires)) {
+        if (!replayCache->check("MessageFlow", temp.get(), issueInstant + skew + m_expires)) {
             log.error("replay detected of message ID (%s)", temp.get());
             throw BindingException("Rejecting replayed message ID ($1).", params(1,temp.get()));
         }
