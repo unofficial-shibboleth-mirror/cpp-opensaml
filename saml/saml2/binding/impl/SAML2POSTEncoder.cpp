@@ -124,17 +124,11 @@ long SAML2POSTEncoder::encode(
     if (relayState)
         pmap.m_map["RelayState"] = relayState;
 
-    // Base64 the message.
+    // Serialize the message.
     string& msg = pmap.m_map[(request ? "SAMLRequest" : "SAMLResponse")];
     XMLHelper::serialize(rootElement, msg);
-    unsigned int len=0;
-    XMLByte* out=Base64::encode(reinterpret_cast<const XMLByte*>(msg.data()),msg.size(),&len);
-    if (!out)
-        throw BindingException("Base64 encoding of XML failed.");
-    msg.erase();
-    msg.append(reinterpret_cast<char*>(out),len);
-    XMLString::release(&out);
-    
+
+    // SimpleSign.
     if (credResolver && m_simple) {
         log.debug("applying simple signature to message data");
         string input = (request ? "SAMLRequest=" : "SAMLResponse=") + msg;
@@ -152,6 +146,15 @@ long SAML2POSTEncoder::encode(
         Signature::createRawSignature(key.get(), sigAlgorithm, input.c_str(), input.length(), sigbuf, sizeof(sigbuf)-1);
         pmap.m_map["Signature"] = sigbuf;
     }
+    
+    // Base64 the message.
+    unsigned int len=0;
+    XMLByte* out=Base64::encode(reinterpret_cast<const XMLByte*>(msg.data()),msg.size(),&len);
+    if (!out)
+        throw BindingException("Base64 encoding of XML failed.");
+    msg.erase();
+    msg.append(reinterpret_cast<char*>(out),len);
+    XMLString::release(&out);
     
     // Push message into template and send result to client.
     log.debug("message encoded, sending HTML form template to client");

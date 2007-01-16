@@ -29,6 +29,7 @@
 #include "saml2/metadata/MetadataProvider.h"
 
 #include <log4cpp/Category.hh>
+#include <xercesc/util/Base64.hpp>
 
 using namespace opensaml::saml2md;
 using namespace opensaml;
@@ -100,6 +101,10 @@ void SimpleSigningRule::evaluate(const XMLObject& message, const GenericRequest*
         // We have to construct a string containing the signature input by accessing the
         // request directly. We can't use the decoded parameters because we need the raw
         // data and URL-encoding isn't canonical.
+
+        // NOTE: SimpleSign for GET means Redirect binding, which means we verify over the
+        // base64-encoded message directly.
+
         pch = httpRequest->getQueryString();
         if (!appendParameter(input, pch, "SAMLRequest="))
             appendParameter(input, pch, "SAMLResponse=");
@@ -109,13 +114,34 @@ void SimpleSigningRule::evaluate(const XMLObject& message, const GenericRequest*
     else {
         // With POST, the input string is concatenated from the decoded form controls.
         // GET should be this way too, but I messed up the spec, sorry.
+
+        // NOTE: SimpleSign for POST means POST binding, which means we verify over the
+        // base64-decoded XML. This sucks, because we have to decode the base64 directly.
+        // Serializing the XMLObject doesn't guarantee the signature will verify (this is
+        // why XMLSignature exists, and why this isn't really "simpler").
+
+        unsigned int x;
         pch = httpRequest->getParameter("SAMLRequest");
-        if (pch)
-            input = string("SAMLRequest=") + pch;
+        if (pch) {
+            XMLByte* decoded=Base64::decode(reinterpret_cast<const XMLByte*>(pch),&x);
+            if (!decoded) {
+                log.warn("unable to decode base64 in POST binding message");
+                return;
+            }
+            input = string("SAMLRequest=") + reinterpret_cast<const char*>(decoded);
+            XMLString::release(&decoded);
+        }
         else {
             pch = httpRequest->getParameter("SAMLResponse");
-            input = string("SAMLResponse=") + pch;
+            XMLByte* decoded=Base64::decode(reinterpret_cast<const XMLByte*>(pch),&x);
+            if (!decoded) {
+                log.warn("unable to decode base64 in POST binding message");
+                return;
+            }
+            input = string("SAMLResponse=") + reinterpret_cast<const char*>(decoded);
+            XMLString::release(&decoded);
         }
+
         pch = httpRequest->getParameter("RelayState");
         if (pch)
             input = input + "&RelayState=" + pch;
