@@ -60,8 +60,8 @@ XMLObject* SAML1SOAPDecoder::decode(
 
     log.debug("validating input");
     string s = genericRequest.getContentType();
-    if (s != "text/xml") {
-        log.warn("ignoring incorrect Content Type (%s)", s.c_str() ? s.c_str() : "none");
+    if (s.find("text/xml") == string::npos) {
+        log.warn("ignoring incorrect content type (%s)", s.c_str() ? s.c_str() : "none");
         return NULL;
     }
 
