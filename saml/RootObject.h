@@ -38,6 +38,15 @@ namespace opensaml {
         virtual ~RootObject() {}
 
         /**
+         * Indicates whether the object is an assertion.
+         * 
+         * @return true iff the object is an assertion 
+         */
+        virtual bool isAssertion() const {
+            return false;
+        }
+
+        /**
          * Returns the unique SAML ID of the object.
          *
          * @return the unique SAML ID

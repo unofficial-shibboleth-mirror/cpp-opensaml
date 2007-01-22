@@ -321,6 +321,9 @@ namespace opensaml {
         };
 
         BEGIN_XMLOBJECT(SAML_API,Assertion,saml2::RootObject,SAML 2.0 Assertion element);
+            bool isAssertion() const {
+                return true;
+            }
             DECL_INHERITED_STRING_ATTRIB(Version,VER);
             DECL_INHERITED_STRING_ATTRIB(ID,ID);
             DECL_INHERITED_DATETIME_ATTRIB(IssueInstant,ISSUEINSTANT);

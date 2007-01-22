@@ -216,6 +216,9 @@ namespace opensaml {
         END_XMLOBJECT;
 
         BEGIN_XMLOBJECT(SAML_API,Assertion,RootObject,SAML 1.x Assertion element);
+            bool isAssertion() const {
+                return true;
+            }
             DECL_INTEGER_ATTRIB(MinorVersion,MINORVERSION);
             DECL_STRING_ATTRIB(AssertionID,ASSERTIONID);
             DECL_STRING_ATTRIB(Issuer,ISSUER);
