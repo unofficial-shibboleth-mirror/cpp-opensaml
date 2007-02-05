@@ -99,6 +99,9 @@ XMLObject* SAML1POSTDecoder::decode(
 
     if (!m_validate)
         SchemaValidators.validate(xmlObject.get());
+
+    // Run through the policy.
+    policy.evaluate(*response, &genericRequest);
     
     // Check recipient URL.
     auto_ptr_char recipient(response->getRecipient());
@@ -112,8 +115,5 @@ XMLObject* SAML1POSTDecoder::decode(
         throw BindingException("SAML message delivered with POST to incorrect server URL.");
     }
     
-    // Run through the policy.
-    policy.evaluate(*response, &genericRequest);
-
     return xmlObject.release();
 }
