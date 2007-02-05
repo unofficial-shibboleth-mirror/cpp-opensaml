@@ -128,6 +128,9 @@ XMLObject* SAML2RedirectDecoder::decode(
     if (!m_validate)
         SchemaValidators.validate(xmlObject.get());
     
+    // Run through the policy.
+    policy.evaluate(*root, &genericRequest);
+
     // Check destination URL.
     auto_ptr_char dest(request ? request->getDestination() : response->getDestination());
     const char* dest2 = httpRequest->getRequestURL();
@@ -139,9 +142,6 @@ XMLObject* SAML2RedirectDecoder::decode(
         log.error("Redirect targeted at (%s), but delivered to (%s)", dest.get(), dest2 ? dest2 : "none");
         throw BindingException("SAML message delivered with Redirect to incorrect server URL.");
     }
-
-    // Run through the policy.
-    policy.evaluate(*root, &genericRequest);
 
     return xmlObject.release();
 }
