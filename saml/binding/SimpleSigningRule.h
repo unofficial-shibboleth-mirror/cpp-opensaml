@@ -34,10 +34,14 @@ namespace opensaml {
     class SAML_API SimpleSigningRule : public SecurityPolicyRule
     {
     public:
-        SimpleSigningRule(const DOMElement* e) {}
+        SimpleSigningRule(const DOMElement* e);
         virtual ~SimpleSigningRule() {}
         
         void evaluate(const xmltooling::XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const;
+
+    protected:
+        /** Flag determining whether to raise exceptions if a signature fails to validate. */
+        bool m_errorsFatal;
     };
     
 };

@@ -36,12 +36,24 @@ using namespace xmltooling;
 using namespace log4cpp;
 using namespace std;
 
+using xmlsignature::SignatureException;
+
 namespace opensaml {
     SecurityPolicyRule* SAML_DLLLOCAL XMLSigningRuleFactory(const DOMElement* const & e)
     {
         return new XMLSigningRule(e);
     }
+    
+    static const XMLCh errorsFatal[] = UNICODE_LITERAL_11(e,r,r,o,r,s,F,a,t,a,l);
 };
+
+XMLSigningRule::XMLSigningRule(const DOMElement* e) : m_errorsFatal(false)
+{
+    if (e) {
+        const XMLCh* flag = e->getAttributeNS(NULL, errorsFatal);
+        m_errorsFatal = (flag && (*flag==chLatin_t || *flag==chDigit_1)); 
+    }
+}
 
 void XMLSigningRule::evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const
 {
@@ -70,6 +82,8 @@ void XMLSigningRule::evaluate(const XMLObject& message, const GenericRequest* re
     }
     catch (ValidationException& ve) {
         log.error("signature profile failed to validate: %s", ve.what());
+        if (m_errorsFatal)
+            throw;
         return;
     }
     
@@ -77,6 +91,8 @@ void XMLSigningRule::evaluate(const XMLObject& message, const GenericRequest* re
             *(signable->getSignature()), *(policy.getIssuerMetadata()), policy.getMetadataProvider()->getKeyResolver()
             )) {
         log.error("unable to verify message signature with supplied trust engine");
+        if (m_errorsFatal)
+            throw SignatureException("Message was signed, but signature could not be verified.");
         return;
     }
 
