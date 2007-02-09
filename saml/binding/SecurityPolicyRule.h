@@ -66,21 +66,21 @@ namespace opensaml {
      * 
      * Extracts message ID, timestamp, and issuer information.
      */
-    #define SAML1MESSAGE_POLICY_RULE  "org.opensaml.saml1.binding.SAML1MessageRule"
+    #define SAML1MESSAGE_POLICY_RULE  "SAML1Message"
 
     /**
      * SecurityPolicyRule for processing SAML 2.0 messages.
      * 
      * Extracts message ID, timestamp, and issuer information.
      */
-    #define SAML2MESSAGE_POLICY_RULE  "org.opensaml.saml2.binding.SAML2MessageRule"
+    #define SAML2MESSAGE_POLICY_RULE  "SAML2Message"
 
     /**
      * SecurityPolicyRule for TLS client certificate authentication.
      * 
      * Evaluates client certificates against the issuer's metadata.
      */
-    #define CLIENTCERTAUTH_POLICY_RULE  "org.opensaml.binding.ClientCertAuthRule"
+    #define CLIENTCERTAUTH_POLICY_RULE  "ClientCertAuth"
 
     /**
      * SecurityPolicyRule for replay detection and freshness checking.
@@ -93,7 +93,7 @@ namespace opensaml {
      * or up to a number of seconds set by an "expires" XML attribute when
      * instantiating the policy rule.
      */
-    #define MESSAGEFLOW_POLICY_RULE  "org.opensaml.binding.MessageFlowRule"
+    #define MESSAGEFLOW_POLICY_RULE  "MessageFlow"
 
     /**
      * SecurityPolicyRule for protocol message "blob" signing.
@@ -101,7 +101,7 @@ namespace opensaml {
      * Allows the message issuer to be authenticated using a non-XML digital signature
      * over the message body. The transport layer is not considered.
      */
-    #define SIMPLESIGNING_POLICY_RULE  "org.opensaml.binding.SimpleSigningRule"
+    #define SIMPLESIGNING_POLICY_RULE  "SimpleSigning"
 
     /**
      * SecurityPolicyRule for protocol message XML signing.
@@ -109,7 +109,7 @@ namespace opensaml {
      * Allows the message issuer to be authenticated using an XML digital signature
      * over the message. The transport layer is not considered.
      */
-    #define XMLSIGNING_POLICY_RULE  "org.opensaml.binding.XMLSigningRule"
+    #define XMLSIGNING_POLICY_RULE  "XMLSigning"
 };
 
 #endif /* __saml_secrule_h__ */

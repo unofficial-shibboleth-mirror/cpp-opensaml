@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <FilesystemMetadataProvider path="../samltest/data/saml2/metadata/InCommon-metadata.xml" validate="0">
     <SignatureMetadataFilter>
-        <KeyResolver type="org.opensaml.xmlooling.InlineKeyResolver"/>
+        <KeyResolver type="Inline"/>
     </SignatureMetadataFilter>
 </FilesystemMetadataProvider>

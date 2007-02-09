@@ -68,13 +68,13 @@ namespace opensaml {
         void SAML_API registerMetadataFilters();
         
         /** MetadataFilter that deletes blacklisted entities. */
-        #define BLACKLIST_METADATA_FILTER  "org.opensaml.saml2.metadata.provider.BlacklistMetadataFilter"
+        #define BLACKLIST_METADATA_FILTER  "Blacklist"
 
         /** MetadataFilter that deletes all but whitelisted entities. */
-        #define WHITELIST_METADATA_FILTER  "org.opensaml.saml2.metadata.provider.WhitelistMetadataFilter"
+        #define WHITELIST_METADATA_FILTER  "Whitelist"
 
         /** MetadataFilter that verifies signatures and filters out any that don't pass. */
-        #define SIGNATURE_METADATA_FILTER  "org.opensaml.saml2.metadata.provider.SignatureMetadataFilter"
+        #define SIGNATURE_METADATA_FILTER  "Signature"
         
         DECL_XMLTOOLING_EXCEPTION(MetadataException,SAML_EXCEPTIONAPI(SAML_API),opensaml::saml2md,xmltooling::XMLToolingException,Exceptions related to metadata use);
         DECL_XMLTOOLING_EXCEPTION(MetadataFilterException,SAML_EXCEPTIONAPI(SAML_API),opensaml::saml2md,MetadataException,Exceptions related to metadata filtering);
