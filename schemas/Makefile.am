@@ -1,7 +1,11 @@
 
 AUTOMAKE_OPTIONS = foreign
 
-schemas = soap-envelope.xsd \
+pkgxmldir = $(datadir)/xml/@PACKAGE@
+
+pkgxml_DATA = saml20-catalog.xml \
+	saml10-catalog.xml \
+	saml11-catalog.xml \
 	cs-sstc-schema-assertion-01.xsd \
 	cs-sstc-schema-protocol-01.xsd \
 	cs-sstc-schema-assertion-1.1.xsd \
@@ -43,13 +47,6 @@ schemas = soap-envelope.xsd \
 	sstc-saml-metadata-ext-query.xsd \
 	sstc-saml-protocol-ext-thirdparty.xsd
 
-pkgxmldir = $(datadir)/xml/@PACKAGE@
-
-pkgxml_DATA = saml20-catalog.xml \
-	saml10-catalog.xml \
-	saml11-catalog.xml \
-	$(schemas)
-
 #
 # Some of these need building
 #
@@ -76,5 +73,4 @@ CLEANFILES = saml20-catalog.xml \
 EXTRA_DIST = \
 	saml20-catalog.xml.in \
 	saml10-catalog.xml.in \
-	saml11-catalog.xml.in \
-	$(schemas)
+	saml11-catalog.xml.in
