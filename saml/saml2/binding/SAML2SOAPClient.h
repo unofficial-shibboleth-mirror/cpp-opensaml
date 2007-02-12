@@ -41,13 +41,12 @@ namespace opensaml {
             /**
              * Creates a SOAP client instance with a particular SecurityPolicy.
              * 
-             * @param policy    reference to SecurityPolicy to apply
+             * @param policy        reference to SecurityPolicy to apply
+             * @param validating    controls schema validation
              */
-            SAML2SOAPClient(SecurityPolicy& policy) : opensaml::SOAPClient(policy), m_correlate(NULL) {}
+            SAML2SOAPClient(SecurityPolicy& policy, bool validating=false) : opensaml::SOAPClient(policy, validating) {}
             
-            virtual ~SAML2SOAPClient() {
-                XMLString::release(&m_correlate);
-            }
+            virtual ~SAML2SOAPClient() {}
     
             /**
              * Specialized method for sending SAML 2.0 requests. The SOAP layer will be
@@ -79,9 +78,6 @@ namespace opensaml {
              * @return true iff the error should be treated as a fatal error
              */
             virtual bool handleError(const Status& status);
-        
-        private:
-            XMLCh* m_correlate;
         };
         
     };

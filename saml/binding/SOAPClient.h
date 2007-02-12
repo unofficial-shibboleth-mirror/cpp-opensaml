@@ -31,17 +31,21 @@ namespace opensaml {
     /**
      * Specialized SOAPClient for SAML SOAP bindings.
      */
-    class SAML_API SOAPClient : soap11::SOAPClient
+    class SAML_API SOAPClient : public soap11::SOAPClient
     {
     public:
         /**
          * Creates a SOAP client instance with a particular SecurityPolicy.
          * 
-         * @param policy    reference to SecurityPolicy to apply
+         * @param policy        reference to SecurityPolicy to apply
+         * @param validating    controls schema validation
          */
-        SOAPClient(SecurityPolicy& policy) : m_policy(policy), m_force(true) {}
+        SOAPClient(SecurityPolicy& policy, bool validating=false)
+            : soap11::SOAPClient(validating), m_policy(policy), m_force(true), m_correlate(NULL) {}
         
-        virtual ~SOAPClient() {}
+        virtual ~SOAPClient() {
+            XMLString::release(&m_correlate);
+        }
 
         /**
          * Controls whether to force transport/peer authentication via an X509TrustEngine.
@@ -70,6 +74,8 @@ namespace opensaml {
          * @return response envelope after SecurityPolicy has been applied
          */
         soap11::Envelope* receive();
+        
+        void reset();
 
     protected:
         /**
@@ -86,6 +92,9 @@ namespace opensaml {
         /** Flag controlling whether transport/peer authn is mandatory. */
         bool m_force;
     
+        /** Message correlation ID. */
+        XMLCh* m_correlate;
+        
     private:
         const saml2md::RoleDescriptor* m_peer;
     };

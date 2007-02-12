@@ -40,8 +40,7 @@ using namespace std;
 void SOAPClient::send(const soap11::Envelope* env, const KeyInfoSource& peer, const char* endpoint)
 {
     // Clear policy.
-    m_policy.setIssuer(NULL);
-    m_policy.setIssuerMetadata(NULL);
+    m_policy.reset();
     
     m_peer = dynamic_cast<const RoleDescriptor*>(&peer);
     
@@ -84,4 +83,12 @@ soap11::Envelope* SOAPClient::receive()
         m_policy.evaluate(*(env.get()));
     }
     return env.release();
+}
+
+void SOAPClient::reset()
+{
+    soap11::SOAPClient::reset();
+    m_policy.reset();
+    XMLString::release(&m_correlate);
+    m_correlate=NULL;
 }
