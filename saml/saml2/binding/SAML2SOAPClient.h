@@ -35,7 +35,7 @@ namespace opensaml {
         /**
          * Specialized SOAPClient for SAML 2.0 SOAP binding.
          */
-        class SAML_API SAML2SOAPClient : opensaml::SOAPClient
+        class SAML_API SAML2SOAPClient : public opensaml::SOAPClient
         {
         public:
             /**
