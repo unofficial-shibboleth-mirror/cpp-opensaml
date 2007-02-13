@@ -94,7 +94,7 @@ saml2bindinclude_HEADERS = \
 	saml2/binding/SAML2SOAPDecoder.h \
 	saml2/binding/SAML2SOAPEncoder.h \
 	saml2/binding/SAML2SOAPClient.h  \
-	saml1/binding/SAML2MessageRule.h
+	saml2/binding/SAML2MessageRule.h
 	
 saml2mdinclude_HEADERS = \
 	saml2/metadata/AbstractMetadataProvider.h \
