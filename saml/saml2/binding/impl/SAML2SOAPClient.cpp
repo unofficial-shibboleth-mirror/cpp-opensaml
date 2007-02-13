@@ -39,22 +39,12 @@ using namespace std;
 
 void SAML2SOAPClient::sendSAML(RequestAbstractType* request, const RoleDescriptor& peer, const char* endpoint)
 {
-    Envelope* env = EnvelopeBuilder::buildEnvelope();
+    auto_ptr<Envelope> env(EnvelopeBuilder::buildEnvelope());
     Body* body = BodyBuilder::buildBody();
     env->setBody(body);
     body->getUnknownXMLObjects().push_back(request);
-    try {
-        send(env, peer, endpoint);
-        m_correlate = XMLString::replicate(request->getID());
-        delete env;
-    }
-    catch (XMLToolingException&) {
-        // A bit weird...we have to "revert" things so that the request is isolated
-        // so the caller can free it.
-        request->getParent()->detach();
-        request->detach();
-        throw;
-    }
+    send(*env.get(), peer, endpoint);
+    m_correlate = XMLString::replicate(request->getID());
 }
 
 StatusResponseType* SAML2SOAPClient::receiveSAML()

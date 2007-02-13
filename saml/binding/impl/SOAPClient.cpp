@@ -37,7 +37,7 @@ using namespace opensaml;
 using namespace xmltooling;
 using namespace std;
 
-void SOAPClient::send(const soap11::Envelope* env, const KeyInfoSource& peer, const char* endpoint)
+void SOAPClient::send(const soap11::Envelope& env, const KeyInfoSource& peer, const char* endpoint)
 {
     // Clear policy.
     m_policy.reset();

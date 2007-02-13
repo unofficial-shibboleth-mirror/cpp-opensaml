@@ -52,7 +52,7 @@ namespace opensaml {
              * Specialized method for sending SAML 1.x requests. The SOAP layer will be
              * constructed automatically.
              * 
-             * <p>The request will be freed by the client object if the method succeeds.
+             * <p>The request will be freed by the client object regardless of the outcome.
              * 
              * @param request   SAML request to send
              * @param peer      peer to send message to, expressed in metadata terms

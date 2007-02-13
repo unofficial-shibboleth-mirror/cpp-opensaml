@@ -66,7 +66,7 @@ namespace opensaml {
          * @param peer      peer to send message to, expressed in TrustEngine terms
          * @param endpoint  URL of endpoint to recieve message
          */
-        void send(const soap11::Envelope* env, const xmltooling::KeyInfoSource& peer, const char* endpoint);
+        void send(const soap11::Envelope& env, const xmltooling::KeyInfoSource& peer, const char* endpoint);
         
         /**
          * Override applies SecurityPolicy to envelope before returning it.
