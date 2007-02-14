@@ -230,7 +230,6 @@ namespace opensaml {
             DECL_TYPED_CHILDREN(AuthenticationStatement);
             DECL_TYPED_CHILDREN(AttributeStatement);
             DECL_TYPED_CHILDREN(AuthorizationDecisionStatement);
-            DECL_INHERITED_TYPED_FOREIGN_CHILD(Signature,xmlsignature);
             /** AssertionType local name */
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;

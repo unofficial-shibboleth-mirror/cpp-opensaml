@@ -42,7 +42,8 @@ void SOAPClient::send(const soap11::Envelope& env, const KeyInfoSource& peer, co
     // Clear policy.
     m_policy.reset();
     
-    m_peer = dynamic_cast<const RoleDescriptor*>(&peer);
+    if (!m_peer)
+        m_peer = dynamic_cast<const RoleDescriptor*>(&peer);
     if (m_peer) {
         const QName& role = m_peer->getElementQName();
         if (XMLString::equals(role.getLocalPart(),RoleDescriptor::LOCAL_NAME))
@@ -94,8 +95,7 @@ soap11::Envelope* SOAPClient::receive()
 
 void SOAPClient::reset()
 {
+    m_peer = NULL;
     soap11::SOAPClient::reset();
     m_policy.reset();
-    XMLString::release(&m_correlate);
-    m_correlate=NULL;
 }

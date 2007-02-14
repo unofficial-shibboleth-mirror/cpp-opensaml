@@ -94,7 +94,6 @@ namespace opensaml {
             DECL_STRING_ATTRIB(RequestID,REQUESTID);
             DECL_INHERITED_DATETIME_ATTRIB(IssueInstant,ISSUEINSTANT);
             DECL_TYPED_CHILDREN(RespondWith);
-            DECL_INHERITED_TYPED_FOREIGN_CHILD(Signature,xmlsignature);
             /** RequestAbstractType local name */
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
@@ -145,7 +144,6 @@ namespace opensaml {
             DECL_STRING_ATTRIB(InResponseTo,INRESPONSETO);
             DECL_INHERITED_DATETIME_ATTRIB(IssueInstant,ISSUEINSTANT);
             DECL_STRING_ATTRIB(Recipient,RECIPIENT);
-            DECL_INHERITED_TYPED_FOREIGN_CHILD(Signature,xmlsignature);
             /** ResponseAbstractType local name */
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;

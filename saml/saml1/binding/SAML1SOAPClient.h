@@ -17,7 +17,7 @@
 /**
  * @file saml/saml1/binding/SAML1SOAPClient.h
  * 
- * Specialized SOAPClient for SAML 1.x SOAP binding.
+ * Client class for SAML 1.x SOAP binding.
  */
 
 #ifndef __saml1_soap11client_h__
@@ -33,20 +33,22 @@ namespace opensaml {
         class SAML_API Status;
 
         /**
-         * Specialized SOAPClient for SAML 1.x SOAP binding.
+         *  Client class for SAML 1.x SOAP binding.
          */
-        class SAML_API SAML1SOAPClient : public opensaml::SOAPClient
+        class SAML_API SAML1SOAPClient
         {
         public:
             /**
-             * Creates a SOAP client instance with a particular SecurityPolicy.
+             * Constructor
              * 
-             * @param policy        reference to SecurityPolicy to apply
-             * @param validating    controls schema validation
+             * @param soaper    reference to SOAPClient object to use for call
              */
-            SAML1SOAPClient(SecurityPolicy& policy, bool validating=false) : opensaml::SOAPClient(policy, validating) {}
+            SAML1SOAPClient(SOAPClient& soaper) : m_soaper(soaper), m_correlate(NULL) {
+            }
             
-            virtual ~SAML1SOAPClient() {}
+            virtual ~SAML1SOAPClient() {
+                XMLString::release(&m_correlate);
+            }
     
             /**
              * Specialized method for sending SAML 1.x requests. The SOAP layer will be
@@ -78,6 +80,12 @@ namespace opensaml {
              * @return true iff the error should be treated as a fatal error
              */
             virtual bool handleError(const Status& status);
+
+            /** SOAP client object */
+            SOAPClient& m_soaper;
+
+        private:
+            XMLCh* m_correlate;
         };
         
     };

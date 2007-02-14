@@ -57,7 +57,6 @@ namespace opensaml {
             DECL_STRING_ATTRIB(Destination,DESTINATION);
             DECL_STRING_ATTRIB(Consent,CONSENT);
             DECL_INHERITED_TYPED_FOREIGN_CHILD(Issuer,saml2);
-            DECL_INHERITED_TYPED_FOREIGN_CHILD(Signature,xmlsignature);
             DECL_TYPED_CHILD(Extensions);
             /** RequestAbstractType local name */
             static const XMLCh TYPE_NAME[];
@@ -147,7 +146,6 @@ namespace opensaml {
             DECL_STRING_ATTRIB(Destination,DESTINATION);
             DECL_STRING_ATTRIB(Consent,CONSENT);
             DECL_INHERITED_TYPED_FOREIGN_CHILD(Issuer,saml2);
-            DECL_INHERITED_TYPED_FOREIGN_CHILD(Signature,xmlsignature);
             DECL_TYPED_CHILD(Extensions);
             DECL_TYPED_CHILD(Status);
             /** StatusResponseType local name */

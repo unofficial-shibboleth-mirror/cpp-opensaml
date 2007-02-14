@@ -43,13 +43,13 @@ void SAML2SOAPClient::sendSAML(RequestAbstractType* request, const RoleDescripto
     Body* body = BodyBuilder::buildBody();
     env->setBody(body);
     body->getUnknownXMLObjects().push_back(request);
-    send(*env.get(), peer, endpoint);
+    m_soaper.send(*env.get(), peer, endpoint);
     m_correlate = XMLString::replicate(request->getID());
 }
 
 StatusResponseType* SAML2SOAPClient::receiveSAML()
 {
-    auto_ptr<Envelope> env(receive());
+    auto_ptr<Envelope> env(m_soaper.receive());
     if (env.get()) {
         Body* body = env->getBody();
         if (body && body->hasChildren()) {
@@ -69,7 +69,7 @@ StatusResponseType* SAML2SOAPClient::receiveSAML()
                         throw BindingException("SAML Response contained an error.");
                 }
                 
-                m_policy.evaluate(*response);
+                m_soaper.getPolicy().evaluate(*response);
                 env.release();
                 body->detach(); // frees Envelope
                 response->detach();   // frees Body

@@ -55,6 +55,13 @@ namespace opensaml {
          */
         virtual xmlsignature::Signature* getSignature() const=0;
 
+        /**
+         * Sets an enveloped Signature in the object.
+         *
+         * @param sig the enveloped Signature, or NULL
+         */
+        virtual void setSignature(xmlsignature::Signature* sig)=0;
+
     protected:
         SignableObject() {}
     };

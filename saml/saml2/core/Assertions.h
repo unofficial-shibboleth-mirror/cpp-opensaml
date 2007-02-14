@@ -328,7 +328,6 @@ namespace opensaml {
             DECL_INHERITED_STRING_ATTRIB(ID,ID);
             DECL_INHERITED_DATETIME_ATTRIB(IssueInstant,ISSUEINSTANT);
             DECL_INHERITED_TYPED_CHILD(Issuer);
-            DECL_INHERITED_TYPED_FOREIGN_CHILD(Signature,xmlsignature);
             DECL_TYPED_CHILD(Subject);
             DECL_TYPED_CHILD(Conditions);
             DECL_TYPED_CHILD(Advice);
