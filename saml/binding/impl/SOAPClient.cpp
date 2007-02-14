@@ -43,6 +43,13 @@ void SOAPClient::send(const soap11::Envelope& env, const KeyInfoSource& peer, co
     m_policy.reset();
     
     m_peer = dynamic_cast<const RoleDescriptor*>(&peer);
+    if (m_peer) {
+        const QName& role = m_peer->getElementQName();
+        if (XMLString::equals(role.getLocalPart(),RoleDescriptor::LOCAL_NAME))
+            m_policy.setRole(m_peer->getSchemaType());
+        else
+            m_policy.setRole(&role);
+    }
     
     soap11::SOAPClient::send(env, peer, endpoint);
 }
