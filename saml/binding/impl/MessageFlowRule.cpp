@@ -83,14 +83,16 @@ void MessageFlowRule::evaluate(const XMLObject& message, const GenericRequest* r
     
     // Check replay.
     if (m_checkReplay) {
+        ReplayCache* replayCache = XMLToolingConfig::getConfig().getReplayCache();
+        if (!replayCache) {
+            log.warn("no ReplayCache available, skipping requested replay check");
+            return;
+        }
         const XMLCh* id = policy.getMessageID();
         if (!id || !*id) {
             log.debug("unknown message ID, no replay check possible");
             return;
         }
-        ReplayCache* replayCache = XMLToolingConfig::getConfig().getReplayCache();
-        if (!replayCache)
-            throw BindingException("Message rejected, no ReplayCache instance available.");
         auto_ptr_char temp(id);
         if (!replayCache->check("MessageFlow", temp.get(), issueInstant + skew + m_expires)) {
             log.error("replay detected of message ID (%s)", temp.get());
