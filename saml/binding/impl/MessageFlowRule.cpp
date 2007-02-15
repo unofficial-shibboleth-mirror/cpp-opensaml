@@ -65,7 +65,7 @@ void MessageFlowRule::evaluate(const XMLObject& message, const GenericRequest* r
     time_t skew = XMLToolingConfig::getConfig().clock_skew_secs;
     time_t issueInstant = policy.getIssueInstant();
     if (issueInstant == 0) {
-        log.info("unknown message timestamp, assuming current time for replay checking");
+        log.debug("unknown message timestamp, assuming current time for replay checking");
         issueInstant = now;
     }
     else {
@@ -85,7 +85,7 @@ void MessageFlowRule::evaluate(const XMLObject& message, const GenericRequest* r
     if (m_checkReplay) {
         const XMLCh* id = policy.getMessageID();
         if (!id || !*id) {
-            log.info("unknown message ID, no replay check possible");
+            log.debug("unknown message ID, no replay check possible");
             return;
         }
         ReplayCache* replayCache = XMLToolingConfig::getConfig().getReplayCache();
