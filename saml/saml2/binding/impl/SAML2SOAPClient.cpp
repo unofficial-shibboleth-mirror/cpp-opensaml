@@ -58,7 +58,7 @@ StatusResponseType* SAML2SOAPClient::receiveSAML()
             if (response) {
                 
                 // Check InResponseTo.
-                if (m_correlate && !XMLString::equals(m_correlate, response->getInResponseTo()))
+                if (m_correlate && response->getInResponseTo() && !XMLString::equals(m_correlate, response->getInResponseTo()))
                     throw BindingException("InResponseTo attribute did not correlate with the Request ID.");
                 
                 // Check Status.

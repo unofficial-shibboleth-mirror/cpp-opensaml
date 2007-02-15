@@ -61,7 +61,7 @@ void SOAPClient::prepareTransport(const xmltooling::SOAPTransport& transport)
     if (http) {
         http->setRequestHeader("SOAPAction", "http://www.oasis-open.org/committees/security");
         http->setRequestHeader("Xerces-C", XERCES_FULLVERSIONDOT);
-        http->setRequestHeader("XML-Security-C", XSEC_VERSION);
+        http->setRequestHeader("XML-Security-C", XSEC_FULLVERSIONDOT);
         http->setRequestHeader("OpenSAML-C", OPENSAML_FULLVERSIONDOT);
     }
     
