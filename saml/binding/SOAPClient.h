@@ -91,7 +91,7 @@ namespace opensaml {
          * 
          * @param transport reference to transport layer
          */
-        void prepareTransport(const xmltooling::SOAPTransport& transport);
+        void prepareTransport(xmltooling::SOAPTransport& transport);
         
         /** Reference to security policy to apply. */
         SecurityPolicy& m_policy;

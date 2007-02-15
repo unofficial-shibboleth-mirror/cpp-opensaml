@@ -55,9 +55,9 @@ void SOAPClient::send(const soap11::Envelope& env, const KeyInfoSource& peer, co
     soap11::SOAPClient::send(env, peer, endpoint);
 }
 
-void SOAPClient::prepareTransport(const xmltooling::SOAPTransport& transport)
+void SOAPClient::prepareTransport(xmltooling::SOAPTransport& transport)
 {
-    const HTTPSOAPTransport* http = dynamic_cast<const HTTPSOAPTransport*>(&transport);
+    HTTPSOAPTransport* http = dynamic_cast<HTTPSOAPTransport*>(&transport);
     if (http) {
         http->setRequestHeader("SOAPAction", "http://www.oasis-open.org/committees/security");
         http->setRequestHeader("Xerces-C", XERCES_FULLVERSIONDOT);
