@@ -24,6 +24,7 @@
 #include "exceptions.h"
 #include "saml2/metadata/ChainingMetadataProvider.h"
 
+#include <log4cpp/Category.hh>
 #include <xmltooling/util/XMLHelper.h>
 #include <xercesc/util/XMLUniDefs.hpp>
 
@@ -31,6 +32,7 @@ using namespace opensaml::saml2md;
 using namespace opensaml;
 using namespace xmlsignature;
 using namespace xmltooling;
+using namespace log4cpp;
 using namespace std;
 
 namespace opensaml {
@@ -42,16 +44,18 @@ namespace opensaml {
     };
 };
 
-static const XMLCh GenericMetadataProvider[] =      UNICODE_LITERAL_16(M,e,t,a,d,a,t,a,P,r,o,v,i,d,e,r);
-static const XMLCh type[] =                         UNICODE_LITERAL_4(t,y,p,e);
+static const XMLCh _MetadataProvider[] =    UNICODE_LITERAL_16(M,e,t,a,d,a,t,a,P,r,o,v,i,d,e,r);
+static const XMLCh type[] =                 UNICODE_LITERAL_4(t,y,p,e);
 
 ChainingMetadataProvider::ChainingMetadataProvider(const DOMElement* e) : ObservableMetadataProvider(e), m_tlsKey(NULL)
 {
+    Category& log=Category::getInstance(SAML_LOGCAT".Metadata");
     try {
-        e = e ? xmltooling::XMLHelper::getFirstChildElement(e, GenericMetadataProvider) : NULL;
+        e = e ? XMLHelper::getFirstChildElement(e, _MetadataProvider) : NULL;
         while (e) {
             auto_ptr_char temp(e->getAttributeNS(NULL,type));
-            if (temp.get()) {
+            if (temp.get() && *temp.get()) {
+                log.info("building MetadataProvider of type %s", temp.get());
                 auto_ptr<MetadataProvider> provider(
                     SAMLConfig::getConfig().MetadataProviderManager.newPlugin(temp.get(), e)
                     );
@@ -61,10 +65,10 @@ ChainingMetadataProvider::ChainingMetadataProvider(const DOMElement* e) : Observ
                 m_providers.push_back(provider.get());
                 provider.release();
             }
-            e = XMLHelper::getNextSiblingElement(e, GenericMetadataProvider);
+            e = XMLHelper::getNextSiblingElement(e, _MetadataProvider);
         }
     }
-    catch (XMLToolingException&) {
+    catch (exception&) {
         for_each(m_providers.begin(), m_providers.end(), xmltooling::cleanup<MetadataProvider>());
         throw;
     }
