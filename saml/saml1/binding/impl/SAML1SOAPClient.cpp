@@ -56,7 +56,7 @@ Response* SAML1SOAPClient::receiveSAML()
             // Check for SAML Response.
             Response* response = dynamic_cast<Response*>(body->getUnknownXMLObjects().front());
             if (response) {
-                
+
                 // Check InResponseTo.
                 if (m_correlate && response->getInResponseTo() && !XMLString::equals(m_correlate, response->getInResponseTo()))
                     throw BindingException("InResponseTo attribute did not correlate with the Request ID.");
@@ -70,6 +70,10 @@ Response* SAML1SOAPClient::receiveSAML()
                 }
                 
                 m_soaper.getPolicy().evaluate(*response);
+                
+                if (!m_soaper.getPolicy().isSecure())
+                    throw BindingException("Security policy could not authenticate the message.");
+                
                 env.release();
                 body->detach(); // frees Envelope
                 response->detach();   // frees Body
