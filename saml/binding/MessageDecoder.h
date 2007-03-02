@@ -68,24 +68,10 @@ namespace opensaml {
             MAKE_NONCOPYABLE(ArtifactResolver);
         protected:
             ArtifactResolver() {}
-            
-            /** Flag controlling schema validation. */
-            bool m_validate;
 
         public:
             virtual ~ArtifactResolver() {}
 
-            /**
-             * Controls schema validation of incoming XML messages.
-             * This is separate from other forms of programmatic validation of objects,
-             * but can detect a much wider range of syntax errors. 
-             * 
-             * @param validate  true iff the resolver should use a validating XML parser
-             */
-            void setValidating(bool validate=true) {
-                m_validate = validate;
-            }
-            
             /**
              * Resolves one or more SAML 1.x artifacts into a response containing a set of
              * resolved Assertions. The caller is responsible for the resulting Response.
@@ -128,25 +114,10 @@ namespace opensaml {
          * 
          * @param artifactResolver   an ArtifactResolver implementation to use
          */
-        void setArtifactResolver(ArtifactResolver* artifactResolver) {
+        void setArtifactResolver(const ArtifactResolver* artifactResolver) {
             m_artifactResolver = artifactResolver;
-            if (m_artifactResolver)
-                m_artifactResolver->setValidating(m_validate);
         }
         
-        /**
-         * Controls schema validation of incoming XML messages.
-         * This is separate from other forms of programmatic validation of objects,
-         * but can detect a much wider range of syntax errors. 
-         * 
-         * @param validate  true iff the decoder should use a validating XML parser
-         */
-        void setValidating(bool validate=true) {
-            m_validate = validate;
-            if (m_artifactResolver)
-                m_artifactResolver->setValidating(m_validate);
-        }
-
         /**
          * Decodes a transport request into a SAML protocol message, and evaluates it
          * against a supplied SecurityPolicy. If the transport request does not contain
@@ -168,13 +139,10 @@ namespace opensaml {
             ) const=0;
 
     protected:
-        MessageDecoder() : m_artifactResolver(NULL), m_validate(false) {}
+        MessageDecoder() : m_artifactResolver(NULL) {}
 
         /** Pointer to an ArtifactResolver implementation. */
-        ArtifactResolver* m_artifactResolver;
-        
-        /** Flag controlling schema validation. */
-        bool m_validate;
+        const ArtifactResolver* m_artifactResolver;
     };
 
     /**

@@ -67,13 +67,16 @@ namespace opensaml {
          * @param metadataProvider  locked MetadataProvider instance
          * @param role              identifies the role (generally IdP or SP) of the policy peer 
          * @param trustEngine       TrustEngine to authenticate policy peer
+         * @param validate          true iff XML parsing should be done with validation
          */
         SecurityPolicy(
             const saml2md::MetadataProvider* metadataProvider=NULL,
             const xmltooling::QName* role=NULL,
-            const xmltooling::TrustEngine* trustEngine=NULL
-            ) : m_messageQName(NULL), m_messageID(NULL), m_issueInstant(0), m_issuer(NULL), m_issuerRole(NULL), m_secure(false),
-                m_matchingPolicy(NULL), m_metadata(metadataProvider), m_role(NULL), m_trust(trustEngine) {
+            const xmltooling::TrustEngine* trustEngine=NULL,
+            bool validate=true
+            ) : m_messageQName(NULL), m_messageID(NULL), m_issueInstant(0),
+                m_issuer(NULL), m_issuerRole(NULL), m_secure(false), m_matchingPolicy(NULL),
+                m_metadata(metadataProvider), m_role(NULL), m_trust(trustEngine), m_validate(validate) {
             if (role)
                 m_role = new xmltooling::QName(*role);
         }
@@ -86,14 +89,17 @@ namespace opensaml {
          * @param metadataProvider  locked MetadataProvider instance
          * @param role              identifies the role (generally IdP or SP) of the policy peer 
          * @param trustEngine       TrustEngine to authenticate policy peer
+         * @param validate          true iff XML parsing should be done with validation
          */
         SecurityPolicy(
             const std::vector<const SecurityPolicyRule*>& rules,
             const saml2md::MetadataProvider* metadataProvider=NULL,
             const xmltooling::QName* role=NULL,
-            const xmltooling::TrustEngine* trustEngine=NULL
-            ) : m_messageQName(NULL), m_messageID(NULL), m_issueInstant(0), m_issuer(NULL), m_issuerRole(NULL), m_secure(false),
-                m_matchingPolicy(NULL), m_rules(rules), m_metadata(metadataProvider), m_role(NULL), m_trust(trustEngine) {
+            const xmltooling::TrustEngine* trustEngine=NULL,
+            bool validate=true
+            ) : m_messageQName(NULL), m_messageID(NULL), m_issueInstant(0),
+                m_issuer(NULL), m_issuerRole(NULL), m_secure(false), m_matchingPolicy(NULL),
+                m_rules(rules), m_metadata(metadataProvider), m_role(NULL), m_trust(trustEngine), m_validate(validate) {
             if (role)
                 m_role = new xmltooling::QName(*role);
         }
@@ -126,6 +132,15 @@ namespace opensaml {
         const xmltooling::TrustEngine* getTrustEngine() const {
             return m_trust;
         }
+
+        /**
+         * Returns XML message validation setting.
+         * 
+         * @return validation flag
+         */
+        bool getValidating() const {
+            return m_validate;
+        } 
 
         /**
          * Adds a SecurityPolicyRule to the policy. The lifetime of the policy rule
@@ -165,6 +180,17 @@ namespace opensaml {
             m_trust = trust;
         }
 
+        /**
+         * Controls schema validation of incoming XML messages.
+         * This is separate from other forms of programmatic validation of objects,
+         * but can detect a much wider range of syntax errors. 
+         * 
+         * @param validate  validation setting
+         */
+        void setValidating(bool validate=true) {
+            m_validate = validate;
+        }
+        
         /**
          * Evaluates the policy against the given request and message,
          * possibly populating message information in the policy object.
@@ -350,6 +376,7 @@ namespace opensaml {
         const saml2md::MetadataProvider* m_metadata;
         xmltooling::QName* m_role;
         const xmltooling::TrustEngine* m_trust;
+        bool m_validate;
     };
 
 };

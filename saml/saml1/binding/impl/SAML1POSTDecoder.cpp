@@ -87,7 +87,7 @@ XMLObject* SAML1POSTDecoder::decode(
     XMLString::release(&decoded);
     
     // Parse and bind the document into an XMLObject.
-    DOMDocument* doc = (m_validate ? XMLToolingConfig::getConfig().getValidatingParser()
+    DOMDocument* doc = (policy.getValidating() ? XMLToolingConfig::getConfig().getValidatingParser()
         : XMLToolingConfig::getConfig().getParser()).parse(is); 
     XercesJanitor<DOMDocument> janitor(doc);
     auto_ptr<XMLObject> xmlObject(XMLObjectBuilder::buildOneFromElement(doc->getDocumentElement(), true));
@@ -97,7 +97,7 @@ XMLObject* SAML1POSTDecoder::decode(
     if (!response)
         throw BindingException("Decoded message was not a SAML 1.x Response.");
 
-    if (!m_validate)
+    if (!policy.getValidating())
         SchemaValidators.validate(xmlObject.get());
 
     // Run through the policy.

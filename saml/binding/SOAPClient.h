@@ -40,8 +40,8 @@ namespace opensaml {
          * @param policy        reference to SecurityPolicy to apply
          * @param validating    controls schema validation
          */
-        SOAPClient(SecurityPolicy& policy, bool validating=false)
-            : soap11::SOAPClient(validating), m_policy(policy), m_force(true), m_peer(NULL) {}
+        SOAPClient(SecurityPolicy& policy)
+            : soap11::SOAPClient(policy.getValidating()), m_policy(policy), m_force(true), m_peer(NULL) {}
         
         virtual ~SOAPClient() {}
 

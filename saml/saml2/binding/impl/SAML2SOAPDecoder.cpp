@@ -73,7 +73,7 @@ XMLObject* SAML2SOAPDecoder::decode(
     istringstream is(data);
     
     // Parse and bind the document into an XMLObject.
-    DOMDocument* doc = (m_validate ? XMLToolingConfig::getConfig().getValidatingParser()
+    DOMDocument* doc = (policy.getValidating() ? XMLToolingConfig::getConfig().getValidatingParser()
         : XMLToolingConfig::getConfig().getParser()).parse(is); 
     XercesJanitor<DOMDocument> janitor(doc);
     auto_ptr<XMLObject> xmlObject(XMLObjectBuilder::buildOneFromElement(doc->getDocumentElement(), true));
@@ -83,7 +83,7 @@ XMLObject* SAML2SOAPDecoder::decode(
     if (!env)
         throw BindingException("Decoded message was not a SOAP 1.1 Envelope.");
 
-    if (!m_validate)
+    if (!policy.getValidating())
         SchemaValidators.validate(env);
     
     Body* body = env->getBody();
