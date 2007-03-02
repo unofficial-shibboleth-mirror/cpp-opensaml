@@ -26,7 +26,7 @@
 #include <saml/saml2/metadata/MetadataFilter.h>
 
 #include <xmltooling/Lockable.h>
-#include <xmltooling/signature/KeyResolver.h>
+#include <xmltooling/security/KeyResolver.h>
 
 namespace opensaml {
     
@@ -118,7 +118,7 @@ namespace opensaml {
              * 
              * @return an associated KeyResolver, or NULL
              */
-            virtual const xmlsignature::KeyResolver* getKeyResolver() const=0;
+            virtual const xmltooling::KeyResolver* getKeyResolver() const=0;
             
             /**
              * Gets the entire metadata tree, after the registered filter has been applied.

@@ -28,7 +28,7 @@
 
 #include <xmltooling/XMLObjectBuilder.h>
 #include <xmltooling/encryption/Encryption.h>
-#include <xmltooling/signature/KeyResolver.h>
+#include <xmltooling/security/KeyResolver.h>
 #include <xmltooling/signature/Signature.h>
 #include <xmltooling/util/DateTime.h>
 
@@ -71,7 +71,7 @@ namespace opensaml {
              * @param recipient     identifier naming the recipient (the entity performing the decryption)
              * @return  the decrypted and unmarshalled object
              */
-            virtual xmltooling::XMLObject* decrypt(xmlsignature::KeyResolver* KEKresolver, const XMLCh* recipient) const=0;
+            virtual xmltooling::XMLObject* decrypt(xmltooling::KeyResolver* KEKresolver, const XMLCh* recipient) const=0;
         END_XMLOBJECT;
 
         BEGIN_XMLOBJECT(SAML_API,EncryptedID,EncryptedElementType,SAML 2.0 EncryptedID element);

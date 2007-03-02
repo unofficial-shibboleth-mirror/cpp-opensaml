@@ -26,7 +26,7 @@
 #include "saml2/metadata/AbstractMetadataProvider.h"
 
 #include <xercesc/util/XMLUniDefs.hpp>
-#include <xmltooling/signature/CachingKeyResolver.h>
+#include <xmltooling/security/CachingKeyResolver.h>
 #include <xmltooling/util/XMLHelper.h>
 
 using namespace opensaml::saml2md;
@@ -34,12 +34,12 @@ using namespace opensaml;
 using namespace xmltooling;
 using namespace std;
 
-static const XMLCh GenericKeyResolver[] =           UNICODE_LITERAL_11(K,e,y,R,e,s,o,l,v,e,r);
-static const XMLCh type[] =                         UNICODE_LITERAL_4(t,y,p,e);
+static const XMLCh _KeyResolver[] = UNICODE_LITERAL_11(K,e,y,R,e,s,o,l,v,e,r);
+static const XMLCh type[] =         UNICODE_LITERAL_4(t,y,p,e);
 
 AbstractMetadataProvider::AbstractMetadataProvider(const DOMElement* e) : ObservableMetadataProvider(e), m_resolver(NULL)
 {
-    e = e ? XMLHelper::getFirstChildElement(e, GenericKeyResolver) : NULL;
+    e = e ? XMLHelper::getFirstChildElement(e, _KeyResolver) : NULL;
     if (e) {
         auto_ptr_char t(e->getAttributeNS(NULL,type));
         if (t.get())
@@ -60,7 +60,7 @@ AbstractMetadataProvider::~AbstractMetadataProvider()
 
 void AbstractMetadataProvider::emitChangeEvent()
 {
-    xmlsignature::CachingKeyResolver* ckr=dynamic_cast<xmlsignature::CachingKeyResolver*>(m_resolver);
+    CachingKeyResolver* ckr=dynamic_cast<CachingKeyResolver*>(m_resolver);
     if (ckr)
         ckr->clearCache();
     ObservableMetadataProvider::emitChangeEvent();    

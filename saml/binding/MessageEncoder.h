@@ -27,7 +27,7 @@
 
 #include <istream>
 #include <xmltooling/XMLObject.h>
-#include <xmltooling/signature/CredentialResolver.h>
+#include <xmltooling/security/CredentialResolver.h>
 
 namespace opensaml {
 
@@ -116,7 +116,7 @@ namespace opensaml {
             const char* destination,
             const char* recipientID=NULL,
             const char* relayState=NULL,
-            const xmlsignature::CredentialResolver* credResolver=NULL,
+            const xmltooling::CredentialResolver* credResolver=NULL,
             const XMLCh* sigAlgorithm=NULL
             ) const=0;
 
@@ -132,7 +132,7 @@ namespace opensaml {
          * @return  a new Signature object
          */
         xmlsignature::Signature* buildSignature(
-            const xmlsignature::CredentialResolver* credResolver,
+            const xmltooling::CredentialResolver* credResolver,
             const XMLCh* sigAlgorithm=NULL
             ) const;
         

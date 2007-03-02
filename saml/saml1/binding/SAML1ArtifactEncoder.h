@@ -41,7 +41,7 @@ namespace opensaml {
                 const char* destination,
                 const char* recipientID=NULL,
                 const char* relayState=NULL,
-                const xmlsignature::CredentialResolver* credResolver=NULL,
+                const xmltooling::CredentialResolver* credResolver=NULL,
                 const XMLCh* sigAlgorithm=NULL
                 ) const;
         };                

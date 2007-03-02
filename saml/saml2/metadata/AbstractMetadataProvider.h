@@ -58,7 +58,7 @@ namespace opensaml {
         public:
             virtual ~AbstractMetadataProvider();
             
-            virtual const xmlsignature::KeyResolver* getKeyResolver() const {
+            virtual const xmltooling::KeyResolver* getKeyResolver() const {
                 return m_resolver;
             }
             
@@ -68,7 +68,7 @@ namespace opensaml {
 
         protected:
             /** Embedded KeyResolver instance. */
-            xmlsignature::KeyResolver* m_resolver;
+            xmltooling::KeyResolver* m_resolver;
 
             /**
              * Loads an entity into the cache for faster lookup. This includes

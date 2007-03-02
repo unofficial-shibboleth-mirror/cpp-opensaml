@@ -84,7 +84,7 @@ namespace opensaml {
             xmltooling::Lockable* lock();
             void unlock();
             void init();
-            const xmlsignature::KeyResolver* getKeyResolver() const;
+            const xmltooling::KeyResolver* getKeyResolver() const;
             const xmltooling::XMLObject* getMetadata() const;
             const EntitiesDescriptor* getEntitiesDescriptor(const char* name, bool requireValidMetadata=true) const;
             const EntityDescriptor* getEntityDescriptor(const char* id, bool requireValidMetadata=true) const;
