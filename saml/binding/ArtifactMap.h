@@ -46,9 +46,17 @@ namespace opensaml {
          * 
          * @param storage       pointer to a StorageService, or NULL to keep map in memory
          * @param context       optional label for storage context
-         * @param artifactTTL   time to live value, determines how long artifact remains valid
+         * @param artifactTTL   time to live in seconds, determines how long artifact remains valid
          */
-        ArtifactMap(xmltooling::StorageService* storage=NULL, const char* context=NULL, int artifactTTL=180);
+        ArtifactMap(xmltooling::StorageService* storage=NULL, const char* context=NULL, unsigned int artifactTTL=180);
+
+        /**
+         * Creates a map on top of a particular storage service context, or in-memory.
+         * 
+         * @param e         root of a DOM with optional XML attributes for context and artifactTTL
+         * @param storage   pointer to a StorageService, or NULL to keep map in memory
+         */
+        ArtifactMap(const DOMElement* e, xmltooling::StorageService* storage=NULL);
 
         virtual ~ArtifactMap();
         
@@ -81,7 +89,7 @@ namespace opensaml {
         xmltooling::StorageService* m_storage;
         std::string m_context;
         ArtifactMappings* m_mappings;
-        int m_artifactTTL;
+        unsigned int m_artifactTTL;
     };
 };
 
