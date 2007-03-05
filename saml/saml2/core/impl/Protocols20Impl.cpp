@@ -38,7 +38,6 @@
 
 using namespace opensaml::saml2p;
 using namespace opensaml::saml2;
-using namespace opensaml;
 using namespace xmlsignature;
 using namespace xmlencryption;
 using namespace xmltooling;
@@ -1131,7 +1130,7 @@ namespace opensaml {
             ResponseImpl(const ResponseImpl& src) : AbstractXMLObject(src), StatusResponseTypeImpl(src) {
                 for (list<XMLObject*>::const_iterator i=src.m_children.begin(); i!=src.m_children.end(); i++) {
                     if (*i) {
-                        Assertion* assertion=dynamic_cast<Assertion*>(*i);
+                        saml2::Assertion* assertion=dynamic_cast<saml2::Assertion*>(*i);
                         if (assertion) {
                             getAssertions().push_back(assertion->cloneAssertion());
                             continue;

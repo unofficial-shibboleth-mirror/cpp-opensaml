@@ -37,7 +37,6 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 
 using namespace opensaml::saml2;
-using namespace opensaml;
 using namespace xmlencryption;
 using namespace xmlsignature;
 using namespace xmltooling;

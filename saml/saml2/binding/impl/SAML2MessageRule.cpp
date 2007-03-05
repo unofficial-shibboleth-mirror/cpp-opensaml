@@ -71,7 +71,7 @@ void SAML2MessageRule::evaluate(const XMLObject& message, const GenericRequest* 
         }
         else if (XMLString::equals(q.getLocalPart(), Response::LOCAL_NAME)) {
             // No issuer in the message, so we have to try the Response approach. 
-            const vector<Assertion*>& assertions = dynamic_cast<const Response&>(samlRoot).getAssertions();
+            const vector<saml2::Assertion*>& assertions = dynamic_cast<const Response&>(samlRoot).getAssertions();
             if (!assertions.empty()) {
                 issuer = assertions.front()->getIssuer();
                 if (issuer && issuer->getName()) {

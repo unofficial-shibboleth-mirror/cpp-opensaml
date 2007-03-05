@@ -48,7 +48,7 @@ public:
 
         // Build metadata provider.
         auto_ptr<MetadataProvider> metadataProvider(
-            SAMLConfig::getConfig().MetadataProviderManager.newPlugin(XML_METADATA_PROVIDER,doc->getDocumentElement())
+            opensaml::SAMLConfig::getConfig().MetadataProviderManager.newPlugin(XML_METADATA_PROVIDER,doc->getDocumentElement())
             );
         try {
             metadataProvider->init();

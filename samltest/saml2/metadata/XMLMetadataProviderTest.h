@@ -22,6 +22,7 @@
 
 using namespace opensaml::saml2md;
 using namespace opensaml::saml2p;
+using namespace opensaml;
 
 class XMLMetadataProviderTest : public CxxTest::TestSuite, public SAMLObjectBaseTestCase {
     XMLCh* entityID;

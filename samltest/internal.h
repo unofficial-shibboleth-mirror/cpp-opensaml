@@ -29,7 +29,6 @@
 #include <xmltooling/XMLToolingConfig.h>
 #include <xmltooling/validation/Validator.h>
 
-using namespace opensaml;
 using namespace xmltooling;
 using namespace std;
 

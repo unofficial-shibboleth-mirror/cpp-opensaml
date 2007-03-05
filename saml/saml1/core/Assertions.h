@@ -23,7 +23,7 @@
 #ifndef __saml1_assertions_h__
 #define __saml1_assertions_h__
 
-#include <saml/RootObject.h>
+#include <saml/Assertion.h>
 #include <saml/util/SAMLConstants.h>
 
 #include <xmltooling/ElementProxy.h>
@@ -215,10 +215,7 @@ namespace opensaml {
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
 
-        BEGIN_XMLOBJECT(SAML_API,Assertion,RootObject,SAML 1.x Assertion element);
-            bool isAssertion() const {
-                return true;
-            }
+        BEGIN_XMLOBJECT(SAML_API,Assertion,opensaml::Assertion,SAML 1.x Assertion element);
             DECL_INTEGER_ATTRIB(MinorVersion,MINORVERSION);
             DECL_STRING_ATTRIB(AssertionID,ASSERTIONID);
             DECL_STRING_ATTRIB(Issuer,ISSUER);

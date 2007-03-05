@@ -23,7 +23,7 @@
 #ifndef __saml2_assertions_h__
 #define __saml2_assertions_h__
 
-#include <saml/RootObject.h>
+#include <saml/Assertion.h>
 #include <saml/util/SAMLConstants.h>
 
 #include <xmltooling/XMLObjectBuilder.h>
@@ -320,10 +320,7 @@ namespace opensaml {
             virtual Issuer* getIssuer() const=0;
         };
 
-        BEGIN_XMLOBJECT(SAML_API,Assertion,saml2::RootObject,SAML 2.0 Assertion element);
-            bool isAssertion() const {
-                return true;
-            }
+        BEGIN_XMLOBJECT2(SAML_API,Assertion,saml2::RootObject,opensaml::Assertion,SAML 2.0 Assertion element);
             DECL_INHERITED_STRING_ATTRIB(Version,VER);
             DECL_INHERITED_STRING_ATTRIB(ID,ID);
             DECL_INHERITED_DATETIME_ATTRIB(IssueInstant,ISSUEINSTANT);

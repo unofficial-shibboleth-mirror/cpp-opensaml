@@ -89,7 +89,7 @@ public:
         assertEquals("Unmarshalled assertion does not match", expectedChildElementsDOM, assertion2.get(), false);
         
         try {
-            SignatureProfileValidator spv;
+            opensaml::SignatureProfileValidator spv;
             SignatureValidator sv(new KeyResolver(m_resolver->getKey()));
             spv.validate(dynamic_cast<Assertion*>(assertion2.get())->getSignature());
             sv.validate(dynamic_cast<Assertion*>(assertion2.get())->getSignature());

@@ -28,6 +28,7 @@
 #include <xmltooling/security/TrustEngine.h>
 
 using namespace opensaml::saml2md;
+using namespace opensaml;
 using namespace xmlsignature;
 
 class SAMLBindingBaseTestCase : public HTTPRequest, public HTTPResponse

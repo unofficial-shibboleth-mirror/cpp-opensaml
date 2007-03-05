@@ -119,7 +119,7 @@ public:
         assertEquals("Unmarshalled response does not match", expectedChildElementsDOM, response2.get(), false);
         
         try {
-            SignatureProfileValidator spv;
+            opensaml::SignatureProfileValidator spv;
             spv.validate(dynamic_cast<Response*>(response2.get())->getAssertions().front()->getSignature());
             spv.validate(dynamic_cast<Response*>(response2.get())->getSignature());
 

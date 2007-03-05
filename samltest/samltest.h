@@ -22,6 +22,8 @@
 #include <xmltooling/util/ReplayCache.h>
 #include <xmltooling/util/TemplateEngine.h>
 
+using namespace opensaml;
+
 //#define SAML_LEAKCHECK
 
 std::string data_path = "../samltest/data/";

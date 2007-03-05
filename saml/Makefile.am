@@ -25,6 +25,7 @@ saml2coreincludedir = $(includedir)/saml/saml2/core
 saml2mdincludedir = $(includedir)/saml/saml2/metadata
 
 libsamlinclude_HEADERS = \
+	Assertion.h \
 	base.h \
 	exceptions.h \
 	version.h \

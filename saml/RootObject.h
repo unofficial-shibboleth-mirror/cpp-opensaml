@@ -32,19 +32,10 @@ namespace opensaml {
      * Base class for SAML objects at the root of core schemas.
      * Root objects are signable, and have message identifiers and timestamps.
      */
-    class SAML_API RootObject : public virtual SignableObject
+    class SAML_API RootObject : public SignableObject
     {
     public:
         virtual ~RootObject() {}
-
-        /**
-         * Indicates whether the object is an assertion.
-         * 
-         * @return true iff the object is an assertion 
-         */
-        virtual bool isAssertion() const {
-            return false;
-        }
 
         /**
          * Returns the unique SAML ID of the object.

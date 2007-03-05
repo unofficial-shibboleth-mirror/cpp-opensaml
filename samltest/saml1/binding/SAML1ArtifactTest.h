@@ -51,15 +51,15 @@ public:
     void testSAML1Artifact() {
         try {
             QName idprole(samlconstants::SAML20MD_NS, IDPSSODescriptor::LOCAL_NAME);
-            SecurityPolicy policy(m_rules1, m_metadata, &idprole, m_trust);
+            SecurityPolicy policy(m_rules1, m_metadata, &idprole, m_trust, false);
 
             // Read message to use from file.
             string path = data_path + "saml1/binding/SAML1Assertion.xml";
             ifstream in(path.c_str());
             DOMDocument* doc=XMLToolingConfig::getConfig().getParser().parse(in);
             XercesJanitor<DOMDocument> janitor(doc);
-            auto_ptr<Assertion> toSend(
-                dynamic_cast<Assertion*>(XMLObjectBuilder::buildOneFromElement(doc->getDocumentElement(),true))
+            auto_ptr<saml1::Assertion> toSend(
+                dynamic_cast<saml1::Assertion*>(XMLObjectBuilder::buildOneFromElement(doc->getDocumentElement(),true))
                 );
             janitor.release();
 
@@ -133,7 +133,7 @@ public:
         TSM_ASSERT_EQUALS("Too many artifacts.", artifacts.size(), 1);
         XMLObject* xmlObject =
             SAMLConfig::getConfig().getArtifactMap()->retrieveContent(artifacts.front(), "https://sp.example.org/");
-        Assertion* assertion = dynamic_cast<Assertion*>(xmlObject);
+        saml1::Assertion* assertion = dynamic_cast<saml1::Assertion*>(xmlObject);
         TSM_ASSERT("Not an assertion.", assertion!=NULL);
         auto_ptr<Response> response(ResponseBuilder::buildResponse());
         response->getAssertions().push_back(assertion);

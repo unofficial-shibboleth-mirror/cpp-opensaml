@@ -37,7 +37,6 @@
 
 using namespace opensaml::saml1p;
 using namespace opensaml::saml1;
-using namespace opensaml;
 using namespace xmlsignature;
 using namespace xmltooling;
 using namespace std;
@@ -744,8 +743,8 @@ namespace opensaml {
                 init();
                 if (src.getStatus())
                     setStatus(src.getStatus()->cloneStatus());
-                VectorOf(Assertion) v=getAssertions();
-                for (vector<Assertion*>::const_iterator i=src.m_Assertions.begin(); i!=src.m_Assertions.end(); i++) {
+                VectorOf(saml1::Assertion) v=getAssertions();
+                for (vector<saml1::Assertion*>::const_iterator i=src.m_Assertions.begin(); i!=src.m_Assertions.end(); i++) {
                     if (*i) {
                         v.push_back((*i)->cloneAssertion());
                     }
@@ -757,12 +756,12 @@ namespace opensaml {
                 return cloneResponse();
             }
             IMPL_TYPED_CHILD(Status);
-            IMPL_TYPED_CHILDREN(Assertion, m_children.end());
+            IMPL_TYPED_FOREIGN_CHILDREN(Assertion,saml1,m_children.end());
     
         protected:
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
                 PROC_TYPED_CHILD(Status,SAML1P_NS,false);
-                PROC_TYPED_CHILDREN(Assertion,SAML1_NS,true);
+                PROC_TYPED_FOREIGN_CHILDREN(Assertion,saml1,SAML1_NS,true);
                 ResponseAbstractTypeImpl::processChildElement(childXMLObject,root);
             }
         };
