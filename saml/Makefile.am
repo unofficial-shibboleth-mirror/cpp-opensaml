@@ -98,6 +98,7 @@ libsaml_la_SOURCES = \
 	binding/impl/MessageDecoder.cpp \
 	binding/impl/MessageEncoder.cpp \
 	binding/impl/MessageFlowRule.cpp \
+	binding/impl/NullSecurityRule.cpp \
 	binding/impl/SAMLArtifact.cpp \
 	binding/impl/SecurityPolicy.cpp \
 	binding/impl/SimpleSigningRule.cpp \
