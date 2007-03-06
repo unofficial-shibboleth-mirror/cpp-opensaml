@@ -23,7 +23,7 @@
 #include "internal.h"
 #include "exceptions.h"
 #include "binding/HTTPResponse.h"
-#include "saml2/binding/SAML2SOAPEncoder.h"
+#include "binding/MessageEncoder.h"
 #include "saml2/core/Protocols.h"
 
 #include <sstream>
@@ -41,6 +41,23 @@ using namespace std;
 
 namespace opensaml {
     namespace saml2p {              
+        class SAML_DLLLOCAL SAML2SOAPEncoder : public MessageEncoder
+        {
+        public:
+            SAML2SOAPEncoder(const DOMElement* e);
+            virtual ~SAML2SOAPEncoder() {}
+            
+            long encode(
+                GenericResponse& genericResponse,
+                xmltooling::XMLObject* xmlObject,
+                const char* destination,
+                const char* recipientID=NULL,
+                const char* relayState=NULL,
+                const xmltooling::CredentialResolver* credResolver=NULL,
+                const XMLCh* sigAlgorithm=NULL
+                ) const;
+        };
+
         MessageEncoder* SAML_DLLLOCAL SAML2SOAPEncoderFactory(const DOMElement* const & e)
         {
             return new SAML2SOAPEncoder(e);

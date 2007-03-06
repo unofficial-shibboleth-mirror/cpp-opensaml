@@ -22,7 +22,7 @@
 
 #include "internal.h"
 #include "exceptions.h"
-#include "binding/MessageFlowRule.h"
+#include "binding/SecurityPolicyRule.h"
 
 #include <log4cpp/Category.hh>
 #include <xmltooling/util/ReplayCache.h>
@@ -34,6 +34,19 @@ using namespace log4cpp;
 using namespace std;
 
 namespace opensaml {
+    class SAML_DLLLOCAL MessageFlowRule : public SecurityPolicyRule
+    {
+    public:
+        MessageFlowRule(const DOMElement* e);
+        virtual ~MessageFlowRule() {}
+        
+        void evaluate(const xmltooling::XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const;
+    
+    private:
+        bool m_checkReplay;
+        time_t m_expires;
+    };
+
     SecurityPolicyRule* SAML_DLLLOCAL MessageFlowRuleFactory(const DOMElement* const & e)
     {
         return new MessageFlowRule(e);

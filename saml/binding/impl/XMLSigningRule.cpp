@@ -22,7 +22,7 @@
 
 #include "internal.h"
 #include "exceptions.h"
-#include "binding/XMLSigningRule.h"
+#include "binding/SecurityPolicyRule.h"
 #include "saml2/core/Assertions.h"
 #include "saml2/metadata/Metadata.h"
 #include "saml2/metadata/MetadataProvider.h"
@@ -39,6 +39,18 @@ using namespace std;
 using xmlsignature::SignatureException;
 
 namespace opensaml {
+    class SAML_DLLLOCAL XMLSigningRule : public SecurityPolicyRule
+    {
+    public:
+        XMLSigningRule(const DOMElement* e);
+        virtual ~XMLSigningRule() {}
+        
+        void evaluate(const xmltooling::XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const;
+
+    private:
+        bool m_errorsFatal;
+    };
+
     SecurityPolicyRule* SAML_DLLLOCAL XMLSigningRuleFactory(const DOMElement* const & e)
     {
         return new XMLSigningRule(e);

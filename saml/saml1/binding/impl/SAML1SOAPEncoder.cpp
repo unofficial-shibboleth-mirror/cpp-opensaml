@@ -23,7 +23,7 @@
 #include "internal.h"
 #include "exceptions.h"
 #include "binding/HTTPResponse.h"
-#include "saml1/binding/SAML1SOAPEncoder.h"
+#include "binding/MessageEncoder.h"
 #include "saml1/core/Protocols.h"
 
 #include <sstream>
@@ -41,14 +41,29 @@ using namespace std;
 
 namespace opensaml {
     namespace saml1p {              
+        class SAML_DLLLOCAL SAML1SOAPEncoder : public MessageEncoder
+        {
+        public:
+            SAML1SOAPEncoder(const DOMElement* e) {}
+            virtual ~SAML1SOAPEncoder() {}
+            
+            long encode(
+                GenericResponse& genericResponse,
+                xmltooling::XMLObject* xmlObject,
+                const char* destination,
+                const char* recipientID=NULL,
+                const char* relayState=NULL,
+                const xmltooling::CredentialResolver* credResolver=NULL,
+                const XMLCh* sigAlgorithm=NULL
+                ) const;
+        };
+
         MessageEncoder* SAML_DLLLOCAL SAML1SOAPEncoderFactory(const DOMElement* const & e)
         {
             return new SAML1SOAPEncoder(e);
         }
     };
 };
-
-SAML1SOAPEncoder::SAML1SOAPEncoder(const DOMElement* e) {}
 
 long SAML1SOAPEncoder::encode(
     GenericResponse& genericResponse,

@@ -23,7 +23,7 @@
 #include "internal.h"
 #include "exceptions.h"
 #include "binding/HTTPRequest.h"
-#include "binding/SimpleSigningRule.h"
+#include "binding/SecurityPolicyRule.h"
 #include "saml2/core/Assertions.h"
 #include "saml2/metadata/Metadata.h"
 #include "saml2/metadata/MetadataProvider.h"
@@ -41,29 +41,43 @@ using xmlsignature::KeyInfo;
 using xmlsignature::SignatureException;
 
 namespace opensaml {
+    class SAML_DLLLOCAL SimpleSigningRule : public SecurityPolicyRule
+    {
+    public:
+        SimpleSigningRule(const DOMElement* e);
+        virtual ~SimpleSigningRule() {}
+        
+        void evaluate(const xmltooling::XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const;
+
+    private:
+        // Appends a raw parameter=value pair to the string.
+        static bool appendParameter(string& s, const char* data, const char* name);
+
+        bool m_errorsFatal;
+    };
+
     SecurityPolicyRule* SAML_DLLLOCAL SimpleSigningRuleFactory(const DOMElement* const & e)
     {
         return new SimpleSigningRule(e);
     }
 
-    // Appends a raw parameter=value pair to the string.
-    static bool appendParameter(string& s, const char* data, const char* name)
-    {
-        const char* start = strstr(data,name);
-        if (!start)
-            return false;
-        if (!s.empty())
-            s += '&';
-        const char* end = strchr(start,'&');
-        if (end)
-            s.append(start, end-start);
-        else
-            s.append(start);
-        return true;
-    }
-
     static const XMLCh errorsFatal[] = UNICODE_LITERAL_11(e,r,r,o,r,s,F,a,t,a,l);
 };
+
+bool SimpleSigningRule::appendParameter(string& s, const char* data, const char* name)
+{
+    const char* start = strstr(data,name);
+    if (!start)
+        return false;
+    if (!s.empty())
+        s += '&';
+    const char* end = strchr(start,'&');
+    if (end)
+        s.append(start, end-start);
+    else
+        s.append(start);
+    return true;
+}
 
 SimpleSigningRule::SimpleSigningRule(const DOMElement* e) : m_errorsFatal(false)
 {

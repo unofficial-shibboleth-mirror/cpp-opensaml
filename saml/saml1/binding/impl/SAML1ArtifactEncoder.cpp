@@ -24,10 +24,11 @@
 #include "exceptions.h"
 #include "binding/ArtifactMap.h"
 #include "binding/HTTPResponse.h"
+#include "binding/MessageEncoder.h"
 #include "binding/SAMLArtifact.h"
 #include "binding/URLEncoder.h"
-#include "saml1/binding/SAML1ArtifactEncoder.h"
 #include "saml1/core/Assertions.h"
+#include "saml1/core/Protocols.h"
 
 #include <log4cpp/Category.hh>
 #include <xmltooling/util/NDC.h>
@@ -42,14 +43,29 @@ using namespace std;
 
 namespace opensaml {
     namespace saml1p {              
+        class SAML_DLLLOCAL SAML1ArtifactEncoder : public MessageEncoder
+        {
+        public:
+            SAML1ArtifactEncoder(const DOMElement* e) {}
+            virtual ~SAML1ArtifactEncoder() {}
+            
+            long encode(
+                GenericResponse& genericResponse,
+                xmltooling::XMLObject* xmlObject,
+                const char* destination,
+                const char* recipientID=NULL,
+                const char* relayState=NULL,
+                const xmltooling::CredentialResolver* credResolver=NULL,
+                const XMLCh* sigAlgorithm=NULL
+                ) const;
+        };                
+
         MessageEncoder* SAML_DLLLOCAL SAML1ArtifactEncoderFactory(const DOMElement* const & e)
         {
             return new SAML1ArtifactEncoder(e);
         }
     };
 };
-
-SAML1ArtifactEncoder::SAML1ArtifactEncoder(const DOMElement* e) {}
 
 long SAML1ArtifactEncoder::encode(
     GenericResponse& genericResponse,

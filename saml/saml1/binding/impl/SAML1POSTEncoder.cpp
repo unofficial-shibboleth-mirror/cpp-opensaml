@@ -22,7 +22,7 @@
 
 #include "internal.h"
 #include "exceptions.h"
-#include "saml1/binding/SAML1POSTEncoder.h"
+#include "binding/MessageEncoder.h"
 #include "saml1/core/Protocols.h"
 
 #include <fstream>
@@ -41,6 +41,27 @@ using namespace std;
 
 namespace opensaml {
     namespace saml1p {              
+        class SAML_DLLLOCAL SAML1POSTEncoder : public MessageEncoder
+        {
+        public:
+            SAML1POSTEncoder(const DOMElement* e);
+            virtual ~SAML1POSTEncoder() {}
+            
+            long encode(
+                GenericResponse& genericResponse,
+                xmltooling::XMLObject* xmlObject,
+                const char* destination,
+                const char* recipientID=NULL,
+                const char* relayState=NULL,
+                const xmltooling::CredentialResolver* credResolver=NULL,
+                const XMLCh* sigAlgorithm=NULL
+                ) const;
+
+        protected:
+            /** Pathname of HTML template for transmission of message via POST. */
+            std::string m_template;
+        };
+
         MessageEncoder* SAML_DLLLOCAL SAML1POSTEncoderFactory(const DOMElement* const & e)
         {
             return new SAML1POSTEncoder(e);
@@ -48,17 +69,17 @@ namespace opensaml {
     };
 };
 
-static const XMLCh templat[] = UNICODE_LITERAL_8(t,e,m,p,l,a,t,e);
+static const XMLCh _template[] = UNICODE_LITERAL_8(t,e,m,p,l,a,t,e);
 
 SAML1POSTEncoder::SAML1POSTEncoder(const DOMElement* e)
 {
     if (e) {
-        auto_ptr_char t(e->getAttributeNS(NULL, templat));
+        auto_ptr_char t(e->getAttributeNS(NULL, _template));
         if (t.get())
             m_template = t.get();
     }
     if (m_template.empty())
-        throw XMLToolingException("SAML1POSTEncoder requires template attribute.");
+        throw XMLToolingException("SAML1POSTEncoder requires template XML attribute.");
 }
 
 long SAML1POSTEncoder::encode(

@@ -630,35 +630,7 @@
 					Name="binding"
 					>
 					<File
-						RelativePath=".\saml1\binding\SAML1ArtifactDecoder.h"
-						>
-					</File>
-					<File
-						RelativePath=".\saml1\binding\SAML1ArtifactEncoder.h"
-						>
-					</File>
-					<File
-						RelativePath=".\saml1\binding\SAML1MessageRule.h"
-						>
-					</File>
-					<File
-						RelativePath=".\saml1\binding\SAML1POSTDecoder.h"
-						>
-					</File>
-					<File
-						RelativePath=".\saml1\binding\SAML1POSTEncoder.h"
-						>
-					</File>
-					<File
 						RelativePath=".\saml1\binding\SAML1SOAPClient.h"
-						>
-					</File>
-					<File
-						RelativePath=".\saml1\binding\SAML1SOAPDecoder.h"
-						>
-					</File>
-					<File
-						RelativePath=".\saml1\binding\SAML1SOAPEncoder.h"
 						>
 					</File>
 					<File
@@ -746,27 +718,7 @@
 						>
 					</File>
 					<File
-						RelativePath=".\saml2\binding\SAML2ArtifactDecoder.h"
-						>
-					</File>
-					<File
-						RelativePath=".\saml2\binding\SAML2ArtifactEncoder.h"
-						>
-					</File>
-					<File
 						RelativePath=".\saml2\binding\SAML2ArtifactType0004.h"
-						>
-					</File>
-					<File
-						RelativePath=".\saml2\binding\SAML2MessageRule.h"
-						>
-					</File>
-					<File
-						RelativePath=".\saml2\binding\SAML2POSTDecoder.h"
-						>
-					</File>
-					<File
-						RelativePath=".\saml2\binding\SAML2POSTEncoder.h"
 						>
 					</File>
 					<File
@@ -774,23 +726,7 @@
 						>
 					</File>
 					<File
-						RelativePath=".\saml2\binding\SAML2RedirectDecoder.h"
-						>
-					</File>
-					<File
-						RelativePath=".\saml2\binding\SAML2RedirectEncoder.h"
-						>
-					</File>
-					<File
 						RelativePath=".\saml2\binding\SAML2SOAPClient.h"
-						>
-					</File>
-					<File
-						RelativePath=".\saml2\binding\SAML2SOAPDecoder.h"
-						>
-					</File>
-					<File
-						RelativePath=".\saml2\binding\SAML2SOAPEncoder.h"
 						>
 					</File>
 				</Filter>
@@ -808,10 +744,6 @@
 				>
 				<File
 					RelativePath=".\binding\ArtifactMap.h"
-					>
-				</File>
-				<File
-					RelativePath=".\binding\ClientCertAuthRule.h"
 					>
 				</File>
 				<File
@@ -839,10 +771,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\binding\MessageFlowRule.h"
-					>
-				</File>
-				<File
 					RelativePath=".\binding\SAMLArtifact.h"
 					>
 				</File>
@@ -855,19 +783,11 @@
 					>
 				</File>
 				<File
-					RelativePath=".\binding\SimpleSigningRule.h"
-					>
-				</File>
-				<File
 					RelativePath=".\binding\SOAPClient.h"
 					>
 				</File>
 				<File
 					RelativePath=".\binding\URLEncoder.h"
-					>
-				</File>
-				<File
-					RelativePath=".\binding\XMLSigningRule.h"
 					>
 				</File>
 			</Filter>

@@ -22,7 +22,7 @@
 
 #include "internal.h"
 #include "exceptions.h"
-#include "binding/ClientCertAuthRule.h"
+#include "binding/SecurityPolicyRule.h"
 #include "saml2/metadata/Metadata.h"
 #include "saml2/metadata/MetadataProvider.h"
 
@@ -37,6 +37,15 @@ using namespace log4cpp;
 using namespace std;
 
 namespace opensaml {
+    class SAML_DLLLOCAL ClientCertAuthRule : public SecurityPolicyRule
+    {
+    public:
+        ClientCertAuthRule(const DOMElement* e) {}
+        virtual ~ClientCertAuthRule() {}
+        
+        void evaluate(const xmltooling::XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const;
+    };
+
     SecurityPolicyRule* SAML_DLLLOCAL ClientCertAuthRuleFactory(const DOMElement* const & e)
     {
         return new ClientCertAuthRule(e);

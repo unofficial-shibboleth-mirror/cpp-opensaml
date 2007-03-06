@@ -23,8 +23,9 @@
 #include "internal.h"
 #include "exceptions.h"
 #include "binding/HTTPRequest.h"
+#include "binding/MessageDecoder.h"
 #include "saml1/core/Assertions.h"
-#include "saml1/binding/SAML1POSTDecoder.h"
+#include "saml1/core/Protocols.h"
 #include "saml2/metadata/Metadata.h"
 #include "saml2/metadata/MetadataProvider.h"
 
@@ -43,14 +44,25 @@ using namespace std;
 
 namespace opensaml {
     namespace saml1p {              
+        class SAML_DLLLOCAL SAML1POSTDecoder : public MessageDecoder
+        {
+        public:
+            SAML1POSTDecoder(const DOMElement* e) {}
+            virtual ~SAML1POSTDecoder() {}
+            
+            xmltooling::XMLObject* decode(
+                std::string& relayState,
+                const GenericRequest& genericRequest,
+                SecurityPolicy& policy
+                ) const;
+        };                
+
         MessageDecoder* SAML_DLLLOCAL SAML1POSTDecoderFactory(const DOMElement* const & e)
         {
             return new SAML1POSTDecoder(e);
         }
     };
 };
-
-SAML1POSTDecoder::SAML1POSTDecoder(const DOMElement* e) {}
 
 XMLObject* SAML1POSTDecoder::decode(
     string& relayState,

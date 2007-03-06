@@ -24,9 +24,9 @@
 #include "exceptions.h"
 #include "binding/ArtifactMap.h"
 #include "binding/HTTPResponse.h"
+#include "binding/MessageEncoder.h"
 #include "binding/URLEncoder.h"
 #include "saml2/binding/SAML2Artifact.h"
-#include "saml2/binding/SAML2ArtifactEncoder.h"
 #include "saml2/core/Protocols.h"
 
 #include <fstream>
@@ -44,6 +44,26 @@ using namespace std;
 
 namespace opensaml {
     namespace saml2p {              
+        class SAML_DLLLOCAL SAML2ArtifactEncoder : public MessageEncoder
+        {
+        public:
+            SAML2ArtifactEncoder(const DOMElement* e);
+            virtual ~SAML2ArtifactEncoder() {}
+            
+            long encode(
+                GenericResponse& genericResponse,
+                xmltooling::XMLObject* xmlObject,
+                const char* destination,
+                const char* recipientID=NULL,
+                const char* relayState=NULL,
+                const xmltooling::CredentialResolver* credResolver=NULL,
+                const XMLCh* sigAlgorithm=NULL
+                ) const;
+        
+        private:
+            std::string m_template; 
+        };
+
         MessageEncoder* SAML_DLLLOCAL SAML2ArtifactEncoderFactory(const DOMElement* const & e)
         {
             return new SAML2ArtifactEncoder(e);
@@ -51,12 +71,12 @@ namespace opensaml {
     };
 };
 
-static const XMLCh templat[] = UNICODE_LITERAL_8(t,e,m,p,l,a,t,e);
+static const XMLCh _template[] = UNICODE_LITERAL_8(t,e,m,p,l,a,t,e);
 
 SAML2ArtifactEncoder::SAML2ArtifactEncoder(const DOMElement* e)
 {
     if (e) {
-        auto_ptr_char t(e->getAttributeNS(NULL, templat));
+        auto_ptr_char t(e->getAttributeNS(NULL, _template));
         if (t.get())
             m_template = t.get();
     }

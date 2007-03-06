@@ -34,21 +34,17 @@ libsamlinclude_HEADERS = \
 
 samlbindinclude_HEADERS = \
 	binding/ArtifactMap.h \
-	binding/ClientCertAuthRule.h \
 	binding/GenericRequest.h \
 	binding/GenericResponse.h \
 	binding/HTTPRequest.h \
 	binding/HTTPResponse.h \
 	binding/MessageDecoder.h \
 	binding/MessageEncoder.h \
-	binding/MessageFlowRule.h \
 	binding/SAMLArtifact.h \
 	binding/SecurityPolicy.h \
 	binding/SecurityPolicyRule.h \
-	binding/SimpleSigningRule.h \
 	binding/SOAPClient.h \
-	binding/URLEncoder.h \
-	binding/XMLSigningRule.h
+	binding/URLEncoder.h
 
 encinclude_HEADERS = \
 	encryption/EncryptedKeyResolver.h
@@ -70,14 +66,7 @@ saml1coreinclude_HEADERS = \
 saml1bindinclude_HEADERS = \
 	saml1/binding/SAMLArtifactType0001.h \
 	saml1/binding/SAMLArtifactType0002.h \
-	saml1/binding/SAML1ArtifactDecoder.h \
-	saml1/binding/SAML1ArtifactEncoder.h \
-	saml1/binding/SAML1POSTDecoder.h \
-	saml1/binding/SAML1POSTEncoder.h \
-	saml1/binding/SAML1SOAPDecoder.h \
-	saml1/binding/SAML1SOAPEncoder.h \
-	saml1/binding/SAML1SOAPClient.h \
-	saml1/binding/SAML1MessageRule.h
+	saml1/binding/SAML1SOAPClient.h
 
 saml2coreinclude_HEADERS = \
 	saml2/core/Assertions.h \
@@ -86,17 +75,8 @@ saml2coreinclude_HEADERS = \
 saml2bindinclude_HEADERS = \
 	saml2/binding/SAML2Artifact.h \
 	saml2/binding/SAML2ArtifactType0004.h \
-	saml2/binding/SAML2ArtifactDecoder.h \
-	saml2/binding/SAML2ArtifactEncoder.h \
-	saml2/binding/SAML2POSTDecoder.h \
-	saml2/binding/SAML2POSTEncoder.h \
 	saml2/binding/SAML2Redirect.h \
-	saml2/binding/SAML2RedirectDecoder.h \
-	saml2/binding/SAML2RedirectEncoder.h \
-	saml2/binding/SAML2SOAPDecoder.h \
-	saml2/binding/SAML2SOAPEncoder.h \
-	saml2/binding/SAML2SOAPClient.h  \
-	saml2/binding/SAML2MessageRule.h
+	saml2/binding/SAML2SOAPClient.h
 	
 saml2mdinclude_HEADERS = \
 	saml2/metadata/AbstractMetadataProvider.h \

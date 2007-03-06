@@ -22,7 +22,8 @@
 
 #include "internal.h"
 #include "exceptions.h"
-#include "saml1/binding/SAML1SOAPDecoder.h"
+#include "binding/MessageDecoder.h"
+#include "saml1/core/Protocols.h"
 
 #include <log4cpp/Category.hh>
 #include <xmltooling/soap/SOAP.h>
@@ -38,14 +39,25 @@ using namespace std;
 
 namespace opensaml {
     namespace saml1p {              
+        class SAML_DLLLOCAL SAML1SOAPDecoder : public MessageDecoder
+        {
+        public:
+            SAML1SOAPDecoder(const DOMElement* e) {}
+            virtual ~SAML1SOAPDecoder() {}
+            
+            xmltooling::XMLObject* decode(
+                std::string& relayState,
+                const GenericRequest& genericRequest,
+                SecurityPolicy& policy
+                ) const;
+        };                
+
         MessageDecoder* SAML_DLLLOCAL SAML1SOAPDecoderFactory(const DOMElement* const & e)
         {
             return new SAML1SOAPDecoder(e);
         }
     };
 };
-
-SAML1SOAPDecoder::SAML1SOAPDecoder(const DOMElement* e) {}
 
 XMLObject* SAML1SOAPDecoder::decode(
     string& relayState,

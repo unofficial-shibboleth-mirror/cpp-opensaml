@@ -22,7 +22,7 @@
 
 #include "internal.h"
 #include "exceptions.h"
-#include "saml2/binding/SAML2MessageRule.h"
+#include "binding/SecurityPolicyRule.h"
 #include "saml2/core/Protocols.h"
 #include "saml2/metadata/Metadata.h"
 #include "saml2/metadata/MetadataProvider.h"
@@ -39,6 +39,15 @@ using namespace log4cpp;
 using namespace std;
 
 namespace opensaml {
+    class SAML_DLLLOCAL SAML2MessageRule : public SecurityPolicyRule
+    {
+    public:
+        SAML2MessageRule(const DOMElement* e) {}
+        virtual ~SAML2MessageRule() {}
+        
+        void evaluate(const xmltooling::XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const;
+    };
+
     SecurityPolicyRule* SAML_DLLLOCAL SAML2MessageRuleFactory(const DOMElement* const & e)
     {
         return new SAML2MessageRule(e);

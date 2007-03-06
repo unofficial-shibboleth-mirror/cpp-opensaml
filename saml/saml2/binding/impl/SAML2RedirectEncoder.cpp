@@ -23,9 +23,9 @@
 #include "internal.h"
 #include "exceptions.h"
 #include "binding/HTTPResponse.h"
+#include "binding/MessageEncoder.h"
 #include "binding/URLEncoder.h"
 #include "saml2/binding/SAML2Redirect.h"
-#include "saml2/binding/SAML2RedirectEncoder.h"
 #include "saml2/core/Protocols.h"
 
 #include <fstream>
@@ -43,6 +43,23 @@ using namespace std;
 
 namespace opensaml {
     namespace saml2p {              
+        class SAML_DLLLOCAL SAML2RedirectEncoder : public MessageEncoder
+        {
+        public:
+            SAML2RedirectEncoder(const DOMElement* e) {}
+            virtual ~SAML2RedirectEncoder() {}
+            
+            long encode(
+                GenericResponse& genericResponse,
+                xmltooling::XMLObject* xmlObject,
+                const char* destination,
+                const char* recipientID=NULL,
+                const char* relayState=NULL,
+                const xmltooling::CredentialResolver* credResolver=NULL,
+                const XMLCh* sigAlgorithm=NULL
+                ) const;
+        };
+
         MessageEncoder* SAML_DLLLOCAL SAML2RedirectEncoderFactory(const DOMElement* const & e)
         {
             return new SAML2RedirectEncoder(e);
