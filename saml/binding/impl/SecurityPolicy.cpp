@@ -79,10 +79,8 @@ void SecurityPolicy::evaluate(const XMLObject& message, const GenericRequest* re
 
 void SecurityPolicy::setIssuer(saml2::Issuer* issuer)
 {
-    if (!getIssuerMatchingPolicy().issuerMatches(issuer, m_issuer)) {
-        delete issuer;
-        throw BindingException("A rule supplied an Issuer that conflicts with previous results.");
-    }
+    if (!getIssuerMatchingPolicy().issuerMatches(issuer, m_issuer))
+        throw SecurityPolicyException("A rule supplied an Issuer that conflicts with previous results.");
     
     delete m_issuer;
     m_issuer=issuer;
@@ -91,7 +89,7 @@ void SecurityPolicy::setIssuer(saml2::Issuer* issuer)
 void SecurityPolicy::setIssuerMetadata(const RoleDescriptor* issuerRole)
 {
     if (issuerRole && m_issuerRole && issuerRole!=m_issuerRole)
-        throw BindingException("A rule supplied a RoleDescriptor that conflicts with previous results.");
+        throw SecurityPolicyException("A rule supplied a RoleDescriptor that conflicts with previous results.");
     m_issuerRole=issuerRole;
 }
 

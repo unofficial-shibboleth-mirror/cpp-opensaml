@@ -61,8 +61,9 @@ void SAML2MessageRule::evaluate(const XMLObject& message, const GenericRequest* 
     const QName& q = message.getElementQName(); 
     policy.setMessageQName(&q);
     
-    if (!XMLString::equals(q.getNamespaceURI(), samlconstants::SAML20P_NS)) {
-        log.debug("not a SAML 2.0 protocol message");
+    if (!XMLString::equals(q.getNamespaceURI(), samlconstants::SAML20P_NS)&&
+        !XMLString::equals(q.getNamespaceURI(), samlconstants::SAML20_NS)) {
+        log.debug("not a SAML 2.0 protocol message or assertion");
         return;
     }
 
@@ -99,6 +100,11 @@ void SAML2MessageRule::evaluate(const XMLObject& message, const GenericRequest* 
         if (log.isDebugEnabled()) {
             auto_ptr_char iname(policy.getIssuer()->getName());
             log.debug("message from (%s)", iname.get());
+        }
+
+        if (policy.getIssuerMetadata()) {
+            log.debug("metadata for issuer already set, leaving in place");
+            return;
         }
 
         if (policy.getMetadataProvider() && policy.getRole()) {

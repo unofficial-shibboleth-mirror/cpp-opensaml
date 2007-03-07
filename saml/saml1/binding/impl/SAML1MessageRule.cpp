@@ -64,8 +64,9 @@ void SAML1MessageRule::evaluate(const XMLObject& message, const GenericRequest* 
     const QName& q = message.getElementQName(); 
     policy.setMessageQName(&q);
 
-    if (!XMLString::equals(q.getNamespaceURI(), samlconstants::SAML1P_NS)) {
-        log.debug("not a SAML 1.x protocol message");
+    if (!XMLString::equals(q.getNamespaceURI(), samlconstants::SAML1P_NS) &&
+        !XMLString::equals(q.getNamespaceURI(), samlconstants::SAML1_NS)) {
+        log.debug("not a SAML 1.x protocol message or assertion");
         return;
     }
 
@@ -77,23 +78,33 @@ void SAML1MessageRule::evaluate(const XMLObject& message, const GenericRequest* 
 
         log.debug("extracting issuer from message");
 
-        // Only samlp:Response is known to carry issuer (via payload) in standard SAML 1.x.
         const XMLCh* protocol = NULL;
-        if (XMLString::equals(q.getLocalPart(), Response::LOCAL_NAME)) {
+        const saml1::Assertion* a = NULL;
+
+        // Handle assertions directly.
+        if (XMLString::equals(q.getLocalPart(), saml1::Assertion::LOCAL_NAME))
+            a = dynamic_cast<const saml1::Assertion*>(&samlRoot);
+            
+        // Only samlp:Response is known to carry issuer (via payload) in standard SAML 1.x.
+        if (!a && XMLString::equals(q.getLocalPart(), Response::LOCAL_NAME)) {
             // Should be a samlp:Response.
             const vector<saml1::Assertion*>& assertions = dynamic_cast<const saml1p::Response&>(samlRoot).getAssertions();
-            if (!assertions.empty()) {
-                const saml1::Assertion* a = assertions.front();
-                if (a->getIssuer()) {
-                    auto_ptr<saml2::Issuer> issuer(saml2::IssuerBuilder::buildIssuer());
-                    issuer->setName(a->getIssuer());
-                    policy.setIssuer(issuer.get());
-                    issuer.release();   // owned by policy now
-                    pair<bool,int> minor = a->getMinorVersion();
-                    protocol = (minor.first && minor.second==0) ?
-                        samlconstants::SAML10_PROTOCOL_ENUM : samlconstants::SAML11_PROTOCOL_ENUM;
-                }
+            if (!assertions.empty())
+                a = assertions.front();
+        }
+
+        if (a && a->getIssuer()) {
+            if (!policy.getIssuer() || policy.getIssuer()->getFormat() ||
+                    !XMLString::equals(policy.getIssuer()->getName(), a->getIssuer())) {
+                // We either have a conflict, or a first-time set of Issuer.
+                auto_ptr<saml2::Issuer> issuer(saml2::IssuerBuilder::buildIssuer());
+                issuer->setName(a->getIssuer());
+                policy.setIssuer(issuer.get());
+                issuer.release();   // owned by policy now
             }
+            pair<bool,int> minor = a->getMinorVersion();
+            protocol = (minor.first && minor.second==0) ?
+                samlconstants::SAML10_PROTOCOL_ENUM : samlconstants::SAML11_PROTOCOL_ENUM;
         }
         
         if (!protocol) {
@@ -104,6 +115,11 @@ void SAML1MessageRule::evaluate(const XMLObject& message, const GenericRequest* 
         if (log.isDebugEnabled()) {
             auto_ptr_char iname(policy.getIssuer()->getName());
             log.debug("message from (%s)", iname.get());
+        }
+        
+        if (policy.getIssuerMetadata()) {
+            log.debug("metadata for issuer already set, leaving in place");
+            return;
         }
         
         if (policy.getMetadataProvider() && policy.getRole()) {

@@ -33,6 +33,7 @@ namespace opensaml {
         class SAML_API RoleDescriptor;
     };
     
+    DECL_XMLTOOLING_EXCEPTION(SecurityPolicyException,SAML_EXCEPTIONAPI(SAML_API),opensaml,xmltooling::XMLToolingException,Exceptions in security policy processing);
     DECL_XMLTOOLING_EXCEPTION(BindingException,SAML_EXCEPTIONAPI(SAML_API),opensaml,xmltooling::XMLToolingException,Exceptions in SAML binding processing);
     DECL_XMLTOOLING_EXCEPTION(ProfileException,SAML_EXCEPTIONAPI(SAML_API),opensaml,xmltooling::ValidationException,Exceptions in SAML profile processing);
     DECL_XMLTOOLING_EXCEPTION(FatalProfileException,SAML_EXCEPTIONAPI(SAML_API),opensaml,ProfileException,Fatal exceptions in SAML profile processing);
