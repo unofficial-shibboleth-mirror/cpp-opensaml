@@ -73,7 +73,8 @@ saml1bindinclude_HEADERS = \
 	saml1/binding/SAML1SOAPClient.h
 
 saml1profinclude_HEADERS = \
-	saml1/profile/AssertionValidator.h
+	saml1/profile/AssertionValidator.h \
+	saml1/profile/BrowserSSOProfileValidator.h
 
 saml2coreinclude_HEADERS = \
 	saml2/core/Assertions.h \
@@ -130,6 +131,7 @@ libsaml_la_SOURCES = \
 	saml1/binding/impl/SAML1SOAPClient.cpp \
 	saml1/binding/impl/SAML1MessageRule.cpp \
 	saml1/profile/AssertionValidator.cpp \
+	saml1/profile/BrowserSSOProfileValidator.cpp \
 	saml2/core/impl/Assertions20Impl.cpp \
 	saml2/core/impl/Assertions20SchemaValidators.cpp \
 	saml2/core/impl/Protocols20Impl.cpp \

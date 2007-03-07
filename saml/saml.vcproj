@@ -493,6 +493,10 @@
 							/>
 						</FileConfiguration>
 					</File>
+					<File
+						RelativePath=".\saml1\profile\BrowserSSOProfileValidator.cpp"
+						>
+					</File>
 				</Filter>
 			</Filter>
 			<Filter
@@ -685,6 +689,10 @@
 					>
 					<File
 						RelativePath=".\saml1\profile\AssertionValidator.h"
+						>
+					</File>
+					<File
+						RelativePath=".\saml1\profile\BrowserSSOProfileValidator.h"
 						>
 					</File>
 				</Filter>
