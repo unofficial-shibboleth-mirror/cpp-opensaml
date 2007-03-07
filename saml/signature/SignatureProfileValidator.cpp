@@ -41,11 +41,16 @@ void SignatureProfileValidator::validate(const XMLObject* xmlObject) const
     const Signature* sigObj=dynamic_cast<const Signature*>(xmlObject);
     if (!sigObj)
         throw ValidationException("Validator only applies to Signature objects.");
-    DSIGSignature* sig=sigObj->getXMLSignature();
+    validateSignature(*sigObj);
+}
+
+void SignatureProfileValidator::validateSignature(const Signature& sigObj) const
+{
+    DSIGSignature* sig=sigObj.getXMLSignature();
     if (!sig)
         throw ValidationException("Signature does not exist yet.");
 
-    const SignableObject* signableObj=dynamic_cast<const SignableObject*>(sigObj->getParent());
+    const SignableObject* signableObj=dynamic_cast<const SignableObject*>(sigObj.getParent());
     if (!signableObj)
         throw ValidationException("Signature is not a child of a signable SAML object.");
     

@@ -39,6 +39,13 @@ namespace opensaml {
         virtual ~SignatureProfileValidator() {}
 
         void validate(const xmltooling::XMLObject* xmlObject) const;
+        
+        /**
+         * Type-safe validation method.
+         *
+         * @param signature Signature to validate
+         */
+        void validateSignature(const xmlsignature::Signature& signature) const;
     };
 
 };

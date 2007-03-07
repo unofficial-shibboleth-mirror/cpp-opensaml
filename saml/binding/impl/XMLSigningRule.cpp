@@ -90,7 +90,7 @@ void XMLSigningRule::evaluate(const XMLObject& message, const GenericRequest* re
     log.debug("validating signature profile");
     try {
         SignatureProfileValidator sigval;
-        sigval.validate(signable->getSignature());
+        sigval.validateSignature(*(signable->getSignature()));
     }
     catch (ValidationException& ve) {
         log.error("signature profile failed to validate: %s", ve.what());

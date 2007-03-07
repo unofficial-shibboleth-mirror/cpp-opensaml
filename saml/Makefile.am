@@ -18,11 +18,15 @@ saml1bindincludedir = $(includedir)/saml/saml1/binding
 
 saml1coreincludedir = $(includedir)/saml/saml1/core
 
+saml1profincludedir = $(includedir)/saml/saml1/profile
+
 saml2bindincludedir = $(includedir)/saml/saml2/binding
 
 saml2coreincludedir = $(includedir)/saml/saml2/core
 
 saml2mdincludedir = $(includedir)/saml/saml2/metadata
+
+saml2profincludedir = $(includedir)/saml/saml2/profile
 
 libsamlinclude_HEADERS = \
 	Assertion.h \
@@ -68,6 +72,9 @@ saml1bindinclude_HEADERS = \
 	saml1/binding/SAMLArtifactType0002.h \
 	saml1/binding/SAML1SOAPClient.h
 
+saml1profinclude_HEADERS = \
+	saml1/profile/AssertionValidator.h
+
 saml2coreinclude_HEADERS = \
 	saml2/core/Assertions.h \
 	saml2/core/Protocols.h
@@ -87,6 +94,9 @@ saml2mdinclude_HEADERS = \
 	saml2/metadata/MetadataKeyInfoIterator.h \
 	saml2/metadata/MetadataProvider.h \
 	saml2/metadata/ObservableMetadataProvider.h
+
+saml2profinclude_HEADERS = \
+	saml2/profile/AssertionValidator.h
 
 noinst_HEADERS = \
 	internal.h
@@ -119,6 +129,7 @@ libsaml_la_SOURCES = \
 	saml1/binding/impl/SAML1SOAPEncoder.cpp \
 	saml1/binding/impl/SAML1SOAPClient.cpp \
 	saml1/binding/impl/SAML1MessageRule.cpp \
+	saml1/profile/AssertionValidator.cpp \
 	saml2/core/impl/Assertions20Impl.cpp \
 	saml2/core/impl/Assertions20SchemaValidators.cpp \
 	saml2/core/impl/Protocols20Impl.cpp \
@@ -146,6 +157,7 @@ libsaml_la_SOURCES = \
 	saml2/binding/impl/SAML2SOAPEncoder.cpp \
 	saml2/binding/impl/SAML2SOAPClient.cpp \
 	saml2/binding/impl/SAML2MessageRule.cpp \
+	saml2/profile/AssertionValidator.cpp \
 	encryption/EncryptedKeyResolver.cpp \
 	signature/ContentReference.cpp \
 	signature/SignatureProfileValidator.cpp \

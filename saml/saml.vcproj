@@ -276,6 +276,14 @@
 						</File>
 					</Filter>
 				</Filter>
+				<Filter
+					Name="profile"
+					>
+					<File
+						RelativePath=".\saml1\profile\AssertionValidator.cpp"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="signature"
@@ -459,6 +467,32 @@
 							>
 						</File>
 					</Filter>
+				</Filter>
+				<Filter
+					Name="profile"
+					>
+					<File
+						RelativePath=".\saml2\profile\AssertionValidator.cpp"
+						>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+							/>
+						</FileConfiguration>
+					</File>
 				</Filter>
 			</Filter>
 			<Filter
@@ -646,6 +680,14 @@
 						>
 					</File>
 				</Filter>
+				<Filter
+					Name="profile"
+					>
+					<File
+						RelativePath=".\saml1\profile\AssertionValidator.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="signature"
@@ -731,6 +773,14 @@
 					</File>
 					<File
 						RelativePath=".\saml2\binding\SAML2SOAPClient.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="profile"
+					>
+					<File
+						RelativePath=".\saml2\profile\AssertionValidator.h"
 						>
 					</File>
 				</Filter>
