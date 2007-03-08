@@ -21,12 +21,14 @@
  */
 
 #include "internal.h"
-#include "binding/URLEncoder.h"
 #include "util/CommonDomainCookie.h"
 
 #include <xercesc/util/Base64.hpp>
+#include <xmltooling/XMLToolingConfig.h>
+#include <xmltooling/util/URLEncoder.h>
 
 using namespace opensaml;
+using namespace xmltooling;
 using namespace std;
 
 const char CommonDomainCookie::CDCName[] = "_saml_idp";
@@ -38,7 +40,7 @@ CommonDomainCookie::CommonDomainCookie(const char* cookie)
 
     // Copy it so we can URL-decode it.
     char* b64=strdup(cookie);
-    SAMLConfig::getConfig().getURLEncoder()->decode(b64);
+    XMLToolingConfig::getConfig().getURLEncoder()->decode(b64);
 
     // Chop it up and save off elements.
     vector<string> templist;
@@ -93,6 +95,6 @@ const char* CommonDomainCookie::set(const char* entityID)
         XMLString::release(&b64);
     }
     
-    m_encoded=SAMLConfig::getConfig().getURLEncoder()->encode(delimited.c_str());
+    m_encoded=XMLToolingConfig::getConfig().getURLEncoder()->encode(delimited.c_str());
     return m_encoded.c_str();
 }

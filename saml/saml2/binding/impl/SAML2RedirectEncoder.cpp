@@ -24,7 +24,6 @@
 #include "exceptions.h"
 #include "binding/HTTPResponse.h"
 #include "binding/MessageEncoder.h"
-#include "binding/URLEncoder.h"
 #include "saml2/binding/SAML2Redirect.h"
 #include "saml2/core/Protocols.h"
 
@@ -33,6 +32,7 @@
 #include <log4cpp/Category.hh>
 #include <xercesc/util/Base64.hpp>
 #include <xmltooling/util/NDC.h>
+#include <xmltooling/util/URLEncoder.h>
 
 using namespace opensaml::saml2p;
 using namespace opensaml;
@@ -119,7 +119,7 @@ long SAML2RedirectEncoder::encode(
         throw BindingException("Base64 encoding of XML failed.");
     
     // Create beginnings of redirect query string.
-    URLEncoder* escaper = SAMLConfig::getConfig().getURLEncoder();
+    const URLEncoder* escaper = XMLToolingConfig::getConfig().getURLEncoder();
     xmlbuf.erase();
     xmlbuf.append(reinterpret_cast<char*>(encoded),len);
     xmlbuf = (request ? "SAMLRequest=" : "SAMLResponse=") + escaper->encode(xmlbuf.c_str()); 

@@ -26,12 +26,13 @@
 #include "binding/HTTPResponse.h"
 #include "binding/MessageEncoder.h"
 #include "binding/SAMLArtifact.h"
-#include "binding/URLEncoder.h"
 #include "saml1/core/Assertions.h"
 #include "saml1/core/Protocols.h"
 
 #include <log4cpp/Category.hh>
+#include <xmltooling/XMLToolingConfig.h>
 #include <xmltooling/util/NDC.h>
+#include <xmltooling/util/URLEncoder.h>
 
 using namespace opensaml::saml1;
 using namespace opensaml::saml1p;
@@ -113,7 +114,7 @@ long SAML1ArtifactEncoder::encode(
     // Generate redirect.
     string loc = destination;
     loc += (strchr(destination,'?') ? '&' : '?');
-    URLEncoder* escaper = SAMLConfig::getConfig().getURLEncoder();
+    const URLEncoder* escaper = XMLToolingConfig::getConfig().getURLEncoder();
     loc = loc + "SAMLart=" + escaper->encode(artifact->encode().c_str()) + "&TARGET=" + escaper->encode(relayState);
     log.debug("message encoded, sending redirect to client");
     return httpResponse->sendRedirect(loc.c_str());

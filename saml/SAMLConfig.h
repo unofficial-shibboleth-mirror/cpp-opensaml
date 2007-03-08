@@ -41,7 +41,6 @@ namespace opensaml {
     class SAML_API MessageDecoder;
     class SAML_API SAMLArtifact;
     class SAML_API SecurityPolicyRule;
-    class SAML_API URLEncoder;
 
     namespace saml2md {
         class SAML_API MetadataProvider;
@@ -113,24 +112,6 @@ namespace opensaml {
         }
 
         /**
-         * Sets the global URLEncoder instance.
-         * This method must be externally synchronized with any code that uses the object.
-         * Any previously set object is destroyed.
-         * 
-         * @param urlEncoder   new URLEncoder instance to store
-         */
-        void setURLEncoder(URLEncoder* urlEncoder);
-        
-        /**
-         * Returns the global URLEncoder instance.
-         * 
-         * @return  global URLEncoder or NULL
-         */
-        URLEncoder* getURLEncoder() const {
-            return m_urlEncoder;
-        }
-        
-        /**
          * Generate random information using the underlying security library
          * 
          * @param buf   buffer for the information
@@ -183,13 +164,10 @@ namespace opensaml {
         xmltooling::PluginManager<saml2md::MetadataFilter,const DOMElement*> MetadataFilterManager;
 
     protected:
-        SAMLConfig() : m_artifactMap(NULL), m_urlEncoder(NULL) {}
+        SAMLConfig() : m_artifactMap(NULL) {}
         
         /** Global ArtifactMap instance for use by artifact-related functions. */
         ArtifactMap* m_artifactMap;
-
-        /** Global URLEncoder instance for use by URL-related functions. */
-        URLEncoder* m_urlEncoder;
     };
 
 #if defined (_MSC_VER)

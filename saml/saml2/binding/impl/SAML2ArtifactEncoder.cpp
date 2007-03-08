@@ -25,7 +25,6 @@
 #include "binding/ArtifactMap.h"
 #include "binding/HTTPResponse.h"
 #include "binding/MessageEncoder.h"
-#include "binding/URLEncoder.h"
 #include "saml2/binding/SAML2Artifact.h"
 #include "saml2/core/Protocols.h"
 
@@ -34,6 +33,7 @@
 #include <log4cpp/Category.hh>
 #include <xmltooling/util/NDC.h>
 #include <xmltooling/util/TemplateEngine.h>
+#include <xmltooling/util/URLEncoder.h>
 
 using namespace opensaml::saml2p;
 using namespace opensaml;
@@ -152,7 +152,7 @@ long SAML2ArtifactEncoder::encode(
         // Generate redirect.
         string loc = destination;
         loc += (strchr(destination,'?') ? '&' : '?');
-        URLEncoder* escaper = SAMLConfig::getConfig().getURLEncoder();
+        const URLEncoder* escaper = XMLToolingConfig::getConfig().getURLEncoder();
         loc = loc + "SAMLart=" + escaper->encode(artifact->encode().c_str());
         if (relayState)
             loc = loc + "&RelayState=" + escaper->encode(relayState);

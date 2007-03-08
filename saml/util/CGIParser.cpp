@@ -21,11 +21,13 @@
  */
 
 #include "internal.h"
-#include "SAMLConfig.h"
-#include "binding/URLEncoder.h"
 #include "util/CGIParser.h"
 
+#include <xmltooling/XMLToolingConfig.h>
+#include <xmltooling/util/URLEncoder.h>
+
 using namespace opensaml;
+using namespace xmltooling;
 using namespace std;
 
 
@@ -38,7 +40,7 @@ CGIParser::CGIParser(const HTTPRequest& request)
         pch=request.getQueryString();
     size_t cl=pch ? strlen(pch) : 0;
     
-    URLEncoder* dec = SAMLConfig::getConfig().getURLEncoder();
+    const URLEncoder* dec = XMLToolingConfig::getConfig().getURLEncoder();
     while (cl && pch) {
         char *name;
         char *value;

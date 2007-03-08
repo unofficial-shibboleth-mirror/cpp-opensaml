@@ -22,10 +22,10 @@
 #include <saml/binding/MessageDecoder.h>
 #include <saml/binding/MessageEncoder.h>
 #include <saml/binding/SecurityPolicyRule.h>
-#include <saml/binding/URLEncoder.h>
 #include <saml/saml2/metadata/Metadata.h>
 #include <saml/saml2/metadata/MetadataProvider.h>
 #include <xmltooling/security/TrustEngine.h>
+#include <xmltooling/util/URLEncoder.h>
 
 using namespace opensaml::saml2md;
 using namespace opensaml;
@@ -213,7 +213,7 @@ public:
                 pch=strchr(pch,'&');
                 if (pch)
                     *pch++=0;
-                SAMLConfig::getConfig().getURLEncoder()->decode(value);
+                XMLToolingConfig::getConfig().getURLEncoder()->decode(value);
                 m_fields[name] = value;
                 name = pch; 
             }

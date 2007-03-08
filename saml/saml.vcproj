@@ -554,10 +554,6 @@
 						>
 					</File>
 					<File
-						RelativePath=".\binding\impl\URLEncoder.cpp"
-						>
-					</File>
-					<File
 						RelativePath=".\binding\impl\XMLSigningRule.cpp"
 						>
 					</File>
@@ -846,10 +842,6 @@
 				</File>
 				<File
 					RelativePath=".\binding\SOAPClient.h"
-					>
-				</File>
-				<File
-					RelativePath=".\binding\URLEncoder.h"
 					>
 				</File>
 			</Filter>
