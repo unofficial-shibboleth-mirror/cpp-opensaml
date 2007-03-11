@@ -66,10 +66,8 @@ void SAML1MessageRule::evaluate(const XMLObject& message, const GenericRequest* 
 
     if (!XMLString::equals(q.getNamespaceURI(), samlconstants::SAML1P_NS) &&
         !XMLString::equals(q.getNamespaceURI(), samlconstants::SAML1_NS)) {
-        log.debug("not a SAML 1.x protocol message or assertion");
         return;
     }
-
     
     try {
         const RootObject& samlRoot = dynamic_cast<const RootObject&>(message);

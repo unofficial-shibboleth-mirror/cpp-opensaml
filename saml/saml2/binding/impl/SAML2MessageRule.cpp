@@ -63,7 +63,6 @@ void SAML2MessageRule::evaluate(const XMLObject& message, const GenericRequest* 
     
     if (!XMLString::equals(q.getNamespaceURI(), samlconstants::SAML20P_NS)&&
         !XMLString::equals(q.getNamespaceURI(), samlconstants::SAML20_NS)) {
-        log.debug("not a SAML 2.0 protocol message or assertion");
         return;
     }
 

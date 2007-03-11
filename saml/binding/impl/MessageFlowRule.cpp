@@ -78,38 +78,37 @@ void MessageFlowRule::evaluate(const XMLObject& message, const GenericRequest* r
     time_t skew = XMLToolingConfig::getConfig().clock_skew_secs;
     time_t issueInstant = policy.getIssueInstant();
     if (issueInstant == 0) {
-        log.debug("unknown message timestamp, assuming current time for replay checking");
         issueInstant = now;
     }
     else {
         if (issueInstant > now + skew) {
             log.errorStream() << "rejected not-yet-valid message, timestamp (" << issueInstant <<
                 "), newest allowed (" << now + skew << ")" << CategoryStream::ENDLINE;
-            throw BindingException("Message rejected, was issued in the future.");
+            throw SecurityPolicyException("Message rejected, was issued in the future.");
         }
         else if (issueInstant < now - skew - m_expires) {
             log.errorStream() << "rejected expired message, timestamp (" << issueInstant <<
                 "), oldest allowed (" << (now - skew - m_expires) << ")" << CategoryStream::ENDLINE;
-            throw BindingException("Message expired, was issued too long ago.");
+            throw SecurityPolicyException("Message expired, was issued too long ago.");
         }
     }
     
     // Check replay.
     if (m_checkReplay) {
+        const XMLCh* id = policy.getMessageID();
+        if (!id || !*id)
+            return;
+
         ReplayCache* replayCache = XMLToolingConfig::getConfig().getReplayCache();
         if (!replayCache) {
             log.warn("no ReplayCache available, skipping requested replay check");
             return;
         }
-        const XMLCh* id = policy.getMessageID();
-        if (!id || !*id) {
-            log.debug("unknown message ID, no replay check possible");
-            return;
-        }
+
         auto_ptr_char temp(id);
         if (!replayCache->check("MessageFlow", temp.get(), issueInstant + skew + m_expires)) {
             log.error("replay detected of message ID (%s)", temp.get());
-            throw BindingException("Rejecting replayed message ID ($1).", params(1,temp.get()));
+            throw SecurityPolicyException("Rejecting replayed message ID ($1).", params(1,temp.get()));
         }
     }
 }

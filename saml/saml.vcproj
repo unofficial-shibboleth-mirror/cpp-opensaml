@@ -283,6 +283,10 @@
 						RelativePath=".\saml1\profile\AssertionValidator.cpp"
 						>
 					</File>
+					<File
+						RelativePath=".\saml1\profile\BrowserSSOProfileValidator.cpp"
+						>
+					</File>
 				</Filter>
 			</Filter>
 			<Filter
@@ -492,10 +496,6 @@
 								XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
 							/>
 						</FileConfiguration>
-					</File>
-					<File
-						RelativePath=".\saml1\profile\BrowserSSOProfileValidator.cpp"
-						>
 					</File>
 				</Filter>
 			</Filter>

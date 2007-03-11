@@ -70,7 +70,6 @@ XMLSigningRule::XMLSigningRule(const DOMElement* e) : m_errorsFatal(false)
 void XMLSigningRule::evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const
 {
     Category& log=Category::getInstance(SAML_LOGCAT".SecurityPolicyRule.XMLSigning");
-    log.debug("evaluating message signing policy");
     
     if (!policy.getIssuerMetadata()) {
         log.debug("ignoring message, no issuer metadata supplied");
@@ -82,10 +81,8 @@ void XMLSigningRule::evaluate(const XMLObject& message, const GenericRequest* re
     }
     
     const SignableObject* signable = dynamic_cast<const SignableObject*>(&message);
-    if (!signable || !signable->getSignature()) {
-        log.debug("ignoring unsigned or unrecognized message");
+    if (!signable || !signable->getSignature())
         return;
-    }
     
     log.debug("validating signature profile");
     try {

@@ -55,13 +55,11 @@ namespace opensaml {
 void ClientCertAuthRule::evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const
 {
     Category& log=Category::getInstance(SAML_LOGCAT".SecurityPolicyRule.ClientCertAuth");
-    log.debug("evaluating client certificate authentication policy");
     
-    if (!request) {
-        log.debug("ignoring message, no protocol request available");
+    if (!request)
         return;
-    }
-    else if (!policy.getIssuerMetadata()) {
+    
+    if (!policy.getIssuerMetadata()) {
         log.debug("ignoring message, no issuer metadata supplied");
         return;
     }
@@ -73,10 +71,8 @@ void ClientCertAuthRule::evaluate(const XMLObject& message, const GenericRequest
     }
     
     const std::vector<XSECCryptoX509*>& chain = request->getClientCertificates();
-    if (chain.empty()) {
-        log.debug("ignoring message, no client certificates in request");
+    if (chain.empty())
         return;
-    }
     
     if (!x509trust->validate(chain.front(), chain, *(policy.getIssuerMetadata()), true,
             policy.getMetadataProvider()->getKeyResolver())) {

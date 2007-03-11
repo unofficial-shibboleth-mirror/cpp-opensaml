@@ -90,7 +90,6 @@ SimpleSigningRule::SimpleSigningRule(const DOMElement* e) : m_errorsFatal(false)
 void SimpleSigningRule::evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const
 {
     Category& log=Category::getInstance(SAML_LOGCAT".SecurityPolicyRule.SimpleSigning");
-    log.debug("evaluating simple signing policy");
     
     if (!policy.getIssuerMetadata()) {
         log.debug("ignoring message, no issuer metadata supplied");
@@ -102,16 +101,12 @@ void SimpleSigningRule::evaluate(const XMLObject& message, const GenericRequest*
     }
 
     const HTTPRequest* httpRequest = dynamic_cast<const HTTPRequest*>(request);
-    if (!request || !httpRequest) {
-        log.debug("ignoring message, no HTTP protocol request available");
+    if (!request || !httpRequest)
         return;
-    }
 
     const char* signature = request->getParameter("Signature");
-    if (!signature) {
-        log.debug("ignoring unsigned message");
+    if (!signature)
         return;
-    }
     
     const char* sigAlgorithm = request->getParameter("SigAlg");
     if (!sigAlgorithm) {
