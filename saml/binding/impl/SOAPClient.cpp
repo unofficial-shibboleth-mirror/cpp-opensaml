@@ -81,9 +81,7 @@ soap11::Envelope* SOAPClient::receive()
             // Set issuer based on peer identity.
             EntityDescriptor* parent = dynamic_cast<EntityDescriptor*>(m_peer->getParent());
             if (parent) {
-                Issuer* issuer = IssuerBuilder::buildIssuer();
-                issuer->setName(parent->getEntityID());
-                m_policy.setIssuer(issuer);
+                m_policy.setIssuer(parent->getEntityID());
                 m_policy.setIssuerMetadata(m_peer);
                 m_policy.setSecure(true);
             }

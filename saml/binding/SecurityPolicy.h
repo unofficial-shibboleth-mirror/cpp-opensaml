@@ -292,11 +292,17 @@ namespace opensaml {
 
         /**
          * Sets the issuer of the message as determined by the registered policies.
-         * The policy object takes ownership of the Issuer object.
          * 
          * @param issuer issuer of the message
          */
-        void setIssuer(saml2::Issuer* issuer);
+        void setIssuer(const saml2::Issuer* issuer);
+
+        /**
+         * Sets the issuer of the message as determined by the registered policies.
+         * 
+         * @param issuer issuer of the message
+         */
+        void setIssuer(const XMLCh* issuer);
         
         /**
          * Sets the metadata for the role the issuer is operating in.
@@ -333,6 +339,19 @@ namespace opensaml {
              * @return  true iff the operands match
              */
             virtual bool issuerMatches(const saml2::Issuer* issuer1, const saml2::Issuer* issuer2) const;
+
+            /**
+             * Returns true iff the two operands "match". Applications can override this method to
+             * support non-standard issuer matching for complex policies. 
+             * 
+             * <p>The default implementation does a basic comparison of the XML content, treating
+             * an unsupplied Format as an "entityID".
+             * 
+             * @param issuer1   the first Issuer to match
+             * @param issuer2   the second Issuer to match
+             * @return  true iff the operands match
+             */
+            virtual bool issuerMatches(const saml2::Issuer* issuer1, const XMLCh* issuer2) const;
         };
 
         /**

@@ -77,13 +77,27 @@ void SecurityPolicy::evaluate(const XMLObject& message, const GenericRequest* re
         (*i)->evaluate(message,request,*this);
 }
 
-void SecurityPolicy::setIssuer(saml2::Issuer* issuer)
+void SecurityPolicy::setIssuer(const Issuer* issuer)
 {
-    if (!getIssuerMatchingPolicy().issuerMatches(issuer, m_issuer))
+    if (!getIssuerMatchingPolicy().issuerMatches(m_issuer, issuer))
         throw SecurityPolicyException("A rule supplied an Issuer that conflicts with previous results.");
     
-    delete m_issuer;
-    m_issuer=issuer;
+    if (!m_issuer) {
+        m_issuerRole = NULL;
+        m_issuer=issuer->cloneIssuer();
+    }
+}
+
+void SecurityPolicy::setIssuer(const XMLCh* issuer)
+{
+    if (!getIssuerMatchingPolicy().issuerMatches(m_issuer, issuer))
+        throw SecurityPolicyException("A rule supplied an Issuer that conflicts with previous results.");
+    
+    if (!m_issuer && issuer && *issuer) {
+        m_issuerRole = NULL;
+        m_issuer = IssuerBuilder::buildIssuer();
+        m_issuer->setName(issuer);
+    }
 }
 
 void SecurityPolicy::setIssuerMetadata(const RoleDescriptor* issuerRole)
@@ -117,6 +131,31 @@ bool SecurityPolicy::IssuerMatchingPolicy::issuerMatches(const Issuer* issuer1, 
     op1=issuer1->getSPNameQualifier();
     op2=issuer2->getSPNameQualifier();
     if (!XMLString::equals(op1 ? op1 : &chNull, op2 ? op2 : &chNull))
+        return false;
+    
+    return true;
+}
+
+bool SecurityPolicy::IssuerMatchingPolicy::issuerMatches(const Issuer* issuer1, const XMLCh* issuer2) const
+{
+    // NULL matches anything for the purposes of this interface.
+    if (!issuer1 || !issuer2 || !*issuer2)
+        return true;
+    
+    const XMLCh* op1=issuer1->getName();
+    if (!op1 || !XMLString::equals(op1,issuer2))
+        return false;
+    
+    op1=issuer1->getFormat();
+    if (op1 && *op1 && !XMLString::equals(op1, NameIDType::ENTITY))
+        return false;
+        
+    op1=issuer1->getNameQualifier();
+    if (op1 && *op1)
+        return false;
+
+    op1=issuer1->getSPNameQualifier();
+    if (op1 && *op1)
         return false;
     
     return true;

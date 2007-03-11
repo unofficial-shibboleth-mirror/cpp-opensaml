@@ -72,32 +72,27 @@ void SAML2MessageRule::evaluate(const XMLObject& message, const GenericRequest* 
         policy.setIssueInstant(samlRoot.getIssueInstantEpoch());
 
         log.debug("extracting issuer from message");
-        Issuer* issuer = samlRoot.getIssuer();
-        if (issuer && issuer->getName()) {
-            auto_ptr<Issuer> copy(issuer->cloneIssuer());
-            policy.setIssuer(copy.get());
-            copy.release();
+        const Issuer* issuer = samlRoot.getIssuer();
+        if (issuer) {
+            policy.setIssuer(issuer);
         }
         else if (XMLString::equals(q.getLocalPart(), Response::LOCAL_NAME)) {
             // No issuer in the message, so we have to try the Response approach. 
             const vector<saml2::Assertion*>& assertions = dynamic_cast<const Response&>(samlRoot).getAssertions();
             if (!assertions.empty()) {
                 issuer = assertions.front()->getIssuer();
-                if (issuer && issuer->getName()) {
-                    auto_ptr<Issuer> copy(issuer->cloneIssuer());
-                    policy.setIssuer(copy.get());
-                    copy.release();
-                }
+                if (issuer)
+                    policy.setIssuer(issuer);
             }
         }
 
-        if (!policy.getIssuer()) {
+        if (!issuer) {
             log.warn("issuer identity not extracted");
             return;
         }
 
         if (log.isDebugEnabled()) {
-            auto_ptr_char iname(policy.getIssuer()->getName());
+            auto_ptr_char iname(issuer->getName());
             log.debug("message from (%s)", iname.get());
         }
 
@@ -107,15 +102,15 @@ void SAML2MessageRule::evaluate(const XMLObject& message, const GenericRequest* 
         }
 
         if (policy.getMetadataProvider() && policy.getRole()) {
-            if (policy.getIssuer()->getFormat() && !XMLString::equals(policy.getIssuer()->getFormat(), saml2::NameIDType::ENTITY)) {
+            if (issuer->getFormat() && !XMLString::equals(issuer->getFormat(), NameIDType::ENTITY)) {
                 log.warn("non-system entity issuer, skipping metadata lookup");
                 return;
             }
             
             log.debug("searching metadata for message issuer...");
-            const EntityDescriptor* entity = policy.getMetadataProvider()->getEntityDescriptor(policy.getIssuer()->getName());
+            const EntityDescriptor* entity = policy.getMetadataProvider()->getEntityDescriptor(issuer->getName());
             if (!entity) {
-                auto_ptr_char temp(policy.getIssuer()->getName());
+                auto_ptr_char temp(issuer->getName());
                 log.warn("no metadata found, can't establish identity of issuer (%s)", temp.get());
                 return;
             }

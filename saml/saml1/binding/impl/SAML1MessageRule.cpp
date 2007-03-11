@@ -91,15 +91,8 @@ void SAML1MessageRule::evaluate(const XMLObject& message, const GenericRequest* 
                 a = assertions.front();
         }
 
-        if (a && a->getIssuer()) {
-            if (!policy.getIssuer() || policy.getIssuer()->getFormat() ||
-                    !XMLString::equals(policy.getIssuer()->getName(), a->getIssuer())) {
-                // We either have a conflict, or a first-time set of Issuer.
-                auto_ptr<saml2::Issuer> issuer(saml2::IssuerBuilder::buildIssuer());
-                issuer->setName(a->getIssuer());
-                policy.setIssuer(issuer.get());
-                issuer.release();   // owned by policy now
-            }
+        if (a) {
+            policy.setIssuer(a->getIssuer());
             pair<bool,int> minor = a->getMinorVersion();
             protocol = (minor.first && minor.second==0) ?
                 samlconstants::SAML10_PROTOCOL_ENUM : samlconstants::SAML11_PROTOCOL_ENUM;
@@ -111,7 +104,7 @@ void SAML1MessageRule::evaluate(const XMLObject& message, const GenericRequest* 
         }
 
         if (log.isDebugEnabled()) {
-            auto_ptr_char iname(policy.getIssuer()->getName());
+            auto_ptr_char iname(a->getIssuer());
             log.debug("message from (%s)", iname.get());
         }
         
@@ -122,9 +115,9 @@ void SAML1MessageRule::evaluate(const XMLObject& message, const GenericRequest* 
         
         if (policy.getMetadataProvider() && policy.getRole()) {
             log.debug("searching metadata for message issuer...");
-            const EntityDescriptor* entity = policy.getMetadataProvider()->getEntityDescriptor(policy.getIssuer()->getName());
+            const EntityDescriptor* entity = policy.getMetadataProvider()->getEntityDescriptor(a->getIssuer());
             if (!entity) {
-                auto_ptr_char temp(policy.getIssuer()->getName());
+                auto_ptr_char temp(a->getIssuer());
                 log.warn("no metadata found, can't establish identity of issuer (%s)", temp.get());
                 return;
             }
