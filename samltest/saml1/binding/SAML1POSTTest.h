@@ -85,7 +85,7 @@ public:
 
             // Trigger a replay.
             policy.reset();
-            TSM_ASSERT_THROWS("Did not catch the replay.", decoder->decode(relayState,*this,policy), BindingException);
+            TSM_ASSERT_THROWS("Did not catch the replay.", decoder->decode(relayState,*this,policy), SecurityPolicyException);
         }
         catch (XMLToolingException& ex) {
             TS_TRACE(ex.what());
