@@ -146,21 +146,19 @@ namespace opensaml {
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
 
-        BEGIN_XMLOBJECT(SAML_API,SubjectConfirmationData,xmltooling::ElementProxy,SAML 2.0 SubjectConfirmationData element);
+        BEGIN_XMLOBJECT(SAML_API,SubjectConfirmationDataType,xmltooling::XMLObject,SAML 2.0 SubjectConfirmationDataType base type);
             DECL_DATETIME_ATTRIB(NotBefore,NOTBEFORE);
             DECL_DATETIME_ATTRIB(NotOnOrAfter,NOTONORAFTER);
             DECL_STRING_ATTRIB(Recipient,RECIPIENT);
             DECL_STRING_ATTRIB(InResponseTo,INRESPONSETO);
             DECL_STRING_ATTRIB(Address,ADDRESS);
+        END_XMLOBJECT;
+
+        BEGIN_XMLOBJECT2(SAML_API,SubjectConfirmationData,SubjectConfirmationDataType,xmltooling::ElementProxy,SAML 2.0 SubjectConfirmationData element);
             DECL_SIMPLE_CONTENT(Data);
         END_XMLOBJECT;
 
-        BEGIN_XMLOBJECT(SAML_API,KeyInfoConfirmationDataType,xmltooling::AttributeExtensibleXMLObject,SAML 2.0 KeyInfoConfirmationDataType type);
-            DECL_DATETIME_ATTRIB(NotBefore,NOTBEFORE);
-            DECL_DATETIME_ATTRIB(NotOnOrAfter,NOTONORAFTER);
-            DECL_STRING_ATTRIB(Recipient,RECIPIENT);
-            DECL_STRING_ATTRIB(InResponseTo,INRESPONSETO);
-            DECL_STRING_ATTRIB(Address,ADDRESS);
+        BEGIN_XMLOBJECT2(SAML_API,KeyInfoConfirmationDataType,SubjectConfirmationDataType,xmltooling::AttributeExtensibleXMLObject,SAML 2.0 KeyInfoConfirmationDataType type);
             DECL_TYPED_FOREIGN_CHILDREN(KeyInfo,xmlsignature);
             /** KeyInfoConfirmationDataType local name */
             static const XMLCh TYPE_NAME[];
@@ -172,7 +170,6 @@ namespace opensaml {
             DECL_TYPED_CHILD(NameID);
             DECL_TYPED_CHILD(EncryptedID);
             DECL_XMLOBJECT_CHILD(SubjectConfirmationData);
-            DECL_TYPED_CHILD(KeyInfoConfirmationDataType);
             /** SubjectConfirmationType local name */
             static const XMLCh TYPE_NAME[];
             /** Bearer confirmation method */

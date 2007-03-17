@@ -433,14 +433,23 @@ namespace opensaml {
             }
         };
 
-        class SAML_DLLLOCAL SubjectConfirmationDataImpl : public virtual SubjectConfirmationData, public AnyElementImpl
+        class SAML_DLLLOCAL SubjectConfirmationDataTypeImpl : public virtual SubjectConfirmationDataType,
+            public AbstractDOMCachingXMLObject,
+            public AbstractXMLObjectMarshaller,
+            public AbstractXMLObjectUnmarshaller
         {
             void init() {
                 m_NotBefore=m_NotOnOrAfter=NULL;
                 m_Recipient=m_InResponseTo=m_Address=NULL;
             }
+
+        protected:
+            SubjectConfirmationDataTypeImpl() {
+                init();
+            }
+
         public:
-            virtual ~SubjectConfirmationDataImpl() {
+            virtual ~SubjectConfirmationDataTypeImpl() {
                 delete m_NotBefore;
                 delete m_NotOnOrAfter;
                 XMLString::release(&m_Recipient);
@@ -448,12 +457,12 @@ namespace opensaml {
                 XMLString::release(&m_Address);
             }
     
-            SubjectConfirmationDataImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
+            SubjectConfirmationDataTypeImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
                     : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
                 init();
             }
                 
-            SubjectConfirmationDataImpl(const SubjectConfirmationDataImpl& src) : AnyElementImpl(src) {
+            SubjectConfirmationDataTypeImpl(const SubjectConfirmationDataTypeImpl& src) : AbstractDOMCachingXMLObject(src) {
                 init();
                 setNotBefore(src.getNotBefore());
                 setNotOnOrAfter(src.getNotOnOrAfter());
@@ -462,14 +471,50 @@ namespace opensaml {
                 setAddress(src.getAddress());
             }
             
-            IMPL_XMLOBJECT_CLONE(SubjectConfirmationData);
             IMPL_DATETIME_ATTRIB(NotBefore,0);
             IMPL_DATETIME_ATTRIB(NotOnOrAfter,SAMLTIME_MAX);
             IMPL_STRING_ATTRIB(Recipient);
             IMPL_STRING_ATTRIB(InResponseTo);
             IMPL_STRING_ATTRIB(Address);
             
+        protected:
+            void marshallAttributes(DOMElement* domElement) const {
+                MARSHALL_DATETIME_ATTRIB(NotBefore,NOTBEFORE,NULL);
+                MARSHALL_DATETIME_ATTRIB(NotOnOrAfter,NOTONORAFTER,NULL);
+                MARSHALL_STRING_ATTRIB(Recipient,RECIPIENT,NULL);
+                MARSHALL_STRING_ATTRIB(InResponseTo,INRESPONSETO,NULL);
+                MARSHALL_STRING_ATTRIB(Address,ADDRESS,NULL);
+            }
+            
+            void processAttribute(const DOMAttr* attribute) {
+                PROC_DATETIME_ATTRIB(NotBefore,NOTBEFORE,NULL);
+                PROC_DATETIME_ATTRIB(NotOnOrAfter,NOTONORAFTER,NULL);
+                PROC_STRING_ATTRIB(Recipient,RECIPIENT,NULL);
+                PROC_STRING_ATTRIB(InResponseTo,INRESPONSETO,NULL);
+                PROC_STRING_ATTRIB(Address,ADDRESS,NULL);
+                AbstractXMLObjectUnmarshaller::processAttribute(attribute);
+            }
+        };
+
+        class SAML_DLLLOCAL SubjectConfirmationDataImpl : public SubjectConfirmationData,
+            public SubjectConfirmationDataTypeImpl, public AnyElementImpl
+        {
         public:
+            virtual ~SubjectConfirmationDataImpl() {}
+    
+            SubjectConfirmationDataImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
+                    : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
+            }
+                
+            SubjectConfirmationDataImpl(const SubjectConfirmationDataImpl& src)
+                    : SubjectConfirmationDataTypeImpl(src), AnyElementImpl(src) {
+            }
+
+            IMPL_XMLOBJECT_CLONE(SubjectConfirmationData);
+            SubjectConfirmationDataType* cloneSubjectConfirmationDataType() const {
+                return new SubjectConfirmationDataImpl(*this);
+            }
+
             void setAttribute(const QName& qualifiedName, const XMLCh* value, bool ID=false) {
                 if (!qualifiedName.hasNamespaceURI()) {
                     if (XMLString::equals(qualifiedName.getLocalPart(),NOTBEFORE_ATTRIB_NAME)) {
@@ -498,62 +543,36 @@ namespace opensaml {
 
         protected:
             void marshallAttributes(DOMElement* domElement) const {
-                MARSHALL_DATETIME_ATTRIB(NotBefore,NOTBEFORE,NULL);
-                MARSHALL_DATETIME_ATTRIB(NotOnOrAfter,NOTONORAFTER,NULL);
-                MARSHALL_STRING_ATTRIB(Recipient,RECIPIENT,NULL);
-                MARSHALL_STRING_ATTRIB(InResponseTo,INRESPONSETO,NULL);
-                MARSHALL_STRING_ATTRIB(Address,ADDRESS,NULL);
+                SubjectConfirmationDataTypeImpl::marshallAttributes(domElement);
                 AnyElementImpl::marshallAttributes(domElement);
             }
-            
-            // The processAttributes hook is handled by AnyElementImpl
         };
 
         class SAML_DLLLOCAL KeyInfoConfirmationDataTypeImpl : public virtual KeyInfoConfirmationDataType,
+                public SubjectConfirmationDataTypeImpl,
                 public AbstractComplexElement,
-                public AbstractAttributeExtensibleXMLObject,
-                public AbstractDOMCachingXMLObject,
-                public AbstractXMLObjectMarshaller,
-                public AbstractXMLObjectUnmarshaller
+                public AbstractAttributeExtensibleXMLObject
         {
-            void init() {
-                m_NotBefore=m_NotOnOrAfter=NULL;
-                m_Recipient=m_InResponseTo=m_Address=NULL;
-            }
         public:
-            virtual ~KeyInfoConfirmationDataTypeImpl() {
-                delete m_NotBefore;
-                delete m_NotOnOrAfter;
-                XMLString::release(&m_Recipient);
-                XMLString::release(&m_InResponseTo);
-                XMLString::release(&m_Address);
-            }
+            virtual ~KeyInfoConfirmationDataTypeImpl() {}
     
             KeyInfoConfirmationDataTypeImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
                     : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
-                init();
             }
                 
             KeyInfoConfirmationDataTypeImpl(const KeyInfoConfirmationDataTypeImpl& src)
-                    : AbstractXMLObject(src), AbstractComplexElement(src),
-                        AbstractAttributeExtensibleXMLObject(src), AbstractDOMCachingXMLObject(src) {
-                init();
-                setNotBefore(src.getNotBefore());
-                setNotOnOrAfter(src.getNotOnOrAfter());
-                setRecipient(src.getRecipient());
-                setInResponseTo(src.getInResponseTo());
-                setAddress(src.getAddress());
+                    : AbstractXMLObject(src), SubjectConfirmationDataTypeImpl(src), AbstractComplexElement(src),
+                        AbstractAttributeExtensibleXMLObject(src) {
                 VectorOf(KeyInfo) v=getKeyInfos();
                 for (vector<KeyInfo*>::const_iterator i=src.m_KeyInfos.begin(); i!=src.m_KeyInfos.end(); ++i)
                     v.push_back((*i)->cloneKeyInfo());
             }
             
             IMPL_XMLOBJECT_CLONE(KeyInfoConfirmationDataType);
-            IMPL_DATETIME_ATTRIB(NotBefore,0);
-            IMPL_DATETIME_ATTRIB(NotOnOrAfter,SAMLTIME_MAX);
-            IMPL_STRING_ATTRIB(Recipient);
-            IMPL_STRING_ATTRIB(InResponseTo);
-            IMPL_STRING_ATTRIB(Address);
+            SubjectConfirmationDataType* cloneSubjectConfirmationDataType() const {
+                return new KeyInfoConfirmationDataTypeImpl(*this);
+            }
+
             IMPL_TYPED_CHILDREN(KeyInfo,m_children.end());
             
         public:
@@ -585,11 +604,7 @@ namespace opensaml {
 
         protected:
             void marshallAttributes(DOMElement* domElement) const {
-                MARSHALL_DATETIME_ATTRIB(NotBefore,NOTBEFORE,NULL);
-                MARSHALL_DATETIME_ATTRIB(NotOnOrAfter,NOTONORAFTER,NULL);
-                MARSHALL_STRING_ATTRIB(Recipient,RECIPIENT,NULL);
-                MARSHALL_STRING_ATTRIB(InResponseTo,INRESPONSETO,NULL);
-                MARSHALL_STRING_ATTRIB(Address,ADDRESS,NULL);
+                SubjectConfirmationDataTypeImpl::marshallAttributes(domElement);
                 marshallExtensionAttributes(domElement);
             }
     
@@ -615,7 +630,6 @@ namespace opensaml {
                 m_NameID=NULL;
                 m_EncryptedID=NULL;
                 m_SubjectConfirmationData=NULL;
-                m_KeyInfoConfirmationDataType=NULL;
                 m_children.push_back(NULL);
                 m_children.push_back(NULL);
                 m_children.push_back(NULL);
@@ -627,8 +641,6 @@ namespace opensaml {
                 ++m_pos_EncryptedID;
                 m_pos_SubjectConfirmationData=m_pos_EncryptedID;
                 ++m_pos_SubjectConfirmationData;
-                m_pos_KeyInfoConfirmationDataType=m_pos_SubjectConfirmationData;
-                ++m_pos_KeyInfoConfirmationDataType;
             }
         public:
             virtual ~SubjectConfirmationImpl() {}
@@ -650,8 +662,6 @@ namespace opensaml {
                     setEncryptedID(src.getEncryptedID()->cloneEncryptedID());
                 if (src.getSubjectConfirmationData())
                     setSubjectConfirmationData(src.getSubjectConfirmationData()->clone());
-                if (src.getKeyInfoConfirmationDataType())
-                    setKeyInfoConfirmationDataType(src.getKeyInfoConfirmationDataType()->cloneKeyInfoConfirmationDataType());
             }
             
             IMPL_XMLOBJECT_CLONE(SubjectConfirmation);
@@ -660,7 +670,6 @@ namespace opensaml {
             IMPL_TYPED_CHILD(NameID);
             IMPL_TYPED_CHILD(EncryptedID);
             IMPL_XMLOBJECT_CHILD(SubjectConfirmationData);
-            IMPL_TYPED_CHILD(KeyInfoConfirmationDataType);
     
         protected:
             void marshallAttributes(DOMElement* domElement) const {
@@ -671,7 +680,6 @@ namespace opensaml {
                 PROC_TYPED_CHILD(BaseID,SAML20_NS,false);
                 PROC_TYPED_CHILD(NameID,SAML20_NS,false);
                 PROC_TYPED_CHILD(EncryptedID,SAML20_NS,false);
-                PROC_TYPED_CHILD(KeyInfoConfirmationDataType,SAML20_NS,false);
                 PROC_XMLOBJECT_CHILD(SubjectConfirmationData,SAML20_NS);
                 AbstractXMLObjectUnmarshaller::processChildElement(childXMLObject,root);
             }
@@ -1599,11 +1607,6 @@ const XMLCh Evidence::TYPE_NAME[] =                 UNICODE_LITERAL_12(E,v,i,d,e
 const XMLCh Issuer::LOCAL_NAME[] =                  UNICODE_LITERAL_6(I,s,s,u,e,r);
 const XMLCh KeyInfoConfirmationDataType::LOCAL_NAME[] = UNICODE_LITERAL_23(S,u,b,j,e,c,t,C,o,n,f,i,r,m,a,t,i,o,n,D,a,t,a);
 const XMLCh KeyInfoConfirmationDataType::TYPE_NAME[] = UNICODE_LITERAL_27(K,e,y,I,n,f,o,C,o,n,f,i,r,m,a,t,i,o,n,D,a,t,a,T,y,p,e);
-const XMLCh KeyInfoConfirmationDataType::NOTBEFORE_ATTRIB_NAME[] =      UNICODE_LITERAL_9(N,o,t,B,e,f,o,r,e);
-const XMLCh KeyInfoConfirmationDataType::NOTONORAFTER_ATTRIB_NAME[] =   UNICODE_LITERAL_12(N,o,t,O,n,O,r,A,f,t,e,r);
-const XMLCh KeyInfoConfirmationDataType::INRESPONSETO_ATTRIB_NAME[] =   UNICODE_LITERAL_12(I,n,R,e,s,p,o,n,s,e,T,o);
-const XMLCh KeyInfoConfirmationDataType::RECIPIENT_ATTRIB_NAME[] =      UNICODE_LITERAL_9(R,e,c,i,p,i,e,n,t);
-const XMLCh KeyInfoConfirmationDataType::ADDRESS_ATTRIB_NAME[] =        UNICODE_LITERAL_7(A,d,d,r,e,s,s);
 const XMLCh NameID::LOCAL_NAME[] =                  UNICODE_LITERAL_6(N,a,m,e,I,D);
 const XMLCh NameIDType::LOCAL_NAME[] =              {chNull};
 const XMLCh NameIDType::TYPE_NAME[] =               UNICODE_LITERAL_10(N,a,m,e,I,D,T,y,p,e);
@@ -1623,11 +1626,11 @@ const XMLCh SubjectConfirmation::LOCAL_NAME[] =     UNICODE_LITERAL_19(S,u,b,j,e
 const XMLCh SubjectConfirmation::TYPE_NAME[] =      UNICODE_LITERAL_23(S,u,b,j,e,c,t,C,o,n,f,i,r,m,a,t,i,o,n,T,y,p,e);
 const XMLCh SubjectConfirmation::METHOD_ATTRIB_NAME[] = UNICODE_LITERAL_6(M,e,t,h,o,d);
 const XMLCh SubjectConfirmationData::LOCAL_NAME[] = UNICODE_LITERAL_23(S,u,b,j,e,c,t,C,o,n,f,i,r,m,a,t,i,o,n,D,a,t,a);
-const XMLCh SubjectConfirmationData::NOTBEFORE_ATTRIB_NAME[] =      UNICODE_LITERAL_9(N,o,t,B,e,f,o,r,e);
-const XMLCh SubjectConfirmationData::NOTONORAFTER_ATTRIB_NAME[] =   UNICODE_LITERAL_12(N,o,t,O,n,O,r,A,f,t,e,r);
-const XMLCh SubjectConfirmationData::INRESPONSETO_ATTRIB_NAME[] =   UNICODE_LITERAL_12(I,n,R,e,s,p,o,n,s,e,T,o);
-const XMLCh SubjectConfirmationData::RECIPIENT_ATTRIB_NAME[] =      UNICODE_LITERAL_9(R,e,c,i,p,i,e,n,t);
-const XMLCh SubjectConfirmationData::ADDRESS_ATTRIB_NAME[] =        UNICODE_LITERAL_7(A,d,d,r,e,s,s);
+const XMLCh SubjectConfirmationDataType::NOTBEFORE_ATTRIB_NAME[] =      UNICODE_LITERAL_9(N,o,t,B,e,f,o,r,e);
+const XMLCh SubjectConfirmationDataType::NOTONORAFTER_ATTRIB_NAME[] =   UNICODE_LITERAL_12(N,o,t,O,n,O,r,A,f,t,e,r);
+const XMLCh SubjectConfirmationDataType::INRESPONSETO_ATTRIB_NAME[] =   UNICODE_LITERAL_12(I,n,R,e,s,p,o,n,s,e,T,o);
+const XMLCh SubjectConfirmationDataType::RECIPIENT_ATTRIB_NAME[] =      UNICODE_LITERAL_9(R,e,c,i,p,i,e,n,t);
+const XMLCh SubjectConfirmationDataType::ADDRESS_ATTRIB_NAME[] =        UNICODE_LITERAL_7(A,d,d,r,e,s,s);
 const XMLCh SubjectLocality::LOCAL_NAME[] =         UNICODE_LITERAL_15(S,u,b,j,e,c,t,L,o,c,a,l,i,t,y);
 const XMLCh SubjectLocality::TYPE_NAME[] =          UNICODE_LITERAL_19(S,u,b,j,e,c,t,L,o,c,a,l,i,t,y,T,y,p,e);
 const XMLCh SubjectLocality::ADDRESS_ATTRIB_NAME[] =UNICODE_LITERAL_7(A,d,d,r,e,s,s);
