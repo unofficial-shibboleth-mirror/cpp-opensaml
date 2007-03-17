@@ -497,6 +497,28 @@
 							/>
 						</FileConfiguration>
 					</File>
+					<File
+						RelativePath=".\saml2\profile\BrowserSSOProfileValidator.cpp"
+						>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)\$(InputName)1.obj"
+								XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+							/>
+						</FileConfiguration>
+					</File>
 				</Filter>
 			</Filter>
 			<Filter
@@ -785,6 +807,10 @@
 					>
 					<File
 						RelativePath=".\saml2\profile\AssertionValidator.h"
+						>
+					</File>
+					<File
+						RelativePath=".\saml2\profile\BrowserSSOProfileValidator.h"
 						>
 					</File>
 				</Filter>

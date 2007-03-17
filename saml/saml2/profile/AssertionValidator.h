@@ -44,7 +44,8 @@ namespace opensaml {
              * @param audiences set of audience values representing recipient
              * @param ts        timestamp to evaluate assertion conditions, or 0 to bypass check
              */
-            AssertionValidator(const std::vector<const XMLCh*>& audiences, time_t ts=0) : m_ts(ts), m_audiences(audiences) {}
+            AssertionValidator(const std::vector<const XMLCh*>& audiences, time_t ts=0) : m_audiences(audiences), m_ts(ts) {}
+
             virtual ~AssertionValidator() {}
     
             void validate(const xmltooling::XMLObject* xmlObject) const;
@@ -59,16 +60,19 @@ namespace opensaml {
             /**
              * Condition validation.
              *
-             * <p>Base class version only understands AudienceRestrictionConditions.
+             * <p>Base class version only understands AudienceRestrictions.
              * 
              * @param condition condition to validate
              * @return true iff condition was understood
              */
             virtual bool validateCondition(const Condition* condition) const;
 
-        private:
-            time_t m_ts;
+        protected:
+            /** Set of audience values representing recipient. */
             const std::vector<const XMLCh*>& m_audiences;
+
+            /** Timestamp to evaluate assertion conditions. */
+            time_t m_ts;
         };
         
     };

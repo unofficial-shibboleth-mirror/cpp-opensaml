@@ -96,7 +96,8 @@ saml2mdinclude_HEADERS = \
 	saml2/metadata/ObservableMetadataProvider.h
 
 saml2profinclude_HEADERS = \
-	saml2/profile/AssertionValidator.h
+	saml2/profile/AssertionValidator.h \
+	saml2/profile/BrowserSSOProfileValidator.h
 
 noinst_HEADERS = \
 	internal.h
@@ -158,6 +159,7 @@ libsaml_la_SOURCES = \
 	saml2/binding/impl/SAML2SOAPClient.cpp \
 	saml2/binding/impl/SAML2MessageRule.cpp \
 	saml2/profile/AssertionValidator.cpp \
+	saml2/profile/BrowserSSOProfileValidator.cpp \
 	encryption/EncryptedKeyResolver.cpp \
 	signature/ContentReference.cpp \
 	signature/SignatureProfileValidator.cpp \
