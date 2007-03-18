@@ -26,7 +26,7 @@
 using namespace xmlencryption;
 using namespace std;
 
-EncryptedKey* opensaml::EncryptedKeyResolver::resolveKey(EncryptedData* encryptedData)
+EncryptedKey* opensaml::EncryptedKeyResolver::resolveKey(EncryptedData& encryptedData) const
 {
     const vector<EncryptedKey*>& keys=m_ref.getEncryptedKeys();
     for (vector<EncryptedKey*>::const_iterator i=keys.begin(); i!=keys.end(); i++) {

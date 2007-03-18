@@ -46,11 +46,7 @@ namespace opensaml {
             XMLString::release(&m_recipient);
         }
 
-        xmlencryption::EncryptedKey* resolveKey(xmlencryption::EncryptedData* encryptedData);
-        
-        EncryptedKeyResolver* clone() const {
-            return new EncryptedKeyResolver(m_ref, m_recipient);
-        }
+        xmlencryption::EncryptedKey* resolveKey(xmlencryption::EncryptedData& encryptedData) const;
      
     protected:
         const saml2::EncryptedElementType& m_ref;

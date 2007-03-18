@@ -1288,12 +1288,13 @@ namespace opensaml {
                 }
             }
     
-            XMLObject* decrypt(KeyResolver* KEKresolver, const XMLCh* recipient) const
+            XMLObject* decrypt(const CredentialResolver* KEKresolver, const XMLCh* recipient) const
             {
                 if (!m_EncryptedData)
                     throw DecryptionException("No encrypted data present.");
-                Decrypter decrypter(KEKresolver, new EncryptedKeyResolver(*this, recipient));
-                DOMDocumentFragment* frag = decrypter.decryptData(m_EncryptedData);
+                EncryptedKeyResolver ekr(*this, recipient);
+                Decrypter decrypter(KEKresolver, &ekr);
+                DOMDocumentFragment* frag = decrypter.decryptData(*m_EncryptedData);
                 if (frag->hasChildNodes() && frag->getFirstChild()==frag->getLastChild()) {
                     DOMNode* plaintext=frag->getFirstChild();
                     if (plaintext->getNodeType()==DOMNode::ELEMENT_NODE) {

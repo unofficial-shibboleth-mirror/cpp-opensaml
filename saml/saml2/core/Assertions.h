@@ -28,7 +28,7 @@
 
 #include <xmltooling/XMLObjectBuilder.h>
 #include <xmltooling/encryption/Encryption.h>
-#include <xmltooling/security/KeyResolver.h>
+#include <xmltooling/security/CredentialResolver.h>
 #include <xmltooling/signature/Signature.h>
 #include <xmltooling/util/DateTime.h>
 
@@ -65,13 +65,13 @@ namespace opensaml {
              * inside the message. The key decryption key should be supplied using the provided
              * resolver. The recipient name may be used when multiple encrypted keys are found.
              * The object returned will be unmarshalled around the decrypted DOM element, but the
-             * DOM itself will be released. 
+             * DOM itself will be released.
              * 
-             * @param KEKresolver   resolver supplying key decryption key
+             * @param KEKresolver   locked resolver supplying key decryption key
              * @param recipient     identifier naming the recipient (the entity performing the decryption)
              * @return  the decrypted and unmarshalled object
              */
-            virtual xmltooling::XMLObject* decrypt(xmltooling::KeyResolver* KEKresolver, const XMLCh* recipient) const=0;
+            virtual xmltooling::XMLObject* decrypt(const xmltooling::CredentialResolver* KEKresolver, const XMLCh* recipient) const=0;
         END_XMLOBJECT;
 
         BEGIN_XMLOBJECT(SAML_API,EncryptedID,EncryptedElementType,SAML 2.0 EncryptedID element);
