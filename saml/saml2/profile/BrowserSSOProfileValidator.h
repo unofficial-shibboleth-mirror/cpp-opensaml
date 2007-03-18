@@ -50,8 +50,8 @@ namespace opensaml {
             BrowserSSOProfileValidator(
                 const std::vector<const XMLCh*>& audiences,
                 time_t ts=0,
-                const XMLCh* destination=NULL,
-                const XMLCh* requestID=NULL
+                const char* destination=NULL,
+                const char* requestID=NULL
                 ) : AssertionValidator(audiences, ts), m_destination(destination), m_requestID(requestID) {
             }
             virtual ~BrowserSSOProfileValidator() {}
@@ -69,10 +69,10 @@ namespace opensaml {
         
         protected:
             /** Server location to which assertion was delivered. */
-            const XMLCh* m_destination;
+            xmltooling::auto_ptr_XMLCh m_destination;
 
             /** ID of request that resulted in assertions. */
-            const XMLCh* m_requestID;
+            xmltooling::auto_ptr_XMLCh m_requestID;
 
         private:
             /** Address in confirmed bearer SubjectConfirmationData. */

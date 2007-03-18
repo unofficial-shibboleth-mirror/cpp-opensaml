@@ -48,15 +48,15 @@ void BrowserSSOProfileValidator::validateAssertion(const Assertion& assertion) c
             if (XMLString::equals((*sc)->getMethod(), SubjectConfirmation::BEARER)) {
                 const SubjectConfirmationDataType* data = dynamic_cast<const SubjectConfirmationDataType*>((*sc)->getSubjectConfirmationData());
                 
-                if (m_destination) {
-                    if (!XMLString::equals(m_destination, data ? data->getRecipient() : NULL)) {
+                if (m_destination.get()) {
+                    if (!XMLString::equals(m_destination.get(), data ? data->getRecipient() : NULL)) {
                         log.error("bearer confirmation failed with recipient mismatch");
                         continue;
                     }
                 }
 
-                if (m_requestID) {
-                    if (!XMLString::equals(m_requestID, data ? data->getInResponseTo() : NULL)) {
+                if (m_requestID.get()) {
+                    if (!XMLString::equals(m_requestID.get(), data ? data->getInResponseTo() : NULL)) {
                         log.error("bearer confirmation failed with request correlation mismatch");
                         continue;
                     }
