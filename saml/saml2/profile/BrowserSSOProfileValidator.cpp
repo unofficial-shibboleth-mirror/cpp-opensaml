@@ -85,4 +85,6 @@ void BrowserSSOProfileValidator::validateAssertion(const Assertion& assertion) c
             }
         }
     }
+    
+    throw ValidationException("Unable to satisfy assertion's SubjectConfirmation.");
 }
