@@ -22,15 +22,16 @@
  
 #include "internal.h"
 #include "encryption/EncryptedKeyResolver.h"
+#include "saml2/core/Assertions.h"
 
 using namespace xmlencryption;
 using namespace std;
 
-EncryptedKey* opensaml::EncryptedKeyResolver::resolveKey(EncryptedData& encryptedData) const
+const EncryptedKey* opensaml::EncryptedKeyResolver::resolveKey(const EncryptedData& encryptedData, const XMLCh* recipient) const
 {
     const vector<EncryptedKey*>& keys=m_ref.getEncryptedKeys();
     for (vector<EncryptedKey*>::const_iterator i=keys.begin(); i!=keys.end(); i++) {
-        if (XMLString::equals(m_recipient,(*i)->getRecipient()))
+        if (XMLString::equals(recipient,(*i)->getRecipient()))
             return (*i);
     }
     return NULL;

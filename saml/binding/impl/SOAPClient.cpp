@@ -37,22 +37,22 @@ using namespace opensaml;
 using namespace xmltooling;
 using namespace std;
 
-void SOAPClient::send(const soap11::Envelope& env, const KeyInfoSource& peer, const char* endpoint)
+void SOAPClient::send(const soap11::Envelope& env, MetadataCredentialCriteria& peer, const char* endpoint)
 {
     // Clear policy.
     m_policy.reset();
+
+    m_criteria = &peer;
+    m_peer = &(peer.getRole());
     
-    if (!m_peer)
-        m_peer = dynamic_cast<const RoleDescriptor*>(&peer);
-    if (m_peer) {
-        const QName& role = m_peer->getElementQName();
-        if (XMLString::equals(role.getLocalPart(),RoleDescriptor::LOCAL_NAME))
-            m_policy.setRole(m_peer->getSchemaType());
-        else
-            m_policy.setRole(&role);
-    }
-    
-    soap11::SOAPClient::send(env, peer, endpoint);
+    const QName& role = m_peer->getElementQName();
+    if (XMLString::equals(role.getLocalPart(),RoleDescriptor::LOCAL_NAME))
+        m_policy.setRole(m_peer->getSchemaType());
+    else
+        m_policy.setRole(&role);
+
+    auto_ptr_char pn(dynamic_cast<const EntityDescriptor*>(m_peer->getParent())->getEntityID());
+    soap11::SOAPClient::send(env, pn.get(), endpoint);
 }
 
 void SOAPClient::prepareTransport(xmltooling::SOAPTransport& transport)
@@ -67,8 +67,7 @@ void SOAPClient::prepareTransport(xmltooling::SOAPTransport& transport)
     
     const X509TrustEngine* engine = dynamic_cast<const X509TrustEngine*>(m_policy.getTrustEngine());
     if (engine) {
-        const MetadataProvider* metadata = m_policy.getMetadataProvider();
-        if (!transport.setTrustEngine(engine, m_force, metadata ? metadata->getKeyResolver() : NULL))
+        if (!transport.setTrustEngine(engine, m_policy.getMetadataProvider(), m_criteria, m_force))
             throw BindingException("Unable to install X509TrustEngine into SOAPTransport.");
     }
 }
@@ -79,12 +78,9 @@ soap11::Envelope* SOAPClient::receive()
     if (env.get()) {
         if (m_peer && m_transport->isSecure()) {
             // Set issuer based on peer identity.
-            EntityDescriptor* parent = dynamic_cast<EntityDescriptor*>(m_peer->getParent());
-            if (parent) {
-                m_policy.setIssuer(parent->getEntityID());
-                m_policy.setIssuerMetadata(m_peer);
-                m_policy.setSecure(true);
-            }
+            m_policy.setIssuer(dynamic_cast<EntityDescriptor*>(m_peer->getParent())->getEntityID());
+            m_policy.setIssuerMetadata(m_peer);
+            m_policy.setSecure(true);
         }
         m_policy.evaluate(*(env.get()));
     }
@@ -93,6 +89,7 @@ soap11::Envelope* SOAPClient::receive()
 
 void SOAPClient::reset()
 {
+    m_criteria = NULL;
     m_peer = NULL;
     soap11::SOAPClient::reset();
     m_policy.reset();

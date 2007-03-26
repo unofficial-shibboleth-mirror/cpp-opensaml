@@ -26,6 +26,7 @@
 #include <saml/binding/SOAPClient.h>
 
 namespace opensaml {
+
     namespace saml1p {
         
         class SAML_API Request;
@@ -57,10 +58,10 @@ namespace opensaml {
              * <p>The request will be freed by the client object regardless of the outcome.
              * 
              * @param request   SAML request to send
-             * @param peer      peer to send message to, expressed in metadata terms
+             * @param peer      peer to send message to, expressed in metadata criteria terms
              * @param endpoint  URL of endpoint to recieve message
              */
-            virtual void sendSAML(Request* request, const saml2md::RoleDescriptor& peer, const char* endpoint);
+            virtual void sendSAML(Request* request, saml2md::MetadataCredentialCriteria& peer, const char* endpoint);
             
             /**
              * Specialized method for receiving SAML 1.x responses. The SOAP layer will be

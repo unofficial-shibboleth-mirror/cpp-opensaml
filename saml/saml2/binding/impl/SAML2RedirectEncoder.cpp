@@ -51,11 +51,11 @@ namespace opensaml {
             
             long encode(
                 GenericResponse& genericResponse,
-                xmltooling::XMLObject* xmlObject,
+                XMLObject* xmlObject,
                 const char* destination,
                 const char* recipientID=NULL,
                 const char* relayState=NULL,
-                const xmltooling::CredentialResolver* credResolver=NULL,
+                const Credential* credential=NULL,
                 const XMLCh* sigAlgorithm=NULL
                 ) const;
         };
@@ -73,7 +73,7 @@ long SAML2RedirectEncoder::encode(
     const char* destination,
     const char* recipientID,
     const char* relayState,
-    const CredentialResolver* credResolver,
+    const Credential* credential,
     const XMLCh* sigAlgorithm
     ) const
 {
@@ -126,7 +126,7 @@ long SAML2RedirectEncoder::encode(
     if (relayState)
         xmlbuf = xmlbuf + "&RelayState=" + escaper->encode(relayState);
   
-    if (credResolver) {
+    if (credential) {
         // Sign the query string after adding the algorithm.
         if (!sigAlgorithm)
             sigAlgorithm = DSIGConstants::s_unicodeStrURIRSA_SHA1;
@@ -135,8 +135,7 @@ long SAML2RedirectEncoder::encode(
 
         char sigbuf[1024];
         memset(sigbuf,0,sizeof(sigbuf));
-        auto_ptr<XSECCryptoKey> key(credResolver->getKey());
-        Signature::createRawSignature(key.get(), sigAlgorithm, xmlbuf.c_str(), xmlbuf.length(), sigbuf, sizeof(sigbuf)-1);
+        Signature::createRawSignature(credential->getPrivateKey(), sigAlgorithm, xmlbuf.c_str(), xmlbuf.length(), sigbuf, sizeof(sigbuf)-1);
         xmlbuf = xmlbuf + "&Signature=" + escaper->encode(sigbuf);
     }
     

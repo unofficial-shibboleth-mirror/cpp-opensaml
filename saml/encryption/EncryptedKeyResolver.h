@@ -24,10 +24,13 @@
 #define __saml_enckeyres_h__
 
 #include <saml/base.h>
-#include <saml/saml2/core/Assertions.h>
 #include <xmltooling/encryption/EncryptedKeyResolver.h>
 
 namespace opensaml {
+
+    namespace saml2 {
+        class SAML_API EncryptedElementType;
+    };
 
     /**
      * SAML-specific encrypted key resolver.
@@ -38,19 +41,15 @@ namespace opensaml {
     class SAML_API EncryptedKeyResolver : public xmlencryption::EncryptedKeyResolver
     {
     public:
-        EncryptedKeyResolver(const saml2::EncryptedElementType& ref, const XMLCh* recipient=NULL)
-            : m_ref(ref), m_recipient(XMLString::replicate(recipient)) {
+        EncryptedKeyResolver(const saml2::EncryptedElementType& ref) : m_ref(ref) {
         }
         
-        virtual ~EncryptedKeyResolver() {
-            XMLString::release(&m_recipient);
-        }
+        virtual ~EncryptedKeyResolver() {}
 
-        xmlencryption::EncryptedKey* resolveKey(xmlencryption::EncryptedData& encryptedData) const;
+        const xmlencryption::EncryptedKey* resolveKey(const xmlencryption::EncryptedData& encryptedData, const XMLCh* recipient=NULL) const;
      
     protected:
         const saml2::EncryptedElementType& m_ref;
-        XMLCh* m_recipient;
     };
 
 };

@@ -8,13 +8,13 @@
 <ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
 </ds:Transforms>
 <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
-<ds:DigestValue>58F0tbYfjW1fw6qvD3SFvhQlg/o=</ds:DigestValue>
+<ds:DigestValue>TfMZL9tjX6BFJb1whHodLQw94aE=</ds:DigestValue>
 </ds:Reference>
 </ds:SignedInfo>
-<ds:SignatureValue>C9U3y5+GJYi+e2kHn2VBYFuE0L/CVDMxiRygammXuDiOo3jQslf8GifLDxinnI33
-+sky4f/Kv5mjVFd6aYs9ad3JANzuDF6zdMBVnQkrCAkfzKXjif1coXZWIcDc0To9
-qp6fegEuvFJrJyEJw9xyKkc93Mk6+gXLyxe1oynOkkI=</ds:SignatureValue>
-<ds:KeyInfo><ds:X509Data><ds:X509Certificate>MIICjzCCAfigAwIBAgIJAKk8t1hYcMkhMA0GCSqGSIb3DQEBBAUAMDoxCzAJBgNV
+<ds:SignatureValue>SvahDxYpqSJI16CjJt2YWQO6DHvrtL9aNCsxwpEG4rRjkUshipwUHMngulnQHyX6
+BiJ5NrdAWd2HMaUOIiwg1e0Xi/H5BGwdyPPOM7kA05EOdnNO2wWcWgjRSUTa7f9g
+a3SHSk63QckMJBkm1neUijbktD2sk0yX6Zm0oyKWlYI=</ds:SignatureValue>
+<ds:KeyInfo><ds:KeyName>sp.example.org</ds:KeyName><ds:X509Data><ds:X509Certificate>MIICjzCCAfigAwIBAgIJAKk8t1hYcMkhMA0GCSqGSIb3DQEBBAUAMDoxCzAJBgNV
 BAYTAlVTMRIwEAYDVQQKEwlJbnRlcm5ldDIxFzAVBgNVBAMTDnNwLmV4YW1wbGUu
 b3JnMB4XDTA1MDYyMDE1NDgzNFoXDTMyMTEwNTE1NDgzNFowOjELMAkGA1UEBhMC
 VVMxEjAQBgNVBAoTCUludGVybmV0MjEXMBUGA1UEAxMOc3AuZXhhbXBsZS5vcmcw
@@ -48,7 +48,7 @@ AuthenticationMethod="method"><saml:Subject><saml:NameIdentifier>John Doe</saml:
 <ds:SignatureValue>d4SsRgDSjboTRA2YUD68TPp+17AqRmxbY/LrWJhueIC/JY+Ct7+Fd6bugUXliIeD
 NVRDACsEB7PqYWZ99+Ecf8XAmQYCw5elj8mWxPp0o+UVHtBZOR2bC+/YjNitSM+x
 G/F3JgZqfunUcg7mcj6WEAUt4pjKhjaTY8Z7QJltdKc=</ds:SignatureValue>
-<ds:KeyInfo><ds:X509Data><ds:X509Certificate>MIICjzCCAfigAwIBAgIJAKk8t1hYcMkhMA0GCSqGSIb3DQEBBAUAMDoxCzAJBgNV
+<ds:KeyInfo><ds:KeyName>sp.example.org</ds:KeyName><ds:X509Data><ds:X509Certificate>MIICjzCCAfigAwIBAgIJAKk8t1hYcMkhMA0GCSqGSIb3DQEBBAUAMDoxCzAJBgNV
 BAYTAlVTMRIwEAYDVQQKEwlJbnRlcm5ldDIxFzAVBgNVBAMTDnNwLmV4YW1wbGUu
 b3JnMB4XDTA1MDYyMDE1NDgzNFoXDTMyMTEwNTE1NDgzNFowOjELMAkGA1UEBhMC
 VVMxEjAQBgNVBAoTCUludGVybmV0MjEXMBUGA1UEAxMOc3AuZXhhbXBsZS5vcmcw

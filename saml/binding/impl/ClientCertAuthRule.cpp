@@ -24,6 +24,7 @@
 #include "exceptions.h"
 #include "binding/SecurityPolicyRule.h"
 #include "saml2/metadata/Metadata.h"
+#include "saml2/metadata/MetadataCredentialCriteria.h"
 #include "saml2/metadata/MetadataProvider.h"
 
 #include <xmltooling/security/X509TrustEngine.h>
@@ -74,8 +75,13 @@ void ClientCertAuthRule::evaluate(const XMLObject& message, const GenericRequest
     if (chain.empty())
         return;
     
-    if (!x509trust->validate(chain.front(), chain, *(policy.getIssuerMetadata()), true,
-            policy.getMetadataProvider()->getKeyResolver())) {
+    // Set up criteria object, including peer name to enforce cert name checking.
+    MetadataCredentialCriteria cc(*(policy.getIssuerMetadata()));
+    auto_ptr_char pn(policy.getIssuer()->getName());
+    cc.setPeerName(pn.get());
+    cc.setUsage(CredentialCriteria::TLS_CREDENTIAL);
+
+    if (!x509trust->validate(chain.front(), chain, *(policy.getMetadataProvider()), &cc)) {
         log.error("unable to verify certificate chain with supplied trust engine");
         return;
     }

@@ -49,16 +49,16 @@ namespace opensaml {
             
             long encode(
                 GenericResponse& genericResponse,
-                xmltooling::XMLObject* xmlObject,
+                XMLObject* xmlObject,
                 const char* destination,
                 const char* recipientID=NULL,
                 const char* relayState=NULL,
-                const xmltooling::CredentialResolver* credResolver=NULL,
+                const Credential* credential=NULL,
                 const XMLCh* sigAlgorithm=NULL
                 ) const;
 
         private:        
-            std::string m_template;
+            string m_template;
             bool m_simple;
         };
 
@@ -93,7 +93,7 @@ long SAML2POSTEncoder::encode(
     const char* destination,
     const char* recipientID,
     const char* relayState,
-    const CredentialResolver* credResolver,
+    const Credential* credential,
     const XMLCh* sigAlgorithm
     ) const
 {
@@ -115,8 +115,7 @@ long SAML2POSTEncoder::encode(
     }
     
     DOMElement* rootElement = NULL;
-    vector<Signature*> sigs;
-    if (credResolver && !m_simple) {
+    if (credential && !m_simple) {
         // Signature based on native XML signing.
         if (request ? request->getSignature() : response->getSignature()) {
             log.debug("message already signed, skipping signature operation");
@@ -125,20 +124,20 @@ long SAML2POSTEncoder::encode(
             log.debug("signing and marshalling the message");
 
             // Build a Signature.
-            Signature* sig = buildSignature(credResolver, sigAlgorithm);
-            
-            // Append Signature.
+            Signature* sig = SignatureBuilder::buildSignature();
             request ? request->setSignature(sig) : response->setSignature(sig);    
-        
+            if (sigAlgorithm)
+                sig->setSignatureAlgorithm(sigAlgorithm);
+            
             // Sign response while marshalling.
-            sigs.push_back(sig);
+            vector<Signature*> sigs(1,sig);
+            rootElement = xmlObject->marshall((DOMDocument*)NULL,&sigs,credential);
         }
     }
     else {
         log.debug("marshalling the message");
+        rootElement = xmlObject->marshall((DOMDocument*)NULL);
     }
-    
-    rootElement = xmlObject->marshall((DOMDocument*)NULL,&sigs);
     
     // Start tracking data.
     TemplateEngine::TemplateParameters pmap;
@@ -150,7 +149,7 @@ long SAML2POSTEncoder::encode(
     XMLHelper::serialize(rootElement, msg);
 
     // SimpleSign.
-    if (credResolver && m_simple) {
+    if (credential && m_simple) {
         log.debug("applying simple signature to message data");
         string input = (request ? "SAMLRequest=" : "SAMLResponse=") + msg;
         if (relayState)
@@ -163,8 +162,7 @@ long SAML2POSTEncoder::encode(
 
         char sigbuf[1024];
         memset(sigbuf,0,sizeof(sigbuf));
-        auto_ptr<XSECCryptoKey> key(credResolver->getKey());
-        Signature::createRawSignature(key.get(), sigAlgorithm, input.c_str(), input.length(), sigbuf, sizeof(sigbuf)-1);
+        Signature::createRawSignature(credential->getPrivateKey(), sigAlgorithm, input.c_str(), input.length(), sigbuf, sizeof(sigbuf)-1);
         pmap.m_map["Signature"] = sigbuf;
     }
     

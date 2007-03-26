@@ -27,8 +27,11 @@
 
 #include <log4cpp/Category.hh>
 
-#include <xmltooling/util/NDC.h>
+#include <xmltooling/security/Credential.h>
+#include <xmltooling/security/CredentialCriteria.h>
+#include <xmltooling/security/CredentialResolver.h>
 #include <xmltooling/signature/SignatureValidator.h>
+#include <xmltooling/util/NDC.h>
 
 using namespace opensaml::saml2md;
 using namespace opensaml;
@@ -45,7 +48,7 @@ namespace opensaml {
         public:
             SignatureMetadataFilter(const DOMElement* e);
             ~SignatureMetadataFilter() {
-                delete m_sigValidator;
+                delete m_credResolver;
             }
             
             const char* getId() const { return SIGNATURE_METADATA_FILTER; }
@@ -56,12 +59,13 @@ namespace opensaml {
             void verifySignature(Signature* sig) const {
                 if (sig) {
                     m_profileValidator.validate(sig);
-                    m_sigValidator->validate(sig);
+                    m_sigValidator.validate(sig);
                 }
             }
             
+            CredentialResolver* m_credResolver;
             SignatureProfileValidator m_profileValidator;
-            SignatureValidator* m_sigValidator;
+            mutable SignatureValidator m_sigValidator;
         }; 
 
         MetadataFilter* SAML_DLLLOCAL SignatureMetadataFilterFactory(const DOMElement* const & e)
@@ -72,20 +76,18 @@ namespace opensaml {
     };
 };
 
-static const XMLCh GenericKeyResolver[] =   UNICODE_LITERAL_11(K,e,y,R,e,s,o,l,v,e,r);
+static const XMLCh _CredentialResolver[] =  UNICODE_LITERAL_18(C,r,e,d,e,n,t,i,a,l,R,e,s,o,l,v,e,r);
 static const XMLCh type[] =                 UNICODE_LITERAL_4(t,y,p,e);
 
-SignatureMetadataFilter::SignatureMetadataFilter(const DOMElement* e) : m_sigValidator(NULL)
+SignatureMetadataFilter::SignatureMetadataFilter(const DOMElement* e) : m_credResolver(NULL)
 {
-    e = XMLHelper::getFirstChildElement(e, GenericKeyResolver);
+    e = XMLHelper::getFirstChildElement(e, _CredentialResolver);
     auto_ptr_char t(e ? e->getAttributeNS(NULL,type) : NULL);
     if (t.get()) {
-        auto_ptr<KeyResolver> kr(XMLToolingConfig::getConfig().KeyResolverManager.newPlugin(t.get(),e));
-        m_sigValidator = new SignatureValidator(kr.get());
-        kr.release();
+        m_credResolver = XMLToolingConfig::getConfig().CredentialResolverManager.newPlugin(t.get(),e);
     }
     else
-        throw MetadataFilterException("missing <KeyResolver> element, or no type attribute found");
+        throw MetadataFilterException("Missing <CredentialResolver> element, or no type attribute found");
 }
 
 void SignatureMetadataFilter::doFilter(XMLObject& xmlObject) const
@@ -94,6 +96,11 @@ void SignatureMetadataFilter::doFilter(XMLObject& xmlObject) const
     NDC ndc("doFilter");
 #endif
     
+    CredentialCriteria cc;
+    cc.setUsage(CredentialCriteria::SIGNING_CREDENTIAL);
+    Locker locker(m_credResolver);
+    m_sigValidator.setCredential(m_credResolver->resolve(&cc));
+
     try {
         EntitiesDescriptor& entities = dynamic_cast<EntitiesDescriptor&>(xmlObject);
         doFilter(entities, true);

@@ -49,11 +49,11 @@ namespace opensaml {
             
             long encode(
                 GenericResponse& genericResponse,
-                xmltooling::XMLObject* xmlObject,
+                XMLObject* xmlObject,
                 const char* destination,
                 const char* recipientID=NULL,
                 const char* relayState=NULL,
-                const xmltooling::CredentialResolver* credResolver=NULL,
+                const Credential* credential=NULL,
                 const XMLCh* sigAlgorithm=NULL
                 ) const;
         };
@@ -73,7 +73,7 @@ long SAML2SOAPEncoder::encode(
     const char* destination,
     const char* recipientID,
     const char* relayState,
-    const CredentialResolver* credResolver,
+    const Credential* credential,
     const XMLCh* sigAlgorithm
     ) const
 {
@@ -101,7 +101,7 @@ long SAML2SOAPEncoder::encode(
             Body* body = BodyBuilder::buildBody();
             env->setBody(body);
             body->getUnknownXMLObjects().push_back(response);
-            if (credResolver ) {
+            if (credential) {
                 if (response->getSignature()) {
                     log.debug("response already signed, skipping signature operation");
                     rootElement = env->marshall();
@@ -110,12 +110,14 @@ long SAML2SOAPEncoder::encode(
                     log.debug("signing and marshalling the response");
         
                     // Build a Signature.
-                    Signature* sig = buildSignature(credResolver, sigAlgorithm);
-                    response->setSignature(sig);
+                    Signature* sig = SignatureBuilder::buildSignature();
+                    response->setSignature(sig);    
+                    if (sigAlgorithm)
+                        sig->setSignatureAlgorithm(sigAlgorithm);
             
                     // Sign response while marshalling.
                     vector<Signature*> sigs(1,sig);
-                    rootElement = env->marshall((DOMDocument*)NULL,&sigs);
+                    rootElement = env->marshall((DOMDocument*)NULL,&sigs,credential);
                 }
             }
             else {

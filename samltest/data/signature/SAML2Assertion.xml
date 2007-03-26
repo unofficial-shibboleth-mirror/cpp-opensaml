@@ -15,7 +15,7 @@ Version="2.0"><saml:Issuer>issuer</saml:Issuer><ds:Signature xmlns:ds="http://ww
 <ds:SignatureValue>zgKU42nQKyB9m8RkDz1I2r7h0N9pc5ys9kve7oN9/Dugrn583/3bMgQBfk1rw4Pq
 BfztAZNcf2lstzvgpVB9fVTsTUuEDtT0mhc+f5t8kbCkABGu0SrfCnDjbYpmEeLC
 j8rJO4aSZIV4tN21aAkQyys28l4oB3KGTTDASjEPVgQ=</ds:SignatureValue>
-<ds:KeyInfo><ds:X509Data><ds:X509Certificate>MIICjzCCAfigAwIBAgIJAKk8t1hYcMkhMA0GCSqGSIb3DQEBBAUAMDoxCzAJBgNV
+<ds:KeyInfo><ds:KeyName>sp.example.org</ds:KeyName><ds:X509Data><ds:X509Certificate>MIICjzCCAfigAwIBAgIJAKk8t1hYcMkhMA0GCSqGSIb3DQEBBAUAMDoxCzAJBgNV
 BAYTAlVTMRIwEAYDVQQKEwlJbnRlcm5ldDIxFzAVBgNVBAMTDnNwLmV4YW1wbGUu
 b3JnMB4XDTA1MDYyMDE1NDgzNFoXDTMyMTEwNTE1NDgzNFowOjELMAkGA1UEBhMC
 VVMxEjAQBgNVBAoTCUludGVybmV0MjEXMBUGA1UEAxMOc3AuZXhhbXBsZS5vcmcw

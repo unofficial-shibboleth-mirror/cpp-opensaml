@@ -66,21 +66,18 @@ public:
         // Append a Signature.
         Signature* sig=SignatureBuilder::buildSignature();
         assertion->setSignature(sig);
-        Locker locker(m_resolver);
-        sig->setSigningKey(m_resolver->getKey());
-
-        // Build KeyInfo.
-        KeyInfo* keyInfo=KeyInfoBuilder::buildKeyInfo();
-        X509Data* x509Data=X509DataBuilder::buildX509Data();
-        keyInfo->getX509Datas().push_back(x509Data);
-        for_each(m_resolver->getCertificates().begin(),m_resolver->getCertificates().end(),bind1st(_addcert(),x509Data));
-        sig->setKeyInfo(keyInfo);
 
         // Sign while marshalling.
         vector<Signature*> sigs(1,sig);
+        CredentialCriteria cc;
+        cc.setUsage(CredentialCriteria::SIGNING_CREDENTIAL);
+        Locker locker(m_resolver);
+        const Credential* cred = m_resolver->resolve(&cc);
+        TSM_ASSERT("Retrieved credential was null", cred!=NULL);
+
         DOMElement* rootElement = NULL;
         try {
-            rootElement=assertion->marshall((DOMDocument*)NULL,&sigs);
+            rootElement=assertion->marshall((DOMDocument*)NULL,&sigs,cred);
         }
         catch (XMLToolingException& e) {
             TS_TRACE(e.what());
@@ -98,7 +95,7 @@ public:
         
         try {
             opensaml::SignatureProfileValidator spv;
-            SignatureValidator sv(new KeyResolver(m_resolver->getKey()));
+            SignatureValidator sv(cred);
             spv.validate(dynamic_cast<Assertion*>(assertion2.get())->getSignature());
             sv.validate(dynamic_cast<Assertion*>(assertion2.get())->getSignature());
         }

@@ -52,16 +52,16 @@ namespace opensaml {
             
             long encode(
                 GenericResponse& genericResponse,
-                xmltooling::XMLObject* xmlObject,
+                XMLObject* xmlObject,
                 const char* destination,
                 const char* recipientID=NULL,
                 const char* relayState=NULL,
-                const xmltooling::CredentialResolver* credResolver=NULL,
+                const Credential* credential=NULL,
                 const XMLCh* sigAlgorithm=NULL
                 ) const;
         
         private:
-            std::string m_template; 
+            string m_template; 
         };
 
         MessageEncoder* SAML_DLLLOCAL SAML2ArtifactEncoderFactory(const DOMElement* const & e)
@@ -84,11 +84,11 @@ SAML2ArtifactEncoder::SAML2ArtifactEncoder(const DOMElement* e)
 
 long SAML2ArtifactEncoder::encode(
     GenericResponse& genericResponse,
-    xmltooling::XMLObject* xmlObject,
+    XMLObject* xmlObject,
     const char* destination,
     const char* recipientID,
     const char* relayState,
-    const CredentialResolver* credResolver,
+    const Credential* credential,
     const XMLCh* sigAlgorithm
     ) const
 {
@@ -124,7 +124,7 @@ long SAML2ArtifactEncoder::encode(
     log.debug("obtaining new artifact for relying party (%s)", recipientID ? recipientID : "unknown");
     auto_ptr<SAMLArtifact> artifact(m_artifactGenerator->generateSAML2Artifact(recipientID));
 
-    if (credResolver) {
+    if (credential) {
         // Signature based on native XML signing.
         if (request ? request->getSignature() : response->getSignature()) {
             log.debug("message already signed, skipping signature operation");
@@ -133,14 +133,14 @@ long SAML2ArtifactEncoder::encode(
             log.debug("signing the message");
 
             // Build a Signature.
-            Signature* sig = buildSignature(credResolver, sigAlgorithm);
-            
-            // Append Signature.
+            Signature* sig = SignatureBuilder::buildSignature();
             request ? request->setSignature(sig) : response->setSignature(sig);    
-        
+            if (sigAlgorithm)
+                sig->setSignatureAlgorithm(sigAlgorithm);
+            
             // Sign response while marshalling.
             vector<Signature*> sigs(1,sig);
-            xmlObject->marshall((DOMDocument*)NULL,&sigs);
+            xmlObject->marshall((DOMDocument*)NULL,&sigs,credential);
         }
     }
     

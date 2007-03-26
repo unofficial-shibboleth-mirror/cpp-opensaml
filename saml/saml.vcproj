@@ -766,11 +766,11 @@
 						>
 					</File>
 					<File
-						RelativePath=".\saml2\metadata\MetadataFilter.h"
+						RelativePath=".\saml2\metadata\MetadataCredentialCriteria.h"
 						>
 					</File>
 					<File
-						RelativePath=".\saml2\metadata\MetadataKeyInfoIterator.h"
+						RelativePath=".\saml2\metadata\MetadataFilter.h"
 						>
 					</File>
 					<File

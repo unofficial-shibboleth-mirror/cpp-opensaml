@@ -29,6 +29,10 @@ namespace opensaml {
     
     namespace saml2md {
         
+#if defined (_MSC_VER)
+        #pragma warning( push )
+        #pragma warning( disable : 4251 )
+#endif
         /**
          * A metadata provider that notifies interested parties of changes.
          */
@@ -100,6 +104,11 @@ namespace opensaml {
         private:
             std::vector<Observer*> m_observers;
         };
+
+#if defined (_MSC_VER)
+        #pragma warning( pop )
+#endif
+
     };
 };
 

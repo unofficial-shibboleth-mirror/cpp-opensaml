@@ -25,18 +25,6 @@
 using namespace opensaml::saml1p;
 using namespace opensaml::saml1;
 
-namespace {
-    class SAML_DLLLOCAL _addcert : public binary_function<X509Data*,XSECCryptoX509*,void> {
-    public:
-        void operator()(X509Data* bag, XSECCryptoX509* cert) const {
-            safeBuffer& buf=cert->getDEREncodingSB();
-            X509Certificate* x=X509CertificateBuilder::buildX509Certificate();
-            x->setValue(buf.sbStrToXMLCh());
-            bag->getX509Certificates().push_back(x);
-        }
-    };
-};
-
 class SAML1ArtifactTest : public CxxTest::TestSuite,
         public SAMLBindingBaseTestCase, public MessageEncoder::ArtifactGenerator, public MessageDecoder::ArtifactResolver {
 public:
@@ -63,12 +51,18 @@ public:
                 );
             janitor.release();
 
+            CredentialCriteria cc;
+            cc.setUsage(CredentialCriteria::SIGNING_CREDENTIAL);
+            Locker clocker(m_creds);
+            const Credential* cred = m_creds->resolve(&cc);
+            TSM_ASSERT("Retrieved credential was null", cred!=NULL);
+
             // Encode message.
             auto_ptr<MessageEncoder> encoder(
                 SAMLConfig::getConfig().MessageEncoderManager.newPlugin(samlconstants::SAML1_PROFILE_BROWSER_ARTIFACT, NULL)
                 );
             encoder->setArtifactGenerator(this);
-            encoder->encode(*this,toSend.get(),"https://sp.example.org/SAML/SSO","https://sp.example.org/","state",m_creds);
+            encoder->encode(*this,toSend.get(),"https://sp.example.org/SAML/SSO","https://sp.example.org/","state",cred);
             toSend.release();
             
             // Decode message.
@@ -106,25 +100,6 @@ public:
         throw BindingException("Not implemented.");
     }
     
-    Signature* buildSignature(const CredentialResolver* credResolver) const
-    {
-        // Build a Signature.
-        Signature* sig = SignatureBuilder::buildSignature();
-        sig->setSigningKey(credResolver->getKey());
-
-        // Build KeyInfo.
-        const vector<XSECCryptoX509*>& certs = credResolver->getCertificates();
-        if (!certs.empty()) {
-            KeyInfo* keyInfo=KeyInfoBuilder::buildKeyInfo();
-            X509Data* x509Data=X509DataBuilder::buildX509Data();
-            keyInfo->getX509Datas().push_back(x509Data);
-            for_each(certs.begin(),certs.end(),bind1st(_addcert(),x509Data));
-            sig->setKeyInfo(keyInfo);
-        }
-        
-        return sig;
-    }
-
     Response* resolve(
         const vector<SAMLArtifact*>& artifacts,
         const IDPSSODescriptor& idpDescriptor,
@@ -142,9 +117,14 @@ public:
         StatusCode* sc = StatusCodeBuilder::buildStatusCode();
         status->setStatusCode(sc);
         sc->setValue(&StatusCode::SUCCESS);
-        response->setSignature(buildSignature(m_creds));
+        response->setSignature(SignatureBuilder::buildSignature());
         vector<Signature*> sigs(1,response->getSignature());
-        response->marshall((DOMDocument*)NULL,&sigs);
+        CredentialCriteria cc;
+        cc.setUsage(CredentialCriteria::SIGNING_CREDENTIAL);
+        Locker clocker(m_creds);
+        const Credential* cred = m_creds->resolve(&cc);
+        TSM_ASSERT("Retrieved credential was null", cred!=NULL);
+        response->marshall((DOMDocument*)NULL,&sigs,cred);
         SchemaValidators.validate(response.get());
         policy.evaluate(*(response.get()), this);
         return response.release();

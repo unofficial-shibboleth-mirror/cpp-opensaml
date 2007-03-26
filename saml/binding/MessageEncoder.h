@@ -27,7 +27,7 @@
 
 #include <istream>
 #include <xmltooling/XMLObject.h>
-#include <xmltooling/security/CredentialResolver.h>
+#include <xmltooling/security/Credential.h>
 
 namespace opensaml {
 
@@ -107,7 +107,7 @@ namespace opensaml {
          * @param destination       destination URL for message
          * @param recipientID       optional entityID of message recipient
          * @param relayState        optional RelayState value to accompany message
-         * @param credResolver      optional CredentialResolver instance to supply signing material
+         * @param credential        optional Credential to supply signing key
          * @param sigAlgorithm      optional signature algorithm identifier
          */
         virtual long encode(
@@ -116,25 +116,12 @@ namespace opensaml {
             const char* destination,
             const char* recipientID=NULL,
             const char* relayState=NULL,
-            const xmltooling::CredentialResolver* credResolver=NULL,
+            const xmltooling::Credential* credential=NULL,
             const XMLCh* sigAlgorithm=NULL
             ) const=0;
 
     protected:
         MessageEncoder() : m_artifactGenerator(NULL) {}
-        
-        /**
-         * Helper function to build a new XML Signature with KeyInfo, based
-         * on the supplied CredentialResolver.
-         * 
-         * @param credResolver      CredentialResolver instance to supply signing material
-         * @param sigAlgorithm      optional signature algorithm identifier
-         * @return  a new Signature object
-         */
-        xmlsignature::Signature* buildSignature(
-            const xmltooling::CredentialResolver* credResolver,
-            const XMLCh* sigAlgorithm=NULL
-            ) const;
         
         /** Pointer to an ArtifactGenerator implementation. */
         const ArtifactGenerator* m_artifactGenerator;

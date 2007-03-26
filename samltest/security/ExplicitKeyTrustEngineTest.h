@@ -18,6 +18,7 @@
 #include <saml/SAMLConfig.h>
 #include <saml/saml2/core/Assertions.h>
 #include <saml/saml2/metadata/Metadata.h>
+#include <saml/saml2/metadata/MetadataCredentialCriteria.h>
 #include <saml/saml2/metadata/MetadataProvider.h>
 #include <xmltooling/security/TrustEngine.h>
 
@@ -80,7 +81,10 @@ public:
         
         Signature* sig=assertion->getSignature();
         TSM_ASSERT("Signature not present", sig!=NULL);
-        TSM_ASSERT("Signature failed to validate.", trustEngine->validate(*sig, *role, metadataProvider->getKeyResolver()));
+
+        MetadataCredentialCriteria cc(*role);
+        cc.setPeerName("https://idp.example.org");
+        TSM_ASSERT("Signature failed to validate.", trustEngine->validate(*sig, *metadataProvider, &cc));
 
         descriptor = metadataProvider->getEntityDescriptor("https://idp2.example.org");
         TSM_ASSERT("Retrieved entity descriptor was null", descriptor!=NULL);
@@ -88,6 +92,8 @@ public:
         role=descriptor->getIDPSSODescriptors().front();
         TSM_ASSERT("Role not present", role!=NULL);
 
-        TSM_ASSERT("Signature validated.", !trustEngine->validate(*sig, *role, metadataProvider->getKeyResolver()));
+        MetadataCredentialCriteria cc2(*role);
+        cc2.setPeerName("https://idp2.example.org");
+        TSM_ASSERT("Signature validated.", !trustEngine->validate(*sig, *metadataProvider, &cc2));
     }
 };

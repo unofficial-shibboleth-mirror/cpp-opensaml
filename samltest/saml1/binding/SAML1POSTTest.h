@@ -46,6 +46,12 @@ public:
                 );
             janitor.release();
 
+            CredentialCriteria cc;
+            cc.setUsage(CredentialCriteria::SIGNING_CREDENTIAL);
+            Locker clocker(m_creds);
+            const Credential* cred = m_creds->resolve(&cc);
+            TSM_ASSERT("Retrieved credential was null", cred!=NULL);
+
             // Freshen timestamp and ID.
             toSend->setIssueInstant(time(NULL));
             toSend->setResponseID(NULL);
@@ -64,7 +70,7 @@ public:
                     samlconstants::SAML1_PROFILE_BROWSER_POST, encoder_config->getDocumentElement()
                     )
                 );
-            encoder->encode(*this,toSend.get(),"https://sp.example.org/SAML/SSO","https://sp.example.org/","state",m_creds);
+            encoder->encode(*this,toSend.get(),"https://sp.example.org/SAML/SSO","https://sp.example.org/","state",cred);
             toSend.release();
             
             // Decode message.

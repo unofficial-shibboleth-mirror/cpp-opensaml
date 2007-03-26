@@ -17,21 +17,12 @@
 #include "internal.h"
 #include <saml/signature/SignatureProfileValidator.h>
 
+#include <xmltooling/security/CredentialCriteria.h>
 #include <xmltooling/security/CredentialResolver.h>
 #include <xmltooling/signature/KeyInfo.h>
 #include <xmltooling/signature/SignatureValidator.h>
 
 using namespace xmlsignature;
-
-class _addcert : public std::binary_function<X509Data*,XSECCryptoX509*,void> {
-public:
-    void operator()(X509Data* bag, XSECCryptoX509* cert) const {
-        safeBuffer& buf=cert->getDEREncodingSB();
-        X509Certificate* x=X509CertificateBuilder::buildX509Certificate();
-        x->setValue(buf.sbStrToXMLCh());
-        bag->getX509Certificates().push_back(x);
-    }
-};
 
 class SAMLSignatureTestBase : public SAMLObjectBaseTestCase {
 protected:

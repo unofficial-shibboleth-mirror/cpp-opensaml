@@ -25,10 +25,15 @@
 
 #include <saml/saml2/metadata/ObservableMetadataProvider.h>
 
-namespace opensaml {
+#include <xmltooling/security/Credential.h>
+#include <xmltooling/security/CredentialCriteria.h>
+#include <xmltooling/util/Threads.h>
 
+namespace opensaml {
     namespace saml2md {
         
+        class SAML_API MetadataFilter;
+
         /**
          * Base class for caching metadata providers.
          */
@@ -39,12 +44,12 @@ namespace opensaml {
              * Constructor.
              * 
              * If a DOM is supplied, a set of default logic will be used to identify
-             * and build a KeyResolver plugin and install it into the provider.
+             * and build a KeyInfoResolver plugin and install it into the provider.
              * 
              * The following XML content is supported:
              * 
              * <ul>
-             *  <li>&lt;KeyResolver&gt; elements with a type attribute
+             *  <li>&lt;KeyInfoResolver&gt; elements with a type attribute
              * </ul>
              * 
              * XML namespaces are ignored in the processing of these elements.
@@ -53,22 +58,21 @@ namespace opensaml {
              */
             AbstractMetadataProvider(const DOMElement* e=NULL);
             
-            void emitChangeEvent();
-            
         public:
             virtual ~AbstractMetadataProvider();
             
-            virtual const xmltooling::KeyResolver* getKeyResolver() const {
-                return m_resolver;
-            }
-            
-            virtual const EntityDescriptor* getEntityDescriptor(const char* id, bool requireValidMetadata=true) const;
-            virtual const EntityDescriptor* getEntityDescriptor(const SAMLArtifact* artifact) const;
-            virtual const EntitiesDescriptor* getEntitiesDescriptor(const char* name, bool requireValidMetadata=true) const;
+            void emitChangeEvent();
+            const EntityDescriptor* getEntityDescriptor(const char* id, bool requireValidMetadata=true) const;
+            const EntityDescriptor* getEntityDescriptor(const SAMLArtifact* artifact) const;
+            const EntitiesDescriptor* getEntitiesDescriptor(const char* name, bool requireValidMetadata=true) const;
+            const xmltooling::Credential* resolve(const xmltooling::CredentialCriteria* criteria=NULL) const;
+            std::vector<const xmltooling::Credential*>::size_type resolve(
+                std::vector<const xmltooling::Credential*>& results, const xmltooling::CredentialCriteria* criteria=NULL
+                ) const;
 
         protected:
-            /** Embedded KeyResolver instance. */
-            xmltooling::KeyResolver* m_resolver;
+            /** Embedded KeyInfoResolver instance. */
+            xmltooling::KeyInfoResolver* m_resolver;
 
             /**
              * Loads an entity into the cache for faster lookup. This includes
@@ -91,15 +95,29 @@ namespace opensaml {
              * Clear the cache of known entities and groups.
              */
             virtual void clearDescriptorIndex();
+
+            /**
+             * Returns true iff the Credential matches the criteria supplied, if any.
+             *
+             * @param cred      Credential plus KeyDescriptor usage information
+             * @param criteria  criteria for Credential selection
+             * @return  true iff the Credential applies
+             */
+            virtual bool matches(
+                const std::pair<const XMLCh*,xmltooling::Credential*>& cred, const xmltooling::CredentialCriteria* criteria
+                ) const;
         
         private:
-            std::vector<MetadataFilter*> m_filters;
-
             typedef std::multimap<std::string,const EntityDescriptor*> sitemap_t;
             typedef std::multimap<std::string,const EntitiesDescriptor*> groupmap_t;
             sitemap_t m_sites;
             sitemap_t m_sources;
             groupmap_t m_groups;
+
+            mutable xmltooling::Mutex* m_credentialLock;
+            typedef std::map<const RoleDescriptor*, std::vector< std::pair<const XMLCh*,xmltooling::Credential*> > > credmap_t;
+            mutable credmap_t m_credentialMap;
+            const credmap_t::mapped_type& resolveCredentials(const RoleDescriptor& role) const;
         };
         
     };

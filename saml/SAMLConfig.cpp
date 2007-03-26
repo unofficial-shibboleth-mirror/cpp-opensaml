@@ -33,6 +33,7 @@
 #include "saml1/core/Protocols.h"
 #include "saml2/core/Protocols.h"
 #include "saml2/metadata/Metadata.h"
+#include "saml2/metadata/MetadataFilter.h"
 #include "saml2/metadata/MetadataProvider.h"
 #include "util/SAMLConstants.h"
 

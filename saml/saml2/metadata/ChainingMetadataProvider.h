@@ -28,7 +28,12 @@
 
 namespace opensaml {
     namespace saml2md {
-        
+
+#if defined (_MSC_VER)
+        #pragma warning( push )
+        #pragma warning( disable : 4251 )
+#endif
+
         /**
          * MetadataProvider that uses multiple providers in sequence.
          */
@@ -84,18 +89,27 @@ namespace opensaml {
             xmltooling::Lockable* lock();
             void unlock();
             void init();
-            const xmltooling::KeyResolver* getKeyResolver() const;
             const xmltooling::XMLObject* getMetadata() const;
             const EntitiesDescriptor* getEntitiesDescriptor(const char* name, bool requireValidMetadata=true) const;
             const EntityDescriptor* getEntityDescriptor(const char* id, bool requireValidMetadata=true) const;
             const EntityDescriptor* getEntityDescriptor(const SAMLArtifact* artifact) const;
             void onEvent(MetadataProvider& provider);
     
+            const xmltooling::Credential* resolve(const xmltooling::CredentialCriteria* criteria=NULL) const;
+            std::vector<const xmltooling::Credential*>::size_type resolve(
+                std::vector<const xmltooling::Credential*>& results, const xmltooling::CredentialCriteria* criteria=NULL
+                ) const;
+
         private:
             xmltooling::ThreadKey* m_tlsKey;
             std::vector<MetadataProvider*> m_providers;
         };
-    };    
+
+#if defined (_MSC_VER)
+        #pragma warning( pop )
+#endif
+
+    };
 };
 
 #endif /* __saml_chainmeta_h__ */

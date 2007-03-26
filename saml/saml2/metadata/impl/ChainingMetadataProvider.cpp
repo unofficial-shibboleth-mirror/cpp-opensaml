@@ -88,7 +88,7 @@ void ChainingMetadataProvider::onEvent(MetadataProvider& provider)
 
 void ChainingMetadataProvider::init()
 {
-    for_each(m_providers.begin(), m_providers.end(), mem_fun<void,MetadataProvider>(&MetadataProvider::init));
+    for_each(m_providers.begin(), m_providers.end(), mem_fun(&MetadataProvider::init));
 }
 
 Lockable* ChainingMetadataProvider::lock()
@@ -104,14 +104,6 @@ void ChainingMetadataProvider::unlock()
         m_tlsKey->setData(NULL);
         reinterpret_cast<MetadataProvider*>(ptr)->unlock();
     }
-}
-
-const KeyResolver* ChainingMetadataProvider::getKeyResolver() const
-{
-    // Check for a locked provider.
-    void* ptr=m_tlsKey->getData();
-    return ptr ? reinterpret_cast<MetadataProvider*>(ptr)->getKeyResolver() : NULL;
-    
 }
 
 const XMLObject* ChainingMetadataProvider::getMetadata() const
@@ -177,4 +169,26 @@ const EntityDescriptor* ChainingMetadataProvider::getEntityDescriptor(const SAML
     }
 
     return NULL;
+}
+
+const Credential* ChainingMetadataProvider::resolve(const CredentialCriteria* criteria) const
+{
+    // Check for a locked provider.
+    void* ptr=m_tlsKey->getData();
+    if (!ptr)
+        throw MetadataException("No locked MetadataProvider, where did the role object come from?");
+
+    return reinterpret_cast<MetadataProvider*>(ptr)->resolve(criteria);
+}
+
+vector<const Credential*>::size_type ChainingMetadataProvider::resolve(
+    vector<const Credential*>& results, const CredentialCriteria* criteria
+    ) const
+{
+    // Check for a locked provider.
+    void* ptr=m_tlsKey->getData();
+    if (!ptr)
+        throw MetadataException("No locked MetadataProvider, where did the role object come from?");
+
+    return reinterpret_cast<MetadataProvider*>(ptr)->resolve(results, criteria);
 }

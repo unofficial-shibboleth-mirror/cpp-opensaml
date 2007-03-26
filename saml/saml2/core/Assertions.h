@@ -28,6 +28,7 @@
 
 #include <xmltooling/XMLObjectBuilder.h>
 #include <xmltooling/encryption/Encryption.h>
+#include <xmltooling/security/CredentialCriteria.h>
 #include <xmltooling/security/CredentialResolver.h>
 #include <xmltooling/signature/Signature.h>
 #include <xmltooling/util/DateTime.h>
@@ -61,17 +62,19 @@ namespace opensaml {
             static const XMLCh TYPE_NAME[];
             
             /**
-             * Decrypts the element using a standard approach based on a wrapped decryption key
-             * inside the message. The key decryption key should be supplied using the provided
-             * resolver. The recipient name may be used when multiple encrypted keys are found.
-             * The object returned will be unmarshalled around the decrypted DOM element, but the
+             * Decrypts the element using the supplied CredentialResolver.
+             *
+             * <p>The object returned will be unmarshalled around the decrypted DOM element, but the
              * DOM itself will be released.
              * 
-             * @param KEKresolver   locked resolver supplying key decryption key
+             * @param credResolver  locked resolver supplying decryption keys
              * @param recipient     identifier naming the recipient (the entity performing the decryption)
+             * @param criteria      optional external criteria to use with resolver
              * @return  the decrypted and unmarshalled object
              */
-            virtual xmltooling::XMLObject* decrypt(const xmltooling::CredentialResolver* KEKresolver, const XMLCh* recipient) const=0;
+            virtual xmltooling::XMLObject* decrypt(
+                const xmltooling::CredentialResolver& credResolver, const XMLCh* recipient, xmltooling::CredentialCriteria* criteria=NULL
+                ) const=0;
         END_XMLOBJECT;
 
         BEGIN_XMLOBJECT(SAML_API,EncryptedID,EncryptedElementType,SAML 2.0 EncryptedID element);

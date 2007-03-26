@@ -49,17 +49,17 @@ namespace opensaml {
             
             long encode(
                 GenericResponse& genericResponse,
-                xmltooling::XMLObject* xmlObject,
+                XMLObject* xmlObject,
                 const char* destination,
                 const char* recipientID=NULL,
                 const char* relayState=NULL,
-                const xmltooling::CredentialResolver* credResolver=NULL,
+                const Credential* credential=NULL,
                 const XMLCh* sigAlgorithm=NULL
                 ) const;
 
         protected:
             /** Pathname of HTML template for transmission of message via POST. */
-            std::string m_template;
+            string m_template;
         };
 
         MessageEncoder* SAML_DLLLOCAL SAML1POSTEncoderFactory(const DOMElement* const & e)
@@ -88,7 +88,7 @@ long SAML1POSTEncoder::encode(
     const char* destination,
     const char* recipientID,
     const char* relayState,
-    const CredentialResolver* credResolver,
+    const Credential* credential,
     const XMLCh* sigAlgorithm
     ) const
 {
@@ -107,7 +107,7 @@ long SAML1POSTEncoder::encode(
         throw BindingException("SAML 1.x POST Encoder requires relay state (TARGET) value.");
     
     DOMElement* rootElement = NULL;
-    if (credResolver) {
+    if (credential) {
         // Signature based on native XML signing.
         if (response->getSignature()) {
             log.debug("response already signed, skipping signature operation");
@@ -116,12 +116,14 @@ long SAML1POSTEncoder::encode(
             log.debug("signing and marshalling the response");
 
             // Build a Signature.
-            Signature* sig = buildSignature(credResolver, sigAlgorithm);
+            Signature* sig = SignatureBuilder::buildSignature();
             response->setSignature(sig);
+            if (sigAlgorithm)
+                sig->setSignatureAlgorithm(sigAlgorithm);
     
             // Sign response while marshalling.
             vector<Signature*> sigs(1,sig);
-            rootElement = response->marshall((DOMDocument*)NULL,&sigs);
+            rootElement = response->marshall((DOMDocument*)NULL,&sigs,credential);
         }
     }
     else {

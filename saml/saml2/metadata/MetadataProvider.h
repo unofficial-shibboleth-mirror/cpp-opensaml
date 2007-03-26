@@ -23,10 +23,8 @@
 #ifndef __saml2_metadataprov_h__
 #define __saml2_metadataprov_h__
 
-#include <saml/saml2/metadata/MetadataFilter.h>
-
-#include <xmltooling/Lockable.h>
-#include <xmltooling/security/KeyResolver.h>
+#include <xmltooling/XMLObject.h>
+#include <xmltooling/security/CredentialResolver.h>
 
 namespace opensaml {
     
@@ -36,7 +34,15 @@ namespace opensaml {
 
         class SAML_API EntityDescriptor;
         class SAML_API EntitiesDescriptor;
-        
+        class SAML_API RoleDescriptor;
+        class SAML_API MetadataCredentialResolver;
+        class SAML_API MetadataFilter;
+
+#if defined (_MSC_VER)
+        #pragma warning( push )
+        #pragma warning( disable : 4251 )
+#endif
+
         /**
          * Supplies an individual source of metadata.
          * 
@@ -44,10 +50,9 @@ namespace opensaml {
          * dynamic lookup, can include local caching, etc. Providers
          * <strong>MUST</strong> be locked before any lookup operations.
          */
-        class SAML_API MetadataProvider : public virtual xmltooling::Lockable
+        class SAML_API MetadataProvider : public virtual xmltooling::CredentialResolver
         {
             MAKE_NONCOPYABLE(MetadataProvider);
-            
         protected:
             /**
              * Constructor.
@@ -112,13 +117,6 @@ namespace opensaml {
              * this method so as to report/log any errors that would affect later processing.
              */
             virtual void init()=0;
-            
-            /**
-             * Returns a KeyResolver associated with this metadata provider, if any.
-             * 
-             * @return an associated KeyResolver, or NULL
-             */
-            virtual const xmltooling::KeyResolver* getKeyResolver() const=0;
             
             /**
              * Gets the entire metadata tree, after the registered filter has been applied.
@@ -198,7 +196,11 @@ namespace opensaml {
         private:
             std::vector<MetadataFilter*> m_filters;
         };
-        
+
+#if defined (_MSC_VER)
+        #pragma warning( pop )
+#endif
+
         /**
          * Registers MetadataProvider classes into the runtime.
          */
@@ -209,6 +211,8 @@ namespace opensaml {
 
         /** MetadataProvider that wraps a sequence of metadata providers. */
         #define CHAINING_METADATA_PROVIDER  "Chaining"
+
+        DECL_XMLTOOLING_EXCEPTION(MetadataException,SAML_EXCEPTIONAPI(SAML_API),opensaml::saml2md,xmltooling::XMLToolingException,Exceptions related to metadata use);
     };
 };
 

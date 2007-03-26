@@ -26,7 +26,6 @@
 #include <saml/saml2/core/Assertions.h>
 
 #include <ctime>
-#include <xmltooling/security/KeyInfoSource.h>
 
 #define DECL_SAML2MDOBJECTBUILDER(cname) \
     DECL_XMLOBJECTBUILDER(SAML_API,cname,samlconstants::SAML20MD_NS,samlconstants::SAML20MD_PREFIX)
@@ -158,9 +157,8 @@ namespace opensaml {
             static const XMLCh KEYTYPE_SIGNING[];
         END_XMLOBJECT;
 
-        BEGIN_XMLOBJECT5(SAML_API,RoleDescriptor,xmltooling::AttributeExtensibleXMLObject,SignableObject,
-                CacheableSAMLObject,TimeBoundSAMLObject,xmltooling::KeyInfoSource,
-                SAML 2.0 RoleDescriptor abstract element);
+        BEGIN_XMLOBJECT4(SAML_API,RoleDescriptor,xmltooling::AttributeExtensibleXMLObject,SignableObject,
+                CacheableSAMLObject,TimeBoundSAMLObject,SAML 2.0 RoleDescriptor abstract element);
             DECL_STRING_ATTRIB(ID,ID);
             DECL_STRING_ATTRIB(ProtocolSupportEnumeration,PROTOCOLSUPPORTENUMERATION);
             /** Searches the ProtocolSupportEnumeration attribute for the indicated protocol. */

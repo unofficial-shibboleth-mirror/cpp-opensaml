@@ -15,7 +15,7 @@ MajorVersion="1" MinorVersion="1" RequestID="ident"><ds:Signature xmlns:ds="http
 <ds:SignatureValue>UE5p832pLFYvMloRofN3y0rrFY7B8zOcF7+CHYyxFn6pqgPeEYGqkbUWlV15/tJ5
 wXJ3LiLQroYQI3XHPvKRSV4OtF9ZFm4QDK7RNd6gnUmHed6Zje//e6z2ekA0UzTl
 IeWCuD84mWemMJzRAhSFKcnqJDBHA61Krvg1kf/2c2E=</ds:SignatureValue>
-<ds:KeyInfo><ds:X509Data><ds:X509Certificate>MIICjzCCAfigAwIBAgIJAKk8t1hYcMkhMA0GCSqGSIb3DQEBBAUAMDoxCzAJBgNV
+<ds:KeyInfo><ds:KeyName>sp.example.org</ds:KeyName><ds:X509Data><ds:X509Certificate>MIICjzCCAfigAwIBAgIJAKk8t1hYcMkhMA0GCSqGSIb3DQEBBAUAMDoxCzAJBgNV
 BAYTAlVTMRIwEAYDVQQKEwlJbnRlcm5ldDIxFzAVBgNVBAMTDnNwLmV4YW1wbGUu
 b3JnMB4XDTA1MDYyMDE1NDgzNFoXDTMyMTEwNTE1NDgzNFowOjELMAkGA1UEBhMC
 VVMxEjAQBgNVBAoTCUludGVybmV0MjEXMBUGA1UEAxMOc3AuZXhhbXBsZS5vcmcw

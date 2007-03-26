@@ -26,6 +26,7 @@
 #include "binding/SecurityPolicyRule.h"
 #include "saml2/core/Assertions.h"
 #include "saml2/metadata/Metadata.h"
+#include "saml2/metadata/MetadataCredentialCriteria.h"
 #include "saml2/metadata/MetadataProvider.h"
 
 #include <log4cpp/Category.hh>
@@ -187,11 +188,14 @@ void SimpleSigningRule::evaluate(const XMLObject& message, const GenericRequest*
     
     auto_ptr<KeyInfo> kjanitor(keyInfo);
     auto_ptr_XMLCh alg(sigAlgorithm);
-    
-    if (!policy.getTrustEngine()->validate(
-            alg.get(), signature, keyInfo, input.c_str(), input.length(),
-            *(policy.getIssuerMetadata()), policy.getMetadataProvider()->getKeyResolver()
-            )) {
+
+    // Set up criteria object, including peer name to enforce cert name checking.
+    MetadataCredentialCriteria cc(*(policy.getIssuerMetadata()));
+    auto_ptr_char pn(policy.getIssuer()->getName());
+    cc.setPeerName(pn.get());
+    cc.setKeyAlgorithm(sigAlgorithm);
+
+    if (!policy.getTrustEngine()->validate(alg.get(), signature, keyInfo, input.c_str(), input.length(), *(policy.getMetadataProvider()), &cc)) {
         log.error("unable to verify message signature with supplied trust engine");
         if (m_errorsFatal)
             throw SignatureException("Message was signed, but signature could not be verified.");

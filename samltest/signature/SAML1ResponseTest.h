@@ -61,21 +61,18 @@ public:
 
         // Append a Signature.
         assertion->setSignature(SignatureBuilder::buildSignature());
-        Locker locker(m_resolver);
-        assertion->getSignature()->setSigningKey(m_resolver->getKey());
-
-        // Build KeyInfo.
-        KeyInfo* keyInfo=KeyInfoBuilder::buildKeyInfo();
-        X509Data* x509Data=X509DataBuilder::buildX509Data();
-        keyInfo->getX509Datas().push_back(x509Data);
-        for_each(m_resolver->getCertificates().begin(),m_resolver->getCertificates().end(),bind1st(_addcert(),x509Data));
-        assertion->getSignature()->setKeyInfo(keyInfo);
 
         // Sign assertion while marshalling.
         vector<Signature*> sigs(1,assertion->getSignature());
+        CredentialCriteria cc;
+        cc.setUsage(CredentialCriteria::SIGNING_CREDENTIAL);
+        Locker locker(m_resolver);
+        const Credential* cred = m_resolver->resolve(&cc);
+        TSM_ASSERT("Retrieved credential was null", cred!=NULL);
+
         DOMElement* rootElement = NULL;
         try {
-            rootElement=assertion->marshall((DOMDocument*)NULL,&sigs);
+            rootElement=assertion->marshall((DOMDocument*)NULL,&sigs,cred);
         }
         catch (XMLToolingException& e) {
             TS_TRACE(e.what());
@@ -94,15 +91,13 @@ public:
         response->setStatus(status);
         response->getAssertions().push_back(assertion);
         response->setSignature(SignatureBuilder::buildSignature());
-        response->getSignature()->setSigningKey(m_resolver->getKey());
-        response->getSignature()->setKeyInfo(keyInfo->cloneKeyInfo());
 
         // Sign response while marshalling.
         sigs.clear();
         sigs.push_back(response->getSignature());
         rootElement = NULL;
         try {
-            rootElement=response->marshall((DOMDocument*)NULL,&sigs);
+            rootElement=response->marshall((DOMDocument*)NULL,&sigs,cred);
         }
         catch (XMLToolingException& e) {
             TS_TRACE(e.what());
@@ -123,7 +118,7 @@ public:
             spv.validate(dynamic_cast<Response*>(response2.get())->getAssertions().front()->getSignature());
             spv.validate(dynamic_cast<Response*>(response2.get())->getSignature());
 
-            SignatureValidator sv(new KeyResolver(m_resolver->getKey()));
+            SignatureValidator sv(cred);
             sv.validate(dynamic_cast<Response*>(response2.get())->getAssertions().front()->getSignature());
             sv.validate(dynamic_cast<Response*>(response2.get())->getSignature());
         }

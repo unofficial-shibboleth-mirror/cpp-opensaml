@@ -22,6 +22,8 @@
 
 #include <saml/base.h>
 #include <saml/exceptions.h>
+#include <saml/saml2/metadata/MetadataProvider.h>
+
 #include <xmltooling/XMLObject.h>
 
 #ifndef __saml2_metadatafilt_h__
@@ -76,7 +78,6 @@ namespace opensaml {
         /** MetadataFilter that verifies signatures and filters out any that don't pass. */
         #define SIGNATURE_METADATA_FILTER  "Signature"
         
-        DECL_XMLTOOLING_EXCEPTION(MetadataException,SAML_EXCEPTIONAPI(SAML_API),opensaml::saml2md,xmltooling::XMLToolingException,Exceptions related to metadata use);
         DECL_XMLTOOLING_EXCEPTION(MetadataFilterException,SAML_EXCEPTIONAPI(SAML_API),opensaml::saml2md,MetadataException,Exceptions related to metadata filtering);
     };
 };

@@ -24,6 +24,7 @@
 #define __saml_soap11client_h__
 
 #include <saml/binding/SecurityPolicy.h>
+#include <saml/saml2/metadata/MetadataCredentialCriteria.h>
 #include <xmltooling/soap/SOAPClient.h>
 
 namespace opensaml {
@@ -41,9 +42,11 @@ namespace opensaml {
          * @param validating    controls schema validation
          */
         SOAPClient(SecurityPolicy& policy)
-            : soap11::SOAPClient(policy.getValidating()), m_policy(policy), m_force(true), m_peer(NULL) {}
+            : soap11::SOAPClient(policy.getValidating()), m_policy(policy), m_force(true), m_peer(NULL), m_criteria(NULL) {
+        }
         
-        virtual ~SOAPClient() {}
+        virtual ~SOAPClient() {
+        }
 
         /**
          * Controls whether to force transport/peer authentication via an X509TrustEngine.
@@ -57,14 +60,15 @@ namespace opensaml {
         }
         
         /**
-         * Override prepares the SecurityPolicy by clearing Issuer identity, in case the policy
-         * is reused.
+         * SAML-specific method uses a RoleDescriptor to determine the peer name and prepare the
+         * transport layer with peer credential information. The SecurityPolicy is also reset,
+         * in case the policy is reused.
          * 
          * @param env       SOAP envelope to send
-         * @param peer      peer to send message to, expressed in TrustEngine terms
+         * @param peer      peer to send message to, expressed in metadata criteria terms
          * @param endpoint  URL of endpoint to recieve message
          */
-        void send(const soap11::Envelope& env, const xmltooling::KeyInfoSource& peer, const char* endpoint);
+        void send(const soap11::Envelope& env, saml2md::MetadataCredentialCriteria& peer, const char* endpoint);
         
         /**
          * Override applies SecurityPolicy to envelope before returning it.
@@ -101,6 +105,9 @@ namespace opensaml {
     
         /** Metadata-based peer identity. */        
         const saml2md::RoleDescriptor* m_peer;
+
+        /** Metadata-based CredentialCriteria for supplying credentials to TrustEngine. */
+        saml2md::MetadataCredentialCriteria* m_criteria;
     };
 
 };

@@ -21,6 +21,7 @@
  */
 
 #include "internal.h"
+#include "saml2/metadata/MetadataFilter.h"
 #include "saml2/metadata/MetadataProvider.h"
 
 #include <log4cpp/Category.hh>

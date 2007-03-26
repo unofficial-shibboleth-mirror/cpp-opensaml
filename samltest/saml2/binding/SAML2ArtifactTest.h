@@ -50,6 +50,12 @@ public:
                 );
             janitor.release();
 
+            CredentialCriteria cc;
+            cc.setUsage(CredentialCriteria::SIGNING_CREDENTIAL);
+            Locker clocker(m_creds);
+            const Credential* cred = m_creds->resolve(&cc);
+            TSM_ASSERT("Retrieved credential was null", cred!=NULL);
+
             // Freshen timestamp.
             toSend->setIssueInstant(time(NULL));
 
@@ -58,7 +64,7 @@ public:
                 SAMLConfig::getConfig().MessageEncoderManager.newPlugin(samlconstants::SAML20_BINDING_HTTP_ARTIFACT, NULL)
                 );
             encoder->setArtifactGenerator(this);
-            encoder->encode(*this,toSend.get(),"https://sp.example.org/SAML/SSO","https://sp.example.org/","state",m_creds);
+            encoder->encode(*this,toSend.get(),"https://sp.example.org/SAML/SSO","https://sp.example.org/","state",cred);
             toSend.release();
             
             // Decode message.

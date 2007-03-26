@@ -25,6 +25,7 @@
 #include "binding/SecurityPolicyRule.h"
 #include "saml2/core/Assertions.h"
 #include "saml2/metadata/Metadata.h"
+#include "saml2/metadata/MetadataCredentialCriteria.h"
 #include "saml2/metadata/MetadataProvider.h"
 #include "signature/SignatureProfileValidator.h"
 
@@ -96,9 +97,12 @@ void XMLSigningRule::evaluate(const XMLObject& message, const GenericRequest* re
         return;
     }
     
-    if (!policy.getTrustEngine()->validate(
-            *(signable->getSignature()), *(policy.getIssuerMetadata()), policy.getMetadataProvider()->getKeyResolver()
-            )) {
+    // Set up criteria object, including peer name to enforce cert name checking.
+    MetadataCredentialCriteria cc(*(policy.getIssuerMetadata()));
+    auto_ptr_char pn(policy.getIssuer()->getName());
+    cc.setPeerName(pn.get());
+
+    if (!policy.getTrustEngine()->validate(*(signable->getSignature()), *(policy.getMetadataProvider()), &cc)) {
         log.error("unable to verify message signature with supplied trust engine");
         if (m_errorsFatal)
             throw SignatureException("Message was signed, but signature could not be verified.");

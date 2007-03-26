@@ -24,46 +24,48 @@
 #include "binding/SAMLArtifact.h"
 #include "saml2/metadata/Metadata.h"
 #include "saml2/metadata/AbstractMetadataProvider.h"
+#include "saml2/metadata/MetadataCredentialCriteria.h"
 
 #include <xercesc/util/XMLUniDefs.hpp>
-#include <xmltooling/security/CachingKeyResolver.h>
+#include <xmltooling/security/KeyInfoResolver.h>
 #include <xmltooling/util/XMLHelper.h>
 
 using namespace opensaml::saml2md;
-using namespace opensaml;
 using namespace xmltooling;
 using namespace std;
+using opensaml::SAMLArtifact;
 
-static const XMLCh _KeyResolver[] = UNICODE_LITERAL_11(K,e,y,R,e,s,o,l,v,e,r);
-static const XMLCh type[] =         UNICODE_LITERAL_4(t,y,p,e);
+static const XMLCh _KeyInfoResolver[] = UNICODE_LITERAL_15(K,e,y,I,n,f,o,R,e,s,o,l,v,e,r);
+static const XMLCh type[] =             UNICODE_LITERAL_4(t,y,p,e);
 
-AbstractMetadataProvider::AbstractMetadataProvider(const DOMElement* e) : ObservableMetadataProvider(e), m_resolver(NULL)
+AbstractMetadataProvider::AbstractMetadataProvider(const DOMElement* e)
+    : ObservableMetadataProvider(e), m_resolver(NULL), m_credentialLock(NULL)
 {
-    e = e ? XMLHelper::getFirstChildElement(e, _KeyResolver) : NULL;
+    e = e ? XMLHelper::getFirstChildElement(e, _KeyInfoResolver) : NULL;
     if (e) {
         auto_ptr_char t(e->getAttributeNS(NULL,type));
         if (t.get())
-            m_resolver = XMLToolingConfig::getConfig().KeyResolverManager.newPlugin(t.get(),e);
+            m_resolver = XMLToolingConfig::getConfig().KeyInfoResolverManager.newPlugin(t.get(),e);
         else
-            throw UnknownExtensionException("<KeyResolver> element found with no type attribute");
+            throw UnknownExtensionException("<KeyInfoResolver> element found with no type attribute");
     }
-    
-    if (!m_resolver) {
-        m_resolver = XMLToolingConfig::getConfig().KeyResolverManager.newPlugin(INLINE_KEY_RESOLVER, NULL);
-    }
+    m_credentialLock = Mutex::create();
 }
 
 AbstractMetadataProvider::~AbstractMetadataProvider()
 {
+    for (credmap_t::iterator c = m_credentialMap.begin(); c!=m_credentialMap.end(); ++c)
+        for_each(c->second.begin(), c->second.end(), cleanup_pair<const XMLCh*,Credential>());
+    delete m_credentialLock;
     delete m_resolver;
 }
 
 void AbstractMetadataProvider::emitChangeEvent()
 {
-    CachingKeyResolver* ckr=dynamic_cast<CachingKeyResolver*>(m_resolver);
-    if (ckr)
-        ckr->clearCache();
-    ObservableMetadataProvider::emitChangeEvent();    
+    for (credmap_t::iterator c = m_credentialMap.begin(); c!=m_credentialMap.end(); ++c)
+        for_each(c->second.begin(), c->second.end(), cleanup_pair<const XMLCh*,Credential>());
+    m_credentialMap.clear();
+    ObservableMetadataProvider::emitChangeEvent();
 }
 
 void AbstractMetadataProvider::index(EntityDescriptor* site, time_t validUntil)
@@ -187,4 +189,77 @@ const EntityDescriptor* AbstractMetadataProvider::getEntityDescriptor(const SAML
             return i->second;
 
     return NULL;
+}
+
+const Credential* AbstractMetadataProvider::resolve(const CredentialCriteria* criteria) const
+{
+    const MetadataCredentialCriteria* metacrit = dynamic_cast<const MetadataCredentialCriteria*>(criteria);
+    if (!metacrit)
+        throw MetadataException("Cannot resolve credentials without a MetadataCredentialCriteria object.");
+
+    Lock lock(m_credentialLock);
+    const credmap_t::mapped_type& creds = resolveCredentials(metacrit->getRole());
+
+    for (credmap_t::mapped_type::const_iterator c = creds.begin(); c!=creds.end(); ++c)
+        if (matches(*c,criteria))
+            return c->second;
+    return NULL;
+}
+
+vector<const Credential*>::size_type AbstractMetadataProvider::resolve(
+    vector<const Credential*>& results, const CredentialCriteria* criteria
+    ) const
+{
+    const MetadataCredentialCriteria* metacrit = dynamic_cast<const MetadataCredentialCriteria*>(criteria);
+    if (!metacrit)
+        throw MetadataException("Cannot resolve credentials without a MetadataCredentialCriteria object.");
+
+    Lock lock(m_credentialLock);
+    const credmap_t::mapped_type& creds = resolveCredentials(metacrit->getRole());
+
+    for (credmap_t::mapped_type::const_iterator c = creds.begin(); c!=creds.end(); ++c)
+        if (matches(*c,criteria))
+            results.push_back(c->second);
+    return results.size();
+}
+
+const AbstractMetadataProvider::credmap_t::mapped_type& AbstractMetadataProvider::resolveCredentials(const RoleDescriptor& role) const
+{
+    credmap_t::const_iterator i = m_credentialMap.find(&role);
+    if (i!=m_credentialMap.end())
+        return i->second;
+
+    const KeyInfoResolver* resolver = m_resolver ? m_resolver : XMLToolingConfig::getConfig().getKeyInfoResolver();
+    const vector<KeyDescriptor*>& keys = role.getKeyDescriptors();
+    AbstractMetadataProvider::credmap_t::mapped_type& resolved = m_credentialMap[&role];
+    for (vector<KeyDescriptor*>::const_iterator k = keys.begin(); k!=keys.end(); ++k) {
+        if ((*k)->getKeyInfo()) {
+            Credential* c = resolver->resolve((*k)->getKeyInfo());
+            resolved.push_back(make_pair((*k)->getUse(), c));
+        }
+    }
+    return resolved;
+}
+
+bool AbstractMetadataProvider::matches(const pair<const XMLCh*,Credential*>& cred, const CredentialCriteria* criteria) const
+{
+    if (criteria) {
+        // Check for a usage mismatch.
+        if ((criteria->getUsage()==CredentialCriteria::SIGNING_CREDENTIAL || criteria->getUsage()==CredentialCriteria::TLS_CREDENTIAL) &&
+                XMLString::equals(cred.first,KeyDescriptor::KEYTYPE_ENCRYPTION))
+            return false;
+        else if (criteria->getUsage()==CredentialCriteria::ENCRYPTION_CREDENTIAL && XMLString::equals(cred.first,KeyDescriptor::KEYTYPE_SIGNING))
+            return false;
+
+        if (cred.second->getPublicKey()) {
+            // See if we have to match a specific key.
+            auto_ptr<Credential> critcred(
+                XMLToolingConfig::getConfig().getKeyInfoResolver()->resolve(*criteria,Credential::RESOLVE_KEYS)
+                );
+            if (critcred.get())
+                if (!critcred->isEqual(*(cred.second->getPublicKey())))
+                    return false;
+        }
+    }
+    return true;
 }

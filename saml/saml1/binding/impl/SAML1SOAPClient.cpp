@@ -37,7 +37,7 @@ using namespace xmltooling;
 using namespace log4cpp;
 using namespace std;
 
-void SAML1SOAPClient::sendSAML(Request* request, const RoleDescriptor& peer, const char* endpoint)
+void SAML1SOAPClient::sendSAML(Request* request, MetadataCredentialCriteria& peer, const char* endpoint)
 {
     auto_ptr<Envelope> env(EnvelopeBuilder::buildEnvelope());
     Body* body = BodyBuilder::buildBody();

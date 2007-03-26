@@ -17,8 +17,10 @@
 #include "internal.h"
 #include <saml/SAMLConfig.h>
 #include <saml/saml2/metadata/Metadata.h>
+#include <saml/saml2/metadata/MetadataCredentialCriteria.h>
 #include <saml/saml2/metadata/MetadataProvider.h>
 #include <xmltooling/security/AbstractPKIXTrustEngine.h>
+#include <xmltooling/security/X509Credential.h>
 
 using namespace opensaml::saml2;
 using namespace opensaml::saml2md;
@@ -31,24 +33,23 @@ namespace {
         ~SampleTrustEngine() {}
         
         class SampleIterator : public PKIXValidationInfoIterator {
-            vector<XSECCryptoX509CRL*> m_crls;
-            KeyResolver::ResolvedCertificates m_certs;
-            KeyResolver* m_resolver;
+            CredentialResolver* m_resolver;
+            mutable vector<XSECCryptoX509CRL*> m_crls;
             bool m_done;
         public:
-            SampleIterator(const KeyResolver& keyResolver)
-                    : PKIXValidationInfoIterator(keyResolver), m_resolver(NULL), m_done(false) {
-                string config = data_path + "security/FilesystemKeyResolver.xml";
+            SampleIterator() : m_resolver(NULL), m_done(false) {
+                string config = data_path + "security/FilesystemCredentialResolver.xml";
                 ifstream in(config.c_str());
                 DOMDocument* doc=XMLToolingConfig::getConfig().getParser().parse(in);
                 XercesJanitor<DOMDocument> janitor(doc);
-                m_resolver = XMLToolingConfig::getConfig().KeyResolverManager.newPlugin(
-                    FILESYSTEM_KEY_RESOLVER,doc->getDocumentElement()
+                m_resolver = XMLToolingConfig::getConfig().CredentialResolverManager.newPlugin(
+                    FILESYSTEM_CREDENTIAL_RESOLVER,doc->getDocumentElement()
                     );
-                m_resolver->resolveCertificates((KeyInfo*)NULL,m_certs);
+                m_resolver->lock();
             }
             
             ~SampleIterator() {
+                m_resolver->unlock();
                 delete m_resolver;
             }
 
@@ -64,20 +65,22 @@ namespace {
             }
             
             const vector<XSECCryptoX509*>& getTrustAnchors() const {
-                return m_certs.v();
+                return dynamic_cast<const X509Credential*>(m_resolver->resolve())->getEntityCertificateChain();
             }
             
             const vector<XSECCryptoX509CRL*>& getCRLs() const {
+                XSECCryptoX509CRL* crl = dynamic_cast<const X509Credential*>(m_resolver->resolve())->getCRL();
+                if (crl)
+                    m_crls.push_back(crl);
                 return m_crls;
             }
         };
     
         PKIXValidationInfoIterator* getPKIXValidationInfoIterator(
-            const KeyInfoSource& keyInfoSource,
-            const KeyResolver& keyResolver
+            const CredentialResolver& credResolver, CredentialCriteria* criteria=NULL, const KeyInfoResolver* keyInfoResolver=NULL
             ) const {
-            dynamic_cast<const RoleDescriptor&>(keyInfoSource);
-            return new SampleIterator(keyResolver);
+            dynamic_cast<const MetadataCredentialCriteria*>(criteria);
+            return new SampleIterator();
         }
     };
 };
@@ -92,7 +95,7 @@ public:
         SAMLObjectBaseTestCase::tearDown();
     }
 
-    void testExplicitKeyTrustEngine() {
+    void testAbstractPKIXTrustEngine() {
         string config = data_path + "security/XMLMetadataProvider.xml";
         ifstream in(config.c_str());
         DOMDocument* doc=XMLToolingConfig::getConfig().getParser().parse(in);
@@ -135,7 +138,10 @@ public:
         
         Signature* sig=assertion->getSignature();
         TSM_ASSERT("Signature not present", sig!=NULL);
-        TSM_ASSERT("Signature failed to validate.", trustEngine->validate(*sig, *role, metadataProvider->getKeyResolver()));
+
+        MetadataCredentialCriteria cc(*role);
+        cc.setPeerName("https://idp.example.org");
+        TSM_ASSERT("Signature failed to validate.", trustEngine->validate(*sig, *metadataProvider, &cc));
 
         descriptor = metadataProvider->getEntityDescriptor("https://idp2.example.org");
         TSM_ASSERT("Retrieved entity descriptor was null", descriptor!=NULL);
@@ -143,6 +149,8 @@ public:
         role=descriptor->getIDPSSODescriptors().front();
         TSM_ASSERT("Role not present", role!=NULL);
 
-        TSM_ASSERT("Signature validated.", !trustEngine->validate(*sig, *role, metadataProvider->getKeyResolver()));
+        MetadataCredentialCriteria cc2(*role);
+        cc2.setPeerName("https://idp2.example.org");
+        TSM_ASSERT("Signature validated.", !trustEngine->validate(*sig, *metadataProvider, &cc2));
     }
 };
