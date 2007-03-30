@@ -68,7 +68,7 @@ namespace opensaml {
          * @param peer      peer to send message to, expressed in metadata criteria terms
          * @param endpoint  URL of endpoint to recieve message
          */
-        void send(const soap11::Envelope& env, saml2md::MetadataCredentialCriteria& peer, const char* endpoint);
+        virtual void send(const soap11::Envelope& env, saml2md::MetadataCredentialCriteria& peer, const char* endpoint);
         
         /**
          * Override applies SecurityPolicy to envelope before returning it.

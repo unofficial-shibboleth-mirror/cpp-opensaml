@@ -77,7 +77,7 @@ namespace {
         };
     
         PKIXValidationInfoIterator* getPKIXValidationInfoIterator(
-            const CredentialResolver& credResolver, CredentialCriteria* criteria=NULL, const KeyInfoResolver* keyInfoResolver=NULL
+            const CredentialResolver& credResolver, CredentialCriteria* criteria=NULL
             ) const {
             dynamic_cast<const MetadataCredentialCriteria*>(criteria);
             return new SampleIterator();

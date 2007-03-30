@@ -24,6 +24,7 @@
 #define __saml2_obsmetadataprov_h__
 
 #include <saml/saml2/metadata/MetadataProvider.h>
+#include <xmltooling/util/Threads.h>
 
 namespace opensaml {
     
@@ -44,18 +45,24 @@ namespace opensaml {
              * 
              * @param e DOM to supply configuration for provider
              */
-            ObservableMetadataProvider(const DOMElement* e=NULL) : MetadataProvider(e) {}
+            ObservableMetadataProvider(const DOMElement* e=NULL)
+                : MetadataProvider(e), m_observerLock(xmltooling::Mutex::create()) {
+            }
             
             /**
              * Convenience method for notifying every registered Observer of an event.
              */
-            virtual void emitChangeEvent();
+            virtual void emitChangeEvent() const {
+                xmltooling::Lock lock(m_observerLock);
+                for (std::vector<const Observer*>::const_iterator i=m_observers.begin(); i!=m_observers.end(); i++) {
+                    (*i)->onEvent(*this);
+                }
+            }
 
         public:
-            /**
-             * Destructor will delete any installed filters.
-             */
-            virtual ~ObservableMetadataProvider();
+            virtual ~ObservableMetadataProvider() {
+                delete m_observerLock;
+            }
             
             /**
              * An observer of metadata provider changes.
@@ -73,7 +80,7 @@ namespace opensaml {
                  * 
                  * @param provider the provider being observed
                  */
-                virtual void onEvent(MetadataProvider& provider)=0;
+                virtual void onEvent(const MetadataProvider& provider) const=0;
             };
             
             /**
@@ -81,18 +88,20 @@ namespace opensaml {
              * 
              * @param newObserver metadata observer to add
              */
-            virtual void addObserver(Observer* newObserver) {
+            virtual void addObserver(const Observer* newObserver) const {
+                xmltooling::Lock lock(m_observerLock);
                 m_observers.push_back(newObserver);
             }
 
             /**
-             * Removes a metadata observer. The caller must delete the observer if necessary.
+             * Removes a metadata observer.
              * 
              * @param oldObserver metadata observer to remove
              * @return  the old observer
              */
-            virtual Observer* removeObserver(Observer* oldObserver) {
-                for (std::vector<Observer*>::iterator i=m_observers.begin(); i!=m_observers.end(); i++) {
+            virtual const Observer* removeObserver(const Observer* oldObserver) const {
+                xmltooling::Lock lock(m_observerLock);
+                for (std::vector<const Observer*>::iterator i=m_observers.begin(); i!=m_observers.end(); i++) {
                     if (oldObserver==(*i)) {
                         m_observers.erase(i);
                         return oldObserver;
@@ -102,7 +111,8 @@ namespace opensaml {
             }
 
         private:
-            std::vector<Observer*> m_observers;
+            mutable xmltooling::Mutex* m_observerLock;
+            mutable std::vector<const Observer*> m_observers;
         };
 
 #if defined (_MSC_VER)

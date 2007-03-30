@@ -23,6 +23,8 @@
 #ifndef __saml2_metadataprov_h__
 #define __saml2_metadataprov_h__
 
+#include <saml/base.h>
+#include <xmltooling/exceptions.h>
 #include <xmltooling/XMLObject.h>
 #include <xmltooling/security/CredentialResolver.h>
 

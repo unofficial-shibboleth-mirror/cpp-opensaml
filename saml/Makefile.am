@@ -141,7 +141,6 @@ libsaml_la_SOURCES = \
 	saml2/metadata/impl/MetadataImpl.cpp \
 	saml2/metadata/impl/MetadataProvider.cpp \
 	saml2/metadata/impl/MetadataSchemaValidators.cpp \
-	saml2/metadata/impl/ObservableMetadataProvider.cpp \
 	saml2/metadata/impl/SignatureMetadataFilter.cpp \
 	saml2/metadata/impl/WhitelistMetadataFilter.cpp \
 	saml2/metadata/impl/XMLMetadataProvider.cpp \
