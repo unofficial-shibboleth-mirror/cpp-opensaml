@@ -24,12 +24,11 @@
 #define __saml_metacred_h__
 
 #include <saml/base.h>
+#include <saml/saml2/metadata/Metadata.h>
 #include <xmltooling/security/CredentialCriteria.h>
 
 namespace opensaml {
     namespace saml2md {
-        
-        class SAML_API RoleDescriptor;
         
         /**
          * Metadata-based CredentialCriteria subclass.
@@ -42,7 +41,13 @@ namespace opensaml {
              *
              * @param role      source of metadata-supplied credentials
              */
-            MetadataCredentialCriteria(const RoleDescriptor& role) : m_role(role) {}
+            MetadataCredentialCriteria(const RoleDescriptor& role) : m_role(role) {
+                const EntityDescriptor* entity = dynamic_cast<const EntityDescriptor*>(role.getParent());
+                if (entity) {
+                    xmltooling::auto_ptr_char name(entity->getEntityID());
+                    setPeerName(name.get());
+                }
+            }
     
             virtual ~MetadataCredentialCriteria() {}
             
