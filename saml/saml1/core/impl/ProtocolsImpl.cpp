@@ -349,7 +349,7 @@ namespace opensaml {
                 prepareForAssignment(m_Signature,sig);
                 *m_pos_Signature=m_Signature=sig;
                 // Sync content reference back up.
-                if (m_Signature)
+                if (m_Signature && (!m_RequestID || *m_RequestID!=chDigit_0))
                     m_Signature->setContentReference(new opensaml::ContentReference(*this));
             }
 
@@ -374,7 +374,9 @@ namespace opensaml {
                 MARSHALL_INTEGER_ATTRIB(MinorVersion,MINORVERSION,NULL);
                 if (!m_RequestID)
                     const_cast<RequestAbstractTypeImpl*>(this)->m_RequestID=SAMLConfig::getConfig().generateIdentifier();
-                MARSHALL_ID_ATTRIB(RequestID,REQUESTID,NULL);
+                domElement->setAttributeNS(NULL, REQUESTID_ATTRIB_NAME, m_RequestID);
+                if (*m_MinorVersion!=chDigit_0)
+                    domElement->setIdAttributeNS(NULL, REQUESTID_ATTRIB_NAME);
                 if (!m_IssueInstant) {
                     const_cast<RequestAbstractTypeImpl*>(this)->m_IssueInstantEpoch=time(NULL);
                     const_cast<RequestAbstractTypeImpl*>(this)->m_IssueInstant=new DateTime(m_IssueInstantEpoch);
@@ -388,6 +390,13 @@ namespace opensaml {
                 AbstractXMLObjectUnmarshaller::processChildElement(childXMLObject,root);
             }
 
+            void unmarshallAttributes(const DOMElement* domElement) {
+                // Standard processing, but then we check IDness.
+                AbstractXMLObjectUnmarshaller::unmarshallAttributes(domElement);
+                if (m_RequestID && (!m_MinorVersion || *m_MinorVersion!=chDigit_0))
+                    const_cast<DOMElement*>(domElement)->setIdAttributeNS(NULL, REQUESTID_ATTRIB_NAME);
+            }
+
             void processAttribute(const DOMAttr* attribute) {
                 static const XMLCh MAJORVERSION[] = UNICODE_LITERAL_12(M,a,j,o,r,V,e,r,s,i,o,n);
                 if (XMLHelper::isNodeNamed(attribute,NULL,MAJORVERSION)) {
@@ -395,7 +404,7 @@ namespace opensaml {
                         throw UnmarshallingException("Request has invalid major version.");
                 }
                 PROC_INTEGER_ATTRIB(MinorVersion,MINORVERSION,NULL);
-                PROC_ID_ATTRIB(RequestID,REQUESTID,NULL);
+                PROC_STRING_ATTRIB(RequestID,REQUESTID,NULL);
                 PROC_DATETIME_ATTRIB(IssueInstant,ISSUEINSTANT,NULL);
             }
         };
@@ -668,7 +677,7 @@ namespace opensaml {
                 prepareForAssignment(m_Signature,sig);
                 *m_pos_Signature=m_Signature=sig;
                 // Sync content reference back up.
-                if (m_Signature)
+                if (m_Signature && (!m_ResponseID || *m_ResponseID!=chDigit_0))
                     m_Signature->setContentReference(new opensaml::ContentReference(*this));
             }
 
@@ -694,7 +703,9 @@ namespace opensaml {
                 MARSHALL_INTEGER_ATTRIB(MinorVersion,MINORVERSION,NULL);
                 if (!m_ResponseID)
                     const_cast<ResponseAbstractTypeImpl*>(this)->m_ResponseID=SAMLConfig::getConfig().generateIdentifier();
-                MARSHALL_ID_ATTRIB(ResponseID,RESPONSEID,NULL);
+                domElement->setAttributeNS(NULL, RESPONSEID_ATTRIB_NAME, m_ResponseID);
+                if (*m_MinorVersion!=chDigit_0)
+                    domElement->setIdAttributeNS(NULL, RESPONSEID_ATTRIB_NAME);
                 MARSHALL_STRING_ATTRIB(InResponseTo,INRESPONSETO,NULL);
                 if (!m_IssueInstant) {
                     const_cast<ResponseAbstractTypeImpl*>(this)->m_IssueInstantEpoch=time(NULL);
@@ -709,6 +720,13 @@ namespace opensaml {
                 AbstractXMLObjectUnmarshaller::processChildElement(childXMLObject,root);
             }
 
+            void unmarshallAttributes(const DOMElement* domElement) {
+                // Standard processing, but then we check IDness.
+                AbstractXMLObjectUnmarshaller::unmarshallAttributes(domElement);
+                if (m_ResponseID && (!m_MinorVersion || *m_MinorVersion!=chDigit_0))
+                    const_cast<DOMElement*>(domElement)->setIdAttributeNS(NULL, RESPONSEID_ATTRIB_NAME);
+            }
+
             void processAttribute(const DOMAttr* attribute) {
                 static const XMLCh MAJORVERSION[] = UNICODE_LITERAL_12(M,a,j,o,r,V,e,r,s,i,o,n);
                 if (XMLHelper::isNodeNamed(attribute,NULL,MAJORVERSION)) {
@@ -716,7 +734,7 @@ namespace opensaml {
                         throw UnmarshallingException("Response has invalid major version.");
                 }
                 PROC_INTEGER_ATTRIB(MinorVersion,MINORVERSION,NULL);
-                PROC_ID_ATTRIB(ResponseID,RESPONSEID,NULL);
+                PROC_STRING_ATTRIB(ResponseID,RESPONSEID,NULL);
                 PROC_STRING_ATTRIB(InResponseTo,INRESPONSETO,NULL);
                 PROC_DATETIME_ATTRIB(IssueInstant,ISSUEINSTANT,NULL);
                 PROC_STRING_ATTRIB(Recipient,RECIPIENT,NULL);

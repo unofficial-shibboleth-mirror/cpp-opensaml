@@ -1001,7 +1001,7 @@ namespace opensaml {
                 prepareForAssignment(m_Signature,sig);
                 *m_pos_Signature=m_Signature=sig;
                 // Sync content reference back up.
-                if (m_Signature)
+                if (m_Signature && (!m_AssertionID || *m_AssertionID!=chDigit_0))
                     m_Signature->setContentReference(new opensaml::ContentReference(*this));
             }
             
@@ -1034,7 +1034,9 @@ namespace opensaml {
                 MARSHALL_INTEGER_ATTRIB(MinorVersion,MINORVERSION,NULL);
                 if (!m_AssertionID)
                     const_cast<AssertionImpl*>(this)->m_AssertionID=SAMLConfig::getConfig().generateIdentifier();
-                MARSHALL_ID_ATTRIB(AssertionID,ASSERTIONID,NULL);
+                domElement->setAttributeNS(NULL, ASSERTIONID_ATTRIB_NAME, m_AssertionID);
+                if (*m_MinorVersion!=chDigit_0)
+                    domElement->setIdAttributeNS(NULL, ASSERTIONID_ATTRIB_NAME);
                 MARSHALL_STRING_ATTRIB(Issuer,ISSUER,NULL);
                 if (!m_IssueInstant) {
                     const_cast<AssertionImpl*>(this)->m_IssueInstantEpoch=time(NULL);
@@ -1055,6 +1057,13 @@ namespace opensaml {
                 AbstractXMLObjectUnmarshaller::processChildElement(childXMLObject,root);
             }
     
+            void unmarshallAttributes(const DOMElement* domElement) {
+                // Standard processing, but then we check IDness.
+                AbstractXMLObjectUnmarshaller::unmarshallAttributes(domElement);
+                if (m_AssertionID && (!m_MinorVersion || *m_MinorVersion!=chDigit_0))
+                    const_cast<DOMElement*>(domElement)->setIdAttributeNS(NULL, ASSERTIONID_ATTRIB_NAME);
+            }
+
             void processAttribute(const DOMAttr* attribute) {
                 static const XMLCh MAJORVERSION[] = UNICODE_LITERAL_12(M,a,j,o,r,V,e,r,s,i,o,n);
                 if (XMLHelper::isNodeNamed(attribute,NULL,MAJORVERSION)) {
@@ -1062,7 +1071,7 @@ namespace opensaml {
                         throw UnmarshallingException("Assertion has invalid major version.");
                 }
                 PROC_INTEGER_ATTRIB(MinorVersion,MINORVERSION,NULL);
-                PROC_ID_ATTRIB(AssertionID,ASSERTIONID,NULL);
+                PROC_STRING_ATTRIB(AssertionID,ASSERTIONID,NULL);
                 PROC_STRING_ATTRIB(Issuer,ISSUER,NULL);
                 PROC_DATETIME_ATTRIB(IssueInstant,ISSUEINSTANT,NULL);
             }
