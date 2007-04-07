@@ -349,7 +349,7 @@ namespace opensaml {
                 prepareForAssignment(m_Signature,sig);
                 *m_pos_Signature=m_Signature=sig;
                 // Sync content reference back up.
-                if (m_Signature && (!m_RequestID || *m_RequestID!=chDigit_0))
+                if (m_Signature)
                     m_Signature->setContentReference(new opensaml::ContentReference(*this));
             }
 
@@ -677,7 +677,7 @@ namespace opensaml {
                 prepareForAssignment(m_Signature,sig);
                 *m_pos_Signature=m_Signature=sig;
                 // Sync content reference back up.
-                if (m_Signature && (!m_ResponseID || *m_ResponseID!=chDigit_0))
+                if (m_Signature)
                     m_Signature->setContentReference(new opensaml::ContentReference(*this));
             }
 
