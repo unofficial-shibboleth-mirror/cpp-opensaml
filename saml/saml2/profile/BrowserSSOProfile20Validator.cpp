@@ -15,7 +15,7 @@
  */
 
 /**
- * BrowserSSOProfileValidator.cpp
+ * BrowserSSOProfile20Validator.cpp
  * 
  * SAML 2.0 Browser SSO Profile Assertion Validator
  */

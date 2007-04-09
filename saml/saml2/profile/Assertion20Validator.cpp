@@ -15,7 +15,7 @@
  */
 
 /**
- * AssertionValidator.cpp
+ * Assertion20Validator.cpp
  * 
  * SAML 2.0 basic assertion validator
  */

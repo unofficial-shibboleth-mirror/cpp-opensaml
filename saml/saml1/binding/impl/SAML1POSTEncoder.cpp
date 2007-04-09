@@ -23,6 +23,7 @@
 #include "internal.h"
 #include "exceptions.h"
 #include "binding/MessageEncoder.h"
+#include "signature/ContentReference.h"
 #include "saml1/core/Protocols.h"
 
 #include <fstream>
@@ -54,7 +55,8 @@ namespace opensaml {
                 const char* recipientID=NULL,
                 const char* relayState=NULL,
                 const Credential* credential=NULL,
-                const XMLCh* sigAlgorithm=NULL
+                const XMLCh* signatureAlg=NULL,
+                const XMLCh* digestAlg=NULL
                 ) const;
 
         protected:
@@ -89,7 +91,8 @@ long SAML1POSTEncoder::encode(
     const char* recipientID,
     const char* relayState,
     const Credential* credential,
-    const XMLCh* sigAlgorithm
+    const XMLCh* signatureAlg,
+    const XMLCh* digestAlg
     ) const
 {
 #ifdef _DEBUG
@@ -118,8 +121,13 @@ long SAML1POSTEncoder::encode(
             // Build a Signature.
             Signature* sig = SignatureBuilder::buildSignature();
             response->setSignature(sig);
-            if (sigAlgorithm)
-                sig->setSignatureAlgorithm(sigAlgorithm);
+            if (signatureAlg)
+                sig->setSignatureAlgorithm(signatureAlg);
+            if (digestAlg) {
+                opensaml::ContentReference* cr = dynamic_cast<opensaml::ContentReference*>(sig->getContentReference());
+                if (cr)
+                    cr->setDigestAlgorithm(digestAlg);
+            }
     
             // Sign response while marshalling.
             vector<Signature*> sigs(1,sig);

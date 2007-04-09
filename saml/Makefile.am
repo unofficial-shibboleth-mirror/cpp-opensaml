@@ -157,8 +157,8 @@ libsaml_la_SOURCES = \
 	saml2/binding/impl/SAML2SOAPEncoder.cpp \
 	saml2/binding/impl/SAML2SOAPClient.cpp \
 	saml2/binding/impl/SAML2MessageRule.cpp \
-	saml2/profile/AssertionValidator.cpp \
-	saml2/profile/BrowserSSOProfileValidator.cpp \
+	saml2/profile/Assertion20Validator.cpp \
+	saml2/profile/BrowserSSOProfile20Validator.cpp \
 	encryption/EncryptedKeyResolver.cpp \
 	signature/ContentReference.cpp \
 	signature/SignatureProfileValidator.cpp \

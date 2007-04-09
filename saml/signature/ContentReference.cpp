@@ -30,17 +30,8 @@
 #include <xsec/dsig/DSIGTransformC14n.hpp>
 
 using namespace opensaml;
+using namespace xmltooling;
 using namespace std;
-
-class _addprefix : public binary_function<DSIGTransformC14n*,string,void> {
-public:
-    void operator()(DSIGTransformC14n* t, const string& s) const {
-        if (s.empty())
-            t->addInclusiveNamespace("#default");
-        else 
-            t->addInclusiveNamespace(s.c_str());
-    }
-};
 
 void ContentReference::createReferences(DSIGSignature* sig)
 {
@@ -54,7 +45,7 @@ void ContentReference::createReferences(DSIGSignature* sig)
         buf[1]=chNull;
         XMLString::catString(buf,id);
         try {
-            ref=sig->createReference(buf);
+            ref=sig->createReference(buf, m_digest ? m_digest : DSIGConstants::s_unicodeStrURISHA1);
             delete[] buf;
         }
         catch(...) {
@@ -62,7 +53,57 @@ void ContentReference::createReferences(DSIGSignature* sig)
             throw;
         }
     }
+    
     ref->appendEnvelopedSignatureTransform();
-    DSIGTransformC14n* c14n=ref->appendCanonicalizationTransform(CANON_C14NE_NOC);
-    for_each(m_prefixes.begin(), m_prefixes.end(), bind1st(_addprefix(),c14n));
+    DSIGTransformC14n* c14n=ref->appendCanonicalizationTransform(m_c14n ? m_c14n : DSIGConstants::s_unicodeStrURIEXC_C14N_NOC);
+    if (!m_c14n || m_c14n == DSIGConstants::s_unicodeStrURIEXC_C14N_NOC || m_c14n == DSIGConstants::s_unicodeStrURIEXC_C14N_COM) {
+        //addPrefixes(m_signableObject);
+#ifdef HAVE_GOOD_STL
+        xstring prefixes;
+        for (set<xstring>::const_iterator p = m_prefixes.begin(); p!=m_prefixes.end(); ++p)
+            prefixes += *p + chSpace;
+        if (!prefixes.empty()) {
+            prefixes.erase(prefixes.begin() + prefixes.size() - 1);
+            c14n->setInclusiveNamespaces(XMLString::replicate(prefixes.c_str()));
+        }
+#else
+        for (set<string>::const_iterator p = m_prefixes.begin(); p!=m_prefixes.end(); ++p)
+            c14n->addInclusiveNamespace(p->c_str());
+#endif
+    }
+}
+
+void ContentReference::addInclusivePrefix(const XMLCh* prefix)
+{
+    static const XMLCh _default[] = { chPound, chLatin_d, chLatin_e, chLatin_f, chLatin_a, chLatin_u, chLatin_l, chLatin_t, chNull };
+
+#ifdef HAVE_GOOD_STL
+    if (prefix && *prefix)
+        m_prefixes.insert(prefix);
+    else
+        m_prefixes.insert(_default);
+#else
+    if (prefix && *prefix) {
+        auto_ptr_char p(prefix);
+        m_prefixes.insert(p.get());
+    }
+    else
+        m_prefixes.insert("#default");
+#endif
+}
+
+void ContentReference::addPrefixes(const std::set<Namespace>& namespaces)
+{
+    for (set<Namespace>::const_iterator n = namespaces.begin(); n!=namespaces.end(); ++n)
+        addInclusivePrefix(n->getNamespacePrefix());
+}
+
+void ContentReference::addPrefixes(const XMLObject& xmlObject)
+{
+    addPrefixes(xmlObject.getNamespaces());
+    const list<XMLObject*>& children = xmlObject.getOrderedChildren();
+    for (list<XMLObject*>::const_iterator child = children.begin(); child!=children.end(); ++child) {
+        if (*child)
+            addPrefixes(*(*child));
+    }
 }

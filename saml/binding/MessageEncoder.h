@@ -108,7 +108,8 @@ namespace opensaml {
          * @param recipientID       optional entityID of message recipient
          * @param relayState        optional RelayState value to accompany message
          * @param credential        optional Credential to supply signing key
-         * @param sigAlgorithm      optional signature algorithm identifier
+         * @param signatureAlg      optional signature algorithm identifier
+         * @param digestAlg         optional reference digest algorithm identifier
          */
         virtual long encode(
             GenericResponse& genericResponse,
@@ -117,7 +118,8 @@ namespace opensaml {
             const char* recipientID=NULL,
             const char* relayState=NULL,
             const xmltooling::Credential* credential=NULL,
-            const XMLCh* sigAlgorithm=NULL
+            const XMLCh* signatureAlg=NULL,
+            const XMLCh* digestAlg=NULL
             ) const=0;
 
     protected:

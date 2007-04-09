@@ -24,8 +24,10 @@
 #define __saml_sigref_h__
 
 #include <saml/base.h>
+#include <xmltooling/XMLObject.h>
 #include <xmltooling/signature/ContentReference.h>
 
+#include <set>
 #include <string>
 
 namespace opensaml {
@@ -43,7 +45,8 @@ namespace opensaml {
          * 
          * @param signableObject    reference to object being signed
          */
-        ContentReference(const SignableObject& signableObject) : m_signableObject(signableObject) {
+        ContentReference(const SignableObject& signableObject)
+            : m_signableObject(signableObject), m_digest(NULL), m_c14n(NULL) {
         }
     
         virtual ~ContentReference() {}
@@ -57,22 +60,46 @@ namespace opensaml {
         virtual void createReferences(DSIGSignature* sig);
         
         /**
-         * Adds a namespace prefix for "inclusive" processing by the
+         * Adds a namespace prefix for "inclusive" processing by an
          * Exclusive C14N Transform applied to the object.
          * An empty string will be transformed into "#default".
          * 
          * @param prefix    the prefix to add 
          */
-        void addInclusivePrefix(const char* prefix) {
-            m_prefixes.push_back(prefix);
+        void addInclusivePrefix(const XMLCh* prefix);
+        
+        /**
+         * Sets the digest algorithm for the signature reference,
+         * using a constant.
+         * 
+         * @param digest    the digest algorithm
+         */
+        void setDigestAlgorithm(const XMLCh* digest) {
+            m_digest = digest;
         }
 
-    protected:
-        /** Reference to object to sign. */
-        const SignableObject& m_signableObject;
+        /**
+         * Sets the canonicalization method to include in the reference,
+         * using a constant.
+         * 
+         * @param c14n  the canonicalization method
+         */
+        void setCanonicalizationMethod(const XMLCh* c14n) {
+            m_c14n = c14n;
+        }
+        
+    private:
+        void addPrefixes(const std::set<xmltooling::Namespace>& namespaces);
+        void addPrefixes(const xmltooling::XMLObject& xmlObject);
 
-        /** Inclusive prefixes. */
-        std::vector<std::string> m_prefixes;
+        const SignableObject& m_signableObject;
+#ifdef HAVE_GOOD_STL
+        std::set<xmltooling::xstring> m_prefixes;
+#else
+        std::set<std::string> m_prefixes;
+#endif
+        const XMLCh* m_digest;
+        const XMLCh* m_c14n;
     };
 
 };

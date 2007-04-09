@@ -23,6 +23,7 @@
 #include "internal.h"
 #include "exceptions.h"
 #include "binding/MessageEncoder.h"
+#include "signature/ContentReference.h"
 #include "saml2/core/Protocols.h"
 
 #include <fstream>
@@ -54,7 +55,8 @@ namespace opensaml {
                 const char* recipientID=NULL,
                 const char* relayState=NULL,
                 const Credential* credential=NULL,
-                const XMLCh* sigAlgorithm=NULL
+                const XMLCh* signatureAlg=NULL,
+                const XMLCh* digestAlg=NULL
                 ) const;
 
         private:        
@@ -94,7 +96,8 @@ long SAML2POSTEncoder::encode(
     const char* recipientID,
     const char* relayState,
     const Credential* credential,
-    const XMLCh* sigAlgorithm
+    const XMLCh* signatureAlg,
+    const XMLCh* digestAlg
     ) const
 {
 #ifdef _DEBUG
@@ -126,8 +129,13 @@ long SAML2POSTEncoder::encode(
             // Build a Signature.
             Signature* sig = SignatureBuilder::buildSignature();
             request ? request->setSignature(sig) : response->setSignature(sig);    
-            if (sigAlgorithm)
-                sig->setSignatureAlgorithm(sigAlgorithm);
+            if (signatureAlg)
+                sig->setSignatureAlgorithm(signatureAlg);
+            if (digestAlg) {
+                opensaml::ContentReference* cr = dynamic_cast<opensaml::ContentReference*>(sig->getContentReference());
+                if (cr)
+                    cr->setDigestAlgorithm(digestAlg);
+            }
             
             // Sign response while marshalling.
             vector<Signature*> sigs(1,sig);
@@ -154,15 +162,15 @@ long SAML2POSTEncoder::encode(
         string input = (request ? "SAMLRequest=" : "SAMLResponse=") + msg;
         if (relayState)
             input = input + "&RelayState=" + relayState;
-        if (!sigAlgorithm)
-            sigAlgorithm = DSIGConstants::s_unicodeStrURIRSA_SHA1;
-        auto_ptr_char alg(sigAlgorithm);
+        if (!signatureAlg)
+            signatureAlg = DSIGConstants::s_unicodeStrURIRSA_SHA1;
+        auto_ptr_char alg(signatureAlg);
         pmap.m_map["SigAlg"] = alg.get();
         input = input + "&SigAlg=" + alg.get();
 
         char sigbuf[1024];
         memset(sigbuf,0,sizeof(sigbuf));
-        Signature::createRawSignature(credential->getPrivateKey(), sigAlgorithm, input.c_str(), input.length(), sigbuf, sizeof(sigbuf)-1);
+        Signature::createRawSignature(credential->getPrivateKey(), signatureAlg, input.c_str(), input.length(), sigbuf, sizeof(sigbuf)-1);
         pmap.m_map["Signature"] = sigbuf;
     }
     

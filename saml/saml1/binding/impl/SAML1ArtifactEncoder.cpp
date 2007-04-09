@@ -57,7 +57,8 @@ namespace opensaml {
                 const char* recipientID=NULL,
                 const char* relayState=NULL,
                 const Credential* credential=NULL,
-                const XMLCh* sigAlgorithm=NULL
+                const XMLCh* signatureAlg=NULL,
+                const XMLCh* digestAlg=NULL
                 ) const;
         };                
 
@@ -75,7 +76,8 @@ long SAML1ArtifactEncoder::encode(
     const char* recipientID,
     const char* relayState,
     const Credential* credential,
-    const XMLCh* sigAlgorithm
+    const XMLCh* signatureAlg,
+    const XMLCh* digestAlg
     ) const
 {
 #ifdef _DEBUG

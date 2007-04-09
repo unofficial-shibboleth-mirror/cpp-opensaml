@@ -189,11 +189,9 @@ void SimpleSigningRule::evaluate(const XMLObject& message, const GenericRequest*
     auto_ptr<KeyInfo> kjanitor(keyInfo);
     auto_ptr_XMLCh alg(sigAlgorithm);
 
-    // Set up criteria object, including peer name to enforce cert name checking.
+    // Set up criteria object.
     MetadataCredentialCriteria cc(*(policy.getIssuerMetadata()));
-    auto_ptr_char pn(policy.getIssuer()->getName());
-    cc.setPeerName(pn.get());
-    cc.setKeyAlgorithm(sigAlgorithm);
+    cc.setXMLAlgorithm(alg.get());
 
     if (!policy.getTrustEngine()->validate(alg.get(), signature, keyInfo, input.c_str(), input.length(), *(policy.getMetadataProvider()), &cc)) {
         log.error("unable to verify message signature with supplied trust engine");

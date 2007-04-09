@@ -119,6 +119,7 @@ public:
             SAMLConfig::getConfig().getArtifactMap()->retrieveContent(&artifact, "https://sp.example.org/");
         Response* payload = dynamic_cast<Response*>(xmlObject);
         TSM_ASSERT("Not a response.", payload!=NULL);
+
         auto_ptr<ArtifactResponse> response(ArtifactResponseBuilder::buildArtifactResponse());
         response->setPayload(payload);
         Status* status = StatusBuilder::buildStatus();

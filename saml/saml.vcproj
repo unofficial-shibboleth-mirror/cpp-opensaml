@@ -472,7 +472,7 @@
 					Name="profile"
 					>
 					<File
-						RelativePath=".\saml2\profile\AssertionValidator.cpp"
+						RelativePath=".\saml2\profile\Assertion20Validator.cpp"
 						>
 						<FileConfiguration
 							Name="Debug|Win32"
@@ -494,7 +494,7 @@
 						</FileConfiguration>
 					</File>
 					<File
-						RelativePath=".\saml2\profile\BrowserSSOProfileValidator.cpp"
+						RelativePath=".\saml2\profile\BrowserSSOProfile20Validator.cpp"
 						>
 						<FileConfiguration
 							Name="Debug|Win32"

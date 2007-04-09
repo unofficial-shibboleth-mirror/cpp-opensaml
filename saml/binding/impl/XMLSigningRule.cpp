@@ -97,10 +97,8 @@ void XMLSigningRule::evaluate(const XMLObject& message, const GenericRequest* re
         return;
     }
     
-    // Set up criteria object, including peer name to enforce cert name checking.
+    // Set up criteria object.
     MetadataCredentialCriteria cc(*(policy.getIssuerMetadata()));
-    auto_ptr_char pn(policy.getIssuer()->getName());
-    cc.setPeerName(pn.get());
 
     if (!policy.getTrustEngine()->validate(*(signable->getSignature()), *(policy.getMetadataProvider()), &cc)) {
         log.error("unable to verify message signature with supplied trust engine");

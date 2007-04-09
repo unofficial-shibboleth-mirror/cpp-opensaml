@@ -251,6 +251,19 @@ bool AbstractMetadataProvider::matches(const pair<const XMLCh*,Credential*>& cre
         else if (criteria->getUsage()==CredentialCriteria::ENCRYPTION_CREDENTIAL && XMLString::equals(cred.first,KeyDescriptor::KEYTYPE_SIGNING))
             return false;
 
+        const char* alg = criteria->getKeyAlgorithm();
+        if (alg && *alg) {
+            const char* alg2 = cred.second->getAlgorithm();
+            if (alg2 && *alg2) {
+                if (!XMLString::equals(alg,alg2))
+                    return false;
+            }
+        }
+        if (criteria->getKeySize()>0 && cred.second->getKeySize()>0) {
+            if (criteria->getKeySize() != cred.second->getKeySize())
+                return false;
+        }
+
         if (cred.second->getPublicKey()) {
             // See if we have to match a specific key.
             auto_ptr<Credential> critcred(
