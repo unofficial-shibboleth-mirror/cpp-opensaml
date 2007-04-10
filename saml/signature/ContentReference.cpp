@@ -57,7 +57,7 @@ void ContentReference::createReferences(DSIGSignature* sig)
     ref->appendEnvelopedSignatureTransform();
     DSIGTransformC14n* c14n=ref->appendCanonicalizationTransform(m_c14n ? m_c14n : DSIGConstants::s_unicodeStrURIEXC_C14N_NOC);
     if (!m_c14n || m_c14n == DSIGConstants::s_unicodeStrURIEXC_C14N_NOC || m_c14n == DSIGConstants::s_unicodeStrURIEXC_C14N_COM) {
-        //addPrefixes(m_signableObject);
+        addPrefixes(m_signableObject);
 #ifdef HAVE_GOOD_STL
         xstring prefixes;
         for (set<xstring>::const_iterator p = m_prefixes.begin(); p!=m_prefixes.end(); ++p)

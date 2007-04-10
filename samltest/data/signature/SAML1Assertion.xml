@@ -9,15 +9,17 @@ AuthenticationMethod="method"
 <ds:Reference URI="#ident">
 <ds:Transforms>
 <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
-<ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+<ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#">
+<ec:InclusiveNamespaces xmlns:ec="http://www.w3.org/2001/10/xml-exc-c14n#" PrefixList="ds saml"/>
+</ds:Transform>
 </ds:Transforms>
 <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
 <ds:DigestValue>j2GRm2UDOBvxwlzvX0fjXYeAGIA=</ds:DigestValue>
 </ds:Reference>
 </ds:SignedInfo>
-<ds:SignatureValue>AA5098JC4gfdAf2bvPQRZ9Ld/VehXAB3uhp0r4js4i6fMB3hGMs4VnE9iEJEsPDD
-0Kj4cfewxHij/kHrWcxpKMMqIgGlqKYZhuQHfFt8GzDeeFIgu1R675jcN4uCOoWl
-3aRVd9hgPRsXzf7/RkMiXHIsU/NjUPRKf7GjNt2jNT0=</ds:SignatureValue>
+<ds:SignatureValue>noFPfzQYxU1saeMUTiuX0SuMtNfI78cBqrzsxB7SnwJ2ea/DBrG4FnXQ3swQLfsv
+OX1Sy3zvUSWDte91Tr+SAVD0oUsk+wx5dQrDX9aQnYq5b8snbWpJRskiQYKFYfGG
+sIovi2m9YOS7FuyOHemMlDc+AMiLFz+wYL6mNXNKuL8=</ds:SignatureValue>
 <ds:KeyInfo><ds:KeyName>sp.example.org</ds:KeyName><ds:X509Data><ds:X509Certificate>MIICjzCCAfigAwIBAgIJAKk8t1hYcMkhMA0GCSqGSIb3DQEBBAUAMDoxCzAJBgNV
 BAYTAlVTMRIwEAYDVQQKEwlJbnRlcm5ldDIxFzAVBgNVBAMTDnNwLmV4YW1wbGUu
 b3JnMB4XDTA1MDYyMDE1NDgzNFoXDTMyMTEwNTE1NDgzNFowOjELMAkGA1UEBhMC

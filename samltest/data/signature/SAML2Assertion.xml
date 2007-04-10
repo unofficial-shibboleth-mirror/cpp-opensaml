@@ -6,15 +6,17 @@ Version="2.0"><saml:Issuer>issuer</saml:Issuer><ds:Signature xmlns:ds="http://ww
 <ds:Reference URI="#ident">
 <ds:Transforms>
 <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
-<ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+<ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#">
+<ec:InclusiveNamespaces xmlns:ec="http://www.w3.org/2001/10/xml-exc-c14n#" PrefixList="ds saml"/>
+</ds:Transform>
 </ds:Transforms>
 <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
 <ds:DigestValue>8DSEsWJl4wOiwY15f7fAurDWpbo=</ds:DigestValue>
 </ds:Reference>
 </ds:SignedInfo>
-<ds:SignatureValue>zgKU42nQKyB9m8RkDz1I2r7h0N9pc5ys9kve7oN9/Dugrn583/3bMgQBfk1rw4Pq
-BfztAZNcf2lstzvgpVB9fVTsTUuEDtT0mhc+f5t8kbCkABGu0SrfCnDjbYpmEeLC
-j8rJO4aSZIV4tN21aAkQyys28l4oB3KGTTDASjEPVgQ=</ds:SignatureValue>
+<ds:SignatureValue>rOtKGQFdqy51HXwY20wEPgkITlwllm//yJkIWTQdWbMSA+Eb9B+NWOSj+8MEWe5b
+jaM1lJ8as3hbetUMKNPKO2mX1M08cveth7mPG9VsJVArvLsn8UYyNX7WUDzCUu0G
+aVHlZYCFeixUPS/NaXVWvtb7CUyNV4vPnsPYIEI1+gQ=</ds:SignatureValue>
 <ds:KeyInfo><ds:KeyName>sp.example.org</ds:KeyName><ds:X509Data><ds:X509Certificate>MIICjzCCAfigAwIBAgIJAKk8t1hYcMkhMA0GCSqGSIb3DQEBBAUAMDoxCzAJBgNV
 BAYTAlVTMRIwEAYDVQQKEwlJbnRlcm5ldDIxFzAVBgNVBAMTDnNwLmV4YW1wbGUu
 b3JnMB4XDTA1MDYyMDE1NDgzNFoXDTMyMTEwNTE1NDgzNFowOjELMAkGA1UEBhMC
