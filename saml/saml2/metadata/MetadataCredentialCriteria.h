@@ -20,8 +20,8 @@
  * Metadata-based CredentialCriteria subclass.
  */
 
-#ifndef __saml_metacred_h__
-#define __saml_metacred_h__
+#ifndef __saml_metacrit_h__
+#define __saml_metacrit_h__
 
 #include <saml/base.h>
 #include <saml/saml2/metadata/Metadata.h>
@@ -66,4 +66,4 @@ namespace opensaml {
     };
 };
 
-#endif /* __saml_metacred_h__ */
+#endif /* __saml_metacrit_h__ */

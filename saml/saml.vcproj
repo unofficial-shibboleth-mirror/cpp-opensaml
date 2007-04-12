@@ -762,6 +762,10 @@
 						>
 					</File>
 					<File
+						RelativePath=".\saml2\metadata\MetadataCredentialContext.h"
+						>
+					</File>
+					<File
 						RelativePath=".\saml2\metadata\MetadataCredentialCriteria.h"
 						>
 					</File>

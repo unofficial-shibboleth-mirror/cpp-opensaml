@@ -24,6 +24,7 @@
 #include "binding/SAMLArtifact.h"
 #include "saml2/metadata/Metadata.h"
 #include "saml2/metadata/AbstractMetadataProvider.h"
+#include "saml2/metadata/MetadataCredentialContext.h"
 #include "saml2/metadata/MetadataCredentialCriteria.h"
 
 #include <xercesc/util/XMLUniDefs.hpp>
@@ -234,7 +235,9 @@ const AbstractMetadataProvider::credmap_t::mapped_type& AbstractMetadataProvider
     AbstractMetadataProvider::credmap_t::mapped_type& resolved = m_credentialMap[&role];
     for (vector<KeyDescriptor*>::const_iterator k = keys.begin(); k!=keys.end(); ++k) {
         if ((*k)->getKeyInfo()) {
-            Credential* c = resolver->resolve((*k)->getKeyInfo());
+            auto_ptr<MetadataCredentialContext> mcc(new MetadataCredentialContext(*(*k)));
+            Credential* c = resolver->resolve(mcc.get());
+            mcc.release();
             resolved.push_back(make_pair((*k)->getUse(), c));
         }
     }
@@ -250,29 +253,7 @@ bool AbstractMetadataProvider::matches(const pair<const XMLCh*,Credential*>& cre
             return false;
         else if (criteria->getUsage()==CredentialCriteria::ENCRYPTION_CREDENTIAL && XMLString::equals(cred.first,KeyDescriptor::KEYTYPE_SIGNING))
             return false;
-
-        const char* alg = criteria->getKeyAlgorithm();
-        if (alg && *alg) {
-            const char* alg2 = cred.second->getAlgorithm();
-            if (alg2 && *alg2) {
-                if (!XMLString::equals(alg,alg2))
-                    return false;
-            }
-        }
-        if (criteria->getKeySize()>0 && cred.second->getKeySize()>0) {
-            if (criteria->getKeySize() != cred.second->getKeySize())
-                return false;
-        }
-
-        if (cred.second->getPublicKey()) {
-            // See if we have to match a specific key.
-            auto_ptr<Credential> critcred(
-                XMLToolingConfig::getConfig().getKeyInfoResolver()->resolve(*criteria,Credential::RESOLVE_KEYS)
-                );
-            if (critcred.get())
-                if (!critcred->isEqual(*(cred.second->getPublicKey())))
-                    return false;
-        }
+        return cred.second->matches(*criteria);
     }
     return true;
 }

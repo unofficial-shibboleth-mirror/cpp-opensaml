@@ -90,6 +90,7 @@ saml2mdinclude_HEADERS = \
 	saml2/metadata/ChainingMetadataProvider.h \
 	saml2/metadata/EndpointManager.h \
 	saml2/metadata/Metadata.h \
+	saml2/metadata/MetadataCredentialContext.h \
 	saml2/metadata/MetadataCredentialCriteria.h \
 	saml2/metadata/MetadataFilter.h \
 	saml2/metadata/MetadataProvider.h \
