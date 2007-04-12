@@ -80,7 +80,7 @@ namespace opensaml {
                  * 
                  * @param provider the provider being observed
                  */
-                virtual void onEvent(const MetadataProvider& provider) const=0;
+                virtual void onEvent(const ObservableMetadataProvider& provider) const=0;
             };
             
             /**

@@ -81,7 +81,7 @@ ChainingMetadataProvider::~ChainingMetadataProvider()
     for_each(m_providers.begin(), m_providers.end(), xmltooling::cleanup<MetadataProvider>());
 }
 
-void ChainingMetadataProvider::onEvent(const MetadataProvider& provider) const
+void ChainingMetadataProvider::onEvent(const ObservableMetadataProvider& provider) const
 {
     emitChangeEvent();
 }
