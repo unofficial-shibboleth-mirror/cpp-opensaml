@@ -25,7 +25,6 @@
 #include "saml2/metadata/MetadataFilter.h"
 #include "saml2/metadata/AbstractMetadataProvider.h"
 
-#include <log4cpp/Category.hh>
 #include <xmltooling/util/NDC.h>
 #include <xmltooling/util/ReloadableXMLFile.h>
 
@@ -45,7 +44,10 @@ namespace opensaml {
         class SAML_DLLLOCAL XMLMetadataProvider : public AbstractMetadataProvider, public ReloadableXMLFile
         {
         public:
-            XMLMetadataProvider(const DOMElement* e) : AbstractMetadataProvider(e), ReloadableXMLFile(e), m_object(NULL) {}
+            XMLMetadataProvider(const DOMElement* e)
+                : AbstractMetadataProvider(e), ReloadableXMLFile(e, Category::getInstance(SAML_LOGCAT".MetadataProvider")),
+                    m_object(NULL) {
+            }
             virtual ~XMLMetadataProvider() {
                 delete m_object;
             }
