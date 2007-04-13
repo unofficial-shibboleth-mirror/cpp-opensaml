@@ -64,8 +64,8 @@ namespace opensaml {
             /**
              * Decrypts the element using the supplied CredentialResolver.
              *
-             * <p>The object returned will be unmarshalled around the decrypted DOM element, but the
-             * DOM itself will be released.
+             * <p>The object returned will be unmarshalled around the decrypted DOM element in a
+             * new Document owned by the object.
              * 
              * @param credResolver  locked resolver supplying decryption keys
              * @param recipient     identifier naming the recipient (the entity performing the decryption)
