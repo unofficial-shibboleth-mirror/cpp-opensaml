@@ -1298,8 +1298,12 @@ namespace opensaml {
                 if (frag->hasChildNodes() && frag->getFirstChild()==frag->getLastChild()) {
                     DOMNode* plaintext=frag->getFirstChild();
                     if (plaintext->getNodeType()==DOMNode::ELEMENT_NODE) {
-                        auto_ptr<XMLObject> ret(XMLObjectBuilder::buildOneFromElement(static_cast<DOMElement*>(plaintext)));
-                        ret->releaseThisAndChildrenDOM();
+                        // Import the tree into a new Document that we can bind to the unmarshalled object.
+                        XercesJanitor<DOMDocument> newdoc(XMLToolingConfig::getConfig().getParser().newDocument());
+                        DOMElement* treecopy = static_cast<DOMElement*>(newdoc->importNode(plaintext, true));
+                        newdoc->appendChild(treecopy);
+                        auto_ptr<XMLObject> ret(XMLObjectBuilder::buildOneFromElement(treecopy, true));
+                        newdoc.release();
                         return ret.release();
                     }
                 }
