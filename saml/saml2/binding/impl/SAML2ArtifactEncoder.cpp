@@ -161,7 +161,7 @@ long SAML2ArtifactEncoder::encode(
         loc += (strchr(destination,'?') ? '&' : '?');
         const URLEncoder* escaper = XMLToolingConfig::getConfig().getURLEncoder();
         loc = loc + "SAMLart=" + escaper->encode(artifact->encode().c_str());
-        if (relayState)
+        if (relayState && *relayState)
             loc = loc + "&RelayState=" + escaper->encode(relayState);
         log.debug("message encoded, sending redirect to client");
         return httpResponse->sendRedirect(loc.c_str());
@@ -178,7 +178,7 @@ long SAML2ArtifactEncoder::encode(
         TemplateEngine::TemplateParameters params;
         params.m_map["action"] = destination;
         params.m_map["SAMLart"] = artifact->encode();
-        if (relayState)
+        if (relayState && *relayState)
             params.m_map["RelayState"] = relayState;
         stringstream s;
         engine->run(infile, s, params);

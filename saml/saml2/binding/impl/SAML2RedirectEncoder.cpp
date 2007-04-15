@@ -125,7 +125,7 @@ long SAML2RedirectEncoder::encode(
     xmlbuf.erase();
     xmlbuf.append(reinterpret_cast<char*>(encoded),len);
     xmlbuf = (request ? "SAMLRequest=" : "SAMLResponse=") + escaper->encode(xmlbuf.c_str()); 
-    if (relayState)
+    if (relayState && *relayState)
         xmlbuf = xmlbuf + "&RelayState=" + escaper->encode(relayState);
   
     if (credential) {

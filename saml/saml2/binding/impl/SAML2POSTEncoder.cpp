@@ -149,7 +149,7 @@ long SAML2POSTEncoder::encode(
     
     // Start tracking data.
     TemplateEngine::TemplateParameters pmap;
-    if (relayState)
+    if (relayState && *relayState)
         pmap.m_map["RelayState"] = relayState;
 
     // Serialize the message.
@@ -160,7 +160,7 @@ long SAML2POSTEncoder::encode(
     if (credential && m_simple) {
         log.debug("applying simple signature to message data");
         string input = (request ? "SAMLRequest=" : "SAMLResponse=") + msg;
-        if (relayState)
+        if (relayState && *relayState)
             input = input + "&RelayState=" + relayState;
         if (!signatureAlg)
             signatureAlg = DSIGConstants::s_unicodeStrURIRSA_SHA1;
