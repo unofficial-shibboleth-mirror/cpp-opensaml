@@ -77,7 +77,7 @@ namespace opensaml {
              * 
              * @param e DOM to supply configuration for provider
              */
-            MetadataProvider(const DOMElement* e=NULL);
+            MetadataProvider(const xercesc::DOMElement* e=NULL);
             
         public:
             /**

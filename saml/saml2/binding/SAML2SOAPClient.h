@@ -48,7 +48,7 @@ namespace opensaml {
             }
             
             virtual ~SAML2SOAPClient() {
-                XMLString::release(&m_correlate);
+                xercesc::XMLString::release(&m_correlate);
             }
     
             /**

@@ -277,8 +277,8 @@ namespace opensaml {
          * @param id message identifier
          */
         void setMessageID(const XMLCh* id) {
-            XMLString::release(&m_messageID);
-            m_messageID = XMLString::replicate(id);
+            xercesc::XMLString::release(&m_messageID);
+            m_messageID = xercesc::XMLString::replicate(id);
         }
 
         /**

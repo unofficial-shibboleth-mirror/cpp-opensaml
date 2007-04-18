@@ -53,7 +53,7 @@ namespace opensaml {
              * 
              * @param e DOM to supply configuration for provider
              */
-            ChainingMetadataProvider(const DOMElement* e=NULL);
+            ChainingMetadataProvider(const xercesc::DOMElement* e=NULL);
             
             /**
              * Destructor will delete any embedded engines.

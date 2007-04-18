@@ -41,6 +41,8 @@
 
 #include <limits.h>
 
+using namespace xercesc;
+
 // C99 defines LLONG_MIN, LLONG_MAX and ULLONG_MAX, but this part of
 // C99 is not yet included into the C++ standard.
 // GCC defines LONG_LONG_MIN, LONG_LONG_MAX and ULONG_LONG_MAX.

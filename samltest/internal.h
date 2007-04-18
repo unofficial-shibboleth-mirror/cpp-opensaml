@@ -30,6 +30,7 @@
 #include <xmltooling/validation/Validator.h>
 
 using namespace xmltooling;
+using namespace xercesc;
 using namespace std;
 
 extern string data_path;

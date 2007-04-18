@@ -45,7 +45,7 @@ namespace opensaml {
              * 
              * @param e DOM to supply configuration for provider
              */
-            ObservableMetadataProvider(const DOMElement* e=NULL)
+            ObservableMetadataProvider(const xercesc::DOMElement* e=NULL)
                 : MetadataProvider(e), m_observerLock(xmltooling::Mutex::create()) {
             }
             

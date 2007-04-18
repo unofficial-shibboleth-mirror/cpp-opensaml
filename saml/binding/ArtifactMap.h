@@ -56,7 +56,7 @@ namespace opensaml {
          * @param e         root of a DOM with optional XML attributes for context and artifactTTL
          * @param storage   pointer to a StorageService, or NULL to keep map in memory
          */
-        ArtifactMap(const DOMElement* e, xmltooling::StorageService* storage=NULL);
+        ArtifactMap(const xercesc::DOMElement* e, xmltooling::StorageService* storage=NULL);
 
         virtual ~ArtifactMap();
         
