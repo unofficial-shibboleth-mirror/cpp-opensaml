@@ -561,6 +561,14 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="encryption"
+				>
+				<File
+					RelativePath=".\encryption\EncryptedAssertionTest.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Unit Tests"
@@ -2480,6 +2488,32 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							CommandLine="perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
+							Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
+						/>
+					</FileConfiguration>
+				</File>
+			</Filter>
+			<Filter
+				Name="encryption"
+				>
+				<File
+					RelativePath=".\encryption\EncryptedAssertionTest.h"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							CommandLine="perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+							Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							CommandLine="perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
 							Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 						/>
 					</FileConfiguration>

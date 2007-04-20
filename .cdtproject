@@ -73,7 +73,7 @@
 <pathentry kind="src" path="saml/signature"/>
 <pathentry kind="src" path="saml/util"/>
 <pathentry kind="src" path="saml/zlib"/>
-<pathentry excluding="saml1/core/impl/|signature/|saml2/core/impl/|saml2/metadata/|security/|saml1/binding/|saml2/binding/" kind="src" path="samltest"/>
+<pathentry excluding="saml1/core/impl/|signature/|saml2/core/impl/|saml2/metadata/|security/|saml1/binding/|saml2/binding/|encryption/" kind="src" path="samltest"/>
 <pathentry kind="src" path="samltest/saml1/binding"/>
 <pathentry kind="src" path="samltest/saml1/core/impl"/>
 <pathentry kind="src" path="samltest/saml2/binding"/>
@@ -90,6 +90,7 @@
 <pathentry include="C:/xml-security-c-1.2.0/include" kind="inc" path="" system="true"/>
 <pathentry include="C:/log4cpp-0.3.5rc1/include" kind="inc" path="" system="true"/>
 <pathentry include="C:/cxxtest" kind="inc" path="" system="true"/>
+<pathentry kind="src" path="samltest/encryption"/>
 </item>
 </data>
 </cdtproject>

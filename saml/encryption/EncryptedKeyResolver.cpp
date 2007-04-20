@@ -29,6 +29,10 @@ using namespace std;
 
 const EncryptedKey* opensaml::EncryptedKeyResolver::resolveKey(const EncryptedData& encryptedData, const XMLCh* recipient) const
 {
+    const EncryptedKey* base = xmlencryption::EncryptedKeyResolver::resolveKey(encryptedData, recipient);
+    if (base)
+        return base;
+
     const vector<EncryptedKey*>& keys=m_ref.getEncryptedKeys();
     for (vector<EncryptedKey*>::const_iterator i=keys.begin(); i!=keys.end(); i++) {
         if (XMLString::equals(recipient,(*i)->getRecipient()))

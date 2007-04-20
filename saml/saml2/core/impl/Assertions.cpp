@@ -79,9 +79,6 @@ void EncryptedElementType::encrypt(
     const XMLCh* algorithm
     )
 {
-    if (recipients.size()==1)
-        return encrypt(xmlObject, *recipients.front().first, *recipients.front().second, compact, algorithm);
-
     // With multiple recipients, we have to generate an encryption key and then multicast it,
     // so we need to split the encryption and key wrapping steps.
     if (!algorithm || !*algorithm)

@@ -6,7 +6,7 @@
 	<EntityDescriptor entityID="https://idp.example.org/">
 		
 		<IDPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:1.1:protocol urn:oasis:names:tc:SAML:2.0:protocol">
-			<KeyDescriptor use="signing">
+			<KeyDescriptor>
 			    <ds:KeyInfo>
 			    	<ds:RetrievalMethod URI="#samplekey" Type="http://www.w3.org/2000/09/xmldsig#X509Data"/>
 			    </ds:KeyInfo>
@@ -31,8 +31,9 @@
 	<EntityDescriptor entityID="https://sp.example.org/">
 	
 		<SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:1.1:protocol urn:oasis:names:tc:SAML:2.0:protocol">
-			<KeyDescriptor use="signing">
+			<KeyDescriptor>
 				<ds:KeyInfo Id="samplekey">
+					<ds:KeyName>sp.example.org</ds:KeyName>
 			    	<ds:X509Data>
 			    		<ds:X509Certificate>
 			    			MIICjzCCAfigAwIBAgIJAKk8t1hYcMkhMA0GCSqGSIb3DQEBBAUAMDoxCzAJBgNV
