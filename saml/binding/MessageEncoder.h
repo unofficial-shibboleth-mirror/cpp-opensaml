@@ -46,6 +46,15 @@ namespace opensaml {
         virtual ~MessageEncoder() {}
 
         /**
+         * Indicates whether the encoding format requires that messages be as compact as possible.
+         *
+         * @return  true iff the encoding has size constraints
+         */
+        virtual bool isCompact() const {
+            return false;
+        }
+
+        /**
          * Interface to caller-supplied artifact generation mechanism.
          * 
          * Generating an artifact for storage and retrieval requires knowledge of

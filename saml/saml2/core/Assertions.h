@@ -38,6 +38,11 @@
 
 namespace opensaml {
 
+    namespace saml2md {
+        class SAML_API MetadataProvider;
+        class SAML_API MetadataCredentialCriteria;
+    };
+
     /**
      * @namespace opensaml::saml2
      * SAML 2.0 assertion namespace
@@ -47,6 +52,16 @@ namespace opensaml {
         // Forward references
         class SAML_API Assertion;
         class SAML_API EncryptedAssertion;
+
+        /**
+         * Marker interface for SAML types that can be encrypted.
+         */
+        class SAML_API EncryptableObject : public virtual xmltooling::XMLObject
+        {
+        protected:
+            EncryptableObject() {}
+            virtual ~EncryptableObject() {}
+        };
         
         DECL_XMLOBJECT_SIMPLE(SAML_API,AssertionIDRef,AssertionID,SAML 2.0 AssertionIDRef element);
         DECL_XMLOBJECT_SIMPLE(SAML_API,AssertionURIRef,AssertionURI,SAML 2.0 AssertionURIRef element);
@@ -62,6 +77,40 @@ namespace opensaml {
             static const XMLCh TYPE_NAME[];
             
             /**
+             * Encrypts an object to a single recipient using this object as a container.
+             * 
+             * @param xmlObject         object to encrypt
+             * @param metadataProvider  a locked MetadataProvider to supply encryption keys
+             * @param criteria          metadata-based CredentialCriteria to use
+             * @param compact           true iff compact KeyInfo should be used
+             * @param algorithm         optionally specifies data encryption algorithm if none can be determined from metadata
+             * @return  the encrypted object
+             */
+            virtual void encrypt(
+                const EncryptableObject& xmlObject,
+                const saml2md::MetadataProvider& metadataProvider,
+                saml2md::MetadataCredentialCriteria& criteria,
+                bool compact=false,
+                const XMLCh* algorithm=NULL
+                );
+
+            /**
+             * Encrypts an object to multiple recipients using this object as a container.
+             * 
+             * @param recipients    pairs containing a locked MetadataProvider to supply encryption keys,
+             *                      and a metadata-based CredentialCriteria to use
+             * @param compact       true iff compact KeyInfo should be used
+             * @param algorithm     optionally specifies data encryption algorithm if none can be determined from metadata
+             * @return  the encrypted object
+             */
+            virtual void encrypt(
+                const EncryptableObject& xmlObject,
+                const std::vector< std::pair<const saml2md::MetadataProvider*, saml2md::MetadataCredentialCriteria*> >& recipients,
+                bool compact=false,
+                const XMLCh* algorithm=NULL
+                );
+
+            /**
              * Decrypts the element using the supplied CredentialResolver.
              *
              * <p>The object returned will be unmarshalled around the decrypted DOM element in a
@@ -74,13 +123,13 @@ namespace opensaml {
              */
             virtual xmltooling::XMLObject* decrypt(
                 const xmltooling::CredentialResolver& credResolver, const XMLCh* recipient, xmltooling::CredentialCriteria* criteria=NULL
-                ) const=0;
+                ) const;
         END_XMLOBJECT;
 
         BEGIN_XMLOBJECT(SAML_API,EncryptedID,EncryptedElementType,SAML 2.0 EncryptedID element);
         END_XMLOBJECT;
 
-        BEGIN_XMLOBJECT(SAML_API,BaseID,xmltooling::XMLObject,SAML 2.0 BaseID abstract element);
+        BEGIN_XMLOBJECT(SAML_API,BaseID,EncryptableObject,SAML 2.0 BaseID abstract element);
             DECL_STRING_ATTRIB(NameQualifier,NAMEQUALIFIER);
             DECL_STRING_ATTRIB(SPNameQualifier,SPNAMEQUALIFIER);
         END_XMLOBJECT;
@@ -111,7 +160,7 @@ namespace opensaml {
             static const XMLCh TRANSIENT[];
         END_XMLOBJECT;
 
-        BEGIN_XMLOBJECT(SAML_API,NameID,NameIDType,SAML 2.0 NameID element);
+        BEGIN_XMLOBJECT2(SAML_API,NameID,NameIDType,EncryptableObject,SAML 2.0 NameID element);
         END_XMLOBJECT;
 
         BEGIN_XMLOBJECT(SAML_API,Issuer,NameIDType,SAML 2.0 Issuer element);
@@ -266,7 +315,7 @@ namespace opensaml {
         BEGIN_XMLOBJECT(SAML_API,AttributeValue,xmltooling::ElementProxy,SAML 2.0 AttributeValue element);
         END_XMLOBJECT;
 
-        BEGIN_XMLOBJECT(SAML_API,Attribute,xmltooling::AttributeExtensibleXMLObject,SAML 2.0 Attribute element);
+        BEGIN_XMLOBJECT2(SAML_API,Attribute,xmltooling::AttributeExtensibleXMLObject,EncryptableObject,SAML 2.0 Attribute element);
             DECL_STRING_ATTRIB(Name,NAME);
             DECL_STRING_ATTRIB(NameFormat,NAMEFORMAT);
             DECL_STRING_ATTRIB(FriendlyName,FRIENDLYNAME);
@@ -320,7 +369,7 @@ namespace opensaml {
             virtual Issuer* getIssuer() const=0;
         };
 
-        BEGIN_XMLOBJECT2(SAML_API,Assertion,saml2::RootObject,opensaml::Assertion,SAML 2.0 Assertion element);
+        BEGIN_XMLOBJECT3(SAML_API,Assertion,saml2::RootObject,opensaml::Assertion,EncryptableObject,SAML 2.0 Assertion element);
             DECL_INHERITED_STRING_ATTRIB(Version,VER);
             DECL_INHERITED_STRING_ATTRIB(ID,ID);
             DECL_INHERITED_DATETIME_ATTRIB(IssueInstant,ISSUEINSTANT);
@@ -446,7 +495,7 @@ namespace opensaml {
                 throw xmltooling::XMLObjectException("Unable to obtain typed builder for KeyInfoConfirmationDataType.");
             }
         };
-        
+
         /**
          * Registers builders and validators for SAML 2.0 Assertion classes into the runtime.
          */

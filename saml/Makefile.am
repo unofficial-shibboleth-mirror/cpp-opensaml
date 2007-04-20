@@ -132,6 +132,7 @@ libsaml_la_SOURCES = \
 	saml1/binding/impl/SAML1MessageRule.cpp \
 	saml1/profile/AssertionValidator.cpp \
 	saml1/profile/BrowserSSOProfileValidator.cpp \
+	saml2/core/impl/Assertions.cpp \
 	saml2/core/impl/Assertions20Impl.cpp \
 	saml2/core/impl/Assertions20SchemaValidators.cpp \
 	saml2/core/impl/Protocols20Impl.cpp \

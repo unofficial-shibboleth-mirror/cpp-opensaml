@@ -48,6 +48,10 @@ namespace opensaml {
         public:
             SAML2RedirectEncoder(const DOMElement* e) {}
             virtual ~SAML2RedirectEncoder() {}
+
+            bool isCompact() const {
+                return true;
+            }
             
             long encode(
                 GenericResponse& genericResponse,

@@ -27,7 +27,6 @@
 
 #include <xmltooling/AbstractComplexElement.h>
 #include <xmltooling/AbstractSimpleElement.h>
-#include <xmltooling/encryption/Decrypter.h>
 #include <xmltooling/impl/AnyElement.h>
 #include <xmltooling/io/AbstractXMLObjectMarshaller.h>
 #include <xmltooling/io/AbstractXMLObjectUnmarshaller.h>
@@ -52,7 +51,7 @@ using samlconstants::SAML20_NS;
 
 namespace opensaml {
     namespace saml2 {
-    
+
         DECL_XMLOBJECTIMPL_SIMPLE(SAML_DLLLOCAL,AssertionIDRef);
         DECL_XMLOBJECTIMPL_SIMPLE(SAML_DLLLOCAL,AssertionURIRef);
         DECL_XMLOBJECTIMPL_SIMPLE(SAML_DLLLOCAL,Audience);
@@ -191,29 +190,6 @@ namespace opensaml {
                     }
                 }
             }
-    
-            XMLObject* decrypt(const CredentialResolver& credResolver, const XMLCh* recipient, CredentialCriteria* criteria) const
-            {
-                if (!m_EncryptedData)
-                    throw DecryptionException("No encrypted data present.");
-                EncryptedKeyResolver ekr(*this);
-                Decrypter decrypter(&credResolver, criteria, &ekr);
-                DOMDocumentFragment* frag = decrypter.decryptData(*m_EncryptedData, recipient);
-                if (frag->hasChildNodes() && frag->getFirstChild()==frag->getLastChild()) {
-                    DOMNode* plaintext=frag->getFirstChild();
-                    if (plaintext->getNodeType()==DOMNode::ELEMENT_NODE) {
-                        // Import the tree into a new Document that we can bind to the unmarshalled object.
-                        XercesJanitor<DOMDocument> newdoc(XMLToolingConfig::getConfig().getParser().newDocument());
-                        DOMElement* treecopy = static_cast<DOMElement*>(newdoc->importNode(plaintext, true));
-                        newdoc->appendChild(treecopy);
-                        auto_ptr<XMLObject> ret(XMLObjectBuilder::buildOneFromElement(treecopy, true));
-                        newdoc.release();
-                        return ret.release();
-                    }
-                }
-                frag->release();
-                throw DecryptionException("Decryption did not result in a single element.");
-            }
         
             IMPL_XMLOBJECT_CLONE(EncryptedElementType);
             IMPL_TYPED_FOREIGN_CHILD(EncryptedData,xmlencryption);
@@ -227,7 +203,6 @@ namespace opensaml {
             }
         };
 
-        //TODO unit test for this 
         class SAML_DLLLOCAL EncryptedIDImpl : public virtual EncryptedID, public EncryptedElementTypeImpl
         {
         public:

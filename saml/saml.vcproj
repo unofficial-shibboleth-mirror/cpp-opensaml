@@ -311,6 +311,10 @@
 						Name="impl"
 						>
 						<File
+							RelativePath=".\saml2\core\impl\Assertions.cpp"
+							>
+						</File>
+						<File
 							RelativePath=".\saml2\core\impl\Assertions20Impl.cpp"
 							>
 						</File>
