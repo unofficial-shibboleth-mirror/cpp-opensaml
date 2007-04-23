@@ -56,7 +56,7 @@ AbstractMetadataProvider::AbstractMetadataProvider(const DOMElement* e)
 AbstractMetadataProvider::~AbstractMetadataProvider()
 {
     for (credmap_t::iterator c = m_credentialMap.begin(); c!=m_credentialMap.end(); ++c)
-        for_each(c->second.begin(), c->second.end(), cleanup_pair<const XMLCh*,Credential>());
+        for_each(c->second.begin(), c->second.end(), xmltooling::cleanup<Credential>());
     delete m_credentialLock;
     delete m_resolver;
 }
@@ -64,7 +64,7 @@ AbstractMetadataProvider::~AbstractMetadataProvider()
 void AbstractMetadataProvider::emitChangeEvent()
 {
     for (credmap_t::iterator c = m_credentialMap.begin(); c!=m_credentialMap.end(); ++c)
-        for_each(c->second.begin(), c->second.end(), cleanup_pair<const XMLCh*,Credential>());
+        for_each(c->second.begin(), c->second.end(), xmltooling::cleanup<Credential>());
     m_credentialMap.clear();
     ObservableMetadataProvider::emitChangeEvent();
 }
@@ -202,8 +202,8 @@ const Credential* AbstractMetadataProvider::resolve(const CredentialCriteria* cr
     const credmap_t::mapped_type& creds = resolveCredentials(metacrit->getRole());
 
     for (credmap_t::mapped_type::const_iterator c = creds.begin(); c!=creds.end(); ++c)
-        if (matches(*c,criteria))
-            return c->second;
+        if (metacrit->matches(*(*c)))
+            return *c;
     return NULL;
 }
 
@@ -219,8 +219,8 @@ vector<const Credential*>::size_type AbstractMetadataProvider::resolve(
     const credmap_t::mapped_type& creds = resolveCredentials(metacrit->getRole());
 
     for (credmap_t::mapped_type::const_iterator c = creds.begin(); c!=creds.end(); ++c)
-        if (matches(*c,criteria))
-            results.push_back(c->second);
+        if (metacrit->matches(*(*c)))
+            results.push_back(*c);
     return results.size();
 }
 
@@ -238,22 +238,8 @@ const AbstractMetadataProvider::credmap_t::mapped_type& AbstractMetadataProvider
             auto_ptr<MetadataCredentialContext> mcc(new MetadataCredentialContext(*(*k)));
             Credential* c = resolver->resolve(mcc.get());
             mcc.release();
-            resolved.push_back(make_pair((*k)->getUse(), c));
+            resolved.push_back(c);
         }
     }
     return resolved;
-}
-
-bool AbstractMetadataProvider::matches(const pair<const XMLCh*,Credential*>& cred, const CredentialCriteria* criteria) const
-{
-    if (criteria) {
-        // Check for a usage mismatch.
-        if ((criteria->getUsage()==CredentialCriteria::SIGNING_CREDENTIAL || criteria->getUsage()==CredentialCriteria::TLS_CREDENTIAL) &&
-                XMLString::equals(cred.first,KeyDescriptor::KEYTYPE_ENCRYPTION))
-            return false;
-        else if (criteria->getUsage()==CredentialCriteria::ENCRYPTION_CREDENTIAL && XMLString::equals(cred.first,KeyDescriptor::KEYTYPE_SIGNING))
-            return false;
-        return cred.second->matches(*criteria);
-    }
-    return true;
 }

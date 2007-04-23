@@ -96,17 +96,6 @@ namespace opensaml {
              */
             virtual void clearDescriptorIndex();
 
-            /**
-             * Returns true iff the Credential matches the criteria supplied, if any.
-             *
-             * @param cred      Credential plus KeyDescriptor usage information
-             * @param criteria  criteria for Credential selection
-             * @return  true iff the Credential applies
-             */
-            virtual bool matches(
-                const std::pair<const XMLCh*,xmltooling::Credential*>& cred, const xmltooling::CredentialCriteria* criteria
-                ) const;
-        
         private:
             typedef std::multimap<std::string,const EntityDescriptor*> sitemap_t;
             typedef std::multimap<std::string,const EntitiesDescriptor*> groupmap_t;
@@ -115,7 +104,7 @@ namespace opensaml {
             groupmap_t m_groups;
 
             mutable xmltooling::Mutex* m_credentialLock;
-            typedef std::map<const RoleDescriptor*, std::vector< std::pair<const XMLCh*,xmltooling::Credential*> > > credmap_t;
+            typedef std::map< const RoleDescriptor*, std::vector<xmltooling::Credential*> > credmap_t;
             mutable credmap_t m_credentialMap;
             const credmap_t::mapped_type& resolveCredentials(const RoleDescriptor& role) const;
         };

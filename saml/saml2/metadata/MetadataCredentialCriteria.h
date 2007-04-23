@@ -24,7 +24,7 @@
 #define __saml_metacrit_h__
 
 #include <saml/base.h>
-#include <saml/saml2/metadata/Metadata.h>
+#include <saml/saml2/metadata/MetadataCredentialContext.h>
 #include <xmltooling/security/CredentialCriteria.h>
 
 namespace opensaml {
@@ -58,6 +58,20 @@ namespace opensaml {
              */
             const RoleDescriptor& getRole() const {
                 return m_role;
+            }
+
+            bool matches(xmltooling::Credential& credential) const {
+                const MetadataCredentialContext* context = dynamic_cast<const MetadataCredentialContext*>(credential.getCredentalContext());
+                if (context) {
+                    // Check for a usage mismatch.
+                    if ((getUsage()==CredentialCriteria::SIGNING_CREDENTIAL || getUsage()==CredentialCriteria::TLS_CREDENTIAL) &&
+                            XMLString::equals(context->getKeyDescriptor().getUse(),KeyDescriptor::KEYTYPE_ENCRYPTION))
+                        return false;
+                    else if (getUsage()==CredentialCriteria::ENCRYPTION_CREDENTIAL &&
+                            XMLString::equals(context->getKeyDescriptor().getUse(),KeyDescriptor::KEYTYPE_SIGNING))
+                        return false;
+                }
+                return CredentialCriteria::matches(credential);
             }
 
         private:
