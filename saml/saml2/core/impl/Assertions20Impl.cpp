@@ -413,10 +413,7 @@ namespace opensaml {
             }
         };
 
-        class SAML_DLLLOCAL SubjectConfirmationDataTypeImpl : public virtual SubjectConfirmationDataType,
-            public AbstractDOMCachingXMLObject,
-            public AbstractXMLObjectMarshaller,
-            public AbstractXMLObjectUnmarshaller
+        class SAML_DLLLOCAL SubjectConfirmationDataTypeImpl : public virtual SubjectConfirmationDataType, public virtual AbstractXMLObject
         {
             void init() {
                 m_NotBefore=m_NotOnOrAfter=NULL;
@@ -442,7 +439,7 @@ namespace opensaml {
                 init();
             }
                 
-            SubjectConfirmationDataTypeImpl(const SubjectConfirmationDataTypeImpl& src) : AbstractDOMCachingXMLObject(src) {
+            SubjectConfirmationDataTypeImpl(const SubjectConfirmationDataTypeImpl& src) : AbstractXMLObject(src) {
                 init();
                 setNotBefore(src.getNotBefore());
                 setNotOnOrAfter(src.getNotOnOrAfter());
@@ -472,7 +469,6 @@ namespace opensaml {
                 PROC_STRING_ATTRIB(Recipient,RECIPIENT,NULL);
                 PROC_STRING_ATTRIB(InResponseTo,INRESPONSETO,NULL);
                 PROC_STRING_ATTRIB(Address,ADDRESS,NULL);
-                AbstractXMLObjectUnmarshaller::processAttribute(attribute);
             }
         };
 
@@ -526,12 +522,24 @@ namespace opensaml {
                 SubjectConfirmationDataTypeImpl::marshallAttributes(domElement);
                 AnyElementImpl::marshallAttributes(domElement);
             }
+
+            void processAttribute(const DOMAttr* attribute) {
+                PROC_DATETIME_ATTRIB(NotBefore,NOTBEFORE,NULL);
+                PROC_DATETIME_ATTRIB(NotOnOrAfter,NOTONORAFTER,NULL);
+                PROC_STRING_ATTRIB(Recipient,RECIPIENT,NULL);
+                PROC_STRING_ATTRIB(InResponseTo,INRESPONSETO,NULL);
+                PROC_STRING_ATTRIB(Address,ADDRESS,NULL);
+                AnyElementImpl::processAttribute(attribute);
+            }
         };
 
         class SAML_DLLLOCAL KeyInfoConfirmationDataTypeImpl : public virtual KeyInfoConfirmationDataType,
                 public SubjectConfirmationDataTypeImpl,
                 public AbstractComplexElement,
-                public AbstractAttributeExtensibleXMLObject
+                public AbstractAttributeExtensibleXMLObject,
+                public AbstractDOMCachingXMLObject,
+                public AbstractXMLObjectMarshaller,
+                public AbstractXMLObjectUnmarshaller
         {
         public:
             virtual ~KeyInfoConfirmationDataTypeImpl() {}
@@ -542,7 +550,7 @@ namespace opensaml {
                 
             KeyInfoConfirmationDataTypeImpl(const KeyInfoConfirmationDataTypeImpl& src)
                     : AbstractXMLObject(src), SubjectConfirmationDataTypeImpl(src), AbstractComplexElement(src),
-                        AbstractAttributeExtensibleXMLObject(src) {
+                        AbstractAttributeExtensibleXMLObject(src), AbstractDOMCachingXMLObject(src) {
                 VectorOf(KeyInfo) v=getKeyInfos();
                 for (vector<KeyInfo*>::const_iterator i=src.m_KeyInfos.begin(); i!=src.m_KeyInfos.end(); ++i)
                     v.push_back((*i)->cloneKeyInfo());
