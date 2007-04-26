@@ -37,6 +37,7 @@ namespace opensaml {
         class EndpointManager
         {
         protected:
+            /** Reference to endpoint array. */
             typename const std::vector<_Tx*>& m_endpoints;
             
         public:

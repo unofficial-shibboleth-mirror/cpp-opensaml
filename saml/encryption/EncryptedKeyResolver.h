@@ -41,6 +41,11 @@ namespace opensaml {
     class SAML_API EncryptedKeyResolver : public xmlencryption::EncryptedKeyResolver
     {
     public:
+        /**
+         * Constructor.
+         * 
+         * @param ref   reference to encrypted element
+         */
         EncryptedKeyResolver(const saml2::EncryptedElementType& ref) : m_ref(ref) {
         }
         
@@ -49,6 +54,7 @@ namespace opensaml {
         const xmlencryption::EncryptedKey* resolveKey(const xmlencryption::EncryptedData& encryptedData, const XMLCh* recipient=NULL) const;
      
     protected:
+        /** Reference to encrypted element. */
         const saml2::EncryptedElementType& m_ref;
     };
 

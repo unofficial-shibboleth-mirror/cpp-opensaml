@@ -36,7 +36,7 @@ namespace opensaml {
         class SAML_API MetadataCredentialCriteria : public xmltooling::CredentialCriteria
         {
         public:
-            /*
+            /**
              * Constructor.
              *
              * @param role      source of metadata-supplied credentials

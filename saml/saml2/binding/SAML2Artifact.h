@@ -50,8 +50,18 @@ namespace opensaml {
         protected:
             SAML2Artifact() {}
 
+            /**
+             * Constructor.
+             * 
+             * @param s raw artifact string
+             */
             SAML2Artifact(const char* s) : SAMLArtifact(s) {}
     
+            /**
+             * Copy constructor.
+             * 
+             * @param src   object to copy
+             */
             SAML2Artifact(const SAML2Artifact& src) : SAMLArtifact(src) {}
         };
         

@@ -88,6 +88,11 @@ namespace opensaml {
             static const unsigned int HANDLE_LENGTH;
     
         protected:
+            /**
+             * Copy constructor.
+             * 
+             * @param src   object to copy
+             */
             SAMLArtifactType0001(const SAMLArtifactType0001& src) : SAMLArtifact(src) {}
         };
         

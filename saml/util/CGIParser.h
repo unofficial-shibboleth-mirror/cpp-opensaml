@@ -43,6 +43,7 @@ namespace opensaml {
 
         ~CGIParser();
 
+        /** Alias for multimap iterator. */
         typedef std::multimap<std::string,char*>::const_iterator walker;
         
         /**

@@ -39,7 +39,6 @@ namespace opensaml {
          * Creates a SOAP client instance with a particular SecurityPolicy.
          * 
          * @param policy        reference to SecurityPolicy to apply
-         * @param validating    controls schema validation
          */
         SOAPClient(SecurityPolicy& policy)
             : soap11::SOAPClient(policy.getValidating()), m_policy(policy), m_force(true), m_peer(NULL), m_criteria(NULL) {

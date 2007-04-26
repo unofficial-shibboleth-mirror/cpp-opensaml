@@ -61,7 +61,7 @@ namespace opensaml {
         public:
             virtual ~AbstractMetadataProvider();
             
-            void emitChangeEvent();
+            void emitChangeEvent() const;
             const EntityDescriptor* getEntityDescriptor(const char* id, bool requireValidMetadata=true) const;
             const EntityDescriptor* getEntityDescriptor(const SAMLArtifact* artifact) const;
             const EntitiesDescriptor* getEntitiesDescriptor(const char* name, bool requireValidMetadata=true) const;

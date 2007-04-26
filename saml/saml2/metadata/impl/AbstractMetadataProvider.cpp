@@ -61,7 +61,7 @@ AbstractMetadataProvider::~AbstractMetadataProvider()
     delete m_resolver;
 }
 
-void AbstractMetadataProvider::emitChangeEvent()
+void AbstractMetadataProvider::emitChangeEvent() const
 {
     for (credmap_t::iterator c = m_credentialMap.begin(); c!=m_credentialMap.end(); ++c)
         for_each(c->second.begin(), c->second.end(), xmltooling::cleanup<Credential>());

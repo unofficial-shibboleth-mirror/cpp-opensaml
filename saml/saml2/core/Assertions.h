@@ -97,6 +97,7 @@ namespace opensaml {
             /**
              * Encrypts an object to multiple recipients using this object as a container.
              * 
+             * @param xmlObject     object to encrypt
              * @param recipients    pairs containing a locked MetadataProvider to supply encryption keys,
              *                      and a metadata-based CredentialCriteria to use
              * @param compact       true iff compact KeyInfo should be used

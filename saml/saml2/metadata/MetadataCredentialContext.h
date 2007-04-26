@@ -35,7 +35,7 @@ namespace opensaml {
         class SAML_API MetadataCredentialContext : public xmltooling::KeyInfoCredentialContext
         {
         public:
-            /*
+            /**
              * Constructor.
              *
              * @param descriptor    source of metadata-supplied credential
