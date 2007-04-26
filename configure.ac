@@ -136,6 +136,16 @@ AC_ARG_WITH(xmlsec,
     fi])
 LIBS="-lxml-security-c $LIBS"
 AC_CHECK_HEADER([xsec/utils/XSECPlatformUtils.hpp],,AC_MSG_ERROR([unable to find xmlsec header files]))
+AC_MSG_CHECKING([XML-Security version])
+AC_PREPROC_IFELSE(
+    [AC_LANG_PROGRAM([#include <xsec/utils/XSECPlatformUtils.hpp>],
+    [#if XSEC_VERSION_MAJOR > 1 || (XSEC_VERSION_MAJOR == 1 && XSEC_VERSION_MEDIUM > 3) || (XSEC_VERSION_MAJOR == 1 && XSEC_VERSION_MEDIUM == 3 && XSEC_VERSION_MINOR > 0)
+int i = 0;
+#else
+#error need version 1.3.1 or later
+#endif])],
+    [AC_MSG_RESULT(OK)],
+    [AC_MSG_FAILURE([XML-Security version 1.3.1 or greater is required.])])
 AC_TRY_LINK(
     [#include <xsec/utils/XSECPlatformUtils.hpp>],
     [XSECPlatformUtils::Initialise()],
