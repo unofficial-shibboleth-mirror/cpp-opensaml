@@ -15,7 +15,7 @@
  */
 
 /**
- * @file saml/security/ChainingMetadataProvider.h
+ * @file saml/saml2/metadata/ChainingMetadataProvider.h
  * 
  * MetadataProvider that uses multiple providers in sequence.
  */

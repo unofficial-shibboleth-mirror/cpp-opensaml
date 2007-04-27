@@ -15,7 +15,7 @@
  */
 
 /**
- * @file saml/saml2/core/SAML2ArtifactType0004.h
+ * @file saml/saml2/binding/SAML2ArtifactType0004.h
  * 
  * Type 0x0004 SAML 2.0 artifact class
  */

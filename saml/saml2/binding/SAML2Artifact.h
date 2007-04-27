@@ -15,7 +15,7 @@
  */
 
 /**
- * @file saml/saml2/core/SAML2Artifact.h
+ * @file saml/saml2/binding/SAML2Artifact.h
  * 
  * Base class for SAML 2.0 artifacts
  */
