@@ -15,7 +15,7 @@
  */
 
 /**
- * version.h
+ * saml/version.h
  * 
  * Library version macros and constants 
  */

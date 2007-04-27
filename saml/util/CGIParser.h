@@ -15,7 +15,7 @@
  */
 
 /**
- * @file shibsp/util/CGIParser.h
+ * @file saml/util/CGIParser.h
  * 
  * CGI GET/POST parameter parsing
  */

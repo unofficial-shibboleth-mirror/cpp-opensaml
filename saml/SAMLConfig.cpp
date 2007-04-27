@@ -45,7 +45,6 @@
 #include <xsec/enc/XSECCryptoException.hpp>
 #include <xsec/enc/XSECCryptoProvider.hpp>
 #include <xsec/utils/XSECPlatformUtils.hpp>
-#include <openssl/err.h>
 
 using namespace opensaml;
 using namespace xmlsignature;
@@ -214,22 +213,6 @@ string SAMLInternalConfig::hashSHA1(const char* s, bool toHex)
         }
     }
     throw XMLSecurityException("Unable to generate SHA-1 hash.");
-}
-
-void opensaml::log_openssl()
-{
-    const char* file;
-    const char* data;
-    int flags,line;
-
-    unsigned long code=ERR_get_error_line_data(&file,&line,&data,&flags);
-    while (code) {
-        Category& log=Category::getInstance("OpenSSL");
-        log.errorStream() << "error code: " << code << " in " << file << ", line " << line << CategoryStream::ENDLINE;
-        if (data && (flags & ERR_TXT_STRING))
-            log.errorStream() << "error data: " << data << CategoryStream::ENDLINE;
-        code=ERR_get_error_line_data(&file,&line,&data,&flags);
-    }
 }
 
 using namespace saml2md;
