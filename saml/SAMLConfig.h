@@ -146,22 +146,22 @@ namespace opensaml {
         virtual std::string hashSHA1(const char* s, bool toHex=false)=0;
 
         /** Manages factories for MessageDecoder plugins. */
-        xmltooling::PluginManager<MessageDecoder,const xercesc::DOMElement*> MessageDecoderManager;
+        xmltooling::PluginManager<MessageDecoder,std::string,const xercesc::DOMElement*> MessageDecoderManager;
 
         /** Manages factories for MessageEncoder plugins. */
-        xmltooling::PluginManager<MessageEncoder,const xercesc::DOMElement*> MessageEncoderManager;        
+        xmltooling::PluginManager<MessageEncoder,std::string,const xercesc::DOMElement*> MessageEncoderManager;        
 
         /** Manages factories for SAMLArtifact plugins. */
-        xmltooling::PluginManager<SAMLArtifact,const char*> SAMLArtifactManager;
+        xmltooling::PluginManager<SAMLArtifact,std::string,const char*> SAMLArtifactManager;
 
         /** Manages factories for SecurityPolicyRule plugins. */
-        xmltooling::PluginManager<SecurityPolicyRule,const xercesc::DOMElement*> SecurityPolicyRuleManager;
+        xmltooling::PluginManager<SecurityPolicyRule,std::string,const xercesc::DOMElement*> SecurityPolicyRuleManager;
 
         /** Manages factories for MetadataProvider plugins. */
-        xmltooling::PluginManager<saml2md::MetadataProvider,const xercesc::DOMElement*> MetadataProviderManager;
+        xmltooling::PluginManager<saml2md::MetadataProvider,std::string,const xercesc::DOMElement*> MetadataProviderManager;
         
         /** Manages factories for MetadataFilter plugins. */
-        xmltooling::PluginManager<saml2md::MetadataFilter,const xercesc::DOMElement*> MetadataFilterManager;
+        xmltooling::PluginManager<saml2md::MetadataFilter,std::string,const xercesc::DOMElement*> MetadataFilterManager;
 
     protected:
         SAMLConfig() : m_artifactMap(NULL) {}

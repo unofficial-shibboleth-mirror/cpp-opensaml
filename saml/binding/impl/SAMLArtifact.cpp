@@ -31,12 +31,12 @@ using namespace std;
 
 namespace opensaml {
     namespace saml1p {
-        SAML_DLLLOCAL PluginManager<SAMLArtifact,const char*>::Factory SAMLArtifactType0001Factory; 
-        SAML_DLLLOCAL PluginManager<SAMLArtifact,const char*>::Factory SAMLArtifactType0002Factory; 
+        SAML_DLLLOCAL PluginManager<SAMLArtifact,string,const char*>::Factory SAMLArtifactType0001Factory; 
+        SAML_DLLLOCAL PluginManager<SAMLArtifact,string,const char*>::Factory SAMLArtifactType0002Factory; 
     };
 
     namespace saml2p {
-        SAML_DLLLOCAL PluginManager<SAMLArtifact,const char*>::Factory SAML2ArtifactType0004Factory; 
+        SAML_DLLLOCAL PluginManager<SAMLArtifact,string,const char*>::Factory SAML2ArtifactType0004Factory; 
     };
 };
 

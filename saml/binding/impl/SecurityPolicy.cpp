@@ -32,12 +32,12 @@ using namespace xmltooling;
 using namespace std;
 
 namespace opensaml {
-    SAML_DLLLOCAL PluginManager<SecurityPolicyRule,const DOMElement*>::Factory ClientCertAuthRuleFactory;
-    SAML_DLLLOCAL PluginManager<SecurityPolicyRule,const DOMElement*>::Factory MessageFlowRuleFactory;
-    SAML_DLLLOCAL PluginManager<SecurityPolicyRule,const DOMElement*>::Factory SAML1MessageRuleFactory;
-    SAML_DLLLOCAL PluginManager<SecurityPolicyRule,const DOMElement*>::Factory SAML2MessageRuleFactory;
-    SAML_DLLLOCAL PluginManager<SecurityPolicyRule,const DOMElement*>::Factory SimpleSigningRuleFactory;
-    SAML_DLLLOCAL PluginManager<SecurityPolicyRule,const DOMElement*>::Factory XMLSigningRuleFactory;
+    SAML_DLLLOCAL PluginManager<SecurityPolicyRule,string,const DOMElement*>::Factory ClientCertAuthRuleFactory;
+    SAML_DLLLOCAL PluginManager<SecurityPolicyRule,string,const DOMElement*>::Factory MessageFlowRuleFactory;
+    SAML_DLLLOCAL PluginManager<SecurityPolicyRule,string,const DOMElement*>::Factory SAML1MessageRuleFactory;
+    SAML_DLLLOCAL PluginManager<SecurityPolicyRule,string,const DOMElement*>::Factory SAML2MessageRuleFactory;
+    SAML_DLLLOCAL PluginManager<SecurityPolicyRule,string,const DOMElement*>::Factory SimpleSigningRuleFactory;
+    SAML_DLLLOCAL PluginManager<SecurityPolicyRule,string,const DOMElement*>::Factory XMLSigningRuleFactory;
 };
 
 void SAML_API opensaml::registerSecurityPolicyRules()

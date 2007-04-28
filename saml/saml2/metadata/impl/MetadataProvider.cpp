@@ -37,11 +37,11 @@ using namespace std;
 
 namespace opensaml {
     namespace saml2md {
-        SAML_DLLLOCAL PluginManager<MetadataProvider,const DOMElement*>::Factory XMLMetadataProviderFactory;
-        SAML_DLLLOCAL PluginManager<MetadataProvider,const DOMElement*>::Factory ChainingMetadataProviderFactory;
-        SAML_DLLLOCAL PluginManager<MetadataFilter,const DOMElement*>::Factory BlacklistMetadataFilterFactory;
-        SAML_DLLLOCAL PluginManager<MetadataFilter,const DOMElement*>::Factory WhitelistMetadataFilterFactory;
-        SAML_DLLLOCAL PluginManager<MetadataFilter,const DOMElement*>::Factory SignatureMetadataFilterFactory;
+        SAML_DLLLOCAL PluginManager<MetadataProvider,string,const DOMElement*>::Factory XMLMetadataProviderFactory;
+        SAML_DLLLOCAL PluginManager<MetadataProvider,string,const DOMElement*>::Factory ChainingMetadataProviderFactory;
+        SAML_DLLLOCAL PluginManager<MetadataFilter,string,const DOMElement*>::Factory BlacklistMetadataFilterFactory;
+        SAML_DLLLOCAL PluginManager<MetadataFilter,string,const DOMElement*>::Factory WhitelistMetadataFilterFactory;
+        SAML_DLLLOCAL PluginManager<MetadataFilter,string,const DOMElement*>::Factory SignatureMetadataFilterFactory;
     };
 };
 
