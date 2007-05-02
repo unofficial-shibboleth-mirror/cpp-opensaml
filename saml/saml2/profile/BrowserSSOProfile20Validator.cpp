@@ -81,7 +81,7 @@ void BrowserSSOProfileValidator::validateAssertion(const Assertion& assertion) c
                 }
 
                 // Pass up for additional checking.
-                AssertionValidator::validateAssertion(assertion);
+                return AssertionValidator::validateAssertion(assertion);
             }
         }
     }
