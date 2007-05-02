@@ -133,6 +133,8 @@ long SAML2RedirectEncoder::encode(
         xmlbuf = xmlbuf + "&RelayState=" + escaper->encode(relayState);
   
     if (credential) {
+        log.debug("signing the message");
+        
         // Sign the query string after adding the algorithm.
         if (!signatureAlg)
             signatureAlg = DSIGConstants::s_unicodeStrURIRSA_SHA1;
