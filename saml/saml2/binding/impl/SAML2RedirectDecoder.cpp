@@ -145,7 +145,7 @@ XMLObject* SAML2RedirectDecoder::decode(
     // Check destination URL.
     auto_ptr_char dest(request ? request->getDestination() : response->getDestination());
     const char* dest2 = httpRequest->getRequestURL();
-    if ((root->getSignature() || httpRequest->getParameter("Signature")) && !dest.get() || !*(dest.get())) {
+    if ((root->getSignature() || httpRequest->getParameter("Signature")) && (!dest.get() || !*(dest.get()))) {
         log.error("signed SAML message missing Destination attribute");
         throw BindingException("Signed SAML message missing Destination attribute identifying intended destination.");
     }
