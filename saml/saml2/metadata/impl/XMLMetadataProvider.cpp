@@ -63,11 +63,6 @@ namespace opensaml {
         protected:
             pair<bool,DOMElement*> load();
 
-            bool isValid() const {
-                const TimeBoundSAMLObject* bound=dynamic_cast<const TimeBoundSAMLObject*>(m_object);
-                return bound ? bound->isValid() : false;
-            }
-
         private:
             void index();
         

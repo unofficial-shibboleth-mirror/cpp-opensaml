@@ -154,6 +154,7 @@ XMLObject* SAML1ArtifactDecoder::decode(
     policy.setIssuerMetadata(roledesc);
     
     try {
+        log.debug("calling ArtifactResolver...");
         auto_ptr<Response> response(
             m_artifactResolver->resolve(artifacts, dynamic_cast<const IDPSSODescriptor&>(*roledesc), policy)
             );
