@@ -78,10 +78,25 @@ namespace opensaml {
 
 static const XMLCh _CredentialResolver[] =  UNICODE_LITERAL_18(C,r,e,d,e,n,t,i,a,l,R,e,s,o,l,v,e,r);
 static const XMLCh type[] =                 UNICODE_LITERAL_4(t,y,p,e);
+static const XMLCh certificate[] =          UNICODE_LITERAL_11(c,e,r,t,i,f,i,c,a,t,e);
+static const XMLCh Certificate[] =          UNICODE_LITERAL_11(C,e,r,t,i,f,i,c,a,t,e);
+static const XMLCh Path[] =                 UNICODE_LITERAL_4(P,a,t,h);
 
 SignatureMetadataFilter::SignatureMetadataFilter(const DOMElement* e) : m_credResolver(NULL)
 {
-    e = XMLHelper::getFirstChildElement(e, _CredentialResolver);
+    if (e && e->hasAttributeNS(NULL,certificate)) {
+        // Dummy up a file resolver.
+        DOMElement* dummy = e->getOwnerDocument()->createElementNS(NULL,_CredentialResolver);
+        DOMElement* child = e->getOwnerDocument()->createElementNS(NULL,Certificate);
+        dummy->appendChild(child);
+        DOMElement* path = e->getOwnerDocument()->createElementNS(NULL,Path);
+        child->appendChild(path);
+        path->appendChild(e->getOwnerDocument()->createTextNode(e->getAttributeNS(NULL,certificate)));
+        m_credResolver = XMLToolingConfig::getConfig().CredentialResolverManager.newPlugin(FILESYSTEM_CREDENTIAL_RESOLVER,dummy);
+        return;
+    }
+
+    e = e ? XMLHelper::getFirstChildElement(e, _CredentialResolver) : NULL;
     auto_ptr_char t(e ? e->getAttributeNS(NULL,type) : NULL);
     if (t.get()) {
         m_credResolver = XMLToolingConfig::getConfig().CredentialResolverManager.newPlugin(t.get(),e);
