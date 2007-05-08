@@ -50,11 +50,11 @@ static const XMLCh type[] =                 UNICODE_LITERAL_4(t,y,p,e);
 ChainingMetadataProvider::ChainingMetadataProvider(const DOMElement* e) : ObservableMetadataProvider(e), m_tlsKey(NULL)
 {
     Category& log=Category::getInstance(SAML_LOGCAT".Metadata");
-    try {
-        e = e ? XMLHelper::getFirstChildElement(e, _MetadataProvider) : NULL;
-        while (e) {
-            auto_ptr_char temp(e->getAttributeNS(NULL,type));
-            if (temp.get() && *temp.get()) {
+    e = e ? XMLHelper::getFirstChildElement(e, _MetadataProvider) : NULL;
+    while (e) {
+        auto_ptr_char temp(e->getAttributeNS(NULL,type));
+        if (temp.get() && *temp.get()) {
+            try {
                 log.info("building MetadataProvider of type %s", temp.get());
                 auto_ptr<MetadataProvider> provider(
                     SAMLConfig::getConfig().MetadataProviderManager.newPlugin(temp.get(), e)
@@ -65,12 +65,11 @@ ChainingMetadataProvider::ChainingMetadataProvider(const DOMElement* e) : Observ
                 m_providers.push_back(provider.get());
                 provider.release();
             }
-            e = XMLHelper::getNextSiblingElement(e, _MetadataProvider);
+            catch (exception& ex) {
+                log.error("error building MetadataProvider: %s", ex.what());
+            }
         }
-    }
-    catch (exception&) {
-        for_each(m_providers.begin(), m_providers.end(), xmltooling::cleanup<MetadataProvider>());
-        throw;
+        e = XMLHelper::getNextSiblingElement(e, _MetadataProvider);
     }
     m_tlsKey = ThreadKey::create(NULL);
 }
@@ -88,7 +87,14 @@ void ChainingMetadataProvider::onEvent(const ObservableMetadataProvider& provide
 
 void ChainingMetadataProvider::init()
 {
-    for_each(m_providers.begin(), m_providers.end(), mem_fun(&MetadataProvider::init));
+    for (vector<MetadataProvider*>::const_iterator i=m_providers.begin(); i!=m_providers.end(); ++i) {
+        try {
+            (*i)->init();
+        }
+        catch (exception& ex) {
+            Category::getInstance(SAML_LOGCAT".Metadata").error("failure initializing MetadataProvider: %s", ex.what());
+        }
+    }
 }
 
 Lockable* ChainingMetadataProvider::lock()
