@@ -9,7 +9,7 @@ MOSTLYCLEANFILES = $(DX_CLEANFILES)
 EXTRA_DIST = $(DX_CONFIG) \
 	doc \
 	schemas \
-	cpp-opensaml.sln \
+	cpp-opensaml2.sln \
 	libtool.m4 \
 	doxygen.m4 \
 	depcomp \
