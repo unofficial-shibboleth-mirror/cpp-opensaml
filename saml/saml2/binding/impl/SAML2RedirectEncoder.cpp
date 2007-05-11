@@ -149,7 +149,7 @@ long SAML2RedirectEncoder::encode(
     
     // Generate redirect.
     log.debug("message encoded, sending redirect to client");
-    xmlbuf.insert(0,1,(strchr(destination,'?') ? '&' : '?'));
+    xmlbuf.insert((string::size_type)0,(string::size_type)1,(strchr(destination,'?') ? '&' : '?'));
     xmlbuf.insert(0,destination);
     long ret = httpResponse->sendRedirect(xmlbuf.c_str());
 

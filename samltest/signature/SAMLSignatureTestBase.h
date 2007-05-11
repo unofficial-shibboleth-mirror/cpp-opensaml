@@ -15,8 +15,9 @@
  */
 
 #include "internal.h"
-#include <saml/signature/SignatureProfileValidator.h>
 
+#include <sstream>
+#include <saml/signature/SignatureProfileValidator.h>
 #include <xmltooling/security/CredentialCriteria.h>
 #include <xmltooling/security/CredentialResolver.h>
 #include <xmltooling/signature/KeyInfo.h>

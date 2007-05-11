@@ -48,7 +48,7 @@ CGIParser::CGIParser(const HTTPRequest& request)
         plustospace(value);
         dec->decode(value);
         name=makeword(value,'=');
-        kvp_map.insert(pair<string,char*>(name,value));
+        kvp_map.insert(pair<const string,char*>(name,value));
         free(name);
     }
 }

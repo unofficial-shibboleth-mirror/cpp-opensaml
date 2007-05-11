@@ -17,6 +17,7 @@
 #include "signature/SAMLSignatureTestBase.h"
 
 #include <fstream>
+#include <sstream>
 #include <saml/SAMLConfig.h>
 #include <saml/saml2/core/Assertions.h>
 #include <saml/saml2/metadata/Metadata.h>
@@ -116,7 +117,9 @@ public:
         const SPSSODescriptor* sprole =  sp->getSPSSODescriptor(samlconstants::SAML20P_NS);
         TSM_ASSERT("No SP role for recipient.", sprole!=NULL);
         MetadataCredentialCriteria mcc(*sprole);
-        vector< pair<const MetadataProvider*,MetadataCredentialCriteria*> > recipients(1, make_pair(m_metadata, &mcc));
+        vector< pair<const MetadataProvider*,MetadataCredentialCriteria*> > recipients(
+            1, pair<const MetadataProvider*,MetadataCredentialCriteria*>(m_metadata, &mcc)
+            );
         encrypted->encrypt(*assertion.get(), recipients);
         
         // Roundtrip it.
