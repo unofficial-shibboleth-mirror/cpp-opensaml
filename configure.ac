@@ -32,6 +32,7 @@ fi
 
 AC_PROG_CC([gcc gcc3 cc])
 AC_PROG_CXX([g++ g++3 c++ CC])
+AC_CANONICAL_HOST
 
 if test "$GCC" = "yes" ; then
 #    AC_HAVE_GCC_VERSION(4,0,0,0,
@@ -43,6 +44,15 @@ if test "$GCC" = "yes" ; then
 #        ])
     CFLAGS="$GCC_CFLAGS"
     CXXFLAGS="$GCC_CXXFLAGS"
+else
+# Fix for Sun Workshop compiler in debug mode, may be Sun case #6360993
+	case "${host_cpu}-${host_os}" in
+	        *solaris*)
+			if test "$CXX" = "CC" ; then
+				CXXFLAGS="$CXXFLAGS -Qoption ccfe -stabs=no%dfltlit+no%dflthlp"
+			fi
+	        ;;
+	esac
 fi
 
 AC_DISABLE_STATIC
