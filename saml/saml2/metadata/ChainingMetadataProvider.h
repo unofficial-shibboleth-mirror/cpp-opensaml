@@ -86,6 +86,9 @@ namespace opensaml {
                 return NULL;
             }
 
+            using MetadataProvider::getEntityDescriptor;
+            using MetadataProvider::getEntitiesDescriptor;
+
             xmltooling::Lockable* lock();
             void unlock();
             void init();

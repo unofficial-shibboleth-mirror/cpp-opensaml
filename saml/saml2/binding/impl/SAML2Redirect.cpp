@@ -23,7 +23,7 @@
 #include "internal.h"
 #include "saml2/binding/SAML2Redirect.h"
 
-#include <zlib/zlib.h>
+#include <zlib.h>
 #include <log4cpp/Category.hh>
 #include <xmltooling/util/NDC.h>
 

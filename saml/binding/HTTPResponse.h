@@ -85,12 +85,14 @@ namespace opensaml {
             SAML_HTTP_STATUS_ERROR = 500
         };
         
+        using GenericResponse::sendResponse;
+
         long sendError(std::istream& inputStream) {
-            return static_cast<GenericResponse*>(this)->sendResponse(inputStream, SAML_HTTP_STATUS_ERROR);
+            return sendResponse(inputStream, SAML_HTTP_STATUS_ERROR);
         }
 
         long sendResponse(std::istream& inputStream) {
-            return static_cast<GenericResponse*>(this)->sendResponse(inputStream, SAML_HTTP_STATUS_OK);
+            return sendResponse(inputStream, SAML_HTTP_STATUS_OK);
         }
     };
 };

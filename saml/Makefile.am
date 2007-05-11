@@ -175,4 +175,4 @@ libsaml_la_LDFLAGS = -version-info 2:0:0
 install-exec-hook:
 	for la in $(lib_LTLIBRARIES) ; do rm -f $(DESTDIR)$(libdir)/$$la ; done
 
-EXTRA_DIST = saml.vcproj
+EXTRA_DIST = saml.vcproj zlib

@@ -58,6 +58,8 @@ namespace opensaml {
             m_force = force;
         }
         
+        using soap11::SOAPClient::send;
+
         /**
          * SAML-specific method uses a RoleDescriptor to determine the peer name and prepare the
          * transport layer with peer credential information. The SecurityPolicy is also reset,

@@ -60,7 +60,7 @@ namespace opensaml {
                 return m_role;
             }
 
-            bool matches(xmltooling::Credential& credential) const {
+            bool matches(const xmltooling::Credential& credential) const {
                 const MetadataCredentialContext* context = dynamic_cast<const MetadataCredentialContext*>(credential.getCredentalContext());
                 if (context) {
                     // Check for a usage mismatch.

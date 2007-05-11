@@ -64,6 +64,7 @@ namespace opensaml {
             pair<bool,DOMElement*> load();
 
         private:
+            using AbstractMetadataProvider::index;
             void index();
         
             XMLObject* m_object;

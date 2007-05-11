@@ -105,7 +105,7 @@ void ArtifactMappings::storeContent(XMLObject* content, const SAMLArtifact* arti
     if (relyingParty)
         m.m_relying = relyingParty;
     m.m_expires = now + TTL;
-    m_expMap.insert(make_pair(m.m_expires,hexed));
+    m_expMap.insert(pair<const time_t,string>(m.m_expires,hexed));
 }
 
 XMLObject* ArtifactMappings::retrieveContent(const SAMLArtifact* artifact, const char* relyingParty)

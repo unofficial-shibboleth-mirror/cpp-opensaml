@@ -76,7 +76,7 @@ void AbstractMetadataProvider::index(EntityDescriptor* site, time_t validUntil)
 
     auto_ptr_char id(site->getEntityID());
     if (id.get()) {
-        m_sites.insert(make_pair(id.get(),site));
+        m_sites.insert(sitemap_t::value_type(id.get(),site));
     }
     
     // Process each IdP role.
@@ -93,7 +93,7 @@ void AbstractMetadataProvider::index(EntityDescriptor* site, time_t validUntil)
                     if (sid) {
                         auto_ptr_char sourceid(sid->getID());
                         if (sourceid.get()) {
-                            m_sources.insert(pair<string,const EntityDescriptor*>(sourceid.get(),site));
+                            m_sources.insert(sitemap_t::value_type(sourceid.get(),site));
                             break;
                         }
                     }
@@ -101,25 +101,21 @@ void AbstractMetadataProvider::index(EntityDescriptor* site, time_t validUntil)
             }
             
             // Hash the ID.
-            m_sources.insert(
-                pair<string,const EntityDescriptor*>(SAMLConfig::getConfig().hashSHA1(id.get(), true),site)
-                );
+            m_sources.insert(sitemap_t::value_type(SAMLConfig::getConfig().hashSHA1(id.get(), true),site));
                 
             // Load endpoints for type 0x0002 artifacts.
             const vector<ArtifactResolutionService*>& locs=const_cast<const IDPSSODescriptor*>(*i)->getArtifactResolutionServices();
             for (vector<ArtifactResolutionService*>::const_iterator loc=locs.begin(); loc!=locs.end(); loc++) {
                 auto_ptr_char location((*loc)->getLocation());
                 if (location.get())
-                    m_sources.insert(pair<string,const EntityDescriptor*>(location.get(),site));
+                    m_sources.insert(sitemap_t::value_type(location.get(),site));
             }
         }
         
         // SAML 2.0?
         if ((*i)->hasSupport(samlconstants::SAML20P_NS)) {
             // Hash the ID.
-            m_sources.insert(
-                pair<string,const EntityDescriptor*>(SAMLConfig::getConfig().hashSHA1(id.get(), true),site)
-                );
+            m_sources.insert(sitemap_t::value_type(SAMLConfig::getConfig().hashSHA1(id.get(), true),site));
         }
     }
 }
@@ -131,7 +127,7 @@ void AbstractMetadataProvider::index(EntitiesDescriptor* group, time_t validUnti
 
     auto_ptr_char name(group->getName());
     if (name.get()) {
-        m_groups.insert(make_pair(name.get(),group));
+        m_groups.insert(groupmap_t::value_type(name.get(),group));
     }
     
     const vector<EntitiesDescriptor*>& groups=const_cast<const EntitiesDescriptor*>(group)->getEntitiesDescriptors();
