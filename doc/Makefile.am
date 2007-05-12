@@ -2,8 +2,12 @@ AUTOMAKE_OPTIONS = foreign
 
 pkgdocdir = $(prefix)/doc/@PACKAGE@
 
-pkgdoc_DATA = \
+docfiles = \
 	LICENSE.txt \
 	NOTICE.txt \
-	LOG4CPP.LICENSE \
-	CURL.LICENSE
+	LOG4CPP.LICENSE
+
+pkgdoc_DATA = $(docfiles)
+
+EXTRA_DIST = $(docfiles)
+	

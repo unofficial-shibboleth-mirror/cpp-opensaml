@@ -3,9 +3,7 @@ AUTOMAKE_OPTIONS = foreign
 
 pkgxmldir = $(datadir)/xml/@PACKAGE@
 
-pkgxml_DATA = saml20-catalog.xml \
-	saml10-catalog.xml \
-	saml11-catalog.xml \
+schemafiles = 
 	cs-sstc-schema-assertion-01.xsd \
 	cs-sstc-schema-protocol-01.xsd \
 	cs-sstc-schema-assertion-1.1.xsd \
@@ -47,6 +45,12 @@ pkgxml_DATA = saml20-catalog.xml \
 	sstc-saml-metadata-ext-query.xsd \
 	sstc-saml-protocol-ext-thirdparty.xsd
 
+pkgxml_DATA = \
+	saml20-catalog.xml \
+	saml10-catalog.xml \
+	saml11-catalog.xml \
+	$(schemafiles)
+
 #
 # Some of these need building
 #
@@ -66,11 +70,13 @@ saml10-catalog.xml: ${srcdir}/saml10-catalog.xml.in Makefile ${top_builddir}/con
 saml11-catalog.xml: ${srcdir}/saml11-catalog.xml.in Makefile ${top_builddir}/config.status
 	$(MAKE) do-build-file FILE=$@
 
-CLEANFILES = saml20-catalog.xml \
+CLEANFILES = \
+	saml20-catalog.xml \
 	saml10-catalog.xml \
 	saml11-catalog.xml
 
 EXTRA_DIST = \
 	saml20-catalog.xml.in \
 	saml10-catalog.xml.in \
-	saml11-catalog.xml.in
+	saml11-catalog.xml.in \
+	$(schemafiles)
