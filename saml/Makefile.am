@@ -178,4 +178,4 @@ install-exec-hook:
 EXTRA_DIST = saml.vcproj zlib
 
 dist-hook:
-	rm -rf `find $(distdir)/saml/zlib -name .svn`
+	rm -rf `find $(distdir)/zlib -name .svn`
