@@ -12,6 +12,7 @@ EXTRA_DIST = $(DX_CONFIG) \
 	cpp-opensaml2.sln \
 	libtool.m4 \
 	doxygen.m4 \
+	acx_pthread.m4 \
 	depcomp \
 	config_win32.h \
 	opensaml.spec.in \

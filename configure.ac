@@ -5,6 +5,7 @@ AM_CONFIG_HEADER(config.h)
 AM_INIT_AUTOMAKE([opensaml], [2.0])
 
 sinclude(doxygen.m4)
+sinclude(acx_pthread.m4)
 
 # Docygen features
 DX_HTML_FEATURE(ON)
@@ -64,8 +65,18 @@ AC_TYPE_SIZE_T
 
 # Checks for library functions.
 AC_CHECK_FUNCS([strchr strdup strstr])
-
 AC_CHECK_SIZEOF(time_t)
+
+# checks for pthreads
+ACX_PTHREAD([enable_threads="pthread"],[enable_threads="no"])
+if test $enable_threads != "pthread"; then
+    AC_MSG_ERROR([unable to find pthreads, currently this is required])
+else
+    AC_DEFINE(HAVE_PTHREAD,1,[Define if you have POSIX threads libraries and header files.])
+    LIBS="$PTHREAD_LIBS $LIBS"
+    CFLAGS="$PTHREAD_CFLAGS $CFLAGS"
+    CXXFLAGS="$PTHREAD_CFLAGS $CXXFLAGS"
+fi
 
 # zlib settings
 AC_ARG_WITH(zlib,
@@ -79,6 +90,31 @@ AC_ARG_WITH(zlib,
 )
 AC_CHECK_HEADER([zlib.h],,AC_MSG_ERROR([unable to find zlib header files]))
 AC_CHECK_LIB([z],[deflateInit2_],,AC_MSG_ERROR([unable to link with zlib library]))
+
+# OpenSSL settings
+AC_ARG_WITH(openssl,
+    AC_HELP_STRING([--with-openssl=PATH], [where openssl is installed]),
+    [if test x_$with_openssl != x_/usr; then
+        SSLFLAGS="-I${with_openssl}/include"
+    fi])
+
+if test "x$SSLFLAGS" = "x" ; then
+    AC_PATH_PROG(PKG_CONFIG, pkg-config)
+    if test "x$PKG_CONFIG" != x && test "x$PKG_CONFIG" != "xno" ; then
+        if pkg-config openssl ; then
+            SSLFLAGS="`$PKG_CONFIG --cflags openssl`"
+        else
+            AC_MSG_ERROR([OpenSSL not supported by pkg-config, try --with-openssl instead])
+        fi
+    fi
+fi
+
+AC_MSG_CHECKING(for OpenSSL cflags)
+AC_MSG_RESULT($SSLFLAGS)
+CPPFLAGS="$SSLFLAGS $CPPFLAGS"
+
+AC_CHECK_HEADER([openssl/x509.h],,
+                AC_MSG_ERROR([unable to find openssl header files]))
 
 AC_LANG(C++)
 
