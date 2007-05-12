@@ -36,11 +36,11 @@ all-local: opensaml.spec pkginfo
 
 if DX_COND_doc
 all-local: doxygen-doc
+endif
 
 install-data-hook:
 	rm -rf $(prefix)/doc/@PACKAGE@/api
 	cp -r doc/api $(prefix)/doc/@PACKAGE@
-endif
 
 opensaml.spec: opensaml.spec.in Makefile
 	rm -f $@.tmp
