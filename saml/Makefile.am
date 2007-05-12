@@ -176,3 +176,6 @@ install-exec-hook:
 	for la in $(lib_LTLIBRARIES) ; do rm -f $(DESTDIR)$(libdir)/$$la ; done
 
 EXTRA_DIST = saml.vcproj zlib
+
+dist-hook:
+	rm -rf `find $(distdir)/saml/zlib -name .svn`
