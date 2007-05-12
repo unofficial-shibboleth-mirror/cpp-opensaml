@@ -245,4 +245,4 @@ AC_SUBST(DX_INCLUDE)
 LIBTOOL="$LIBTOOL --silent"
 
 # output makefiles
-AC_OUTPUT(Makefile saml/Makefile samltest/Makefile schemas/Makefile)
+AC_OUTPUT(Makefile saml/Makefile samltest/Makefile schemas/Makefile doc/Makefile)
