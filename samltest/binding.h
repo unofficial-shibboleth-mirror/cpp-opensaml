@@ -249,6 +249,8 @@ public:
         return decoded;
     }
     
+    using HTTPResponse::sendResponse;
+
     long sendResponse(std::istream& inputStream, long status) {
         m_method="POST";
         string page,line;
