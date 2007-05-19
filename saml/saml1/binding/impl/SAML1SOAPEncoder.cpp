@@ -22,13 +22,13 @@
 
 #include "internal.h"
 #include "exceptions.h"
-#include "binding/HTTPResponse.h"
 #include "binding/MessageEncoder.h"
 #include "signature/ContentReference.h"
 #include "saml1/core/Protocols.h"
 
 #include <sstream>
 #include <log4cpp/Category.hh>
+#include <xmltooling/io/HTTPResponse.h>
 #include <xmltooling/util/NDC.h>
 #include <xmltooling/soap/SOAP.h>
 

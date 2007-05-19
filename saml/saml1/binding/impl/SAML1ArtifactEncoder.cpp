@@ -23,7 +23,6 @@
 #include "internal.h"
 #include "exceptions.h"
 #include "binding/ArtifactMap.h"
-#include "binding/HTTPResponse.h"
 #include "binding/MessageEncoder.h"
 #include "binding/SAMLArtifact.h"
 #include "saml1/core/Assertions.h"
@@ -31,6 +30,7 @@
 
 #include <log4cpp/Category.hh>
 #include <xmltooling/XMLToolingConfig.h>
+#include <xmltooling/io/HTTPResponse.h>
 #include <xmltooling/util/NDC.h>
 #include <xmltooling/util/URLEncoder.h>
 

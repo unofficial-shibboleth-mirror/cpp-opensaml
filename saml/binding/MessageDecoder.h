@@ -23,9 +23,9 @@
 #ifndef __saml_decoder_h__
 #define __saml_decoder_h__
 
-#include <saml/binding/GenericRequest.h>
 #include <saml/binding/SecurityPolicy.h>
 #include <xmltooling/XMLObject.h>
+#include <xmltooling/io/GenericRequest.h>
 
 namespace opensaml {
     
@@ -134,7 +134,7 @@ namespace opensaml {
          */
         virtual xmltooling::XMLObject* decode(
             std::string& relayState,
-            const GenericRequest& genericRequest,
+            const xmltooling::GenericRequest& genericRequest,
             SecurityPolicy& policy
             ) const=0;
 

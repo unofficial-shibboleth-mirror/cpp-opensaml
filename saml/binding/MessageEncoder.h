@@ -23,10 +23,11 @@
 #ifndef __saml_encoder_h__
 #define __saml_encoder_h__
 
-#include <saml/binding/GenericResponse.h>
+#include <saml/base.h>
 
 #include <istream>
 #include <xmltooling/XMLObject.h>
+#include <xmltooling/io/GenericResponse.h>
 #include <xmltooling/security/Credential.h>
 
 namespace opensaml {
@@ -121,7 +122,7 @@ namespace opensaml {
          * @param digestAlg         optional reference digest algorithm identifier
          */
         virtual long encode(
-            GenericResponse& genericResponse,
+            xmltooling::GenericResponse& genericResponse,
             xmltooling::XMLObject* xmlObject,
             const char* destination,
             const char* recipientID=NULL,

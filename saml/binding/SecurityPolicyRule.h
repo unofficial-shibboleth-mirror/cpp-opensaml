@@ -52,7 +52,7 @@ namespace opensaml {
          * @throws BindingException raised if the message/request is not acceptable to the policy rule
          */
         virtual void evaluate(
-            const xmltooling::XMLObject& message, const GenericRequest* request, SecurityPolicy& policy
+            const xmltooling::XMLObject& message, const xmltooling::GenericRequest* request, SecurityPolicy& policy
             ) const=0;
     };
 

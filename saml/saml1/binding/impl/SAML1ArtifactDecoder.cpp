@@ -22,7 +22,6 @@
 
 #include "internal.h"
 #include "exceptions.h"
-#include "binding/HTTPRequest.h"
 #include "binding/MessageDecoder.h"
 #include "binding/SAMLArtifact.h"
 #include "saml1/core/Protocols.h"
@@ -30,6 +29,7 @@
 #include "saml2/metadata/MetadataProvider.h"
 
 #include <log4cpp/Category.hh>
+#include <xmltooling/io/HTTPRequest.h>
 #include <xmltooling/util/NDC.h>
 #include <xmltooling/util/ReplayCache.h>
 

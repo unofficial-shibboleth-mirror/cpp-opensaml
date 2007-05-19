@@ -22,7 +22,6 @@
 
 #include "internal.h"
 #include "exceptions.h"
-#include "binding/HTTPRequest.h"
 #include "binding/SecurityPolicyRule.h"
 #include "saml2/core/Assertions.h"
 #include "saml2/metadata/Metadata.h"
@@ -31,6 +30,7 @@
 
 #include <log4cpp/Category.hh>
 #include <xercesc/util/Base64.hpp>
+#include <xmltooling/io/HTTPRequest.h>
 
 using namespace opensaml::saml2md;
 using namespace opensaml;

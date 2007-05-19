@@ -22,7 +22,6 @@
 
 #include "internal.h"
 #include "exceptions.h"
-#include "binding/HTTPResponse.h"
 #include "binding/MessageEncoder.h"
 #include "saml2/binding/SAML2Redirect.h"
 #include "saml2/core/Protocols.h"
@@ -31,6 +30,7 @@
 #include <sstream>
 #include <log4cpp/Category.hh>
 #include <xercesc/util/Base64.hpp>
+#include <xmltooling/io/HTTPResponse.h>
 #include <xmltooling/util/NDC.h>
 #include <xmltooling/util/URLEncoder.h>
 

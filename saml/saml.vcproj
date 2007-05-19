@@ -835,22 +835,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\binding\GenericRequest.h"
-					>
-				</File>
-				<File
-					RelativePath=".\binding\GenericResponse.h"
-					>
-				</File>
-				<File
-					RelativePath=".\binding\HTTPRequest.h"
-					>
-				</File>
-				<File
-					RelativePath=".\binding\HTTPResponse.h"
-					>
-				</File>
-				<File
 					RelativePath=".\binding\MessageDecoder.h"
 					>
 				</File>

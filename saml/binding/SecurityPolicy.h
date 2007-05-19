@@ -23,11 +23,12 @@
 #ifndef __saml_secpol_h__
 #define __saml_secpol_h__
 
-#include <saml/binding/GenericRequest.h>
+#include <saml/base.h>
 
 #include <ctime>
 #include <vector>
 #include <xmltooling/XMLObject.h>
+#include <xmltooling/io/GenericRequest.h>
 #include <xmltooling/security/TrustEngine.h>
 
 #if defined (_MSC_VER)
@@ -200,7 +201,7 @@ namespace opensaml {
          *
          * @throws BindingException raised if the message/request is invalid according to the supplied rules
          */
-        void evaluate(const xmltooling::XMLObject& message, const GenericRequest* request=NULL);
+        void evaluate(const xmltooling::XMLObject& message, const xmltooling::GenericRequest* request=NULL);
 
         /**
          * Resets the policy object and clears any per-message state.

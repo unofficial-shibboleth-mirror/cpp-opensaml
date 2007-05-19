@@ -38,10 +38,6 @@ libsamlinclude_HEADERS = \
 
 samlbindinclude_HEADERS = \
 	binding/ArtifactMap.h \
-	binding/GenericRequest.h \
-	binding/GenericResponse.h \
-	binding/HTTPRequest.h \
-	binding/HTTPResponse.h \
 	binding/MessageDecoder.h \
 	binding/MessageEncoder.h \
 	binding/SAMLArtifact.h \

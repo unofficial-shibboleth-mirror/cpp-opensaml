@@ -23,7 +23,8 @@
 #ifndef __saml_cgi_h__
 #define __saml_cgi_h__
 
-#include <saml/binding/HTTPRequest.h>
+#include <saml/base.h>
+#include <xmltooling/io/HTTPRequest.h>
 
 namespace opensaml {
 
@@ -39,7 +40,7 @@ namespace opensaml {
          * 
          * @param request   HTTP request interface
          */
-        CGIParser(const HTTPRequest& request);
+        CGIParser(const xmltooling::HTTPRequest& request);
 
         ~CGIParser();
 

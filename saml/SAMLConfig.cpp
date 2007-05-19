@@ -67,6 +67,7 @@ extern "C" void SAML_API xmltooling_extension_term()
 }
 
 DECL_XMLTOOLING_EXCEPTION_FACTORY(ArtifactException,opensaml);
+DECL_XMLTOOLING_EXCEPTION_FACTORY(SecurityPolicyException,opensaml);
 DECL_XMLTOOLING_EXCEPTION_FACTORY(MetadataException,opensaml::saml2md);
 DECL_XMLTOOLING_EXCEPTION_FACTORY(MetadataFilterException,opensaml::saml2md);
 DECL_XMLTOOLING_EXCEPTION_FACTORY(BindingException,opensaml);
@@ -108,6 +109,7 @@ bool SAMLInternalConfig::init(bool initXMLTooling)
     }
 
     REGISTER_XMLTOOLING_EXCEPTION_FACTORY(ArtifactException,opensaml);
+    REGISTER_XMLTOOLING_EXCEPTION_FACTORY(SecurityPolicyException,opensaml);
     REGISTER_XMLTOOLING_EXCEPTION_FACTORY(MetadataException,opensaml::saml2md);
     REGISTER_XMLTOOLING_EXCEPTION_FACTORY(MetadataFilterException,opensaml::saml2md);
     REGISTER_XMLTOOLING_EXCEPTION_FACTORY(BindingException,opensaml);
