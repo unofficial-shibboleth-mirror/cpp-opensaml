@@ -22,7 +22,6 @@
 
 #include "internal.h"
 #include "saml2/core/Assertions.h"
-#include "binding/HTTPRequest.h"
 #include "saml2/profile/BrowserSSOProfileValidator.h"
 
 #include <log4cpp/Category.hh>
