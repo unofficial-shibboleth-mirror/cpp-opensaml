@@ -61,10 +61,9 @@ public:
             auto_ptr<MessageEncoder> encoder(
                 SAMLConfig::getConfig().MessageEncoderManager.newPlugin(samlconstants::SAML1_PROFILE_BROWSER_ARTIFACT, NULL)
                 );
-            encoder->setArtifactGenerator(this);
             Locker locker(m_metadata);
             encoder->encode(
-                *this,toSend.get(),"https://sp.example.org/SAML/SSO",m_metadata->getEntityDescriptor("https://sp.example.org/"),"state",cred
+                *this,toSend.get(),"https://sp.example.org/SAML/SSO",m_metadata->getEntityDescriptor("https://sp.example.org/"),"state",this,cred
                 );
             toSend.release();
             

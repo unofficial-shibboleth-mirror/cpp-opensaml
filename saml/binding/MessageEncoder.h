@@ -93,17 +93,6 @@ namespace opensaml {
         };
 
         /**
-         * Provides an ArtifactGenerator implementation for the MessageEncoder to use.
-         * The implementation's lifetime must be longer than the lifetime of this object. 
-         * This method must be externally synchronized. 
-         * 
-         * @param artifactGenerator   an ArtifactGenerator implementation to use
-         */
-        void setArtifactGenerator(ArtifactGenerator* artifactGenerator) {
-            m_artifactGenerator = artifactGenerator;
-        }
-        
-        /**
          * Encodes an XML object/message into a binding- and transport-specific response.
          * The XML content cannot have a parent object, and any existing references to
          * the content will be invalidated if the encode method returns successfully.
@@ -120,6 +109,7 @@ namespace opensaml {
          * @param destination       destination URL for message
          * @param recipient         optional message recipient
          * @param relayState        optional RelayState value to accompany message
+         * @param artifactGenerator optional interface for generation of artifacts
          * @param credential        optional Credential to supply signing key
          * @param signatureAlg      optional signature algorithm identifier
          * @param digestAlg         optional reference digest algorithm identifier
@@ -130,16 +120,14 @@ namespace opensaml {
             const char* destination,
             const saml2md::EntityDescriptor* recipient=NULL,
             const char* relayState=NULL,
+            const ArtifactGenerator* artifactGenerator=NULL,
             const xmltooling::Credential* credential=NULL,
             const XMLCh* signatureAlg=NULL,
             const XMLCh* digestAlg=NULL
             ) const=0;
 
     protected:
-        MessageEncoder() : m_artifactGenerator(NULL) {}
-        
-        /** Pointer to an ArtifactGenerator implementation. */
-        const ArtifactGenerator* m_artifactGenerator;
+        MessageEncoder() {}
     };
 
     /**

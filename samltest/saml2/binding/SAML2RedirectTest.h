@@ -62,7 +62,7 @@ public:
                 );
             Locker locker(m_metadata);
             encoder->encode(
-                *this,toSend.get(),"https://sp.example.org/SAML/SSO",m_metadata->getEntityDescriptor("https://sp.example.org/"),"state",cred
+                *this,toSend.get(),"https://sp.example.org/SAML/SSO",m_metadata->getEntityDescriptor("https://sp.example.org/"),"state",NULL,cred
                 );
             toSend.release();
             

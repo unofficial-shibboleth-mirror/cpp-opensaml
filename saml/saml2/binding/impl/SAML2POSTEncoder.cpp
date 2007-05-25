@@ -55,6 +55,7 @@ namespace opensaml {
                 const char* destination,
                 const EntityDescriptor* recipient=NULL,
                 const char* relayState=NULL,
+                const ArtifactGenerator* artifactGenerator=NULL,
                 const Credential* credential=NULL,
                 const XMLCh* signatureAlg=NULL,
                 const XMLCh* digestAlg=NULL
@@ -96,6 +97,7 @@ long SAML2POSTEncoder::encode(
     const char* destination,
     const EntityDescriptor* recipient,
     const char* relayState,
+    const ArtifactGenerator* artifactGenerator,
     const Credential* credential,
     const XMLCh* signatureAlg,
     const XMLCh* digestAlg

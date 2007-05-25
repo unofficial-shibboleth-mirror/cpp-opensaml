@@ -58,6 +58,7 @@ namespace opensaml {
                 const char* destination,
                 const EntityDescriptor* recipient=NULL,
                 const char* relayState=NULL,
+                const ArtifactGenerator* artifactGenerator=NULL,
                 const Credential* credential=NULL,
                 const XMLCh* signatureAlg=NULL,
                 const XMLCh* digestAlg=NULL
@@ -77,6 +78,7 @@ long SAML1ArtifactEncoder::encode(
     const char* destination,
     const EntityDescriptor* recipient,
     const char* relayState,
+    const ArtifactGenerator* artifactGenerator,
     const Credential* credential,
     const XMLCh* signatureAlg,
     const XMLCh* digestAlg
@@ -106,11 +108,11 @@ long SAML1ArtifactEncoder::encode(
         throw BindingException("SAML 1.x Artifact Encoder requires ArtifactMap be set in configuration.");
 
     // Obtain a fresh artifact.
-    if (!m_artifactGenerator)
+    if (!artifactGenerator)
         throw BindingException("SAML 1.x Artifact Encoder requires an ArtifactGenerator instance.");
     auto_ptr_char recipientID(recipient ? recipient->getEntityID() : NULL);
     log.debug("obtaining new artifact for relying party (%s)", recipientID.get() ? recipientID.get() : "unknown");
-    auto_ptr<SAMLArtifact> artifact(m_artifactGenerator->generateSAML1Artifact(recipient));
+    auto_ptr<SAMLArtifact> artifact(artifactGenerator->generateSAML1Artifact(recipient));
     
     // Store the assertion. Last step in storage will be to delete the XML.
     log.debug("storing artifact and content in map");
