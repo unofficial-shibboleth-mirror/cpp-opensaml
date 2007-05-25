@@ -62,7 +62,8 @@ namespace opensaml {
                 ) const;
         
         private:
-            string m_template; 
+            bool m_post;
+            string m_template;
         };
 
         MessageEncoder* SAML_DLLLOCAL SAML2ArtifactEncoderFactory(const DOMElement* const & e)
@@ -70,16 +71,21 @@ namespace opensaml {
             return new SAML2ArtifactEncoder(e);
         }
     };
+
+    static const XMLCh _template[] =    UNICODE_LITERAL_8(t,e,m,p,l,a,t,e);
+    static const XMLCh postArtifact[] = UNICODE_LITERAL_12(p,o,s,t,A,r,t,i,f,a,c,t);
 };
 
-static const XMLCh _template[] = UNICODE_LITERAL_8(t,e,m,p,l,a,t,e);
-
-SAML2ArtifactEncoder::SAML2ArtifactEncoder(const DOMElement* e)
+SAML2ArtifactEncoder::SAML2ArtifactEncoder(const DOMElement* e) : m_post(false)
 {
     if (e) {
-        auto_ptr_char t(e->getAttributeNS(NULL, _template));
-        if (t.get())
-            m_template = t.get();
+        const XMLCh* flag = e->getAttributeNS(NULL, postArtifact);
+        m_post = (flag && (*flag==chLatin_t || *flag==chDigit_1));
+        if (m_post) {
+            auto_ptr_char t(e->getAttributeNS(NULL, _template));
+            if (t.get())
+                m_template = t.get();
+        }
     }
 }
 
