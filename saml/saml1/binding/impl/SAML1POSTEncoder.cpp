@@ -34,6 +34,7 @@
 #include <xmltooling/util/TemplateEngine.h>
 
 using namespace opensaml::saml1p;
+using namespace opensaml::saml2md;
 using namespace opensaml;
 using namespace xmlsignature;
 using namespace xmltooling;
@@ -52,7 +53,7 @@ namespace opensaml {
                 GenericResponse& genericResponse,
                 XMLObject* xmlObject,
                 const char* destination,
-                const char* recipientID=NULL,
+                const EntityDescriptor* recipient=NULL,
                 const char* relayState=NULL,
                 const Credential* credential=NULL,
                 const XMLCh* signatureAlg=NULL,
@@ -88,7 +89,7 @@ long SAML1POSTEncoder::encode(
     GenericResponse& genericResponse,
     XMLObject* xmlObject,
     const char* destination,
-    const char* recipientID,
+    const EntityDescriptor* recipient,
     const char* relayState,
     const Credential* credential,
     const XMLCh* signatureAlg,

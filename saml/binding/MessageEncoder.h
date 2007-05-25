@@ -36,6 +36,9 @@ namespace opensaml {
     namespace saml2p {
         class SAML_API SAML2Artifact;
     };
+    namespace saml2md {
+        class SAML_API EntityDescriptor;
+    };
 
     /**
      * Interface to SAML protocol binding message encoders.
@@ -78,7 +81,7 @@ namespace opensaml {
              * @param relyingParty  the party that will recieve the artifact
              * @return a SAML 1.x artifact with a random assertion handle
              */
-            virtual SAMLArtifact* generateSAML1Artifact(const char* relyingParty) const=0;
+            virtual SAMLArtifact* generateSAML1Artifact(const saml2md::EntityDescriptor* relyingParty) const=0;
 
             /**
              * Generate a SAML 2.0 artifact suitable for consumption by the relying party.
@@ -86,7 +89,7 @@ namespace opensaml {
              * @param relyingParty  the party that will recieve the artifact
              * @return a SAML 2.0 artifact with a random message handle
              */
-            virtual saml2p::SAML2Artifact* generateSAML2Artifact(const char* relyingParty) const=0;
+            virtual saml2p::SAML2Artifact* generateSAML2Artifact(const saml2md::EntityDescriptor* relyingParty) const=0;
         };
 
         /**
@@ -115,7 +118,7 @@ namespace opensaml {
          * @param genericResponse   reference to interface for sending transport response      
          * @param xmlObject         XML message to encode
          * @param destination       destination URL for message
-         * @param recipientID       optional entityID of message recipient
+         * @param recipient         optional message recipient
          * @param relayState        optional RelayState value to accompany message
          * @param credential        optional Credential to supply signing key
          * @param signatureAlg      optional signature algorithm identifier
@@ -125,7 +128,7 @@ namespace opensaml {
             xmltooling::GenericResponse& genericResponse,
             xmltooling::XMLObject* xmlObject,
             const char* destination,
-            const char* recipientID=NULL,
+            const saml2md::EntityDescriptor* recipient=NULL,
             const char* relayState=NULL,
             const xmltooling::Credential* credential=NULL,
             const XMLCh* signatureAlg=NULL,

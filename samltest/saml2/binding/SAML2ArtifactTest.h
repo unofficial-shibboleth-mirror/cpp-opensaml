@@ -64,7 +64,10 @@ public:
                 SAMLConfig::getConfig().MessageEncoderManager.newPlugin(samlconstants::SAML20_BINDING_HTTP_ARTIFACT, NULL)
                 );
             encoder->setArtifactGenerator(this);
-            encoder->encode(*this,toSend.get(),"https://sp.example.org/SAML/SSO","https://sp.example.org/","state",cred);
+            Locker locker(m_metadata);
+            encoder->encode(
+                *this,toSend.get(),"https://sp.example.org/SAML/SSO",m_metadata->getEntityDescriptor("https://sp.example.org/"),"state",cred
+                );
             toSend.release();
             
             // Decode message.
@@ -73,7 +76,6 @@ public:
                 SAMLConfig::getConfig().MessageDecoderManager.newPlugin(samlconstants::SAML20_BINDING_HTTP_ARTIFACT, NULL)
                 );
             decoder->setArtifactResolver(this);
-            Locker locker(m_metadata);
             auto_ptr<Response> response(dynamic_cast<Response*>(decoder->decode(relayState,*this,policy)));
             
             // Test the results.
@@ -94,11 +96,11 @@ public:
         }
     }
     
-    SAMLArtifact* generateSAML1Artifact(const char* relyingParty) const {
+    SAMLArtifact* generateSAML1Artifact(const EntityDescriptor* relyingParty) const {
         throw BindingException("Not implemented.");
     }
     
-    saml2p::SAML2Artifact* generateSAML2Artifact(const char* relyingParty) const {
+    saml2p::SAML2Artifact* generateSAML2Artifact(const EntityDescriptor* relyingParty) const {
         return new SAML2ArtifactType0004(SAMLConfig::getConfig().hashSHA1("https://idp.example.org/"),1);
     }
     

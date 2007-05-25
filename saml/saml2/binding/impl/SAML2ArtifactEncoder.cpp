@@ -26,6 +26,7 @@
 #include "binding/MessageEncoder.h"
 #include "saml2/binding/SAML2Artifact.h"
 #include "saml2/core/Protocols.h"
+#include "saml2/metadata/Metadata.h"
 
 #include <fstream>
 #include <sstream>
@@ -36,6 +37,7 @@
 #include <xmltooling/util/URLEncoder.h>
 
 using namespace opensaml::saml2p;
+using namespace opensaml::saml2md;
 using namespace opensaml;
 using namespace xmlsignature;
 using namespace xmltooling;
@@ -54,7 +56,7 @@ namespace opensaml {
                 GenericResponse& genericResponse,
                 XMLObject* xmlObject,
                 const char* destination,
-                const char* recipientID=NULL,
+                const EntityDescriptor* recipient=NULL,
                 const char* relayState=NULL,
                 const Credential* credential=NULL,
                 const XMLCh* signatureAlg=NULL,
@@ -93,7 +95,7 @@ long SAML2ArtifactEncoder::encode(
     GenericResponse& genericResponse,
     XMLObject* xmlObject,
     const char* destination,
-    const char* recipientID,
+    const EntityDescriptor* recipient,
     const char* relayState,
     const Credential* credential,
     const XMLCh* signatureAlg,
@@ -129,8 +131,9 @@ long SAML2ArtifactEncoder::encode(
     // Obtain a fresh artifact.
     if (!m_artifactGenerator)
         throw BindingException("SAML 2.0 HTTP-Artifact Encoder requires an ArtifactGenerator instance.");
-    log.debug("obtaining new artifact for relying party (%s)", recipientID ? recipientID : "unknown");
-    auto_ptr<SAMLArtifact> artifact(m_artifactGenerator->generateSAML2Artifact(recipientID));
+    auto_ptr_char recipientID(recipient ? recipient->getEntityID() : NULL);
+    log.debug("obtaining new artifact for relying party (%s)", recipientID.get() ? recipientID.get() : "unknown");
+    auto_ptr<SAMLArtifact> artifact(m_artifactGenerator->generateSAML2Artifact(recipient));
 
     if (credential) {
         // Signature based on native XML signing.
@@ -159,7 +162,7 @@ long SAML2ArtifactEncoder::encode(
     
     // Store the message. Last step in storage will be to delete the XML.
     log.debug("storing artifact and content in map");
-    mapper->storeContent(xmlObject, artifact.get(), recipientID);
+    mapper->storeContent(xmlObject, artifact.get(), recipientID.get());
 
     if (m_template.empty()) {
         // Generate redirect.

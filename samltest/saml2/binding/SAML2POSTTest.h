@@ -70,7 +70,10 @@ public:
                     samlconstants::SAML20_BINDING_HTTP_POST, encoder_config->getDocumentElement()
                     )
                 );
-            encoder->encode(*this,toSend.get(),"https://sp.example.org/SAML/SSO","https://sp.example.org/","state",cred);
+            Locker locker(m_metadata);
+            encoder->encode(
+                *this,toSend.get(),"https://sp.example.org/SAML/SSO",m_metadata->getEntityDescriptor("https://sp.example.org/"),"state",cred
+                );
             toSend.release();
             
             // Decode message.
@@ -78,7 +81,6 @@ public:
             auto_ptr<MessageDecoder> decoder(
                 SAMLConfig::getConfig().MessageDecoderManager.newPlugin(samlconstants::SAML20_BINDING_HTTP_POST, NULL)
                 );
-            Locker locker(m_metadata);
             auto_ptr<Response> response(dynamic_cast<Response*>(decoder->decode(relayState,*this,policy)));
             
             // Test the results.
@@ -138,7 +140,10 @@ public:
                     samlconstants::SAML20_BINDING_HTTP_POST_SIMPLESIGN, encoder_config->getDocumentElement()
                     )
                 );
-            encoder->encode(*this,toSend.get(),"https://sp.example.org/SAML/SSO","https://sp.example.org/","state",cred);
+            Locker locker(m_metadata);
+            encoder->encode(
+                *this,toSend.get(),"https://sp.example.org/SAML/SSO",m_metadata->getEntityDescriptor("https://sp.example.org/"),"state",cred
+                );
             toSend.release();
             
             // Decode message.
@@ -146,7 +151,6 @@ public:
             auto_ptr<MessageDecoder> decoder(
                 SAMLConfig::getConfig().MessageDecoderManager.newPlugin(samlconstants::SAML20_BINDING_HTTP_POST_SIMPLESIGN, NULL)
                 );
-            Locker locker(m_metadata);
             auto_ptr<Response> response(dynamic_cast<Response*>(decoder->decode(relayState,*this,policy)));
             
             // Test the results.

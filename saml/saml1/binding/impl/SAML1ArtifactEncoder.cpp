@@ -27,6 +27,7 @@
 #include "binding/SAMLArtifact.h"
 #include "saml1/core/Assertions.h"
 #include "saml1/core/Protocols.h"
+#include "saml2/metadata/Metadata.h"
 
 #include <log4cpp/Category.hh>
 #include <xmltooling/XMLToolingConfig.h>
@@ -36,6 +37,7 @@
 
 using namespace opensaml::saml1;
 using namespace opensaml::saml1p;
+using namespace opensaml::saml2md;
 using namespace opensaml;
 using namespace xmlsignature;
 using namespace xmltooling;
@@ -54,7 +56,7 @@ namespace opensaml {
                 GenericResponse& genericResponse,
                 XMLObject* xmlObject,
                 const char* destination,
-                const char* recipientID=NULL,
+                const EntityDescriptor* recipient=NULL,
                 const char* relayState=NULL,
                 const Credential* credential=NULL,
                 const XMLCh* signatureAlg=NULL,
@@ -73,7 +75,7 @@ long SAML1ArtifactEncoder::encode(
     GenericResponse& genericResponse,
     XMLObject* xmlObject,
     const char* destination,
-    const char* recipientID,
+    const EntityDescriptor* recipient,
     const char* relayState,
     const Credential* credential,
     const XMLCh* signatureAlg,
@@ -106,12 +108,13 @@ long SAML1ArtifactEncoder::encode(
     // Obtain a fresh artifact.
     if (!m_artifactGenerator)
         throw BindingException("SAML 1.x Artifact Encoder requires an ArtifactGenerator instance.");
-    log.debug("obtaining new artifact for relying party (%s)", recipientID ? recipientID : "unknown");
-    auto_ptr<SAMLArtifact> artifact(m_artifactGenerator->generateSAML1Artifact(recipientID));
+    auto_ptr_char recipientID(recipient ? recipient->getEntityID() : NULL);
+    log.debug("obtaining new artifact for relying party (%s)", recipientID.get() ? recipientID.get() : "unknown");
+    auto_ptr<SAMLArtifact> artifact(m_artifactGenerator->generateSAML1Artifact(recipient));
     
     // Store the assertion. Last step in storage will be to delete the XML.
     log.debug("storing artifact and content in map");
-    mapper->storeContent(xmlObject, artifact.get(), recipientID);
+    mapper->storeContent(xmlObject, artifact.get(), recipientID.get());
 
     // Generate redirect.
     string loc = destination;

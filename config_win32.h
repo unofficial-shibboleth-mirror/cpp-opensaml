@@ -90,9 +90,6 @@
 /* Version number of package */
 #define VERSION "2.0"
 
-/* Define if you wish to disable XML-Security-dependent features. */
-/* #undef XMLTOOLING_NO_XMLSEC */
-
 /* Define to empty if `const' does not conform to ANSI C. */
 /* #undef const */
 
