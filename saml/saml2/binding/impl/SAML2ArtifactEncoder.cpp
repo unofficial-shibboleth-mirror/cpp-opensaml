@@ -121,10 +121,11 @@ long SAML2ArtifactEncoder::encode(
 
     StatusResponseType* response = NULL;
     RequestAbstractType* request = dynamic_cast<RequestAbstractType*>(xmlObject);
-    if (!request)
+    if (!request) {
         response = dynamic_cast<StatusResponseType*>(xmlObject);
-    if (!response)
-        throw BindingException("XML content for SAML 2.0 HTTP-Artifact Encoder must be a SAML 2.0 protocol message.");
+        if (!response)
+            throw BindingException("XML content for SAML 2.0 HTTP-Artifact Encoder must be a SAML 2.0 protocol message.");
+    }
     
     ArtifactMap* mapper = SAMLConfig::getConfig().getArtifactMap();
     if (!mapper)
