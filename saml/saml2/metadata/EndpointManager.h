@@ -38,7 +38,7 @@ namespace opensaml {
         {
         protected:
             /** Reference to endpoint array. */
-            typename const std::vector<_Tx*>& m_endpoints;
+            const typename std::vector<_Tx*>& m_endpoints;
             
         public:
             /**
@@ -46,7 +46,7 @@ namespace opensaml {
              *
              * @param endpoints array of endpoints to manage
              */
-            EndpointManager(typename const std::vector<_Tx*>& endpoints) : m_endpoints(endpoints) {
+            EndpointManager(const typename std::vector<_Tx*>& endpoints) : m_endpoints(endpoints) {
             }
             
             /**
@@ -56,7 +56,7 @@ namespace opensaml {
              * @return a supporting endpoint, favoring the default, or NULL
              */
             const _Tx* getByBinding(const XMLCh* binding) const {
-                for (std::vector<_Tx*>::const_iterator i = m_endpoints.begin(); i!=m_endpoints.end(); ++i) {
+                for (typename std::vector<_Tx*>::const_iterator i = m_endpoints.begin(); i!=m_endpoints.end(); ++i) {
                     if (xercesc::XMLString::equals(binding,(*i)->getBinding()))
                         return *i;
                 }
@@ -72,7 +72,7 @@ namespace opensaml {
         template <class _Tx>
         class IndexedEndpointManager : public EndpointManager<_Tx>
         {
-            typename const _Tx* m_default;
+            const _Tx* m_default;
             
         public:
             /**
@@ -80,7 +80,7 @@ namespace opensaml {
              *
              * @param endpoints array of endpoints to manage
              */
-            IndexedEndpointManager(typename const std::vector<_Tx*>& endpoints) : EndpointManager(endpoints), m_default(NULL) {
+            IndexedEndpointManager(const typename std::vector<_Tx*>& endpoints) : EndpointManager<_Tx>(endpoints), m_default(NULL) {
             }
             
             /**
@@ -91,11 +91,11 @@ namespace opensaml {
             const _Tx* getDefault() const {
                 if (m_default)
                     return m_default;
-                for (std::vector<_Tx*>::const_iterator i = m_endpoints.begin(); i!=m_endpoints.end(); ++i) {
+                for (typename std::vector<_Tx*>::const_iterator i = EndpointManager<_Tx>::m_endpoints.begin(); i!=EndpointManager<_Tx>::m_endpoints.end(); ++i) {
                     if ((*i)->isDefault())
                         return m_default=*i;
                 }
-                return (m_endpoints.empty()) ? m_default=NULL : m_default=m_endpoints.front();
+                return (EndpointManager<_Tx>::m_endpoints.empty()) ? m_default=NULL : m_default=EndpointManager<_Tx>::m_endpoints.front();
             }
             
             /**
@@ -105,7 +105,7 @@ namespace opensaml {
              * @return matching endpoint, or NULL
              */
             const _Tx* getByIndex(unsigned short index) const {
-                for (std::vector<_Tx*>::const_iterator i = m_endpoints.begin(); i!=m_endpoints.end(); ++i) {
+                for (typename std::vector<_Tx*>::const_iterator i = EndpointManager<_Tx>::m_endpoints.begin(); i!=EndpointManager<_Tx>::m_endpoints.end(); ++i) {
                     std::pair<bool,int> comp = (*i)->getIndex();
                     if (comp.first && index == comp.second)
                         return *i;
@@ -122,7 +122,7 @@ namespace opensaml {
             const _Tx* getByBinding(const XMLCh* binding) const {
                 if (getDefault() && xercesc::XMLString::equals(binding,m_default->getBinding()))
                     return m_default;
-                return EndpointManager::getByBinding(binding);
+                return EndpointManager<_Tx>::getByBinding(binding);
             }
         };
     };
