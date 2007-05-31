@@ -54,7 +54,6 @@ siginclude_HEADERS = \
 	signature/SignatureProfileValidator.h
 
 utilinclude_HEADERS = \
-	util/CGIParser.h \
 	util/CommonDomainCookie.h \
 	util/SAMLConstants.h
 
@@ -160,7 +159,6 @@ libsaml_la_SOURCES = \
 	encryption/EncryptedKeyResolver.cpp \
 	signature/ContentReference.cpp \
 	signature/SignatureProfileValidator.cpp \
-	util/CGIParser.cpp \
 	util/CommonDomainCookie.cpp \
 	util/SAMLConstants.cpp
 
