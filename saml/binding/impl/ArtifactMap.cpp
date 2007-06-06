@@ -141,7 +141,7 @@ XMLObject* ArtifactMappings::retrieveContent(const SAMLArtifact* artifact, const
 }
 
 ArtifactMap::ArtifactMap(xmltooling::StorageService* storage, const char* context, unsigned int artifactTTL)
-    : m_storage(storage), m_context(context ? context : "opensaml::ArtifactMap"), m_mappings(NULL), m_artifactTTL(artifactTTL)
+    : m_storage(storage), m_context((context && *context) ? context : "opensaml::ArtifactMap"), m_mappings(NULL), m_artifactTTL(artifactTTL)
 {
     if (!m_storage)
         m_mappings = new ArtifactMappings();
@@ -154,6 +154,8 @@ ArtifactMap::ArtifactMap(const DOMElement* e, xmltooling::StorageService* storag
         auto_ptr_char c(e->getAttributeNS(NULL, context));
         if (c.get() && *c.get())
             m_context = c.get();
+        else
+            m_context = "opensaml::ArtifactMap";
         
         const XMLCh* TTL = e->getAttributeNS(NULL, artifactTTL);
         if (TTL) {
