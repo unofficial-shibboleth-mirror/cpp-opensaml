@@ -49,6 +49,7 @@ namespace opensaml {
         }
         void storeContent(XMLObject* content, const SAMLArtifact* artifact, const char* relyingParty, int TTL);
         XMLObject* retrieveContent(const SAMLArtifact* artifact, const char* relyingParty);
+        string getRelyingParty(const SAMLArtifact* artifact);
     
     private:
         struct SAML_DLLLOCAL Mapping {
@@ -140,6 +141,14 @@ XMLObject* ArtifactMappings::retrieveContent(const SAMLArtifact* artifact, const
     return ret;
 }
 
+string ArtifactMappings::getRelyingParty(const SAMLArtifact* artifact)
+{
+    map<string,Mapping>::iterator i=m_artMap.find(SAMLArtifact::toHex(artifact->getMessageHandle()));
+    if (i==m_artMap.end())
+        throw BindingException("Requested artifact not in map or may have expired.");
+    return i->second.m_relying;
+}
+
 ArtifactMap::ArtifactMap(xmltooling::StorageService* storage, const char* context, unsigned int artifactTTL)
     : m_storage(storage), m_context((context && *context) ? context : "opensaml::ArtifactMap"), m_mappings(NULL), m_artifactTTL(artifactTTL)
 {
@@ -208,21 +217,22 @@ XMLObject* ArtifactMap::retrieveContent(const SAMLArtifact* artifact, const char
 #ifdef _DEBUG
     xmltooling::NDC ndc("retrieveContent");
 #endif
+    Category& log=Category::getInstance(SAML_LOGCAT".ArtifactMap");
 
     if (!m_storage)
         return m_mappings->retrieveContent(artifact, relyingParty);
     
+    // Read the mapping and then delete it.
     string xmlbuf;
     string key = SAMLArtifact::toHex(artifact->getMessageHandle());
     if (!m_storage->readText(m_context.c_str(), key.c_str(), &xmlbuf))
         throw BindingException("Artifact not found in mapping database.");
+    m_storage->deleteText(m_context.c_str(), key.c_str());
     
+    // Parse the data back into XML.
     istringstream is(xmlbuf);
     DOMDocument* doc=XMLToolingConfig::getConfig().getParser().parse(is);
     XercesJanitor<DOMDocument> janitor(doc);
-
-    Category& log=Category::getInstance(SAML_LOGCAT".ArtifactMap");
-    m_storage->deleteText(m_context.c_str(), key.c_str());
     
     // Check the root element.
     DOMElement* messageRoot = doc->getDocumentElement();
@@ -241,4 +251,27 @@ XMLObject* ArtifactMap::retrieveContent(const SAMLArtifact* artifact, const char
     
     log.debug("resolved artifact for (%s)", relyingParty ? relyingParty : "unknown");
     return xmlObject;
+}
+
+string ArtifactMap::getRelyingParty(const SAMLArtifact* artifact)
+{
+    if (!m_storage)
+        return m_mappings->getRelyingParty(artifact);
+    
+    string xmlbuf;
+    if (!m_storage->readText(m_context.c_str(), SAMLArtifact::toHex(artifact->getMessageHandle()).c_str(), &xmlbuf))
+        throw BindingException("Artifact not found in mapping database.");
+    
+    // Parse the data back into XML.
+    istringstream is(xmlbuf);
+    DOMDocument* doc=XMLToolingConfig::getConfig().getParser().parse(is);
+    XercesJanitor<DOMDocument> janitor(doc);
+    
+    // Check the root element.
+    DOMElement* messageRoot = doc->getDocumentElement();
+    if (XMLHelper::isNodeNamed(messageRoot, NULL, Mapping)) {
+        auto_ptr_char temp(messageRoot->getAttributeNS(NULL,_relyingParty));
+        return temp.get();
+    }
+    return string();
 }

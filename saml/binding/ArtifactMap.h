@@ -85,6 +85,14 @@ namespace opensaml {
          */
         virtual xmltooling::XMLObject* retrieveContent(const SAMLArtifact* artifact, const char* relyingParty=NULL);
 
+        /**
+         * Retrieves the relying party to whom the artifact was issued.
+         *
+         * @param artifact  the artifact to check
+         * @return  entityID of the party to whom the artifact was issued, if any
+         */
+        virtual std::string getRelyingParty(const SAMLArtifact* artifact);
+
     private:
         xmltooling::StorageService* m_storage;
         std::string m_context;
