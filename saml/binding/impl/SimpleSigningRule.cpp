@@ -31,6 +31,7 @@
 #include <log4cpp/Category.hh>
 #include <xercesc/util/Base64.hpp>
 #include <xmltooling/io/HTTPRequest.h>
+#include <xmltooling/security/SignatureTrustEngine.h>
 
 using namespace opensaml::saml2md;
 using namespace opensaml;
@@ -96,8 +97,10 @@ void SimpleSigningRule::evaluate(const XMLObject& message, const GenericRequest*
         log.debug("ignoring message, no issuer metadata supplied");
         return;
     }
-    else if (!policy.getTrustEngine()) {
-        log.debug("ignoring message, no TrustEngine supplied");
+
+    const SignatureTrustEngine* sigtrust;
+    if (!(sigtrust=dynamic_cast<const SignatureTrustEngine*>(policy.getTrustEngine()))) {
+        log.debug("ignoring message, no SignatureTrustEngine supplied");
         return;
     }
 
@@ -193,7 +196,7 @@ void SimpleSigningRule::evaluate(const XMLObject& message, const GenericRequest*
     MetadataCredentialCriteria cc(*(policy.getIssuerMetadata()));
     cc.setXMLAlgorithm(alg.get());
 
-    if (!policy.getTrustEngine()->validate(alg.get(), signature, keyInfo, input.c_str(), input.length(), *(policy.getMetadataProvider()), &cc)) {
+    if (!sigtrust->validate(alg.get(), signature, keyInfo, input.c_str(), input.length(), *(policy.getMetadataProvider()), &cc)) {
         log.error("unable to verify message signature with supplied trust engine");
         if (m_errorsFatal)
             throw SignatureException("Message was signed, but signature could not be verified.");
