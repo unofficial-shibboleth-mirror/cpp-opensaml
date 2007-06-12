@@ -6,14 +6,13 @@ Group:		System Environment/Libraries
 Vendor:		Internet2
 License:	Apache 2.0
 URL:		http://www.opensaml.org/
-Source0:	http://shibboleth.internet2.edu/downloads/%{name}-%{version}.tar.gz
-Source1:	http://shibboleth.internet2.edu/downloads/%{name}-%{version}.tar.gz.asc
+Source0:	%{name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-root
 
-BuildRequires:	xerces-c-devel >= 2.6.1
-BuildRequires:	xml-security-c-devel >= 1.3.0
+BuildRequires:	xerces%{?xercesver}-c-devel >= 2.6.1
+BuildRequires:	xml-security-c-devel >= 1.3.1
 BuildRequires:	log4cpp-devel >= 0.3.5
-BuildRequires:	xmltooling-devel, cxxtest, doxygen
+BuildRequires:	xmltooling-devel, cxxtest
 
 %description
 OpenSAML is an open source implementation of the OASIS Security Assertion
@@ -53,9 +52,8 @@ make
 %install
 [ "$RPM_BUILD_ROOT" != "/" ] && rm -rf $RPM_BUILD_ROOT
 rm -rf _docs
-
 make install DESTDIR=$RPM_BUILD_ROOT
-#mv $RPM_BUILD_ROOT/usr/doc/%{name} _docs
+mv $RPM_BUILD_ROOT/usr/doc/%{name} _docs
 
 %check || :
 make check
@@ -71,11 +69,11 @@ make check
 
 %files
 %defattr(-,root,root,-)
-#%doc _docs/LICENSE.txt _docs/NEWS.txt _docs/README.txt _docs/TODO.txt
-%{_bindir}/samltest
+%doc _docs/LICENSE.txt _docs/NOTICE.txt
 %{_libdir}/libsaml.so.*
 %dir %{_datadir}/xml/%{name}
 %{_datadir}/xml/%{name}
+%exclude %{_bindir}/samltest
 
 %files devel
 %defattr(-,root,root,-)
@@ -84,7 +82,7 @@ make check
 
 %files docs
 %defattr(644,root,root,755)
-%doc doc/api/*
+%doc _docs/api
 
 %changelog
 * Sun Apr 16 2006  Scott Cantor  <cantor.2@osu.edu>  - 2.0-1

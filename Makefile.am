@@ -12,16 +12,16 @@ dist-hook:
 
 SUBDIRS = doc schemas saml samltest
 
-all-local: opensaml.spec pkginfo
-
 if DX_COND_doc
-all-local: doxygen-doc
+all-local: opensaml.spec pkginfo doxygen-doc
 APIDOCS = doc/api
+else
+all-local: opensaml.spec pkginfo
 endif
 
 install-data-hook:
-	rm -rf $(prefix)/doc/@PACKAGE@/api
-	cp -r doc/api $(prefix)/doc/@PACKAGE@
+	rm -rf $(DESTDIR)$(prefix)/doc/@PACKAGE@/api
+	cp -r doc/api $(DESTDIR)$(prefix)/doc/@PACKAGE@
 
 opensaml.spec: opensaml.spec.in Makefile
 	rm -f $@.tmp
