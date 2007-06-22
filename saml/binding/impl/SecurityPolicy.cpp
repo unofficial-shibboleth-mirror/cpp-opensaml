@@ -34,6 +34,7 @@ using namespace std;
 namespace opensaml {
     SAML_DLLLOCAL PluginManager<SecurityPolicyRule,string,const DOMElement*>::Factory ClientCertAuthRuleFactory;
     SAML_DLLLOCAL PluginManager<SecurityPolicyRule,string,const DOMElement*>::Factory MessageFlowRuleFactory;
+    SAML_DLLLOCAL PluginManager<SecurityPolicyRule,string,const DOMElement*>::Factory NullSecurityRuleFactory;
     SAML_DLLLOCAL PluginManager<SecurityPolicyRule,string,const DOMElement*>::Factory SAML1MessageRuleFactory;
     SAML_DLLLOCAL PluginManager<SecurityPolicyRule,string,const DOMElement*>::Factory SAML2MessageRuleFactory;
     SAML_DLLLOCAL PluginManager<SecurityPolicyRule,string,const DOMElement*>::Factory SimpleSigningRuleFactory;
@@ -45,6 +46,7 @@ void SAML_API opensaml::registerSecurityPolicyRules()
     SAMLConfig& conf=SAMLConfig::getConfig();
     conf.SecurityPolicyRuleManager.registerFactory(CLIENTCERTAUTH_POLICY_RULE, ClientCertAuthRuleFactory);
     conf.SecurityPolicyRuleManager.registerFactory(MESSAGEFLOW_POLICY_RULE, MessageFlowRuleFactory);
+    conf.SecurityPolicyRuleManager.registerFactory(NULLSECURITY_POLICY_RULE, NullSecurityRuleFactory);
     conf.SecurityPolicyRuleManager.registerFactory(SAML1MESSAGE_POLICY_RULE, SAML1MessageRuleFactory);
     conf.SecurityPolicyRuleManager.registerFactory(SAML2MESSAGE_POLICY_RULE, SAML2MessageRuleFactory);
     conf.SecurityPolicyRuleManager.registerFactory(SIMPLESIGNING_POLICY_RULE, SimpleSigningRuleFactory);

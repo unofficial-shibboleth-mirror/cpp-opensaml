@@ -96,6 +96,15 @@ namespace opensaml {
     #define MESSAGEFLOW_POLICY_RULE  "MessageFlow"
 
     /**
+     * SecurityPolicyRule for disabling security.
+     * 
+     * Allows the message issuer to be authenticated regardless of the message or
+     * transport. Used mainly for debugging or in situations that I wouldn't care to
+     * comment on.
+     */
+    #define NULLSECURITY_POLICY_RULE  "NullSecurity"
+
+    /**
      * SecurityPolicyRule for protocol message "blob" signing.
      * 
      * Allows the message issuer to be authenticated using a non-XML digital signature
