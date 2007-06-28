@@ -204,9 +204,14 @@ void ArtifactMap::storeContent(XMLObject* content, const SAMLArtifact* artifact,
     // Serialize the root element, whatever it is, for storage.
     string xmlbuf;
     XMLHelper::serialize(root, xmlbuf);
-    m_storage->createText(
-        m_context.c_str(), SAMLArtifact::toHex(artifact->getMessageHandle()).c_str(), xmlbuf.c_str(), time(NULL) + m_artifactTTL
-        );
+    if (!m_storage->createText(
+        m_context.c_str(),
+        SAMLArtifact::toHex(artifact->getMessageHandle()).c_str(),
+        xmlbuf.c_str(),
+        time(NULL) + m_artifactTTL
+        )) {
+        throw IOException("Attempt to insert duplicate artifact into map.");
+    }
         
     // Cleanup by destroying XML.
     delete content;
