@@ -54,6 +54,15 @@ namespace opensaml {
         virtual ~MessageDecoder() {}
 
         /**
+         * Indicates whether a web browser or similar user agent delivered the message.
+         *
+         * @return true iff the message was delivered by a user agent
+         */
+        virtual bool isUserAgentPresent() const {
+            return true;
+        }
+
+        /**
          * Interface to caller-supplied artifact resolution mechanism.
          * 
          * Resolving artifacts requires internally performing a SOAP-based

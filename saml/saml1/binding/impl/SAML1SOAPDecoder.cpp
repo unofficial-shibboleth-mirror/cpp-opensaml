@@ -44,7 +44,11 @@ namespace opensaml {
         public:
             SAML1SOAPDecoder(const DOMElement* e) {}
             virtual ~SAML1SOAPDecoder() {}
-            
+
+            bool isUserAgentPresent() const {
+                return false;
+            }
+
             xmltooling::XMLObject* decode(
                 std::string& relayState,
                 const GenericRequest& genericRequest,

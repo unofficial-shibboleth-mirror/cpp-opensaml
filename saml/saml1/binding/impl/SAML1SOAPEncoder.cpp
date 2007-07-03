@@ -48,7 +48,11 @@ namespace opensaml {
         public:
             SAML1SOAPEncoder(const DOMElement* e) {}
             virtual ~SAML1SOAPEncoder() {}
-            
+
+            bool isUserAgentPresent() const {
+                return false;
+            }
+
             long encode(
                 GenericResponse& genericResponse,
                 XMLObject* xmlObject,

@@ -59,6 +59,15 @@ namespace opensaml {
         }
 
         /**
+         * Indicates whether a web browser or similar user agent will receive the message.
+         *
+         * @return true iff the message will be handled by a user agent
+         */
+        virtual bool isUserAgentPresent() const {
+            return true;
+        }
+
+        /**
          * Interface to caller-supplied artifact generation mechanism.
          * 
          * Generating an artifact for storage and retrieval requires knowledge of
