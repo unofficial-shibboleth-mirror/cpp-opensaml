@@ -78,8 +78,8 @@ static const XMLCh _template[] = UNICODE_LITERAL_8(t,e,m,p,l,a,t,e);
 SAML1POSTEncoder::SAML1POSTEncoder(const DOMElement* e)
 {
     if (e) {
-        auto_ptr_char t(e->getAttributeNS(NULL, _template));
-        if (t.get())
+        auto_ptr_char t(e->getAttribute(_template));
+        if (t.get() && *t.get())
             m_template = t.get();
     }
     if (m_template.empty())

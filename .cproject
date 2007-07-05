@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?eclipse-cdt version="2.0"?>
+<?fileVersion 4.0.0?>
 
-<cdtproject id="org.eclipse.cdt.make.core.make">
-<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
-<extension id="org.eclipse.cdt.core.nullindexer" point="org.eclipse.cdt.core.CIndexer"/>
-<data>
-<item id="scannerConfiguration">
+<cproject>
+<storageModule moduleId="org.eclipse.cdt.core.settings">
+<cconfiguration id="converted.config.2133715230">
+<storageModule moduleId="scannerConfiguration">
 <autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.make.core.GCCStandardMakePerProjectProfile"/>
 <profile id="org.eclipse.cdt.make.core.GCCStandardMakePerProjectProfile">
 <buildOutputProvider>
@@ -47,8 +46,8 @@
 <parser enabled="false"/>
 </scannerInfoProvider>
 </profile>
-</item>
-<item id="org.eclipse.cdt.core.pathentry">
+</storageModule>
+<storageModule moduleId="org.eclipse.cdt.core.pathentry">
 <pathentry kind="out" path=""/>
 <pathentry kind="out" path="debug"/>
 <pathentry kind="out" path="saml/Debug"/>
@@ -91,6 +90,14 @@
 <pathentry include="C:/log4cpp-0.3.5rc1/include" kind="inc" path="" system="true"/>
 <pathentry include="C:/cxxtest" kind="inc" path="" system="true"/>
 <pathentry kind="src" path="samltest/encryption"/>
-</item>
-</data>
-</cdtproject>
+</storageModule>
+<storageModule buildSystemId="org.eclipse.cdt.core.defaultConfigDataProvider" id="converted.config.2133715230" moduleId="org.eclipse.cdt.core.settings" name="convertedConfig">
+<externalSettings/>
+<extensions>
+<extension id="org.eclipse.cdt.core.nullindexer" point="org.eclipse.cdt.core.CIndexer"/>
+<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+</extensions>
+</storageModule>
+</cconfiguration>
+</storageModule>
+</cproject>

@@ -82,11 +82,11 @@ namespace opensaml {
 SAML2ArtifactEncoder::SAML2ArtifactEncoder(const DOMElement* e) : m_post(false)
 {
     if (e) {
-        const XMLCh* flag = e->getAttributeNS(NULL, postArtifact);
+        const XMLCh* flag = e->getAttribute(postArtifact);
         m_post = (flag && (*flag==chLatin_t || *flag==chDigit_1));
         if (m_post) {
-            auto_ptr_char t(e->getAttributeNS(NULL, _template));
-            if (t.get())
+            auto_ptr_char t(e->getAttribute(_template));
+            if (t.get() && *t.get())
                 m_template = t.get();
         }
     }
