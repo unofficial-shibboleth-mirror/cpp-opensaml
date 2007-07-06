@@ -42,11 +42,12 @@ namespace opensaml {
             /**
              * Constructor
              * 
-             * @param soaper    reference to SOAPClient object to use for call
+             * @param soaper            reference to SOAPClient object to use for call
+             * @param fatalSAMLErrors   true iff a non-successful SAML Status code should be fatal
              */
-            SAML2SOAPClient(SOAPClient& soaper) : m_soaper(soaper), m_correlate(NULL) {
+            SAML2SOAPClient(SOAPClient& soaper, bool fatalSAMLErrors=true) : m_soaper(soaper), m_fatal(fatalSAMLErrors), m_correlate(NULL) {
             }
-            
+
             virtual ~SAML2SOAPClient() {
                 xercesc::XMLString::release(&m_correlate);
             }
@@ -84,6 +85,9 @@ namespace opensaml {
 
             /** SOAP client object */
             SOAPClient& m_soaper;
+
+            /** Flag controlling default error handler. */
+            bool m_fatal;
 
         private:
             XMLCh* m_correlate;

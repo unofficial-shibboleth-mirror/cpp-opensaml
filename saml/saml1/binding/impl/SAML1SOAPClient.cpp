@@ -95,5 +95,5 @@ bool SAML1SOAPClient::handleError(const Status& status)
         (code ? code->toString().c_str() : "no code"),
         (str.get() ? str.get() : "no message")
         );
-    return true;
+    return m_fatal;
 }
