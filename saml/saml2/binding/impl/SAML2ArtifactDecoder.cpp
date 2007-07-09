@@ -76,13 +76,11 @@ XMLObject* SAML2ArtifactDecoder::decode(
 
     log.debug("validating input");
     const HTTPRequest* httpRequest=dynamic_cast<const HTTPRequest*>(&genericRequest);
-    if (!httpRequest) {
-        log.error("unable to cast request to HTTPRequest type");
-        return NULL;
-    }
+    if (!httpRequest)
+        throw BindingException("Unable to cast request object to HTTPRequest type.");
     const char* SAMLart = httpRequest->getParameter("SAMLart");
     if (!SAMLart)
-        return NULL;
+        throw BindingException("Request missing SAMLart parameter.");
     const char* state = httpRequest->getParameter("RelayState");
     if (state)
         relayState = state;

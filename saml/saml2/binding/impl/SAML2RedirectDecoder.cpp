@@ -78,17 +78,15 @@ XMLObject* SAML2RedirectDecoder::decode(
 
     log.debug("validating input");
     const HTTPRequest* httpRequest=dynamic_cast<const HTTPRequest*>(&genericRequest);
-    if (!httpRequest) {
-        log.error("unable to cast request to HTTPRequest type");
-        return NULL;
-    }
+    if (!httpRequest)
+        throw BindingException("Unable to cast request object to HTTPRequest type.");
     if (strcmp(httpRequest->getMethod(),"GET"))
-        return NULL;
+        throw BindingException("Invalid HTTP method ($1).", params(1, httpRequest->getMethod()));
     const char* msg = httpRequest->getParameter("SAMLResponse");
     if (!msg)
         msg = httpRequest->getParameter("SAMLRequest");
     if (!msg)
-        return NULL;
+        throw BindingException("Request missing SAMLRequest or SAMLResponse parameter.");
     const char* state = httpRequest->getParameter("RelayState");
     if (state)
         relayState = state;
@@ -97,7 +95,7 @@ XMLObject* SAML2RedirectDecoder::decode(
     state = httpRequest->getParameter("SAMLEncoding");
     if (state && strcmp(state,samlconstants::SAML20_BINDING_URL_ENCODING_DEFLATE)) {
         log.warn("SAMLEncoding (%s) was not recognized", state);
-        return NULL;
+        throw BindingException("Unsupported SAMLEncoding value.");
     }
 
     // Decode the compressed message into SAML. First we base64-decode it.

@@ -78,14 +78,12 @@ XMLObject* SAML1SOAPDecoder::decode(
     string s = genericRequest.getContentType();
     if (s.find("text/xml") == string::npos) {
         log.warn("ignoring incorrect content type (%s)", s.c_str() ? s.c_str() : "none");
-        return NULL;
+        throw BindingException("Invalid content type for SOAP message.");
     }
 
     const char* data = genericRequest.getRequestBody();
-    if (!data) {
-        log.warn("empty request body");
-        return NULL;
-    }
+    if (!data)
+        throw BindingException("SOAP message had an empty request body.");
     istringstream is(data);
     
     // Parse and bind the document into an XMLObject.

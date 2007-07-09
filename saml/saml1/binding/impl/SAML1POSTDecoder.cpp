@@ -77,16 +77,14 @@ XMLObject* SAML1POSTDecoder::decode(
 
     log.debug("validating input");
     const HTTPRequest* httpRequest=dynamic_cast<const HTTPRequest*>(&genericRequest);
-    if (!httpRequest) {
-        log.error("unable to cast request to HTTPRequest type");
-        return NULL;
-    }
+    if (!httpRequest)
+        throw BindingException("Unable to cast request object to HTTPRequest type.");
     if (strcmp(httpRequest->getMethod(),"POST"))
-        return NULL;
+        throw BindingException("Invalid HTTP method ($1).", params(1, httpRequest->getMethod()));
     const char* samlResponse = httpRequest->getParameter("SAMLResponse");
     const char* TARGET = httpRequest->getParameter("TARGET");
     if (!samlResponse || !TARGET)
-        return NULL;
+        throw BindingException("Request missing SAMLResponse or TARGET parameters.");
     relayState = TARGET;
 
     // Decode the base64 into SAML.
