@@ -59,20 +59,24 @@ StatusResponseType* SAML2SOAPClient::receiveSAML()
                 
                 // Check InResponseTo.
                 if (m_correlate && response->getInResponseTo() && !XMLString::equals(m_correlate, response->getInResponseTo()))
-                    throw BindingException("InResponseTo attribute did not correlate with the Request ID.");
-                
+                    throw SecurityPolicyException("InResponseTo attribute did not correlate with the Request ID.");
+
+                m_soaper.getPolicy().evaluate(*response);
+                if (!m_soaper.getPolicy().isSecure()) {
+                    SecurityPolicyException ex("Security policy could not authenticate the message.");
+                    annotateException(&ex, m_soaper.getPolicy().getIssuerMetadata(), response->getStatus());   // throws it
+                }
+
                 // Check Status.
                 Status* status = response->getStatus();
                 if (status) {
                     const XMLCh* code = status->getStatusCode() ? status->getStatusCode()->getValue() : NULL;
-                    if (code && !XMLString::equals(code,StatusCode::SUCCESS) && handleError(*status))
-                        throw BindingException("SAML Response contained an error.");
+                    if (code && !XMLString::equals(code,StatusCode::SUCCESS) && handleError(*status)) {
+                        BindingException ex("SAML response contained an error.");
+                        annotateException(&ex, m_soaper.getPolicy().getIssuerMetadata(), status);   // throws it
+                    }
                 }
                 
-                m_soaper.getPolicy().evaluate(*response);
-                if (!m_soaper.getPolicy().isSecure())
-                    throw BindingException("Security policy could not authenticate the message.");
-
                 env.release();
                 body->detach(); // frees Envelope
                 response->detach();   // frees Body
@@ -80,7 +84,11 @@ StatusResponseType* SAML2SOAPClient::receiveSAML()
             }
         }
         
-        throw BindingException("SOAP Envelope did not contain a SAML Response or a Fault.");
+        BindingException ex("SOAP Envelope did not contain a SAML Response or a Fault.");
+        if (m_soaper.getPolicy().getIssuerMetadata())
+            annotateException(&ex, m_soaper.getPolicy().getIssuerMetadata());   // throws it
+        else
+            ex.raise();
     }
     return NULL;
 }

@@ -28,6 +28,9 @@
 
 namespace opensaml {
     
+    namespace saml2p {
+        class SAML_API Status;
+    };
     namespace saml2md {
         class SAML_API EntityDescriptor;
         class SAML_API RoleDescriptor;
@@ -44,18 +47,25 @@ namespace opensaml {
      * rethrows the object. The following named properties are attached, when possible:
      * 
      *  <dl>
-     *  <dt>providerId</dt>     <dd>The unique ID of the entity</dd>
+     *  <dt>entityID</dt>       <dd>The unique ID of the entity</dd>
      *  <dt>errorURL</dt>       <dd>The error support URL of a random role</dd>
      *  <dt>contactName</dt>    <dd>A formatted support or technical contact name</dd>
      *  <dt>contactEmail</dt>   <dd>A contact email address</dd>
+     *  <dt>statusCode</dt>     <dd>Top-level status code from Status object</dd>
+     *  <dt>statusCode2</dt>    <dd>Second-level status code from Status object</dd>
+     *  <dt>statusMessage</dt>  <dd>StatusMessage from Status object</dd>
      *  </dl>
      * 
      * @param e         pointer to exception object
      * @param entity    pointer to entity
+     * @param status    pointer to Status from message 
      * @param rethrow   true iff the exception should be rethrown
      */
     void SAML_API annotateException(
-        xmltooling::XMLToolingException* e, const saml2md::EntityDescriptor* entity, bool rethrow=true
+        xmltooling::XMLToolingException* e,
+        const saml2md::EntityDescriptor* entity,
+        const saml2p::Status* status=NULL,
+        bool rethrow=true
         );
     
     /**
@@ -63,18 +73,24 @@ namespace opensaml {
      * rethrows the object. The following named properties are attached, when possible:
      * 
      *  <dl>
-     *  <dt>providerId</dt>     <dd>The unique ID of the entity</dd>
+     *  <dt>entityID</dt>       <dd>The unique ID of the entity</dd>
      *  <dt>errorURL</dt>       <dd>The error support URL of the role</dd>
      *  <dt>contactName</dt>    <dd>A formatted support or technical contact name</dd>
      *  <dt>contactEmail</dt>   <dd>A contact email address</dd>
+     *  <dt>statusCode</dt>     <dd>Top-level status code from Status object</dd>
+     *  <dt>statusCode2</dt>    <dd>Second-level status code from Status object</dd>
      *  </dl>
      * 
      * @param e         pointer to exception object
      * @param entity    pointer to role
+     * @param status    pointer to Status from message 
      * @param rethrow   true iff the exception should be rethrown
      */
     void SAML_API annotateException(
-        xmltooling::XMLToolingException* e, const saml2md::RoleDescriptor* role, bool rethrow=true
+        xmltooling::XMLToolingException* e,
+        const saml2md::RoleDescriptor* role,
+        const saml2p::Status* status=NULL,
+        bool rethrow=true
         );
 };
 

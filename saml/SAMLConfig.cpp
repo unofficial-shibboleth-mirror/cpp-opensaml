@@ -217,59 +217,24 @@ string SAMLInternalConfig::hashSHA1(const char* s, bool toHex)
     throw XMLSecurityException("Unable to generate SHA-1 hash.");
 }
 
+using namespace saml2p;
 using namespace saml2md;
 
-void opensaml::annotateException(XMLToolingException* e, const EntityDescriptor* entity, bool rethrow)
+void opensaml::annotateException(XMLToolingException* e, const EntityDescriptor* entity, const Status* status, bool rethrow)
 {
+    const RoleDescriptor* role = NULL;
     if (entity) {
-        auto_ptr_char id(entity->getEntityID());
-        e->addProperty("entityID",id.get());
         const list<XMLObject*>& roles=entity->getOrderedChildren();
-        for (list<XMLObject*>::const_iterator child=roles.begin(); child!=roles.end(); ++child) {
-            const RoleDescriptor* role=dynamic_cast<RoleDescriptor*>(*child);
-            if (role && role->isValid()) {
-                const vector<ContactPerson*>& contacts=role->getContactPersons();
-                for (vector<ContactPerson*>::const_iterator c=contacts.begin(); c!=contacts.end(); ++c) {
-                    const XMLCh* ctype=(*c)->getContactType();
-                    if (ctype && (XMLString::equals(ctype,ContactPerson::CONTACT_SUPPORT)
-                            || XMLString::equals(ctype,ContactPerson::CONTACT_TECHNICAL))) {
-                        GivenName* fname=(*c)->getGivenName();
-                        SurName* lname=(*c)->getSurName();
-                        auto_ptr_char first(fname ? fname->getName() : NULL);
-                        auto_ptr_char last(lname ? lname->getName() : NULL);
-                        if (first.get() && last.get()) {
-                            string contact=string(first.get()) + ' ' + last.get();
-                            e->addProperty("contactName",contact.c_str());
-                        }
-                        else if (first.get())
-                            e->addProperty("contactName",first.get());
-                        else if (last.get())
-                            e->addProperty("contactName",last.get());
-                        const vector<EmailAddress*>& emails=const_cast<const ContactPerson*>(*c)->getEmailAddresss();
-                        if (!emails.empty()) {
-                            auto_ptr_char email(emails.front()->getAddress());
-                            if (email.get())
-                                e->addProperty("contactEmail",email.get());
-                        }
-                        break;
-                    }
-                }
-                if (e->getProperty("contactName") || e->getProperty("contactEmail")) {
-                    auto_ptr_char eurl(role->getErrorURL());
-                    if (eurl.get()) {
-                        e->addProperty("errorURL",eurl.get());
-                    }
-                }
-                break;
-            }
+        for (list<XMLObject*>::const_iterator child=roles.begin(); !role && child!=roles.end(); ++child) {
+            role=dynamic_cast<RoleDescriptor*>(*child);
+            if (role && !role->isValid())
+                role = NULL;
         }
     }
-    
-    if (rethrow)
-        e->raise();
+    annotateException(e, role, status, rethrow);
 }
 
-void opensaml::annotateException(XMLToolingException* e, const RoleDescriptor* role, bool rethrow)
+void opensaml::annotateException(XMLToolingException* e, const RoleDescriptor* role, const Status* status, bool rethrow)
 {
     if (role) {
         auto_ptr_char id(dynamic_cast<EntityDescriptor*>(role->getParent())->getEntityID());
@@ -305,6 +270,22 @@ void opensaml::annotateException(XMLToolingException* e, const RoleDescriptor* r
         auto_ptr_char eurl(role->getErrorURL());
         if (eurl.get()) {
             e->addProperty("errorURL",eurl.get());
+        }
+    }
+    
+    if (status) {
+        auto_ptr_char sc(status->getStatusCode() ? status->getStatusCode()->getValue() : NULL);
+        if (sc.get() && *sc.get())
+            e->addProperty("statusCode", sc.get());
+        if (status->getStatusCode()->getStatusCode()) {
+            auto_ptr_char sc2(status->getStatusCode()->getStatusCode()->getValue());
+            if (sc2.get() && *sc.get())
+                e->addProperty("statusCode2", sc2.get());
+        }
+        if (status->getStatusMessage()) {
+            auto_ptr_char msg(status->getStatusMessage()->getMessage());
+            if (msg.get() && *msg.get())
+                e->addProperty("statusMessage", msg.get());
         }
     }
     

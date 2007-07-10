@@ -59,20 +59,30 @@ Response* SAML1SOAPClient::receiveSAML()
 
                 // Check InResponseTo.
                 if (m_correlate && response->getInResponseTo() && !XMLString::equals(m_correlate, response->getInResponseTo()))
-                    throw BindingException("InResponseTo attribute did not correlate with the Request ID.");
+                    throw SecurityPolicyException("InResponseTo attribute did not correlate with the Request ID.");
+                
+                m_soaper.getPolicy().evaluate(*response);
+                
+                if (!m_soaper.getPolicy().isSecure()) {
+                    SecurityPolicyException ex("Security policy could not authenticate the message.");
+                    if (m_soaper.getPolicy().getIssuerMetadata())
+                        annotateException(&ex, m_soaper.getPolicy().getIssuerMetadata());   // throws it
+                    else
+                        ex.raise();
+                }
                 
                 // Check Status.
                 Status* status = response->getStatus();
                 if (status) {
                     const QName* code = status->getStatusCode() ? status->getStatusCode()->getValue() : NULL;
-                    if (code && *code != StatusCode::SUCCESS && handleError(*status))
-                        throw BindingException("SAML Response contained an error.");
+                    if (code && *code != StatusCode::SUCCESS && handleError(*status)) {
+                        BindingException ex("SAML Response contained an error.");
+                        if (m_soaper.getPolicy().getIssuerMetadata())
+                            annotateException(&ex, m_soaper.getPolicy().getIssuerMetadata());   // throws it
+                        else
+                            ex.raise();
+                    }
                 }
-                
-                m_soaper.getPolicy().evaluate(*response);
-                
-                if (!m_soaper.getPolicy().isSecure())
-                    throw BindingException("Security policy could not authenticate the message.");
                 
                 env.release();
                 body->detach(); // frees Envelope
@@ -81,7 +91,11 @@ Response* SAML1SOAPClient::receiveSAML()
             }
         }
         
-        throw BindingException("SOAP Envelope did not contain a SAML Response or a Fault.");
+        BindingException ex("SOAP Envelope did not contain a SAML Response or a Fault.");
+        if (m_soaper.getPolicy().getIssuerMetadata())
+            annotateException(&ex, m_soaper.getPolicy().getIssuerMetadata());   // throws it
+        else
+            ex.raise();
     }
     return NULL;
 }
