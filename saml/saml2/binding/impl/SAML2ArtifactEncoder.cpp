@@ -49,7 +49,7 @@ namespace opensaml {
         class SAML_DLLLOCAL SAML2ArtifactEncoder : public MessageEncoder
         {
         public:
-            SAML2ArtifactEncoder(const DOMElement* e);
+            SAML2ArtifactEncoder(const DOMElement* e, const XMLCh* ns);
             virtual ~SAML2ArtifactEncoder() {}
             
             long encode(
@@ -69,9 +69,9 @@ namespace opensaml {
             string m_template;
         };
 
-        MessageEncoder* SAML_DLLLOCAL SAML2ArtifactEncoderFactory(const DOMElement* const & e)
+        MessageEncoder* SAML_DLLLOCAL SAML2ArtifactEncoderFactory(const pair<const DOMElement*,const XMLCh*>& p)
         {
-            return new SAML2ArtifactEncoder(e);
+            return new SAML2ArtifactEncoder(p.first, p.second);
         }
     };
 
@@ -79,13 +79,13 @@ namespace opensaml {
     static const XMLCh postArtifact[] = UNICODE_LITERAL_12(p,o,s,t,A,r,t,i,f,a,c,t);
 };
 
-SAML2ArtifactEncoder::SAML2ArtifactEncoder(const DOMElement* e) : m_post(false)
+SAML2ArtifactEncoder::SAML2ArtifactEncoder(const DOMElement* e, const XMLCh* ns) : m_post(false)
 {
     if (e) {
-        const XMLCh* flag = e->getAttribute(postArtifact);
+        const XMLCh* flag = e->getAttributeNS(ns, postArtifact);
         m_post = (flag && (*flag==chLatin_t || *flag==chDigit_1));
         if (m_post) {
-            auto_ptr_char t(e->getAttribute(_template));
+            auto_ptr_char t(e->getAttributeNS(ns, _template));
             if (t.get() && *t.get())
                 m_template = t.get();
         }

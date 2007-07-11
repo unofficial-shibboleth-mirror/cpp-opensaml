@@ -47,7 +47,7 @@ namespace opensaml {
         class SAML_DLLLOCAL SAML2RedirectEncoder : public MessageEncoder
         {
         public:
-            SAML2RedirectEncoder(const DOMElement* e) {}
+            SAML2RedirectEncoder() {}
             virtual ~SAML2RedirectEncoder() {}
 
             bool isCompact() const {
@@ -67,9 +67,9 @@ namespace opensaml {
                 ) const;
         };
 
-        MessageEncoder* SAML_DLLLOCAL SAML2RedirectEncoderFactory(const DOMElement* const & e)
+        MessageEncoder* SAML_DLLLOCAL SAML2RedirectEncoderFactory(const pair<const DOMElement*,const XMLCh*>& p)
         {
-            return new SAML2RedirectEncoder(e);
+            return new SAML2RedirectEncoder();
         }
     };
 };

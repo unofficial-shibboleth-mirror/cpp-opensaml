@@ -61,7 +61,9 @@ public:
 
             // Encode message.
             auto_ptr<MessageEncoder> encoder(
-                SAMLConfig::getConfig().MessageEncoderManager.newPlugin(samlconstants::SAML20_BINDING_HTTP_ARTIFACT, NULL)
+                SAMLConfig::getConfig().MessageEncoderManager.newPlugin(
+                    samlconstants::SAML20_BINDING_HTTP_ARTIFACT, pair<const DOMElement*,const XMLCh*>(NULL,NULL)
+                    )
                 );
             Locker locker(m_metadata);
             encoder->encode(
@@ -72,7 +74,9 @@ public:
             // Decode message.
             string relayState;
             auto_ptr<MessageDecoder> decoder(
-                SAMLConfig::getConfig().MessageDecoderManager.newPlugin(samlconstants::SAML20_BINDING_HTTP_ARTIFACT, NULL)
+                SAMLConfig::getConfig().MessageDecoderManager.newPlugin(
+                    samlconstants::SAML20_BINDING_HTTP_ARTIFACT, pair<const DOMElement*,const XMLCh*>(NULL,NULL)
+                    )
                 );
             decoder->setArtifactResolver(this);
             auto_ptr<Response> response(dynamic_cast<Response*>(decoder->decode(relayState,*this,policy)));

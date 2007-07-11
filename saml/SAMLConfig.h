@@ -146,10 +146,10 @@ namespace opensaml {
         virtual std::string hashSHA1(const char* s, bool toHex=false)=0;
 
         /** Manages factories for MessageDecoder plugins. */
-        xmltooling::PluginManager<MessageDecoder,std::string,const xercesc::DOMElement*> MessageDecoderManager;
+        xmltooling::PluginManager< MessageDecoder,std::string,std::pair<const xercesc::DOMElement*,const XMLCh*> > MessageDecoderManager;
 
         /** Manages factories for MessageEncoder plugins. */
-        xmltooling::PluginManager<MessageEncoder,std::string,const xercesc::DOMElement*> MessageEncoderManager;        
+        xmltooling::PluginManager< MessageEncoder,std::string,std::pair<const xercesc::DOMElement*,const XMLCh*> > MessageEncoderManager;
 
         /** Manages factories for SAMLArtifact plugins. */
         xmltooling::PluginManager<SAMLArtifact,std::string,const char*> SAMLArtifactManager;

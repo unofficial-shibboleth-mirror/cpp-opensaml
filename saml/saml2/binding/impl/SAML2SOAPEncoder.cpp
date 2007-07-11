@@ -46,7 +46,7 @@ namespace opensaml {
         class SAML_DLLLOCAL SAML2SOAPEncoder : public MessageEncoder
         {
         public:
-            SAML2SOAPEncoder(const DOMElement* e);
+            SAML2SOAPEncoder() {}
             virtual ~SAML2SOAPEncoder() {}
 
             bool isUserAgentPresent() const {
@@ -66,14 +66,12 @@ namespace opensaml {
                 ) const;
         };
 
-        MessageEncoder* SAML_DLLLOCAL SAML2SOAPEncoderFactory(const DOMElement* const & e)
+        MessageEncoder* SAML_DLLLOCAL SAML2SOAPEncoderFactory(const pair<const DOMElement*,const XMLCh*>& p)
         {
-            return new SAML2SOAPEncoder(e);
+            return new SAML2SOAPEncoder();
         }
     };
 };
-
-SAML2SOAPEncoder::SAML2SOAPEncoder(const DOMElement* e) {}
 
 long SAML2SOAPEncoder::encode(
     GenericResponse& genericResponse,

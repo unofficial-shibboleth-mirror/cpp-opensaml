@@ -48,7 +48,7 @@ namespace opensaml {
         class SAML_DLLLOCAL SAML2RedirectDecoder : public MessageDecoder
         {
         public:
-            SAML2RedirectDecoder(const DOMElement* e) {}
+            SAML2RedirectDecoder() {}
             virtual ~SAML2RedirectDecoder() {}
             
             xmltooling::XMLObject* decode(
@@ -58,9 +58,9 @@ namespace opensaml {
                 ) const;
         };                
 
-        MessageDecoder* SAML_DLLLOCAL SAML2RedirectDecoderFactory(const DOMElement* const & e)
+        MessageDecoder* SAML_DLLLOCAL SAML2RedirectDecoderFactory(const pair<const DOMElement*,const XMLCh*>& p)
         {
-            return new SAML2RedirectDecoder(e);
+            return new SAML2RedirectDecoder();
         }
     };
 };

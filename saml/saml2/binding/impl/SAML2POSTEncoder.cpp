@@ -46,7 +46,7 @@ namespace opensaml {
         class SAML_DLLLOCAL SAML2POSTEncoder : public MessageEncoder
         {
         public:
-            SAML2POSTEncoder(const DOMElement* e, bool simple=false);
+            SAML2POSTEncoder(const DOMElement* e, const XMLCh* ns, bool simple=false);
             virtual ~SAML2POSTEncoder() {}
             
             long encode(
@@ -66,24 +66,24 @@ namespace opensaml {
             bool m_simple;
         };
 
-        MessageEncoder* SAML_DLLLOCAL SAML2POSTEncoderFactory(const DOMElement* const & e)
+        MessageEncoder* SAML_DLLLOCAL SAML2POSTEncoderFactory(const pair<const DOMElement*,const XMLCh*>& p)
         {
-            return new SAML2POSTEncoder(e, false);
+            return new SAML2POSTEncoder(p.first, p.second, false);
         }
 
-        MessageEncoder* SAML_DLLLOCAL SAML2POSTSimpleSignEncoderFactory(const DOMElement* const & e)
+        MessageEncoder* SAML_DLLLOCAL SAML2POSTSimpleSignEncoderFactory(const pair<const DOMElement*,const XMLCh*>& p)
         {
-            return new SAML2POSTEncoder(e, true);
+            return new SAML2POSTEncoder(p.first, p.second, true);
         }
     };
 };
 
 static const XMLCh _template[] = UNICODE_LITERAL_8(t,e,m,p,l,a,t,e);
 
-SAML2POSTEncoder::SAML2POSTEncoder(const DOMElement* e, bool simple) : m_simple(simple)
+SAML2POSTEncoder::SAML2POSTEncoder(const DOMElement* e, const XMLCh* ns, bool simple) : m_simple(simple)
 {
     if (e) {
-        auto_ptr_char t(e->getAttribute(_template));
+        auto_ptr_char t(e->getAttributeNS(ns, _template));
         if (t.get() && *t.get())
             m_template = t.get();
     }

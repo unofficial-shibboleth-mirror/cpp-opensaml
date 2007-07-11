@@ -30,16 +30,16 @@ using namespace std;
 
 namespace opensaml {
     namespace saml1p {
-        SAML_DLLLOCAL PluginManager<MessageDecoder,string,const DOMElement*>::Factory SAML1ArtifactDecoderFactory;
-        SAML_DLLLOCAL PluginManager<MessageDecoder,string,const DOMElement*>::Factory SAML1POSTDecoderFactory;
-        SAML_DLLLOCAL PluginManager<MessageDecoder,string,const DOMElement*>::Factory SAML1SOAPDecoderFactory;
+        SAML_DLLLOCAL PluginManager< MessageDecoder,string,pair<const DOMElement*,const XMLCh*> >::Factory SAML1ArtifactDecoderFactory;
+        SAML_DLLLOCAL PluginManager< MessageDecoder,string,pair<const DOMElement*,const XMLCh*> >::Factory SAML1POSTDecoderFactory;
+        SAML_DLLLOCAL PluginManager< MessageDecoder,string,pair<const DOMElement*,const XMLCh*> >::Factory SAML1SOAPDecoderFactory;
     }; 
 
     namespace saml2p {
-        SAML_DLLLOCAL PluginManager<MessageDecoder,string,const DOMElement*>::Factory SAML2ArtifactDecoderFactory;
-        SAML_DLLLOCAL PluginManager<MessageDecoder,string,const DOMElement*>::Factory SAML2POSTDecoderFactory;
-        SAML_DLLLOCAL PluginManager<MessageDecoder,string,const DOMElement*>::Factory SAML2RedirectDecoderFactory;
-        SAML_DLLLOCAL PluginManager<MessageDecoder,string,const DOMElement*>::Factory SAML2SOAPDecoderFactory;
+        SAML_DLLLOCAL PluginManager< MessageDecoder,string,pair<const DOMElement*,const XMLCh*> >::Factory SAML2ArtifactDecoderFactory;
+        SAML_DLLLOCAL PluginManager< MessageDecoder,string,pair<const DOMElement*,const XMLCh*> >::Factory SAML2POSTDecoderFactory;
+        SAML_DLLLOCAL PluginManager< MessageDecoder,string,pair<const DOMElement*,const XMLCh*> >::Factory SAML2RedirectDecoderFactory;
+        SAML_DLLLOCAL PluginManager< MessageDecoder,string,pair<const DOMElement*,const XMLCh*> >::Factory SAML2SOAPDecoderFactory;
     };
 };
 

@@ -67,7 +67,7 @@ public:
             encoder_config->getDocumentElement()->setAttributeNS(NULL,lit2.get(),lit3.get());
             auto_ptr<MessageEncoder> encoder(
                 SAMLConfig::getConfig().MessageEncoderManager.newPlugin(
-                    samlconstants::SAML20_BINDING_HTTP_POST, encoder_config->getDocumentElement()
+                    samlconstants::SAML20_BINDING_HTTP_POST, pair<const DOMElement*,const XMLCh*>(encoder_config->getDocumentElement(), NULL)
                     )
                 );
             Locker locker(m_metadata);
@@ -79,7 +79,9 @@ public:
             // Decode message.
             string relayState;
             auto_ptr<MessageDecoder> decoder(
-                SAMLConfig::getConfig().MessageDecoderManager.newPlugin(samlconstants::SAML20_BINDING_HTTP_POST, NULL)
+                SAMLConfig::getConfig().MessageDecoderManager.newPlugin(
+                    samlconstants::SAML20_BINDING_HTTP_POST, pair<const DOMElement*,const XMLCh*>(NULL,NULL)
+                    )
                 );
             auto_ptr<Response> response(dynamic_cast<Response*>(decoder->decode(relayState,*this,policy)));
             
@@ -137,7 +139,7 @@ public:
             encoder_config->getDocumentElement()->setAttributeNS(NULL,lit2.get(),lit3.get());
             auto_ptr<MessageEncoder> encoder(
                 SAMLConfig::getConfig().MessageEncoderManager.newPlugin(
-                    samlconstants::SAML20_BINDING_HTTP_POST_SIMPLESIGN, encoder_config->getDocumentElement()
+                    samlconstants::SAML20_BINDING_HTTP_POST_SIMPLESIGN, pair<const DOMElement*,const XMLCh*>(encoder_config->getDocumentElement(),NULL)
                     )
                 );
             Locker locker(m_metadata);
@@ -149,7 +151,9 @@ public:
             // Decode message.
             string relayState;
             auto_ptr<MessageDecoder> decoder(
-                SAMLConfig::getConfig().MessageDecoderManager.newPlugin(samlconstants::SAML20_BINDING_HTTP_POST_SIMPLESIGN, NULL)
+                SAMLConfig::getConfig().MessageDecoderManager.newPlugin(
+                    samlconstants::SAML20_BINDING_HTTP_POST_SIMPLESIGN, pair<const DOMElement*,const XMLCh*>(NULL,NULL)
+                    )
                 );
             auto_ptr<Response> response(dynamic_cast<Response*>(decoder->decode(relayState,*this,policy)));
             

@@ -46,7 +46,7 @@ namespace opensaml {
         class SAML_DLLLOCAL SAML1POSTEncoder : public MessageEncoder
         {
         public:
-            SAML1POSTEncoder(const DOMElement* e);
+            SAML1POSTEncoder(const DOMElement* e, const XMLCh* ns);
             virtual ~SAML1POSTEncoder() {}
             
             long encode(
@@ -66,19 +66,19 @@ namespace opensaml {
             string m_template;
         };
 
-        MessageEncoder* SAML_DLLLOCAL SAML1POSTEncoderFactory(const DOMElement* const & e)
+        MessageEncoder* SAML_DLLLOCAL SAML1POSTEncoderFactory(const pair<const DOMElement*,const XMLCh*>& p)
         {
-            return new SAML1POSTEncoder(e);
+            return new SAML1POSTEncoder(p.first, p.second);
         }
     };
 };
 
 static const XMLCh _template[] = UNICODE_LITERAL_8(t,e,m,p,l,a,t,e);
 
-SAML1POSTEncoder::SAML1POSTEncoder(const DOMElement* e)
+SAML1POSTEncoder::SAML1POSTEncoder(const DOMElement* e, const XMLCh* ns)
 {
     if (e) {
-        auto_ptr_char t(e->getAttribute(_template));
+        auto_ptr_char t(e->getAttributeNS(ns, _template));
         if (t.get() && *t.get())
             m_template = t.get();
     }

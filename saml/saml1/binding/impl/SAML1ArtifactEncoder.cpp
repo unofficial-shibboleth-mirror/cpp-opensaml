@@ -49,7 +49,7 @@ namespace opensaml {
         class SAML_DLLLOCAL SAML1ArtifactEncoder : public MessageEncoder
         {
         public:
-            SAML1ArtifactEncoder(const DOMElement* e) {}
+            SAML1ArtifactEncoder() {}
             virtual ~SAML1ArtifactEncoder() {}
             
             long encode(
@@ -65,9 +65,9 @@ namespace opensaml {
                 ) const;
         };                
 
-        MessageEncoder* SAML_DLLLOCAL SAML1ArtifactEncoderFactory(const DOMElement* const & e)
+        MessageEncoder* SAML_DLLLOCAL SAML1ArtifactEncoderFactory(const pair<const DOMElement*,const XMLCh*>& p)
         {
-            return new SAML1ArtifactEncoder(e);
+            return new SAML1ArtifactEncoder();
         }
     };
 };

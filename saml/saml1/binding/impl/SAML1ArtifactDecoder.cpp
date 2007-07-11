@@ -45,7 +45,7 @@ namespace opensaml {
         class SAML_DLLLOCAL SAML1ArtifactDecoder : public MessageDecoder
         {
         public:
-            SAML1ArtifactDecoder(const DOMElement* e) {}
+            SAML1ArtifactDecoder() {}
             virtual ~SAML1ArtifactDecoder() {}
             
             xmltooling::XMLObject* decode(
@@ -55,9 +55,9 @@ namespace opensaml {
                 ) const;
         };                
 
-        MessageDecoder* SAML_DLLLOCAL SAML1ArtifactDecoderFactory(const DOMElement* const & e)
+        MessageDecoder* SAML_DLLLOCAL SAML1ArtifactDecoderFactory(const pair<const DOMElement*,const XMLCh*>& p)
         {
-            return new SAML1ArtifactDecoder(e);
+            return new SAML1ArtifactDecoder();
         }
     };
 };

@@ -34,17 +34,17 @@ using namespace std;
 
 namespace opensaml {
     namespace saml1p {
-        SAML_DLLLOCAL PluginManager<MessageEncoder,string,const DOMElement*>::Factory SAML1ArtifactEncoderFactory;
-        SAML_DLLLOCAL PluginManager<MessageEncoder,string,const DOMElement*>::Factory SAML1POSTEncoderFactory;
-        SAML_DLLLOCAL PluginManager<MessageEncoder,string,const DOMElement*>::Factory SAML1SOAPEncoderFactory;
+        SAML_DLLLOCAL PluginManager< MessageEncoder,string,pair<const DOMElement*,const XMLCh*> >::Factory SAML1ArtifactEncoderFactory;
+        SAML_DLLLOCAL PluginManager< MessageEncoder,string,pair<const DOMElement*,const XMLCh*> >::Factory SAML1POSTEncoderFactory;
+        SAML_DLLLOCAL PluginManager< MessageEncoder,string,pair<const DOMElement*,const XMLCh*> >::Factory SAML1SOAPEncoderFactory;
     }; 
 
     namespace saml2p {
-        SAML_DLLLOCAL PluginManager<MessageEncoder,string,const DOMElement*>::Factory SAML2ArtifactEncoderFactory;
-        SAML_DLLLOCAL PluginManager<MessageEncoder,string,const DOMElement*>::Factory SAML2POSTEncoderFactory;
-        SAML_DLLLOCAL PluginManager<MessageEncoder,string,const DOMElement*>::Factory SAML2POSTSimpleSignEncoderFactory;
-        SAML_DLLLOCAL PluginManager<MessageEncoder,string,const DOMElement*>::Factory SAML2RedirectEncoderFactory;
-        SAML_DLLLOCAL PluginManager<MessageEncoder,string,const DOMElement*>::Factory SAML2SOAPEncoderFactory;
+        SAML_DLLLOCAL PluginManager< MessageEncoder,string,pair<const DOMElement*,const XMLCh*> >::Factory SAML2ArtifactEncoderFactory;
+        SAML_DLLLOCAL PluginManager< MessageEncoder,string,pair<const DOMElement*,const XMLCh*> >::Factory SAML2POSTEncoderFactory;
+        SAML_DLLLOCAL PluginManager< MessageEncoder,string,pair<const DOMElement*,const XMLCh*> >::Factory SAML2POSTSimpleSignEncoderFactory;
+        SAML_DLLLOCAL PluginManager< MessageEncoder,string,pair<const DOMElement*,const XMLCh*> >::Factory SAML2RedirectEncoderFactory;
+        SAML_DLLLOCAL PluginManager< MessageEncoder,string,pair<const DOMElement*,const XMLCh*> >::Factory SAML2SOAPEncoderFactory;
     };
 };
 

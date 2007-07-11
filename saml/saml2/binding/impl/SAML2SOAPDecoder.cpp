@@ -42,7 +42,7 @@ namespace opensaml {
         class SAML_DLLLOCAL SAML2SOAPDecoder : public MessageDecoder
         {
         public:
-            SAML2SOAPDecoder(const DOMElement* e);
+            SAML2SOAPDecoder() {}
             virtual ~SAML2SOAPDecoder() {}
 
             bool isUserAgentPresent() const {
@@ -56,14 +56,12 @@ namespace opensaml {
                 ) const;
         };                
 
-        MessageDecoder* SAML_DLLLOCAL SAML2SOAPDecoderFactory(const DOMElement* const & e)
+        MessageDecoder* SAML_DLLLOCAL SAML2SOAPDecoderFactory(const pair<const DOMElement*,const XMLCh*>& p)
         {
-            return new SAML2SOAPDecoder(e);
+            return new SAML2SOAPDecoder();
         }
     };
 };
-
-SAML2SOAPDecoder::SAML2SOAPDecoder(const DOMElement* e) {}
 
 XMLObject* SAML2SOAPDecoder::decode(
     string& relayState,
