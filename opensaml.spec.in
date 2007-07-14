@@ -1,7 +1,7 @@
 Name:		opensaml
 Summary:	Open source SAML library
 Version:	@-VERSION-@
-Release:	1
+Release:	2
 Group:		System Environment/Libraries
 Vendor:		Internet2
 License:	Apache 2.0
@@ -85,5 +85,8 @@ make check
 %doc _docs/api
 
 %changelog
-* Sun Apr 16 2006  Scott Cantor  <cantor.2@osu.edu>  - 2.0-1
-- First SPEC file for 2.0
+* Fri Jul 13 2007  Scott Cantor  <cantor.2@osu.edu>  - 2.0-2
+- Second alpha.
+
+* Sun Apr 16 2007  Scott Cantor  <cantor.2@osu.edu>  - 2.0-1
+- First SPEC file for 2.0.
