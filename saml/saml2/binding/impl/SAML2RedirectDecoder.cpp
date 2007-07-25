@@ -143,12 +143,13 @@ XMLObject* SAML2RedirectDecoder::decode(
     // Check destination URL.
     auto_ptr_char dest(request ? request->getDestination() : response->getDestination());
     const char* dest2 = httpRequest->getRequestURL();
+    const char* delim = strchr(dest2, '?');
     if ((root->getSignature() || httpRequest->getParameter("Signature")) && (!dest.get() || !*(dest.get()))) {
         log.error("signed SAML message missing Destination attribute");
         throw BindingException("Signed SAML message missing Destination attribute identifying intended destination.");
     }
-    else if (dest.get() && (!dest2 || !*dest2 || strcmp(dest.get(),dest2))) {
-        log.error("Redirect targeted at (%s), but delivered to (%s)", dest.get(), dest2 ? dest2 : "none");
+    else if ((delim && strncmp(dest.get(), dest2, delim - dest2)) || (!delim && strcmp(dest.get(),dest2))) {
+        log.error("Redirect targeted at (%s), but delivered to (%s)", dest.get(), dest2);
         throw BindingException("SAML message delivered with Redirect to incorrect server URL.");
     }
 
