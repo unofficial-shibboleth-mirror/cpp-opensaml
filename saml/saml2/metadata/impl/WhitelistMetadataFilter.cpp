@@ -24,12 +24,12 @@
 #include "saml2/metadata/Metadata.h"
 #include "saml2/metadata/MetadataFilter.h"
 
-#include <log4cpp/Category.hh>
+#include <xmltooling/logging.h>
 #include <xmltooling/util/NDC.h>
 
 using namespace opensaml::saml2md;
+using namespace xmltooling::logging;
 using namespace xmltooling;
-using namespace log4cpp;
 using namespace std;
 
 namespace opensaml {

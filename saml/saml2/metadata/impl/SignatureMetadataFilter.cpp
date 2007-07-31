@@ -25,8 +25,7 @@
 #include "saml2/metadata/MetadataFilter.h"
 #include "signature/SignatureProfileValidator.h"
 
-#include <log4cpp/Category.hh>
-
+#include <xmltooling/logging.h>
 #include <xmltooling/security/Credential.h>
 #include <xmltooling/security/CredentialCriteria.h>
 #include <xmltooling/security/CredentialResolver.h>
@@ -36,8 +35,8 @@
 using namespace opensaml::saml2md;
 using namespace opensaml;
 using namespace xmlsignature;
+using namespace xmltooling::logging;
 using namespace xmltooling;
-using namespace log4cpp;
 using namespace std;
 
 namespace opensaml {

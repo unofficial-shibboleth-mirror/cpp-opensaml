@@ -27,7 +27,7 @@
 #include "saml2/metadata/Metadata.h"
 #include "saml2/metadata/MetadataProvider.h"
 
-#include <log4cpp/Category.hh>
+#include <xmltooling/logging.h>
 #include <xercesc/util/Base64.hpp>
 #include <xmltooling/io/HTTPRequest.h>
 #include <xmltooling/util/NDC.h>
@@ -37,8 +37,8 @@ using namespace opensaml::saml2md;
 using namespace opensaml::saml2p;
 using namespace opensaml::saml2;
 using namespace opensaml;
+using namespace xmltooling::logging;
 using namespace xmltooling;
-using namespace log4cpp;
 using namespace std;
 
 namespace opensaml {

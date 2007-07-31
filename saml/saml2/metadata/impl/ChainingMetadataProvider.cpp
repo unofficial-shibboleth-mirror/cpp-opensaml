@@ -24,15 +24,16 @@
 #include "exceptions.h"
 #include "saml2/metadata/ChainingMetadataProvider.h"
 
-#include <log4cpp/Category.hh>
-#include <xmltooling/util/XMLHelper.h>
 #include <xercesc/util/XMLUniDefs.hpp>
+#include <xmltooling/logging.h>
+#include <xmltooling/util/XMLHelper.h>
+
 
 using namespace opensaml::saml2md;
 using namespace opensaml;
 using namespace xmlsignature;
+using namespace xmltooling::logging;
 using namespace xmltooling;
-using namespace log4cpp;
 using namespace std;
 
 namespace opensaml {

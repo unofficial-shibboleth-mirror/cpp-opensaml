@@ -24,13 +24,13 @@
 #include "exceptions.h"
 #include "binding/SecurityPolicyRule.h"
 
-#include <log4cpp/Category.hh>
+#include <xmltooling/logging.h>
 #include <xmltooling/util/ReplayCache.h>
 #include <xercesc/util/XMLUniDefs.hpp>
 
 using namespace opensaml;
+using namespace xmltooling::logging;
 using namespace xmltooling;
-using namespace log4cpp;
 using namespace std;
 
 namespace opensaml {

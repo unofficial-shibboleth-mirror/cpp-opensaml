@@ -30,7 +30,7 @@
 
 #include <fstream>
 #include <sstream>
-#include <log4cpp/Category.hh>
+#include <xmltooling/logging.h>
 #include <xmltooling/io/HTTPResponse.h>
 #include <xmltooling/util/NDC.h>
 #include <xmltooling/util/TemplateEngine.h>
@@ -40,8 +40,8 @@ using namespace opensaml::saml2p;
 using namespace opensaml::saml2md;
 using namespace opensaml;
 using namespace xmlsignature;
+using namespace xmltooling::logging;
 using namespace xmltooling;
-using namespace log4cpp;
 using namespace std;
 
 namespace opensaml {

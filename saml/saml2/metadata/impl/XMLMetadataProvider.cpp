@@ -29,8 +29,8 @@
 #include <xmltooling/util/ReloadableXMLFile.h>
 
 using namespace opensaml::saml2md;
+using namespace xmltooling::logging;
 using namespace xmltooling;
-using namespace log4cpp;
 using namespace std;
 
 #if defined (_MSC_VER)

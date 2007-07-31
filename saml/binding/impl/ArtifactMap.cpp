@@ -25,15 +25,15 @@
 #include "binding/ArtifactMap.h"
 #include "binding/SAMLArtifact.h"
 
-#include <log4cpp/Category.hh>
 #include <xercesc/util/XMLUniDefs.hpp>
+#include <xmltooling/logging.h>
 #include <xmltooling/XMLObjectBuilder.h>
 #include <xmltooling/util/NDC.h>
 #include <xmltooling/util/XMLHelper.h>
 
 using namespace opensaml;
+using namespace xmltooling::logging;
 using namespace xmltooling;
-using namespace log4cpp;
 using namespace std;
 
 namespace opensaml {

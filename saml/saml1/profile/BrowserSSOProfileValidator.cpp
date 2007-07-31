@@ -24,12 +24,12 @@
 #include "saml1/core/Assertions.h"
 #include "saml1/profile/BrowserSSOProfileValidator.h"
 
-#include <log4cpp/Category.hh>
+#include <xmltooling/logging.h>
 #include <xmltooling/util/NDC.h>
 
 using namespace opensaml::saml1;
+using namespace xmltooling::logging;
 using namespace xmltooling;
-using namespace log4cpp;
 using namespace std;
 
 namespace {

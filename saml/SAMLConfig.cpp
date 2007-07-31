@@ -22,6 +22,19 @@
  */
 
 #include "internal.h"
+
+#if defined(XMLTOOLING_LOG4SHIB)
+# ifndef OPENSAML_LOG4SHIB
+#  error "Logging library mismatch (XMLTooling is using log4shib)."
+# endif
+#elif defined(XMLTOOLING_LOG4CPP)
+# ifndef OPENSAML_LOG4CPP
+#  error "Logging library mismatch (XMLTooling is using log4cpp)."
+# endif
+#else
+# error "No supported logging library."
+#endif
+
 #include "exceptions.h"
 #include "SAMLConfig.h"
 #include "binding/ArtifactMap.h"
@@ -37,19 +50,19 @@
 #include "saml2/metadata/MetadataProvider.h"
 #include "util/SAMLConstants.h"
 
+#include <xmltooling/logging.h>
 #include <xmltooling/XMLToolingConfig.h>
 #include <xmltooling/signature/Signature.h>
 #include <xmltooling/util/NDC.h>
 
-#include <log4cpp/Category.hh>
 #include <xsec/enc/XSECCryptoException.hpp>
 #include <xsec/enc/XSECCryptoProvider.hpp>
 #include <xsec/utils/XSECPlatformUtils.hpp>
 
 using namespace opensaml;
 using namespace xmlsignature;
+using namespace xmltooling::logging;
 using namespace xmltooling;
-using namespace log4cpp;
 using namespace std;
 
 // Expose entry points when used as an extension library

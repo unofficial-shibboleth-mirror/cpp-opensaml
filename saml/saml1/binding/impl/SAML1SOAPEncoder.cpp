@@ -27,7 +27,7 @@
 #include "saml1/core/Protocols.h"
 
 #include <sstream>
-#include <log4cpp/Category.hh>
+#include <xmltooling/logging.h>
 #include <xmltooling/io/HTTPResponse.h>
 #include <xmltooling/util/NDC.h>
 #include <xmltooling/soap/SOAP.h>
@@ -37,8 +37,8 @@ using namespace opensaml::saml2md;
 using namespace opensaml;
 using namespace xmlsignature;
 using namespace soap11;
+using namespace xmltooling::logging;
 using namespace xmltooling;
-using namespace log4cpp;
 using namespace std;
 
 namespace opensaml {

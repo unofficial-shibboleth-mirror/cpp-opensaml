@@ -29,7 +29,7 @@
 #include "saml2/metadata/MetadataCredentialContext.h"
 #include "saml2/metadata/MetadataCredentialCriteria.h"
 
-#include <log4cpp/Category.hh>
+#include <xmltooling/logging.h>
 #include <xmltooling/encryption/Encrypter.h>
 #include <xmltooling/encryption/Decrypter.h>
 
@@ -109,7 +109,7 @@ void EncryptedElementType::encrypt(
         const Credential* KEK = r->first->resolve(r->second);
         if (!KEK) {
             auto_ptr_char name(dynamic_cast<const EntityDescriptor*>(r->second->getRole().getParent())->getEntityID());
-            log4cpp::Category::getInstance(SAML_LOGCAT".Encryption").warn("No key encryption credential found for (%s).", name.get());
+            logging::Category::getInstance(SAML_LOGCAT".Encryption").warn("No key encryption credential found for (%s).", name.get());
             continue;
         }
 

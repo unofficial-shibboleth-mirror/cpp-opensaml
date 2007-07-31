@@ -24,12 +24,12 @@
 #include "saml2/core/Assertions.h"
 #include "saml2/profile/BrowserSSOProfileValidator.h"
 
-#include <log4cpp/Category.hh>
+#include <xmltooling/logging.h>
 #include <xmltooling/util/NDC.h>
 
 using namespace opensaml::saml2;
+using namespace xmltooling::logging;
 using namespace xmltooling;
-using namespace log4cpp;
 using namespace std;
 
 void BrowserSSOProfileValidator::validateAssertion(const Assertion& assertion) const

@@ -26,15 +26,15 @@
 #include "saml2/core/Protocols.h"
 #include "saml2/metadata/Metadata.h"
 
-#include <log4cpp/Category.hh>
+#include <xmltooling/logging.h>
 #include <xmltooling/soap/SOAP.h>
 
 using namespace opensaml::saml2p;
 using namespace opensaml::saml2md;
 using namespace opensaml;
 using namespace soap11;
+using namespace xmltooling::logging;
 using namespace xmltooling;
-using namespace log4cpp;
 using namespace std;
 
 void SAML2SOAPClient::sendSAML(RequestAbstractType* request, MetadataCredentialCriteria& peer, const char* endpoint)

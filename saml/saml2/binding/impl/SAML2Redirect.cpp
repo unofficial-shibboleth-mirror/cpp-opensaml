@@ -24,10 +24,10 @@
 #include "saml2/binding/SAML2Redirect.h"
 
 #include <zlib.h>
-#include <log4cpp/Category.hh>
+#include <xmltooling/logging.h>
 #include <xmltooling/util/NDC.h>
 
-using namespace log4cpp;
+using namespace xmltooling::logging;
 using namespace std;
 
 namespace {

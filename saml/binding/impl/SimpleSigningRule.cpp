@@ -28,15 +28,15 @@
 #include "saml2/metadata/MetadataCredentialCriteria.h"
 #include "saml2/metadata/MetadataProvider.h"
 
-#include <log4cpp/Category.hh>
 #include <xercesc/util/Base64.hpp>
+#include <xmltooling/logging.h>
 #include <xmltooling/io/HTTPRequest.h>
 #include <xmltooling/security/SignatureTrustEngine.h>
 
 using namespace opensaml::saml2md;
 using namespace opensaml;
+using namespace xmltooling::logging;
 using namespace xmltooling;
-using namespace log4cpp;
 using namespace std;
 
 using xmlsignature::KeyInfo;

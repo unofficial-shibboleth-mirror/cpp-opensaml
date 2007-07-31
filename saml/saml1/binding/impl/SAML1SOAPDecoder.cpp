@@ -25,7 +25,7 @@
 #include "binding/MessageDecoder.h"
 #include "saml1/core/Protocols.h"
 
-#include <log4cpp/Category.hh>
+#include <xmltooling/logging.h>
 #include <xmltooling/soap/SOAP.h>
 #include <xmltooling/util/NDC.h>
 #include <xmltooling/validation/ValidatorSuite.h>
@@ -33,8 +33,8 @@
 using namespace opensaml::saml1p;
 using namespace opensaml;
 using namespace soap11;
+using namespace xmltooling::logging;
 using namespace xmltooling;
-using namespace log4cpp;
 using namespace std;
 
 namespace opensaml {

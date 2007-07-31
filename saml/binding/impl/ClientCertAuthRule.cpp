@@ -27,14 +27,14 @@
 #include "saml2/metadata/MetadataCredentialCriteria.h"
 #include "saml2/metadata/MetadataProvider.h"
 
+#include <xmltooling/logging.h>
 #include <xmltooling/security/X509TrustEngine.h>
 #include <xmltooling/util/ReplayCache.h>
-#include <log4cpp/Category.hh>
 
 using namespace opensaml::saml2md;
 using namespace opensaml;
+using namespace xmltooling::logging;
 using namespace xmltooling;
-using namespace log4cpp;
 using namespace std;
 
 namespace opensaml {
