@@ -134,7 +134,7 @@ XMLObject* SAML2POSTDecoder::decode(
         log.error("signed SAML message missing Destination attribute");
         throw BindingException("Signed SAML message missing Destination attribute identifying intended destination.");
     }
-    else if ((delim && strncmp(dest.get(), dest2, delim - dest2)) || (!delim && strcmp(dest.get(),dest2))) {
+    else if (dest.get() && *dest.get() && ((delim && strncmp(dest.get(), dest2, delim - dest2)) || (!delim && strcmp(dest.get(),dest2)))) {
         log.error("POST targeted at (%s), but delivered to (%s)", dest.get(), dest2);
         throw BindingException("SAML message delivered with POST to incorrect server URL.");
     }

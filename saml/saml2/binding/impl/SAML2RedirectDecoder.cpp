@@ -148,7 +148,7 @@ XMLObject* SAML2RedirectDecoder::decode(
         log.error("signed SAML message missing Destination attribute");
         throw BindingException("Signed SAML message missing Destination attribute identifying intended destination.");
     }
-    else if ((delim && strncmp(dest.get(), dest2, delim - dest2)) || (!delim && strcmp(dest.get(),dest2))) {
+    else if (dest.get() && *dest.get() && ((delim && strncmp(dest.get(), dest2, delim - dest2)) || (!delim && strcmp(dest.get(),dest2)))) {
         log.error("Redirect targeted at (%s), but delivered to (%s)", dest.get(), dest2);
         throw BindingException("SAML message delivered with Redirect to incorrect server URL.");
     }
