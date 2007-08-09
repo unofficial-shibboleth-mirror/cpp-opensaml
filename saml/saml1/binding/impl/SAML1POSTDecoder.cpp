@@ -111,7 +111,12 @@ XMLObject* SAML1POSTDecoder::decode(
         SchemaValidators.validate(xmlObject.get());
 
     // Run through the policy.
-    policy.evaluate(*response, &genericRequest);
+    pair<bool,int> minor = response->getMinorVersion();
+    policy.evaluate(
+        *response,
+        &genericRequest,
+        (minor.first && minor.second==0) ? samlconstants::SAML10_PROTOCOL_ENUM : samlconstants::SAML11_PROTOCOL_ENUM
+        );
     
     // Check recipient URL.
     auto_ptr_char recipient(response->getRecipient());

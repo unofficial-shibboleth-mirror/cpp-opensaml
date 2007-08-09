@@ -45,7 +45,10 @@ namespace opensaml {
         SAML2MessageRule(const DOMElement* e) {}
         virtual ~SAML2MessageRule() {}
         
-        void evaluate(const xmltooling::XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const;
+        const char* getType() const {
+            return SAML2MESSAGE_POLICY_RULE;
+        }
+        void evaluate(const XMLObject& message, const GenericRequest* request, const XMLCh* protocol, SecurityPolicy& policy) const;
     };
 
     SecurityPolicyRule* SAML_DLLLOCAL SAML2MessageRuleFactory(const DOMElement* const & e)
@@ -54,18 +57,20 @@ namespace opensaml {
     }
 };
 
-void SAML2MessageRule::evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const
+void SAML2MessageRule::evaluate(
+    const XMLObject& message, const GenericRequest* request, const XMLCh* protocol, SecurityPolicy& policy
+    ) const
 {
+    // Only handle SAML 2.0 protocol and 2.0 messages.
+    if (!XMLString::equals(protocol, samlconstants::SAML20P_NS))
+        return;
+    const QName& q = message.getElementQName();
+    if (!XMLString::equals(q.getNamespaceURI(), samlconstants::SAML20P_NS)&&
+        !XMLString::equals(q.getNamespaceURI(), samlconstants::SAML20_NS))
+        return;
+
     Category& log=Category::getInstance(SAML_LOGCAT".SecurityPolicyRule.SAML2Message");
     
-    const QName& q = message.getElementQName(); 
-    policy.setMessageQName(&q);
-    
-    if (!XMLString::equals(q.getNamespaceURI(), samlconstants::SAML20P_NS)&&
-        !XMLString::equals(q.getNamespaceURI(), samlconstants::SAML20_NS)) {
-        return;
-    }
-
     try {
         const saml2::RootObject& samlRoot = dynamic_cast<const saml2::RootObject&>(message);
         policy.setMessageID(samlRoot.getID());
@@ -116,7 +121,7 @@ void SAML2MessageRule::evaluate(const XMLObject& message, const GenericRequest* 
             }
     
             log.debug("matched message issuer against metadata, searching for applicable role...");
-            const RoleDescriptor* roledesc=entity->getRoleDescriptor(*policy.getRole(), samlconstants::SAML20P_NS);
+            const RoleDescriptor* roledesc=entity->getRoleDescriptor(*policy.getRole(), protocol);
             if (!roledesc) {
                 log.warn("unable to find compatible role (%s) in metadata", policy.getRole()->toString().c_str());
                 return;

@@ -105,8 +105,9 @@ XMLObject* SAML2SOAPDecoder::decode(
         RequestAbstractType* request = dynamic_cast<RequestAbstractType*>(body->getUnknownXMLObjects().front());
         if (request) {
             // Run through the policy at two layers.
-            policy.evaluate(*env, &genericRequest);
-            policy.evaluate(*request, &genericRequest);
+            policy.evaluate(*env, &genericRequest, samlconstants::SAML20P_NS);
+            policy.reset(true);
+            policy.evaluate(*request, &genericRequest, samlconstants::SAML20P_NS);
             xmlObject.release();
             body->detach(); // frees Envelope
             request->detach();   // frees Body

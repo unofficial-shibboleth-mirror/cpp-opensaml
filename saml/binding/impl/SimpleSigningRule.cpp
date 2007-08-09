@@ -49,7 +49,10 @@ namespace opensaml {
         SimpleSigningRule(const DOMElement* e);
         virtual ~SimpleSigningRule() {}
         
-        void evaluate(const xmltooling::XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const;
+        const char* getType() const {
+            return SIMPLESIGNING_POLICY_RULE;
+        }
+        void evaluate(const XMLObject& message, const GenericRequest* request, const XMLCh* protocol, SecurityPolicy& policy) const;
 
     private:
         // Appends a raw parameter=value pair to the string.
@@ -89,7 +92,9 @@ SimpleSigningRule::SimpleSigningRule(const DOMElement* e) : m_errorsFatal(false)
     }
 }
 
-void SimpleSigningRule::evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const
+void SimpleSigningRule::evaluate(
+    const XMLObject& message, const GenericRequest* request, const XMLCh* protocol, SecurityPolicy& policy
+    ) const
 {
     Category& log=Category::getInstance(SAML_LOGCAT".SecurityPolicyRule.SimpleSigning");
     

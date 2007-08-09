@@ -105,8 +105,18 @@ XMLObject* SAML1SOAPDecoder::decode(
         Request* request = dynamic_cast<Request*>(body->getUnknownXMLObjects().front());
         if (request) {
             // Run through the policy at two layers.
-            policy.evaluate(*env, &genericRequest);
-            policy.evaluate(*request, &genericRequest);
+            pair<bool,int> minor = request->getMinorVersion();
+            policy.evaluate(
+                *env,
+                &genericRequest,
+                (minor.first && minor.second==0) ? samlconstants::SAML10_PROTOCOL_ENUM : samlconstants::SAML11_PROTOCOL_ENUM
+                );
+            policy.reset(true);
+            policy.evaluate(
+                *request,
+                &genericRequest,
+                (minor.first && minor.second==0) ? samlconstants::SAML10_PROTOCOL_ENUM : samlconstants::SAML11_PROTOCOL_ENUM
+                );
             xmlObject.release();
             body->detach(); // frees Envelope
             request->detach();   // frees Body
@@ -114,5 +124,5 @@ XMLObject* SAML1SOAPDecoder::decode(
         }
     }
     
-    throw BindingException("SOAP Envelope did not contain a SAML Request.");
+    throw BindingException("SOAP Envelope did not contain a SAML 1.x Request.");
 }

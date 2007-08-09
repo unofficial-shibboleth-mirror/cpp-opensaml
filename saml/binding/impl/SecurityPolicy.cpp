@@ -57,26 +57,26 @@ SecurityPolicy::IssuerMatchingPolicy SecurityPolicy::m_defaultMatching;
 
 SecurityPolicy::~SecurityPolicy()
 {
-    reset();
+    reset(false);
 }
 
-void SecurityPolicy::reset()
+void SecurityPolicy::reset(bool messageOnly)
 {
-    delete m_messageQName;
     XMLString::release(&m_messageID);
-    delete m_issuer;
-    m_messageQName=NULL;
     m_messageID=NULL;
     m_issueInstant=0;
-    m_issuer=NULL;
-    m_issuerRole=NULL;
-    m_secure=false;
+    if (!messageOnly) {
+        delete m_issuer;
+        m_issuer=NULL;
+        m_issuerRole=NULL;
+        m_secure=false;
+    }
 }
 
-void SecurityPolicy::evaluate(const XMLObject& message, const GenericRequest* request)
+void SecurityPolicy::evaluate(const XMLObject& message, const GenericRequest* request, const XMLCh* protocol)
 {
     for (vector<const SecurityPolicyRule*>::const_iterator i=m_rules.begin(); i!=m_rules.end(); ++i)
-        (*i)->evaluate(message,request,*this);
+        (*i)->evaluate(message,request,protocol,*this);
 }
 
 void SecurityPolicy::setIssuer(const Issuer* issuer)

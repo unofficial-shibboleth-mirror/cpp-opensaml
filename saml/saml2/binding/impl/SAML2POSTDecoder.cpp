@@ -124,7 +124,7 @@ XMLObject* SAML2POSTDecoder::decode(
         SchemaValidators.validate(xmlObject.get());
 
     // Run through the policy.
-    policy.evaluate(*root, &genericRequest);
+    policy.evaluate(*root, &genericRequest, samlconstants::SAML20P_NS);
     
     // Check destination URL.
     auto_ptr_char dest(request ? request->getDestination() : response->getDestination());

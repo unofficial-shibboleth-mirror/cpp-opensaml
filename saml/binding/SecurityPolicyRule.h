@@ -43,16 +43,28 @@ namespace opensaml {
         virtual ~SecurityPolicyRule() {}
 
         /**
+         * Returns the rule's class/type.
+         *
+         * @return  the class/type of the object
+         */
+        virtual const char* getType() const=0;
+
+        /**
          * Evaluates the rule against the given request and message.
+         * 
+         * <p>An exception will be raised if the message is invalid according to
+         * a policy rule.
          * 
          * @param message   the incoming message
          * @param request   the protocol request
+         * @param protocol  the protocol family in use
          * @param policy    SecurityPolicy to provide various components and track message data
-         *
-         * @throws BindingException raised if the message/request is not acceptable to the policy rule
          */
         virtual void evaluate(
-            const xmltooling::XMLObject& message, const xmltooling::GenericRequest* request, SecurityPolicy& policy
+            const xmltooling::XMLObject& message,
+            const xmltooling::GenericRequest* request,
+            const XMLCh* protocol,
+            SecurityPolicy& policy
             ) const=0;
     };
 

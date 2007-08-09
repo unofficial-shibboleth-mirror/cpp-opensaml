@@ -48,7 +48,10 @@ namespace opensaml {
         SAML1MessageRule(const DOMElement* e) {}
         virtual ~SAML1MessageRule() {}
         
-        void evaluate(const xmltooling::XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const;
+        const char* getType() const {
+            return SAML1MESSAGE_POLICY_RULE;
+        }
+        void evaluate(const XMLObject& message, const GenericRequest* request, const XMLCh* protocol, SecurityPolicy& policy) const;
     };
 
     SecurityPolicyRule* SAML_DLLLOCAL SAML1MessageRuleFactory(const DOMElement* const & e)
@@ -57,17 +60,20 @@ namespace opensaml {
     }
 };
 
-void SAML1MessageRule::evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const
+void SAML1MessageRule::evaluate(
+    const XMLObject& message, const GenericRequest* request, const XMLCh* protocol, SecurityPolicy& policy
+    ) const
 {
-    Category& log=Category::getInstance(SAML_LOGCAT".SecurityPolicyRule.SAML1Message");
-    
-    const QName& q = message.getElementQName(); 
-    policy.setMessageQName(&q);
-
-    if (!XMLString::equals(q.getNamespaceURI(), samlconstants::SAML1P_NS) &&
-        !XMLString::equals(q.getNamespaceURI(), samlconstants::SAML1_NS)) {
+    // Only handle SAML 1.x protocol and SAML 1.x messages.
+    if (!XMLString::equals(protocol, samlconstants::SAML11_PROTOCOL_ENUM) &&
+        !XMLString::equals(protocol, samlconstants::SAML10_PROTOCOL_ENUM))
         return;
-    }
+    const QName& q = message.getElementQName();
+    if (!XMLString::equals(q.getNamespaceURI(), samlconstants::SAML1P_NS) &&
+        !XMLString::equals(q.getNamespaceURI(), samlconstants::SAML1_NS))
+        return;
+    
+    Category& log=Category::getInstance(SAML_LOGCAT".SecurityPolicyRule.SAML1Message");
     
     try {
         const RootObject& samlRoot = dynamic_cast<const RootObject&>(message);
@@ -76,7 +82,6 @@ void SAML1MessageRule::evaluate(const XMLObject& message, const GenericRequest* 
 
         log.debug("extracting issuer from message");
 
-        const XMLCh* protocol = NULL;
         const saml1::Assertion* a = NULL;
 
         // Handle assertions directly.
@@ -93,12 +98,8 @@ void SAML1MessageRule::evaluate(const XMLObject& message, const GenericRequest* 
 
         if (a) {
             policy.setIssuer(a->getIssuer());
-            pair<bool,int> minor = a->getMinorVersion();
-            protocol = (minor.first && minor.second==0) ?
-                samlconstants::SAML10_PROTOCOL_ENUM : samlconstants::SAML11_PROTOCOL_ENUM;
         }
-        
-        if (!protocol) {
+        else {
             log.warn("issuer identity not extracted");
             return;
         }

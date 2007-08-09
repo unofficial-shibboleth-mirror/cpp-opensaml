@@ -152,11 +152,13 @@ XMLObject* SAML2ArtifactDecoder::decode(
         m_artifactResolver->resolve(*(artifact2.get()), dynamic_cast<const SSODescriptorType&>(*roledesc), policy)
         );
     
-    // The policy should be enforced against the ArtifactResponse by the resolve step. 
+    // The policy should be enforced against the ArtifactResponse by the resolve step.
+    // Reset only the message state.
+    policy.reset(true);
 
     // Extract payload and check that message.
     XMLObject* payload = response->getPayload();
-    policy.evaluate(*payload, &genericRequest);
+    policy.evaluate(*payload, &genericRequest, samlconstants::SAML20P_NS);
 
     // Return the payload only.
     response.release();

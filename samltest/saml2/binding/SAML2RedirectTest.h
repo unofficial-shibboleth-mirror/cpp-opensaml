@@ -34,7 +34,8 @@ public:
     void testSAML2Redirect() {
         try {
             QName idprole(samlconstants::SAML20MD_NS, IDPSSODescriptor::LOCAL_NAME);
-            SecurityPolicy policy(m_rules2, m_metadata, &idprole, m_trust, false);
+            SecurityPolicy policy(m_metadata, &idprole, m_trust, false);
+            policy.getRules().assign(m_rules2.begin(), m_rules2.end());
 
             // Read message to use from file.
             string path = data_path + "saml2/binding/SAML2Response.xml";
