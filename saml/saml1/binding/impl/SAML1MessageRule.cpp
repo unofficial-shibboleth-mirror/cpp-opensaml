@@ -64,10 +64,7 @@ void SAML1MessageRule::evaluate(
     const XMLObject& message, const GenericRequest* request, const XMLCh* protocol, SecurityPolicy& policy
     ) const
 {
-    // Only handle SAML 1.x protocol and SAML 1.x messages.
-    if (!XMLString::equals(protocol, samlconstants::SAML11_PROTOCOL_ENUM) &&
-        !XMLString::equals(protocol, samlconstants::SAML10_PROTOCOL_ENUM))
-        return;
+    // Only handle SAML 1.x messages.
     const QName& q = message.getElementQName();
     if (!XMLString::equals(q.getNamespaceURI(), samlconstants::SAML1P_NS) &&
         !XMLString::equals(q.getNamespaceURI(), samlconstants::SAML1_NS))

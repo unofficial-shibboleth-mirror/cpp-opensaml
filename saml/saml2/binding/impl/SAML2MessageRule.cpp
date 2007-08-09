@@ -61,9 +61,7 @@ void SAML2MessageRule::evaluate(
     const XMLObject& message, const GenericRequest* request, const XMLCh* protocol, SecurityPolicy& policy
     ) const
 {
-    // Only handle SAML 2.0 protocol and 2.0 messages.
-    if (!XMLString::equals(protocol, samlconstants::SAML20P_NS))
-        return;
+    // Only handle SAML 2.0 messages.
     const QName& q = message.getElementQName();
     if (!XMLString::equals(q.getNamespaceURI(), samlconstants::SAML20P_NS)&&
         !XMLString::equals(q.getNamespaceURI(), samlconstants::SAML20_NS))
