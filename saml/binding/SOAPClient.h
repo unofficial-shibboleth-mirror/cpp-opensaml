@@ -61,15 +61,16 @@ namespace opensaml {
         using soap11::SOAPClient::send;
 
         /**
-         * SAML-specific method uses a RoleDescriptor to determine the peer name and prepare the
+         * SAML-specific method uses metadata to determine the peer name and prepare the
          * transport layer with peer credential information. The SecurityPolicy is also reset,
          * in case the policy is reused.
          * 
          * @param env       SOAP envelope to send
-         * @param peer      peer to send message to, expressed in metadata criteria terms
+         * @param from      identity of sending application
+         * @param to        peer to send message to, expressed in metadata criteria terms
          * @param endpoint  URL of endpoint to recieve message
          */
-        virtual void send(const soap11::Envelope& env, saml2md::MetadataCredentialCriteria& peer, const char* endpoint);
+        virtual void send(const soap11::Envelope& env, const char* from, saml2md::MetadataCredentialCriteria& to, const char* endpoint);
         
         /**
          * Override applies SecurityPolicy to envelope before returning it.

@@ -37,13 +37,13 @@ using namespace opensaml;
 using namespace xmltooling;
 using namespace std;
 
-void SOAPClient::send(const soap11::Envelope& env, MetadataCredentialCriteria& peer, const char* endpoint)
+void SOAPClient::send(const soap11::Envelope& env, const char* from, MetadataCredentialCriteria& to, const char* endpoint)
 {
     // Clear policy.
     m_policy.reset();
 
-    m_criteria = &peer;
-    m_peer = &(peer.getRole());
+    m_criteria = &to;
+    m_peer = &(to.getRole());
     
     const QName& role = m_peer->getElementQName();
     if (XMLString::equals(role.getLocalPart(),RoleDescriptor::LOCAL_NAME))
@@ -52,7 +52,7 @@ void SOAPClient::send(const soap11::Envelope& env, MetadataCredentialCriteria& p
         m_policy.setRole(&role);
 
     auto_ptr_char pn(dynamic_cast<const EntityDescriptor*>(m_peer->getParent())->getEntityID());
-    soap11::SOAPClient::send(env, pn.get(), endpoint);
+    soap11::SOAPClient::send(env, SOAPTransport::Address(from, pn.get(), endpoint));
 }
 
 void SOAPClient::prepareTransport(xmltooling::SOAPTransport& transport)

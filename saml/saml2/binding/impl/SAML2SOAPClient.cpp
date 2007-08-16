@@ -37,13 +37,13 @@ using namespace xmltooling::logging;
 using namespace xmltooling;
 using namespace std;
 
-void SAML2SOAPClient::sendSAML(RequestAbstractType* request, MetadataCredentialCriteria& peer, const char* endpoint)
+void SAML2SOAPClient::sendSAML(RequestAbstractType* request, const char* from, MetadataCredentialCriteria& to, const char* endpoint)
 {
     auto_ptr<Envelope> env(EnvelopeBuilder::buildEnvelope());
     Body* body = BodyBuilder::buildBody();
     env->setBody(body);
     body->getUnknownXMLObjects().push_back(request);
-    m_soaper.send(*env.get(), peer, endpoint);
+    m_soaper.send(*env.get(), from, to, endpoint);
     m_correlate = XMLString::replicate(request->getID());
 }
 
