@@ -60,12 +60,13 @@ namespace opensaml {
             /**
              * Condition validation.
              *
-             * <p>Base class version only understands AudienceRestrictions.
+             * <p>The base class version only understands AudienceRestriction conditions.
+             * All other condition types will be rejected and require subclassing to
+             * prevent validation failure.
              * 
              * @param condition condition to validate
-             * @return true iff condition was understood
              */
-            virtual bool validateCondition(const Condition* condition) const;
+            virtual void validateCondition(const Condition* condition) const;
 
         protected:
             /** Set of audience values representing recipient. */

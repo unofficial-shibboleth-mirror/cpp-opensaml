@@ -58,22 +58,29 @@ void AssertionValidator::validateAssertion(const Assertion& assertion) const
             throw ValidationException("Assertion is no longer valid.");
     }
 
-    // Now we process conditions. Only audience restrictions at the moment.
+    // Now we process conditions, starting with the known types and then extensions.
+
+    const vector<AudienceRestriction*>& acvec = conds->getAudienceRestrictions();
+    for (vector<AudienceRestriction*>::const_iterator ac = acvec.begin(); ac!=acvec.end(); ++ac)
+        validateCondition(*ac);
+
+    const vector<OneTimeUse*>& dncvec = conds->getOneTimeUses();
+    for (vector<OneTimeUse*>::const_iterator dnc = dncvec.begin(); dnc!=dncvec.end(); ++dnc)
+        validateCondition(*dnc);
+
     const vector<Condition*>& convec = conds->getConditions();
-    for (vector<Condition*>::const_iterator c = convec.begin(); c!=convec.end(); ++c) {
-        if (!validateCondition(*c)) {
-            Category::getInstance(SAML_LOGCAT".AssertionValidator").error("unrecognized Condition in assertion (%s)",
-                (*c)->getSchemaType() ? (*c)->getSchemaType()->toString().c_str() : (*c)->getElementQName().toString().c_str());
-            throw ValidationException("Assertion contains an unrecognized condition.");
-        }
-    }
+    for (vector<Condition*>::const_iterator c = convec.begin(); c!=convec.end(); ++c)
+        validateCondition(*c);
 }
 
-bool AssertionValidator::validateCondition(const Condition* condition) const
+void AssertionValidator::validateCondition(const Condition* c) const
 {
-    const AudienceRestriction* ac=dynamic_cast<const AudienceRestriction*>(condition);
-    if (!ac)
-        return false;
+    const AudienceRestriction* ac=dynamic_cast<const AudienceRestriction*>(c);
+    if (!ac) {
+        Category::getInstance(SAML_LOGCAT".AssertionValidator").error("unrecognized Condition in assertion (%s)",
+            c->getSchemaType() ? c->getSchemaType()->toString().c_str() : c->getElementQName().toString().c_str());
+        throw ValidationException("Assertion contains an unrecognized condition.");
+    }
 
     bool found = false;
     const vector<Audience*>& auds1 = ac->getAudiences();
@@ -89,6 +96,4 @@ bool AssertionValidator::validateCondition(const Condition* condition) const
         Category::getInstance(SAML_LOGCAT".AssertionValidator").error("unacceptable AudienceRestriction in assertion (%s)", os.str().c_str());
         throw ValidationException("Assertion contains an unacceptable AudienceRestriction.");
     }
-
-    return found;
 }
