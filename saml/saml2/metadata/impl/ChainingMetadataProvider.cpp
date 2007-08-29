@@ -115,7 +115,7 @@ void ChainingMetadataProvider::unlock()
 
 const XMLObject* ChainingMetadataProvider::getMetadata() const
 {
-    throw XMLToolingException("getMetadata operation not implemented on this provider.");
+    throw MetadataException("getMetadata operation not implemented on this provider.");
 }
 
 const EntitiesDescriptor* ChainingMetadataProvider::getEntitiesDescriptor(const char* name, bool requireValidMetadata) const

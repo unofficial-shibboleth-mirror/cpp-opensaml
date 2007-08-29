@@ -69,13 +69,26 @@ void AbstractMetadataProvider::emitChangeEvent() const
     ObservableMetadataProvider::emitChangeEvent();
 }
 
-void AbstractMetadataProvider::index(EntityDescriptor* site, time_t validUntil)
+void AbstractMetadataProvider::index(EntityDescriptor* site, time_t validUntil, bool replace) const
 {
     if (validUntil < site->getValidUntilEpoch())
         site->setValidUntil(validUntil);
 
     auto_ptr_char id(site->getEntityID());
     if (id.get()) {
+        if (replace) {
+            m_sites.erase(id.get());
+            for (sitemap_t::iterator s = m_sources.begin(); s != m_sources.end();) {
+                if (s->second == site) {
+                    sitemap_t::iterator temp = s;
+                    ++s;
+                    m_sources.erase(temp);
+                }
+                else {
+                    ++s;
+                }
+            }
+        }
         m_sites.insert(sitemap_t::value_type(id.get(),site));
     }
     
@@ -120,7 +133,7 @@ void AbstractMetadataProvider::index(EntityDescriptor* site, time_t validUntil)
     }
 }
 
-void AbstractMetadataProvider::index(EntitiesDescriptor* group, time_t validUntil)
+void AbstractMetadataProvider::index(EntitiesDescriptor* group, time_t validUntil) const
 {
     if (validUntil < group->getValidUntilEpoch())
         group->setValidUntil(validUntil);
@@ -139,11 +152,13 @@ void AbstractMetadataProvider::index(EntitiesDescriptor* group, time_t validUnti
         index(*j,group->getValidUntilEpoch());
 }
 
-void AbstractMetadataProvider::clearDescriptorIndex()
+void AbstractMetadataProvider::clearDescriptorIndex(bool freeSites)
 {
-    m_sources.clear();
+    if (freeSites)
+        for_each(m_sites.begin(), m_sites.end(), cleanup_const_pair<string,EntityDescriptor>());
     m_sites.clear();
     m_groups.clear();
+    m_sources.clear();
 }
 
 const EntitiesDescriptor* AbstractMetadataProvider::getEntitiesDescriptor(const char* name, bool strict) const

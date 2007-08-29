@@ -211,6 +211,9 @@ namespace opensaml {
         /** MetadataProvider based on local or remote XML file */
         #define XML_METADATA_PROVIDER  "XML"
 
+        /** MetadataProvider based on dynamic resolution */
+        #define DYNAMIC_METADATA_PROVIDER  "Dynamic"
+
         /** MetadataProvider that wraps a sequence of metadata providers. */
         #define CHAINING_METADATA_PROVIDER  "Chaining"
 

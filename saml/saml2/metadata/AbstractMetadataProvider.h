@@ -82,29 +82,32 @@ namespace opensaml {
              * processing known reverse lookup strategies for artifacts.
              * 
              * @param site          entity definition
-             * @param validUntil    expiration time of the entity definition
+             * @param validUntil    maximum expiration time of the entity definition
+             * @param replace       true iff existing entries for the same entity should be cleared/replaced
              */
-            virtual void index(EntityDescriptor* site, time_t validUntil);
+            virtual void index(EntityDescriptor* site, time_t validUntil, bool replace=false) const;
 
             /**
              * Loads a group of entities into the cache for faster lookup.
              * 
              * @param group         group definition
-             * @param validUntil    expiration time of the group definition
+             * @param validUntil    maximum expiration time of the group definition
              */
-            virtual void index(EntitiesDescriptor* group, time_t validUntil);
+            virtual void index(EntitiesDescriptor* group, time_t validUntil) const;
         
             /**
              * Clear the cache of known entities and groups.
+             *
+             * @param freeSites true iff the objects cached in the site map should be freed.
              */
-            virtual void clearDescriptorIndex();
+            virtual void clearDescriptorIndex(bool freeSites=false);
 
         private:
             typedef std::multimap<std::string,const EntityDescriptor*> sitemap_t;
             typedef std::multimap<std::string,const EntitiesDescriptor*> groupmap_t;
-            sitemap_t m_sites;
-            sitemap_t m_sources;
-            groupmap_t m_groups;
+            mutable sitemap_t m_sites;
+            mutable sitemap_t m_sources;
+            mutable groupmap_t m_groups;
 
             mutable xmltooling::Mutex* m_credentialLock;
             typedef std::map< const RoleDescriptor*, std::vector<xmltooling::Credential*> > credmap_t;
