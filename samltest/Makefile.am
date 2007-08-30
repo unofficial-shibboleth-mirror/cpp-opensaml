@@ -19,8 +19,8 @@ samltest_h = \
     signature/SAML1RequestTest.h \
     signature/SAML1ResponseTest.h \
     signature/SAML2AssertionTest.h \
-    security/AbstractPKIXTrustEngineTest.h \
     security/ExplicitKeyTrustEngineTest.h \
+    security/StaticPKIXTrustEngineTest.h \
     saml1/core/impl/ActionTest.h \
     saml1/core/impl/AdviceTest.h \
     saml1/core/impl/AssertionIDReferenceTest.h \

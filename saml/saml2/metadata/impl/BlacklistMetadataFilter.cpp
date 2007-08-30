@@ -121,7 +121,7 @@ void BlacklistMetadataFilter::doFilter(XMLObject& xmlObject) const
 
 void BlacklistMetadataFilter::doFilter(EntitiesDescriptor& entities) const
 {
-    Category& log=Category::getInstance(SAML_LOGCAT".Metadata");
+    Category& log=Category::getInstance(SAML_LOGCAT".MetadataFilter.Blacklist");
     
     VectorOf(EntityDescriptor) v=entities.getEntityDescriptors();
     for (VectorOf(EntityDescriptor)::size_type i=0; i<v.size(); ) {

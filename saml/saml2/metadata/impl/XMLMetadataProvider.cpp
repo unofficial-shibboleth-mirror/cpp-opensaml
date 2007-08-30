@@ -45,7 +45,7 @@ namespace opensaml {
         {
         public:
             XMLMetadataProvider(const DOMElement* e)
-                : AbstractMetadataProvider(e), ReloadableXMLFile(e, Category::getInstance(SAML_LOGCAT".MetadataProvider")),
+                : AbstractMetadataProvider(e), ReloadableXMLFile(e, Category::getInstance(SAML_LOGCAT".MetadataProvider.XML")),
                     m_object(NULL) {
             }
             virtual ~XMLMetadataProvider() {

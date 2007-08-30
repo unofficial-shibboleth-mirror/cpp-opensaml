@@ -553,11 +553,11 @@
 				Name="security"
 				>
 				<File
-					RelativePath=".\security\AbstractPKIXTrustEngineTest.cpp"
+					RelativePath=".\security\ExplicitKeyTrustEngineTest.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\security\ExplicitKeyTrustEngineTest.cpp"
+					RelativePath=".\security\StaticPKIXTrustEngineTest.cpp"
 					>
 				</File>
 			</Filter>
@@ -2449,28 +2449,6 @@
 				Name="security"
 				>
 				<File
-					RelativePath=".\security\AbstractPKIXTrustEngineTest.h"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							CommandLine="perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
-							Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							CommandLine="perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
-							Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
 					RelativePath=".\security\ExplicitKeyTrustEngineTest.h"
 					>
 					<FileConfiguration
@@ -2492,12 +2470,8 @@
 						/>
 					</FileConfiguration>
 				</File>
-			</Filter>
-			<Filter
-				Name="encryption"
-				>
 				<File
-					RelativePath=".\encryption\EncryptedAssertionTest.h"
+					RelativePath=".\security\StaticPKIXTrustEngineTest.h"
 					>
 					<FileConfiguration
 						Name="Debug|Win32"
@@ -2514,6 +2488,32 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							CommandLine="perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+							Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
+						/>
+					</FileConfiguration>
+				</File>
+			</Filter>
+			<Filter
+				Name="encryption"
+				>
+				<File
+					RelativePath=".\encryption\EncryptedAssertionTest.h"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							CommandLine="perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
+							Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							CommandLine="perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 							Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 						/>
 					</FileConfiguration>

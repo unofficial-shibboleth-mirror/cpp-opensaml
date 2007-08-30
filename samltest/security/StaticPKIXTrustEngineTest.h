@@ -19,73 +19,13 @@
 #include <saml/saml2/metadata/Metadata.h>
 #include <saml/saml2/metadata/MetadataCredentialCriteria.h>
 #include <saml/saml2/metadata/MetadataProvider.h>
-#include <xmltooling/security/AbstractPKIXTrustEngine.h>
-#include <xmltooling/security/X509Credential.h>
+#include <xmltooling/security/SignatureTrustEngine.h>
 
 using namespace opensaml::saml2;
 using namespace opensaml::saml2md;
 using namespace xmlsignature;
 
-namespace {
-    class SampleTrustEngine : public AbstractPKIXTrustEngine {
-    public:
-        SampleTrustEngine() {}
-        ~SampleTrustEngine() {}
-        
-        class SampleIterator : public PKIXValidationInfoIterator {
-            CredentialResolver* m_resolver;
-            mutable vector<XSECCryptoX509CRL*> m_crls;
-            bool m_done;
-        public:
-            SampleIterator() : m_resolver(NULL), m_done(false) {
-                string config = data_path + "security/FilesystemCredentialResolver.xml";
-                ifstream in(config.c_str());
-                DOMDocument* doc=XMLToolingConfig::getConfig().getParser().parse(in);
-                XercesJanitor<DOMDocument> janitor(doc);
-                m_resolver = XMLToolingConfig::getConfig().CredentialResolverManager.newPlugin(
-                    FILESYSTEM_CREDENTIAL_RESOLVER,doc->getDocumentElement()
-                    );
-                m_resolver->lock();
-            }
-            
-            ~SampleIterator() {
-                m_resolver->unlock();
-                delete m_resolver;
-            }
-
-            bool next() {
-                if (m_done)
-                    return false;
-                m_done = true;
-                return true;
-            }
-            
-            int getVerificationDepth() const {
-                return 0;
-            }
-            
-            const vector<XSECCryptoX509*>& getTrustAnchors() const {
-                return dynamic_cast<const X509Credential*>(m_resolver->resolve())->getEntityCertificateChain();
-            }
-            
-            const vector<XSECCryptoX509CRL*>& getCRLs() const {
-                XSECCryptoX509CRL* crl = dynamic_cast<const X509Credential*>(m_resolver->resolve())->getCRL();
-                if (crl)
-                    m_crls.push_back(crl);
-                return m_crls;
-            }
-        };
-    
-        PKIXValidationInfoIterator* getPKIXValidationInfoIterator(
-            const CredentialResolver& credResolver, CredentialCriteria* criteria=NULL
-            ) const {
-            dynamic_cast<const MetadataCredentialCriteria*>(criteria);
-            return new SampleIterator();
-        }
-    };
-};
-
-class AbstractPKIXTrustEngineTest : public CxxTest::TestSuite, public SAMLObjectBaseTestCase {
+class StaticPKIXTrustEngineTest : public CxxTest::TestSuite, public SAMLObjectBaseTestCase {
 public:
     void setUp() {
         SAMLObjectBaseTestCase::setUp();
@@ -95,7 +35,7 @@ public:
         SAMLObjectBaseTestCase::tearDown();
     }
 
-    void testAbstractPKIXTrustEngine() {
+    void testStaticPKIXTrustEngine() {
         string config = data_path + "security/XMLMetadataProvider.xml";
         ifstream in(config.c_str());
         DOMDocument* doc=XMLToolingConfig::getConfig().getParser().parse(in);
@@ -119,15 +59,21 @@ public:
         }
         
         // Build trust engine.
-        auto_ptr<TrustEngine> trustEngine(new SampleTrustEngine());
-        
-        // Get signed assertion.
-        config = data_path + "signature/SAML2Assertion.xml";
+        config = data_path + "security/StaticPKIXTrustEngine.xml";
         ifstream in2(config.c_str());
         DOMDocument* doc2=XMLToolingConfig::getConfig().getParser().parse(in2);
         XercesJanitor<DOMDocument> janitor2(doc2);
-        auto_ptr<Assertion> assertion(dynamic_cast<Assertion*>(XMLObjectBuilder::getBuilder(doc2->getDocumentElement())->buildFromDocument(doc2)));
-        janitor2.release();
+        auto_ptr<TrustEngine> trustEngine(
+            XMLToolingConfig::getConfig().TrustEngineManager.newPlugin(STATIC_PKIX_TRUSTENGINE,doc2->getDocumentElement())
+            );
+        
+        // Get signed assertion.
+        config = data_path + "signature/SAML2Assertion.xml";
+        ifstream in3(config.c_str());
+        DOMDocument* doc3=XMLToolingConfig::getConfig().getParser().parse(in3);
+        XercesJanitor<DOMDocument> janitor3(doc3);
+        auto_ptr<Assertion> assertion(dynamic_cast<Assertion*>(XMLObjectBuilder::getBuilder(doc3->getDocumentElement())->buildFromDocument(doc3)));
+        janitor3.release();
 
         Locker locker(metadataProvider.get());
         const EntityDescriptor* descriptor = metadataProvider->getEntityDescriptor("https://idp.example.org");

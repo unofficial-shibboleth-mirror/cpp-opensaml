@@ -118,7 +118,7 @@ void WhitelistMetadataFilter::doFilter(XMLObject& xmlObject) const
 
 void WhitelistMetadataFilter::doFilter(EntitiesDescriptor& entities) const
 {
-    Category& log=Category::getInstance(SAML_LOGCAT".Metadata");
+    Category& log=Category::getInstance(SAML_LOGCAT".MetadataFilter.Whitelist");
     
     VectorOf(EntityDescriptor) v=entities.getEntityDescriptors();
     for (VectorOf(EntityDescriptor)::size_type i=0; i<v.size(); ) {

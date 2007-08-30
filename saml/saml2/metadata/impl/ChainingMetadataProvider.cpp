@@ -50,7 +50,7 @@ static const XMLCh type[] =                 UNICODE_LITERAL_4(t,y,p,e);
 
 ChainingMetadataProvider::ChainingMetadataProvider(const DOMElement* e) : ObservableMetadataProvider(e), m_tlsKey(NULL)
 {
-    Category& log=Category::getInstance(SAML_LOGCAT".Metadata");
+    Category& log=Category::getInstance(SAML_LOGCAT".Metadata.Chaining");
     e = e ? XMLHelper::getFirstChildElement(e, _MetadataProvider) : NULL;
     while (e) {
         auto_ptr_char temp(e->getAttributeNS(NULL,type));
