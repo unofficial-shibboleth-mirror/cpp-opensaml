@@ -96,14 +96,8 @@ static const XMLCh Path[] =                 UNICODE_LITERAL_4(P,a,t,h);
 SignatureMetadataFilter::SignatureMetadataFilter(const DOMElement* e) : m_credResolver(NULL), m_trust(NULL)
 {
     if (e && e->hasAttributeNS(NULL,certificate)) {
-        // Dummy up a file resolver.
-        DOMElement* dummy = e->getOwnerDocument()->createElementNS(NULL,_CredentialResolver);
-        DOMElement* child = e->getOwnerDocument()->createElementNS(NULL,Certificate);
-        dummy->appendChild(child);
-        DOMElement* path = e->getOwnerDocument()->createElementNS(NULL,Path);
-        child->appendChild(path);
-        path->appendChild(e->getOwnerDocument()->createTextNode(e->getAttributeNS(NULL,certificate)));
-        m_credResolver = XMLToolingConfig::getConfig().CredentialResolverManager.newPlugin(FILESYSTEM_CREDENTIAL_RESOLVER,dummy);
+        // Use a file-based credential resolver rooted here.
+        m_credResolver = XMLToolingConfig::getConfig().CredentialResolverManager.newPlugin(FILESYSTEM_CREDENTIAL_RESOLVER,e);
         return;
     }
 
