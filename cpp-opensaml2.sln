@@ -2,8 +2,25 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "saml", "saml\saml.vcproj", "{34DE3EA5-EA05-4261-8B63-A850FFB91768}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "samltest", "samltest\samltest.vcproj", "{8BBB3B12-DBA1-4533-9C36-2CA95F1F1659}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+	ProjectSection(ProjectDependencies) = postProject
+		{34DE3EA5-EA05-4261-8B63-A850FFB91768} = {34DE3EA5-EA05-4261-8B63-A850FFB91768}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "samlsign", "samlsign\samlsign.vcproj", "{C4E58F5A-AF7E-4060-89E7-5F690682E662}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 	ProjectSection(ProjectDependencies) = postProject
 		{34DE3EA5-EA05-4261-8B63-A850FFB91768} = {34DE3EA5-EA05-4261-8B63-A850FFB91768}
 	EndProjectSection
@@ -22,6 +39,10 @@ Global
 		{8BBB3B12-DBA1-4533-9C36-2CA95F1F1659}.Debug|Win32.Build.0 = Debug|Win32
 		{8BBB3B12-DBA1-4533-9C36-2CA95F1F1659}.Release|Win32.ActiveCfg = Release|Win32
 		{8BBB3B12-DBA1-4533-9C36-2CA95F1F1659}.Release|Win32.Build.0 = Release|Win32
+		{C4E58F5A-AF7E-4060-89E7-5F690682E662}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C4E58F5A-AF7E-4060-89E7-5F690682E662}.Debug|Win32.Build.0 = Debug|Win32
+		{C4E58F5A-AF7E-4060-89E7-5F690682E662}.Release|Win32.ActiveCfg = Release|Win32
+		{C4E58F5A-AF7E-4060-89E7-5F690682E662}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

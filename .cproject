@@ -47,6 +47,15 @@
 </scannerInfoProvider>
 </profile>
 </storageModule>
+
+<storageModule buildSystemId="org.eclipse.cdt.core.defaultConfigDataProvider" id="converted.config.2133715230" moduleId="org.eclipse.cdt.core.settings" name="convertedConfig">
+<externalSettings/>
+<extensions>
+<extension id="org.eclipse.cdt.core.nullindexer" point="org.eclipse.cdt.core.CIndexer"/>
+<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+</extensions>
+</storageModule>
+<storageModule moduleId="org.eclipse.cdt.core.language.mapping"/>
 <storageModule moduleId="org.eclipse.cdt.core.pathentry">
 <pathentry kind="out" path=""/>
 <pathentry kind="out" path="debug"/>
@@ -90,14 +99,9 @@
 <pathentry include="C:/log4cpp-0.3.5rc1/include" kind="inc" path="" system="true"/>
 <pathentry include="C:/cxxtest" kind="inc" path="" system="true"/>
 <pathentry kind="src" path="samltest/encryption"/>
+<pathentry kind="src" path="samlsign"/>
 </storageModule>
-<storageModule buildSystemId="org.eclipse.cdt.core.defaultConfigDataProvider" id="converted.config.2133715230" moduleId="org.eclipse.cdt.core.settings" name="convertedConfig">
-<externalSettings/>
-<extensions>
-<extension id="org.eclipse.cdt.core.nullindexer" point="org.eclipse.cdt.core.CIndexer"/>
-<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
-</extensions>
-</storageModule>
+<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
 </cconfiguration>
 </storageModule>
 </cproject>

@@ -70,6 +70,7 @@ make check
 %files
 %defattr(-,root,root,-)
 %doc _docs/LICENSE.txt _docs/NOTICE.txt
+%{_bindir}/samlsign
 %{_libdir}/libsaml.so.*
 %dir %{_datadir}/xml/%{name}
 %{_datadir}/xml/%{name}

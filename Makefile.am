@@ -10,7 +10,7 @@ dist-hook:
 	rm -rf `find $(distdir)/samltest/data -name .svn`
 
 
-SUBDIRS = doc schemas saml samltest
+SUBDIRS = doc schemas saml samltest samlsign
 
 if DX_COND_doc
 all-local: opensaml.spec pkginfo doxygen-doc
