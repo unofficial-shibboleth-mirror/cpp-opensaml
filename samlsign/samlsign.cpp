@@ -35,10 +35,15 @@
 
 #include <saml/SAMLConfig.h>
 #include <saml/saml2/metadata/Metadata.h>
+#include <saml/saml2/metadata/MetadataProvider.h>
+#include <saml/saml2/metadata/MetadataCredentialCriteria.h>
+#include <saml/signature/SignatureProfileValidator.h>
 #include <saml/util/SAMLConstants.h>
 #include <xmltooling/logging.h>
 #include <xmltooling/XMLToolingConfig.h>
+#include <xmltooling/security/SignatureTrustEngine.h>
 #include <xmltooling/signature/Signature.h>
+#include <xmltooling/signature/SignatureValidator.h>
 #include <xmltooling/util/XMLHelper.h>
 
 #include <fstream>
@@ -90,6 +95,21 @@ CredentialResolver* buildSimpleResolver(const char* key, const char* cert)
 
     return XMLToolingConfig::getConfig().CredentialResolverManager.newPlugin(FILESYSTEM_CREDENTIAL_RESOLVER, root);
 }
+
+class DummyCredentialResolver : public CredentialResolver
+{
+public:
+    DummyCredentialResolver() {}
+    ~DummyCredentialResolver() {}
+    
+    Lockable* lock() {return this;}
+    void unlock() {}
+    
+    const Credential* resolve(const CredentialCriteria* criteria=NULL) const {return NULL;}
+    vector<const Credential*>::size_type resolve(
+        vector<const Credential*>& results, const CredentialCriteria* criteria=NULL
+        ) const {return 0;}
+};
 
 int main(int argc,char* argv[])
 {
@@ -153,7 +173,11 @@ int main(int argc,char* argv[])
             rname="SPSSODescriptor";
     }
 
-    if (!verify && !key_param && !cr_param) {
+    if (verify && !cert_param && !cr_param && !t_param) {
+        cerr << "either -c or -R or -T option required when verifiying, see documentation for usage" << endl;
+        return -1;
+    }
+    else if (!verify && !key_param && !cr_param) {
         cerr << "either -k or -R option required when signing, see documentation for usage" << endl;
         return -1;
     }
@@ -206,13 +230,105 @@ int main(int argc,char* argv[])
             throw XMLToolingException("Input is not a signable SAML object.");
 
         if (verify) {
+            if (!signable->getSignature())
+                throw SignatureException("Cannot verify unsigned object.");
+
+            // Check the profile.
+            SignatureProfileValidator sigval;
+            sigval.validate(signable->getSignature());
+
+            if (cert_param || cr_param) {
+                // Build a resolver to supply trusted credentials.
+                auto_ptr<CredentialResolver> cr(
+                    cr_param ? buildPlugin(cr_param, xmlconf.CredentialResolverManager) : buildSimpleResolver(NULL, cert_param)
+                    );
+                Locker locker(cr.get());
+
+                // Set up criteria.
+                CredentialCriteria cc;
+                cc.setUsage(CredentialCriteria::SIGNING_CREDENTIAL);
+                cc.setSignature(*(signable->getSignature()), CredentialCriteria::KEYINFO_EXTRACTION_KEY);
+                if (issuer)
+                    cc.setPeerName(issuer);
+
+                // Try every credential we can find.
+                vector<const Credential*> creds;
+                if (cr->resolve(creds, &cc)) {
+                    bool good=false;
+                    SignatureValidator sigValidator;
+                    for (vector<const Credential*>::const_iterator i = creds.begin(); i != creds.end(); ++i) {
+                        try {
+                            sigValidator.setCredential(*i);
+                            sigValidator.validate(signable->getSignature());
+                            log.info("successful signature verification");
+                            good = true;
+                            break;
+                        }
+                        catch (exception&) {
+                        }
+                    }
+                    if (!good)
+                        throw SignatureException("CredentialResolver did not supply a successful verification key.");
+                }
+                else {
+                    throw SignatureException("CredentialResolver did not supply any verification keys.");
+                }
+            }
+            else {
+                // TrustEngine-based verification, so try and build the plugins.
+                auto_ptr<TrustEngine> trust(buildPlugin(t_param, xmlconf.TrustEngineManager));
+                SignatureTrustEngine* sigtrust = dynamic_cast<SignatureTrustEngine*>(trust.get());
+                if (m_param && rname && issuer) {
+                    if (!protocol) {
+                        if (prot)
+                            protocol = XMLString::transcode(prot);
+                    }
+                    if (!protocol) {
+                        conf.term();
+                        cerr << "use of metadata option requires a protocol option" << endl;
+                        return -1;
+                    }
+                    auto_ptr<MetadataProvider> metadata(buildPlugin(m_param, conf.MetadataProviderManager));
+                    metadata->init();
+                    
+                    Locker locker(metadata.get());
+                    const EntityDescriptor* entity = metadata->getEntityDescriptor(issuer);
+                    if (!entity)
+                        throw MetadataException("no metadata found for ($1)", params(1, issuer));
+                    const XMLCh* ns = rns ? XMLString::transcode(rns) : samlconstants::SAML20MD_NS;
+                    auto_ptr_XMLCh n(rname);
+                    QName q(ns, n.get());
+                    const RoleDescriptor* role = entity->getRoleDescriptor(q, protocol);
+                    if (!role)
+                        throw MetadataException("compatible role $1 not found for ($2)", params(2, q.toString().c_str(), issuer));
+
+                    MetadataCredentialCriteria mcc(*role);
+                    if (sigtrust->validate(*signable->getSignature(), *metadata.get(), &mcc))
+                        log.info("successful signature verification");
+                    else
+                        throw SignatureException("Unable to verify signature with TrustEngine and supplied metadata.");
+                }
+                else {
+                    // Set up criteria.
+                    CredentialCriteria cc;
+                    cc.setUsage(CredentialCriteria::SIGNING_CREDENTIAL);
+                    cc.setSignature(*(signable->getSignature()), CredentialCriteria::KEYINFO_EXTRACTION_KEY);
+                    if (issuer)
+                        cc.setPeerName(issuer);
+                    DummyCredentialResolver dummy;
+                    if (sigtrust->validate(*signable->getSignature(), dummy, &cc))
+                        log.info("successful signature verification");
+                    else
+                        throw SignatureException("Unable to verify signature with TrustEngine (no metadata supplied).");
+                }
+            }
         }
         else {
             // Build a resolver to supply a credential.
             auto_ptr<CredentialResolver> cr(
                 cr_param ? buildPlugin(cr_param, xmlconf.CredentialResolverManager) : buildSimpleResolver(key_param, cert_param)
                 );
-            cr->lock();
+            Locker locker(cr.get());
             CredentialCriteria cc;
             cc.setUsage(CredentialCriteria::SIGNING_CREDENTIAL);
             const Credential* cred = cr->resolve(&cc);
