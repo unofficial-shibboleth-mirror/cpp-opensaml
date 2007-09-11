@@ -181,11 +181,12 @@ int main(int argc,char* argv[])
         cerr << "either -k or -R option required when signing, see documentation for usage" << endl;
         return -1;
     }
-
+    
+    XMLToolingConfig& xmlconf = XMLToolingConfig::getConfig();
+    xmlconf.log_config();
     SAMLConfig& conf=SAMLConfig::getConfig();
     if (!conf.init())
         return -2;
-    XMLToolingConfig& xmlconf = XMLToolingConfig::getConfig();
     Category& log = Category::getInstance("OpenSAML.Utility.SAMLSign");
 
     int ret = 0;
