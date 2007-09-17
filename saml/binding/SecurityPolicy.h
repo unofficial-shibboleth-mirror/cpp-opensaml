@@ -75,7 +75,7 @@ namespace opensaml {
             const xmltooling::QName* role=NULL,
             const xmltooling::TrustEngine* trustEngine=NULL,
             bool validate=true
-            ) : m_messageID(NULL), m_issueInstant(0), m_issuer(NULL), m_issuerRole(NULL), m_secure(false),
+            ) : m_messageID(NULL), m_issueInstant(0), m_issuer(NULL), m_issuerRole(NULL), m_authenticated(false),
                 m_matchingPolicy(NULL), m_metadata(metadataProvider), m_role(NULL), m_trust(trustEngine), m_validate(validate) {
             if (role)
                 m_role = new xmltooling::QName(*role);
@@ -175,12 +175,11 @@ namespace opensaml {
          * 
          * @param message           the incoming message
          * @param request           the protocol request
-         * @param protocol          the protocol family in use
          *
          * @throws BindingException raised if the message/request is invalid according to the supplied rules
          */
         void evaluate(
-            const xmltooling::XMLObject& message, const xmltooling::GenericRequest* request=NULL, const XMLCh* protocol=NULL
+            const xmltooling::XMLObject& message, const xmltooling::GenericRequest* request=NULL
             );
 
         /**
@@ -230,12 +229,12 @@ namespace opensaml {
         }
 
         /**
-         * Returns the security status as determined by the registered policies.
+         * Returns the authentication status of the message as determined by the registered policies.
          * 
          * @return true iff a SecurityPolicyRule has indicated the issuer/message has been authenticated 
          */
-        bool isSecure() const {
-            return m_secure;
+        bool isAuthenticated() const {
+            return m_authenticated;
         }
 
         /**
@@ -279,12 +278,12 @@ namespace opensaml {
         void setIssuerMetadata(const saml2md::RoleDescriptor* issuerRole);
 
         /**
-         * Sets the security status as determined by the registered policies.
+         * Sets the authentication status of the message as determined by the registered policies.
          * 
-         * @param secure indicates whether the issuer/message has been authenticated
+         * @param auth indicates whether the issuer/message has been authenticated
          */
-        void setSecure(bool secure) {
-            m_secure = secure;
+        void setAuthenticated(bool auth) {
+            m_authenticated = auth;
         }
         
         /** Allows override of rules for comparing saml2:Issuer information. */
@@ -353,7 +352,7 @@ namespace opensaml {
         time_t m_issueInstant;
         saml2::Issuer* m_issuer;
         const saml2md::RoleDescriptor* m_issuerRole;
-        bool m_secure;
+        bool m_authenticated;
         
         // components governing policy rules
         IssuerMatchingPolicy* m_matchingPolicy;

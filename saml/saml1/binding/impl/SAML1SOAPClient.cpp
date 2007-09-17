@@ -62,20 +62,13 @@ Response* SAML1SOAPClient::receiveSAML()
                     throw SecurityPolicyException("InResponseTo attribute did not correlate with the Request ID.");
                 
                 m_soaper.getPolicy().reset(true);
-                pair<bool,int> minor = response->getMinorVersion();
-                m_soaper.getPolicy().evaluate(
-                    *response,
-                    NULL,
-                    (minor.first && minor.second==0) ? samlconstants::SAML10_PROTOCOL_ENUM : samlconstants::SAML11_PROTOCOL_ENUM
-                    );
-                
-                if (!m_soaper.getPolicy().isSecure()) {
-                    SecurityPolicyException ex("Security policy could not authenticate the message.");
-                    if (m_soaper.getPolicy().getIssuerMetadata())
-                        annotateException(&ex, m_soaper.getPolicy().getIssuerMetadata());   // throws it
-                    else
-                        ex.raise();
-                }
+
+                // Extract Response details and run policy against it.
+                // We don't pull Issuer out of any assertions because some profiles may permit
+                // alternate issuers at that layer.
+                m_soaper.getPolicy().setMessageID(response->getResponseID());
+                m_soaper.getPolicy().setIssueInstant(response->getIssueInstantEpoch());
+                m_soaper.getPolicy().evaluate(*response);
                 
                 // Check Status.
                 Status* status = response->getStatus();

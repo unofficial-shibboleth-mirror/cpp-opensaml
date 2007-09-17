@@ -35,7 +35,7 @@ public:
         try {
             QName idprole(samlconstants::SAML20MD_NS, IDPSSODescriptor::LOCAL_NAME);
             SecurityPolicy policy(m_metadata, &idprole, m_trust, false);
-            policy.getRules().assign(m_rules2.begin(), m_rules2.end());
+            policy.getRules().assign(m_rules.begin(), m_rules.end());
 
             // Read message to use from file.
             string path = data_path + "saml2/binding/SAML2Response.xml";
@@ -81,7 +81,7 @@ public:
             // Test the results.
             TSM_ASSERT_EQUALS("RelayState was not the expected result.", relayState, "state");
             TSM_ASSERT("SAML Response not decoded successfully.", response.get());
-            TSM_ASSERT("Message was not verified.", policy.isSecure());
+            TSM_ASSERT("Message was not verified.", policy.isAuthenticated());
             auto_ptr_char entityID(policy.getIssuer()->getName());
             TSM_ASSERT("Issuer was not expected.", !strcmp(entityID.get(),"https://idp.example.org/"));
             TSM_ASSERT_EQUALS("Assertion count was not correct.", response->getAssertions().size(), 1);

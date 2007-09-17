@@ -47,7 +47,7 @@ namespace opensaml {
         const char* getType() const {
             return CLIENTCERTAUTH_POLICY_RULE;
         }
-        void evaluate(const XMLObject& message, const GenericRequest* request, const XMLCh* protocol, SecurityPolicy& policy) const;
+        void evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const;
     };
 
     SecurityPolicyRule* SAML_DLLLOCAL ClientCertAuthRuleFactory(const DOMElement* const & e)
@@ -56,9 +56,7 @@ namespace opensaml {
     }
 };
 
-void ClientCertAuthRule::evaluate(
-    const XMLObject& message, const GenericRequest* request, const XMLCh* protocol, SecurityPolicy& policy
-    ) const
+void ClientCertAuthRule::evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const
 {
     Category& log=Category::getInstance(SAML_LOGCAT".SecurityPolicyRule.ClientCertAuth");
     
@@ -92,5 +90,5 @@ void ClientCertAuthRule::evaluate(
     }
     
     log.debug("client certificate verified against message issuer");
-    policy.setSecure(true);
+    policy.setAuthenticated(true);
 }

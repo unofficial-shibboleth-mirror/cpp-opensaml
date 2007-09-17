@@ -22,8 +22,8 @@
 
 #include "internal.h"
 #include "exceptions.h"
-#include "binding/MessageDecoder.h"
 #include "saml2/binding/SAML2Artifact.h"
+#include "saml2/binding/SAML2MessageDecoder.h"
 #include "saml2/core/Protocols.h"
 #include "saml2/metadata/Metadata.h"
 #include "saml2/metadata/MetadataProvider.h"
@@ -43,7 +43,7 @@ using namespace std;
 
 namespace opensaml {
     namespace saml2p {              
-        class SAML_DLLLOCAL SAML2ArtifactDecoder : public MessageDecoder
+        class SAML_DLLLOCAL SAML2ArtifactDecoder : public SAML2MessageDecoder
         {
         public:
             SAML2ArtifactDecoder() {}
@@ -133,18 +133,14 @@ XMLObject* SAML2ArtifactDecoder::decode(
         log.debug("lookup succeeded, artifact issued by (%s)", issuer.get());
     }
 
-    // Mock up an Issuer object for the policy.
-    auto_ptr<Issuer> issuer(IssuerBuilder::buildIssuer());
-    issuer->setName(provider->getEntityID());
-    policy.setIssuer(issuer.get());
-    issuer.release();   // owned by policy now
-    
     log.debug("attempting to find artifact issuing role...");
     const RoleDescriptor* roledesc=provider->getRoleDescriptor(*(policy.getRole()), samlconstants::SAML20P_NS);
     if (!roledesc || !dynamic_cast<const SSODescriptorType*>(roledesc)) {
         log.error("unable to find compatible SAML role (%s) in metadata", policy.getRole()->toString().c_str());
         throw BindingException("Unable to find compatible metadata role for artifact issuer.");
     }
+    // Set issuer into policy.
+    policy.setIssuer(provider->getEntityID());
     policy.setIssuerMetadata(roledesc);
     
     log.debug("calling ArtifactResolver...");
@@ -156,9 +152,10 @@ XMLObject* SAML2ArtifactDecoder::decode(
     // Reset only the message state.
     policy.reset(true);
 
-    // Extract payload and check that message.
+    // Now extract details from the payload and check that message.
     XMLObject* payload = response->getPayload();
-    policy.evaluate(*payload, &genericRequest, samlconstants::SAML20P_NS);
+    extractMessageDetails(*payload, genericRequest, samlconstants::SAML20P_NS, policy);
+    policy.evaluate(*payload, &genericRequest);
 
     // Return the payload only.
     response.release();

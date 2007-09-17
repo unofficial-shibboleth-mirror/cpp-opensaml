@@ -15,14 +15,14 @@
  */
 
 /**
- * SAML2MessageRule.cpp
+ * SAML2MessageDecoder.cpp
  * 
- * SAML 2.0 message extraction rule
+ * Base class for SAML 2.0 MessageDecoders.
  */
 
 #include "internal.h"
 #include "exceptions.h"
-#include "binding/SecurityPolicyRule.h"
+#include "saml2/binding/SAML2MessageDecoder.h"
 #include "saml2/core/Protocols.h"
 #include "saml2/metadata/Metadata.h"
 #include "saml2/metadata/MetadataProvider.h"
@@ -38,43 +38,23 @@ using namespace xmltooling::logging;
 using namespace xmltooling;
 using namespace std;
 
-namespace opensaml {
-    class SAML_DLLLOCAL SAML2MessageRule : public SecurityPolicyRule
-    {
-    public:
-        SAML2MessageRule(const DOMElement* e) {}
-        virtual ~SAML2MessageRule() {}
-        
-        const char* getType() const {
-            return SAML2MESSAGE_POLICY_RULE;
-        }
-        void evaluate(const XMLObject& message, const GenericRequest* request, const XMLCh* protocol, SecurityPolicy& policy) const;
-    };
-
-    SecurityPolicyRule* SAML_DLLLOCAL SAML2MessageRuleFactory(const DOMElement* const & e)
-    {
-        return new SAML2MessageRule(e);
-    }
-};
-
-void SAML2MessageRule::evaluate(
-    const XMLObject& message, const GenericRequest* request, const XMLCh* protocol, SecurityPolicy& policy
+void SAML2MessageDecoder::extractMessageDetails(
+    const XMLObject& message, const GenericRequest& request, const XMLCh* protocol, SecurityPolicy& policy
     ) const
 {
     // Only handle SAML 2.0 messages.
     const QName& q = message.getElementQName();
-    if (!XMLString::equals(q.getNamespaceURI(), samlconstants::SAML20P_NS)&&
-        !XMLString::equals(q.getNamespaceURI(), samlconstants::SAML20_NS))
+    if (!XMLString::equals(q.getNamespaceURI(), samlconstants::SAML20P_NS))
         return;
 
-    Category& log=Category::getInstance(SAML_LOGCAT".SecurityPolicyRule.SAML2Message");
-    
+    Category& log = Category::getInstance(SAML_LOGCAT".MessageDecoder.SAML2");
+
     try {
         const saml2::RootObject& samlRoot = dynamic_cast<const saml2::RootObject&>(message);
         policy.setMessageID(samlRoot.getID());
         policy.setIssueInstant(samlRoot.getIssueInstantEpoch());
 
-        log.debug("extracting issuer from message");
+        log.debug("extracting issuer from SAML 2.0 protocol message");
         const Issuer* issuer = samlRoot.getIssuer();
         if (issuer) {
             policy.setIssuer(issuer);
@@ -129,6 +109,6 @@ void SAML2MessageRule::evaluate(
     }
     catch (bad_cast&) {
         // Just trap it.
-        log.warn("caught a bad_cast while examining message");
+        log.warn("caught a bad_cast while extracting message details");
     }
 }

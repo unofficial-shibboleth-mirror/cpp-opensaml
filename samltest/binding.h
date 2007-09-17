@@ -41,8 +41,7 @@ protected:
     map<string,string> m_headers;
     string m_method,m_url,m_query;
     vector<XSECCryptoX509*> m_clientCerts;
-    vector<const SecurityPolicyRule*> m_rules1;
-    vector<const SecurityPolicyRule*> m_rules2;
+    vector<const SecurityPolicyRule*> m_rules;
 
 public:
     void setUp() {
@@ -81,15 +80,9 @@ public:
                 
             m_trust = XMLToolingConfig::getConfig().TrustEngineManager.newPlugin(EXPLICIT_KEY_TRUSTENGINE, NULL);
 
-            m_rules1.push_back(SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(SAML1MESSAGE_POLICY_RULE,NULL));
-            m_rules1.push_back(SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(MESSAGEFLOW_POLICY_RULE,NULL));
-            m_rules1.push_back(SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(SIMPLESIGNING_POLICY_RULE,NULL));
-            m_rules1.push_back(SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(XMLSIGNING_POLICY_RULE,NULL));
-
-            m_rules2.push_back(SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(SAML2MESSAGE_POLICY_RULE,NULL));
-            m_rules2.push_back(SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(MESSAGEFLOW_POLICY_RULE,NULL));
-            m_rules2.push_back(SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(SIMPLESIGNING_POLICY_RULE,NULL));
-            m_rules2.push_back(SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(XMLSIGNING_POLICY_RULE,NULL));
+            m_rules.push_back(SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(MESSAGEFLOW_POLICY_RULE,NULL));
+            m_rules.push_back(SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(SIMPLESIGNING_POLICY_RULE,NULL));
+            m_rules.push_back(SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(XMLSIGNING_POLICY_RULE,NULL));
         }
         catch (XMLToolingException& ex) {
             TS_TRACE(ex.what());
@@ -100,10 +93,8 @@ public:
     }
     
     void tearDown() {
-        for_each(m_rules1.begin(), m_rules1.end(), xmltooling::cleanup<SecurityPolicyRule>());
-        m_rules1.clear();
-        for_each(m_rules2.begin(), m_rules2.end(), xmltooling::cleanup<SecurityPolicyRule>());
-        m_rules2.clear();
+        for_each(m_rules.begin(), m_rules.end(), xmltooling::cleanup<SecurityPolicyRule>());
+        m_rules.clear();
         delete m_creds;
         delete m_metadata;
         delete m_trust;

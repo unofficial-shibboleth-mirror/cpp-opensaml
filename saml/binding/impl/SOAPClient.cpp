@@ -51,7 +51,14 @@ void SOAPClient::send(const soap11::Envelope& env, const char* from, MetadataCre
     else
         m_policy.setRole(&role);
 
-    auto_ptr_char pn(dynamic_cast<const EntityDescriptor*>(m_peer->getParent())->getEntityID());
+    // Establish the "expected" issuer identity.
+    const XMLCh* entityID = dynamic_cast<const EntityDescriptor*>(m_peer->getParent())->getEntityID();
+    m_policy.setIssuer(entityID);
+    if (!m_policy.getIssuerMetadata())
+        m_policy.setIssuerMetadata(m_peer);
+
+    // Call the base class.
+    auto_ptr_char pn(entityID);
     soap11::SOAPClient::send(env, SOAPTransport::Address(from, pn.get(), endpoint));
 }
 
@@ -76,12 +83,12 @@ soap11::Envelope* SOAPClient::receive()
 {
     auto_ptr<soap11::Envelope> env(soap11::SOAPClient::receive());
     if (env.get()) {
-        if (m_peer && m_transport->isSecure()) {
-            // Set issuer based on peer identity.
-            m_policy.setIssuer(dynamic_cast<EntityDescriptor*>(m_peer->getParent())->getEntityID());
-            m_policy.setIssuerMetadata(m_peer);
-            m_policy.setSecure(true);
+        if (m_peer && m_transport->isAuthenticated()) {
+            // Set flag based on peer identity.
+            m_policy.setAuthenticated(true);
         }
+
+        // Run policy against SOAP layer.
         m_policy.evaluate(*(env.get()));
     }
     return env.release();

@@ -22,7 +22,7 @@
 
 #include "internal.h"
 #include "exceptions.h"
-#include "binding/MessageDecoder.h"
+#include "saml1/binding/SAML1MessageDecoder.h"
 #include "saml1/core/Assertions.h"
 #include "saml1/core/Protocols.h"
 #include "saml2/metadata/Metadata.h"
@@ -44,7 +44,7 @@ using namespace std;
 
 namespace opensaml {
     namespace saml1p {              
-        class SAML_DLLLOCAL SAML1POSTDecoder : public MessageDecoder
+        class SAML_DLLLOCAL SAML1POSTDecoder : public SAML1MessageDecoder
         {
         public:
             SAML1POSTDecoder() {}
@@ -108,15 +108,18 @@ XMLObject* SAML1POSTDecoder::decode(
         throw BindingException("Decoded message was not a SAML 1.x Response.");
 
     if (!policy.getValidating())
-        SchemaValidators.validate(xmlObject.get());
+        SchemaValidators.validate(response);
+    
+    pair<bool,int> minor = response->getMinorVersion();
+    extractMessageDetails(
+        *response,
+        genericRequest,
+        (minor.first && minor.second==0) ? samlconstants::SAML10_PROTOCOL_ENUM : samlconstants::SAML11_PROTOCOL_ENUM,
+        policy
+        );
 
     // Run through the policy.
-    pair<bool,int> minor = response->getMinorVersion();
-    policy.evaluate(
-        *response,
-        &genericRequest,
-        (minor.first && minor.second==0) ? samlconstants::SAML10_PROTOCOL_ENUM : samlconstants::SAML11_PROTOCOL_ENUM
-        );
+    policy.evaluate(*response,&genericRequest);
     
     // Check recipient URL.
     auto_ptr_char recipient(response->getRecipient());

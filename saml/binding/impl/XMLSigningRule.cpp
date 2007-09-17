@@ -50,7 +50,7 @@ namespace opensaml {
         const char* getType() const {
             return XMLSIGNING_POLICY_RULE;
         }
-        void evaluate(const XMLObject& message, const GenericRequest* request, const XMLCh* protocol, SecurityPolicy& policy) const;
+        void evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const;
 
     private:
         bool m_errorsFatal;
@@ -72,9 +72,7 @@ XMLSigningRule::XMLSigningRule(const DOMElement* e) : m_errorsFatal(false)
     }
 }
 
-void XMLSigningRule::evaluate(
-    const XMLObject& message, const GenericRequest* request, const XMLCh* protocol, SecurityPolicy& policy
-    ) const
+void XMLSigningRule::evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const
 {
     Category& log=Category::getInstance(SAML_LOGCAT".SecurityPolicyRule.XMLSigning");
     
@@ -116,5 +114,5 @@ void XMLSigningRule::evaluate(
     }
 
     log.debug("signature verified against message issuer");
-    policy.setSecure(true);
+    policy.setAuthenticated(true);
 }

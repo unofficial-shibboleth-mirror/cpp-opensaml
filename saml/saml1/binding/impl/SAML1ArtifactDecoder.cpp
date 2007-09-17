@@ -22,8 +22,8 @@
 
 #include "internal.h"
 #include "exceptions.h"
-#include "binding/MessageDecoder.h"
 #include "binding/SAMLArtifact.h"
+#include "saml1/binding/SAML1MessageDecoder.h"
 #include "saml1/core/Protocols.h"
 #include "saml2/metadata/Metadata.h"
 #include "saml2/metadata/MetadataProvider.h"
@@ -42,7 +42,7 @@ using namespace std;
 
 namespace opensaml {
     namespace saml1p {              
-        class SAML_DLLLOCAL SAML1ArtifactDecoder : public MessageDecoder
+        class SAML_DLLLOCAL SAML1ArtifactDecoder : public SAML1MessageDecoder
         {
         public:
             SAML1ArtifactDecoder() {}
@@ -134,12 +134,6 @@ XMLObject* SAML1ArtifactDecoder::decode(
         log.debug("lookup succeeded, artifact issued by (%s)", issuer.get());
     }
 
-    // Mock up an Issuer object for the policy.
-    auto_ptr<saml2::Issuer> issuer(saml2::IssuerBuilder::buildIssuer());
-    issuer->setName(provider->getEntityID());
-    policy.setIssuer(issuer.get());
-    issuer.release();   // owned by policy now
-    
     log.debug("attempting to find artifact issuing role...");
     const RoleDescriptor* roledesc=provider->getRoleDescriptor(*(policy.getRole()), samlconstants::SAML11_PROTOCOL_ENUM);
     if (!roledesc)
@@ -149,6 +143,8 @@ XMLObject* SAML1ArtifactDecoder::decode(
         for_each(artifacts.begin(), artifacts.end(), xmltooling::cleanup<SAMLArtifact>());
         throw BindingException("Unable to find compatible metadata role for artifact issuer.");
     }
+    // Set Issuer for the policy.
+    policy.setIssuer(provider->getEntityID());
     policy.setIssuerMetadata(roledesc);
     
     try {

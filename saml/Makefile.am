@@ -64,6 +64,7 @@ saml1coreinclude_HEADERS = \
 saml1bindinclude_HEADERS = \
 	saml1/binding/SAMLArtifactType0001.h \
 	saml1/binding/SAMLArtifactType0002.h \
+	saml1/binding/SAML1MessageDecoder.h \
 	saml1/binding/SAML1SOAPClient.h
 
 saml1profinclude_HEADERS = \
@@ -77,6 +78,7 @@ saml2coreinclude_HEADERS = \
 saml2bindinclude_HEADERS = \
 	saml2/binding/SAML2Artifact.h \
 	saml2/binding/SAML2ArtifactType0004.h \
+	saml2/binding/SAML2MessageDecoder.h \
 	saml2/binding/SAML2Redirect.h \
 	saml2/binding/SAML2SOAPClient.h
 	
@@ -120,12 +122,12 @@ libsaml_la_SOURCES = \
 	saml1/binding/impl/SAMLArtifactType0002.cpp \
 	saml1/binding/impl/SAML1ArtifactDecoder.cpp \
 	saml1/binding/impl/SAML1ArtifactEncoder.cpp \
+	saml1/binding/impl/SAML1MessageDecoder.cpp \
 	saml1/binding/impl/SAML1POSTDecoder.cpp \
 	saml1/binding/impl/SAML1POSTEncoder.cpp \
 	saml1/binding/impl/SAML1SOAPDecoder.cpp \
 	saml1/binding/impl/SAML1SOAPEncoder.cpp \
 	saml1/binding/impl/SAML1SOAPClient.cpp \
-	saml1/binding/impl/SAML1MessageRule.cpp \
 	saml1/profile/AssertionValidator.cpp \
 	saml1/profile/BrowserSSOProfileValidator.cpp \
 	saml2/core/impl/Assertions.cpp \
@@ -147,6 +149,7 @@ libsaml_la_SOURCES = \
 	saml2/binding/impl/SAML2ArtifactType0004.cpp \
 	saml2/binding/impl/SAML2ArtifactDecoder.cpp \
 	saml2/binding/impl/SAML2ArtifactEncoder.cpp \
+    saml2/binding/impl/SAML2MessageDecoder.cpp \
 	saml2/binding/impl/SAML2POSTDecoder.cpp \
 	saml2/binding/impl/SAML2POSTEncoder.cpp \
 	saml2/binding/impl/SAML2Redirect.cpp \
@@ -155,7 +158,6 @@ libsaml_la_SOURCES = \
 	saml2/binding/impl/SAML2SOAPDecoder.cpp \
 	saml2/binding/impl/SAML2SOAPEncoder.cpp \
 	saml2/binding/impl/SAML2SOAPClient.cpp \
-	saml2/binding/impl/SAML2MessageRule.cpp \
 	saml2/profile/Assertion20Validator.cpp \
 	saml2/profile/BrowserSSOProfile20Validator.cpp \
 	encryption/EncryptedKeyResolver.cpp \

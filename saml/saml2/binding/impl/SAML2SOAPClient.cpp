@@ -25,10 +25,12 @@
 #include "saml2/binding/SAML2SOAPClient.h"
 #include "saml2/core/Protocols.h"
 #include "saml2/metadata/Metadata.h"
+#include "saml2/metadata/MetadataProvider.h"
 
 #include <xmltooling/logging.h>
 #include <xmltooling/soap/SOAP.h>
 
+using namespace opensaml::saml2;
 using namespace opensaml::saml2p;
 using namespace opensaml::saml2md;
 using namespace opensaml;
@@ -56,17 +58,24 @@ StatusResponseType* SAML2SOAPClient::receiveSAML()
             // Check for SAML Response.
             StatusResponseType* response = dynamic_cast<StatusResponseType*>(body->getUnknownXMLObjects().front());
             if (response) {
-                
                 // Check InResponseTo.
                 if (m_correlate && response->getInResponseTo() && !XMLString::equals(m_correlate, response->getInResponseTo()))
                     throw SecurityPolicyException("InResponseTo attribute did not correlate with the Request ID.");
 
-                m_soaper.getPolicy().reset(true);
-                m_soaper.getPolicy().evaluate(*response, NULL, samlconstants::SAML20P_NS);
-                if (!m_soaper.getPolicy().isSecure()) {
-                    SecurityPolicyException ex("Security policy could not authenticate the message.");
-                    annotateException(&ex, m_soaper.getPolicy().getIssuerMetadata(), response->getStatus());   // throws it
-                }
+                SecurityPolicy& policy = m_soaper.getPolicy();
+                policy.reset(true);
+
+                // Extract Response details.
+                policy.setMessageID(response->getID());
+                policy.setIssueInstant(response->getIssueInstantEpoch());
+
+                // Extract and re-verify Issuer if present.
+                const Issuer* issuer = response->getIssuer();
+                if (issuer)
+                    policy.setIssuer(issuer);   // This will throw if it conflicts with the known peer identity.
+
+                // Now run the policy.
+                policy.evaluate(*response);
 
                 // Check Status.
                 Status* status = response->getStatus();
@@ -74,7 +83,7 @@ StatusResponseType* SAML2SOAPClient::receiveSAML()
                     const XMLCh* code = status->getStatusCode() ? status->getStatusCode()->getValue() : NULL;
                     if (code && !XMLString::equals(code,StatusCode::SUCCESS) && handleError(*status)) {
                         BindingException ex("SAML response contained an error.");
-                        annotateException(&ex, m_soaper.getPolicy().getIssuerMetadata(), status);   // throws it
+                        annotateException(&ex, policy.getIssuerMetadata(), status);   // throws it
                     }
                 }
                 

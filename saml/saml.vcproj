@@ -240,7 +240,7 @@
 							>
 						</File>
 						<File
-							RelativePath=".\saml1\binding\impl\SAML1MessageRule.cpp"
+							RelativePath=".\saml1\binding\impl\SAML1MessageDecoder.cpp"
 							>
 						</File>
 						<File
@@ -436,7 +436,7 @@
 							</FileConfiguration>
 						</File>
 						<File
-							RelativePath=".\saml2\binding\impl\SAML2MessageRule.cpp"
+							RelativePath=".\saml2\binding\impl\SAML2MessageDecoder.cpp"
 							>
 						</File>
 						<File
@@ -687,6 +687,10 @@
 					Name="binding"
 					>
 					<File
+						RelativePath=".\saml1\binding\SAML1MessageDecoder.h"
+						>
+					</File>
+					<File
 						RelativePath=".\saml1\binding\SAML1SOAPClient.h"
 						>
 					</File>
@@ -796,6 +800,10 @@
 					</File>
 					<File
 						RelativePath=".\saml2\binding\SAML2ArtifactType0004.h"
+						>
+					</File>
+					<File
+						RelativePath=".\saml2\binding\SAML2MessageDecoder.h"
 						>
 					</File>
 					<File

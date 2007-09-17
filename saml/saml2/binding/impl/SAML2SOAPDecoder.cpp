@@ -22,7 +22,7 @@
 
 #include "internal.h"
 #include "exceptions.h"
-#include "binding/MessageDecoder.h"
+#include "saml2/binding/SAML2MessageDecoder.h"
 #include "saml2/core/Protocols.h"
 
 #include <xmltooling/logging.h>
@@ -39,7 +39,7 @@ using namespace std;
 
 namespace opensaml {
     namespace saml2p {              
-        class SAML_DLLLOCAL SAML2SOAPDecoder : public MessageDecoder
+        class SAML_DLLLOCAL SAML2SOAPDecoder : public SAML2MessageDecoder
         {
         public:
             SAML2SOAPDecoder() {}
@@ -105,9 +105,11 @@ XMLObject* SAML2SOAPDecoder::decode(
         RequestAbstractType* request = dynamic_cast<RequestAbstractType*>(body->getUnknownXMLObjects().front());
         if (request) {
             // Run through the policy at two layers.
-            policy.evaluate(*env, &genericRequest, samlconstants::SAML20P_NS);
+            extractMessageDetails(*env, genericRequest, samlconstants::SAML20P_NS, policy);
+            policy.evaluate(*env, &genericRequest);
             policy.reset(true);
-            policy.evaluate(*request, &genericRequest, samlconstants::SAML20P_NS);
+            extractMessageDetails(*request, genericRequest, samlconstants::SAML20P_NS, policy);
+            policy.evaluate(*request, &genericRequest);
             xmlObject.release();
             body->detach(); // frees Envelope
             request->detach();   // frees Body

@@ -152,6 +152,21 @@ namespace opensaml {
 
         /** Pointer to an ArtifactResolver implementation. */
         const ArtifactResolver* m_artifactResolver;
+
+        /**
+         * Extracts policy-relevant message details.
+         * 
+         * @param message   the incoming message
+         * @param request   the protocol request
+         * @param protocol  the protocol family in use
+         * @param policy    SecurityPolicy to provide various components and track message data
+         */
+        virtual void extractMessageDetails (
+            const xmltooling::XMLObject& message,
+            const xmltooling::GenericRequest& genericRequest,
+            const XMLCh* protocol,
+            SecurityPolicy& policy
+            ) const=0;
     };
 
     /**

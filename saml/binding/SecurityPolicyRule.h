@@ -57,13 +57,11 @@ namespace opensaml {
          * 
          * @param message   the incoming message
          * @param request   the protocol request
-         * @param protocol  the protocol family in use
          * @param policy    SecurityPolicy to provide various components and track message data
          */
         virtual void evaluate(
             const xmltooling::XMLObject& message,
             const xmltooling::GenericRequest* request,
-            const XMLCh* protocol,
             SecurityPolicy& policy
             ) const=0;
     };
@@ -72,20 +70,6 @@ namespace opensaml {
      * Registers SecurityPolicyRule plugins into the runtime.
      */
     void SAML_API registerSecurityPolicyRules();
-
-    /**
-     * SecurityPolicyRule for processing SAML 1.x messages.
-     * 
-     * Extracts message ID, timestamp, and issuer information.
-     */
-    #define SAML1MESSAGE_POLICY_RULE  "SAML1Message"
-
-    /**
-     * SecurityPolicyRule for processing SAML 2.0 messages.
-     * 
-     * Extracts message ID, timestamp, and issuer information.
-     */
-    #define SAML2MESSAGE_POLICY_RULE  "SAML2Message"
 
     /**
      * SecurityPolicyRule for TLS client certificate authentication.

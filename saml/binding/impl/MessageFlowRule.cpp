@@ -43,7 +43,7 @@ namespace opensaml {
         const char* getType() const {
             return MESSAGEFLOW_POLICY_RULE;
         }
-        void evaluate(const XMLObject& message, const GenericRequest* request, const XMLCh* protocol, SecurityPolicy& policy) const;
+        void evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const;
     
     private:
         bool m_checkReplay;
@@ -72,9 +72,7 @@ MessageFlowRule::MessageFlowRule(const DOMElement* e)
     }
 }
 
-void MessageFlowRule::evaluate(
-    const XMLObject& message, const GenericRequest* request, const XMLCh* protocol, SecurityPolicy& policy
-    ) const
+void MessageFlowRule::evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const
 {
     Category& log=Category::getInstance(SAML_LOGCAT".SecurityPolicyRule.MessageFlow");
     log.debug("evaluating message flow policy (replay checking %s, expiration %lu)", m_checkReplay ? "on" : "off", m_expires);

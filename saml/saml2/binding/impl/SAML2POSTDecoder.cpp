@@ -22,7 +22,7 @@
 
 #include "internal.h"
 #include "exceptions.h"
-#include "binding/MessageDecoder.h"
+#include "saml2/binding/SAML2MessageDecoder.h"
 #include "saml2/core/Protocols.h"
 #include "saml2/metadata/Metadata.h"
 #include "saml2/metadata/MetadataProvider.h"
@@ -43,7 +43,7 @@ using namespace std;
 
 namespace opensaml {
     namespace saml2p {              
-        class SAML_DLLLOCAL SAML2POSTDecoder : public MessageDecoder
+        class SAML_DLLLOCAL SAML2POSTDecoder : public SAML2MessageDecoder
         {
         public:
             SAML2POSTDecoder() {}
@@ -121,10 +121,11 @@ XMLObject* SAML2POSTDecoder::decode(
     }
     
     if (!policy.getValidating())
-        SchemaValidators.validate(xmlObject.get());
+        SchemaValidators.validate(root);
 
     // Run through the policy.
-    policy.evaluate(*root, &genericRequest, samlconstants::SAML20P_NS);
+    extractMessageDetails(*root, genericRequest, samlconstants::SAML20P_NS, policy);
+    policy.evaluate(*root, &genericRequest);
     
     // Check destination URL.
     auto_ptr_char dest(request ? request->getDestination() : response->getDestination());

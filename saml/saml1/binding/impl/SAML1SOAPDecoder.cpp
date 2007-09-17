@@ -22,7 +22,7 @@
 
 #include "internal.h"
 #include "exceptions.h"
-#include "binding/MessageDecoder.h"
+#include "saml1/binding/SAML1MessageDecoder.h"
 #include "saml1/core/Protocols.h"
 
 #include <xmltooling/logging.h>
@@ -39,7 +39,7 @@ using namespace std;
 
 namespace opensaml {
     namespace saml1p {              
-        class SAML_DLLLOCAL SAML1SOAPDecoder : public MessageDecoder
+        class SAML_DLLLOCAL SAML1SOAPDecoder : public SAML1MessageDecoder
         {
         public:
             SAML1SOAPDecoder() {}
@@ -106,17 +106,23 @@ XMLObject* SAML1SOAPDecoder::decode(
         if (request) {
             // Run through the policy at two layers.
             pair<bool,int> minor = request->getMinorVersion();
-            policy.evaluate(
+            extractMessageDetails(
                 *env,
-                &genericRequest,
-                (minor.first && minor.second==0) ? samlconstants::SAML10_PROTOCOL_ENUM : samlconstants::SAML11_PROTOCOL_ENUM
+                genericRequest,
+                (minor.first && minor.second==0) ? samlconstants::SAML10_PROTOCOL_ENUM : samlconstants::SAML11_PROTOCOL_ENUM,
+                policy
                 );
+            policy.evaluate(*env,&genericRequest);
+
+            // Reset, extract, and run again.
             policy.reset(true);
-            policy.evaluate(
+            extractMessageDetails(
                 *request,
-                &genericRequest,
-                (minor.first && minor.second==0) ? samlconstants::SAML10_PROTOCOL_ENUM : samlconstants::SAML11_PROTOCOL_ENUM
+                genericRequest,
+                (minor.first && minor.second==0) ? samlconstants::SAML10_PROTOCOL_ENUM : samlconstants::SAML11_PROTOCOL_ENUM,
+                policy
                 );
+            policy.evaluate(*request,&genericRequest);
             xmlObject.release();
             body->detach(); // frees Envelope
             request->detach();   // frees Body

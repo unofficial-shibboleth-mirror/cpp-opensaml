@@ -40,9 +40,9 @@ namespace opensaml {
         const char* getType() const {
             return NULLSECURITY_POLICY_RULE;
         }
-        void evaluate(const XMLObject& message, const GenericRequest* request, const XMLCh* protocol, SecurityPolicy& policy) const {
+        void evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const {
             m_log.warn("security enforced using NULL policy rule, be sure you know what you're doing");
-            policy.setSecure(true);
+            policy.setAuthenticated(true);
         }
 
     private:

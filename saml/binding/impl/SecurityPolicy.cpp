@@ -35,8 +35,6 @@ namespace opensaml {
     SAML_DLLLOCAL PluginManager<SecurityPolicyRule,string,const DOMElement*>::Factory ClientCertAuthRuleFactory;
     SAML_DLLLOCAL PluginManager<SecurityPolicyRule,string,const DOMElement*>::Factory MessageFlowRuleFactory;
     SAML_DLLLOCAL PluginManager<SecurityPolicyRule,string,const DOMElement*>::Factory NullSecurityRuleFactory;
-    SAML_DLLLOCAL PluginManager<SecurityPolicyRule,string,const DOMElement*>::Factory SAML1MessageRuleFactory;
-    SAML_DLLLOCAL PluginManager<SecurityPolicyRule,string,const DOMElement*>::Factory SAML2MessageRuleFactory;
     SAML_DLLLOCAL PluginManager<SecurityPolicyRule,string,const DOMElement*>::Factory SimpleSigningRuleFactory;
     SAML_DLLLOCAL PluginManager<SecurityPolicyRule,string,const DOMElement*>::Factory XMLSigningRuleFactory;
 };
@@ -47,8 +45,6 @@ void SAML_API opensaml::registerSecurityPolicyRules()
     conf.SecurityPolicyRuleManager.registerFactory(CLIENTCERTAUTH_POLICY_RULE, ClientCertAuthRuleFactory);
     conf.SecurityPolicyRuleManager.registerFactory(MESSAGEFLOW_POLICY_RULE, MessageFlowRuleFactory);
     conf.SecurityPolicyRuleManager.registerFactory(NULLSECURITY_POLICY_RULE, NullSecurityRuleFactory);
-    conf.SecurityPolicyRuleManager.registerFactory(SAML1MESSAGE_POLICY_RULE, SAML1MessageRuleFactory);
-    conf.SecurityPolicyRuleManager.registerFactory(SAML2MESSAGE_POLICY_RULE, SAML2MessageRuleFactory);
     conf.SecurityPolicyRuleManager.registerFactory(SIMPLESIGNING_POLICY_RULE, SimpleSigningRuleFactory);
     conf.SecurityPolicyRuleManager.registerFactory(XMLSIGNING_POLICY_RULE, XMLSigningRuleFactory);
 }
@@ -69,14 +65,14 @@ void SecurityPolicy::reset(bool messageOnly)
         delete m_issuer;
         m_issuer=NULL;
         m_issuerRole=NULL;
-        m_secure=false;
+        m_authenticated=false;
     }
 }
 
-void SecurityPolicy::evaluate(const XMLObject& message, const GenericRequest* request, const XMLCh* protocol)
+void SecurityPolicy::evaluate(const XMLObject& message, const GenericRequest* request)
 {
     for (vector<const SecurityPolicyRule*>::const_iterator i=m_rules.begin(); i!=m_rules.end(); ++i)
-        (*i)->evaluate(message,request,protocol,*this);
+        (*i)->evaluate(message,request,*this);
 }
 
 void SecurityPolicy::setIssuer(const Issuer* issuer)
