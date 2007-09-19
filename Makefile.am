@@ -20,8 +20,8 @@ all-local: opensaml.spec pkginfo
 endif
 
 install-data-hook:
-	rm -rf $(DESTDIR)$(prefix)/doc/@PACKAGE@/api
-	cp -r doc/api $(DESTDIR)$(prefix)/doc/@PACKAGE@
+	rm -rf $(DESTDIR)$(datadir)/doc/@PACKAGE@/api
+	cp -r doc/api $(DESTDIR)$(datadir)/doc/@PACKAGE@
 
 opensaml.spec: opensaml.spec.in Makefile
 	rm -f $@.tmp
