@@ -265,7 +265,8 @@ int main(int argc,char* argv[])
                             good = true;
                             break;
                         }
-                        catch (exception&) {
+                        catch (exception& e) {
+                            log.info("error trying verification key: %s", e.what());
                         }
                     }
                     if (!good)
