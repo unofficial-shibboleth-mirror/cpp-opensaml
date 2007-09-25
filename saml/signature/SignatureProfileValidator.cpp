@@ -63,13 +63,15 @@ void SignatureProfileValidator::validateSignature(const Signature& sigObj) const
             const XMLCh* ID=signableObj->getXMLID();
             if (URI==NULL || *URI==0 || (*URI==chPound && ID && !XMLString::compareString(URI+1,ID))) {
                 DSIGTransformList* tlist=ref->getTransforms();
-                for (unsigned int i=0; tlist && i<tlist->getSize(); i++) {
-                    if (tlist->item(i)->getTransformType()==TRANSFORM_ENVELOPED_SIGNATURE)
-                        valid=true;
-                    else if (tlist->item(i)->getTransformType()!=TRANSFORM_EXC_C14N &&
-                             tlist->item(i)->getTransformType()!=TRANSFORM_C14N) {
-                        valid=false;
-                        break;
+                if (tlist->getSize() <= 2) { 
+                    for (unsigned int i=0; tlist && i<tlist->getSize(); i++) {
+                        if (tlist->item(i)->getTransformType()==TRANSFORM_ENVELOPED_SIGNATURE)
+                            valid=true;
+                        else if (tlist->item(i)->getTransformType()!=TRANSFORM_EXC_C14N &&
+                                 tlist->item(i)->getTransformType()!=TRANSFORM_C14N) {
+                            valid=false;
+                            break;
+                        }
                     }
                 }
             }
