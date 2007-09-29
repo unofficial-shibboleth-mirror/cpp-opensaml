@@ -163,6 +163,8 @@ namespace opensaml {
             DECL_STRING_ATTRIB(ProtocolSupportEnumeration,PROTOCOLSUPPORTENUMERATION);
             /** Searches the ProtocolSupportEnumeration attribute for the indicated protocol. */
             virtual bool hasSupport(const XMLCh* protocol) const=0;
+            /** Adds the indicated protocol to the ProtocolSupportEnumeration attribute. */
+            virtual void addSupport(const XMLCh* protocol)=0;
             DECL_STRING_ATTRIB(ErrorURL,ERRORURL);
             DECL_TYPED_CHILD(Extensions);
             DECL_TYPED_CHILDREN(KeyDescriptor);

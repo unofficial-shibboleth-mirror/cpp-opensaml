@@ -996,6 +996,27 @@ namespace opensaml {
                 }
                 return false;
             }
+
+            void addSupport(const XMLCh* protocol) {
+                if (hasSupport(protocol))
+                    return;
+                if (m_ProtocolSupportEnumeration && *m_ProtocolSupportEnumeration) {
+#ifdef HAVE_GOOD_STL
+                    xstring pse(m_ProtocolSupportEnumeration);
+                    pse = pse + chSpace + protocol;
+                    setProtocolSupportEnumeration(pse.c_str());
+#else
+                    auto_ptr_char temp(m_ProtocolSupportEnumeration);
+                    string pse(temp.get());
+                    pse = pse + ' ' + protocol;
+                    auto_ptr_XMLCh temp2(pse.c_str());
+                    setProtocolSupportEnumeration(temp2.get());
+#endif
+                }
+                else {
+                    setProtocolSupportEnumeration(protocol);
+                }
+            }
     
             void setAttribute(const QName& qualifiedName, const XMLCh* value, bool ID=false) {
                 if (!qualifiedName.hasNamespaceURI()) {
