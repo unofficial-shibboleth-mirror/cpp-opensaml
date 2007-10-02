@@ -38,7 +38,6 @@ namespace opensaml {
 
         DECL_XMLOBJECT_SIMPLE(SAML_API,Artifact,Artifact,SAML 2.0 Artifact element);
         DECL_XMLOBJECT_SIMPLE(SAML_API,GetComplete,GetComplete,SAML 2.0 GetComplete element);
-        DECL_XMLOBJECT_SIMPLE(SAML_API,NewID,NewID,SAML 2.0 NewID element);
         DECL_XMLOBJECT_SIMPLE(SAML_API,RequesterID,RequesterID,SAML 2.0 RequesterID element);
         DECL_XMLOBJECT_SIMPLE(SAML_API,SessionIndex,SessionIndex,SAML 2.0 SessionIndex element);
         DECL_XMLOBJECT_SIMPLE(SAML_API,StatusMessage,Message,SAML 2.0 StatusMessage element);
@@ -282,6 +281,10 @@ namespace opensaml {
         BEGIN_XMLOBJECT(SAML_API,Terminate,xmltooling::XMLObject,SAML 2.0 Terminate element);
             /** TerminateType local name */
             static const XMLCh TYPE_NAME[];
+        END_XMLOBJECT;
+
+        BEGIN_XMLOBJECT(SAML_API,NewID,saml2::EncryptableObject,SAML 2.0 NewID element);
+            DECL_SIMPLE_CONTENT(NewID);
         END_XMLOBJECT;
 
         BEGIN_XMLOBJECT(SAML_API,NewEncryptedID,saml2::EncryptedElementType,SAML 2.0 NewEncryptedID element);
