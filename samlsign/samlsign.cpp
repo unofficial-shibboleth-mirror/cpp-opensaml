@@ -347,13 +347,8 @@ int main(int argc,char* argv[])
         }
     }
     catch(exception& e) {
-        log.errorStream() << "caught an exception: " << e.what() << CategoryStream::ENDLINE;
+        log.errorStream() << "caught an exception: " << e.what() << logging::eol;
         ret=-10;
-    }
-    catch(XMLException& e) {
-        auto_ptr_char temp(e.getMessage());
-        log.errorStream() << "caught a Xerces exception: " << temp.get() << CategoryStream::ENDLINE;
-        ret=-20;
     }
 
     conf.term();
