@@ -95,7 +95,7 @@ public:
         // Sign while marshalling.
         vector<Signature*> sigs(1,sig);
         CredentialCriteria cc;
-        cc.setUsage(CredentialCriteria::SIGNING_CREDENTIAL);
+        cc.setUsage(Credential::SIGNING_CREDENTIAL);
         Locker locker(m_resolver);
         const Credential* cred = m_resolver->resolve(&cc);
         TSM_ASSERT("Retrieved credential was null", cred!=NULL);

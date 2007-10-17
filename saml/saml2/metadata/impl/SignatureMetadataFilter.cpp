@@ -193,7 +193,7 @@ void SignatureMetadataFilter::verifySignature(Signature* sig, const XMLCh* peerN
 
     // Set up criteria.
     CredentialCriteria cc;
-    cc.setUsage(CredentialCriteria::SIGNING_CREDENTIAL);
+    cc.setUsage(Credential::SIGNING_CREDENTIAL);
     cc.setSignature(*sig, CredentialCriteria::KEYINFO_EXTRACTION_KEY);
     if (peerName) {
         auto_ptr_char pname(peerName);

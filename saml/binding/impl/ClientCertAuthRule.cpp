@@ -82,7 +82,7 @@ void ClientCertAuthRule::evaluate(const XMLObject& message, const GenericRequest
     MetadataCredentialCriteria cc(*(policy.getIssuerMetadata()));
     auto_ptr_char pn(policy.getIssuer()->getName());
     cc.setPeerName(pn.get());
-    cc.setUsage(CredentialCriteria::TLS_CREDENTIAL);
+    cc.setUsage(Credential::TLS_CREDENTIAL);
 
     if (!x509trust->validate(chain.front(), chain, *(policy.getMetadataProvider()), &cc)) {
         log.error("unable to verify certificate chain with supplied trust engine");

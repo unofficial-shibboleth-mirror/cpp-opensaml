@@ -48,7 +48,7 @@ public:
             janitor.release();
 
             CredentialCriteria cc;
-            cc.setUsage(CredentialCriteria::SIGNING_CREDENTIAL);
+            cc.setUsage(Credential::SIGNING_CREDENTIAL);
             Locker clocker(m_creds);
             const Credential* cred = m_creds->resolve(&cc);
             TSM_ASSERT("Retrieved credential was null", cred!=NULL);

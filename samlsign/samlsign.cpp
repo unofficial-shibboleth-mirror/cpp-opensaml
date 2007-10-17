@@ -247,7 +247,7 @@ int main(int argc,char* argv[])
 
                 // Set up criteria.
                 CredentialCriteria cc;
-                cc.setUsage(CredentialCriteria::SIGNING_CREDENTIAL);
+                cc.setUsage(Credential::SIGNING_CREDENTIAL);
                 cc.setSignature(*(signable->getSignature()), CredentialCriteria::KEYINFO_EXTRACTION_KEY);
                 if (issuer)
                     cc.setPeerName(issuer);
@@ -313,7 +313,7 @@ int main(int argc,char* argv[])
                 else {
                     // Set up criteria.
                     CredentialCriteria cc;
-                    cc.setUsage(CredentialCriteria::SIGNING_CREDENTIAL);
+                    cc.setUsage(Credential::SIGNING_CREDENTIAL);
                     cc.setSignature(*(signable->getSignature()), CredentialCriteria::KEYINFO_EXTRACTION_KEY);
                     if (issuer)
                         cc.setPeerName(issuer);
@@ -332,7 +332,7 @@ int main(int argc,char* argv[])
                 );
             Locker locker(cr.get());
             CredentialCriteria cc;
-            cc.setUsage(CredentialCriteria::SIGNING_CREDENTIAL);
+            cc.setUsage(Credential::SIGNING_CREDENTIAL);
             const Credential* cred = cr->resolve(&cc);
             if (!cred)
                 throw XMLSecurityException("Unable to resolve a signing credential.");

@@ -50,7 +50,7 @@ void EncryptedElementType::encrypt(
 {
     // With one recipient, we let the library generate the encryption key for us.
     // Get the key encryption key to use.
-    criteria.setUsage(CredentialCriteria::ENCRYPTION_CREDENTIAL);
+    criteria.setUsage(Credential::ENCRYPTION_CREDENTIAL);
     const Credential* KEK = metadataProvider.resolve(&criteria);
     if (!KEK)
         throw EncryptionException("No key encryption credential found.");
@@ -105,7 +105,7 @@ void EncryptedElementType::encrypt(
     // Now we encrypt the key for each recipient.
     for (vector< pair<const MetadataProvider*, MetadataCredentialCriteria*> >::const_iterator r = recipients.begin(); r!=recipients.end(); ++r) {
         // Get key encryption key to use.
-        r->second->setUsage(CredentialCriteria::ENCRYPTION_CREDENTIAL);
+        r->second->setUsage(Credential::ENCRYPTION_CREDENTIAL);
         const Credential* KEK = r->first->resolve(r->second);
         if (!KEK) {
             auto_ptr_char name(dynamic_cast<const EntityDescriptor*>(r->second->getRole().getParent())->getEntityID());
