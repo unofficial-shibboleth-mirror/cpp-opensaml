@@ -64,10 +64,10 @@ namespace opensaml {
                 const MetadataCredentialContext* context = dynamic_cast<const MetadataCredentialContext*>(credential.getCredentalContext());
                 if (context) {
                     // Check for a usage mismatch.
-                    if ((getUsage()==xmltooling::Credential::SIGNING_CREDENTIAL || getUsage()==xmltooling::Credential::TLS_CREDENTIAL) &&
+                    if ((getUsage() | (xmltooling::Credential::SIGNING_CREDENTIAL & xmltooling::Credential::TLS_CREDENTIAL)) &&
                             XMLString::equals(context->getKeyDescriptor().getUse(),KeyDescriptor::KEYTYPE_ENCRYPTION))
                         return false;
-                    else if (getUsage()==xmltooling::Credential::ENCRYPTION_CREDENTIAL &&
+                    else if ((getUsage() | xmltooling::Credential::ENCRYPTION_CREDENTIAL) &&
                             XMLString::equals(context->getKeyDescriptor().getUse(),KeyDescriptor::KEYTYPE_SIGNING))
                         return false;
                 }
