@@ -34,7 +34,7 @@ namespace opensaml {
          * @param out_len   will contain the length of the resulting data
          * @return  allocated buffer of out_len bytes containing deflated data
          */
-        char* deflate(char* in, unsigned int in_len, unsigned int* out_len);
+        SAML_EXPORT char* deflate(char* in, unsigned int in_len, unsigned int* out_len);
         
         /**
          * Inflates data compressed in accordance with RFC1951 and sends the
@@ -45,6 +45,6 @@ namespace opensaml {
          * @param out       reference to output stream to receive data
          * @return  number of bytes written to stream
          */
-        unsigned int inflate(char* in, unsigned int in_len, std::ostream& out);
+        SAML_EXPORT unsigned int inflate(char* in, unsigned int in_len, std::ostream& out);
     };
 };
