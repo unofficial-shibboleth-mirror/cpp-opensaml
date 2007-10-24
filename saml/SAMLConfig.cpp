@@ -116,10 +116,8 @@ bool SAMLInternalConfig::init(bool initXMLTooling)
     Category& log=Category::getInstance(SAML_LOGCAT".SAMLConfig");
     log.debug("library initialization started");
 
-    if (initXMLTooling) {
+    if (initXMLTooling)
         XMLToolingConfig::getConfig().init();
-        log.debug("XMLTooling library initialized");
-    }
 
     REGISTER_XMLTOOLING_EXCEPTION_FACTORY(ArtifactException,opensaml);
     REGISTER_XMLTOOLING_EXCEPTION_FACTORY(SecurityPolicyException,opensaml);
@@ -142,7 +140,7 @@ bool SAMLInternalConfig::init(bool initXMLTooling)
     registerMessageDecoders();
     registerSecurityPolicyRules();
 
-    log.info("library initialization complete");
+    log.info("%s library initialization complete", PACKAGE_STRING);
     return true;
 }
 
@@ -163,11 +161,10 @@ void SAMLInternalConfig::term(bool termXMLTooling)
     delete m_artifactMap;
     m_artifactMap = NULL;
 
-    if (termXMLTooling) {
+    if (termXMLTooling)
         XMLToolingConfig::getConfig().term();
-        log.debug("XMLTooling library shut down");
-    }
-    log.info("library shutdown complete");
+    
+    log.info("%s library shutdown complete", PACKAGE_STRING);
 }
 
 void SAMLInternalConfig::generateRandomBytes(void* buf, unsigned int len)
