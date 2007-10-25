@@ -76,6 +76,7 @@ namespace opensaml {
             CredentialResolver* m_credResolver;
             SignatureTrustEngine* m_trust;
             SignatureProfileValidator m_profileValidator;
+            Category& m_log;
         }; 
 
         MetadataFilter* SAML_DLLLOCAL SignatureMetadataFilterFactory(const DOMElement* const & e)
@@ -93,7 +94,8 @@ static const XMLCh certificate[] =          UNICODE_LITERAL_11(c,e,r,t,i,f,i,c,a
 static const XMLCh Certificate[] =          UNICODE_LITERAL_11(C,e,r,t,i,f,i,c,a,t,e);
 static const XMLCh Path[] =                 UNICODE_LITERAL_4(P,a,t,h);
 
-SignatureMetadataFilter::SignatureMetadataFilter(const DOMElement* e) : m_credResolver(NULL), m_trust(NULL)
+SignatureMetadataFilter::SignatureMetadataFilter(const DOMElement* e)
+    : m_credResolver(NULL), m_trust(NULL), m_log(Category::getInstance(SAML_LOGCAT".MetadataFilter.Signature"))
 {
     if (e && e->hasAttributeNS(NULL,certificate)) {
         // Use a file-based credential resolver rooted here.
@@ -135,6 +137,10 @@ void SignatureMetadataFilter::doFilter(XMLObject& xmlObject) const
     }
     catch (bad_cast) {
     }
+    catch (exception& ex) {
+        m_log.warn("filtering out group at root of instance after failed signature check: ", ex.what());
+        throw MetadataFilterException("SignatureMetadataFilter unable to verify signature at root of metadata instance.");
+    }
 
     try {
         EntityDescriptor& entity = dynamic_cast<EntityDescriptor&>(xmlObject);
@@ -144,14 +150,16 @@ void SignatureMetadataFilter::doFilter(XMLObject& xmlObject) const
     }
     catch (bad_cast) {
     }
+    catch (exception& ex) {
+        m_log.warn("filtering out entity at root of instance after failed signature check: ", ex.what());
+        throw MetadataFilterException("SignatureMetadataFilter unable to verify signature at root of metadata instance.");
+    }
      
     throw MetadataFilterException("SignatureMetadataFilter was given an improper metadata instance to filter.");
 }
 
 void SignatureMetadataFilter::doFilter(EntitiesDescriptor& entities, bool rootObject) const
 {
-    Category& log=Category::getInstance(SAML_LOGCAT".MetadataFilter.Signature");
-    
     Signature* sig = entities.getSignature();
     if (!sig && rootObject)
         throw MetadataFilterException("Root metadata element was unsigned.");
@@ -165,7 +173,7 @@ void SignatureMetadataFilter::doFilter(EntitiesDescriptor& entities, bool rootOb
         }
         catch (exception& e) {
             auto_ptr_char id(v[i]->getEntityID());
-            log.warn("filtering out entity (%s) after failed signature check: ", id.get(), e.what());
+            m_log.warn("filtering out entity (%s) after failed signature check: ", id.get(), e.what());
             v.erase(v.begin() + i);
         }
     }
@@ -178,7 +186,7 @@ void SignatureMetadataFilter::doFilter(EntitiesDescriptor& entities, bool rootOb
         }
         catch (exception& e) {
             auto_ptr_char name(w[j]->getName());
-            log.warn("filtering out group (%s) after failed signature check: ", name.get(), e.what());
+            m_log.warn("filtering out group (%s) after failed signature check: ", name.get(), e.what());
             w.erase(w.begin() + j);
         }
     }
