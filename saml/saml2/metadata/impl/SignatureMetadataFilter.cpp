@@ -165,7 +165,7 @@ void SignatureMetadataFilter::doFilter(EntitiesDescriptor& entities, bool rootOb
         }
         catch (exception& e) {
             auto_ptr_char id(v[i]->getEntityID());
-            log.info("filtering out entity (%s) after failed signature check: ", id.get(), e.what());
+            log.warn("filtering out entity (%s) after failed signature check: ", id.get(), e.what());
             v.erase(v.begin() + i);
         }
     }
@@ -178,7 +178,7 @@ void SignatureMetadataFilter::doFilter(EntitiesDescriptor& entities, bool rootOb
         }
         catch (exception& e) {
             auto_ptr_char name(w[j]->getName());
-            log.info("filtering out group (%s) after failed signature check: ", name.get(), e.what());
+            log.warn("filtering out group (%s) after failed signature check: ", name.get(), e.what());
             w.erase(w.begin() + j);
         }
     }
@@ -217,7 +217,7 @@ void SignatureMetadataFilter::verifySignature(Signature* sig, const XMLCh* peerN
             throw MetadataFilterException("CredentialResolver did not supply a successful verification key.");
         }
         else {
-            throw MetadataFilterException("CredentialResolver did not supply any verification keys.");
+            throw MetadataFilterException("CredentialResolver did not supply a successful verification key.");
         }
     }
     else if (m_trust) {
