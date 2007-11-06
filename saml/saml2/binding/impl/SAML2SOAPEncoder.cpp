@@ -101,15 +101,29 @@ long SAML2SOAPEncoder::encode(
         httpResponse->setResponseHeader("Pragma", "no-cache");
     }
 
+    bool detachOnFailure = false;
     DOMElement* rootElement = NULL;
+
+    // Check for a naked message.
     SignableObject* msg = dynamic_cast<SignableObject*>(xmlObject);
     if (msg) {
+        // Wrap it in a SOAP envelope and point xmlObject at that.
+        detachOnFailure = true;
+        Envelope* env = EnvelopeBuilder::buildEnvelope();
+        Body* body = BodyBuilder::buildBody();
+        env->setBody(body);
+        body->getUnknownXMLObjects().push_back(msg);
+        xmlObject = env;
+    }
+
+    Envelope* env = dynamic_cast<Envelope*>(xmlObject);
+    if (env) {
+        if (!msg) {
+            msg = (env->getBody() && env->getBody()->hasChildren()) ?
+                dynamic_cast<SignableObject*>(env->getBody()->getUnknownXMLObjects().front()) : NULL;
+        }
         try {
-            Envelope* env = EnvelopeBuilder::buildEnvelope();
-            Body* body = BodyBuilder::buildBody();
-            env->setBody(body);
-            body->getUnknownXMLObjects().push_back(msg);
-            if (credential) {
+            if (msg && credential) {
                 if (msg->getSignature()) {
                     log.debug("message already signed, skipping signature operation");
                     rootElement = env->marshall();
@@ -137,22 +151,27 @@ long SAML2SOAPEncoder::encode(
                 log.debug("marshalling the envelope");
                 rootElement = env->marshall();
             }
-            
-            stringstream s;
-            s << *rootElement;
+
+            string xmlbuf;
+            XMLHelper::serialize(rootElement, xmlbuf);
+            istringstream s(xmlbuf);
             log.debug("sending serialized envelope");
-            long ret = genericResponse.sendResponse(s);
+            bool error = (!msg && env->getBody() && env->getBody()->hasChildren() &&
+                dynamic_cast<Fault*>(env->getBody()->getUnknownXMLObjects().front()));
+            long ret = error ? genericResponse.sendError(s) : genericResponse.sendResponse(s);
         
             // Cleanup by destroying XML.
             delete env;
             return ret;
         }
         catch (XMLToolingException&) {
-            // A bit weird...we have to "revert" things so that the response is isolated
-            // so the caller can free it.
-            if (msg->getParent()) {
-                msg->getParent()->detach();
-                msg->detach();
+            if (msg && detachOnFailure) {
+                // A bit weird...we have to "revert" things so that the message is isolated
+                // so the caller can free it.
+                if (msg->getParent()) {
+                    msg->getParent()->detach();
+                    msg->detach();
+                }
             }
             throw;
         }
@@ -187,55 +206,6 @@ long SAML2SOAPEncoder::encode(
             }
             throw;
         }
-    }
-
-    Envelope* env = dynamic_cast<Envelope*>(xmlObject);
-    if (env) {
-        SignableObject* msg =
-            (env->getBody() && env->getBody()->hasChildren()) ?
-                dynamic_cast<SignableObject*>(env->getBody()->getUnknownXMLObjects().front()) : NULL;
-        if (msg && credential) {
-            if (msg->getSignature()) {
-                log.debug("message already signed, skipping signature operation");
-                rootElement = env->marshall();
-            }
-            else {
-                log.debug("signing the message and marshalling the envelope");
-    
-                // Build a Signature.
-                Signature* sig = SignatureBuilder::buildSignature();
-                msg->setSignature(sig);    
-                if (signatureAlg)
-                    sig->setSignatureAlgorithm(signatureAlg);
-                if (digestAlg) {
-                    opensaml::ContentReference* cr = dynamic_cast<opensaml::ContentReference*>(sig->getContentReference());
-                    if (cr)
-                        cr->setDigestAlgorithm(digestAlg);
-                }
-        
-                // Sign message while marshalling.
-                vector<Signature*> sigs(1,sig);
-                rootElement = env->marshall((DOMDocument*)NULL,&sigs,credential);
-            }
-        }
-        else {
-            log.debug("marshalling the envelope");
-            rootElement = env->marshall();
-        }
-
-        string xmlbuf;
-        XMLHelper::serialize(rootElement, xmlbuf);
-        istringstream s(xmlbuf);
-        log.debug("sending serialized envelope");
-        bool error =
-            (env->getBody() &&
-                env->getBody()->hasChildren() &&
-                    dynamic_cast<Fault*>(env->getBody()->getUnknownXMLObjects().front()));
-        long ret = error ? genericResponse.sendError(s) : genericResponse.sendResponse(s);
-    
-        // Cleanup by destroying XML.
-        delete env;
-        return ret;
     }
 
     throw BindingException("XML content for SAML 2.0 SOAP Encoder must be a SAML 2.0 message or SOAP Fault/Envelope.");
