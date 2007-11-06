@@ -149,6 +149,8 @@ libsaml_la_SOURCES = \
 	saml2/binding/impl/SAML2ArtifactType0004.cpp \
 	saml2/binding/impl/SAML2ArtifactDecoder.cpp \
 	saml2/binding/impl/SAML2ArtifactEncoder.cpp \
+    saml2/binding/impl/SAML2ECPDecoder.cpp \
+    saml2/binding/impl/SAML2ECPEncoder.cpp \
     saml2/binding/impl/SAML2MessageDecoder.cpp \
 	saml2/binding/impl/SAML2POSTDecoder.cpp \
 	saml2/binding/impl/SAML2POSTEncoder.cpp \
@@ -157,7 +159,6 @@ libsaml_la_SOURCES = \
 	saml2/binding/impl/SAML2RedirectEncoder.cpp \
 	saml2/binding/impl/SAML2SOAPDecoder.cpp \
 	saml2/binding/impl/SAML2SOAPEncoder.cpp \
-	saml2/binding/impl/SAML2ECPEncoder.cpp \
 	saml2/binding/impl/SAML2SOAPClient.cpp \
 	saml2/profile/Assertion20Validator.cpp \
 	saml2/profile/BrowserSSOProfile20Validator.cpp \

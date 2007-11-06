@@ -436,6 +436,10 @@
 							</FileConfiguration>
 						</File>
 						<File
+							RelativePath=".\saml2\binding\impl\SAML2ECPDecoder.cpp"
+							>
+						</File>
+						<File
 							RelativePath=".\saml2\binding\impl\SAML2ECPEncoder.cpp"
 							>
 						</File>

@@ -40,6 +40,7 @@ namespace opensaml {
         SAML_DLLLOCAL PluginManager< MessageDecoder,string,pair<const DOMElement*,const XMLCh*> >::Factory SAML2POSTDecoderFactory;
         SAML_DLLLOCAL PluginManager< MessageDecoder,string,pair<const DOMElement*,const XMLCh*> >::Factory SAML2RedirectDecoderFactory;
         SAML_DLLLOCAL PluginManager< MessageDecoder,string,pair<const DOMElement*,const XMLCh*> >::Factory SAML2SOAPDecoderFactory;
+        SAML_DLLLOCAL PluginManager< MessageDecoder,string,pair<const DOMElement*,const XMLCh*> >::Factory SAML2ECPDecoderFactory;
     };
 };
 
@@ -54,4 +55,5 @@ void SAML_API opensaml::registerMessageDecoders()
     conf.MessageDecoderManager.registerFactory(samlconstants::SAML20_BINDING_HTTP_POST_SIMPLESIGN, saml2p::SAML2POSTDecoderFactory);
     conf.MessageDecoderManager.registerFactory(samlconstants::SAML20_BINDING_HTTP_REDIRECT, saml2p::SAML2RedirectDecoderFactory);
     conf.MessageDecoderManager.registerFactory(samlconstants::SAML20_BINDING_SOAP, saml2p::SAML2SOAPDecoderFactory);
+    conf.MessageDecoderManager.registerFactory(samlconstants::SAML20_BINDING_PAOS, saml2p::SAML2ECPDecoderFactory);
 }
