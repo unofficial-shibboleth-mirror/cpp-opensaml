@@ -11,5 +11,4 @@
 	<system systemId="urn:oasis:names:tc:SAML:profiles:v1metadata" uri="@-PKGXMLDIR-@/sstc-saml1x-metadata.xsd"/>
 	<system systemId="urn:oasis:names:tc:SAML:metadata:ext:query" uri="@-PKGXMLDIR-@/sstc-saml-metadata-ext-query.xsd"/>
 	<system systemId="urn:oasis:names:tc:SAML:protocol:ext:third-party" uri="@-PKGXMLDIR-@/sstc-saml-protocol-ext-thirdparty.xsd"/>
-	<system systemId="urn:liberty:paos:2003-08" uri="@-PKGXMLDIR-@/liberty-paos-v1.1.xsd"/>
 </catalog>

@@ -43,8 +43,7 @@ schemafiles = \
 	saml-schema-xacml-2.0.xsd \
 	sstc-saml1x-metadata.xsd \
 	sstc-saml-metadata-ext-query.xsd \
-	sstc-saml-protocol-ext-thirdparty.xsd \
-	liberty-paos-v1.1.xsd
+	sstc-saml-protocol-ext-thirdparty.xsd
 
 pkgxml_DATA = \
 	saml20-catalog.xml \
