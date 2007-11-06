@@ -115,7 +115,7 @@ long SAML1SOAPEncoder::encode(
                     rootElement = env->marshall();
                 }
                 else {
-                    log.debug("signing and marshalling the response");
+                    log.debug("signing the response and marshalling the envelope");
         
                     // Build a Signature.
                     Signature* sig = SignatureBuilder::buildSignature();
@@ -134,13 +134,13 @@ long SAML1SOAPEncoder::encode(
                 }
             }
             else {
-                log.debug("marshalling the response");
+                log.debug("marshalling the envelope");
                 rootElement = env->marshall();
             }
             
             stringstream s;
             s << *rootElement;
-            log.debug("sending serialized response");
+            log.debug("sending serialized envelope");
             long ret = genericResponse.sendResponse(s);
         
             // Cleanup by destroying XML.
@@ -161,7 +161,7 @@ long SAML1SOAPEncoder::encode(
     Fault* fault = dynamic_cast<Fault*>(xmlObject);
     if (fault) {
         try {
-            log.debug("building Envelope and marshalling Fault");
+            log.debug("building envelope and marshalling fault");
             Envelope* env = EnvelopeBuilder::buildEnvelope();
             Body* body = BodyBuilder::buildBody();
             env->setBody(body);
@@ -191,18 +191,46 @@ long SAML1SOAPEncoder::encode(
 
     Envelope* env = dynamic_cast<Envelope*>(xmlObject);
     if (env) {
-        log.debug("marshalling envelope");
-        rootElement = env->marshall();
-
-        bool error =
-            (env->getBody() &&
-                env->getBody()->hasChildren() &&
-                    dynamic_cast<Fault*>(env->getBody()->getUnknownXMLObjects().front()));
+        Response* response =
+            (env->getBody() && env->getBody()->hasChildren()) ?
+                dynamic_cast<Response*>(env->getBody()->getUnknownXMLObjects().front()) : NULL;
+        if (response && credential) {
+            if (response->getSignature()) {
+                log.debug("response already signed, skipping signature operation");
+                rootElement = env->marshall();
+            }
+            else {
+                log.debug("signing the response and marshalling the envelope");
+    
+                // Build a Signature.
+                Signature* sig = SignatureBuilder::buildSignature();
+                response->setSignature(sig);    
+                if (signatureAlg)
+                    sig->setSignatureAlgorithm(signatureAlg);
+                if (digestAlg) {
+                    opensaml::ContentReference* cr = dynamic_cast<opensaml::ContentReference*>(sig->getContentReference());
+                    if (cr)
+                        cr->setDigestAlgorithm(digestAlg);
+                }
+        
+                // Sign message while marshalling.
+                vector<Signature*> sigs(1,sig);
+                rootElement = env->marshall((DOMDocument*)NULL,&sigs,credential);
+            }
+        }
+        else {
+            log.debug("marshalling the envelope");
+            rootElement = env->marshall();
+        }
 
         string xmlbuf;
         XMLHelper::serialize(rootElement, xmlbuf);
         istringstream s(xmlbuf);
         log.debug("sending serialized envelope");
+        bool error =
+            (env->getBody() &&
+                env->getBody()->hasChildren() &&
+                    dynamic_cast<Fault*>(env->getBody()->getUnknownXMLObjects().front()));
         long ret = error ? genericResponse.sendError(s) : genericResponse.sendResponse(s);
     
         // Cleanup by destroying XML.
