@@ -135,6 +135,9 @@ namespace samlconstants {
     /** SAML 2.0 SOAP binding ("urn:oasis:names:tc:SAML:2.0:bindings:SOAP") */
     extern SAML_API const char SAML20_BINDING_SOAP[];
 
+    /** SAML 2.0 PAOS binding ("urn:oasis:names:tc:SAML:2.0:bindings:PAOS") */
+    extern SAML_API const char SAML20_BINDING_PAOS[];
+    
     /** SAML 2.0 URI binding ("urn:oasis:names:tc:SAML:2.0:bindings:URI") */
     extern SAML_API const char SAML20_BINDING_URI[];
 
