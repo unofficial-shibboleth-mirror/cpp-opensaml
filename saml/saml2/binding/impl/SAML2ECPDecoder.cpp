@@ -29,6 +29,7 @@
 #include <xmltooling/io/HTTPRequest.h>
 #include <xmltooling/soap/SOAP.h>
 #include <xmltooling/util/NDC.h>
+#include <xmltooling/util/Predicates.h>
 #include <xmltooling/validation/ValidatorSuite.h>
 
 using namespace opensaml::saml2p;
@@ -126,20 +127,15 @@ XMLObject* SAML2ECPDecoder::decode(
 
             // Check for RelayState header.
             if (env->getHeader()) {
+                static const XMLCh RelayState[] = UNICODE_LITERAL_10(R,e,l,a,y,S,t,a,t,e);
                 const vector<XMLObject*>& blocks = const_cast<const Header*>(env->getHeader())->getUnknownXMLObjects();
-                for (vector<XMLObject*>::const_iterator h = blocks.begin(); h != blocks.end(); ++h) {
-                    static const XMLCh RelayState[] = UNICODE_LITERAL_10(R,e,l,a,y,S,t,a,t,e);
-                    if (XMLString::equals((*h)->getElementQName().getLocalPart(), RelayState) &&
-                            XMLString::equals((*h)->getElementQName().getNamespaceURI(), samlconstants::SAML20ECP_NS)) {
-                        const ElementProxy* ep = dynamic_cast<const ElementProxy*>(*h);
-                        if (ep) {
-                            auto_ptr_char rs(ep->getTextContent());
-                            if (rs.get()) {
-                                relayState = rs.get();
-                                break;
-                            }
-                        }
-                    }
+                vector<XMLObject*>::const_iterator h =
+                    find_if(blocks.begin(), blocks.end(), hasQName(QName(samlconstants::SAML20ECP_NS, RelayState)));
+                const ElementProxy* ep = dynamic_cast<const ElementProxy*>(h != blocks.end() ? *h : NULL);
+                if (ep) {
+                    auto_ptr_char rs(ep->getTextContent());
+                    if (rs.get())
+                        relayState = rs.get();
                 }
             }
             
