@@ -138,16 +138,18 @@ const EntitiesDescriptor* ChainingMetadataProvider::getEntitiesDescriptor(const 
     return NULL;
 }
 
-const EntityDescriptor* ChainingMetadataProvider::getEntityDescriptor(const char* id, bool requireValidMetadata) const
+pair<const EntityDescriptor*,const RoleDescriptor*> ChainingMetadataProvider::getEntityDescriptor(const Criteria& criteria) const
 {
     // Clear any existing lock.
     const_cast<ChainingMetadataProvider*>(this)->unlock();
 
     // Do a search.
-    const EntityDescriptor* ret=NULL;
+    pair<const EntityDescriptor*,const RoleDescriptor*> ret;
+    ret.first = NULL;
+    ret.second = NULL;
     for (vector<MetadataProvider*>::const_iterator i=m_providers.begin(); i!=m_providers.end(); ++i) {
         (*i)->lock();
-        if (ret=(*i)->getEntityDescriptor(id,requireValidMetadata)) {
+        if ((ret=(*i)->getEntityDescriptor(criteria)).first) {
             // Save locked provider.
             m_tlsKey->setData(*i);
             return ret;
@@ -155,27 +157,7 @@ const EntityDescriptor* ChainingMetadataProvider::getEntityDescriptor(const char
         (*i)->unlock();
     }
 
-    return NULL;
-}
-
-const EntityDescriptor* ChainingMetadataProvider::getEntityDescriptor(const SAMLArtifact* artifact) const
-{
-    // Clear any existing lock.
-    const_cast<ChainingMetadataProvider*>(this)->unlock();
-
-    // Do a search.
-    const EntityDescriptor* ret=NULL;
-    for (vector<MetadataProvider*>::const_iterator i=m_providers.begin(); i!=m_providers.end(); ++i) {
-        (*i)->lock();
-        if (ret=(*i)->getEntityDescriptor(artifact)) {
-            // Save locked provider.
-            m_tlsKey->setData(*i);
-            return ret;
-        }
-        (*i)->unlock();
-    }
-
-    return NULL;
+    return ret;
 }
 
 const Credential* ChainingMetadataProvider::resolve(const CredentialCriteria* criteria) const

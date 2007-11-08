@@ -140,9 +140,3 @@ const EntitiesDescriptor* MetadataProvider::getEntitiesDescriptor(const XMLCh* n
     auto_ptr_char temp(name);
     return getEntitiesDescriptor(temp.get(),strict);
 }
-
-const EntityDescriptor* MetadataProvider::getEntityDescriptor(const XMLCh* name, bool strict) const
-{
-    auto_ptr_char temp(name);
-    return getEntityDescriptor(temp.get(),strict);
-}

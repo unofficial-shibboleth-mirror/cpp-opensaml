@@ -129,41 +129,6 @@ namespace opensaml {
             virtual const xmltooling::XMLObject* getMetadata() const=0;
         
             /**
-             * Gets the metadata for a given entity. If a valid entity is returned,
-             * the provider will be left in a locked state. The caller MUST unlock the
-             * provider when finished with the entity.
-             *  
-             * @param id                    the ID of the entity
-             * @param requireValidMetadata  indicates whether the metadata for the entity must be valid/current
-             * 
-             * @return the entity's metadata or NULL if there is no metadata or no valid metadata
-             */
-            virtual const EntityDescriptor* getEntityDescriptor(const XMLCh* id, bool requireValidMetadata=true) const;
-
-            /**
-             * Gets the metadata for a given entity. If a valid entity is returned,
-             * the provider will be left in a locked state. The caller MUST unlock the
-             * provider when finished with the entity.
-             *  
-             * @param id                    the ID of the entity
-             * @param requireValidMetadata  indicates whether the metadata for the entity must be valid/current
-             * 
-             * @return the entity's metadata or NULL if there is no metadata or no valid metadata
-             */
-            virtual const EntityDescriptor* getEntityDescriptor(const char* id, bool requireValidMetadata=true) const=0;
-
-            /**
-             * Gets the metadata for an entity that issued a SAML artifact. If a valid entity is returned,
-             * the provider will be left in a locked state. The caller MUST unlock the
-             * provider when finished with the entity.
-             *  
-             * @param artifact              a SAML artifact to find the issuer of
-             * 
-             * @return the entity's metadata or NULL if there is no valid metadata
-             */
-            virtual const EntityDescriptor* getEntityDescriptor(const SAMLArtifact* artifact) const=0;
-
-            /**
              * Gets the metadata for a given group of entities. If a valid group is returned,
              * the resolver will be left in a locked state. The caller MUST unlock the
              * resolver when finished with the group.
@@ -186,6 +151,73 @@ namespace opensaml {
              * @return the group's metadata or NULL if there is no metadata or no valid metadata
              */
             virtual const EntitiesDescriptor* getEntitiesDescriptor(const char* name, bool requireValidMetadata=true) const=0;
+
+            /**
+             * Batches up criteria for entity lookup.
+             */
+            struct Criteria {
+                /**
+                 * Constructor.
+                 * 
+                 * @param id    entityID to lookup
+                 * @param q     element/type of role, if any
+                 * @param prot  protocol support constant, if any
+                 * @param valid true iff stale metadata should be ignored
+                 */
+                Criteria(const XMLCh* id, const xmltooling::QName* q=NULL, const XMLCh* prot=NULL, bool valid=true)
+                    : entityID_unicode(id), entityID_ascii(NULL), artifact(NULL), role(q), protocol(prot), protocol2(NULL), validOnly(valid) {
+                }
+                
+                /**
+                 * Constructor.
+                 * 
+                 * @param id    entityID to lookup
+                 * @param q     element/type of role, if any
+                 * @param prot  protocol support constant, if any
+                 * @param valid true iff stale metadata should be ignored
+                 */
+                Criteria(const char* id, const xmltooling::QName* q=NULL, const XMLCh* prot=NULL, bool valid=true)
+                    : entityID_unicode(NULL), entityID_ascii(id), artifact(NULL), role(q), protocol(prot), protocol2(NULL), validOnly(valid) {
+                }
+
+                /**
+                 * Constructor.
+                 * 
+                 * @param a     artifact to lookup
+                 * @param q     element/type of role, if any
+                 * @param prot  protocol support constant, if any
+                 * @param valid true iff stale metadata should be ignored
+                 */
+                Criteria(const SAMLArtifact* a, const xmltooling::QName* q=NULL, const XMLCh* prot=NULL, bool valid=true)
+                    : entityID_unicode(NULL), entityID_ascii(NULL), artifact(a), role(q), protocol(prot), protocol2(NULL), validOnly(valid) {
+                }
+                
+                /** Unique ID of entity. */
+                const XMLCh* entityID_unicode;
+                /** Unique ID of entity. */
+                const char* entityID_ascii;
+                /** SAML artifact */
+                const SAMLArtifact* artifact;
+                /** Element or schema type QName of metadata role. */
+                const xmltooling::QName* role;
+                /** Protocol support constant. */
+                const XMLCh* protocol;
+                /** Backup protocol support constant. */
+                const XMLCh* protocol2;
+                /** Controls whether stale metadata is ignored. */
+                bool validOnly;
+            };
+            
+            /**
+             * Gets entity metadata based on supplied criteria. If a valid entity is returned,
+             * the provider will be left in a locked state. The caller MUST unlock the
+             * provider when finished with the entity.
+             *  
+             * @param criteria  lookup criteria
+             * 
+             * @return the entity's metadata (and optionally a role) or NULL if there is no qualifying metadata
+             */
+            virtual std::pair<const EntityDescriptor*,const RoleDescriptor*> getEntityDescriptor(const Criteria& criteria) const=0;
 
         protected:
             /**

@@ -59,7 +59,7 @@ namespace opensaml {
                 throw MetadataException("getMetadata operation not implemented on this provider.");
             }
 
-            const EntityDescriptor* getEntityDescriptor(const char* id, bool requireValidMetadata=true) const;
+            std::pair<const EntityDescriptor*,const RoleDescriptor*> getEntityDescriptor(const Criteria& criteria) const;
 
         protected:
             /** Controls XML schema validation. */

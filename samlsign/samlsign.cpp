@@ -293,18 +293,19 @@ int main(int argc,char* argv[])
                     auto_ptr<MetadataProvider> metadata(buildPlugin(m_param, conf.MetadataProviderManager));
                     metadata->init();
                     
-                    Locker locker(metadata.get());
-                    const EntityDescriptor* entity = metadata->getEntityDescriptor(issuer);
-                    if (!entity)
-                        throw MetadataException("no metadata found for ($1)", params(1, issuer));
                     const XMLCh* ns = rns ? XMLString::transcode(rns) : samlconstants::SAML20MD_NS;
                     auto_ptr_XMLCh n(rname);
                     QName q(ns, n.get());
-                    const RoleDescriptor* role = entity->getRoleDescriptor(q, protocol);
-                    if (!role)
+
+                    Locker locker(metadata.get());
+                    MetadataProvider::Criteria mc(issuer, &q, protocol);
+                    pair<const EntityDescriptor*,const RoleDescriptor*> entity = metadata->getEntityDescriptor(mc);
+                    if (!entity.first)
+                        throw MetadataException("no metadata found for ($1)", params(1, issuer));
+                    else if (!entity.second)
                         throw MetadataException("compatible role $1 not found for ($2)", params(2, q.toString().c_str(), issuer));
 
-                    MetadataCredentialCriteria mcc(*role);
+                    MetadataCredentialCriteria mcc(*entity.second);
                     if (sigtrust->validate(*signable->getSignature(), *metadata.get(), &mcc))
                         log.info("successful signature verification");
                     else

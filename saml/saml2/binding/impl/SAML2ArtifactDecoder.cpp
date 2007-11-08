@@ -119,8 +119,9 @@ XMLObject* SAML2ArtifactDecoder::decode(
     }
     
     log.debug("attempting to determine source of artifact...");
-    const EntityDescriptor* provider=policy.getMetadataProvider()->getEntityDescriptor(artifact);
-    if (!provider) {
+    MetadataProvider::Criteria mc(artifact, policy.getRole(), samlconstants::SAML20P_NS);
+    pair<const EntityDescriptor*,const RoleDescriptor*> provider=policy.getMetadataProvider()->getEntityDescriptor(mc);
+    if (!provider.first) {
         log.error(
             "metadata lookup failed, unable to determine issuer of artifact (0x%s)",
             SAMLArtifact::toHex(artifact->getBytes()).c_str()
@@ -129,23 +130,21 @@ XMLObject* SAML2ArtifactDecoder::decode(
     }
     
     if (log.isDebugEnabled()) {
-        auto_ptr_char issuer(provider->getEntityID());
+        auto_ptr_char issuer(provider.first->getEntityID());
         log.debug("lookup succeeded, artifact issued by (%s)", issuer.get());
     }
 
-    log.debug("attempting to find artifact issuing role...");
-    const RoleDescriptor* roledesc=provider->getRoleDescriptor(*(policy.getRole()), samlconstants::SAML20P_NS);
-    if (!roledesc || !dynamic_cast<const SSODescriptorType*>(roledesc)) {
-        log.error("unable to find compatible SAML role (%s) in metadata", policy.getRole()->toString().c_str());
+    if (!provider.second || !dynamic_cast<const SSODescriptorType*>(provider.second)) {
+        log.error("unable to find compatible SAML 2.0 role (%s) in metadata", policy.getRole()->toString().c_str());
         throw BindingException("Unable to find compatible metadata role for artifact issuer.");
     }
     // Set issuer into policy.
-    policy.setIssuer(provider->getEntityID());
-    policy.setIssuerMetadata(roledesc);
+    policy.setIssuer(provider.first->getEntityID());
+    policy.setIssuerMetadata(provider.second);
     
     log.debug("calling ArtifactResolver...");
     auto_ptr<ArtifactResponse> response(
-        m_artifactResolver->resolve(*(artifact2.get()), dynamic_cast<const SSODescriptorType&>(*roledesc), policy)
+        m_artifactResolver->resolve(*(artifact2.get()), dynamic_cast<const SSODescriptorType&>(*provider.second), policy)
         );
     
     // The policy should be enforced against the ArtifactResponse by the resolve step.

@@ -112,11 +112,11 @@ public:
         // Now encrypt this puppy to the SP role in the example metadata.
         auto_ptr<EncryptedAssertion> encrypted(EncryptedAssertionBuilder::buildEncryptedAssertion());
         Locker mlocker(m_metadata);
-        const EntityDescriptor* sp = m_metadata->getEntityDescriptor("https://sp.example.org/");
-        TSM_ASSERT("No metadata for recipient.", sp!=NULL); 
-        const SPSSODescriptor* sprole =  sp->getSPSSODescriptor(samlconstants::SAML20P_NS);
-        TSM_ASSERT("No SP role for recipient.", sprole!=NULL);
-        MetadataCredentialCriteria mcc(*sprole);
+        MetadataProvider::Criteria mc("https://sp.example.org/", &SPSSODescriptor::ELEMENT_QNAME, samlconstants::SAML20P_NS);
+        pair<const EntityDescriptor*,const RoleDescriptor*> sp = m_metadata->getEntityDescriptor(mc);
+        TSM_ASSERT("No metadata for recipient.", sp.first!=NULL); 
+        TSM_ASSERT("No SP role for recipient.", sp.second!=NULL);
+        MetadataCredentialCriteria mcc(*sp.second);
         vector< pair<const MetadataProvider*,MetadataCredentialCriteria*> > recipients(
             1, pair<const MetadataProvider*,MetadataCredentialCriteria*>(m_metadata, &mcc)
             );
@@ -132,7 +132,7 @@ public:
         
         // Unpack, then decypt with our key.
         auto_ptr<EncryptedAssertion> encrypted2(dynamic_cast<EncryptedAssertion*>(b->buildFromDocument(doc)));
-        auto_ptr<Assertion> assertion2(dynamic_cast<Assertion*>(encrypted2->decrypt(*m_resolver, sp->getEntityID())));
+        auto_ptr<Assertion> assertion2(dynamic_cast<Assertion*>(encrypted2->decrypt(*m_resolver, sp.first->getEntityID())));
         assertEquals("Unmarshalled assertion does not match", expectedChildElementsDOM, assertion2.get(), false);
         
         // And check the signature.

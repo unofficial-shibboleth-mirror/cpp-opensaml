@@ -21,6 +21,7 @@
  */
 
 #include "internal.h"
+#include "binding/SAMLArtifact.h"
 #include "saml2/metadata/Metadata.h"
 #include "saml2/metadata/DynamicMetadataProvider.h"
 
@@ -60,23 +61,35 @@ DynamicMetadataProvider::~DynamicMetadataProvider()
     delete m_lock;
 }
 
-const EntityDescriptor* DynamicMetadataProvider::getEntityDescriptor(const char* name, bool strict) const
+pair<const EntityDescriptor*,const RoleDescriptor*> DynamicMetadataProvider::getEntityDescriptor(const Criteria& criteria) const
 {
     // Check cache while holding the read lock.
-    const EntityDescriptor* entity = AbstractMetadataProvider::getEntityDescriptor(name, strict);
-    if (entity)
+    pair<const EntityDescriptor*,const RoleDescriptor*> entity = AbstractMetadataProvider::getEntityDescriptor(criteria);
+    if (entity.first)   // even if the role isn't found, we're done
+        return entity;
+
+    string name;
+    if (criteria.entityID_ascii)
+        name = criteria.entityID_ascii;
+    else if (criteria.entityID_unicode) {
+        auto_ptr_char temp(criteria.entityID_unicode);
+        name = temp.get();
+    }
+    else if (criteria.artifact)
+        name = criteria.artifact->getSource();
+    else
         return entity;
 
     Category& log = Category::getInstance(SAML_LOGCAT".MetadataProvider.Dynamic");
-    log.info("resolving metadata for (%s)", name);
+    log.info("resolving metadata for (%s)", name.c_str());
 
     // Try resolving it.
-    auto_ptr<EntityDescriptor> entity2(resolve(name));
+    auto_ptr<EntityDescriptor> entity2(resolve(name.c_str()));
 
     // Filter it, which may throw.
     doFilters(*entity2.get());
 
-    log.info("caching resolved metadata for (%s)", name);
+    log.info("caching resolved metadata for (%s)", name.c_str());
 
     // Translate cacheDuration into validUntil.
     if (entity2->getCacheDuration())
@@ -97,7 +110,7 @@ const EntityDescriptor* DynamicMetadataProvider::getEntityDescriptor(const char*
     m_lock->rdlock();
 
     // Rinse and repeat.
-    return getEntityDescriptor(name, strict);
+    return getEntityDescriptor(criteria);
 }
 
 EntityDescriptor* DynamicMetadataProvider::resolve(const char* entityID) const

@@ -119,8 +119,10 @@ XMLObject* SAML1ArtifactDecoder::decode(
     }
     
     log.debug("attempting to determine source of artifact(s)...");
-    const EntityDescriptor* provider=policy.getMetadataProvider()->getEntityDescriptor(artifacts.front());
-    if (!provider) {
+    MetadataProvider::Criteria mc(artifacts.front(), policy.getRole(), samlconstants::SAML11_PROTOCOL_ENUM);
+    mc.protocol2 = samlconstants::SAML10_PROTOCOL_ENUM;
+    pair<const EntityDescriptor*,const RoleDescriptor*> provider=policy.getMetadataProvider()->getEntityDescriptor(mc);
+    if (!provider.first) {
         log.error(
             "metadata lookup failed, unable to determine issuer of artifact (0x%s)",
             SAMLArtifact::toHex(artifacts.front()->getBytes()).c_str()
@@ -130,27 +132,23 @@ XMLObject* SAML1ArtifactDecoder::decode(
     }
     
     if (log.isDebugEnabled()) {
-        auto_ptr_char issuer(provider->getEntityID());
-        log.debug("lookup succeeded, artifact issued by (%s)", issuer.get());
+        auto_ptr_char issuer(provider.first->getEntityID());
+        log.debug("artifact issued by (%s)", issuer.get());
     }
 
-    log.debug("attempting to find artifact issuing role...");
-    const RoleDescriptor* roledesc=provider->getRoleDescriptor(*(policy.getRole()), samlconstants::SAML11_PROTOCOL_ENUM);
-    if (!roledesc)
-        roledesc=provider->getRoleDescriptor(*(policy.getRole()), samlconstants::SAML10_PROTOCOL_ENUM);
-    if (!roledesc || !dynamic_cast<const IDPSSODescriptor*>(roledesc)) {
-        log.error("unable to find compatible SAML role (%s) in metadata", policy.getRole()->toString().c_str());
+    if (!provider.second || !dynamic_cast<const IDPSSODescriptor*>(provider.second)) {
+        log.error("unable to find compatible SAML 1.x role (%s) in metadata", policy.getRole()->toString().c_str());
         for_each(artifacts.begin(), artifacts.end(), xmltooling::cleanup<SAMLArtifact>());
         throw BindingException("Unable to find compatible metadata role for artifact issuer.");
     }
     // Set Issuer for the policy.
-    policy.setIssuer(provider->getEntityID());
-    policy.setIssuerMetadata(roledesc);
+    policy.setIssuer(provider.first->getEntityID());
+    policy.setIssuerMetadata(provider.second);
     
     try {
         log.debug("calling ArtifactResolver...");
         auto_ptr<Response> response(
-            m_artifactResolver->resolve(artifacts, dynamic_cast<const IDPSSODescriptor&>(*roledesc), policy)
+            m_artifactResolver->resolve(artifacts, dynamic_cast<const IDPSSODescriptor&>(*provider.second), policy)
             );
         
         // The policy should be enforced against the Response by the resolve step.

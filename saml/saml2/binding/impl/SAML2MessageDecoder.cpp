@@ -91,20 +91,19 @@ void SAML2MessageDecoder::extractMessageDetails(
             }
             
             log.debug("searching metadata for message issuer...");
-            const EntityDescriptor* entity = policy.getMetadataProvider()->getEntityDescriptor(issuer->getName());
-            if (!entity) {
+
+            MetadataProvider::Criteria mc(issuer->getName(), policy.getRole(), protocol);
+            pair<const EntityDescriptor*,const RoleDescriptor*> entity = policy.getMetadataProvider()->getEntityDescriptor(mc);
+            if (!entity.first) {
                 auto_ptr_char temp(issuer->getName());
                 log.warn("no metadata found, can't establish identity of issuer (%s)", temp.get());
                 return;
             }
-    
-            log.debug("matched message issuer against metadata, searching for applicable role...");
-            const RoleDescriptor* roledesc=entity->getRoleDescriptor(*policy.getRole(), protocol);
-            if (!roledesc) {
+            else if (!entity.second) {
                 log.warn("unable to find compatible role (%s) in metadata", policy.getRole()->toString().c_str());
                 return;
             }
-            policy.setIssuerMetadata(roledesc);
+            policy.setIssuerMetadata(entity.second);
         }
     }
     catch (bad_cast&) {

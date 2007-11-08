@@ -76,7 +76,7 @@ public:
         janitor3.release();
 
         Locker locker(metadataProvider.get());
-        const EntityDescriptor* descriptor = metadataProvider->getEntityDescriptor("https://idp.example.org");
+        const EntityDescriptor* descriptor = metadataProvider->getEntityDescriptor(MetadataProvider::Criteria("https://idp.example.org")).first;
         TSM_ASSERT("Retrieved entity descriptor was null", descriptor!=NULL);
         
         RoleDescriptor* role=descriptor->getIDPSSODescriptors().front();
@@ -89,7 +89,7 @@ public:
         cc.setPeerName("https://idp.example.org");
         TSM_ASSERT("Signature failed to validate.", dynamic_cast<SignatureTrustEngine*>(trustEngine.get())->validate(*sig, *metadataProvider, &cc));
 
-        descriptor = metadataProvider->getEntityDescriptor("https://idp2.example.org");
+        descriptor = metadataProvider->getEntityDescriptor(MetadataProvider::Criteria("https://idp2.example.org")).first;
         TSM_ASSERT("Retrieved entity descriptor was null", descriptor!=NULL);
         
         role=descriptor->getIDPSSODescriptors().front();

@@ -74,7 +74,13 @@ public:
 
             Locker locker(m_metadata);
             encoder->encode(
-                *this,toSend.get(),"https://sp.example.org/SAML/SSO",m_metadata->getEntityDescriptor("https://sp.example.org/"),"state",NULL,cred
+                *this,
+                toSend.get(),
+                "https://sp.example.org/SAML/SSO",
+                m_metadata->getEntityDescriptor(MetadataProvider::Criteria("https://sp.example.org/")).first,
+                "state",
+                NULL,
+                cred
                 );
             toSend.release();
             

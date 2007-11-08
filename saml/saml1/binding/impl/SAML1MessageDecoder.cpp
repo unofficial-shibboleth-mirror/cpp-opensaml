@@ -93,18 +93,19 @@ void SAML1MessageDecoder::extractMessageDetails(
 
     if (policy.getMetadataProvider() && policy.getRole()) {
         log.debug("searching metadata for response issuer...");
-        const EntityDescriptor* entity = policy.getMetadataProvider()->getEntityDescriptor(issuer);
-        if (entity) {
-            log.debug("matched response issuer against metadata, searching for applicable role...");
-            const RoleDescriptor* roledesc=entity->getRoleDescriptor(*policy.getRole(), protocol);
-            if (roledesc)
-                policy.setIssuerMetadata(roledesc);
-            else if (log.isWarnEnabled())
-                log.warn("unable to find compatible role (%s) in metadata", policy.getRole()->toString().c_str());
-        }
-        else if (log.isWarnEnabled()) {
+
+        MetadataProvider::Criteria mc(issuer, policy.getRole(), protocol);
+        pair<const EntityDescriptor*,const RoleDescriptor*> entity = policy.getMetadataProvider()->getEntityDescriptor(mc);
+
+        if (!entity.first) {
             auto_ptr_char iname(issuer);
             log.warn("no metadata found, can't establish identity of issuer (%s)", iname.get());
+            return;
         }
+        else if (!entity.second) {
+            log.warn("unable to find compatible role (%s) in metadata", policy.getRole()->toString().c_str());
+            return;
+        }
+        policy.setIssuerMetadata(entity.second);
     }
 }

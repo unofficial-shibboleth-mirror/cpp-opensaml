@@ -94,8 +94,7 @@ namespace opensaml {
             void init();
             const xmltooling::XMLObject* getMetadata() const;
             const EntitiesDescriptor* getEntitiesDescriptor(const char* name, bool requireValidMetadata=true) const;
-            const EntityDescriptor* getEntityDescriptor(const char* id, bool requireValidMetadata=true) const;
-            const EntityDescriptor* getEntityDescriptor(const SAMLArtifact* artifact) const;
+            std::pair<const EntityDescriptor*,const RoleDescriptor*> getEntityDescriptor(const Criteria& criteria) const;
             void onEvent(const ObservableMetadataProvider& provider) const;
     
             const xmltooling::Credential* resolve(const xmltooling::CredentialCriteria* criteria=NULL) const;

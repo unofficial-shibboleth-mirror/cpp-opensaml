@@ -176,31 +176,42 @@ const EntitiesDescriptor* AbstractMetadataProvider::getEntitiesDescriptor(const 
     return NULL;
 }
 
-const EntityDescriptor* AbstractMetadataProvider::getEntityDescriptor(const char* name, bool strict) const
+pair<const EntityDescriptor*,const RoleDescriptor*> AbstractMetadataProvider::getEntityDescriptor(const Criteria& criteria) const
 {
-    pair<sitemap_t::const_iterator,sitemap_t::const_iterator> range=m_sites.equal_range(name);
-
-    time_t now=time(NULL);
-    for (sitemap_t::const_iterator i=range.first; i!=range.second; i++)
-        if (now < i->second->getValidUntilEpoch())
-            return i->second;
+    pair<sitemap_t::const_iterator,sitemap_t::const_iterator> range;
+    if (criteria.entityID_ascii)
+        range = m_sites.equal_range(criteria.entityID_ascii);
+    else if (criteria.entityID_unicode) {
+        auto_ptr_char id(criteria.entityID_unicode);
+        range = m_sites.equal_range(id.get());
+    }
+    else if (criteria.artifact)
+        range = m_sources.equal_range(criteria.artifact->getSource());
+    else
+        return pair<const EntityDescriptor*,const RoleDescriptor*>(NULL,NULL);
     
-    if (!strict && range.first!=range.second)
-        return range.first->second;
-        
-    return NULL;
-}
-
-const EntityDescriptor* AbstractMetadataProvider::getEntityDescriptor(const SAMLArtifact* artifact) const
-{
-    pair<sitemap_t::const_iterator,sitemap_t::const_iterator> range=m_sources.equal_range(artifact->getSource());
-
+    pair<const EntityDescriptor*,const RoleDescriptor*> result;
+    result.first = NULL;
+    result.second = NULL;
+    
     time_t now=time(NULL);
-    for (sitemap_t::const_iterator i=range.first; i!=range.second; i++)
-        if (now < i->second->getValidUntilEpoch())
-            return i->second;
-
-    return NULL;
+    for (sitemap_t::const_iterator i=range.first; i!=range.second; i++) {
+        if (now < i->second->getValidUntilEpoch()) {
+            result.first = i->second;
+            break;
+        }
+    }
+    
+    if (!result.first && !criteria.validOnly && range.first!=range.second)
+        result.first = range.first->second;
+        
+    if (result.first && criteria.role && criteria.protocol) {
+        result.second = result.first->getRoleDescriptor(*criteria.role, criteria.protocol);
+        if (!result.second && criteria.protocol2)
+            result.second = result.first->getRoleDescriptor(*criteria.role, criteria.protocol2);
+    }
+    
+    return result;
 }
 
 const Credential* AbstractMetadataProvider::resolve(const CredentialCriteria* criteria) const
