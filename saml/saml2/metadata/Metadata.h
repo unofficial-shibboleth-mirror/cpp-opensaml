@@ -24,6 +24,7 @@
 #define __saml2_metadata_h__
 
 #include <saml/saml2/core/Assertions.h>
+#include <xmltooling/util/Predicates.h>
 
 #include <ctime>
 
@@ -63,6 +64,10 @@ namespace opensaml {
             /** Returns true iff the object is valid at the current time. */
             bool isValid() const {
                 return time(NULL) <= getValidUntilEpoch();
+            }
+            /** Returns true iff the object is valid at the supplied time. */
+            bool isValid(time_t t) const {
+                return t <= getValidUntilEpoch();
             }
         };
 
@@ -223,6 +228,7 @@ namespace opensaml {
             DECL_TYPED_FOREIGN_CHILDREN(Attribute,saml2);
             /** IDPSSODescriptorType local name */
             static const XMLCh TYPE_NAME[];
+            DECL_ELEMENT_QNAME;
         END_XMLOBJECT;
 
         BEGIN_XMLOBJECT(SAML_API,ServiceName,localizedNameType,SAML 2.0 ServiceName element);
@@ -259,6 +265,7 @@ namespace opensaml {
             DECL_TYPED_CHILDREN(AttributeConsumingService);
             /** SPSSODescriptorType local name */
             static const XMLCh TYPE_NAME[];
+            DECL_ELEMENT_QNAME;
         END_XMLOBJECT;
 
         BEGIN_XMLOBJECT(SAML_API,AuthnQueryService,EndpointType,SAML 2.0 AuthnQueryService element);
@@ -270,6 +277,7 @@ namespace opensaml {
             DECL_TYPED_CHILDREN(NameIDFormat);
             /** AuthnAuthorityDescriptorType local name */
             static const XMLCh TYPE_NAME[];
+            DECL_ELEMENT_QNAME;
         END_XMLOBJECT;
 
         BEGIN_XMLOBJECT(SAML_API,AuthzService,EndpointType,SAML 2.0 AuthzService element);
@@ -281,6 +289,7 @@ namespace opensaml {
             DECL_TYPED_CHILDREN(NameIDFormat);
             /** PDPDescriptorType local name */
             static const XMLCh TYPE_NAME[];
+            DECL_ELEMENT_QNAME;
         END_XMLOBJECT;
 
         BEGIN_XMLOBJECT(SAML_API,AttributeService,EndpointType,SAML 2.0 AttributeService element);
@@ -294,6 +303,7 @@ namespace opensaml {
             DECL_TYPED_FOREIGN_CHILDREN(Attribute,saml2);
             /** AttributeAuthorityDescriptorType local name */
             static const XMLCh TYPE_NAME[];
+            DECL_ELEMENT_QNAME;
         END_XMLOBJECT;
 
         BEGIN_XMLOBJECT(SAML_API,QueryDescriptorType,RoleDescriptor,SAML 2.0 QueryDescriptorType abstract type);
@@ -306,18 +316,21 @@ namespace opensaml {
         BEGIN_XMLOBJECT(SAML_API,AuthnQueryDescriptorType,QueryDescriptorType,SAML 2.0 AuthnQueryDescriptorType extension type);
             /** AuthnQueryDescriptorType local name */
             static const XMLCh TYPE_NAME[];
+            DECL_TYPE_QNAME;
         END_XMLOBJECT;
 
         BEGIN_XMLOBJECT(SAML_API,AttributeQueryDescriptorType,QueryDescriptorType,SAML 2.0 AttributeQueryDescriptorType extension type);
             DECL_TYPED_CHILDREN(AttributeConsumingService);
             /** AttributeQueryDescriptorType local name */
             static const XMLCh TYPE_NAME[];
+            DECL_TYPE_QNAME;
         END_XMLOBJECT;
 
         BEGIN_XMLOBJECT(SAML_API,AuthzDecisionQueryDescriptorType,QueryDescriptorType,SAML 2.0 AuthzDecisionQueryDescriptorType extension type);
             DECL_TYPED_CHILDREN(ActionNamespace);
             /** AuthzDecisionQueryDescriptorType local name */
             static const XMLCh TYPE_NAME[];
+            DECL_TYPE_QNAME;
         END_XMLOBJECT;
 
         BEGIN_XMLOBJECT4(SAML_API,AffiliationDescriptor,xmltooling::AttributeExtensibleXMLObject,SignableObject,
@@ -349,23 +362,7 @@ namespace opensaml {
             DECL_TYPED_CHILD(Organization);
             DECL_TYPED_CHILDREN(ContactPerson);
             DECL_TYPED_CHILDREN(AdditionalMetadataLocation);
-            /** Finds an IDP role supporting a given protocol. */
-            virtual const IDPSSODescriptor* getIDPSSODescriptor(const XMLCh* protocol) const=0;
-            /** Finds an SP role supporting a given protocol. */
-            virtual const SPSSODescriptor* getSPSSODescriptor(const XMLCh* protocol) const=0;
-            /** Finds an Authn Authority role supporting a given protocol. */
-            virtual const AuthnAuthorityDescriptor* getAuthnAuthorityDescriptor(const XMLCh* protocol) const=0;
-            /** Finds an Attribute Authority role supporting a given protocol. */
-            virtual const AttributeAuthorityDescriptor* getAttributeAuthorityDescriptor(const XMLCh* protocol) const=0;
-            /** Finds a PDP role supporting a given protocol. */
-            virtual const PDPDescriptor* getPDPDescriptor(const XMLCh* protocol) const=0;
-            /** Finds an AuthnQuery role supporting a given protocol. */
-            virtual const AuthnQueryDescriptorType* getAuthnQueryDescriptorType(const XMLCh* protocol) const=0;
-            /** Finds an AttributeQuery role supporting a given protocol. */
-            virtual const AttributeQueryDescriptorType* getAttributeQueryDescriptorType(const XMLCh* protocol) const=0;
-            /** Finds an AuthzDecisionQuery role supporting a given protocol. */
-            virtual const AuthzDecisionQueryDescriptorType* getAuthzDecisionQueryDescriptorType(const XMLCh* protocol) const=0;
-            /** Finds an extension role supporting a given protocol. */
+            /** Finds an arbitrary role type supporting a given protocol. */
             virtual const RoleDescriptor* getRoleDescriptor(const xmltooling::QName& qname, const XMLCh* protocol) const=0;
             /** EntityDescriptorType local name */
             static const XMLCh TYPE_NAME[];
@@ -381,6 +378,62 @@ namespace opensaml {
             /** EntitiesDescriptorType local name */
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
+
+        /**
+         * Predicate to test a role for validity and protocol support.
+         */
+        class isValidForProtocol
+        {
+        public:
+            /**
+             * Constructor.
+             *
+             * @param protocol  support constant to test for
+             */
+            isValidForProtocol(const XMLCh* protocol) : m_time(time(NULL)), m_protocol(protocol) {
+            }
+            
+            /**
+             * Returns true iff the supplied role is valid now and supports the right protocol.
+             *
+             * @param role  role to test
+             * @return  result of predicate
+             */
+            bool operator()(const RoleDescriptor* role) const {
+                return role ? (role->isValid(m_time) && role->hasSupport(m_protocol)) : false;
+            }
+            
+        private:
+            time_t m_time;
+            const XMLCh* m_protocol;
+        };
+
+        /**
+         * Predicate to test a role for type equivalence, validity, and protocol support.
+         */
+        class ofTypeValidForProtocol : public isValidForProtocol, public xmltooling::hasSchemaType
+        {
+        public:
+            /**
+             * Constructor.
+             *
+             * @param q         schema type to test for
+             * @param protocol  support constant to test for
+             */
+            ofTypeValidForProtocol(const xmltooling::QName& q, const XMLCh* protocol)
+                : isValidForProtocol(protocol), xmltooling::hasSchemaType(q)  {
+            }
+            
+            /**
+             * Returns true iff the supplied role is of the right type, valid now, and supports the right protocol.
+             *
+             * @param role  role to test
+             * @return  result of predicate
+             */
+            bool operator()(const RoleDescriptor* role) const {
+                return xmltooling::hasSchemaType::operator()(role) && isValidForProtocol::operator()(role); 
+            }
+        };
 
         DECL_SAML2MDOBJECTBUILDER(AdditionalMetadataLocation);
         DECL_SAML2MDOBJECTBUILDER(AffiliateMember);
@@ -576,10 +629,10 @@ namespace opensaml {
             virtual xmltooling::XMLObject* buildObject() const {
 #endif
                 xmltooling::QName schemaType(
-                    samlconstants::SAML20_NS,AuthnQueryDescriptorType::TYPE_NAME,samlconstants::SAML20MD_QUERY_EXT_PREFIX
+                    samlconstants::SAML20MD_QUERY_EXT_NS,AuthnQueryDescriptorType::TYPE_NAME,samlconstants::SAML20MD_QUERY_EXT_PREFIX
                     );
                 return buildObject(
-                    samlconstants::SAML20_NS,AuthnQueryDescriptorType::LOCAL_NAME,samlconstants::SAML20_PREFIX,&schemaType
+                    samlconstants::SAML20MD_NS,AuthnQueryDescriptorType::LOCAL_NAME,samlconstants::SAML20MD_PREFIX,&schemaType
                     );
             }
             /** Builder that allows element/type override. */
@@ -623,10 +676,10 @@ namespace opensaml {
             virtual xmltooling::XMLObject* buildObject() const {
 #endif
                 xmltooling::QName schemaType(
-                    samlconstants::SAML20_NS,AttributeQueryDescriptorType::TYPE_NAME,samlconstants::SAML20MD_QUERY_EXT_PREFIX
+                    samlconstants::SAML20MD_QUERY_EXT_NS,AttributeQueryDescriptorType::TYPE_NAME,samlconstants::SAML20MD_QUERY_EXT_PREFIX
                     );
                 return buildObject(
-                    samlconstants::SAML20_NS,AttributeQueryDescriptorType::LOCAL_NAME,samlconstants::SAML20_PREFIX,&schemaType
+                    samlconstants::SAML20MD_NS,AttributeQueryDescriptorType::LOCAL_NAME,samlconstants::SAML20MD_PREFIX,&schemaType
                     );
             }
             /** Builder that allows element/type override. */
@@ -670,10 +723,10 @@ namespace opensaml {
             virtual xmltooling::XMLObject* buildObject() const {
 #endif
                 xmltooling::QName schemaType(
-                    samlconstants::SAML20_NS,AuthzDecisionQueryDescriptorType::TYPE_NAME,samlconstants::SAML20MD_QUERY_EXT_PREFIX
+                    samlconstants::SAML20MD_QUERY_EXT_NS,AuthzDecisionQueryDescriptorType::TYPE_NAME,samlconstants::SAML20MD_QUERY_EXT_PREFIX
                     );
                 return buildObject(
-                    samlconstants::SAML20_NS,AuthzDecisionQueryDescriptorType::LOCAL_NAME,samlconstants::SAML20_PREFIX,&schemaType
+                    samlconstants::SAML20MD_NS,AuthzDecisionQueryDescriptorType::LOCAL_NAME,samlconstants::SAML20MD_PREFIX,&schemaType
                     );
             }
             /** Builder that allows element/type override. */
