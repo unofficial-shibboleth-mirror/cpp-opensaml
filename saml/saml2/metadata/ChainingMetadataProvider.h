@@ -24,6 +24,7 @@
 #define __saml_chainmeta_h__
 
 #include <saml/saml2/metadata/ObservableMetadataProvider.h>
+#include <xmltooling/logging.h>
 #include <xmltooling/util/Threads.h>
 
 namespace opensaml {
@@ -103,8 +104,10 @@ namespace opensaml {
                 ) const;
 
         private:
+            bool m_firstMatch;
             xmltooling::ThreadKey* m_tlsKey;
             std::vector<MetadataProvider*> m_providers;
+            xmltooling::logging::Category& m_log;
         };
 
 #if defined (_MSC_VER)
