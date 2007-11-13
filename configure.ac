@@ -1,7 +1,6 @@
 AC_PREREQ([2.50])
 AC_INIT([opensaml], [2.0], [mace-opensaml-users@internet2.edu], [saml])
 AM_CONFIG_HEADER(config.h)
-#AM_CONFIG_HEADER(saml/config_pub.h)
 AM_INIT_AUTOMAKE([opensaml], [2.0])
 
 sinclude(doxygen.m4)
@@ -239,14 +238,6 @@ AC_TRY_LINK(
     [xmltooling::XMLToolingConfig::getConfig().init()],
     [AC_DEFINE(HAVE_LIBXMLTOOLING,1,[Define if XML-Tooling library was found])],
     [AC_MSG_ERROR([unable to link with xmltooling library])]
-    )
-
-# Does the STL in use help or screw us?
-AC_TRY_LINK(
-    [#include <string>],
-    [std::basic_string<unsigned short> foo; foo=foo+(unsigned short)65],
-    [AC_DEFINE(HAVE_GOOD_STL,1,
-        [Define if you have an STL implementation that supports useful string specialization.])],
     )
 
 # Check for unit test support

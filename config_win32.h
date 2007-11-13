@@ -6,10 +6,6 @@
 /* Define to 1 if you have the `gmtime_r' function. */
 /* #undef HAVE_GMTIME_R */
 
-/* Define if you have an STL implementation that supports useful string
-   specialization. */
-#define HAVE_GOOD_STL 1
-
 /* Define to 1 if you have the <inttypes.h> header file. */
 /* #undef HAVE_INTTYPES_H */
 
