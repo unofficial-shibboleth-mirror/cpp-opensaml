@@ -1,0 +1,17 @@
+#!/bin/sh
+
+cd ${CLIENT_BASEDIR}/share/xml/opensaml
+
+sed "s|uri=\".*${CLIENT_BASEDIR}|uri=\"${CLIENT_BASEDIR}|1" saml10-catalog.xml > catalog.xml.tmp
+mv catalog.xml.tmp saml10-catalog.xml
+chmod 644 saml10-catalog.xml
+
+sed "s|uri=\".*${CLIENT_BASEDIR}|uri=\"${CLIENT_BASEDIR}|1" saml11-catalog.xml > catalog.xml.tmp
+mv catalog.xml.tmp saml11-catalog.xml
+chmod 644 saml11-catalog.xml
+
+sed "s|uri=\".*${CLIENT_BASEDIR}|uri=\"${CLIENT_BASEDIR}|1" saml20-catalog.xml > catalog.xml.tmp
+mv catalog.xml.tmp saml20-catalog.xml
+chmod 644 saml20-catalog.xml
+
+exit 0

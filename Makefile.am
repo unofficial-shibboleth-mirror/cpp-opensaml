@@ -48,6 +48,7 @@ EXTRA_DIST = $(DX_CONFIG) \
 	opensaml.spec \
 	pkginfo.in \
 	pkginfo \
-	checkinstall
+	depend \
+	postinstall
 
 DISTCLEANFILES = opensaml.spec pkginfo
