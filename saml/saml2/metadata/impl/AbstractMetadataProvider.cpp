@@ -163,7 +163,7 @@ void AbstractMetadataProvider::clearDescriptorIndex(bool freeSites)
 
 const EntitiesDescriptor* AbstractMetadataProvider::getEntitiesDescriptor(const char* name, bool strict) const
 {
-    pair<groupmap_t::const_iterator,groupmap_t::const_iterator> range=m_groups.equal_range(name);
+    pair<groupmap_t::const_iterator,groupmap_t::const_iterator> range=const_cast<groupmap_t&>(m_groups).equal_range(name);
 
     time_t now=time(NULL);
     for (groupmap_t::const_iterator i=range.first; i!=range.second; i++)
@@ -180,13 +180,13 @@ pair<const EntityDescriptor*,const RoleDescriptor*> AbstractMetadataProvider::ge
 {
     pair<sitemap_t::const_iterator,sitemap_t::const_iterator> range;
     if (criteria.entityID_ascii)
-        range = m_sites.equal_range(criteria.entityID_ascii);
+        range = const_cast<sitemap_t&>(m_sites).equal_range(criteria.entityID_ascii);
     else if (criteria.entityID_unicode) {
         auto_ptr_char id(criteria.entityID_unicode);
-        range = m_sites.equal_range(id.get());
+        range = const_cast<sitemap_t&>(m_sites).equal_range(id.get());
     }
     else if (criteria.artifact)
-        range = m_sources.equal_range(criteria.artifact->getSource());
+        range = const_cast<sitemap_t&>(m_sources).equal_range(criteria.artifact->getSource());
     else
         return pair<const EntityDescriptor*,const RoleDescriptor*>(NULL,NULL);
     
