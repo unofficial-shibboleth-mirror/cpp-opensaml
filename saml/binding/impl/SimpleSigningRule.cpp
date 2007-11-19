@@ -178,17 +178,24 @@ void SimpleSigningRule::evaluate(const XMLObject& message, const GenericRequest*
     KeyInfo* keyInfo=NULL;
     pch = request->getParameter("KeyInfo");
     if (pch) {
-        try {
-            istringstream kstrm(pch);
-            DOMDocument* doc = XMLToolingConfig::getConfig().getParser().parse(kstrm);
-            XercesJanitor<DOMDocument> janitor(doc);
-            XMLObject* kxml = XMLObjectBuilder::buildOneFromElement(doc->getDocumentElement(), true);
-            janitor.release();
-            if (!(keyInfo=dynamic_cast<KeyInfo*>(kxml)))
-                delete kxml;
+        unsigned int x;
+        XMLByte* decoded=Base64::decode(reinterpret_cast<const XMLByte*>(pch),&x);
+        if (decoded) {
+            try {
+                istringstream kstrm(pch);
+                DOMDocument* doc = XMLToolingConfig::getConfig().getParser().parse(kstrm);
+                XercesJanitor<DOMDocument> janitor(doc);
+                XMLObject* kxml = XMLObjectBuilder::buildOneFromElement(doc->getDocumentElement(), true);
+                janitor.release();
+                if (!(keyInfo=dynamic_cast<KeyInfo*>(kxml)))
+                    delete kxml;
+            }
+            catch (XMLToolingException& ex) {
+                log.warn("Failed to load KeyInfo from message: %s", ex.what());
+            }
         }
-        catch (XMLToolingException& ex) {
-            log.warn("Failed to load KeyInfo from message: %s", ex.what());
+        else {
+            log.warn("Failed to load KeyInfo from message: Unable to decode base64-encoded KeyInfo.");
         }
     }
     

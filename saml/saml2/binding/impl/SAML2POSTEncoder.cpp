@@ -175,6 +175,19 @@ long SAML2POSTEncoder::encode(
         memset(sigbuf,0,sizeof(sigbuf));
         Signature::createRawSignature(credential->getPrivateKey(), signatureAlg, input.c_str(), input.length(), sigbuf, sizeof(sigbuf)-1);
         pmap.m_map["Signature"] = sigbuf;
+
+        auto_ptr<KeyInfo> keyInfo(credential->getKeyInfo());
+        if (keyInfo.get()) {
+            string& kstring = pmap.m_map["KeyInfo"];
+            XMLHelper::serialize(keyInfo->marshall((DOMDocument*)NULL), kstring);
+            unsigned int len=0;
+            XMLByte* out=Base64::encode(reinterpret_cast<const XMLByte*>(kstring.data()),kstring.size(),&len);
+            if (!out)
+                throw BindingException("Base64 encoding of XML failed.");
+            kstring.erase();
+            kstring.append(reinterpret_cast<char*>(out),len);
+            XMLString::release(&out);
+        }
     }
     
     // Base64 the message.
