@@ -85,6 +85,7 @@ XMLObject* SAML2ECPDecoder::decode(
     const char* data = genericRequest.getRequestBody();
     if (!data)
         throw BindingException("PAOS message had an empty request body.");
+    log.debug("received message:\n%s", data);
     istringstream is(data);
     
     // Parse and bind the document into an XMLObject.

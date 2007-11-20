@@ -164,7 +164,7 @@ long SAML2ArtifactEncoder::encode(
     }
 
     if (log.isDebugEnabled())
-        log.debugStream() << "marshalled message: " << *xmlObject << logging::eol;
+        log.debugStream() << "marshalled message:" << logging::eol << *xmlObject << logging::eol;
     
     // Store the message. Last step in storage will be to delete the XML.
     log.debug("storing artifact and content in map");

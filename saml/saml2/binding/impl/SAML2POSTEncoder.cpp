@@ -158,7 +158,7 @@ long SAML2POSTEncoder::encode(
     TemplateEngine::TemplateParameters pmap;
     string& msg = pmap.m_map[(request ? "SAMLRequest" : "SAMLResponse")];
     XMLHelper::serialize(rootElement, msg);
-    log.debug("marshalled message: %s", msg.c_str());
+    log.debug("marshalled message:\n%s", msg.c_str());
     
     // SimpleSign.
     if (credential && m_simple) {

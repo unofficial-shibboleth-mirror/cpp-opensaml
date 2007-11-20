@@ -150,7 +150,7 @@ long SAML1POSTEncoder::encode(
     TemplateEngine::TemplateParameters pmap;
     string& xmlbuf = pmap.m_map["SAMLResponse"];
     XMLHelper::serialize(rootElement, xmlbuf);
-    log.debug("marshalled response: %s", xmlbuf.c_str());
+    log.debug("marshalled response:\n%s", xmlbuf.c_str());
     
     // Replace with base-64 encoded version.
     unsigned int len=0;

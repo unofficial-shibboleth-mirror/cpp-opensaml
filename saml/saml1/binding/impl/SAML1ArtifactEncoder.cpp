@@ -112,7 +112,7 @@ long SAML1ArtifactEncoder::encode(
         throw BindingException("SAML 1.x Artifact Encoder requires an ArtifactGenerator instance.");
     
     if (log.isDebugEnabled())
-        log.debugStream() << "marshalled assertion: " << *xmlObject << logging::eol;
+        log.debugStream() << "marshalled assertion:" << logging::eol << *xmlObject << logging::eol;
     
     auto_ptr_char recipientID(recipient ? recipient->getEntityID() : NULL);
     log.debug("obtaining new artifact for relying party (%s)", recipientID.get() ? recipientID.get() : "unknown");

@@ -84,6 +84,7 @@ XMLObject* SAML1SOAPDecoder::decode(
     const char* data = genericRequest.getRequestBody();
     if (!data)
         throw BindingException("SOAP message had an empty request body.");
+    log.debug("received message:\n%s", data);
     istringstream is(data);
     
     // Parse and bind the document into an XMLObject.

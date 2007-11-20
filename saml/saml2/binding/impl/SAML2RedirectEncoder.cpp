@@ -116,7 +116,7 @@ long SAML2RedirectEncoder::encode(
     DOMElement* rootElement = xmlObject->marshall();
     string xmlbuf;
     XMLHelper::serialize(rootElement, xmlbuf);
-    log.debug("marshalled message: %s", xmlbuf.c_str());
+    log.debug("marshalled message:\n%s", xmlbuf.c_str());
     
     unsigned int len;
     char* deflated = deflate(const_cast<char*>(xmlbuf.c_str()), xmlbuf.length(), &len);
