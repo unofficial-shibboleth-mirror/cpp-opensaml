@@ -221,9 +221,12 @@ long SAML2ECPEncoder::encode(
             rootElement = env->marshall();
         }
 
-        string xmlbuf;
-        XMLHelper::serialize(rootElement, xmlbuf);
-        istringstream s(xmlbuf);
+        stringstream s;
+        s << *rootElement;
+        
+        if (log.isDebugEnabled())
+            log.debug("marshalled envelope: %s", s.str().c_str());
+
         log.debug("sending serialized envelope");
         long ret = genericResponse.sendResponse(s);
     

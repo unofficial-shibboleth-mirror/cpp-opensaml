@@ -103,6 +103,10 @@ long SAML1POSTEncoder::encode(
 #endif
     Category& log = Category::getInstance(SAML_LOGCAT".MessageEncoder.SAML1POST");
 
+    TemplateEngine* engine = XMLToolingConfig::getConfig().getTemplateEngine();
+    if (!engine)
+        throw BindingException("Encoding response using POST requires a TemplateEngine instance.");
+    
     log.debug("validating input");
     if (xmlObject->getParent())
         throw BindingException("Cannot encode XML content with parent.");
@@ -141,9 +145,14 @@ long SAML1POSTEncoder::encode(
         log.debug("marshalling the response");
         rootElement = response->marshall();
     }
-    
-    string xmlbuf;
+
+    // Push message into template.
+    TemplateEngine::TemplateParameters pmap;
+    string& xmlbuf = pmap.m_map["SAMLResponse"];
     XMLHelper::serialize(rootElement, xmlbuf);
+    log.debug("marshalled response: %s", xmlbuf.c_str());
+    
+    // Replace with base-64 encoded version.
     unsigned int len=0;
     XMLByte* out=Base64::encode(reinterpret_cast<const XMLByte*>(xmlbuf.data()),xmlbuf.size(),&len);
     if (out) {
@@ -155,20 +164,15 @@ long SAML1POSTEncoder::encode(
         throw BindingException("Base64 encoding of XML failed.");
     }
 
-    // Push message into template and send result to client.
+    // Fill in the rest of the data and send to the client.
     log.debug("message encoded, sending HTML form template to client");
-    TemplateEngine* engine = XMLToolingConfig::getConfig().getTemplateEngine();
-    if (!engine)
-        throw BindingException("Encoding response using POST requires a TemplateEngine instance.");
     ifstream infile(m_template.c_str());
     if (!infile)
         throw BindingException("Failed to open HTML template for POST response ($1).", params(1,m_template.c_str()));
-    TemplateEngine::TemplateParameters params;
-    params.m_map["action"] = destination;
-    params.m_map["SAMLResponse"] = xmlbuf;
-    params.m_map["TARGET"] = relayState;
+    pmap.m_map["action"] = destination;
+    pmap.m_map["TARGET"] = relayState;
     stringstream s;
-    engine->run(infile, s, params);
+    engine->run(infile, s, pmap);
     genericResponse.setContentType("text/html");
     long ret = genericResponse.sendResponse(s);
 

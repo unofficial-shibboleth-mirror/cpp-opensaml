@@ -154,9 +154,12 @@ long SAML1SOAPEncoder::encode(
                 rootElement = env->marshall();
             }
 
-            string xmlbuf;
-            XMLHelper::serialize(rootElement, xmlbuf);
-            istringstream s(xmlbuf);
+            stringstream s;
+            s << *rootElement;
+            
+            if (log.isDebugEnabled())
+                log.debug("marshalled envelope: %s", s.str().c_str());
+            
             log.debug("sending serialized envelope");
             bool error = (!response && env->getBody() && env->getBody()->hasChildren() &&
                 dynamic_cast<Fault*>(env->getBody()->getUnknownXMLObjects().front()));
@@ -188,11 +191,14 @@ long SAML1SOAPEncoder::encode(
             env->setBody(body);
             body->getUnknownXMLObjects().push_back(fault);
             rootElement = env->marshall();
-    
-            string xmlbuf;
-            XMLHelper::serialize(rootElement, xmlbuf);
-            istringstream s(xmlbuf);
-            log.debug("sending serialized fault");
+
+            stringstream s;
+            s << *rootElement;
+            
+            if (log.isDebugEnabled())
+                log.debug("marshalled envelope: %s", s.str().c_str());
+            
+            log.debug("sending serialized envelope");
             long ret = genericResponse.sendError(s);
         
             // Cleanup by destroying XML.

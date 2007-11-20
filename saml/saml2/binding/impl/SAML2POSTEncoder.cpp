@@ -108,6 +108,10 @@ long SAML2POSTEncoder::encode(
 #endif
     Category& log = Category::getInstance(SAML_LOGCAT".MessageEncoder.SAML2POST");
 
+    TemplateEngine* engine = XMLToolingConfig::getConfig().getTemplateEngine();
+    if (!engine)
+        throw BindingException("Encoding message using POST requires a TemplateEngine instance.");
+    
     log.debug("validating input");
     if (xmlObject->getParent())
         throw BindingException("Cannot encode XML content with parent.");
@@ -150,15 +154,12 @@ long SAML2POSTEncoder::encode(
         rootElement = xmlObject->marshall((DOMDocument*)NULL);
     }
     
-    // Start tracking data.
-    TemplateEngine::TemplateParameters pmap;
-    if (relayState && *relayState)
-        pmap.m_map["RelayState"] = relayState;
-
     // Serialize the message.
+    TemplateEngine::TemplateParameters pmap;
     string& msg = pmap.m_map[(request ? "SAMLRequest" : "SAMLResponse")];
     XMLHelper::serialize(rootElement, msg);
-
+    log.debug("marshalled message: %s", msg.c_str());
+    
     // SimpleSign.
     if (credential && m_simple) {
         log.debug("applying simple signature to message data");
@@ -199,15 +200,14 @@ long SAML2POSTEncoder::encode(
     msg.append(reinterpret_cast<char*>(out),len);
     XMLString::release(&out);
     
-    // Push message into template and send result to client.
+    // Push the rest of it into template and send result to client.
     log.debug("message encoded, sending HTML form template to client");
-    TemplateEngine* engine = XMLToolingConfig::getConfig().getTemplateEngine();
-    if (!engine)
-        throw BindingException("Encoding message using POST requires a TemplateEngine instance.");
     ifstream infile(m_template.c_str());
     if (!infile)
         throw BindingException("Failed to open HTML template for POST message ($1).", params(1,m_template.c_str()));
     pmap.m_map["action"] = destination;
+    if (relayState && *relayState)
+        pmap.m_map["RelayState"] = relayState;
     stringstream s;
     engine->run(infile, s, pmap);
     genericResponse.setContentType("text/html");
