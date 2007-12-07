@@ -1006,10 +1006,11 @@ namespace opensaml {
                     setProtocolSupportEnumeration(pse.c_str());
 #else
                     auto_ptr_char temp(m_ProtocolSupportEnumeration);
+                    auto_ptr_char temp2(protocol);
                     string pse(temp.get());
-                    pse = pse + ' ' + protocol;
-                    auto_ptr_XMLCh temp2(pse.c_str());
-                    setProtocolSupportEnumeration(temp2.get());
+                    pse = pse + ' ' + temp2.get();
+                    auto_ptr_XMLCh temp3(pse.c_str());
+                    setProtocolSupportEnumeration(temp3.get());
 #endif
                 }
                 else {
