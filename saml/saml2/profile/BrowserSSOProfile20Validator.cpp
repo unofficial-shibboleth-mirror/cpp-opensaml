@@ -85,5 +85,5 @@ void BrowserSSOProfileValidator::validateAssertion(const Assertion& assertion) c
         }
     }
     
-    throw ValidationException("Unable to satisfy assertion's SubjectConfirmation.");
+    throw ValidationException("Unable to locate satisfiable bearer SubjectConfirmation in assertion.");
 }
