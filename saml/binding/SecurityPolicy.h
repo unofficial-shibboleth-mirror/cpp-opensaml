@@ -76,7 +76,7 @@ namespace opensaml {
             const xmltooling::TrustEngine* trustEngine=NULL,
             bool validate=true
             ) : m_messageID(NULL), m_issueInstant(0), m_issuer(NULL), m_issuerRole(NULL), m_authenticated(false),
-                m_matchingPolicy(NULL), m_metadata(metadataProvider), m_role(NULL), m_trust(trustEngine), m_validate(validate) {
+                m_matchingPolicy(NULL), m_metadata(metadataProvider), m_role(NULL), m_trust(trustEngine), m_validate(validate), m_entityOnly(true) {
             if (role)
                 m_role = new xmltooling::QName(*role);
         }
@@ -117,7 +117,16 @@ namespace opensaml {
          */
         bool getValidating() const {
             return m_validate;
-        } 
+        }
+        
+        /**
+         * Returns flag controlling non-entity issuer support.
+         * 
+         * @return flag controlling non-entity issuer support
+         */
+        bool requireEntityIssuer() const {
+            return m_entityOnly;
+        }
 
         /**
          * Gets a mutable array of installed policy rules.
@@ -167,6 +176,15 @@ namespace opensaml {
          */
         void setValidating(bool validate=true) {
             m_validate = validate;
+        }
+
+        /**
+         * Sets flag controlling non-entity issuer support.
+         * 
+         * @param entityOnly require that Issuer be in entity format 
+         */
+        void requireEntityIssuer(bool entityOnly=true) {
+            m_entityOnly = entityOnly;
         }
         
         /**
@@ -361,6 +379,7 @@ namespace opensaml {
         xmltooling::QName* m_role;
         const xmltooling::TrustEngine* m_trust;
         bool m_validate;
+        bool m_entityOnly;
     };
 
 };

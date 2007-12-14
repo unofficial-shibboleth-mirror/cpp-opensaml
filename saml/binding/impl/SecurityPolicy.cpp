@@ -78,9 +78,11 @@ void SecurityPolicy::evaluate(const XMLObject& message, const GenericRequest* re
 void SecurityPolicy::setIssuer(const Issuer* issuer)
 {
     if (!getIssuerMatchingPolicy().issuerMatches(m_issuer, issuer))
-        throw SecurityPolicyException("A rule supplied an Issuer that conflicts with previous results.");
+        throw SecurityPolicyException("An Issuer was supplied that conflicts with previous results.");
     
     if (!m_issuer) {
+        if (m_entityOnly && issuer->getFormat() && !XMLString::equals(issuer->getFormat(), NameIDType::ENTITY))
+            throw SecurityPolicyException("A non-entity Issuer was supplied, violating policy.");
         m_issuerRole = NULL;
         m_issuer=issuer->cloneIssuer();
     }
@@ -89,7 +91,7 @@ void SecurityPolicy::setIssuer(const Issuer* issuer)
 void SecurityPolicy::setIssuer(const XMLCh* issuer)
 {
     if (!getIssuerMatchingPolicy().issuerMatches(m_issuer, issuer))
-        throw SecurityPolicyException("A rule supplied an Issuer that conflicts with previous results.");
+        throw SecurityPolicyException("An Issuer was supplied that conflicts with previous results.");
     
     if (!m_issuer && issuer && *issuer) {
         m_issuerRole = NULL;
