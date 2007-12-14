@@ -47,8 +47,11 @@ void AssertionValidator::validateAssertion(const Assertion& assertion) const
 #endif
 
     const Conditions* conds = assertion.getConditions();
+    if (!conds)
+        return;
+    
     // First verify the time conditions, using the specified timestamp, if non-zero.
-    if (m_ts>0 && conds) {
+    if (m_ts>0) {
         unsigned int skew = XMLToolingConfig::getConfig().clock_skew_secs;
         time_t t=conds->getNotBeforeEpoch();
         if (m_ts+skew < t)
