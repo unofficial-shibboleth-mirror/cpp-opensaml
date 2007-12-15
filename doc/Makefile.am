@@ -9,5 +9,5 @@ docfiles = \
 
 pkgdoc_DATA = $(docfiles)
 
-EXTRA_DIST = $(docfiles)
+EXTRA_DIST = $(docfiles) api
 	
