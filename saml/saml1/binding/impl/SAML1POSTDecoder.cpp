@@ -84,7 +84,7 @@ XMLObject* SAML1POSTDecoder::decode(
     const char* samlResponse = httpRequest->getParameter("SAMLResponse");
     const char* TARGET = httpRequest->getParameter("TARGET");
     if (!samlResponse || !TARGET)
-        throw BindingException("Request missing SAMLResponse or TARGET parameters.");
+        throw BindingException("Request missing SAMLResponse or TARGET form parameters.");
     relayState = TARGET;
 
     // Decode the base64 into SAML.

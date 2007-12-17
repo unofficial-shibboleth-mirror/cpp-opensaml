@@ -86,7 +86,7 @@ XMLObject* SAML2RedirectDecoder::decode(
     if (!msg)
         msg = httpRequest->getParameter("SAMLRequest");
     if (!msg)
-        throw BindingException("Request missing SAMLRequest or SAMLResponse parameter.");
+        throw BindingException("Request missing SAMLRequest or SAMLResponse query string parameter.");
     const char* state = httpRequest->getParameter("RelayState");
     if (state)
         relayState = state;

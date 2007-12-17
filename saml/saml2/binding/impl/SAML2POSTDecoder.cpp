@@ -84,7 +84,7 @@ XMLObject* SAML2POSTDecoder::decode(
     if (!msg)
         msg = httpRequest->getParameter("SAMLRequest");
     if (!msg)
-        throw BindingException("Request missing SAMLRequest or SAMLResponse parameter.");
+        throw BindingException("Request missing SAMLRequest or SAMLResponse form parameter.");
     const char* state = httpRequest->getParameter("RelayState");
     if (state)
         relayState = state;

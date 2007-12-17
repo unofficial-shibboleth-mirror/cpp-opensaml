@@ -80,7 +80,7 @@ XMLObject* SAML2ArtifactDecoder::decode(
         throw BindingException("Unable to cast request object to HTTPRequest type.");
     const char* SAMLart = httpRequest->getParameter("SAMLart");
     if (!SAMLart)
-        throw BindingException("Request missing SAMLart parameter.");
+        throw BindingException("Request missing SAMLart query string or form parameter.");
     const char* state = httpRequest->getParameter("RelayState");
     if (state)
         relayState = state;

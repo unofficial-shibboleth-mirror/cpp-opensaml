@@ -82,7 +82,7 @@ XMLObject* SAML1ArtifactDecoder::decode(
     vector<const char*> SAMLart;
     const char* TARGET = httpRequest->getParameter("TARGET");
     if (httpRequest->getParameters("SAMLart", SAMLart)==0 || !TARGET)
-        throw BindingException("Request missing SAMLart or TARGET parameters.");
+        throw BindingException("Request missing SAMLart or TARGET query string parameters.");
     relayState = TARGET;
 
     if (!m_artifactResolver || !policy.getMetadataProvider() || !policy.getRole())
