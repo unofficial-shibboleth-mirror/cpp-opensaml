@@ -58,7 +58,7 @@ namespace opensaml {
         // Appends a raw parameter=value pair to the string.
         static bool appendParameter(string& s, const char* data, const char* name);
 
-        bool m_errorsFatal;
+        bool m_errorFatal;
     };
 
     SecurityPolicyRule* SAML_DLLLOCAL SimpleSigningRuleFactory(const DOMElement* const & e)
@@ -66,7 +66,7 @@ namespace opensaml {
         return new SimpleSigningRule(e);
     }
 
-    static const XMLCh errorsFatal[] = UNICODE_LITERAL_11(e,r,r,o,r,s,F,a,t,a,l);
+    static const XMLCh errorFatal[] = UNICODE_LITERAL_10(e,r,r,o,r,F,a,t,a,l);
 };
 
 bool SimpleSigningRule::appendParameter(string& s, const char* data, const char* name)
@@ -84,11 +84,11 @@ bool SimpleSigningRule::appendParameter(string& s, const char* data, const char*
     return true;
 }
 
-SimpleSigningRule::SimpleSigningRule(const DOMElement* e) : m_errorsFatal(false)
+SimpleSigningRule::SimpleSigningRule(const DOMElement* e) : m_errorFatal(false)
 {
     if (e) {
-        const XMLCh* flag = e->getAttributeNS(NULL, errorsFatal);
-        m_errorsFatal = (flag && (*flag==chLatin_t || *flag==chDigit_1)); 
+        const XMLCh* flag = e->getAttributeNS(NULL, errorFatal);
+        m_errorFatal = (flag && (*flag==chLatin_t || *flag==chDigit_1)); 
     }
 }
 
@@ -208,8 +208,8 @@ void SimpleSigningRule::evaluate(const XMLObject& message, const GenericRequest*
 
     if (!sigtrust->validate(alg.get(), signature, keyInfo, input.c_str(), input.length(), *(policy.getMetadataProvider()), &cc)) {
         log.error("unable to verify message signature with supplied trust engine");
-        if (m_errorsFatal)
-            throw SignatureException("Message was signed, but signature could not be verified.");
+        if (m_errorFatal)
+            throw SecurityPolicyException("Message was signed, but signature could not be verified.");
         return;
     }
 

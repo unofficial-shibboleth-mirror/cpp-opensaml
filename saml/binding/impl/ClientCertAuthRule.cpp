@@ -41,20 +41,33 @@ namespace opensaml {
     class SAML_DLLLOCAL ClientCertAuthRule : public SecurityPolicyRule
     {
     public:
-        ClientCertAuthRule(const DOMElement* e) {}
+        ClientCertAuthRule(const DOMElement* e);
         virtual ~ClientCertAuthRule() {}
         
         const char* getType() const {
             return CLIENTCERTAUTH_POLICY_RULE;
         }
         void evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const;
+
+    private:
+        bool m_errorFatal;
     };
 
     SecurityPolicyRule* SAML_DLLLOCAL ClientCertAuthRuleFactory(const DOMElement* const & e)
     {
         return new ClientCertAuthRule(e);
     }
+
+    static const XMLCh errorFatal[] = UNICODE_LITERAL_10(e,r,r,o,r,F,a,t,a,l);
 };
+
+ClientCertAuthRule::ClientCertAuthRule(const DOMElement* e) : m_errorFatal(false)
+{
+    if (e) {
+        const XMLCh* flag = e->getAttributeNS(NULL, errorFatal);
+        m_errorFatal = (flag && (*flag==chLatin_t || *flag==chDigit_1)); 
+    }
+}
 
 void ClientCertAuthRule::evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const
 {
@@ -85,6 +98,8 @@ void ClientCertAuthRule::evaluate(const XMLObject& message, const GenericRequest
     cc.setUsage(Credential::TLS_CREDENTIAL);
 
     if (!x509trust->validate(chain.front(), chain, *(policy.getMetadataProvider()), &cc)) {
+        if (m_errorFatal)
+            throw SecurityPolicyException("Client certificate supplied, but could not be verified.");
         log.error("unable to verify certificate chain with supplied trust engine");
         return;
     }

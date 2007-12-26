@@ -53,7 +53,7 @@ namespace opensaml {
         void evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const;
 
     private:
-        bool m_errorsFatal;
+        bool m_errorFatal;
     };
 
     SecurityPolicyRule* SAML_DLLLOCAL XMLSigningRuleFactory(const DOMElement* const & e)
@@ -61,14 +61,14 @@ namespace opensaml {
         return new XMLSigningRule(e);
     }
     
-    static const XMLCh errorsFatal[] = UNICODE_LITERAL_11(e,r,r,o,r,s,F,a,t,a,l);
+    static const XMLCh errorFatal[] = UNICODE_LITERAL_10(e,r,r,o,r,F,a,t,a,l);
 };
 
-XMLSigningRule::XMLSigningRule(const DOMElement* e) : m_errorsFatal(false)
+XMLSigningRule::XMLSigningRule(const DOMElement* e) : m_errorFatal(false)
 {
     if (e) {
-        const XMLCh* flag = e->getAttributeNS(NULL, errorsFatal);
-        m_errorsFatal = (flag && (*flag==chLatin_t || *flag==chDigit_1)); 
+        const XMLCh* flag = e->getAttributeNS(NULL, errorFatal);
+        m_errorFatal = (flag && (*flag==chLatin_t || *flag==chDigit_1)); 
     }
 }
 
@@ -98,7 +98,7 @@ void XMLSigningRule::evaluate(const XMLObject& message, const GenericRequest* re
     }
     catch (ValidationException& ve) {
         log.error("signature profile failed to validate: %s", ve.what());
-        if (m_errorsFatal)
+        if (m_errorFatal)
             throw;
         return;
     }
@@ -108,8 +108,8 @@ void XMLSigningRule::evaluate(const XMLObject& message, const GenericRequest* re
 
     if (!sigtrust->validate(*(signable->getSignature()), *(policy.getMetadataProvider()), &cc)) {
         log.error("unable to verify message signature with supplied trust engine");
-        if (m_errorsFatal)
-            throw SignatureException("Message was signed, but signature could not be verified.");
+        if (m_errorFatal)
+            throw SecurityPolicyException("Message was signed, but signature could not be verified.");
         return;
     }
 
