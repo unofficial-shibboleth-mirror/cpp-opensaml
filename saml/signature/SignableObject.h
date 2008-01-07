@@ -36,17 +36,6 @@ namespace opensaml {
     {
     public:
         virtual ~SignableObject() {}
-
-        /**
-         * Gets a new ContentReference object bound to this object.
-         * It's lifetime must not outlast this object, so it should
-         * generally be set into a Signature owned by the object.
-         * 
-         * @return  a new ContentReference
-         */
-        virtual ContentReference* getContentReference() const {
-            return new ContentReference(*this);
-        }
         
         /**
          * Returns the enveloped Signature from the object.
