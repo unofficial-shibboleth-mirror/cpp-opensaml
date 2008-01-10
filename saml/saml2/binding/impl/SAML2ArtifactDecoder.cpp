@@ -153,6 +153,8 @@ XMLObject* SAML2ArtifactDecoder::decode(
 
     // Now extract details from the payload and check that message.
     XMLObject* payload = response->getPayload();
+    if (!payload)
+        throw BindingException("ArtifactResponse message did not contain a protocol message.");
     extractMessageDetails(*payload, genericRequest, samlconstants::SAML20P_NS, policy);
     policy.evaluate(*payload, &genericRequest);
 
