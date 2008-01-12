@@ -181,7 +181,7 @@ void SignatureMetadataFilter::doFilter(EntitiesDescriptor& entities, bool rootOb
     VectorOf(EntitiesDescriptor) w=entities.getEntitiesDescriptors();
     for (VectorOf(EntitiesDescriptor)::size_type j=0; j<w.size(); ) {
         try {
-            verifySignature(w[j]->getSignature(), w[j]->getName());
+            doFilter(*w[j], false);
             j++;
         }
         catch (exception& e) {
