@@ -28,6 +28,8 @@
 #include "saml2/metadata/Metadata.h"
 #include "saml2/metadata/MetadataProvider.h"
 
+#include <xercesc/framework/MemBufInputSource.hpp>
+#include <xercesc/framework/Wrapper4InputSource.hpp>
 #include <xercesc/util/Base64.hpp>
 #include <xmltooling/logging.h>
 #include <xmltooling/io/HTTPRequest.h>
@@ -87,18 +89,18 @@ XMLObject* SAML1POSTDecoder::decode(
         throw BindingException("Request missing SAMLResponse or TARGET form parameters.");
     relayState = TARGET;
 
-    // Decode the base64 into SAML.
+    // Decode the base64 into XML.
     unsigned int x;
     XMLByte* decoded=Base64::decode(reinterpret_cast<const XMLByte*>(samlResponse),&x);
     if (!decoded)
         throw BindingException("Unable to decode base64 in POST profile response.");
-    log.debug("decoded SAML response:\n%s", decoded);
-    istringstream is(reinterpret_cast<char*>(decoded));
-    XMLString::release(&decoded);
-    
+    log.debugStream() << "decoded SAML response:" << logging::eol << decoded << logging::eol;
+
     // Parse and bind the document into an XMLObject.
+    MemBufInputSource src(decoded, x, "SAMLResponse", true);
+    Wrapper4InputSource dsrc(&src, false);
     DOMDocument* doc = (policy.getValidating() ? XMLToolingConfig::getConfig().getValidatingParser()
-        : XMLToolingConfig::getConfig().getParser()).parse(is); 
+        : XMLToolingConfig::getConfig().getParser()).parse(dsrc); 
     XercesJanitor<DOMDocument> janitor(doc);
     auto_ptr<XMLObject> xmlObject(XMLObjectBuilder::buildOneFromElement(doc->getDocumentElement(), true));
     janitor.release();

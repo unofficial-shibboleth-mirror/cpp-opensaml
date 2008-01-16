@@ -106,7 +106,7 @@ XMLObject* SAML2RedirectDecoder::decode(
     
     // Now we have to inflate it.
     stringstream s;
-    if (inflate((char*)decoded, x, s)==0) {
+    if (inflate(reinterpret_cast<char*>(decoded), x, s)==0) {
         XMLString::release(&decoded);
         throw BindingException("Unable to inflate Redirect binding message.");
     }
