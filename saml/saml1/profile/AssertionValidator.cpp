@@ -88,8 +88,13 @@ void AssertionValidator::validateCondition(const Condition* c) const
     bool found = false;
     const vector<Audience*>& auds1 = ac->getAudiences();
     for (vector<Audience*>::const_iterator a = auds1.begin(); !found && a!=auds1.end(); ++a) {
-        for (vector<const XMLCh*>::const_iterator a2 = m_audiences.begin(); !found && a2!=m_audiences.end(); ++a2) {
-            found = XMLString::equals((*a)->getAudienceURI(), *a2);
+        if (XMLString::equals(m_recipient, (*a)->getAudienceURI())) {
+            found = true;
+        }
+        else if (m_audiences) {
+            for (vector<const XMLCh*>::const_iterator a2 = m_audiences->begin(); !found && a2!=m_audiences->end(); ++a2) {
+                found = XMLString::equals((*a)->getAudienceURI(), *a2);
+            }
         }
     }
 

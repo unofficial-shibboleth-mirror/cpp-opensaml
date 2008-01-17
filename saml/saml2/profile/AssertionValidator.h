@@ -41,10 +41,13 @@ namespace opensaml {
             /**
              * Constructor
              * 
-             * @param audiences set of audience values representing recipient
+             * @param recipient name of assertion recipient (implicit audience)
+             * @param audiences additional audience values
              * @param ts        timestamp to evaluate assertion conditions, or 0 to bypass check
              */
-            AssertionValidator(const std::vector<const XMLCh*>& audiences, time_t ts=0) : m_audiences(audiences), m_ts(ts) {}
+            AssertionValidator(const XMLCh* recipient, const std::vector<const XMLCh*>* audiences=NULL, time_t ts=0)
+                : m_recipient(recipient), m_audiences(audiences), m_ts(ts) {
+            }
 
             virtual ~AssertionValidator() {}
     
@@ -69,8 +72,11 @@ namespace opensaml {
             virtual void validateCondition(const Condition* condition) const;
 
         protected:
-            /** Set of audience values representing recipient. */
-            const std::vector<const XMLCh*>& m_audiences;
+            /** Name of recipient (implicit audience). */
+            const XMLCh* m_recipient;
+
+            /** Additional audience values. */
+            const std::vector<const XMLCh*>* m_audiences;
 
             /** Timestamp to evaluate assertion conditions. */
             time_t m_ts;

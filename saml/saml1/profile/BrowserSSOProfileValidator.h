@@ -41,11 +41,12 @@ namespace opensaml {
             /**
              * Constructor
              * 
-             * @param audiences set of audience values representing recipient
+             * @recipient       name of assertion recipient (implicit audience)
+             * @param audiences additional audience values
              * @param ts        timestamp to evaluate assertion conditions, or 0 to bypass check
              */
-            BrowserSSOProfileValidator(const std::vector<const XMLCh*>& audiences, time_t ts=0)
-                : AssertionValidator(audiences, ts) {
+            BrowserSSOProfileValidator(const XMLCh* recipient, const std::vector<const XMLCh*>* audiences=NULL, time_t ts=0)
+                : AssertionValidator(recipient, audiences, ts) {
             }
             virtual ~BrowserSSOProfileValidator() {}
     
