@@ -106,6 +106,7 @@ void ChainingMetadataProvider::init()
 
 Lockable* ChainingMetadataProvider::lock()
 {
+    m_log.debug("locked metadata chain (no-op)");
     return this;   // we're not lockable ourselves...
 }
 
@@ -116,6 +117,10 @@ void ChainingMetadataProvider::unlock()
     if (ptr) {
         m_tlsKey->setData(NULL);
         reinterpret_cast<MetadataProvider*>(ptr)->unlock();
+        m_log.debug("unlocked embedded metadata provider (%p)", ptr);
+    }
+    else {
+        m_log.debug("unlocked metadata chain (no-op)");
     }
 }
 
@@ -177,7 +182,9 @@ pair<const EntityDescriptor*,const RoleDescriptor*> ChainingMetadataProvider::ge
     pair<const EntityDescriptor*,const RoleDescriptor*> ret = pair<const EntityDescriptor*,const RoleDescriptor*>(NULL,NULL);
     pair<const EntityDescriptor*,const RoleDescriptor*> cur = ret;
     for (vector<MetadataProvider*>::const_iterator i=m_providers.begin(); i!=m_providers.end(); ++i) {
+        m_log.debug("locking embedded metadata provider (%p)", *i);
         (*i)->lock();
+        m_log.debug("locked embedded metadata provider (%p)", *i);
         cur = (*i)->getEntityDescriptor(criteria);
         if (cur.first) {
             if (bRole) {
@@ -187,6 +194,7 @@ pair<const EntityDescriptor*,const RoleDescriptor*> ChainingMetadataProvider::ge
                     if (m_firstMatch) {
                         // Save locked provider.
                         m_tlsKey->setData(*i);
+                        m_log.debug("leaving embedded metadata provider locked (%p)", *i);
                         return cur;
                     }
 
@@ -262,7 +270,9 @@ pair<const EntityDescriptor*,const RoleDescriptor*> ChainingMetadataProvider::ge
         }
         else {
             // No match, so just unlock this one and move on.
+            m_log.debug("unlocking embedded metadata provider (%p)", *i);
             (*i)->unlock();
+            m_log.debug("unlocked embedded metadata provider (%p)", *i);
         }
     }
 
