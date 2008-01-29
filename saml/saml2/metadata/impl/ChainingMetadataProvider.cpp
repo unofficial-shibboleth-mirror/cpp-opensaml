@@ -106,7 +106,6 @@ void ChainingMetadataProvider::init()
 
 Lockable* ChainingMetadataProvider::lock()
 {
-    m_log.debug("locked metadata chain (no-op)");
     return this;   // we're not lockable ourselves...
 }
 
@@ -117,10 +116,6 @@ void ChainingMetadataProvider::unlock()
     if (ptr) {
         m_tlsKey->setData(NULL);
         reinterpret_cast<MetadataProvider*>(ptr)->unlock();
-        m_log.debug("unlocked embedded metadata provider (%p)", ptr);
-    }
-    else {
-        m_log.debug("unlocked metadata chain (no-op)");
     }
 }
 
