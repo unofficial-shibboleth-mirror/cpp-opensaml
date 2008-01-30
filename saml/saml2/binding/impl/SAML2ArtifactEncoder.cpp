@@ -33,6 +33,7 @@
 #include <xmltooling/logging.h>
 #include <xmltooling/io/HTTPResponse.h>
 #include <xmltooling/util/NDC.h>
+#include <xmltooling/util/PathResolver.h>
 #include <xmltooling/util/TemplateEngine.h>
 #include <xmltooling/util/URLEncoder.h>
 
@@ -86,8 +87,10 @@ SAML2ArtifactEncoder::SAML2ArtifactEncoder(const DOMElement* e, const XMLCh* ns)
         m_post = (flag && (*flag==chLatin_t || *flag==chDigit_1));
         if (m_post) {
             auto_ptr_char t(e->getAttributeNS(ns, _template));
-            if (t.get() && *t.get())
+            if (t.get() && *t.get()) {
                 m_template = t.get();
+                XMLToolingConfig::getConfig().getPathResolver()->resolve(m_template, PathResolver::XMLTOOLING_CFG_FILE);
+            }
         }
     }
 }

@@ -31,6 +31,7 @@
 #include <xercesc/util/Base64.hpp>
 #include <xmltooling/logging.h>
 #include <xmltooling/util/NDC.h>
+#include <xmltooling/util/PathResolver.h>
 #include <xmltooling/util/TemplateEngine.h>
 
 using namespace opensaml::saml2p;
@@ -89,6 +90,7 @@ SAML2POSTEncoder::SAML2POSTEncoder(const DOMElement* e, const XMLCh* ns, bool si
     }
     if (m_template.empty())
         throw XMLToolingException("SAML2POSTEncoder requires template XML attribute.");
+    XMLToolingConfig::getConfig().getPathResolver()->resolve(m_template, PathResolver::XMLTOOLING_CFG_FILE);
 }
 
 long SAML2POSTEncoder::encode(
