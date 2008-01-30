@@ -54,6 +54,7 @@
 #include <xmltooling/XMLToolingConfig.h>
 #include <xmltooling/signature/Signature.h>
 #include <xmltooling/util/NDC.h>
+#include <xmltooling/util/PathResolver.h>
 
 #include <xsec/enc/XSECCryptoException.hpp>
 #include <xsec/enc/XSECCryptoProvider.hpp>
@@ -118,6 +119,7 @@ bool SAMLInternalConfig::init(bool initXMLTooling)
 
     if (initXMLTooling)
         XMLToolingConfig::getConfig().init();
+    XMLToolingConfig::getConfig().getPathResolver()->setDefaultPackageName("opensaml");
 
     REGISTER_XMLTOOLING_EXCEPTION_FACTORY(ArtifactException,opensaml);
     REGISTER_XMLTOOLING_EXCEPTION_FACTORY(SecurityPolicyException,opensaml);
