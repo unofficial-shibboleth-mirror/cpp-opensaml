@@ -17,7 +17,7 @@ MajorVersion="1" MinorVersion="1" RequestID="ident"><ds:Signature xmlns:ds="http
 <ds:SignatureValue>LZjrLObm21F7WoLEpuzKs9d+R9+qqyh1YOiwc5P1vfFDadrk+bPCQFR/RpkjJpNw
 fnUONvYshTjltqLqHSNCNbBoYdK1AZxP8/ucqIK1jqi88FDao2ZccenEscDnjjrW
 ZwoFCcR5Mx5oie5wmBzKqStjh0aGP5JVXW2gerULpLI=</ds:SignatureValue>
-<ds:KeyInfo><ds:KeyName>sp.example.org</ds:KeyName><ds:X509Data><ds:X509Certificate>MIICjzCCAfigAwIBAgIJAKk8t1hYcMkhMA0GCSqGSIb3DQEBBAUAMDoxCzAJBgNV
+<ds:KeyInfo><ds:KeyName>sp.example.org</ds:KeyName><ds:X509Data><ds:X509SubjectName>CN=sp.example.org,O=Internet2,C=US</ds:X509SubjectName><ds:X509IssuerSerial><ds:X509IssuerName>CN=sp.example.org,O=Internet2,C=US</ds:X509IssuerName><ds:X509SerialNumber>2147483647</ds:X509SerialNumber></ds:X509IssuerSerial><ds:X509Certificate>MIICjzCCAfigAwIBAgIJAKk8t1hYcMkhMA0GCSqGSIb3DQEBBAUAMDoxCzAJBgNV
 BAYTAlVTMRIwEAYDVQQKEwlJbnRlcm5ldDIxFzAVBgNVBAMTDnNwLmV4YW1wbGUu
 b3JnMB4XDTA1MDYyMDE1NDgzNFoXDTMyMTEwNTE1NDgzNFowOjELMAkGA1UEBhMC
 VVMxEjAQBgNVBAoTCUludGVybmV0MjEXMBUGA1UEAxMOc3AuZXhhbXBsZS5vcmcw
