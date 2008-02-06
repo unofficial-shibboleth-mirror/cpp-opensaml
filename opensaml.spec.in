@@ -1,7 +1,7 @@
 Name:		opensaml
 Summary:	Open source SAML library
 Version:	@-VERSION-@
-Release:	5
+Release:	6
 Group:		System Environment/Libraries
 Vendor:		Internet2
 License:	Apache 2.0
