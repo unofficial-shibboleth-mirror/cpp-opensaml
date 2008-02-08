@@ -965,6 +965,8 @@ namespace opensaml {
             IMPL_TYPED_CHILDREN(ContactPerson,m_pos_ContactPerson);
 
             bool hasSupport(const XMLCh* protocol) const {
+                if (!protocol || !*protocol)
+                    return true;
                 if (m_ProtocolSupportEnumeration) {
                     // Look for first character.
                     unsigned int len=XMLString::stringLen(protocol);
