@@ -205,7 +205,7 @@ pair<const EntityDescriptor*,const RoleDescriptor*> AbstractMetadataProvider::ge
     if (!result.first && !criteria.validOnly && range.first!=range.second)
         result.first = range.first->second;
         
-    if (result.first && criteria.role && criteria.protocol) {
+    if (result.first && criteria.role) {
         result.second = result.first->getRoleDescriptor(*criteria.role, criteria.protocol);
         if (!result.second && criteria.protocol2)
             result.second = result.first->getRoleDescriptor(*criteria.role, criteria.protocol2);

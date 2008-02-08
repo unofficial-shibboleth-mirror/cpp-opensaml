@@ -167,8 +167,6 @@ const EntitiesDescriptor* ChainingMetadataProvider::getEntitiesDescriptor(const 
 
 pair<const EntityDescriptor*,const RoleDescriptor*> ChainingMetadataProvider::getEntityDescriptor(const Criteria& criteria) const
 {
-    bool bRole = (criteria.role && criteria.protocol);  // searching for role also?
-
     // Clear any existing lock.
     const_cast<ChainingMetadataProvider*>(this)->unlock();
 
@@ -180,7 +178,7 @@ pair<const EntityDescriptor*,const RoleDescriptor*> ChainingMetadataProvider::ge
         (*i)->lock();
         cur = (*i)->getEntityDescriptor(criteria);
         if (cur.first) {
-            if (bRole) {
+            if (criteria.role) {
                 // We want a role also. Did we find one?
                 if (cur.second) {
                     // Are we using a first match policy?
