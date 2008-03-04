@@ -94,7 +94,7 @@ XMLObject* SAML1POSTDecoder::decode(
     XMLByte* decoded=Base64::decode(reinterpret_cast<const XMLByte*>(samlResponse),&x);
     if (!decoded)
         throw BindingException("Unable to decode base64 in POST profile response.");
-    log.debugStream() << "decoded SAML response:" << logging::eol << decoded << logging::eol;
+    log.debugStream() << "decoded SAML response:\n" << decoded << logging::eol;
 
     // Parse and bind the document into an XMLObject.
     MemBufInputSource src(decoded, x, "SAMLResponse", true);
