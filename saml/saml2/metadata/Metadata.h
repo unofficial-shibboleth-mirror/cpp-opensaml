@@ -619,7 +619,7 @@ namespace opensaml {
          * This is customized to return a RoleDescriptor element with an
          * xsi:type of AuthnQueryDescriptorType.
          */
-        class SAML_API AuthnQueryDescriptorTypeBuilder : public xmltooling::XMLObjectBuilder {
+        class SAML_API AuthnQueryDescriptorTypeBuilder : public xmltooling::ConcreteXMLObjectBuilder {
         public:
             virtual ~AuthnQueryDescriptorTypeBuilder() {}
             /** Default builder. */
@@ -666,7 +666,7 @@ namespace opensaml {
          * This is customized to return a RoleDescriptor element with an
          * xsi:type of AttributeQueryDescriptorType.
          */
-        class SAML_API AttributeQueryDescriptorTypeBuilder : public xmltooling::XMLObjectBuilder {
+        class SAML_API AttributeQueryDescriptorTypeBuilder : public xmltooling::ConcreteXMLObjectBuilder {
         public:
             virtual ~AttributeQueryDescriptorTypeBuilder() {}
             /** Default builder. */
@@ -713,7 +713,7 @@ namespace opensaml {
          * This is customized to return a RoleDescriptor element with an
          * xsi:type of AuthzDecisionQueryDescriptorType.
          */
-        class SAML_API AuthzDecisionQueryDescriptorTypeBuilder : public xmltooling::XMLObjectBuilder {
+        class SAML_API AuthzDecisionQueryDescriptorTypeBuilder : public xmltooling::ConcreteXMLObjectBuilder {
         public:
             virtual ~AuthzDecisionQueryDescriptorTypeBuilder() {}
             /** Default builder. */

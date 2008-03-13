@@ -249,6 +249,9 @@ namespace opensaml {
         /** MetadataProvider that wraps a sequence of metadata providers. */
         #define CHAINING_METADATA_PROVIDER  "Chaining"
 
+        /** MetadataProvider that returns an empty "dummy" entity descriptor. */
+        #define NULL_METADATA_PROVIDER  "Null"
+
         DECL_XMLTOOLING_EXCEPTION(MetadataException,SAML_EXCEPTIONAPI(SAML_API),opensaml::saml2md,xmltooling::XMLToolingException,Exceptions related to metadata use);
     };
 };

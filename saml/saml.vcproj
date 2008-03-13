@@ -364,6 +364,10 @@
 							>
 						</File>
 						<File
+							RelativePath=".\saml2\metadata\impl\NullMetadataProvider.cpp"
+							>
+						</File>
+						<File
 							RelativePath=".\saml2\metadata\impl\SignatureMetadataFilter.cpp"
 							>
 						</File>

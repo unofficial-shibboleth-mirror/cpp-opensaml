@@ -457,7 +457,7 @@ namespace opensaml {
          * This is customized to return a SubjectConfirmationData element with an
          * xsi:type of KeyInfoConfirmationDataType.
          */
-        class SAML_API KeyInfoConfirmationDataTypeBuilder : public xmltooling::XMLObjectBuilder {
+        class SAML_API KeyInfoConfirmationDataTypeBuilder : public xmltooling::ConcreteXMLObjectBuilder {
         public:
             virtual ~KeyInfoConfirmationDataTypeBuilder() {}
             /** Default builder. */

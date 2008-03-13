@@ -17,7 +17,7 @@
 /**
  * DynamicMetadataProvider.cpp
  * 
- * Base class for caching metadata providers.
+ * Simple implementation of a dynamic caching MetadataProvider.
  */
 
 #include "internal.h"

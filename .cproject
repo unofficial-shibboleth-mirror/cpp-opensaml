@@ -1,7 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<?fileVersion 4.0.0?>
-
-<cproject>
+<?xml version="1.0" encoding="UTF-8"?><?fileVersion 4.0.0?><cproject>
 <storageModule moduleId="org.eclipse.cdt.core.settings">
 <cconfiguration id="converted.config.2133715230">
 <storageModule moduleId="scannerConfiguration">
@@ -56,7 +53,15 @@
 </extensions>
 </storageModule>
 <storageModule moduleId="org.eclipse.cdt.core.language.mapping"/>
+
+<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
 <storageModule moduleId="org.eclipse.cdt.core.pathentry">
+<pathentry kind="mac" name="_MSC_VER" path="" value=""/>
+<pathentry kind="mac" name="WIN32" path="" value=""/>
+<pathentry include="C:/xerces-c_2_8_0-x86-windows-vc_8_0/include" kind="inc" path="" system="true"/>
+<pathentry include="C:/xml-security-c-1.4.0/include" kind="inc" path="" system="true"/>
+<pathentry include="C:/log4shib-1.0/include" kind="inc" path="" system="true"/>
+<pathentry include="C:/cxxtest" kind="inc" path="" system="true"/>
 <pathentry kind="out" path=""/>
 <pathentry kind="out" path="debug"/>
 <pathentry kind="out" path="saml/Debug"/>
@@ -89,19 +94,9 @@
 <pathentry kind="src" path="samltest/saml2/metadata"/>
 <pathentry kind="src" path="samltest/security"/>
 <pathentry kind="src" path="samltest/signature"/>
-<pathentry kind="mac" name="_MSC_VER" path="" value=""/>
-<pathentry kind="mac" name="WIN32" path="" value=""/>
-<pathentry base-path="OpenSAML2-C" include="" kind="inc" path="" system="true"/>
-<pathentry base-path="OpenSAML2-C" include="saml" kind="inc" path="" system="true"/>
-<pathentry base-path="XMLTooling-C" include="" kind="inc" path="" system="true"/>
-<pathentry include="C:/xerces-c2_7_0-win32/include" kind="inc" path="" system="true"/>
-<pathentry include="C:/xml-security-c-1.2.0/include" kind="inc" path="" system="true"/>
-<pathentry include="C:/log4cpp-0.3.5rc1/include" kind="inc" path="" system="true"/>
-<pathentry include="C:/cxxtest" kind="inc" path="" system="true"/>
 <pathentry kind="src" path="samltest/encryption"/>
 <pathentry kind="src" path="samlsign"/>
 </storageModule>
-<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
 </cconfiguration>
 </storageModule>
 </cproject>
