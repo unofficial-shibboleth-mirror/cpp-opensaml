@@ -314,6 +314,7 @@ namespace opensaml {
         END_XMLOBJECT;
 
         BEGIN_XMLOBJECT(SAML_API,AttributeValue,xmltooling::ElementProxy,SAML 2.0 AttributeValue element);
+        	DECL_BOOLEAN_ATTRIB(Nil,NIL,false);
         END_XMLOBJECT;
 
         BEGIN_XMLOBJECT2(SAML_API,Attribute,xmltooling::AttributeExtensibleXMLObject,EncryptableObject,SAML 2.0 Attribute element);
