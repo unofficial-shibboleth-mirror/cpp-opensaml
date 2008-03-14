@@ -1097,45 +1097,17 @@ namespace opensaml {
 
         class SAML_DLLLOCAL AttributeValueImpl : public virtual AttributeValue, public AnyElementImpl
         {
-        	void init() {
-        		m_Nil=XML_BOOL_NULL;
-        	}
         public:
             virtual ~AttributeValueImpl() {}
     
             AttributeValueImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
                 : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
-            	init();
             }
                 
             AttributeValueImpl(const AttributeValueImpl& src) : AnyElementImpl(src) {
-            	init();
-            	Nil(m_Nil);
             }
             
             IMPL_XMLOBJECT_CLONE(AttributeValue);
-            IMPL_BOOLEAN_ATTRIB(Nil);
-
-            void setAttribute(const QName& qualifiedName, const XMLCh* value, bool ID=false) {
-                if (XMLString::equals(qualifiedName.getNamespaceURI(), xmlconstants::XSI_NS)) {
-                    if (XMLString::equals(qualifiedName.getLocalPart(),NIL_ATTRIB_NAME)) {
-                        setNil(value);
-                        return;
-                    }
-                }
-                AnyElementImpl::setAttribute(qualifiedName, value, ID);
-            }
-
-        protected:
-            void marshallAttributes(DOMElement* domElement) const {
-                MARSHALL_BOOLEAN_ATTRIB(Nil,NIL,NULL);
-                AnyElementImpl::marshallAttributes(domElement);
-            }
-
-            void processAttribute(const DOMAttr* attribute) {
-                PROC_BOOLEAN_ATTRIB(Nil,NIL,NULL);
-                AnyElementImpl::processAttribute(attribute);
-            }
         };
 
 
@@ -1586,7 +1558,6 @@ const XMLCh Attribute::FRIENDLYNAME_ATTRIB_NAME[] = UNICODE_LITERAL_12(F,r,i,e,n
 const XMLCh AttributeStatement::LOCAL_NAME[] =      UNICODE_LITERAL_18(A,t,t,r,i,b,u,t,e,S,t,a,t,e,m,e,n,t);
 const XMLCh AttributeStatement::TYPE_NAME[] =       UNICODE_LITERAL_22(A,t,t,r,i,b,u,t,e,S,t,a,t,e,m,e,n,t,T,y,p,e);
 const XMLCh AttributeValue::LOCAL_NAME[] =          UNICODE_LITERAL_14(A,t,t,r,i,b,u,t,e,V,a,l,u,e);
-const XMLCh AttributeValue::NIL_ATTRIB_NAME[] =     UNICODE_LITERAL_3(n,i,l);
 const XMLCh Audience::LOCAL_NAME[] =                UNICODE_LITERAL_8(A,u,d,i,e,n,c,e);
 const XMLCh AudienceRestriction::LOCAL_NAME[] =     UNICODE_LITERAL_19(A,u,d,i,e,n,c,e,R,e,s,t,r,i,c,t,i,o,n);
 const XMLCh AudienceRestriction::TYPE_NAME[] =      UNICODE_LITERAL_23(A,u,d,i,e,n,c,e,R,e,s,t,r,i,c,t,i,o,n,T,y,p,e);
