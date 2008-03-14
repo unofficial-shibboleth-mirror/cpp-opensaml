@@ -89,6 +89,9 @@ find $RPM_BUILD_ROOT/%{_bindir} -type f |
 %doc %{_datadir}/doc/%{name}/api
 
 %changelog
+* Mon Mar 17 2008  Scott Cantor  <cantor.2@osu.edu>  - 2.0-6
+- Official release.
+
 * Fri Jan 18 2008  Scott Cantor  <cantor.2@osu.edu>  - 2.0-5
 - Release candidate 1.
 
