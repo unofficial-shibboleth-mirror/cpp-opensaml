@@ -1,7 +1,5 @@
 PKG=SHIBosaml
-ARCH=sparc
 VERSION=@-VERSION-@
-BASEDIR=/usr/local
 NAME=opensaml-c
 CATEGORY=application,security
 DESC=OpenSAML library for C++
