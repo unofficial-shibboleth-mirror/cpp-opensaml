@@ -20,7 +20,7 @@ AuthenticationMethod="method"
 <ds:SignatureValue>noFPfzQYxU1saeMUTiuX0SuMtNfI78cBqrzsxB7SnwJ2ea/DBrG4FnXQ3swQLfsv
 OX1Sy3zvUSWDte91Tr+SAVD0oUsk+wx5dQrDX9aQnYq5b8snbWpJRskiQYKFYfGG
 sIovi2m9YOS7FuyOHemMlDc+AMiLFz+wYL6mNXNKuL8=</ds:SignatureValue>
-<ds:KeyInfo><ds:KeyName>sp.example.org</ds:KeyName><ds:X509Data><ds:X509SubjectName>CN=sp.example.org,O=Internet2,C=US</ds:X509SubjectName><ds:X509IssuerSerial><ds:X509IssuerName>CN=sp.example.org,O=Internet2,C=US</ds:X509IssuerName><ds:X509SerialNumber>2147483647</ds:X509SerialNumber></ds:X509IssuerSerial><ds:X509Certificate>MIICjzCCAfigAwIBAgIJAKk8t1hYcMkhMA0GCSqGSIb3DQEBBAUAMDoxCzAJBgNV
+<ds:KeyInfo><ds:KeyName>sp.example.org</ds:KeyName><ds:X509Data><ds:X509SubjectName>CN=sp.example.org,O=Internet2,C=US</ds:X509SubjectName><ds:X509IssuerSerial><ds:X509IssuerName>CN=sp.example.org,O=Internet2,C=US</ds:X509IssuerName><ds:X509SerialNumber>12194823481081252129</ds:X509SerialNumber></ds:X509IssuerSerial><ds:X509Certificate>MIICjzCCAfigAwIBAgIJAKk8t1hYcMkhMA0GCSqGSIb3DQEBBAUAMDoxCzAJBgNV
 BAYTAlVTMRIwEAYDVQQKEwlJbnRlcm5ldDIxFzAVBgNVBAMTDnNwLmV4YW1wbGUu
 b3JnMB4XDTA1MDYyMDE1NDgzNFoXDTMyMTEwNTE1NDgzNFowOjELMAkGA1UEBhMC
 VVMxEjAQBgNVBAoTCUludGVybmV0MjEXMBUGA1UEAxMOc3AuZXhhbXBsZS5vcmcw
