@@ -6,3 +6,5 @@ P SHIBxmlsec xml-security-c
 	1.4.0
 P SHIBxmltool xmltooling-c
 	1.0
+P SHIBlog4shib log4shib
+    1.0
