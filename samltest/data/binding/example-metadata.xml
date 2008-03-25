@@ -28,6 +28,7 @@
                         </ds:X509Certificate>
                     </ds:X509Data>
                 </ds:KeyInfo>
+                <EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#rsa-1_5"/>
 			</KeyDescriptor>
 
 			<SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:protocol"

@@ -326,6 +326,9 @@ void opensaml::saml2md::registerMetadataClasses() {
     REGISTER_TYPE(RequestedAttribute);
     REGISTER_TYPE(SPSSODescriptor);
 
+    q=QName(SAML20MD_NS,xmlencryption::EncryptionMethod::LOCAL_NAME);
+    XMLObjectBuilder::registerBuilder(q,new xmlencryption::EncryptionMethodBuilder());
+    
     q=QName(samlconstants::SAML1MD_NS,SourceID::LOCAL_NAME);
     XMLObjectBuilder::registerBuilder(q,new SourceIDBuilder());
     SchemaValidators.registerValidator(q,new SourceIDSchemaValidator());
