@@ -147,6 +147,7 @@ void SignatureMetadataFilter::doFilter(XMLObject& xmlObject) const
         if (!entity.getSignature())
             throw MetadataFilterException("Root metadata element was unsigned.");
         verifySignature(entity.getSignature(), entity.getEntityID());
+        return;
     }
     catch (bad_cast) {
     }
