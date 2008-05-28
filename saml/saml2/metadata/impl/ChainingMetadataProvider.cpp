@@ -25,6 +25,7 @@
 #include "saml/binding/SAMLArtifact.h"
 #include "saml2/metadata/ChainingMetadataProvider.h"
 
+#include <memory>
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xmltooling/logging.h>
 #include <xmltooling/util/XMLHelper.h>
