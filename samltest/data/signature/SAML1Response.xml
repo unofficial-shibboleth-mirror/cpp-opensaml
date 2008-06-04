@@ -10,13 +10,13 @@
 </ds:Transform>
 </ds:Transforms>
 <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
-<ds:DigestValue>sFYXGGxuyCnfqy6YT3GNpSXA2Y4=</ds:DigestValue>
+<ds:DigestValue>DZzCmg8AWJp4jG9J7OGIZ72oSlE=</ds:DigestValue>
 </ds:Reference>
 </ds:SignedInfo>
-<ds:SignatureValue>hz9yCbecILBmp5k+T1+cAWU8LncPBXWj/teZIwcpAiAlXsucG4rcqThTA/4KC5hc
-YUE0a+vFlcMkmjTr9ZW6ZcaICaqBQzpDPkFe5CnEc7K7C729BBIDZGCbXqsCTlp9
-jsItK1mwFzhX4AlBaPH+4bdZ/05il3URmj0ooMix/ic=</ds:SignatureValue>
-<ds:KeyInfo><ds:KeyName>sp.example.org</ds:KeyName><ds:X509Data><ds:X509SubjectName>CN=sp.example.org,O=Internet2,C=US</ds:X509SubjectName><ds:X509IssuerSerial><ds:X509IssuerName>CN=sp.example.org,O=Internet2,C=US</ds:X509IssuerName><ds:X509SerialNumber>12194823481081252129</ds:X509SerialNumber></ds:X509IssuerSerial><ds:X509Certificate>MIICjzCCAfigAwIBAgIJAKk8t1hYcMkhMA0GCSqGSIb3DQEBBAUAMDoxCzAJBgNV
+<ds:SignatureValue>CkkbbVTtfN4Ib5/tydsNYKob2vBM0aPNyVre4iCWaxMpCqeuyLzsBQI+H9a0YfZX
+ykSBgP+mmPku5U1Lu3zn9+X5JK4lztDH4VsQteXJIRUnHipWZQSOeso8Wq5JQ/+0
+Qrp+HPi+9L8K1FGYJ5/Wfl2XlMSET/bM4jk6GiykFiw=</ds:SignatureValue>
+<ds:KeyInfo><ds:KeyName>sp.example.org</ds:KeyName><ds:X509Data><ds:X509SubjectName>CN=sp.example.org,O=Internet2,C=US</ds:X509SubjectName><ds:X509Certificate>MIICjzCCAfigAwIBAgIJAKk8t1hYcMkhMA0GCSqGSIb3DQEBBAUAMDoxCzAJBgNV
 BAYTAlVTMRIwEAYDVQQKEwlJbnRlcm5ldDIxFzAVBgNVBAMTDnNwLmV4YW1wbGUu
 b3JnMB4XDTA1MDYyMDE1NDgzNFoXDTMyMTEwNTE1NDgzNFowOjELMAkGA1UEBhMC
 VVMxEjAQBgNVBAoTCUludGVybmV0MjEXMBUGA1UEAxMOc3AuZXhhbXBsZS5vcmcw
@@ -52,7 +52,7 @@ AuthenticationMethod="method"><saml:Subject><saml:NameIdentifier>John Doe</saml:
 <ds:SignatureValue>xttzgmYBtjqoxeKRkScW6dIkE5pGyBeTcajAevaquJeAKrRcagu2on/4Apq5xsse
 tgdkQnMUV+yPHKw+t0tXGUJCnL286/ePGdz2TAVIg5idT7H6TxFLgUbCO4xoKH4h
 zGQjxxPZvXbb7z9XTAqIkyW1QbaC20i+IOkk1ZQiBEU=</ds:SignatureValue>
-<ds:KeyInfo><ds:KeyName>sp.example.org</ds:KeyName><ds:X509Data><ds:X509SubjectName>CN=sp.example.org,O=Internet2,C=US</ds:X509SubjectName><ds:X509IssuerSerial><ds:X509IssuerName>CN=sp.example.org,O=Internet2,C=US</ds:X509IssuerName><ds:X509SerialNumber>12194823481081252129</ds:X509SerialNumber></ds:X509IssuerSerial><ds:X509Certificate>MIICjzCCAfigAwIBAgIJAKk8t1hYcMkhMA0GCSqGSIb3DQEBBAUAMDoxCzAJBgNV
+<ds:KeyInfo><ds:KeyName>sp.example.org</ds:KeyName><ds:X509Data><ds:X509SubjectName>CN=sp.example.org,O=Internet2,C=US</ds:X509SubjectName><ds:X509Certificate>MIICjzCCAfigAwIBAgIJAKk8t1hYcMkhMA0GCSqGSIb3DQEBBAUAMDoxCzAJBgNV
 BAYTAlVTMRIwEAYDVQQKEwlJbnRlcm5ldDIxFzAVBgNVBAMTDnNwLmV4YW1wbGUu
 b3JnMB4XDTA1MDYyMDE1NDgzNFoXDTMyMTEwNTE1NDgzNFowOjELMAkGA1UEBhMC
 VVMxEjAQBgNVBAoTCUludGVybmV0MjEXMBUGA1UEAxMOc3AuZXhhbXBsZS5vcmcw

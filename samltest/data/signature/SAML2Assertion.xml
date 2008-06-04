@@ -17,7 +17,7 @@ Version="2.0"><saml:Issuer>issuer</saml:Issuer><ds:Signature xmlns:ds="http://ww
 <ds:SignatureValue>rOtKGQFdqy51HXwY20wEPgkITlwllm//yJkIWTQdWbMSA+Eb9B+NWOSj+8MEWe5b
 jaM1lJ8as3hbetUMKNPKO2mX1M08cveth7mPG9VsJVArvLsn8UYyNX7WUDzCUu0G
 aVHlZYCFeixUPS/NaXVWvtb7CUyNV4vPnsPYIEI1+gQ=</ds:SignatureValue>
-<ds:KeyInfo><ds:KeyName>sp.example.org</ds:KeyName><ds:X509Data><ds:X509SubjectName>CN=sp.example.org,O=Internet2,C=US</ds:X509SubjectName><ds:X509IssuerSerial><ds:X509IssuerName>CN=sp.example.org,O=Internet2,C=US</ds:X509IssuerName><ds:X509SerialNumber>12194823481081252129</ds:X509SerialNumber></ds:X509IssuerSerial><ds:X509Certificate>MIICjzCCAfigAwIBAgIJAKk8t1hYcMkhMA0GCSqGSIb3DQEBBAUAMDoxCzAJBgNV
+<ds:KeyInfo><ds:KeyName>sp.example.org</ds:KeyName><ds:X509Data><ds:X509SubjectName>CN=sp.example.org,O=Internet2,C=US</ds:X509SubjectName><ds:X509Certificate>MIICjzCCAfigAwIBAgIJAKk8t1hYcMkhMA0GCSqGSIb3DQEBBAUAMDoxCzAJBgNV
 BAYTAlVTMRIwEAYDVQQKEwlJbnRlcm5ldDIxFzAVBgNVBAMTDnNwLmV4YW1wbGUu
 b3JnMB4XDTA1MDYyMDE1NDgzNFoXDTMyMTEwNTE1NDgzNFowOjELMAkGA1UEBhMC
 VVMxEjAQBgNVBAoTCUludGVybmV0MjEXMBUGA1UEAxMOc3AuZXhhbXBsZS5vcmcw
