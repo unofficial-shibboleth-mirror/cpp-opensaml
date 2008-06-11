@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2008 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -71,6 +71,7 @@ namespace opensaml {
 
         private:
             void doFilter(EntitiesDescriptor& entities, bool rootObject=false) const;
+            void doFilter(EntityDescriptor& entity, bool rootObject=false) const;
             void verifySignature(Signature* sig, const XMLCh* peerName) const;
             
             CredentialResolver* m_credResolver;
@@ -138,21 +139,19 @@ void SignatureMetadataFilter::doFilter(XMLObject& xmlObject) const
     catch (bad_cast) {
     }
     catch (exception& ex) {
-        m_log.warn("filtering out group at root of instance after failed signature check: ", ex.what());
+        m_log.warn("filtering out group at root of instance after failed signature check: %s", ex.what());
         throw MetadataFilterException("SignatureMetadataFilter unable to verify signature at root of metadata instance.");
     }
 
     try {
         EntityDescriptor& entity = dynamic_cast<EntityDescriptor&>(xmlObject);
-        if (!entity.getSignature())
-            throw MetadataFilterException("Root metadata element was unsigned.");
-        verifySignature(entity.getSignature(), entity.getEntityID());
+        doFilter(entity, true);
         return;
     }
     catch (bad_cast) {
     }
     catch (exception& ex) {
-        m_log.warn("filtering out entity at root of instance after failed signature check: ", ex.what());
+        m_log.warn("filtering out entity at root of instance after failed signature check: %s", ex.what());
         throw MetadataFilterException("SignatureMetadataFilter unable to verify signature at root of metadata instance.");
     }
      
@@ -169,12 +168,12 @@ void SignatureMetadataFilter::doFilter(EntitiesDescriptor& entities, bool rootOb
     VectorOf(EntityDescriptor) v=entities.getEntityDescriptors();
     for (VectorOf(EntityDescriptor)::size_type i=0; i<v.size(); ) {
         try {
-            verifySignature(v[i]->getSignature(), v[i]->getEntityID());
+            doFilter(*(v[i]));
             i++;
         }
         catch (exception& e) {
             auto_ptr_char id(v[i]->getEntityID());
-            m_log.warn("filtering out entity (%s) after failed signature check: ", id.get(), e.what());
+            m_log.warn("filtering out entity (%s) after failed signature check: %s", id.get(), e.what());
             v.erase(v.begin() + i);
         }
     }
@@ -187,8 +186,43 @@ void SignatureMetadataFilter::doFilter(EntitiesDescriptor& entities, bool rootOb
         }
         catch (exception& e) {
             auto_ptr_char name(w[j]->getName());
-            m_log.warn("filtering out group (%s) after failed signature check: ", name.get(), e.what());
+            m_log.warn("filtering out group (%s) after failed signature check: %s", name.get(), e.what());
             w.erase(w.begin() + j);
+        }
+    }
+}
+
+void SignatureMetadataFilter::doFilter(EntityDescriptor& entity, bool rootObject) const
+{
+    Signature* sig = entity.getSignature();
+    if (!sig && rootObject)
+        throw MetadataFilterException("Root metadata element was unsigned.");
+    verifySignature(sig, entity.getEntityID());
+    
+    VectorOf(RoleDescriptor) v=entity.getRoleDescriptors();
+    for (VectorOf(RoleDescriptor)::size_type i=0; i<v.size(); ) {
+        try {
+            verifySignature(v[i]->getSignature(), entity.getEntityID());
+            i++;
+        }
+        catch (exception& e) {
+            auto_ptr_char id(entity.getEntityID());
+            m_log.warn(
+                "filtering out role (%s) for entity (%s) after failed signature check: %s",
+                v[i]->getElementQName().toString().c_str(), id.get(), e.what()
+                );
+            v.erase(v.begin() + i);
+        }
+    }
+
+    if (entity.getAffiliationDescriptor()) {
+        try {
+            verifySignature(entity.getAffiliationDescriptor()->getSignature(), entity.getEntityID());
+        }
+        catch (exception& e) {
+            auto_ptr_char id(entity.getEntityID());
+            m_log.warn("filtering out affiliation from entity (%s) after failed signature check: %s", id.get(), e.what());
+            entity.setAffiliationDescriptor(NULL);
         }
     }
 }
