@@ -163,7 +163,7 @@ namespace opensaml {
          */
         virtual void extractMessageDetails (
             const xmltooling::XMLObject& message,
-            const xmltooling::GenericRequest& genericRequest,
+            const xmltooling::GenericRequest& request,
             const XMLCh* protocol,
             SecurityPolicy& policy
             ) const=0;
