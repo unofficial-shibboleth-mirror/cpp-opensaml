@@ -1,7 +1,7 @@
 AC_PREREQ([2.50])
-AC_INIT([opensaml], [2.0.1], [mace-opensaml-users@internet2.edu], [saml])
+AC_INIT([opensaml], [2.1], [mace-opensaml-users@internet2.edu], [saml])
 AM_CONFIG_HEADER(config.h)
-AM_INIT_AUTOMAKE([opensaml], [2.0.1])
+AM_INIT_AUTOMAKE([opensaml], [2.1])
 
 sinclude(doxygen.m4)
 sinclude(acx_pthread.m4)

@@ -1,4 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?><?fileVersion 4.0.0?><cproject>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?fileVersion 4.0.0?>
+
+<cproject>
 <storageModule moduleId="org.eclipse.cdt.core.settings">
 <cconfiguration id="converted.config.2133715230">
 <storageModule moduleId="scannerConfiguration">
@@ -55,6 +58,8 @@
 <storageModule moduleId="org.eclipse.cdt.core.language.mapping"/>
 
 <storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+
+<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 <storageModule moduleId="org.eclipse.cdt.core.pathentry">
 <pathentry kind="mac" name="_MSC_VER" path="" value=""/>
 <pathentry kind="mac" name="WIN32" path="" value=""/>
@@ -62,6 +67,8 @@
 <pathentry include="C:/xml-security-c-1.4.0/include" kind="inc" path="" system="true"/>
 <pathentry include="C:/log4shib-1.0/include" kind="inc" path="" system="true"/>
 <pathentry include="C:/cxxtest" kind="inc" path="" system="true"/>
+<pathentry base-path="cpp-xmltooling" include="" kind="inc" path="" system="true"/>
+<pathentry base-path="cpp-opensaml2" include="saml" kind="inc" path="" system="true"/>
 <pathentry kind="out" path=""/>
 <pathentry kind="out" path="debug"/>
 <pathentry kind="out" path="saml/Debug"/>

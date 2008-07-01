@@ -10,7 +10,7 @@ Source0:	%{name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-root
 BuildRequires:	xerces%{?xercesver}-c-devel >= 2.8.0
 BuildRequires:  xml-security-c-devel >= 1.4.0
-BuildRequires:	xmltooling-devel
+BuildRequires:	xmltooling-devel >= 1.1
 %{?_with_log4cpp:BuildRequires: log4cpp-devel >= 1.0}
 %{!?_with_log4cpp:BuildRequires: log4shib-devel}
 
@@ -75,6 +75,7 @@ find $RPM_BUILD_ROOT/%{_bindir} -type f |
 %dir %{_datadir}/xml/%{name}
 %{_datadir}/xml/%{name}
 %docdir %{_datadir}/doc/%{name}
+%{_datadir}/doc/%{name}/README.txt
 %{_datadir}/doc/%{name}/LICENSE.txt
 %{_datadir}/doc/%{name}/NOTICE.txt
 %{_datadir}/doc/%{name}/LOG4CPP.LICENSE
@@ -89,6 +90,9 @@ find $RPM_BUILD_ROOT/%{_bindir} -type f |
 %doc %{_datadir}/doc/%{name}/api
 
 %changelog
+* Tue Jul 1 2008  Scott Cantor  <cantor.2@osu.edu>  - 2.1-1
+- Bumping for minor update.
+
 * Mon Mar 17 2008  Scott Cantor  <cantor.2@osu.edu>  - 2.0-6
 - Official release.
 
