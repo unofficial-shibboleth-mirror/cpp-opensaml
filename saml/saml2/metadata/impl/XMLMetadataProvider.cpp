@@ -1,6 +1,6 @@
 /*
  *  Copyright 2001-2007 Internet2
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,7 +16,7 @@
 
 /**
  * XMLMetadataProvider.cpp
- * 
+ *
  * Supplies metadata from an XML file
  */
 
@@ -41,12 +41,16 @@ using namespace std;
 namespace opensaml {
     namespace saml2md {
 
+        static const XMLCh requireValidUntil[] = UNICODE_LITERAL_17(r,e,q,u,i,r,e,V,a,l,i,d,U,n,t,i,l);
+
         class SAML_DLLLOCAL XMLMetadataProvider : public AbstractMetadataProvider, public ReloadableXMLFile
         {
         public:
             XMLMetadataProvider(const DOMElement* e)
                 : AbstractMetadataProvider(e), ReloadableXMLFile(e, Category::getInstance(SAML_LOGCAT".MetadataProvider.XML")),
-                    m_object(NULL) {
+                    m_object(NULL), m_requireValidUntil(false) {
+                const XMLCh* flag = e ? e->getAttributeNS(NULL,requireValidUntil) : NULL;
+                m_requireValidUntil = (flag && (*flag == chLatin_t || *flag == chDigit_1));
             }
             virtual ~XMLMetadataProvider() {
                 delete m_object;
@@ -55,7 +59,7 @@ namespace opensaml {
             void init() {
                 load(); // guarantees an exception or the metadata is loaded
             }
-            
+
             const XMLObject* getMetadata() const {
                 return m_object;
             }
@@ -66,9 +70,10 @@ namespace opensaml {
         private:
             using AbstractMetadataProvider::index;
             void index();
-        
+
             XMLObject* m_object;
-        }; 
+            bool m_requireValidUntil;
+        };
 
         MetadataProvider* SAML_DLLLOCAL XMLMetadataProviderFactory(const DOMElement* const & e)
         {
@@ -86,10 +91,10 @@ pair<bool,DOMElement*> XMLMetadataProvider::load()
 {
     // Load from source using base class.
     pair<bool,DOMElement*> raw = ReloadableXMLFile::load();
-    
+
     // If we own it, wrap it for now.
     XercesJanitor<DOMDocument> docjanitor(raw.first ? raw.second->getOwnerDocument() : NULL);
-            
+
     // Unmarshall objects, binding the document.
     auto_ptr<XMLObject> xmlObject(XMLObjectBuilder::buildOneFromElement(raw.second, true));
     docjanitor.release();
@@ -98,12 +103,18 @@ pair<bool,DOMElement*> XMLMetadataProvider::load()
         throw MetadataException(
             "Root of metadata instance not recognized: $1", params(1,xmlObject->getElementQName().toString().c_str())
             );
-    
+
+    if (m_requireValidUntil) {
+        const TimeBoundSAMLObject* tbo = dynamic_cast<const TimeBoundSAMLObject*>(xmlObject.get());
+        if (!tbo || tbo->getValidUntil() == NULL)
+            throw MetadataException("Root of metadata instance does not have validUntil atttribute.");
+    }
+
     // Preprocess the metadata.
     doFilters(*xmlObject.get());
     xmlObject->releaseThisAndChildrenDOM();
     xmlObject->setDocument(NULL);
-    
+
     // Swap it in.
     bool changed = m_object!=NULL;
     delete m_object;
