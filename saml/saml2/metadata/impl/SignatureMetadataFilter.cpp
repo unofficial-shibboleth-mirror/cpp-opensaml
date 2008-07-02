@@ -64,6 +64,7 @@ namespace opensaml {
             SignatureMetadataFilter(const DOMElement* e);
             ~SignatureMetadataFilter() {
                 delete m_credResolver;
+                delete m_trust;
             }
             
             const char* getId() const { return SIGNATURE_METADATA_FILTER; }
