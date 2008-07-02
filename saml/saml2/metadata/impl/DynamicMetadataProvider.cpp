@@ -1,6 +1,6 @@
 /*
  *  Copyright 2001-2007 Internet2
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,7 +16,7 @@
 
 /**
  * DynamicMetadataProvider.cpp
- * 
+ *
  * Simple implementation of a dynamic caching MetadataProvider.
  */
 
@@ -36,7 +36,12 @@ using namespace xmltooling::logging;
 using namespace xmltooling;
 using namespace std;
 
-static const XMLCh validate[] = UNICODE_LITERAL_8(v,a,l,i,d,a,t,e);
+# ifndef min
+#  define min(a,b)            (((a) < (b)) ? (a) : (b))
+# endif
+
+static const XMLCh maxCacheDuration[] = UNICODE_LITERAL_16(m,a,x,C,a,c,h,e,D,u,r,a,t,i,o,n);
+static const XMLCh validate[] =         UNICODE_LITERAL_8(v,a,l,i,d,a,t,e);
 
 namespace opensaml {
     namespace saml2md {
@@ -48,10 +53,13 @@ namespace opensaml {
 };
 
 DynamicMetadataProvider::DynamicMetadataProvider(const DOMElement* e)
-    : AbstractMetadataProvider(e), m_lock(RWLock::create())
+    : AbstractMetadataProvider(e), m_maxCacheDuration(0), m_lock(RWLock::create())
 {
     const XMLCh* flag=e ? e->getAttributeNS(NULL,validate) : NULL;
     m_validate=(XMLString::equals(flag,xmlconstants::XML_TRUE) || XMLString::equals(flag,xmlconstants::XML_ONE));
+    flag = e ? e->getAttributeNS(NULL,maxCacheDuration) : NULL;
+    if (flag && *flag)
+        m_maxCacheDuration = XMLString::parseInt(flag);
 }
 
 DynamicMetadataProvider::~DynamicMetadataProvider()
@@ -93,7 +101,7 @@ pair<const EntityDescriptor*,const RoleDescriptor*> DynamicMetadataProvider::get
 
     // Translate cacheDuration into validUntil.
     if (entity2->getCacheDuration())
-        entity2->setValidUntil(time(NULL) + entity2->getCacheDurationEpoch());
+        entity2->setValidUntil(time(NULL) + min(m_maxCacheDuration, entity2->getCacheDurationEpoch()));
 
     // Upgrade our lock so we can cache the new metadata.
     m_lock->unlock();
@@ -127,7 +135,7 @@ EntityDescriptor* DynamicMetadataProvider::resolve(const char* entityID) const
 
         // Wrap the document for now.
         XercesJanitor<DOMDocument> docjanitor(doc);
-                
+
         // Unmarshall objects, binding the document.
         auto_ptr<XMLObject> xmlObject(XMLObjectBuilder::buildOneFromElement(doc->getDocumentElement(), true));
         docjanitor.release();

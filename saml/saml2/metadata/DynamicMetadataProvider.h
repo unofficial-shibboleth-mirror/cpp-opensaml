@@ -1,6 +1,6 @@
 /*
  *  Copyright 2001-2007 Internet2
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,7 +16,7 @@
 
 /**
  * @file saml/saml2/metadata/DynamicMetadataProvider.h
- * 
+ *
  * Simple implementation of a dynamic caching MetadataProvider.
  */
 
@@ -36,7 +36,7 @@ namespace opensaml {
         public:
             /**
              * Constructor.
-             * 
+             *
              * @param e DOM to supply configuration for provider
              */
             DynamicMetadataProvider(const xercesc::DOMElement* e=NULL);
@@ -65,9 +65,12 @@ namespace opensaml {
             /** Controls XML schema validation. */
             bool m_validate;
 
+            /** Caps the allowable cache duration of a metadata instance. */
+            time_t m_maxCacheDuration;
+
             /**
              * Resolves an entityID into a metadata instance for that entity.
-             * 
+             *
              * @param entityID      entity ID to resolve
              * @return  a valid metadata instance
              */
@@ -76,7 +79,7 @@ namespace opensaml {
         private:
             mutable xmltooling::RWLock* m_lock;
         };
-        
+
     };
 };
 
