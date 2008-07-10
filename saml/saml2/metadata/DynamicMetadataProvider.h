@@ -69,12 +69,12 @@ namespace opensaml {
             time_t m_maxCacheDuration;
 
             /**
-             * Resolves an entityID into a metadata instance for that entity.
+             * Resolves a metadata instance using the supplied criteria.
              *
-             * @param entityID      entity ID to resolve
+             * @param criteria  lookup criteria
              * @return  a valid metadata instance
              */
-            virtual EntityDescriptor* resolve(const char* entityID) const;
+            virtual EntityDescriptor* resolve(const Criteria& criteria) const;
 
         private:
             mutable xmltooling::RWLock* m_lock;

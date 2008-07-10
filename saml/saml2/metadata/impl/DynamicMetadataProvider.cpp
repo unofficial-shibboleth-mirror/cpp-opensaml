@@ -53,13 +53,16 @@ namespace opensaml {
 };
 
 DynamicMetadataProvider::DynamicMetadataProvider(const DOMElement* e)
-    : AbstractMetadataProvider(e), m_maxCacheDuration(0), m_lock(RWLock::create())
+    : AbstractMetadataProvider(e), m_maxCacheDuration(28800), m_lock(RWLock::create())
 {
     const XMLCh* flag=e ? e->getAttributeNS(NULL,validate) : NULL;
     m_validate=(XMLString::equals(flag,xmlconstants::XML_TRUE) || XMLString::equals(flag,xmlconstants::XML_ONE));
     flag = e ? e->getAttributeNS(NULL,maxCacheDuration) : NULL;
-    if (flag && *flag)
+    if (flag && *flag) {
         m_maxCacheDuration = XMLString::parseInt(flag);
+        if (m_maxCacheDuration == 0)
+            m_maxCacheDuration = 28800;
+    }
 }
 
 DynamicMetadataProvider::~DynamicMetadataProvider()
@@ -91,41 +94,81 @@ pair<const EntityDescriptor*,const RoleDescriptor*> DynamicMetadataProvider::get
     Category& log = Category::getInstance(SAML_LOGCAT".MetadataProvider.Dynamic");
     log.info("resolving metadata for (%s)", name.c_str());
 
-    // Try resolving it.
-    auto_ptr<EntityDescriptor> entity2(resolve(name.c_str()));
+    try {
+        // Try resolving it.
+        auto_ptr<EntityDescriptor> entity2(resolve(criteria));
 
-    // Filter it, which may throw.
-    doFilters(*entity2.get());
+        // Verify the entityID.
+        if (criteria.entityID_unicode && !XMLString::equals(criteria.entityID_unicode, entity2->getEntityID())) {
+            Category::getInstance(SAML_LOGCAT".MetadataProvider.Dynamic").error("metadata instance did not match expected entityID");
+            return entity;
+        }
+        else {
+            auto_ptr_XMLCh temp2(name.c_str());
+            if (!XMLString::equals(temp2.get(), entity2->getEntityID())) {
+                Category::getInstance(SAML_LOGCAT".MetadataProvider.Dynamic").error("metadata instance did not match expected entityID");
+                return entity;
+            }
+        }
 
-    log.info("caching resolved metadata for (%s)", name.c_str());
+        // Filter it, which may throw.
+        doFilters(*entity2.get());
 
-    // Translate cacheDuration into validUntil.
-    if (entity2->getCacheDuration())
-        entity2->setValidUntil(time(NULL) + min(m_maxCacheDuration, entity2->getCacheDurationEpoch()));
+        log.info("caching resolved metadata for (%s)", name.c_str());
 
-    // Upgrade our lock so we can cache the new metadata.
-    m_lock->unlock();
-    m_lock->wrlock();
+        // Translate cacheDuration into validUntil.
+        time_t exp = m_maxCacheDuration;
+        if (entity2->getCacheDuration())
+            exp = min(m_maxCacheDuration, entity2->getCacheDurationEpoch());
+        exp += time(NULL);
+        if (entity2->getValidUntil()) {
+            if (exp < entity2->getValidUntilEpoch())
+                entity2->setValidUntil(exp);
+        }
+        else {
+            entity2->setValidUntil(exp);
+        }
 
-    // Notify observers.
-    emitChangeEvent();
+        // Upgrade our lock so we can cache the new metadata.
+        m_lock->unlock();
+        m_lock->wrlock();
 
-    // Make sure we clear out any existing copies, including stale metadata or if somebody snuck in.
-    index(entity2.release(), SAMLTIME_MAX, true);
+        // Notify observers.
+        emitChangeEvent();
 
-    // Downgrade back to a read lock.
-    m_lock->unlock();
-    m_lock->rdlock();
+        // Make sure we clear out any existing copies, including stale metadata or if somebody snuck in.
+        index(entity2.release(), SAMLTIME_MAX, true);
+
+        // Downgrade back to a read lock.
+        m_lock->unlock();
+        m_lock->rdlock();
+    }
+    catch (exception& e) {
+        Category::getInstance(SAML_LOGCAT".MetadataProvider.Dynamic").error(
+            "error while resolving entityID (%s): %s", name.c_str(), e.what()
+            );
+        return entity;
+    }
 
     // Rinse and repeat.
     return getEntityDescriptor(criteria);
 }
 
-EntityDescriptor* DynamicMetadataProvider::resolve(const char* entityID) const
+EntityDescriptor* DynamicMetadataProvider::resolve(const Criteria& criteria) const
 {
+    string name;
+    if (criteria.entityID_ascii)
+        name = criteria.entityID_ascii;
+    else if (criteria.entityID_unicode) {
+        auto_ptr_char temp(criteria.entityID_unicode);
+        name = temp.get();
+    }
+    else if (criteria.artifact)
+        name = criteria.artifact->getSource();
+
     try {
         DOMDocument* doc=NULL;
-        auto_ptr_XMLCh widenit(entityID);
+        auto_ptr_XMLCh widenit(name.c_str());
         URLInputSource src(widenit.get());
         Wrapper4InputSource dsrc(&src,false);
         if (m_validate)
@@ -153,14 +196,8 @@ EntityDescriptor* DynamicMetadataProvider::resolve(const char* entityID) const
     catch (XMLException& e) {
         auto_ptr_char msg(e.getMessage());
         Category::getInstance(SAML_LOGCAT".MetadataProvider.Dynamic").error(
-            "Xerces error while resolving entityID (%s): %s", entityID, msg.get()
+            "Xerces error while resolving entityID (%s): %s", name.c_str(), msg.get()
             );
         throw MetadataException(msg.get());
-    }
-    catch (exception& e) {
-        Category::getInstance(SAML_LOGCAT".MetadataProvider.Dynamic").error(
-            "error while resolving entityID (%s): %s", entityID, e.what()
-            );
-        throw;
     }
 }
