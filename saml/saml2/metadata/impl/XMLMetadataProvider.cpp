@@ -127,12 +127,18 @@ pair<bool,DOMElement*> XMLMetadataProvider::load()
 
 void XMLMetadataProvider::index()
 {
+    time_t exp = SAMLTIME_MAX;
+
     clearDescriptorIndex();
     EntitiesDescriptor* group=dynamic_cast<EntitiesDescriptor*>(m_object);
     if (group) {
-        AbstractMetadataProvider::index(group, SAMLTIME_MAX);
+        if (!m_local && group->getCacheDuration())
+            exp = time_t(NULL) + group->getCacheDurationEpoch();
+        AbstractMetadataProvider::index(group, exp);
         return;
     }
     EntityDescriptor* site=dynamic_cast<EntityDescriptor*>(m_object);
-    AbstractMetadataProvider::index(site, SAMLTIME_MAX);
+    if (!m_local && site->getCacheDuration())
+        exp = time_t(NULL) + site->getCacheDurationEpoch();
+    AbstractMetadataProvider::index(site, exp);
 }
