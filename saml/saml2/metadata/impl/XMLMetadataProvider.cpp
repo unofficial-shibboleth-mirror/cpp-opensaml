@@ -41,16 +41,12 @@ using namespace std;
 namespace opensaml {
     namespace saml2md {
 
-        static const XMLCh requireValidUntil[] = UNICODE_LITERAL_17(r,e,q,u,i,r,e,V,a,l,i,d,U,n,t,i,l);
-
         class SAML_DLLLOCAL XMLMetadataProvider : public AbstractMetadataProvider, public ReloadableXMLFile
         {
         public:
             XMLMetadataProvider(const DOMElement* e)
                 : AbstractMetadataProvider(e), ReloadableXMLFile(e, Category::getInstance(SAML_LOGCAT".MetadataProvider.XML")),
-                    m_object(NULL), m_requireValidUntil(false) {
-                const XMLCh* flag = e ? e->getAttributeNS(NULL,requireValidUntil) : NULL;
-                m_requireValidUntil = (flag && (*flag == chLatin_t || *flag == chDigit_1));
+                    m_object(NULL), m_maxCacheDuration(m_reloadInterval) {
             }
             virtual ~XMLMetadataProvider() {
                 delete m_object;
@@ -72,7 +68,7 @@ namespace opensaml {
             void index();
 
             XMLObject* m_object;
-            bool m_requireValidUntil;
+            time_t m_maxCacheDuration;
         };
 
         MetadataProvider* SAML_DLLLOCAL XMLMetadataProviderFactory(const DOMElement* const & e)
@@ -104,12 +100,6 @@ pair<bool,DOMElement*> XMLMetadataProvider::load()
             "Root of metadata instance not recognized: $1", params(1,xmlObject->getElementQName().toString().c_str())
             );
 
-    if (m_requireValidUntil) {
-        const TimeBoundSAMLObject* tbo = dynamic_cast<const TimeBoundSAMLObject*>(xmlObject.get());
-        if (!tbo || tbo->getValidUntil() == NULL)
-            throw MetadataException("Root of metadata instance does not have validUntil atttribute.");
-    }
-
     // Preprocess the metadata.
     doFilters(*xmlObject.get());
     xmlObject->releaseThisAndChildrenDOM();
@@ -122,6 +112,16 @@ pair<bool,DOMElement*> XMLMetadataProvider::load()
     index();
     if (changed)
         emitChangeEvent();
+
+    // If a remote resource, reduce the reload interval if cacheDuration is set.
+    if (!m_local) {
+        const CacheableSAMLObject* cacheable = dynamic_cast<const CacheableSAMLObject*>(m_object);
+        if (cacheable && cacheable->getCacheDuration() && cacheable->getCacheDurationEpoch() < m_maxCacheDuration)
+            m_reloadInterval = cacheable->getCacheDurationEpoch();
+        else
+            m_reloadInterval = m_maxCacheDuration;
+    }
+
     return make_pair(false,(DOMElement*)NULL);
 }
 

@@ -1,6 +1,6 @@
 /*
  *  Copyright 2001-2007 Internet2
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,7 +16,7 @@
 
 /**
  * MetadataProvider.cpp
- * 
+ *
  * Registration of factories for built-in providers
  */
 
@@ -44,6 +44,7 @@ namespace opensaml {
         SAML_DLLLOCAL PluginManager<MetadataFilter,string,const DOMElement*>::Factory BlacklistMetadataFilterFactory;
         SAML_DLLLOCAL PluginManager<MetadataFilter,string,const DOMElement*>::Factory WhitelistMetadataFilterFactory;
         SAML_DLLLOCAL PluginManager<MetadataFilter,string,const DOMElement*>::Factory SignatureMetadataFilterFactory;
+        SAML_DLLLOCAL PluginManager<MetadataFilter,string,const DOMElement*>::Factory RequireValidUntilMetadataFilterFactory;
     };
 };
 
@@ -61,6 +62,7 @@ void SAML_API opensaml::saml2md::registerMetadataFilters()
     SAMLConfig::getConfig().MetadataFilterManager.registerFactory(BLACKLIST_METADATA_FILTER, BlacklistMetadataFilterFactory);
     SAMLConfig::getConfig().MetadataFilterManager.registerFactory(WHITELIST_METADATA_FILTER, WhitelistMetadataFilterFactory);
     SAMLConfig::getConfig().MetadataFilterManager.registerFactory(SIGNATURE_METADATA_FILTER, SignatureMetadataFilterFactory);
+    SAMLConfig::getConfig().MetadataFilterManager.registerFactory(REQUIREVALIDUNTIL_METADATA_FILTER, RequireValidUntilMetadataFilterFactory);
 }
 
 static const XMLCh _MetadataFilter[] =  UNICODE_LITERAL_14(M,e,t,a,d,a,t,a,F,i,l,t,e,r);
@@ -78,7 +80,7 @@ MetadataProvider::MetadataProvider(const DOMElement* e)
 #endif
     Category& log = Category::getInstance(SAML_LOGCAT".Metadata");
     SAMLConfig& conf=SAMLConfig::getConfig();
-    
+
     // Locate any default recognized filters and plugins.
     try {
         DOMElement* child = e ? XMLHelper::getFirstChildElement(e) : NULL;
