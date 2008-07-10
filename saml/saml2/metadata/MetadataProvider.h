@@ -155,7 +155,7 @@ namespace opensaml {
             /**
              * Batches up criteria for entity lookup.
              */
-            struct Criteria {
+            struct SAML_API Criteria {
                 /**
                  * Constructor.
                  * 
@@ -191,6 +191,8 @@ namespace opensaml {
                 Criteria(const SAMLArtifact* a, const xmltooling::QName* q=NULL, const XMLCh* prot=NULL, bool valid=true)
                     : entityID_unicode(NULL), entityID_ascii(NULL), artifact(a), role(q), protocol(prot), protocol2(NULL), validOnly(valid) {
                 }
+                
+                virtual ~Criteria() {}
                 
                 /** Unique ID of entity. */
                 const XMLCh* entityID_unicode;

@@ -77,6 +77,9 @@ namespace opensaml {
 
         /** MetadataFilter that verifies signatures and filters out any that don't pass. */
         #define SIGNATURE_METADATA_FILTER  "Signature"
+
+        /** MetadataFilter that enforces expiration requirements. */
+        #define REQUIREVALIDUNTIL_METADATA_FILTER  "RequireValidUntil"
         
         DECL_XMLTOOLING_EXCEPTION(MetadataFilterException,SAML_EXCEPTIONAPI(SAML_API),opensaml::saml2md,MetadataException,Exceptions related to metadata filtering);
     };
