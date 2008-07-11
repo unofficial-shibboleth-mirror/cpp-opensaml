@@ -144,6 +144,7 @@ libsaml_la_SOURCES = \
 	saml2/metadata/impl/MetadataSchemaValidators.cpp \
 	saml2/metadata/impl/NullMetadataProvider.cpp \
 	saml2/metadata/impl/SignatureMetadataFilter.cpp \
+	saml2/metadata/impl/RequireValidUntilMetadataFilter.cpp \
 	saml2/metadata/impl/WhitelistMetadataFilter.cpp \
 	saml2/metadata/impl/XMLMetadataProvider.cpp \
 	saml2/binding/impl/SAML2Artifact.cpp \
@@ -171,7 +172,7 @@ libsaml_la_SOURCES = \
 
 # this is different from the project version
 # http://sources.redhat.com/autobook/autobook/autobook_91.html
-libsaml_la_LDFLAGS = -version-info 2:0:0
+libsaml_la_LDFLAGS = -version-info 3:0:0
 
 install-exec-hook:
 	for la in $(lib_LTLIBRARIES) ; do rm -f $(DESTDIR)$(libdir)/$$la ; done
