@@ -114,20 +114,12 @@ pair<const EntityDescriptor*,const RoleDescriptor*> DynamicMetadataProvider::get
         // Filter it, which may throw.
         doFilters(*entity2.get());
 
-        log.info("caching resolved metadata for (%s)", name.c_str());
+        time_t now = time(NULL);
 
-        // Translate cacheDuration into validUntil.
-        time_t exp = m_maxCacheDuration;
-        if (entity2->getCacheDuration())
-            exp = min(m_maxCacheDuration, entity2->getCacheDurationEpoch());
-        exp += time(NULL);
-        if (entity2->getValidUntil()) {
-            if (exp < entity2->getValidUntilEpoch())
-                entity2->setValidUntil(exp);
-        }
-        else {
-            entity2->setValidUntil(exp);
-        }
+        if (entity2->getValidUntil() && entity2->getValidUntilEpoch() < now + 60)
+            throw MetadataException("Metadata was already invalid at the time of retrieval.");
+
+        log.info("caching resolved metadata for (%s)", name.c_str());
 
         // Upgrade our lock so we can cache the new metadata.
         m_lock->unlock();
@@ -137,7 +129,11 @@ pair<const EntityDescriptor*,const RoleDescriptor*> DynamicMetadataProvider::get
         emitChangeEvent();
 
         // Make sure we clear out any existing copies, including stale metadata or if somebody snuck in.
-        index(entity2.release(), SAMLTIME_MAX, true);
+        time_t exp = m_maxCacheDuration;
+        if (entity2->getCacheDuration())
+            exp = min(m_maxCacheDuration, entity2->getCacheDurationEpoch());
+        exp += now;
+        index(entity2.release(), exp, true);
 
         // Downgrade back to a read lock.
         m_lock->unlock();
