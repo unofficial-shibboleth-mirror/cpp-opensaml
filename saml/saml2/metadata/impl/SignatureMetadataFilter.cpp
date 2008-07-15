@@ -1,6 +1,6 @@
 /*
  *  Copyright 2001-2008 Internet2
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,7 +16,7 @@
 
 /**
  * SignatureMetadataFilter.cpp
- * 
+ *
  * Filters out unsigned or mis-signed elements.
  */
 
@@ -48,16 +48,16 @@ namespace opensaml {
         public:
             DummyCredentialResolver() {}
             ~DummyCredentialResolver() {}
-            
+
             Lockable* lock() {return this;}
             void unlock() {}
-            
+
             const Credential* resolve(const CredentialCriteria* criteria=NULL) const {return NULL;}
             vector<const Credential*>::size_type resolve(
                 vector<const Credential*>& results, const CredentialCriteria* criteria=NULL
                 ) const {return 0;}
         };
-        
+
         class SAML_DLLLOCAL SignatureMetadataFilter : public MetadataFilter
         {
         public:
@@ -66,7 +66,7 @@ namespace opensaml {
                 delete m_credResolver;
                 delete m_trust;
             }
-            
+
             const char* getId() const { return SIGNATURE_METADATA_FILTER; }
             void doFilter(XMLObject& xmlObject) const;
 
@@ -74,12 +74,13 @@ namespace opensaml {
             void doFilter(EntitiesDescriptor& entities, bool rootObject=false) const;
             void doFilter(EntityDescriptor& entity, bool rootObject=false) const;
             void verifySignature(Signature* sig, const XMLCh* peerName) const;
-            
+
+            bool m_verifyRoles;
             CredentialResolver* m_credResolver;
             SignatureTrustEngine* m_trust;
             SignatureProfileValidator m_profileValidator;
             Category& m_log;
-        }; 
+        };
 
         MetadataFilter* SAML_DLLLOCAL SignatureMetadataFilterFactory(const DOMElement* const & e)
         {
@@ -95,10 +96,14 @@ static const XMLCh type[] =                 UNICODE_LITERAL_4(t,y,p,e);
 static const XMLCh certificate[] =          UNICODE_LITERAL_11(c,e,r,t,i,f,i,c,a,t,e);
 static const XMLCh Certificate[] =          UNICODE_LITERAL_11(C,e,r,t,i,f,i,c,a,t,e);
 static const XMLCh Path[] =                 UNICODE_LITERAL_4(P,a,t,h);
+static const XMLCh verifyRoles[] =          UNICODE_LITERAL_11(v,e,r,i,f,y,R,o,l,e,s);
 
 SignatureMetadataFilter::SignatureMetadataFilter(const DOMElement* e)
-    : m_credResolver(NULL), m_trust(NULL), m_log(Category::getInstance(SAML_LOGCAT".MetadataFilter.Signature"))
+    : m_verifyRoles(false), m_credResolver(NULL), m_trust(NULL), m_log(Category::getInstance(SAML_LOGCAT".MetadataFilter.Signature"))
 {
+    const XMLCh* flag = e ? e->getAttributeNS(NULL,verifyRoles) : NULL;
+    m_verifyRoles = (flag && (*flag == chLatin_t || *flag == chDigit_1));
+
     if (e && e->hasAttributeNS(NULL,certificate)) {
         // Use a file-based credential resolver rooted here.
         m_credResolver = XMLToolingConfig::getConfig().CredentialResolverManager.newPlugin(FILESYSTEM_CREDENTIAL_RESOLVER,e);
@@ -122,7 +127,7 @@ SignatureMetadataFilter::SignatureMetadataFilter(const DOMElement* e)
         }
         return;
     }
-    
+
     throw MetadataFilterException("SignatureMetadataFilter configuration requires <CredentialResolver> or <TrustEngine> element.");
 }
 
@@ -131,7 +136,7 @@ void SignatureMetadataFilter::doFilter(XMLObject& xmlObject) const
 #ifdef _DEBUG
     NDC ndc("doFilter");
 #endif
-    
+
     try {
         EntitiesDescriptor& entities = dynamic_cast<EntitiesDescriptor&>(xmlObject);
         doFilter(entities, true);
@@ -155,7 +160,7 @@ void SignatureMetadataFilter::doFilter(XMLObject& xmlObject) const
         m_log.warn("filtering out entity at root of instance after failed signature check: %s", ex.what());
         throw MetadataFilterException("SignatureMetadataFilter unable to verify signature at root of metadata instance.");
     }
-     
+
     throw MetadataFilterException("SignatureMetadataFilter was given an improper metadata instance to filter.");
 }
 
@@ -165,7 +170,7 @@ void SignatureMetadataFilter::doFilter(EntitiesDescriptor& entities, bool rootOb
     if (!sig && rootObject)
         throw MetadataFilterException("Root metadata element was unsigned.");
     verifySignature(sig, entities.getName());
-    
+
     VectorOf(EntityDescriptor) v=entities.getEntityDescriptors();
     for (VectorOf(EntityDescriptor)::size_type i=0; i<v.size(); ) {
         try {
@@ -178,7 +183,7 @@ void SignatureMetadataFilter::doFilter(EntitiesDescriptor& entities, bool rootOb
             v.erase(v.begin() + i);
         }
     }
-    
+
     VectorOf(EntitiesDescriptor) w=entities.getEntitiesDescriptors();
     for (VectorOf(EntitiesDescriptor)::size_type j=0; j<w.size(); ) {
         try {
@@ -199,7 +204,130 @@ void SignatureMetadataFilter::doFilter(EntityDescriptor& entity, bool rootObject
     if (!sig && rootObject)
         throw MetadataFilterException("Root metadata element was unsigned.");
     verifySignature(sig, entity.getEntityID());
-    
+
+    if (!m_verifyRoles)
+        return;
+
+    VectorOf(IDPSSODescriptor) idp=entity.getIDPSSODescriptors();
+    for (VectorOf(IDPSSODescriptor)::size_type i=0; i<idp.size(); ) {
+        try {
+            verifySignature(idp[i]->getSignature(), entity.getEntityID());
+            i++;
+        }
+        catch (exception& e) {
+            auto_ptr_char id(entity.getEntityID());
+            m_log.warn(
+                "filtering out IDPSSODescriptor for entity (%s) after failed signature check: %s", id.get(), e.what()
+                );
+            idp.erase(idp.begin() + i);
+        }
+    }
+
+    VectorOf(SPSSODescriptor) sp=entity.getSPSSODescriptors();
+    for (VectorOf(SPSSODescriptor)::size_type i=0; i<sp.size(); ) {
+        try {
+            verifySignature(sp[i]->getSignature(), entity.getEntityID());
+            i++;
+        }
+        catch (exception& e) {
+            auto_ptr_char id(entity.getEntityID());
+            m_log.warn(
+                "filtering out SPSSODescriptor for entity (%s) after failed signature check: %s", id.get(), e.what()
+                );
+            sp.erase(sp.begin() + i);
+        }
+    }
+
+    VectorOf(AuthnAuthorityDescriptor) authn=entity.getAuthnAuthorityDescriptors();
+    for (VectorOf(AuthnAuthorityDescriptor)::size_type i=0; i<authn.size(); ) {
+        try {
+            verifySignature(authn[i]->getSignature(), entity.getEntityID());
+            i++;
+        }
+        catch (exception& e) {
+            auto_ptr_char id(entity.getEntityID());
+            m_log.warn(
+                "filtering out AuthnAuthorityDescriptor for entity (%s) after failed signature check: %s", id.get(), e.what()
+                );
+            authn.erase(authn.begin() + i);
+        }
+    }
+
+    VectorOf(AttributeAuthorityDescriptor) aa=entity.getAttributeAuthorityDescriptors();
+    for (VectorOf(AttributeAuthorityDescriptor)::size_type i=0; i<aa.size(); ) {
+        try {
+            verifySignature(aa[i]->getSignature(), entity.getEntityID());
+            i++;
+        }
+        catch (exception& e) {
+            auto_ptr_char id(entity.getEntityID());
+            m_log.warn(
+                "filtering out AttributeAuthorityDescriptor for entity (%s) after failed signature check: %s", id.get(), e.what()
+                );
+            aa.erase(aa.begin() + i);
+        }
+    }
+
+    VectorOf(PDPDescriptor) pdp=entity.getPDPDescriptors();
+    for (VectorOf(AuthnAuthorityDescriptor)::size_type i=0; i<pdp.size(); ) {
+        try {
+            verifySignature(pdp[i]->getSignature(), entity.getEntityID());
+            i++;
+        }
+        catch (exception& e) {
+            auto_ptr_char id(entity.getEntityID());
+            m_log.warn(
+                "filtering out PDPDescriptor for entity (%s) after failed signature check: %s", id.get(), e.what()
+                );
+            pdp.erase(pdp.begin() + i);
+        }
+    }
+
+    VectorOf(AuthnQueryDescriptorType) authnq=entity.getAuthnQueryDescriptorTypes();
+    for (VectorOf(AuthnQueryDescriptorType)::size_type i=0; i<authnq.size(); ) {
+        try {
+            verifySignature(authnq[i]->getSignature(), entity.getEntityID());
+            i++;
+        }
+        catch (exception& e) {
+            auto_ptr_char id(entity.getEntityID());
+            m_log.warn(
+                "filtering out AuthnQueryDescriptorType for entity (%s) after failed signature check: %s", id.get(), e.what()
+                );
+            authnq.erase(authnq.begin() + i);
+        }
+    }
+
+    VectorOf(AttributeQueryDescriptorType) attrq=entity.getAttributeQueryDescriptorTypes();
+    for (VectorOf(AttributeQueryDescriptorType)::size_type i=0; i<attrq.size(); ) {
+        try {
+            verifySignature(attrq[i]->getSignature(), entity.getEntityID());
+            i++;
+        }
+        catch (exception& e) {
+            auto_ptr_char id(entity.getEntityID());
+            m_log.warn(
+                "filtering out AttributeQueryDescriptorType for entity (%s) after failed signature check: %s", id.get(), e.what()
+                );
+            attrq.erase(attrq.begin() + i);
+        }
+    }
+
+    VectorOf(AuthzDecisionQueryDescriptorType) authzq=entity.getAuthzDecisionQueryDescriptorTypes();
+    for (VectorOf(AuthzDecisionQueryDescriptorType)::size_type i=0; i<authzq.size(); ) {
+        try {
+            verifySignature(authzq[i]->getSignature(), entity.getEntityID());
+            i++;
+        }
+        catch (exception& e) {
+            auto_ptr_char id(entity.getEntityID());
+            m_log.warn(
+                "filtering out AuthzDecisionQueryDescriptorType for entity (%s) after failed signature check: %s", id.get(), e.what()
+                );
+            authzq.erase(authzq.begin() + i);
+        }
+    }
+
     VectorOf(RoleDescriptor) v=entity.getRoleDescriptors();
     for (VectorOf(RoleDescriptor)::size_type i=0; i<v.size(); ) {
         try {
