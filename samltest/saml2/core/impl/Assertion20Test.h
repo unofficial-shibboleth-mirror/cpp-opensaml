@@ -1,6 +1,6 @@
 /*
  *  Copyright 2001-2007 Internet2
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -31,14 +31,14 @@ public:
         expectedID = XMLString::transcode("abc123");
         expectedIssueInstant = new DateTime(XMLString::transcode("1984-08-26T10:01:30.043Z"));
         expectedIssueInstant->parseDateTime();
-    
+
 
         singleElementFile = data_path + "saml2/core/impl/Assertion.xml";
         singleElementOptionalAttributesFile = data_path + "saml2/core/impl/AssertionOptionalAttributes.xml";
-        childElementsFile  = data_path + "saml2/core/impl/AssertionChildElements.xml";    
+        childElementsFile  = data_path + "saml2/core/impl/AssertionChildElements.xml";
         SAMLObjectBaseTestCase::setUp();
     }
-    
+
     void tearDown() {
         delete expectedIssueInstant;
         XMLString::release(&expectedID);
@@ -81,7 +81,7 @@ public:
         TS_ASSERT(assertion->getConditions()!=NULL);
         TS_ASSERT(assertion->getAdvice()!=NULL);
 
-        TSM_ASSERT_EQUALS("# of Statement child elements", 0, assertion->getStatements().size());
+        TSM_ASSERT_EQUALS("# of Statement child elements", 1, assertion->getStatements().size());
         TSM_ASSERT_EQUALS("# of AuthnStatement child elements", 1, assertion->getAuthnStatements().size());
         TSM_ASSERT_EQUALS("# of AttributeStatement child elements", 3, assertion->getAttributeStatements().size());
         TSM_ASSERT_EQUALS("# of AuthzDecisionStatement child elements", 2, assertion->getAuthzDecisionStatements().size());
@@ -95,6 +95,8 @@ public:
     }
 
     void testChildElementsMarshall() {
+        QName qext("http://www.opensaml.org/", "Foo", "ext");
+
         Assertion* assertion=AssertionBuilder::buildAssertion();
         assertion->setID(expectedID);
         assertion->setIssueInstant(expectedIssueInstant);
@@ -103,13 +105,14 @@ public:
         assertion->setConditions(ConditionsBuilder::buildConditions());
         assertion->setAdvice(AdviceBuilder::buildAdvice());
 
-        //Test storing children as their direct type 
+        //Test storing children as their direct type
         assertion->getAuthnStatements().push_back(AuthnStatementBuilder::buildAuthnStatement());
         assertion->getAttributeStatements().push_back(AttributeStatementBuilder::buildAttributeStatement());
         assertion->getAttributeStatements().push_back(AttributeStatementBuilder::buildAttributeStatement());
         assertion->getAuthzDecisionStatements().push_back(AuthzDecisionStatementBuilder::buildAuthzDecisionStatement());
         assertion->getAuthzDecisionStatements().push_back(AuthzDecisionStatementBuilder::buildAuthzDecisionStatement());
         assertion->getAttributeStatements().push_back(AttributeStatementBuilder::buildAttributeStatement());
+        assertion->getStatements().push_back(StatementBuilder::buildStatement(qext));
         assertEquals(expectedChildElementsDOM, assertion);
 
         // Note: assertEquals() above has already 'delete'-ed the XMLObject* it was passed
@@ -129,6 +132,7 @@ public:
         assertion->getStatements().push_back(AuthzDecisionStatementBuilder::buildAuthzDecisionStatement());
         assertion->getStatements().push_back(AuthzDecisionStatementBuilder::buildAuthzDecisionStatement());
         assertion->getStatements().push_back(AttributeStatementBuilder::buildAttributeStatement());
+        assertion->getStatements().push_back(StatementBuilder::buildStatement(qext));
         assertEquals(expectedChildElementsDOM, assertion);
     }
 

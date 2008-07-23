@@ -1,6 +1,6 @@
 /*
 *  Copyright 2001-2007 Internet2
- * 
+ *
 * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,7 +16,7 @@
 
 /**
  * AssertionsSchemaValidators.cpp
- * 
+ *
  * Schema-based validators for SAML 1.x Assertions classes
  */
 
@@ -34,7 +34,7 @@ using samlconstants::SAML1_NS;
 
 namespace opensaml {
     namespace saml1 {
-        
+
         XMLOBJECTVALIDATOR_SIMPLE(SAML_DLLLOCAL,Action);
         XMLOBJECTVALIDATOR_SIMPLE(SAML_DLLLOCAL,AssertionIDReference);
         XMLOBJECTVALIDATOR_SIMPLE(SAML_DLLLOCAL,Audience);
@@ -148,7 +148,7 @@ namespace opensaml {
     q=QName(SAML1_NS,cname::LOCAL_NAME); \
     XMLObjectBuilder::registerBuilder(q,new cname##Builder()); \
     SchemaValidators.registerValidator(q,new cname##SchemaValidator())
-    
+
 #define REGISTER_TYPE(cname) \
     q=QName(SAML1_NS,cname::TYPE_NAME); \
     XMLObjectBuilder::registerBuilder(q,new cname##Builder()); \
@@ -157,7 +157,7 @@ namespace opensaml {
 #define REGISTER_ELEMENT_NOVAL(cname) \
     q=QName(SAML1_NS,cname::LOCAL_NAME); \
     XMLObjectBuilder::registerBuilder(q,new cname##Builder());
-    
+
 #define REGISTER_TYPE_NOVAL(cname) \
     q=QName(SAML1_NS,cname::TYPE_NAME); \
     XMLObjectBuilder::registerBuilder(q,new cname##Builder());
@@ -177,11 +177,13 @@ void opensaml::saml1::registerAssertionClasses() {
     REGISTER_ELEMENT(AuthenticationStatement);
     REGISTER_ELEMENT(AuthorityBinding);
     REGISTER_ELEMENT(AuthorizationDecisionStatement);
+    REGISTER_ELEMENT_NOVAL(Condition);
     REGISTER_ELEMENT(Conditions);
     REGISTER_ELEMENT(ConfirmationMethod);
     REGISTER_ELEMENT_NOVAL(DoNotCacheCondition);
     REGISTER_ELEMENT(Evidence);
     REGISTER_ELEMENT(NameIdentifier);
+    REGISTER_ELEMENT_NOVAL(Statement);
     REGISTER_ELEMENT(Subject);
     REGISTER_ELEMENT(SubjectConfirmation);
     REGISTER_ELEMENT_NOVAL(SubjectConfirmationData);

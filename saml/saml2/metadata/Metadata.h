@@ -1,6 +1,6 @@
 /*
  *  Copyright 2001-2007 Internet2
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,7 +16,7 @@
 
 /**
  * @file saml/saml2/metadata/Metadata.h
- * 
+ *
  * XMLObjects representing the SAML 2.0 Metadata schema
  */
 
@@ -38,7 +38,7 @@ namespace opensaml {
      * SAML 2.0 metadata namespace
      */
     namespace saml2md {
-        
+
         /**
          * Base class for metadata objects that feature a cacheDuration attribute.
          */
@@ -79,7 +79,7 @@ namespace opensaml {
         DECL_XMLOBJECT_SIMPLE(SAML_API,NameIDFormat,Format,SAML 2.0 NameIDFormat element);
         DECL_XMLOBJECT_SIMPLE(SAML_API,SurName,Name,SAML 2.0 SurName element);
         DECL_XMLOBJECT_SIMPLE(SAML_API,TelephoneNumber,Number,SAML 2.0 TelephoneNumber element);
-        
+
         DECL_XMLOBJECT_SIMPLE(SAML_API,ActionNamespace,Namespace,SAML 2.0 Metadata Extension ActionNamespace element);
         DECL_XMLOBJECT_SIMPLE(SAML_API,SourceID,ID,SAML 1.x Metadata Profile SourceID element);
 
@@ -106,7 +106,7 @@ namespace opensaml {
         BEGIN_XMLOBJECT(SAML_API,OrganizationURL,localizedURIType,SAML 2.0 OrganizationURL element);
             DECL_SIMPLE_CONTENT(URL);
         END_XMLOBJECT;
-        
+
         BEGIN_XMLOBJECT(SAML_API,Extensions,xmltooling::ElementExtensibleXMLObject,SAML 2.0 Extensions element);
             /** ExtensionsType local name */
             static const XMLCh TYPE_NAME[];
@@ -175,6 +175,9 @@ namespace opensaml {
             DECL_TYPED_CHILDREN(KeyDescriptor);
             DECL_TYPED_CHILD(Organization);
             DECL_TYPED_CHILDREN(ContactPerson);
+        END_XMLOBJECT;
+
+        BEGIN_XMLOBJECT2(SAML_API,RoleDescriptorType,RoleDescriptor,xmltooling::ElementExtensibleXMLObject,SAML 2.0 RoleDescriptor extension);
         END_XMLOBJECT;
 
         BEGIN_XMLOBJECT(SAML_API,EndpointType,xmltooling::ElementProxy,SAML 2.0 EndpointType type);
@@ -392,7 +395,7 @@ namespace opensaml {
              */
             isValidForProtocol(const XMLCh* protocol) : m_time(time(NULL)), m_protocol(protocol) {
             }
-            
+
             /**
              * Returns true iff the supplied role is valid now and supports the right protocol.
              *
@@ -402,7 +405,7 @@ namespace opensaml {
             bool operator()(const RoleDescriptor* role) const {
                 return role ? (role->isValid(m_time) && role->hasSupport(m_protocol)) : false;
             }
-            
+
         private:
             time_t m_time;
             const XMLCh* m_protocol;
@@ -423,7 +426,7 @@ namespace opensaml {
             ofTypeValidForProtocol(const xmltooling::QName& q, const XMLCh* protocol)
                 : isValidForProtocol(protocol), xmltooling::hasSchemaType(q)  {
             }
-            
+
             /**
              * Returns true iff the supplied role is of the right type, valid now, and supports the right protocol.
              *
@@ -431,7 +434,7 @@ namespace opensaml {
              * @return  result of predicate
              */
             bool operator()(const RoleDescriptor* role) const {
-                return xmltooling::hasSchemaType::operator()(role) && isValidForProtocol::operator()(role); 
+                return xmltooling::hasSchemaType::operator()(role) && isValidForProtocol::operator()(role);
             }
         };
 
@@ -473,13 +476,13 @@ namespace opensaml {
         DECL_SAML2MDOBJECTBUILDER(SPSSODescriptor);
         DECL_SAML2MDOBJECTBUILDER(SurName);
         DECL_SAML2MDOBJECTBUILDER(TelephoneNumber);
-        
+
         DECL_XMLOBJECTBUILDER(SAML_API,ActionNamespace,samlconstants::SAML20MD_QUERY_EXT_NS,samlconstants::SAML20MD_QUERY_EXT_PREFIX);
         DECL_XMLOBJECTBUILDER(SAML_API,SourceID,samlconstants::SAML1MD_NS,samlconstants::SAML1MD_PREFIX);
 
         /**
          * Builder for localizedNameType objects.
-         * 
+         *
          * This is customized to force the element name to be specified.
          */
         class SAML_API localizedNameTypeBuilder : public xmltooling::XMLObjectBuilder {
@@ -493,7 +496,7 @@ namespace opensaml {
 #endif
                 const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=NULL, const xmltooling::QName* schemaType=NULL
                 ) const;
-        
+
             /** Singleton builder. */
             static localizedNameType* buildlocalizedNameType(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=NULL) {
                 const localizedNameTypeBuilder* b = dynamic_cast<const localizedNameTypeBuilder*>(
@@ -513,7 +516,7 @@ namespace opensaml {
 
         /**
          * Builder for localizedURIType objects.
-         * 
+         *
          * This is customized to force the element name to be specified.
          */
         class SAML_API localizedURITypeBuilder : public xmltooling::XMLObjectBuilder {
@@ -527,7 +530,7 @@ namespace opensaml {
 #endif
                 const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=NULL, const xmltooling::QName* schemaType=NULL
                 ) const;
-        
+
             /** Singleton builder. */
             static localizedURIType* buildlocalizedURIType(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=NULL) {
                 const localizedURITypeBuilder* b = dynamic_cast<const localizedURITypeBuilder*>(
@@ -547,7 +550,7 @@ namespace opensaml {
 
         /**
          * Builder for EndpointType objects.
-         * 
+         *
          * This is customized to force the element name to be specified.
          */
         class SAML_API EndpointTypeBuilder : public xmltooling::XMLObjectBuilder {
@@ -561,7 +564,7 @@ namespace opensaml {
 #endif
                 const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=NULL, const xmltooling::QName* schemaType=NULL
                 ) const;
-        
+
             /** Singleton builder. */
             static EndpointType* buildEndpointType(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=NULL) {
                 const EndpointTypeBuilder* b = dynamic_cast<const EndpointTypeBuilder*>(
@@ -581,7 +584,7 @@ namespace opensaml {
 
         /**
          * Builder for IndexedEndpointType objects.
-         * 
+         *
          * This is customized to force the element name to be specified.
          */
         class SAML_API IndexedEndpointTypeBuilder : public xmltooling::XMLObjectBuilder {
@@ -595,7 +598,7 @@ namespace opensaml {
 #endif
                 const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=NULL, const xmltooling::QName* schemaType=NULL
                 ) const;
-        
+
             /** Singleton builder. */
             static IndexedEndpointType* buildIndexedEndpointType(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=NULL) {
                 const IndexedEndpointTypeBuilder* b = dynamic_cast<const IndexedEndpointTypeBuilder*>(
@@ -614,8 +617,41 @@ namespace opensaml {
         };
 
         /**
+         * Builder for RoleDescriptor extension objects.
+         *
+         * This is customized to force the schema type to be specified.
+         */
+        class SAML_API RoleDescriptorBuilder : public xmltooling::XMLObjectBuilder {
+        public:
+            virtual ~RoleDescriptorBuilder() {}
+            /** Builder that allows element/type override. */
+#ifdef HAVE_COVARIANT_RETURNS
+            virtual RoleDescriptor* buildObject(
+#else
+            virtual xmltooling::XMLObject* buildObject(
+#endif
+                const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=NULL, const xmltooling::QName* schemaType=NULL
+                ) const;
+
+            /** Singleton builder. */
+            static RoleDescriptor* buildRoleDescriptor(const xmltooling::QName& schemaType) {
+                const RoleDescriptorBuilder* b = dynamic_cast<const RoleDescriptorBuilder*>(
+                    XMLObjectBuilder::getBuilder(xmltooling::QName(samlconstants::SAML20MD_NS,RoleDescriptor::LOCAL_NAME))
+                    );
+                if (b) {
+#ifdef HAVE_COVARIANT_RETURNS
+                    return b->buildObject(samlconstants::SAML20MD_NS, RoleDescriptor::LOCAL_NAME, samlconstants::SAML20MD_PREFIX, &schemaType);
+#else
+                    return dynamic_cast<RoleDescriptor*>(b->buildObject(samlconstants::SAML20MD_NS, RoleDescriptor::LOCAL_NAME, samlconstants::SAML20MD_PREFIX, &schemaType));
+#endif
+                }
+                throw xmltooling::XMLObjectException("Unable to obtain typed builder for RoleDescriptor.");
+            }
+        };
+
+        /**
          * Builder for AuthnQueryDescriptorType objects.
-         * 
+         *
          * This is customized to return a RoleDescriptor element with an
          * xsi:type of AuthnQueryDescriptorType.
          */
@@ -643,7 +679,7 @@ namespace opensaml {
 #endif
                 const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=NULL, const xmltooling::QName* schemaType=NULL
                 ) const;
-        
+
             /** Singleton builder. */
             static AuthnQueryDescriptorType* buildAuthnQueryDescriptorType() {
                 const AuthnQueryDescriptorTypeBuilder* b = dynamic_cast<const AuthnQueryDescriptorTypeBuilder*>(
@@ -662,7 +698,7 @@ namespace opensaml {
 
         /**
          * Builder for AttributeQueryDescriptorType objects.
-         * 
+         *
          * This is customized to return a RoleDescriptor element with an
          * xsi:type of AttributeQueryDescriptorType.
          */
@@ -690,7 +726,7 @@ namespace opensaml {
 #endif
                 const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=NULL, const xmltooling::QName* schemaType=NULL
                 ) const;
-        
+
             /** Singleton builder. */
             static AttributeQueryDescriptorType* buildAttributeQueryDescriptorType() {
                 const AttributeQueryDescriptorTypeBuilder* b = dynamic_cast<const AttributeQueryDescriptorTypeBuilder*>(
@@ -709,7 +745,7 @@ namespace opensaml {
 
         /**
          * Builder for AuthzDecisionQueryDescriptorType objects.
-         * 
+         *
          * This is customized to return a RoleDescriptor element with an
          * xsi:type of AuthzDecisionQueryDescriptorType.
          */
@@ -737,7 +773,7 @@ namespace opensaml {
 #endif
                 const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=NULL, const xmltooling::QName* schemaType=NULL
                 ) const;
-        
+
             /** Singleton builder. */
             static AuthzDecisionQueryDescriptorType* buildAuthzDecisionQueryDescriptorType() {
                 const AuthzDecisionQueryDescriptorTypeBuilder* b = dynamic_cast<const AuthzDecisionQueryDescriptorTypeBuilder*>(

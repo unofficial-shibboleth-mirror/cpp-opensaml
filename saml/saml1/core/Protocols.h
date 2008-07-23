@@ -1,6 +1,6 @@
 /*
  *  Copyright 2001-2007 Internet2
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,7 +16,7 @@
 
 /**
  * @file saml/saml1/core/Protocols.h
- * 
+ *
  * XMLObjects representing the SAML 1.x Protocols schema
  */
 
@@ -50,10 +50,10 @@ namespace opensaml {
      * SAML 1.x protocol namespace
      */
     namespace saml1p {
-        
+
         DECL_XMLOBJECT_SIMPLE(SAML_API,AssertionArtifact,Artifact,SAML 1.x AssertionArtifact element);
         DECL_XMLOBJECT_SIMPLE(SAML_API,StatusMessage,Message,SAML 1.x StatusMessage element);
-        
+
         BEGIN_XMLOBJECT(SAML_API,RespondWith,xmltooling::XMLObject,SAML 1.x RespondWith element);
             /** Gets the QName content of the element. */
             virtual xmltooling::QName* getQName() const=0;
@@ -166,7 +166,40 @@ namespace opensaml {
         DECL_SAML1POBJECTBUILDER(StatusCode);
         DECL_SAML1POBJECTBUILDER(StatusDetail);
         DECL_SAML1POBJECTBUILDER(StatusMessage);
-        
+
+        /**
+         * Builder for Query extension objects.
+         *
+         * This is customized to force the schema type to be specified.
+         */
+        class SAML_API QueryBuilder : public xmltooling::XMLObjectBuilder {
+        public:
+            virtual ~QueryBuilder() {}
+            /** Builder that allows element/type override. */
+#ifdef HAVE_COVARIANT_RETURNS
+            virtual Query* buildObject(
+#else
+            virtual xmltooling::XMLObject* buildObject(
+#endif
+                const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=NULL, const xmltooling::QName* schemaType=NULL
+                ) const;
+
+            /** Singleton builder. */
+            static Query* buildQuery(const xmltooling::QName& schemaType) {
+                const QueryBuilder* b = dynamic_cast<const QueryBuilder*>(
+                    XMLObjectBuilder::getBuilder(xmltooling::QName(samlconstants::SAML1P_NS,Query::LOCAL_NAME))
+                    );
+                if (b) {
+#ifdef HAVE_COVARIANT_RETURNS
+                    return b->buildObject(samlconstants::SAML1P_NS, Query::LOCAL_NAME, samlconstants::SAML1P_PREFIX, &schemaType);
+#else
+                    return dynamic_cast<Query*>(b->buildObject(samlconstants::SAML1P_NS, Query::LOCAL_NAME, samlconstants::SAML1P_PREFIX, &schemaType));
+#endif
+                }
+                throw xmltooling::XMLObjectException("Unable to obtain typed builder for Query.");
+            }
+        };
+
         /**
          * Registers builders and validators for SAML 1.x Protocol classes into the runtime.
          */

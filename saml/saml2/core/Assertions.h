@@ -1,6 +1,6 @@
 /*
  *  Copyright 2001-2007 Internet2
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,7 +16,7 @@
 
 /**
  * @file saml/saml2/core/Assertions.h
- * 
+ *
  * XMLObjects representing the SAML 2.0 Assertions schema
  */
 
@@ -48,7 +48,7 @@ namespace opensaml {
      * SAML 2.0 assertion namespace
      */
     namespace saml2 {
-        
+
         // Forward references
         class SAML_API Assertion;
         class SAML_API EncryptedAssertion;
@@ -62,7 +62,7 @@ namespace opensaml {
             EncryptableObject() {}
             virtual ~EncryptableObject() {}
         };
-        
+
         DECL_XMLOBJECT_SIMPLE(SAML_API,AssertionIDRef,AssertionID,SAML 2.0 AssertionIDRef element);
         DECL_XMLOBJECT_SIMPLE(SAML_API,AssertionURIRef,AssertionURI,SAML 2.0 AssertionURIRef element);
         DECL_XMLOBJECT_SIMPLE(SAML_API,Audience,AudienceURI,SAML 2.0 Audience element);
@@ -75,10 +75,10 @@ namespace opensaml {
             DECL_TYPED_FOREIGN_CHILDREN(EncryptedKey,xmlencryption);
             /** EncryptedElementType local name */
             static const XMLCh TYPE_NAME[];
-            
+
             /**
              * Encrypts an object to a single recipient using this object as a container.
-             * 
+             *
              * @param xmlObject         object to encrypt
              * @param metadataProvider  a locked MetadataProvider to supply encryption keys
              * @param criteria          metadata-based CredentialCriteria to use
@@ -96,7 +96,7 @@ namespace opensaml {
 
             /**
              * Encrypts an object to multiple recipients using this object as a container.
-             * 
+             *
              * @param xmlObject     object to encrypt
              * @param recipients    pairs containing a locked MetadataProvider to supply encryption keys,
              *                      and a metadata-based CredentialCriteria to use
@@ -116,7 +116,7 @@ namespace opensaml {
              *
              * <p>The object returned will be unmarshalled around the decrypted DOM element in a
              * new Document owned by the object.
-             * 
+             *
              * @param credResolver  locked resolver supplying decryption keys
              * @param recipient     identifier naming the recipient (the entity performing the decryption)
              * @param criteria      optional external criteria to use with resolver
@@ -169,7 +169,7 @@ namespace opensaml {
 
         BEGIN_XMLOBJECT(SAML_API,Condition,xmltooling::XMLObject,SAML 2.0 Condition element);
         END_XMLOBJECT;
-        
+
         BEGIN_XMLOBJECT(SAML_API,AudienceRestriction,Condition,SAML 2.0 AudienceRestriction element);
             DECL_TYPED_CHILDREN(Audience);
             /** AudienceRestrictionType local name */
@@ -216,7 +216,7 @@ namespace opensaml {
             /** KeyInfoConfirmationDataType local name */
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
-        
+
         BEGIN_XMLOBJECT(SAML_API,SubjectConfirmation,xmltooling::XMLObject,SAML 2.0 SubjectConfirmation element);
             DECL_STRING_ATTRIB(Method,METHOD);
             DECL_TYPED_CHILD(BaseID);
@@ -362,10 +362,10 @@ namespace opensaml {
             RootObject() {}
         public:
             virtual ~RootObject() {}
-            
+
             /** Gets the Version attribute. */
             virtual const XMLCh* getVersion() const=0;
-            
+
             /** Gets the Issuer. */
             virtual Issuer* getIssuer() const=0;
         };
@@ -416,10 +416,10 @@ namespace opensaml {
         DECL_SAML2OBJECTBUILDER(SubjectConfirmation);
         DECL_SAML2OBJECTBUILDER(SubjectConfirmationData);
         DECL_SAML2OBJECTBUILDER(SubjectLocality);
-        
+
         /**
          * Builder for NameIDType objects.
-         * 
+         *
          * This is customized to force the element name to be specified.
          */
         class SAML_API NameIDTypeBuilder : public xmltooling::XMLObjectBuilder {
@@ -433,7 +433,7 @@ namespace opensaml {
 #endif
                 const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=NULL, const xmltooling::QName* schemaType=NULL
                 ) const;
-        
+
             /** Singleton builder. */
             static NameIDType* buildNameIDType(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=NULL) {
                 const NameIDTypeBuilder* b = dynamic_cast<const NameIDTypeBuilder*>(
@@ -452,8 +452,41 @@ namespace opensaml {
         };
 
         /**
+         * Builder for Condition extension objects.
+         *
+         * This is customized to force the schema type to be specified.
+         */
+        class SAML_API ConditionBuilder : public xmltooling::XMLObjectBuilder {
+        public:
+            virtual ~ConditionBuilder() {}
+            /** Builder that allows element/type override. */
+#ifdef HAVE_COVARIANT_RETURNS
+            virtual Condition* buildObject(
+#else
+            virtual xmltooling::XMLObject* buildObject(
+#endif
+                const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=NULL, const xmltooling::QName* schemaType=NULL
+                ) const;
+
+            /** Singleton builder. */
+            static Condition* buildCondition(const xmltooling::QName& schemaType) {
+                const ConditionBuilder* b = dynamic_cast<const ConditionBuilder*>(
+                    XMLObjectBuilder::getBuilder(xmltooling::QName(samlconstants::SAML20_NS,Condition::LOCAL_NAME))
+                    );
+                if (b) {
+#ifdef HAVE_COVARIANT_RETURNS
+                    return b->buildObject(samlconstants::SAML20_NS, Condition::LOCAL_NAME, samlconstants::SAML20_PREFIX, &schemaType);
+#else
+                    return dynamic_cast<Statement*>(b->buildObject(samlconstants::SAML20_NS, Condition::LOCAL_NAME, samlconstants::SAML20_PREFIX, &schemaType));
+#endif
+                }
+                throw xmltooling::XMLObjectException("Unable to obtain typed builder for Condition.");
+            }
+        };
+
+        /**
          * Builder for KeyInfoConfirmationDataType objects.
-         * 
+         *
          * This is customized to return a SubjectConfirmationData element with an
          * xsi:type of KeyInfoConfirmationDataType.
          */
@@ -481,7 +514,7 @@ namespace opensaml {
 #endif
                 const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=NULL, const xmltooling::QName* schemaType=NULL
                 ) const;
-        
+
             /** Singleton builder. */
             static KeyInfoConfirmationDataType* buildKeyInfoConfirmationDataType() {
                 const KeyInfoConfirmationDataTypeBuilder* b = dynamic_cast<const KeyInfoConfirmationDataTypeBuilder*>(
@@ -494,6 +527,39 @@ namespace opensaml {
                     return dynamic_cast<KeyInfoConfirmationDataType*>(b->buildObject());
 #endif
                 throw xmltooling::XMLObjectException("Unable to obtain typed builder for KeyInfoConfirmationDataType.");
+            }
+        };
+
+        /**
+         * Builder for Statement extension objects.
+         *
+         * This is customized to force the schema type to be specified.
+         */
+        class SAML_API StatementBuilder : public xmltooling::XMLObjectBuilder {
+        public:
+            virtual ~StatementBuilder() {}
+            /** Builder that allows element/type override. */
+#ifdef HAVE_COVARIANT_RETURNS
+            virtual Statement* buildObject(
+#else
+            virtual xmltooling::XMLObject* buildObject(
+#endif
+                const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=NULL, const xmltooling::QName* schemaType=NULL
+                ) const;
+
+            /** Singleton builder. */
+            static Statement* buildStatement(const xmltooling::QName& schemaType) {
+                const StatementBuilder* b = dynamic_cast<const StatementBuilder*>(
+                    XMLObjectBuilder::getBuilder(xmltooling::QName(samlconstants::SAML20_NS,Statement::LOCAL_NAME))
+                    );
+                if (b) {
+#ifdef HAVE_COVARIANT_RETURNS
+                    return b->buildObject(samlconstants::SAML20_NS, Statement::LOCAL_NAME, samlconstants::SAML20_PREFIX, &schemaType);
+#else
+                    return dynamic_cast<Statement*>(b->buildObject(samlconstants::SAML20_NS, Statement::LOCAL_NAME, samlconstants::SAML20_PREFIX, &schemaType));
+#endif
+                }
+                throw xmltooling::XMLObjectException("Unable to obtain typed builder for Statement.");
             }
         };
 

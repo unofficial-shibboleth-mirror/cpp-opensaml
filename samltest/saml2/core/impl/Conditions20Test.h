@@ -1,6 +1,6 @@
 /*
  *  Copyright 2001-2007 Internet2
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -33,10 +33,10 @@ public:
 
         singleElementFile = data_path + "saml2/core/impl/Conditions.xml";
         singleElementOptionalAttributesFile = data_path + "saml2/core/impl/ConditionsOptionalAttributes.xml";
-        childElementsFile  = data_path + "saml2/core/impl/ConditionsChildElements.xml";    
+        childElementsFile  = data_path + "saml2/core/impl/ConditionsChildElements.xml";
         SAMLObjectBaseTestCase::setUp();
     }
-    
+
     void tearDown() {
         delete expectedNotBefore;
         delete expectedNotOnOrAfter;
@@ -80,7 +80,7 @@ public:
         TS_ASSERT(conditions->getNotBefore()==NULL);
         TS_ASSERT(conditions->getNotOnOrAfter()==NULL);
 
-        TSM_ASSERT_EQUALS("# of Condition child elements", 0, conditions->getConditions().size());
+        TSM_ASSERT_EQUALS("# of Condition child elements", 1, conditions->getConditions().size());
         TSM_ASSERT_EQUALS("# of AudienceRestriction child elements", 3, conditions->getAudienceRestrictions().size());
         TSM_ASSERT_EQUALS("# of OneTimeUse child elements", 1, conditions->getOneTimeUses().size());
         TSM_ASSERT_EQUALS("# of ProxyRestriction child elements", 2, conditions->getProxyRestrictions().size());
@@ -99,15 +99,17 @@ public:
     }
 
     void testChildElementsMarshall() {
+        QName qext("http://www.opensaml.org/", "Foo", "ext");
         Conditions* conditions=ConditionsBuilder::buildConditions();
 
-        //Test storing children as their direct type 
+        //Test storing children as their direct type
         conditions->getAudienceRestrictions().push_back(AudienceRestrictionBuilder::buildAudienceRestriction());
         conditions->getAudienceRestrictions().push_back(AudienceRestrictionBuilder::buildAudienceRestriction());
         conditions->getProxyRestrictions().push_back(ProxyRestrictionBuilder::buildProxyRestriction());
         conditions->getAudienceRestrictions().push_back(AudienceRestrictionBuilder::buildAudienceRestriction());
         conditions->getOneTimeUses().push_back(OneTimeUseBuilder::buildOneTimeUse());
         conditions->getProxyRestrictions().push_back(ProxyRestrictionBuilder::buildProxyRestriction());
+        conditions->getConditions().push_back(ConditionBuilder::buildCondition(qext));
         assertEquals(expectedChildElementsDOM, conditions);
 
         // Note: assertEquals() above has already 'delete'-ed the XMLObject* it was passed
@@ -121,6 +123,7 @@ public:
         conditions->getConditions().push_back(AudienceRestrictionBuilder::buildAudienceRestriction());
         conditions->getConditions().push_back(OneTimeUseBuilder::buildOneTimeUse());
         conditions->getConditions().push_back(ProxyRestrictionBuilder::buildProxyRestriction());
+        conditions->getConditions().push_back(ConditionBuilder::buildCondition(qext));
         assertEquals(expectedChildElementsDOM, conditions);
     }
 

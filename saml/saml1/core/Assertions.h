@@ -1,6 +1,6 @@
 /*
  *  Copyright 2001-2007 Internet2
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,7 +16,7 @@
 
 /**
  * @file saml/saml1/core/Assertions.h
- * 
+ *
  * XMLObjects representing the SAML 1.x Assertions schema
  */
 
@@ -42,17 +42,17 @@ namespace opensaml {
      * SAML 1.x assertion namespace
      */
     namespace saml1 {
-        
+
         // Forward references
         class SAML_API Assertion;
-        
+
         DECL_XMLOBJECT_SIMPLE(SAML_API,AssertionIDReference,AssertionID,SAML 1.x AssertionIDReference element);
         DECL_XMLOBJECT_SIMPLE(SAML_API,Audience,AudienceURI,SAML 1.x Audience element);
         DECL_XMLOBJECT_SIMPLE(SAML_API,ConfirmationMethod,Method,SAML 1.x ConfirmationMethod element);
-        
+
         BEGIN_XMLOBJECT(SAML_API,Condition,xmltooling::XMLObject,SAML 1.x Condition element);
         END_XMLOBJECT;
-        
+
         BEGIN_XMLOBJECT(SAML_API,AudienceRestrictionCondition,Condition,SAML 1.x AudienceRestrictionCondition element);
             DECL_TYPED_CHILDREN(Audience);
             /** AudienceRestrictionConditionType local name */
@@ -92,7 +92,7 @@ namespace opensaml {
 
         BEGIN_XMLOBJECT(SAML_API,SubjectConfirmationData,xmltooling::ElementProxy,SAML 1.x SubjectConfirmationData element);
         END_XMLOBJECT;
-        
+
         BEGIN_XMLOBJECT(SAML_API,SubjectConfirmation,xmltooling::XMLObject,SAML 1.x SubjectConfirmation element);
             DECL_TYPED_CHILDREN(ConfirmationMethod);
             DECL_XMLOBJECT_CHILD(SubjectConfirmationData);
@@ -253,7 +253,73 @@ namespace opensaml {
         DECL_SAML1OBJECTBUILDER(SubjectConfirmation);
         DECL_SAML1OBJECTBUILDER(SubjectConfirmationData);
         DECL_SAML1OBJECTBUILDER(SubjectLocality);
-        
+
+        /**
+         * Builder for Condition extension objects.
+         *
+         * This is customized to force the schema type to be specified.
+         */
+        class SAML_API ConditionBuilder : public xmltooling::XMLObjectBuilder {
+        public:
+            virtual ~ConditionBuilder() {}
+            /** Builder that allows element/type override. */
+#ifdef HAVE_COVARIANT_RETURNS
+            virtual Condition* buildObject(
+#else
+            virtual xmltooling::XMLObject* buildObject(
+#endif
+                const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=NULL, const xmltooling::QName* schemaType=NULL
+                ) const;
+
+            /** Singleton builder. */
+            static Condition* buildCondition(const xmltooling::QName& schemaType) {
+                const ConditionBuilder* b = dynamic_cast<const ConditionBuilder*>(
+                    XMLObjectBuilder::getBuilder(xmltooling::QName(samlconstants::SAML1_NS,Condition::LOCAL_NAME))
+                    );
+                if (b) {
+#ifdef HAVE_COVARIANT_RETURNS
+                    return b->buildObject(samlconstants::SAML1_NS, Condition::LOCAL_NAME, samlconstants::SAML1_PREFIX, &schemaType);
+#else
+                    return dynamic_cast<Statement*>(b->buildObject(samlconstants::SAML1_NS, Condition::LOCAL_NAME, samlconstants::SAML1_PREFIX, &schemaType));
+#endif
+                }
+                throw xmltooling::XMLObjectException("Unable to obtain typed builder for Condition.");
+            }
+        };
+
+        /**
+         * Builder for Statement extension objects.
+         *
+         * This is customized to force the schema type to be specified.
+         */
+        class SAML_API StatementBuilder : public xmltooling::XMLObjectBuilder {
+        public:
+            virtual ~StatementBuilder() {}
+            /** Builder that allows element/type override. */
+#ifdef HAVE_COVARIANT_RETURNS
+            virtual Statement* buildObject(
+#else
+            virtual xmltooling::XMLObject* buildObject(
+#endif
+                const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=NULL, const xmltooling::QName* schemaType=NULL
+                ) const;
+
+            /** Singleton builder. */
+            static Statement* buildStatement(const xmltooling::QName& schemaType) {
+                const StatementBuilder* b = dynamic_cast<const StatementBuilder*>(
+                    XMLObjectBuilder::getBuilder(xmltooling::QName(samlconstants::SAML1_NS,Statement::LOCAL_NAME))
+                    );
+                if (b) {
+#ifdef HAVE_COVARIANT_RETURNS
+                    return b->buildObject(samlconstants::SAML1_NS, Statement::LOCAL_NAME, samlconstants::SAML1_PREFIX, &schemaType);
+#else
+                    return dynamic_cast<Statement*>(b->buildObject(samlconstants::SAML1_NS, Statement::LOCAL_NAME, samlconstants::SAML1_PREFIX, &schemaType));
+#endif
+                }
+                throw xmltooling::XMLObjectException("Unable to obtain typed builder for Statement.");
+            }
+        };
+
         /**
          * Registers builders and validators for SAML 1.x Assertion classes into the runtime.
          */

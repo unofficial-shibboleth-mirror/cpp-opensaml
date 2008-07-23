@@ -1071,6 +1071,34 @@ namespace opensaml {
             }
         };
 
+        class SAML_DLLLOCAL RoleDescriptorTypeImpl : public virtual RoleDescriptorType, public RoleDescriptorImpl
+        {
+        public:
+            virtual ~RoleDescriptorTypeImpl() {}
+
+            RoleDescriptorTypeImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
+            }
+
+            RoleDescriptorTypeImpl(const RoleDescriptorTypeImpl& src) : AbstractXMLObject(src), RoleDescriptorImpl(src) {
+                VectorOf(XMLObject) v=getUnknownXMLObjects();
+                for (vector<XMLObject*>::const_iterator i=src.m_UnknownXMLObjects.begin(); i!=src.m_UnknownXMLObjects.end(); ++i)
+                    v.push_back((*i)->clone());
+            }
+
+            IMPL_XMLOBJECT_CLONE(RoleDescriptorType);
+            RoleDescriptor* cloneRoleDescriptor() const {
+                return new RoleDescriptorTypeImpl(*this);
+            }
+
+            IMPL_XMLOBJECT_CHILDREN(UnknownXMLObject,m_children.end());
+
+        protected:
+            void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
+                getUnknownXMLObjects().push_back(childXMLObject);
+            }
+        };
+
         class SAML_DLLLOCAL SSODescriptorTypeImpl : public virtual SSODescriptorType, public RoleDescriptorImpl
         {
             void init() {
@@ -2436,6 +2464,17 @@ IMPL_XMLOBJECTBUILDER(TelephoneNumber);
 
 IMPL_XMLOBJECTBUILDER(ActionNamespace);
 IMPL_XMLOBJECTBUILDER(SourceID);
+
+#ifdef HAVE_COVARIANT_RETURNS
+RoleDescriptor* RoleDescriptorBuilder::buildObject(
+#else
+xmltooling::XMLObject* RoleDescriptorBuilder::buildObject(
+#endif
+    const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType
+    ) const
+{
+    return new RoleDescriptorTypeImpl(nsURI,localName,prefix,schemaType);
+}
 
 const XMLCh ActionNamespace::LOCAL_NAME[] =             UNICODE_LITERAL_15(A,c,t,i,o,n,N,a,m,e,s,p,a,c,e);
 const XMLCh AdditionalMetadataLocation::LOCAL_NAME[] =  UNICODE_LITERAL_26(A,d,d,i,t,i,o,n,a,l,M,e,t,a,d,a,t,a,L,o,c,a,t,i,o,n);

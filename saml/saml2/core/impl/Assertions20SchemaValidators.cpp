@@ -1,6 +1,6 @@
 /*
 *  Copyright 2001-2007 Internet2
- * 
+ *
 * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,7 +16,7 @@
 
 /**
  * Assertions20SchemaValidators.cpp
- * 
+ *
  * Schema-based validators for SAML 2.0 Assertions classes
  */
 
@@ -34,7 +34,7 @@ using samlconstants::SAML20_NS;
 
 namespace opensaml {
     namespace saml2 {
-        
+
         XMLOBJECTVALIDATOR_SIMPLE(SAML_DLLLOCAL,Action);
         XMLOBJECTVALIDATOR_SIMPLE(SAML_DLLLOCAL,AssertionIDRef);
         XMLOBJECTVALIDATOR_SIMPLE(SAML_DLLLOCAL,AssertionURIRef);
@@ -49,7 +49,7 @@ namespace opensaml {
         BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,EncryptedElementType);
             XMLOBJECTVALIDATOR_REQUIRE(EncryptedElementType,EncryptedData);
         END_XMLOBJECTVALIDATOR;
-        
+
         BEGIN_XMLOBJECTVALIDATOR_SUB(SAML_DLLLOCAL,EncryptedID,EncryptedElementType);
             EncryptedElementTypeSchemaValidator::validate(xmlObject);
         END_XMLOBJECTVALIDATOR;
@@ -183,7 +183,7 @@ namespace opensaml {
     q=QName(SAML20_NS,cname::LOCAL_NAME); \
     XMLObjectBuilder::registerBuilder(q,new cname##Builder()); \
     SchemaValidators.registerValidator(q,new cname##SchemaValidator())
-    
+
 #define REGISTER_TYPE(cname) \
     q=QName(SAML20_NS,cname::TYPE_NAME); \
     XMLObjectBuilder::registerBuilder(q,new cname##Builder()); \
@@ -192,7 +192,7 @@ namespace opensaml {
 #define REGISTER_ELEMENT_NOVAL(cname) \
     q=QName(SAML20_NS,cname::LOCAL_NAME); \
     XMLObjectBuilder::registerBuilder(q,new cname##Builder());
-    
+
 #define REGISTER_TYPE_NOVAL(cname) \
     q=QName(SAML20_NS,cname::TYPE_NAME); \
     XMLObjectBuilder::registerBuilder(q,new cname##Builder());
@@ -216,6 +216,7 @@ void opensaml::saml2::registerAssertionClasses() {
     REGISTER_ELEMENT(AuthnContextDeclRef);
     REGISTER_ELEMENT(AuthnStatement);
     REGISTER_ELEMENT(AuthzDecisionStatement);
+    REGISTER_ELEMENT_NOVAL(Condition);
     REGISTER_ELEMENT(Conditions);
     REGISTER_ELEMENT(EncryptedAssertion);
     REGISTER_ELEMENT(EncryptedAttribute);
@@ -225,6 +226,7 @@ void opensaml::saml2::registerAssertionClasses() {
     REGISTER_ELEMENT(NameID);
     REGISTER_ELEMENT_NOVAL(OneTimeUse);
     REGISTER_ELEMENT(ProxyRestriction);
+    REGISTER_ELEMENT_NOVAL(Statement);
     REGISTER_ELEMENT(Subject);
     REGISTER_ELEMENT(SubjectConfirmation);
     REGISTER_ELEMENT_NOVAL(SubjectConfirmationData);

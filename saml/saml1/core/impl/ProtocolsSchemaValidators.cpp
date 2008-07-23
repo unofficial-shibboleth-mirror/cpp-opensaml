@@ -1,6 +1,6 @@
 /*
 *  Copyright 2001-2007 Internet2
- * 
+ *
 * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,7 +16,7 @@
 
 /**
  * ProtocolsSchemaValidators.cpp
- * 
+ *
  * Schema-based validators for SAML 1.x Protocols classes
  */
 
@@ -35,10 +35,10 @@ using samlconstants::SAML1P_NS;
 
 namespace opensaml {
     namespace saml1p {
-        
+
         XMLOBJECTVALIDATOR_SIMPLE(SAML_DLLLOCAL,AssertionArtifact);
         XMLOBJECTVALIDATOR_SIMPLE(SAML_DLLLOCAL,StatusMessage);
-        
+
         BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,RespondWith);
             XMLOBJECTVALIDATOR_REQUIRE(RespondWith,QName);
         END_XMLOBJECTVALIDATOR;
@@ -84,7 +84,7 @@ namespace opensaml {
             const QName* value=ptr->getStatusCode()->getValue();
             if (!value || (*value!=StatusCode::SUCCESS && *value!=StatusCode::REQUESTER &&
                 *value!=StatusCode::RESPONDER && *value!=StatusCode::VERSIONMISMATCH))
-                throw ValidationException("Top-level status code not one of the allowable values."); 
+                throw ValidationException("Top-level status code not one of the allowable values.");
         END_XMLOBJECTVALIDATOR;
 
         BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,Response);
@@ -102,7 +102,7 @@ namespace opensaml {
     q=QName(SAML1P_NS,cname::LOCAL_NAME); \
     XMLObjectBuilder::registerBuilder(q,new cname##Builder()); \
     SchemaValidators.registerValidator(q,new cname##SchemaValidator())
-    
+
 #define REGISTER_TYPE(cname) \
     q=QName(SAML1P_NS,cname::TYPE_NAME); \
     XMLObjectBuilder::registerBuilder(q,new cname##Builder()); \
@@ -111,7 +111,7 @@ namespace opensaml {
 #define REGISTER_ELEMENT_NOVAL(cname) \
     q=QName(SAML1P_NS,cname::LOCAL_NAME); \
     XMLObjectBuilder::registerBuilder(q,new cname##Builder());
-    
+
 #define REGISTER_TYPE_NOVAL(cname) \
     q=QName(SAML1P_NS,cname::TYPE_NAME); \
     XMLObjectBuilder::registerBuilder(q,new cname##Builder());
@@ -122,6 +122,7 @@ void opensaml::saml1p::registerProtocolClasses() {
     REGISTER_ELEMENT(AttributeQuery);
     REGISTER_ELEMENT(AuthenticationQuery);
     REGISTER_ELEMENT(AuthorizationDecisionQuery);
+    REGISTER_ELEMENT_NOVAL(Query);
     REGISTER_ELEMENT(Request);
     REGISTER_ELEMENT(RespondWith);
     REGISTER_ELEMENT(Response);

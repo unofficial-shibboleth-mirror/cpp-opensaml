@@ -1,6 +1,6 @@
 /*
  *  Copyright 2001-2007 Internet2
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,7 +16,7 @@
 
 /**
  * ProtocolsImpl.cpp
- * 
+ *
  * Implementation classes for SAML 1.x Protocols schema
  */
 
@@ -53,7 +53,7 @@ using samlconstants::SAML1P_PREFIX;
 
 namespace opensaml {
     namespace saml1p {
-    
+
         DECL_XMLOBJECTIMPL_SIMPLE(SAML_DLLLOCAL,AssertionArtifact);
         DECL_XMLOBJECTIMPL_SIMPLE(SAML_DLLLOCAL,StatusMessage);
 
@@ -68,20 +68,20 @@ namespace opensaml {
             virtual ~RespondWithImpl() {
                 delete m_qname;
             }
-    
+
             RespondWithImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
                 : AbstractXMLObject(nsURI, localName, prefix, schemaType), m_qname(NULL) {
             }
-                
+
             RespondWithImpl(const RespondWithImpl& src)
                     : AbstractXMLObject(src), AbstractSimpleElement(src), AbstractDOMCachingXMLObject(src), m_qname(NULL) {
                 setQName(src.getQName());
             }
-            
+
             QName* getQName() const {
                 return m_qname;
             }
-            
+
             void setQName(const QName* qname) {
                 m_qname=prepareForAssignment(m_qname,qname);
                 if (m_qname) {
@@ -91,8 +91,22 @@ namespace opensaml {
                 else
                     setTextContent(NULL);
             }
-            
+
             IMPL_XMLOBJECT_CLONE(RespondWith);
+        };
+
+        class SAML_DLLLOCAL QueryImpl : public virtual Query, public AnyElementImpl
+        {
+        public:
+            virtual ~QueryImpl() {}
+
+            QueryImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
+            }
+
+            QueryImpl(const QueryImpl& src) : AnyElementImpl(src) {}
+
+            IMPL_XMLOBJECT_CLONE(Query);
         };
 
         class SAML_DLLLOCAL SubjectQueryImpl : public virtual SubjectQuery,
@@ -112,21 +126,21 @@ namespace opensaml {
             }
         public:
             virtual ~SubjectQueryImpl() {}
-    
+
             SubjectQueryImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
                 : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
                 init();
             }
-                
+
             SubjectQueryImpl(const SubjectQueryImpl& src)
                     : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
                 init();
                 if (src.getSubject())
                     setSubject(src.getSubject()->cloneSubject());
             }
-            
+
             IMPL_TYPED_CHILD(Subject);
-    
+
         protected:
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
                 PROC_TYPED_CHILD(Subject,SAML1_NS,true);
@@ -143,17 +157,17 @@ namespace opensaml {
             virtual ~AuthenticationQueryImpl() {
                 XMLString::release(&m_AuthenticationMethod);
             }
-    
+
             AuthenticationQueryImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
                 : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
                 init();
             }
-                
+
             AuthenticationQueryImpl(const AuthenticationQueryImpl& src) : AbstractXMLObject(src), SubjectQueryImpl(src) {
                 init();
                 setAuthenticationMethod(src.getAuthenticationMethod());
             }
-            
+
             IMPL_XMLOBJECT_CLONE(AuthenticationQuery);
             SubjectQuery* cloneSubjectQuery() const {
                 return cloneAuthenticationQuery();
@@ -162,13 +176,13 @@ namespace opensaml {
                 return cloneAuthenticationQuery();
             }
             IMPL_STRING_ATTRIB(AuthenticationMethod);
-    
+
         protected:
             void marshallAttributes(DOMElement* domElement) const {
                 MARSHALL_STRING_ATTRIB(AuthenticationMethod,AUTHENTICATIONMETHOD,NULL);
                 SubjectQueryImpl::marshallAttributes(domElement);
             }
-    
+
             void processAttribute(const DOMAttr* attribute) {
                 PROC_STRING_ATTRIB(AuthenticationMethod,AUTHENTICATIONMETHOD,NULL);
                 SubjectQueryImpl::processAttribute(attribute);
@@ -184,12 +198,12 @@ namespace opensaml {
             virtual ~AttributeQueryImpl() {
                 XMLString::release(&m_Resource);
             }
-    
+
             AttributeQueryImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
                 : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
                 init();
             }
-                
+
             AttributeQueryImpl(const AttributeQueryImpl& src) : AbstractXMLObject(src), SubjectQueryImpl(src) {
                 init();
                 setResource(src.getResource());
@@ -200,7 +214,7 @@ namespace opensaml {
                     }
                 }
             }
-            
+
             IMPL_XMLOBJECT_CLONE(AttributeQuery);
             SubjectQuery* cloneSubjectQuery() const {
                 return cloneAttributeQuery();
@@ -210,18 +224,18 @@ namespace opensaml {
             }
             IMPL_STRING_ATTRIB(Resource);
             IMPL_TYPED_CHILDREN(AttributeDesignator,m_children.end());
-    
+
         protected:
             void marshallAttributes(DOMElement* domElement) const {
                 MARSHALL_STRING_ATTRIB(Resource,RESOURCE,NULL);
                 SubjectQueryImpl::marshallAttributes(domElement);
             }
-    
+
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
                 PROC_TYPED_CHILDREN(AttributeDesignator,SAML1_NS,true);
                 SubjectQueryImpl::processChildElement(childXMLObject,root);
             }
-    
+
             void processAttribute(const DOMAttr* attribute) {
                 PROC_STRING_ATTRIB(Resource,RESOURCE,NULL);
                 SubjectQueryImpl::processAttribute(attribute);
@@ -241,12 +255,12 @@ namespace opensaml {
             virtual ~AuthorizationDecisionQueryImpl() {
                 XMLString::release(&m_Resource);
             }
-    
+
             AuthorizationDecisionQueryImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
                 : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
                 init();
             }
-                
+
             AuthorizationDecisionQueryImpl(const AuthorizationDecisionQueryImpl& src) : AbstractXMLObject(src), SubjectQueryImpl(src) {
                 init();
                 setResource(src.getResource());
@@ -259,7 +273,7 @@ namespace opensaml {
                     }
                 }
             }
-            
+
             IMPL_XMLOBJECT_CLONE(AuthorizationDecisionQuery);
             SubjectQuery* cloneSubjectQuery() const {
                 return cloneAuthorizationDecisionQuery();
@@ -270,19 +284,19 @@ namespace opensaml {
             IMPL_STRING_ATTRIB(Resource);
             IMPL_TYPED_CHILD(Evidence);
             IMPL_TYPED_CHILDREN(Action, m_pos_Evidence);
-    
+
         protected:
             void marshallAttributes(DOMElement* domElement) const {
                 MARSHALL_STRING_ATTRIB(Resource,RESOURCE,NULL);
                 SubjectQueryImpl::marshallAttributes(domElement);
             }
-    
+
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
                 PROC_TYPED_CHILD(Evidence,SAML1_NS,false);
                 PROC_TYPED_CHILDREN(Action,SAML1_NS,false);
                 SubjectQueryImpl::processChildElement(childXMLObject,root);
             }
-    
+
             void processAttribute(const DOMAttr* attribute) {
                 PROC_STRING_ATTRIB(Resource,RESOURCE,NULL);
                 SubjectQueryImpl::processAttribute(attribute);
@@ -313,12 +327,12 @@ namespace opensaml {
                 XMLString::release(&m_RequestID);
                 delete m_IssueInstant;
             }
-    
+
             RequestAbstractTypeImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
                 : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
                 init();
             }
-                
+
             RequestAbstractTypeImpl(const RequestAbstractTypeImpl& src)
                     : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
                 init();
@@ -334,7 +348,7 @@ namespace opensaml {
                     }
                 }
             }
-            
+
             //IMPL_TYPED_CHILD(Signature);
             // Need customized setter.
         protected:
@@ -344,7 +358,7 @@ namespace opensaml {
             Signature* getSignature() const {
                 return m_Signature;
             }
-            
+
             void setSignature(Signature* sig) {
                 prepareForAssignment(m_Signature,sig);
                 *m_pos_Signature=m_Signature=sig;
@@ -364,7 +378,7 @@ namespace opensaml {
             }
             IMPL_DATETIME_ATTRIB(IssueInstant,0);
             IMPL_TYPED_CHILDREN(RespondWith,m_pos_Signature);
-    
+
         protected:
             void marshallAttributes(DOMElement* domElement) const {
                 static const XMLCh MAJORVERSION[] = UNICODE_LITERAL_12(M,a,j,o,r,V,e,r,s,i,o,n);
@@ -419,12 +433,12 @@ namespace opensaml {
             }
         public:
             virtual ~RequestImpl() {}
-    
+
             RequestImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
                 : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
                 init();
             }
-                
+
             RequestImpl(const RequestImpl& src) : AbstractXMLObject(src), RequestAbstractTypeImpl(src) {
                 init();
                 if (src.getQuery())
@@ -442,13 +456,13 @@ namespace opensaml {
                     }
                 }
             }
-            
+
             IMPL_XMLOBJECT_CLONE(Request);
             RequestAbstractType* cloneRequestAbstractType() const {
                 return cloneRequest();
             }
             IMPL_TYPED_CHILD(Query);
-            
+
             SubjectQuery* getSubjectQuery() const {
                 return dynamic_cast<SubjectQuery*>(getQuery());
             }
@@ -474,10 +488,10 @@ namespace opensaml {
             void setAuthorizationDecisionQuery(AuthorizationDecisionQuery* q) {
                 setQuery(q);
             }
-            
+
             IMPL_TYPED_CHILDREN(AssertionIDReference, m_children.end());
             IMPL_TYPED_CHILDREN(AssertionArtifact, m_children.end());
-    
+
         protected:
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
                 PROC_TYPED_CHILD(Query,SAML1P_NS,true);
@@ -503,12 +517,12 @@ namespace opensaml {
             virtual ~StatusCodeImpl() {
                 delete m_Value;
             }
-    
+
             StatusCodeImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
                 : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
                 init();
             }
-                
+
             StatusCodeImpl(const StatusCodeImpl& src)
                     : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
                 init();
@@ -516,11 +530,11 @@ namespace opensaml {
                 if (src.getStatusCode())
                     setStatusCode(src.getStatusCode()->cloneStatusCode());
             }
-            
+
             IMPL_XMLOBJECT_CLONE(StatusCode);
             IMPL_XMLOBJECT_ATTRIB(Value,QName);
             IMPL_TYPED_CHILD(StatusCode);
-    
+
         protected:
             void marshallAttributes(DOMElement* domElement) const {
                 MARSHALL_QNAME_ATTRIB(Value,VALUE,NULL);
@@ -544,21 +558,21 @@ namespace opensaml {
         {
         public:
             virtual ~StatusDetailImpl() {}
-    
+
             StatusDetailImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
                 : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
             }
-                
+
             StatusDetailImpl(const StatusDetailImpl& src)
                     : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
                 VectorOf(XMLObject) v=getUnknownXMLObjects();
                 for (vector<XMLObject*>::const_iterator i=src.m_UnknownXMLObjects.begin(); i!=src.m_UnknownXMLObjects.end(); ++i)
                     v.push_back((*i)->clone());
             }
-            
+
             IMPL_XMLOBJECT_CLONE(StatusDetail);
             IMPL_XMLOBJECT_CHILDREN(UnknownXMLObject,m_children.end());
-    
+
         protected:
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
                 getUnknownXMLObjects().push_back(childXMLObject);
@@ -586,12 +600,12 @@ namespace opensaml {
             }
         public:
             virtual ~StatusImpl() {}
-    
+
             StatusImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
                 : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
                 init();
             }
-                
+
             StatusImpl(const StatusImpl& src)
                     : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
                 init();
@@ -602,12 +616,12 @@ namespace opensaml {
                 if (src.getStatusDetail())
                     setStatusDetail(src.getStatusDetail()->cloneStatusDetail());
             }
-            
+
             IMPL_XMLOBJECT_CLONE(Status);
             IMPL_TYPED_CHILD(StatusCode);
             IMPL_TYPED_CHILD(StatusMessage);
             IMPL_TYPED_CHILD(StatusDetail);
-    
+
         protected:
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
                 PROC_TYPED_CHILD(StatusCode,SAML1P_NS,false);
@@ -645,12 +659,12 @@ namespace opensaml {
                 XMLString::release(&m_Recipient);
                 delete m_IssueInstant;
             }
-    
+
             ResponseAbstractTypeImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
                 : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
                 init();
             }
-                
+
             ResponseAbstractTypeImpl(const ResponseAbstractTypeImpl& src)
                     : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
                 init();
@@ -672,7 +686,7 @@ namespace opensaml {
             Signature* getSignature() const {
                 return m_Signature;
             }
-            
+
             void setSignature(Signature* sig) {
                 prepareForAssignment(m_Signature,sig);
                 *m_pos_Signature=m_Signature=sig;
@@ -693,7 +707,7 @@ namespace opensaml {
             IMPL_STRING_ATTRIB(InResponseTo);
             IMPL_DATETIME_ATTRIB(IssueInstant,0);
             IMPL_STRING_ATTRIB(Recipient);
-    
+
         protected:
             void marshallAttributes(DOMElement* domElement) const {
                 static const XMLCh MAJORVERSION[] = UNICODE_LITERAL_12(M,a,j,o,r,V,e,r,s,i,o,n);
@@ -751,12 +765,12 @@ namespace opensaml {
             }
         public:
             virtual ~ResponseImpl() {}
-    
+
             ResponseImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
                 : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
                 init();
             }
-                
+
             ResponseImpl(const ResponseImpl& src) : AbstractXMLObject(src), ResponseAbstractTypeImpl(src) {
                 init();
                 if (src.getStatus())
@@ -768,14 +782,14 @@ namespace opensaml {
                     }
                 }
             }
-            
+
             IMPL_XMLOBJECT_CLONE(Response);
             ResponseAbstractType* cloneResponseAbstractType() const {
                 return cloneResponse();
             }
             IMPL_TYPED_CHILD(Status);
             IMPL_TYPED_FOREIGN_CHILDREN(Assertion,saml1,m_children.end());
-    
+
         protected:
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
                 PROC_TYPED_CHILD(Status,SAML1P_NS,false);
@@ -797,6 +811,7 @@ IMPL_XMLOBJECTBUILDER(AssertionArtifact);
 IMPL_XMLOBJECTBUILDER(AttributeQuery);
 IMPL_XMLOBJECTBUILDER(AuthenticationQuery);
 IMPL_XMLOBJECTBUILDER(AuthorizationDecisionQuery);
+IMPL_XMLOBJECTBUILDER(Query);
 IMPL_XMLOBJECTBUILDER(Request);
 IMPL_XMLOBJECTBUILDER(RespondWith);
 IMPL_XMLOBJECTBUILDER(Response);
@@ -851,7 +866,7 @@ const XMLCh _SUCCESS[] =                                    UNICODE_LITERAL_7(S,
 const XMLCh _REQUESTER[] =                                  UNICODE_LITERAL_9(R,e,q,u,e,s,t,e,r);
 const XMLCh _RESPONDER[] =                                  UNICODE_LITERAL_9(R,e,s,p,o,n,d,e,r);
 const XMLCh _VERSIONMISMATCH[] =                            UNICODE_LITERAL_15(V,e,r,s,i,o,n,M,i,s,m,a,t,c,h);
- 
+
 QName StatusCode::SUCCESS(SAML1P_NS,_SUCCESS,SAML1P_PREFIX);
 QName StatusCode::REQUESTER(SAML1P_NS,_REQUESTER,SAML1P_PREFIX);
 QName StatusCode::RESPONDER(SAML1P_NS,_RESPONDER,SAML1P_PREFIX);

@@ -1,6 +1,6 @@
 /*
 *  Copyright 2001-2007 Internet2
- * 
+ *
 * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,7 +16,7 @@
 
 /**
  * MetadataSchemaValidators.cpp
- * 
+ *
  * Schema-based validators for SAML 2.0 Metadata classes
  */
 
@@ -36,7 +36,7 @@ using samlconstants::SAML20MD_QUERY_EXT_NS;
 
 namespace opensaml {
     namespace saml2md {
-        
+
         XMLOBJECTVALIDATOR_SIMPLE(SAML_DLLLOCAL,ActionNamespace);
         XMLOBJECTVALIDATOR_SIMPLE(SAML_DLLLOCAL,AffiliateMember);
         XMLOBJECTVALIDATOR_SIMPLE(SAML_DLLLOCAL,AttributeProfile);
@@ -57,7 +57,7 @@ namespace opensaml {
             XMLOBJECTVALIDATOR_REQUIRE(localizedNameType,TextContent);
             XMLOBJECTVALIDATOR_REQUIRE(localizedURIType,Lang);
         END_XMLOBJECTVALIDATOR;
-        
+
         BEGIN_XMLOBJECTVALIDATOR_SUB(SAML_DLLLOCAL,OrganizationName,localizedNameType);
             localizedNameTypeSchemaValidator::validate(xmlObject);
         END_XMLOBJECTVALIDATOR;
@@ -89,7 +89,7 @@ namespace opensaml {
             const vector<XMLObject*>& anys=ptr->getUnknownXMLObjects();
             for_each(anys.begin(),anys.end(),checkWildcardNS());
         END_XMLOBJECTVALIDATOR;
-        
+
         BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,Organization);
             XMLOBJECTVALIDATOR_NONEMPTY(Organization,OrganizationName);
             XMLOBJECTVALIDATOR_NONEMPTY(Organization,OrganizationDisplayName);
@@ -232,7 +232,7 @@ namespace opensaml {
                 ptr->getAuthnAuthorityDescriptors().empty() &&
                 ptr->getAttributeAuthorityDescriptors().empty() &&
                 ptr->getPDPDescriptors().empty()) {
-                    
+
                 if (!ptr->getAffiliationDescriptor())
                     throw ValidationException("EntityDescriptor must have at least one child role or affiliation descriptor.");
             }
@@ -243,7 +243,7 @@ namespace opensaml {
 
         BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,EntitiesDescriptor);
             if (ptr->getEntityDescriptors().empty() && ptr->getEntitiesDescriptors().empty())
-                throw ValidationException("EntitiesDescriptor must contain at least one child descriptor."); 
+                throw ValidationException("EntitiesDescriptor must contain at least one child descriptor.");
         END_XMLOBJECTVALIDATOR;
     };
 };
@@ -252,7 +252,7 @@ namespace opensaml {
     q=QName(SAML20MD_NS,cname::LOCAL_NAME); \
     XMLObjectBuilder::registerBuilder(q,new cname##Builder()); \
     SchemaValidators.registerValidator(q,new cname##SchemaValidator())
-    
+
 #define REGISTER_TYPE(cname) \
     q=QName(SAML20MD_NS,cname::TYPE_NAME); \
     XMLObjectBuilder::registerBuilder(q,new cname##Builder()); \
@@ -261,7 +261,7 @@ namespace opensaml {
 #define REGISTER_ELEMENT_NOVAL(cname) \
     q=QName(SAML20MD_NS,cname::LOCAL_NAME); \
     XMLObjectBuilder::registerBuilder(q,new cname##Builder());
-    
+
 #define REGISTER_TYPE_NOVAL(cname) \
     q=QName(SAML20MD_NS,cname::TYPE_NAME); \
     XMLObjectBuilder::registerBuilder(q,new cname##Builder());
@@ -299,6 +299,7 @@ void opensaml::saml2md::registerMetadataClasses() {
     REGISTER_ELEMENT(OrganizationURL);
     REGISTER_ELEMENT(PDPDescriptor);
     REGISTER_ELEMENT(RequestedAttribute);
+    REGISTER_ELEMENT(RoleDescriptor);
     REGISTER_ELEMENT(ServiceDescription);
     REGISTER_ELEMENT(ServiceName);
     REGISTER_ELEMENT(SingleLogoutService);
@@ -328,7 +329,7 @@ void opensaml::saml2md::registerMetadataClasses() {
 
     q=QName(SAML20MD_NS,xmlencryption::EncryptionMethod::LOCAL_NAME);
     XMLObjectBuilder::registerBuilder(q,new xmlencryption::EncryptionMethodBuilder());
-    
+
     q=QName(samlconstants::SAML1MD_NS,SourceID::LOCAL_NAME);
     XMLObjectBuilder::registerBuilder(q,new SourceIDBuilder());
     SchemaValidators.registerValidator(q,new SourceIDSchemaValidator());
