@@ -1,5 +1,9 @@
 VERSION 2.1
 
+Issues addressed by this release:
+---------------------------------
+https://bugs.internet2.edu/jira/secure/IssueNavigator.jspa?reset=true&&pid=10010&fixfor=10133&status=5&status=6&sorter/field=issuekey&sorter/order=ASC
+
 Documentation:
 --------------
 The OpenSAML wiki is the home for any documentation.
