@@ -75,7 +75,7 @@ namespace opensaml {
             void doFilter(EntityDescriptor& entity, bool rootObject=false) const;
             void verifySignature(Signature* sig, const XMLCh* peerName) const;
 
-            bool m_verifyRoles;
+            bool m_verifyRoles,m_verifyName;
             CredentialResolver* m_credResolver;
             SignatureTrustEngine* m_trust;
             SignatureProfileValidator m_profileValidator;
@@ -97,12 +97,16 @@ static const XMLCh certificate[] =          UNICODE_LITERAL_11(c,e,r,t,i,f,i,c,a
 static const XMLCh Certificate[] =          UNICODE_LITERAL_11(C,e,r,t,i,f,i,c,a,t,e);
 static const XMLCh Path[] =                 UNICODE_LITERAL_4(P,a,t,h);
 static const XMLCh verifyRoles[] =          UNICODE_LITERAL_11(v,e,r,i,f,y,R,o,l,e,s);
+static const XMLCh verifyName[] =           UNICODE_LITERAL_10(v,e,r,i,f,y,N,a,m,e);
 
 SignatureMetadataFilter::SignatureMetadataFilter(const DOMElement* e)
-    : m_verifyRoles(false), m_credResolver(NULL), m_trust(NULL), m_log(Category::getInstance(SAML_LOGCAT".MetadataFilter.Signature"))
+    : m_verifyRoles(false), m_verifyName(true), m_credResolver(NULL), m_trust(NULL), m_log(Category::getInstance(SAML_LOGCAT".MetadataFilter.Signature"))
 {
     const XMLCh* flag = e ? e->getAttributeNS(NULL,verifyRoles) : NULL;
     m_verifyRoles = (flag && (*flag == chLatin_t || *flag == chDigit_1));
+
+    flag = e ? e->getAttributeNS(NULL,verifyName) : NULL;
+    m_verifyName = !(flag && (*flag == chLatin_f || *flag == chDigit_0));
 
     if (e && e->hasAttributeNS(NULL,certificate)) {
         // Use a file-based credential resolver rooted here.
@@ -367,12 +371,12 @@ void SignatureMetadataFilter::verifySignature(Signature* sig, const XMLCh* peerN
     CredentialCriteria cc;
     cc.setUsage(Credential::SIGNING_CREDENTIAL);
     cc.setSignature(*sig, CredentialCriteria::KEYINFO_EXTRACTION_KEY);
-    if (peerName) {
-        auto_ptr_char pname(peerName);
-        cc.setPeerName(pname.get());
-    }
 
     if (m_credResolver) {
+        if (peerName) {
+            auto_ptr_char pname(peerName);
+            cc.setPeerName(pname.get());
+        }
         Locker locker(m_credResolver);
         vector<const Credential*> creds;
         if (m_credResolver->resolve(creds,&cc)) {
@@ -393,6 +397,10 @@ void SignatureMetadataFilter::verifySignature(Signature* sig, const XMLCh* peerN
         }
     }
     else if (m_trust) {
+        if (m_verifyName && peerName) {
+            auto_ptr_char pname(peerName);
+            cc.setPeerName(pname.get());
+        }
         DummyCredentialResolver dummy;
         if (m_trust->validate(*sig, dummy, &cc))
             return;
