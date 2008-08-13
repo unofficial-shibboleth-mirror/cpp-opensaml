@@ -280,7 +280,7 @@ namespace opensaml {
 #ifdef HAVE_COVARIANT_RETURNS
                     return b->buildObject(samlconstants::SAML1_NS, Condition::LOCAL_NAME, samlconstants::SAML1_PREFIX, &schemaType);
 #else
-                    return dynamic_cast<Statement*>(b->buildObject(samlconstants::SAML1_NS, Condition::LOCAL_NAME, samlconstants::SAML1_PREFIX, &schemaType));
+                    return dynamic_cast<Condition*>(b->buildObject(samlconstants::SAML1_NS, Condition::LOCAL_NAME, samlconstants::SAML1_PREFIX, &schemaType));
 #endif
                 }
                 throw xmltooling::XMLObjectException("Unable to obtain typed builder for Condition.");
