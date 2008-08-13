@@ -28,8 +28,8 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2,1,0,0
- PRODUCTVERSION 2,1,0,0
+ FILEVERSION 2,1,1,0
+ PRODUCTVERSION 2,1,1,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -46,8 +46,8 @@ BEGIN
         BEGIN
             VALUE "Comments", "\0"
             VALUE "CompanyName", "Internet2\0"
-            VALUE "FileDescription", "OpenSAML 2.1 Library\0"
-            VALUE "FileVersion", "2, 1, 0, 0\0"
+            VALUE "FileDescription", "OpenSAML 2.1.1 Library\0"
+            VALUE "FileVersion", "2, 1, 1, 0\0"
 #ifdef _DEBUG
             VALUE "InternalName", "saml2_1D\0"
 #else
@@ -61,8 +61,8 @@ BEGIN
             VALUE "OriginalFilename", "saml2_1.dll\0"
 #endif
             VALUE "PrivateBuild", "\0"
-            VALUE "ProductName", "OpenSAML 2.1\0"
-            VALUE "ProductVersion", "2, 1, 0, 0\0"
+            VALUE "ProductName", "OpenSAML 2.1.1\0"
+            VALUE "ProductVersion", "2, 1, 1, 0\0"
             VALUE "SpecialBuild", "\0"
         END
     END

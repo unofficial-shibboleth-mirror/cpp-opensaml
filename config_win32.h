@@ -70,7 +70,7 @@
 #define PACKAGE_TARNAME "opensaml"
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "2.1"
+#define PACKAGE_VERSION "2.1.1"
 
 /* Define to the necessary symbol if this constant uses a non-standard name on
    your system. */
@@ -83,7 +83,7 @@
 /* #undef TM_IN_SYS_TIME */
 
 /* Version number of package */
-#define VERSION "2.1"
+#define VERSION "2.1.1"
 
 /* Define to empty if `const' does not conform to ANSI C. */
 /* #undef const */
