@@ -381,7 +381,9 @@ namespace opensaml {
                 ++m_pos_TelephoneNumber;
             }
         public:
-            virtual ~ContactPersonImpl() {}
+            virtual ~ContactPersonImpl() {
+                XMLString::release(&m_ContactType);
+            }
 
             ContactPersonImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
                 : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
