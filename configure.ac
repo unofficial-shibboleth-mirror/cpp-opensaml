@@ -234,11 +234,15 @@ AC_ARG_WITH(xmltooling,
 LIBS="-lxmltooling $LIBS"
 AC_CHECK_HEADER([xmltooling/XMLToolingConfig.h],,AC_MSG_ERROR([unable to find xmltooling header files]))
 AC_TRY_LINK(
-    [#include <xmltooling/XMLToolingConfig.h>],
-    [xmltooling::XMLToolingConfig::getConfig().init()],
-    [AC_DEFINE(HAVE_LIBXMLTOOLING,1,[Define if XML-Tooling library was found])],
-    [AC_MSG_ERROR([unable to link with xmltooling library])]
-    )
+    [#include <xmltooling/XMLToolingConfig.h>
+#include <xmltooling/version.h>],
+    [#if _XMLTOOLING_VERSION >= 10100
+xmltooling::XMLToolingConfig::getConfig();
+#else
+#error Need XMLTooling version 1.1 or higher
+#endif],
+        [AC_DEFINE(HAVE_XMLTOOLING,1,[Define if xmltooling library was found])],
+        [AC_MSG_ERROR([unable to link with XMLTooling, or version was too old])])
 
 # Check for unit test support
 CXXTEST="/usr/bin/cxxtestgen.pl"
