@@ -1,7 +1,7 @@
 AC_PREREQ([2.50])
-AC_INIT([opensaml], [2.1.1], [mace-opensaml-users@internet2.edu], [saml])
+AC_INIT([opensaml], [2.2], [mace-opensaml-users@internet2.edu], [saml])
 AM_CONFIG_HEADER(config.h)
-AM_INIT_AUTOMAKE([opensaml], [2.1.1])
+AM_INIT_AUTOMAKE([opensaml], [2.2])
 
 sinclude(doxygen.m4)
 sinclude(acx_pthread.m4)
@@ -236,10 +236,10 @@ AC_CHECK_HEADER([xmltooling/XMLToolingConfig.h],,AC_MSG_ERROR([unable to find xm
 AC_TRY_LINK(
     [#include <xmltooling/XMLToolingConfig.h>
 #include <xmltooling/version.h>],
-    [#if _XMLTOOLING_VERSION >= 10100
+    [#if _XMLTOOLING_VERSION >= 10200
 xmltooling::XMLToolingConfig::getConfig();
 #else
-#error Need XMLTooling version 1.1 or higher
+#error Need XMLTooling version 1.2 or higher
 #endif],
         [AC_DEFINE(HAVE_XMLTOOLING,1,[Define if xmltooling library was found])],
         [AC_MSG_ERROR([unable to link with XMLTooling, or version was too old])])
