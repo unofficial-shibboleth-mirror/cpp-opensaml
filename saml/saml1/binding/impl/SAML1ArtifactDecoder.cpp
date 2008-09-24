@@ -1,6 +1,6 @@
 /*
  *  Copyright 2001-2007 Internet2
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,7 +16,7 @@
 
 /**
  * SAML1ArtifactDecoder.cpp
- * 
+ *
  * SAML 1.x Artifact binding/profile message decoder
  */
 
@@ -41,19 +41,19 @@ using namespace xmltooling;
 using namespace std;
 
 namespace opensaml {
-    namespace saml1p {              
+    namespace saml1p {
         class SAML_DLLLOCAL SAML1ArtifactDecoder : public SAML1MessageDecoder
         {
         public:
             SAML1ArtifactDecoder() {}
             virtual ~SAML1ArtifactDecoder() {}
-            
+
             xmltooling::XMLObject* decode(
                 std::string& relayState,
                 const GenericRequest& genericRequest,
                 SecurityPolicy& policy
                 ) const;
-        };                
+        };
 
         MessageDecoder* SAML_DLLLOCAL SAML1ArtifactDecoderFactory(const pair<const DOMElement*,const XMLCh*>& p)
         {
@@ -93,7 +93,7 @@ XMLObject* SAML1ArtifactDecoder::decode(
     for (vector<const char*>::const_iterator raw=SAMLart.begin(); raw!=SAMLart.end(); ++raw) {
         try {
             log.debug("processing encoded artifact (%s)", *raw);
-            
+
             // Check replay.
             ReplayCache* replayCache = XMLToolingConfig::getConfig().getReplayCache();
             if (replayCache) {
@@ -117,9 +117,12 @@ XMLObject* SAML1ArtifactDecoder::decode(
             throw;
         }
     }
-    
+
     log.debug("attempting to determine source of artifact(s)...");
-    MetadataProvider::Criteria mc(artifacts.front(), policy.getRole(), samlconstants::SAML11_PROTOCOL_ENUM);
+    MetadataProvider::Criteria& mc = policy.getMetadataProviderCriteria();
+    mc.artifact = artifacts.front();
+    mc.role = policy.getRole();
+    mc.protocol = samlconstants::SAML11_PROTOCOL_ENUM;
     mc.protocol2 = samlconstants::SAML10_PROTOCOL_ENUM;
     pair<const EntityDescriptor*,const RoleDescriptor*> provider=policy.getMetadataProvider()->getEntityDescriptor(mc);
     if (!provider.first) {
@@ -130,7 +133,7 @@ XMLObject* SAML1ArtifactDecoder::decode(
         for_each(artifacts.begin(), artifacts.end(), xmltooling::cleanup<SAMLArtifact>());
         throw BindingException("Metadata lookup failed, unable to determine artifact issuer");
     }
-    
+
     if (log.isDebugEnabled()) {
         auto_ptr_char issuer(provider.first->getEntityID());
         log.debug("artifact issued by (%s)", issuer.get());
@@ -144,15 +147,15 @@ XMLObject* SAML1ArtifactDecoder::decode(
     // Set Issuer for the policy.
     policy.setIssuer(provider.first->getEntityID());
     policy.setIssuerMetadata(provider.second);
-    
+
     try {
         log.debug("calling ArtifactResolver...");
         auto_ptr<Response> response(
             m_artifactResolver->resolve(artifacts, dynamic_cast<const IDPSSODescriptor&>(*provider.second), policy)
             );
-        
+
         // The policy should be enforced against the Response by the resolve step.
-        
+
         for_each(artifacts.begin(), artifacts.end(), xmltooling::cleanup<SAMLArtifact>());
         return response.release();
     }

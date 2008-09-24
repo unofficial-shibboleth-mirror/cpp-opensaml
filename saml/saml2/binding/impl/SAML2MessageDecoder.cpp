@@ -1,6 +1,6 @@
 /*
  *  Copyright 2001-2007 Internet2
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,7 +16,7 @@
 
 /**
  * SAML2MessageDecoder.cpp
- * 
+ *
  * Base class for SAML 2.0 MessageDecoders.
  */
 
@@ -60,7 +60,7 @@ void SAML2MessageDecoder::extractMessageDetails(
             policy.setIssuer(issuer);
         }
         else if (XMLString::equals(q.getLocalPart(), Response::LOCAL_NAME)) {
-            // No issuer in the message, so we have to try the Response approach. 
+            // No issuer in the message, so we have to try the Response approach.
             const vector<saml2::Assertion*>& assertions = dynamic_cast<const Response&>(samlRoot).getAssertions();
             if (!assertions.empty()) {
                 issuer = assertions.front()->getIssuer();
@@ -89,10 +89,12 @@ void SAML2MessageDecoder::extractMessageDetails(
                 log.warn("non-system entity issuer, skipping metadata lookup");
                 return;
             }
-            
-            log.debug("searching metadata for message issuer...");
 
-            MetadataProvider::Criteria mc(issuer->getName(), policy.getRole(), protocol);
+            log.debug("searching metadata for message issuer...");
+            MetadataProvider::Criteria& mc = policy.getMetadataProviderCriteria();
+            mc.entityID_unicode = issuer->getName();
+            mc.role = policy.getRole();
+            mc.protocol = protocol;
             pair<const EntityDescriptor*,const RoleDescriptor*> entity = policy.getMetadataProvider()->getEntityDescriptor(mc);
             if (!entity.first) {
                 auto_ptr_char temp(issuer->getName());

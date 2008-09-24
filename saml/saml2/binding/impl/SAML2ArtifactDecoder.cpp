@@ -1,6 +1,6 @@
 /*
  *  Copyright 2001-2007 Internet2
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,7 +16,7 @@
 
 /**
  * SAML2ArtifactDecoder.cpp
- * 
+ *
  * SAML 2.0 Artifact binding message decoder
  */
 
@@ -42,19 +42,19 @@ using namespace xmltooling;
 using namespace std;
 
 namespace opensaml {
-    namespace saml2p {              
+    namespace saml2p {
         class SAML_DLLLOCAL SAML2ArtifactDecoder : public SAML2MessageDecoder
         {
         public:
             SAML2ArtifactDecoder() {}
             virtual ~SAML2ArtifactDecoder() {}
-            
+
             xmltooling::XMLObject* decode(
                 std::string& relayState,
                 const GenericRequest& genericRequest,
                 SecurityPolicy& policy
                 ) const;
-        };                
+        };
 
         MessageDecoder* SAML_DLLLOCAL SAML2ArtifactDecoderFactory(const pair<const DOMElement*,const XMLCh*>& p)
         {
@@ -92,7 +92,7 @@ XMLObject* SAML2ArtifactDecoder::decode(
     SAMLArtifact* artifact=NULL;
     try {
         log.debug("processing encoded artifact (%s)", SAMLart);
-        
+
         // Check replay.
         ReplayCache* replayCache = XMLToolingConfig::getConfig().getReplayCache();
         if (replayCache) {
@@ -110,16 +110,19 @@ XMLObject* SAML2ArtifactDecoder::decode(
         log.error("error parsing artifact (%s)", SAMLart);
         throw;
     }
-    
+
     // Check the type.
     auto_ptr<SAML2Artifact> artifact2(dynamic_cast<SAML2Artifact*>(artifact));
     if (!artifact2.get()) {
         throw BindingException("Artifact binding requires SAML 2.0 artifact.");
         delete artifact;
     }
-    
+
     log.debug("attempting to determine source of artifact...");
-    MetadataProvider::Criteria mc(artifact, policy.getRole(), samlconstants::SAML20P_NS);
+    MetadataProvider::Criteria& mc = policy.getMetadataProviderCriteria();
+    mc.artifact = artifact;
+    mc.role = policy.getRole();
+    mc.protocol = samlconstants::SAML20P_NS;
     pair<const EntityDescriptor*,const RoleDescriptor*> provider=policy.getMetadataProvider()->getEntityDescriptor(mc);
     if (!provider.first) {
         log.error(
@@ -128,7 +131,7 @@ XMLObject* SAML2ArtifactDecoder::decode(
             );
         throw BindingException("Metadata lookup failed, unable to determine artifact issuer.");
     }
-    
+
     if (log.isDebugEnabled()) {
         auto_ptr_char issuer(provider.first->getEntityID());
         log.debug("lookup succeeded, artifact issued by (%s)", issuer.get());
@@ -141,12 +144,12 @@ XMLObject* SAML2ArtifactDecoder::decode(
     // Set issuer into policy.
     policy.setIssuer(provider.first->getEntityID());
     policy.setIssuerMetadata(provider.second);
-    
+
     log.debug("calling ArtifactResolver...");
     auto_ptr<ArtifactResponse> response(
         m_artifactResolver->resolve(*(artifact2.get()), dynamic_cast<const SSODescriptorType&>(*provider.second), policy)
         );
-    
+
     // The policy should be enforced against the ArtifactResponse by the resolve step.
     // Reset only the message state.
     policy.reset(true);
@@ -160,6 +163,6 @@ XMLObject* SAML2ArtifactDecoder::decode(
 
     // Return the payload only.
     response.release();
-    payload->detach(); 
+    payload->detach();
     return payload;
 }

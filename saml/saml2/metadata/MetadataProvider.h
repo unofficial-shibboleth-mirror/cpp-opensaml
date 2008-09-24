@@ -157,6 +157,12 @@ namespace opensaml {
              */
             struct SAML_API Criteria {
                 /**
+                 * Default constructor.
+                 */
+                Criteria() : entityID_unicode(NULL), entityID_ascii(NULL), artifact(NULL), role(NULL), protocol(NULL), protocol2(NULL), validOnly(true) {
+                }
+            
+                /**
                  * Constructor.
                  * 
                  * @param id    entityID to lookup

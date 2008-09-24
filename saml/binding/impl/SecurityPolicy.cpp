@@ -1,6 +1,6 @@
 /*
  *  Copyright 2001-2007 Internet2
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,8 +16,8 @@
 
 /**
  * SecurityPolicy.cpp
- * 
- * Overall policy used to verify the security of an incoming message. 
+ *
+ * Overall policy used to verify the security of an incoming message.
  */
 
 #include "internal.h"
@@ -61,12 +61,21 @@ void SecurityPolicy::reset(bool messageOnly)
     XMLString::release(&m_messageID);
     m_messageID=NULL;
     m_issueInstant=0;
+    delete m_metadataCriteria;
+    m_metadataCriteria=NULL;
     if (!messageOnly) {
         delete m_issuer;
         m_issuer=NULL;
         m_issuerRole=NULL;
         m_authenticated=false;
     }
+}
+
+MetadataProvider::Criteria& SecurityPolicy::getMetadataProviderCriteria() const
+{
+    if (!m_metadataCriteria)
+        m_metadataCriteria=new MetadataProvider::Criteria();
+    return *m_metadataCriteria;
 }
 
 void SecurityPolicy::evaluate(const XMLObject& message, const GenericRequest* request)
@@ -79,7 +88,7 @@ void SecurityPolicy::setIssuer(const Issuer* issuer)
 {
     if (!getIssuerMatchingPolicy().issuerMatches(m_issuer, issuer))
         throw SecurityPolicyException("An Issuer was supplied that conflicts with previous results.");
-    
+
     if (!m_issuer) {
         if (m_entityOnly && issuer->getFormat() && !XMLString::equals(issuer->getFormat(), NameIDType::ENTITY))
             throw SecurityPolicyException("A non-entity Issuer was supplied, violating policy.");
@@ -92,7 +101,7 @@ void SecurityPolicy::setIssuer(const XMLCh* issuer)
 {
     if (!getIssuerMatchingPolicy().issuerMatches(m_issuer, issuer))
         throw SecurityPolicyException("An Issuer was supplied that conflicts with previous results.");
-    
+
     if (!m_issuer && issuer && *issuer) {
         m_issuerRole = NULL;
         m_issuer = IssuerBuilder::buildIssuer();
@@ -112,17 +121,17 @@ bool SecurityPolicy::IssuerMatchingPolicy::issuerMatches(const Issuer* issuer1, 
     // NULL matches anything for the purposes of this interface.
     if (!issuer1 || !issuer2)
         return true;
-    
+
     const XMLCh* op1=issuer1->getName();
     const XMLCh* op2=issuer2->getName();
     if (!op1 || !op2 || !XMLString::equals(op1,op2))
         return false;
-    
+
     op1=issuer1->getFormat();
     op2=issuer2->getFormat();
     if (!XMLString::equals(op1 ? op1 : NameIDType::ENTITY, op2 ? op2 : NameIDType::ENTITY))
         return false;
-        
+
     op1=issuer1->getNameQualifier();
     op2=issuer2->getNameQualifier();
     if (!XMLString::equals(op1 ? op1 : &chNull, op2 ? op2 : &chNull))
@@ -132,7 +141,7 @@ bool SecurityPolicy::IssuerMatchingPolicy::issuerMatches(const Issuer* issuer1, 
     op2=issuer2->getSPNameQualifier();
     if (!XMLString::equals(op1 ? op1 : &chNull, op2 ? op2 : &chNull))
         return false;
-    
+
     return true;
 }
 
@@ -141,15 +150,15 @@ bool SecurityPolicy::IssuerMatchingPolicy::issuerMatches(const Issuer* issuer1, 
     // NULL matches anything for the purposes of this interface.
     if (!issuer1 || !issuer2 || !*issuer2)
         return true;
-    
+
     const XMLCh* op1=issuer1->getName();
     if (!op1 || !XMLString::equals(op1,issuer2))
         return false;
-    
+
     op1=issuer1->getFormat();
     if (op1 && *op1 && !XMLString::equals(op1, NameIDType::ENTITY))
         return false;
-        
+
     op1=issuer1->getNameQualifier();
     if (op1 && *op1)
         return false;
@@ -157,6 +166,6 @@ bool SecurityPolicy::IssuerMatchingPolicy::issuerMatches(const Issuer* issuer1, 
     op1=issuer1->getSPNameQualifier();
     if (op1 && *op1)
         return false;
-    
+
     return true;
 }
