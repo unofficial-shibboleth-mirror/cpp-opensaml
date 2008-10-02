@@ -73,6 +73,7 @@ namespace opensaml {
         {
             void init() {
                 m_Lang=NULL;
+                m_LangPrefix=NULL;
             }
 
         protected:
@@ -83,6 +84,7 @@ namespace opensaml {
         public:
             virtual ~localizedNameTypeImpl() {
                 XMLString::release(&m_Lang);
+                XMLString::release(&m_LangPrefix);
             }
 
             localizedNameTypeImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
@@ -94,18 +96,32 @@ namespace opensaml {
                     : AbstractXMLObject(src), AbstractSimpleElement(src), AbstractDOMCachingXMLObject(src) {
                 init();
                 setLang(src.getLang());
+                if (src.m_LangPrefix)
+                    m_LangPrefix = XMLString::replicate(src.m_LangPrefix);
             }
 
             IMPL_XMLOBJECT_CLONE(localizedNameType);
-            IMPL_STRING_ATTRIB(Lang);
+            IMPL_XMLOBJECT_FOREIGN_ATTRIB(Lang,XMLCh);
 
         protected:
             void marshallAttributes(DOMElement* domElement) const {
-                MARSHALL_STRING_ATTRIB(Lang,LANG,xmlconstants::XML_NS);
+                if (m_Lang && *m_Lang) {
+                    DOMAttr* attr=domElement->getOwnerDocument()->createAttributeNS(xmlconstants::XML_NS,LANG_ATTRIB_NAME);
+                    if (m_LangPrefix && *m_LangPrefix)
+                        attr->setPrefix(m_LangPrefix);
+                    attr->setNodeValue(m_Lang);
+                    domElement->setAttributeNodeNS(attr);
+                }
             }
 
             void processAttribute(const DOMAttr* attribute) {
-                PROC_STRING_ATTRIB(Lang,LANG,xmlconstants::XML_NS);
+                if (XMLHelper::isNodeNamed(attribute, xmlconstants::XML_NS, LANG_ATTRIB_NAME)) {
+                    setLang(attribute->getValue());
+                    const XMLCh* temp = attribute->getPrefix();
+                    if (temp && *temp && !XMLString::equals(temp, xmlconstants::XML_NS))
+                        m_LangPrefix = XMLString::replicate(temp);
+                    return;
+                }
                 AbstractXMLObjectUnmarshaller::processAttribute(attribute);
             }
         };
@@ -118,6 +134,7 @@ namespace opensaml {
         {
             void init() {
                 m_Lang=NULL;
+                m_LangPrefix=NULL;
             }
 
         protected:
@@ -128,6 +145,7 @@ namespace opensaml {
         public:
             virtual ~localizedURITypeImpl() {
                 XMLString::release(&m_Lang);
+                XMLString::release(&m_LangPrefix);
             }
 
             localizedURITypeImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
@@ -139,18 +157,32 @@ namespace opensaml {
                     : AbstractXMLObject(src), AbstractSimpleElement(src), AbstractDOMCachingXMLObject(src) {
                 init();
                 setLang(src.getLang());
+                if (src.m_LangPrefix)
+                    m_LangPrefix = XMLString::replicate(src.m_LangPrefix);
             }
 
             IMPL_XMLOBJECT_CLONE(localizedURIType);
-            IMPL_STRING_ATTRIB(Lang);
+            IMPL_XMLOBJECT_FOREIGN_ATTRIB(Lang,XMLCh);
 
         protected:
             void marshallAttributes(DOMElement* domElement) const {
-                MARSHALL_STRING_ATTRIB(Lang,LANG,xmlconstants::XML_NS);
+                if (m_Lang && *m_Lang) {
+                    DOMAttr* attr=domElement->getOwnerDocument()->createAttributeNS(xmlconstants::XML_NS,LANG_ATTRIB_NAME);
+                    if (m_LangPrefix && *m_LangPrefix)
+                        attr->setPrefix(m_LangPrefix);
+                    attr->setNodeValue(m_Lang);
+                    domElement->setAttributeNodeNS(attr);
+                }
             }
 
             void processAttribute(const DOMAttr* attribute) {
-                PROC_STRING_ATTRIB(Lang,LANG,xmlconstants::XML_NS);
+                if (XMLHelper::isNodeNamed(attribute, xmlconstants::XML_NS, LANG_ATTRIB_NAME)) {
+                    setLang(attribute->getValue());
+                    const XMLCh* temp = attribute->getPrefix();
+                    if (temp && *temp && !XMLString::equals(temp, xmlconstants::XML_NS))
+                        m_LangPrefix = XMLString::replicate(temp);
+                    return;
+                }
                 AbstractXMLObjectUnmarshaller::processAttribute(attribute);
             }
         };
