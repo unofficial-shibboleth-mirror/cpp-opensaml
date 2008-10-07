@@ -1,6 +1,6 @@
 /*
  *  Copyright 2001-2007 Internet2
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,7 +16,7 @@
 
 /**
  * BrowserSSOProfile20Validator.cpp
- * 
+ *
  * SAML 2.0 Browser SSO Profile Assertion Validator
  */
 
@@ -40,34 +40,35 @@ void BrowserSSOProfileValidator::validateAssertion(const Assertion& assertion) c
     Category& log = Category::getInstance(SAML_LOGCAT".AssertionValidator");
 
     // The assertion MUST have proper confirmation requirements.
+    const char* msg=NULL;
     const Subject* subject = assertion.getSubject();
     if (subject) {
         const vector<SubjectConfirmation*>& confs = subject->getSubjectConfirmations();
         for (vector<SubjectConfirmation*>::const_iterator sc = confs.begin(); sc!=confs.end(); ++sc) {
             if (XMLString::equals((*sc)->getMethod(), SubjectConfirmation::BEARER)) {
                 const SubjectConfirmationDataType* data = dynamic_cast<const SubjectConfirmationDataType*>((*sc)->getSubjectConfirmationData());
-                
+
                 if (m_destination.get()) {
                     if (!XMLString::equals(m_destination.get(), data ? data->getRecipient() : NULL)) {
-                        log.error("bearer confirmation failed with recipient mismatch");
+                        msg = "bearer confirmation failed with recipient mismatch";
                         continue;
                     }
                 }
 
                 if (m_requestID.get()) {
                     if (!XMLString::equals(m_requestID.get(), data ? data->getInResponseTo() : NULL)) {
-                        log.error("bearer confirmation failed with request correlation mismatch");
+                        msg = "bearer confirmation failed with request correlation mismatch";
                         continue;
                     }
                 }
 
                 if (m_ts) {
                     if (!data || !data->getNotOnOrAfter()) {
-                        log.error("bearer confirmation missing NotOnOrAfter attribute");
+                        msg = "bearer confirmation missing NotOnOrAfter attribute";
                         continue;
                     }
                     else if (data->getNotOnOrAfterEpoch() <= m_ts - XMLToolingConfig::getConfig().clock_skew_secs) {
-                        log.error("bearer confirmation has expired");
+                        msg = "bearer confirmation has expired";
                         continue;
                     }
                 }
@@ -84,6 +85,7 @@ void BrowserSSOProfileValidator::validateAssertion(const Assertion& assertion) c
             }
         }
     }
-    
+
+    log.error(msg);
     throw ValidationException("Unable to locate satisfiable bearer SubjectConfirmation in assertion.");
 }
