@@ -43,7 +43,7 @@ void SAML2MessageDecoder::extractMessageDetails(
     ) const
 {
     // Only handle SAML 2.0 messages.
-    const QName& q = message.getElementQName();
+    const xmltooling::QName& q = message.getElementQName();
     if (!XMLString::equals(q.getNamespaceURI(), samlconstants::SAML20P_NS))
         return;
 

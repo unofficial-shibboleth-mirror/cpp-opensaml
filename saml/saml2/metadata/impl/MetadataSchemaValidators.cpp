@@ -249,25 +249,25 @@ namespace opensaml {
 };
 
 #define REGISTER_ELEMENT(cname) \
-    q=QName(SAML20MD_NS,cname::LOCAL_NAME); \
+    q=xmltooling::QName(SAML20MD_NS,cname::LOCAL_NAME); \
     XMLObjectBuilder::registerBuilder(q,new cname##Builder()); \
     SchemaValidators.registerValidator(q,new cname##SchemaValidator())
 
 #define REGISTER_TYPE(cname) \
-    q=QName(SAML20MD_NS,cname::TYPE_NAME); \
+    q=xmltooling::QName(SAML20MD_NS,cname::TYPE_NAME); \
     XMLObjectBuilder::registerBuilder(q,new cname##Builder()); \
     SchemaValidators.registerValidator(q,new cname##SchemaValidator())
 
 #define REGISTER_ELEMENT_NOVAL(cname) \
-    q=QName(SAML20MD_NS,cname::LOCAL_NAME); \
+    q=xmltooling::QName(SAML20MD_NS,cname::LOCAL_NAME); \
     XMLObjectBuilder::registerBuilder(q,new cname##Builder());
 
 #define REGISTER_TYPE_NOVAL(cname) \
-    q=QName(SAML20MD_NS,cname::TYPE_NAME); \
+    q=xmltooling::QName(SAML20MD_NS,cname::TYPE_NAME); \
     XMLObjectBuilder::registerBuilder(q,new cname##Builder());
 
 void opensaml::saml2md::registerMetadataClasses() {
-    QName q;
+    xmltooling::QName q;
     REGISTER_ELEMENT(AdditionalMetadataLocation);
     REGISTER_ELEMENT(AffiliateMember);
     REGISTER_ELEMENT(AffiliationDescriptor);
@@ -327,26 +327,26 @@ void opensaml::saml2md::registerMetadataClasses() {
     REGISTER_TYPE(RequestedAttribute);
     REGISTER_TYPE(SPSSODescriptor);
 
-    q=QName(SAML20MD_NS,xmlencryption::EncryptionMethod::LOCAL_NAME);
+    q=xmltooling::QName(SAML20MD_NS,xmlencryption::EncryptionMethod::LOCAL_NAME);
     XMLObjectBuilder::registerBuilder(q,new xmlencryption::EncryptionMethodBuilder());
 
-    q=QName(samlconstants::SAML1MD_NS,SourceID::LOCAL_NAME);
+    q=xmltooling::QName(samlconstants::SAML1MD_NS,SourceID::LOCAL_NAME);
     XMLObjectBuilder::registerBuilder(q,new SourceIDBuilder());
     SchemaValidators.registerValidator(q,new SourceIDSchemaValidator());
 
-    q=QName(SAML20MD_QUERY_EXT_NS,ActionNamespace::LOCAL_NAME);
+    q=xmltooling::QName(SAML20MD_QUERY_EXT_NS,ActionNamespace::LOCAL_NAME);
     XMLObjectBuilder::registerBuilder(q,new ActionNamespaceBuilder());
     SchemaValidators.registerValidator(q,new ActionNamespaceSchemaValidator());
 
-    q=QName(SAML20MD_QUERY_EXT_NS,AuthnQueryDescriptorType::TYPE_NAME);
+    q=xmltooling::QName(SAML20MD_QUERY_EXT_NS,AuthnQueryDescriptorType::TYPE_NAME);
     XMLObjectBuilder::registerBuilder(q,new AuthnQueryDescriptorTypeBuilder());
     SchemaValidators.registerValidator(q,new RoleDescriptorSchemaValidator());
 
-    q=QName(SAML20MD_QUERY_EXT_NS,AttributeQueryDescriptorType::TYPE_NAME);
+    q=xmltooling::QName(SAML20MD_QUERY_EXT_NS,AttributeQueryDescriptorType::TYPE_NAME);
     XMLObjectBuilder::registerBuilder(q,new AttributeQueryDescriptorTypeBuilder());
     SchemaValidators.registerValidator(q,new RoleDescriptorSchemaValidator());
 
-    q=QName(SAML20MD_QUERY_EXT_NS,AuthzDecisionQueryDescriptorType::TYPE_NAME);
+    q=xmltooling::QName(SAML20MD_QUERY_EXT_NS,AuthzDecisionQueryDescriptorType::TYPE_NAME);
     XMLObjectBuilder::registerBuilder(q,new AuthzDecisionQueryDescriptorTypeBuilder());
     SchemaValidators.registerValidator(q,new RoleDescriptorSchemaValidator());
 }

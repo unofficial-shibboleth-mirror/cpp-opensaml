@@ -99,7 +99,7 @@ XMLObject* SAML2RedirectDecoder::decode(
     }
 
     // Decode the compressed message into SAML. First we base64-decode it.
-    unsigned int x;
+    xsecsize_t x;
     XMLByte* decoded=Base64::decode(reinterpret_cast<const XMLByte*>(msg),&x);
     if (!decoded)
         throw BindingException("Unable to decode base64 in Redirect binding message.");
@@ -107,12 +107,20 @@ XMLObject* SAML2RedirectDecoder::decode(
     // Now we have to inflate it.
     stringstream s;
     if (inflate(reinterpret_cast<char*>(decoded), x, s)==0) {
+#ifdef OPENSAML_XERCESC_HAS_XMLBYTE_RELEASE
         XMLString::release(&decoded);
+#else
+        XMLString::release((char**)&decoded);
+#endif
         throw BindingException("Unable to inflate Redirect binding message.");
     }
     if (log.isDebugEnabled())
         log.debug("decoded SAML message:\n%s", s.str().c_str());
+#ifdef OPENSAML_XERCESC_HAS_XMLBYTE_RELEASE
     XMLString::release(&decoded);
+#else
+    XMLString::release((char**)&decoded);
+#endif
     
     // Parse and bind the document into an XMLObject.
     DOMDocument* doc = (policy.getValidating() ? XMLToolingConfig::getConfig().getValidatingParser()

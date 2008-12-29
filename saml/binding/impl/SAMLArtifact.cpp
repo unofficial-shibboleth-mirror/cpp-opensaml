@@ -61,23 +61,31 @@ const unsigned int SAMLArtifact::TYPECODE_LENGTH = 2;
 
 SAMLArtifact::SAMLArtifact(const char* s)
 {
-    unsigned int len=0;
+    xsecsize_t len=0;
     XMLByte* decoded=Base64::decode(reinterpret_cast<const XMLByte*>(s),&len);
     if (!decoded)
         throw ArtifactException("Unable to decode base64 artifact.");
     XMLByte* ptr=decoded;
     while (len--)
         m_raw+= *ptr++;
+#ifdef OPENSAML_XERCESC_HAS_XMLBYTE_RELEASE
     XMLString::release(&decoded);
+#else
+    XMLString::release((char**)&decoded);
+#endif
 }
 
 string SAMLArtifact::encode() const
 {
-    unsigned int len=0;
+    xsecsize_t len=0;
     XMLByte* out=Base64::encode(reinterpret_cast<const XMLByte*>(m_raw.data()),m_raw.size(),&len);
     if (out) {
         string ret(reinterpret_cast<char*>(out),len);
+#ifdef OPENSAML_XERCESC_HAS_XMLBYTE_RELEASE
         XMLString::release(&out);
+#else
+        XMLString::release((char**)&out);
+#endif
         return ret;
     }
     return string();
@@ -86,7 +94,7 @@ string SAMLArtifact::encode() const
 SAMLArtifact* SAMLArtifact::parse(const char* s)
 {
     // Decode and extract the type code first.
-    unsigned int len=0;
+    xsecsize_t len=0;
     XMLByte* decoded=Base64::decode(reinterpret_cast<const XMLByte*>(s),&len);
     if (!decoded)
         throw ArtifactException("Artifact parser unable to decode base64-encoded artifact.");
@@ -94,7 +102,11 @@ SAMLArtifact* SAMLArtifact::parse(const char* s)
     string type;
     type+= decoded[0];
     type+= decoded[1];
+#ifdef OPENSAML_XERCESC_HAS_XMLBYTE_RELEASE
     XMLString::release(&decoded);
+#else
+    XMLString::release((char**)&decoded);
+#endif
     
     return SAMLConfig::getConfig().SAMLArtifactManager.newPlugin(type,s);
 }

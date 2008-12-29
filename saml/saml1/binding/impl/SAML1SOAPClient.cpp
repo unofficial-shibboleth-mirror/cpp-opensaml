@@ -73,7 +73,7 @@ Response* SAML1SOAPClient::receiveSAML()
                 // Check Status.
                 Status* status = response->getStatus();
                 if (status) {
-                    const QName* code = status->getStatusCode() ? status->getStatusCode()->getValue() : NULL;
+                    const xmltooling::QName* code = status->getStatusCode() ? status->getStatusCode()->getValue() : NULL;
                     if (code && *code != StatusCode::SUCCESS && handleError(*status)) {
                         BindingException ex("SAML Response contained an error.");
                         if (m_soaper.getPolicy().getIssuerMetadata())
@@ -101,7 +101,7 @@ Response* SAML1SOAPClient::receiveSAML()
 
 bool SAML1SOAPClient::handleError(const Status& status)
 {
-    const QName* code = status.getStatusCode() ? status.getStatusCode()->getValue() : NULL;
+    const xmltooling::QName* code = status.getStatusCode() ? status.getStatusCode()->getValue() : NULL;
     auto_ptr_char str((status.getStatusMessage() ? status.getStatusMessage()->getMessage() : NULL));
     Category::getInstance(SAML_LOGCAT".SOAPClient").error(
         "SOAP client detected a SAML error: (%s) (%s)",

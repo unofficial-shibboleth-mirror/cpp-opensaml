@@ -131,7 +131,7 @@ XMLObject* SAML2ECPDecoder::decode(
                 static const XMLCh RelayState[] = UNICODE_LITERAL_10(R,e,l,a,y,S,t,a,t,e);
                 const vector<XMLObject*>& blocks = const_cast<const Header*>(env->getHeader())->getUnknownXMLObjects();
                 vector<XMLObject*>::const_iterator h =
-                    find_if(blocks.begin(), blocks.end(), hasQName(QName(samlconstants::SAML20ECP_NS, RelayState)));
+                    find_if(blocks.begin(), blocks.end(), hasQName(xmltooling::QName(samlconstants::SAML20ECP_NS, RelayState)));
                 const ElementProxy* ep = dynamic_cast<const ElementProxy*>(h != blocks.end() ? *h : NULL);
                 if (ep) {
                     auto_ptr_char rs(ep->getTextContent());

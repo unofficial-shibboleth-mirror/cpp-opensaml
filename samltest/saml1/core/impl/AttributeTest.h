@@ -76,9 +76,9 @@ public:
         
         const XMLCh xsdstring[] = UNICODE_LITERAL_6(s,t,r,i,n,g);
        
-        const XMLObjectBuilder* builder=XMLObjectBuilder::getBuilder(QName(samlconstants::SAML1_NS,AttributeValue::LOCAL_NAME));
+        const XMLObjectBuilder* builder=XMLObjectBuilder::getBuilder(xmltooling::QName(samlconstants::SAML1_NS,AttributeValue::LOCAL_NAME));
         TS_ASSERT(builder!=NULL);
-        QName xsitype(xmlconstants::XSD_NS,xsdstring,xmlconstants::XSD_PREFIX);
+        xmltooling::QName xsitype(xmlconstants::XSD_NS,xsdstring,xmlconstants::XSD_PREFIX);
         for (int i=0; i<4; i++)
             a->getAttributeValues().push_back(builder->buildObject(samlconstants::SAML1_NS, AttributeValue::LOCAL_NAME, samlconstants::SAML1_PREFIX, &xsitype)); 
 

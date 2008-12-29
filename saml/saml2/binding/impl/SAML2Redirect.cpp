@@ -113,21 +113,22 @@ unsigned int opensaml::saml2p::inflate(char* in, unsigned int in_len, ostream& o
         return 0;
     }
   
+    size_t diff;
     int iter = 30;
     while (--iter) {  /* Make sure we can never be caught in infinite loop */
         ret = inflate(&z, Z_SYNC_FLUSH);
         switch (ret) {
             case Z_STREAM_END:
-                ret = z.next_out - buf;
+                diff = z.next_out - buf;
                 z.next_out = buf;
-                while (ret--)
+                while (diff--)
                     out << *(z.next_out++);
                 goto done;
                 
             case Z_OK:  /* avail_out should be 0 now. Time to dump the buffer. */
-                ret = z.next_out - buf;
+                diff = z.next_out - buf;
                 z.next_out = buf;
-                while (ret--)
+                while (diff--)
                     out << *(z.next_out++);
                 memset(buf, 0, dlen);
                 z.next_out = buf;

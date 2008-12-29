@@ -145,25 +145,25 @@ namespace opensaml {
 };
 
 #define REGISTER_ELEMENT(cname) \
-    q=QName(SAML1_NS,cname::LOCAL_NAME); \
+    q=xmltooling::QName(SAML1_NS,cname::LOCAL_NAME); \
     XMLObjectBuilder::registerBuilder(q,new cname##Builder()); \
     SchemaValidators.registerValidator(q,new cname##SchemaValidator())
 
 #define REGISTER_TYPE(cname) \
-    q=QName(SAML1_NS,cname::TYPE_NAME); \
+    q=xmltooling::QName(SAML1_NS,cname::TYPE_NAME); \
     XMLObjectBuilder::registerBuilder(q,new cname##Builder()); \
     SchemaValidators.registerValidator(q,new cname##SchemaValidator())
 
 #define REGISTER_ELEMENT_NOVAL(cname) \
-    q=QName(SAML1_NS,cname::LOCAL_NAME); \
+    q=xmltooling::QName(SAML1_NS,cname::LOCAL_NAME); \
     XMLObjectBuilder::registerBuilder(q,new cname##Builder());
 
 #define REGISTER_TYPE_NOVAL(cname) \
-    q=QName(SAML1_NS,cname::TYPE_NAME); \
+    q=xmltooling::QName(SAML1_NS,cname::TYPE_NAME); \
     XMLObjectBuilder::registerBuilder(q,new cname##Builder());
 
 void opensaml::saml1::registerAssertionClasses() {
-    QName q;
+    xmltooling::QName q;
     REGISTER_ELEMENT(Action);
     REGISTER_ELEMENT(Advice);
     REGISTER_ELEMENT(Assertion);

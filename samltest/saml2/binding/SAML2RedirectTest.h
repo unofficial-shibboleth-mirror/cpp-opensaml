@@ -33,7 +33,7 @@ public:
 
     void testSAML2Redirect() {
         try {
-            QName idprole(samlconstants::SAML20MD_NS, IDPSSODescriptor::LOCAL_NAME);
+            xmltooling::QName idprole(samlconstants::SAML20MD_NS, IDPSSODescriptor::LOCAL_NAME);
             SecurityPolicy policy(m_metadata, &idprole, m_trust, false);
             policy.getRules().assign(m_rules.begin(), m_rules.end());
 

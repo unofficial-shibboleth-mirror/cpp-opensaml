@@ -55,12 +55,16 @@ CommonDomainCookie::CommonDomainCookie(const char* cookie)
     free(b64);
 
     // Now Base64 decode the list.
-    unsigned int len;
+    xsecsize_t len;
     for (vector<string>::iterator i=templist.begin(); i!=templist.end(); ++i) {
         XMLByte* decoded=Base64::decode(reinterpret_cast<const XMLByte*>(i->c_str()),&len);
         if (decoded && *decoded) {
             m_list.push_back(reinterpret_cast<char*>(decoded));
+#ifdef OPENSAML_XERCESC_HAS_XMLBYTE_RELEASE
             XMLString::release(&decoded);
+#else
+            XMLString::release((char**)&decoded);
+#endif
         }
     }
 }
@@ -79,7 +83,7 @@ const char* CommonDomainCookie::set(const char* entityID)
     m_list.push_back(entityID);
     
     // Now rebuild the delimited list.
-    unsigned int len;
+    xsecsize_t len;
     string delimited;
     for (vector<string>::const_iterator j=m_list.begin(); j!=m_list.end(); j++) {
         if (!delimited.empty()) delimited += ' ';
@@ -92,7 +96,11 @@ const char* CommonDomainCookie::set(const char* entityID)
         *pos=0;
         
         delimited += reinterpret_cast<char*>(b64);
+#ifdef OPENSAML_XERCESC_HAS_XMLBYTE_RELEASE
         XMLString::release(&b64);
+#else
+        XMLString::release((char**)&b64);
+#endif
     }
     
     m_encoded=XMLToolingConfig::getConfig().getURLEncoder()->encode(delimited.c_str());

@@ -155,7 +155,7 @@ class SAMLObjectValidatorBaseTestCase : virtual public SAMLObjectBaseTestCase {
         XMLObject* target;
 
         /** QName of the object to be tested */
-        QName targetQName;
+        xmltooling::QName targetQName;
 
         /** Builder for XMLObjects of type targetQName */
         const XMLObjectBuilder* builder;
@@ -225,7 +225,7 @@ class SAMLObjectValidatorBaseTestCase : virtual public SAMLObjectBaseTestCase {
          * @param targetQName QName of the type of object to build
          * @returns new XMLObject of type targetQName
          */
-        XMLObject* buildXMLObject(QName &targetQName) {
+        XMLObject* buildXMLObject(xmltooling::QName &targetQName) {
             // Create the builder on the first request only, for efficiency
             if (builder == NULL) {
                 builder = XMLObjectBuilder::getBuilder(targetQName);

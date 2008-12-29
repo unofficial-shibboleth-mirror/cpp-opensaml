@@ -95,7 +95,7 @@ public:
     }
 
     void testChildElementsMarshall() {
-        QName qext("http://www.opensaml.org/", "Foo", "ext");
+        xmltooling::QName qext("http://www.opensaml.org/", "Foo", "ext");
 
         Assertion* assertion=AssertionBuilder::buildAssertion();
         assertion->setID(expectedID);

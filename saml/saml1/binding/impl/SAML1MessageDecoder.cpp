@@ -43,7 +43,7 @@ void SAML1MessageDecoder::extractMessageDetails(
     ) const
 {
     // Only handle SAML 1.x protocol messages.
-    const QName& q = message.getElementQName();
+    const xmltooling::QName& q = message.getElementQName();
     if (!XMLString::equals(q.getNamespaceURI(), samlconstants::SAML1P_NS))
         return;
 

@@ -63,13 +63,13 @@ namespace opensaml {
             public AbstractXMLObjectMarshaller,
             public AbstractXMLObjectUnmarshaller
         {
-            QName* m_qname;
+            xmltooling::QName* m_qname;
         public:
             virtual ~RespondWithImpl() {
                 delete m_qname;
             }
 
-            RespondWithImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
+            RespondWithImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
                 : AbstractXMLObject(nsURI, localName, prefix, schemaType), m_qname(NULL) {
             }
 
@@ -78,11 +78,11 @@ namespace opensaml {
                 setQName(src.getQName());
             }
 
-            QName* getQName() const {
+            xmltooling::QName* getQName() const {
                 return m_qname;
             }
 
-            void setQName(const QName* qname) {
+            void setQName(const xmltooling::QName* qname) {
                 m_qname=prepareForAssignment(m_qname,qname);
                 if (m_qname) {
                     auto_ptr_XMLCh temp(m_qname->toString().c_str());
@@ -100,7 +100,7 @@ namespace opensaml {
         public:
             virtual ~QueryImpl() {}
 
-            QueryImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
+            QueryImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
                 : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
             }
 
@@ -127,7 +127,7 @@ namespace opensaml {
         public:
             virtual ~SubjectQueryImpl() {}
 
-            SubjectQueryImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
+            SubjectQueryImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
                 : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
                 init();
             }
@@ -158,7 +158,7 @@ namespace opensaml {
                 XMLString::release(&m_AuthenticationMethod);
             }
 
-            AuthenticationQueryImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
+            AuthenticationQueryImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
                 : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
                 init();
             }
@@ -199,7 +199,7 @@ namespace opensaml {
                 XMLString::release(&m_Resource);
             }
 
-            AttributeQueryImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
+            AttributeQueryImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
                 : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
                 init();
             }
@@ -256,7 +256,7 @@ namespace opensaml {
                 XMLString::release(&m_Resource);
             }
 
-            AuthorizationDecisionQueryImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
+            AuthorizationDecisionQueryImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
                 : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
                 init();
             }
@@ -328,7 +328,7 @@ namespace opensaml {
                 delete m_IssueInstant;
             }
 
-            RequestAbstractTypeImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
+            RequestAbstractTypeImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
                 : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
                 init();
             }
@@ -389,8 +389,13 @@ namespace opensaml {
                 if (!m_RequestID)
                     const_cast<RequestAbstractTypeImpl*>(this)->m_RequestID=SAMLConfig::getConfig().generateIdentifier();
                 domElement->setAttributeNS(NULL, REQUESTID_ATTRIB_NAME, m_RequestID);
-                if (*m_MinorVersion!=chDigit_0)
+                if (*m_MinorVersion!=chDigit_0) {
+#ifdef XMLTOOLING_XERCESC_BOOLSETIDATTRIBUTE
+                    domElement->setIdAttributeNS(NULL, REQUESTID_ATTRIB_NAME, true);
+#else
                     domElement->setIdAttributeNS(NULL, REQUESTID_ATTRIB_NAME);
+#endif
+                }
                 if (!m_IssueInstant) {
                     const_cast<RequestAbstractTypeImpl*>(this)->m_IssueInstantEpoch=time(NULL);
                     const_cast<RequestAbstractTypeImpl*>(this)->m_IssueInstant=new DateTime(m_IssueInstantEpoch);
@@ -407,8 +412,13 @@ namespace opensaml {
             void unmarshallAttributes(const DOMElement* domElement) {
                 // Standard processing, but then we check IDness.
                 AbstractXMLObjectUnmarshaller::unmarshallAttributes(domElement);
-                if (m_RequestID && (!m_MinorVersion || *m_MinorVersion!=chDigit_0))
+                if (m_RequestID && (!m_MinorVersion || *m_MinorVersion!=chDigit_0)) {
+#ifdef XMLTOOLING_XERCESC_BOOLSETIDATTRIBUTE
+                    const_cast<DOMElement*>(domElement)->setIdAttributeNS(NULL, REQUESTID_ATTRIB_NAME, true);
+#else
                     const_cast<DOMElement*>(domElement)->setIdAttributeNS(NULL, REQUESTID_ATTRIB_NAME);
+#endif
+                }
             }
 
             void processAttribute(const DOMAttr* attribute) {
@@ -434,7 +444,7 @@ namespace opensaml {
         public:
             virtual ~RequestImpl() {}
 
-            RequestImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
+            RequestImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
                 : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
                 init();
             }
@@ -518,7 +528,7 @@ namespace opensaml {
                 delete m_Value;
             }
 
-            StatusCodeImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
+            StatusCodeImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
                 : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
                 init();
             }
@@ -532,7 +542,7 @@ namespace opensaml {
             }
 
             IMPL_XMLOBJECT_CLONE(StatusCode);
-            IMPL_XMLOBJECT_ATTRIB(Value,QName);
+            IMPL_XMLOBJECT_ATTRIB(Value,xmltooling::QName);
             IMPL_TYPED_CHILD(StatusCode);
 
         protected:
@@ -559,7 +569,7 @@ namespace opensaml {
         public:
             virtual ~StatusDetailImpl() {}
 
-            StatusDetailImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
+            StatusDetailImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
                 : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
             }
 
@@ -601,7 +611,7 @@ namespace opensaml {
         public:
             virtual ~StatusImpl() {}
 
-            StatusImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
+            StatusImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
                 : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
                 init();
             }
@@ -660,7 +670,7 @@ namespace opensaml {
                 delete m_IssueInstant;
             }
 
-            ResponseAbstractTypeImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
+            ResponseAbstractTypeImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
                 : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
                 init();
             }
@@ -718,8 +728,13 @@ namespace opensaml {
                 if (!m_ResponseID)
                     const_cast<ResponseAbstractTypeImpl*>(this)->m_ResponseID=SAMLConfig::getConfig().generateIdentifier();
                 domElement->setAttributeNS(NULL, RESPONSEID_ATTRIB_NAME, m_ResponseID);
-                if (*m_MinorVersion!=chDigit_0)
+                if (*m_MinorVersion!=chDigit_0) {
+#ifdef XMLTOOLING_XERCESC_BOOLSETIDATTRIBUTE
+                    domElement->setIdAttributeNS(NULL, RESPONSEID_ATTRIB_NAME, true);
+#else
                     domElement->setIdAttributeNS(NULL, RESPONSEID_ATTRIB_NAME);
+#endif
+                }
                 MARSHALL_STRING_ATTRIB(InResponseTo,INRESPONSETO,NULL);
                 if (!m_IssueInstant) {
                     const_cast<ResponseAbstractTypeImpl*>(this)->m_IssueInstantEpoch=time(NULL);
@@ -737,8 +752,13 @@ namespace opensaml {
             void unmarshallAttributes(const DOMElement* domElement) {
                 // Standard processing, but then we check IDness.
                 AbstractXMLObjectUnmarshaller::unmarshallAttributes(domElement);
-                if (m_ResponseID && (!m_MinorVersion || *m_MinorVersion!=chDigit_0))
+                if (m_ResponseID && (!m_MinorVersion || *m_MinorVersion!=chDigit_0)) {
+#ifdef XMLTOOLING_XERCESC_BOOLSETIDATTRIBUTE
+                    const_cast<DOMElement*>(domElement)->setIdAttributeNS(NULL, RESPONSEID_ATTRIB_NAME, true);
+#else
                     const_cast<DOMElement*>(domElement)->setIdAttributeNS(NULL, RESPONSEID_ATTRIB_NAME);
+#endif
+                }
             }
 
             void processAttribute(const DOMAttr* attribute) {
@@ -766,7 +786,7 @@ namespace opensaml {
         public:
             virtual ~ResponseImpl() {}
 
-            ResponseImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const QName* schemaType)
+            ResponseImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
                 : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
                 init();
             }
@@ -867,7 +887,7 @@ const XMLCh _REQUESTER[] =                                  UNICODE_LITERAL_9(R,
 const XMLCh _RESPONDER[] =                                  UNICODE_LITERAL_9(R,e,s,p,o,n,d,e,r);
 const XMLCh _VERSIONMISMATCH[] =                            UNICODE_LITERAL_15(V,e,r,s,i,o,n,M,i,s,m,a,t,c,h);
 
-QName StatusCode::SUCCESS(SAML1P_NS,_SUCCESS,SAML1P_PREFIX);
-QName StatusCode::REQUESTER(SAML1P_NS,_REQUESTER,SAML1P_PREFIX);
-QName StatusCode::RESPONDER(SAML1P_NS,_RESPONDER,SAML1P_PREFIX);
-QName StatusCode::VERSIONMISMATCH(SAML1P_NS,_VERSIONMISMATCH,SAML1P_PREFIX);
+xmltooling::QName StatusCode::SUCCESS(SAML1P_NS,_SUCCESS,SAML1P_PREFIX);
+xmltooling::QName StatusCode::REQUESTER(SAML1P_NS,_REQUESTER,SAML1P_PREFIX);
+xmltooling::QName StatusCode::RESPONDER(SAML1P_NS,_RESPONDER,SAML1P_PREFIX);
+xmltooling::QName StatusCode::VERSIONMISMATCH(SAML1P_NS,_VERSIONMISMATCH,SAML1P_PREFIX);

@@ -97,7 +97,7 @@ namespace opensaml {
             // then there are only 4 valid values per SAML Core.
             if (ptr->getParent()!=NULL && ptr->getParent()->getElementQName().hasLocalPart())
             {
-                QName pq = ptr->getParent()->getElementQName();
+                xmltooling::QName pq = ptr->getParent()->getElementQName();
 
                 if ( XMLString::equals(pq.getNamespaceURI(), SAML20P_NS) &&
                         XMLString::equals(pq.getLocalPart(), Status::LOCAL_NAME))
@@ -225,25 +225,25 @@ namespace opensaml {
 };
 
 #define REGISTER_ELEMENT(cname) \
-    q=QName(SAML20P_NS,cname::LOCAL_NAME); \
+    q=xmltooling::QName(SAML20P_NS,cname::LOCAL_NAME); \
     XMLObjectBuilder::registerBuilder(q,new cname##Builder()); \
     SchemaValidators.registerValidator(q,new cname##SchemaValidator())
     
 #define REGISTER_TYPE(cname) \
-    q=QName(SAML20P_NS,cname::TYPE_NAME); \
+    q=xmltooling::QName(SAML20P_NS,cname::TYPE_NAME); \
     XMLObjectBuilder::registerBuilder(q,new cname##Builder()); \
     SchemaValidators.registerValidator(q,new cname##SchemaValidator())
 
 #define REGISTER_ELEMENT_NOVAL(cname) \
-    q=QName(SAML20P_NS,cname::LOCAL_NAME); \
+    q=xmltooling::QName(SAML20P_NS,cname::LOCAL_NAME); \
     XMLObjectBuilder::registerBuilder(q,new cname##Builder());
     
 #define REGISTER_TYPE_NOVAL(cname) \
-    q=QName(SAML20P_NS,cname::TYPE_NAME); \
+    q=xmltooling::QName(SAML20P_NS,cname::TYPE_NAME); \
     XMLObjectBuilder::registerBuilder(q,new cname##Builder());
 
 void opensaml::saml2p::registerProtocolClasses() {
-    QName q;
+    xmltooling::QName q;
     REGISTER_ELEMENT(Artifact);
     REGISTER_ELEMENT(ArtifactResolve);
     REGISTER_ELEMENT(ArtifactResponse);
@@ -298,7 +298,7 @@ void opensaml::saml2p::registerProtocolClasses() {
     REGISTER_TYPE_NOVAL(StatusDetail);
     REGISTER_TYPE_NOVAL(Terminate);
 
-    q=QName(samlconstants::SAML20P_THIRDPARTY_EXT_NS,RespondTo::LOCAL_NAME);
+    q=xmltooling::QName(samlconstants::SAML20P_THIRDPARTY_EXT_NS,RespondTo::LOCAL_NAME);
     XMLObjectBuilder::registerBuilder(q,new RespondToBuilder());
     SchemaValidators.registerValidator(q,new RespondToSchemaValidator());
 }

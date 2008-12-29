@@ -196,6 +196,15 @@ AC_TRY_LINK(
     [AC_DEFINE(HAVE_LIBXERCESC,1,[Define if Xerces-C library was found])],
     [AC_MSG_ERROR([unable to link with Xerces])])
 
+AC_MSG_CHECKING([whether Xerces XMLString::release(XMLByte**) exists])
+AC_TRY_COMPILE([#include <xercesc/util/XMLString.hpp>],
+    [using namespace XERCES_CPP_NAMESPACE;
+      XMLByte* buf=NULL;
+      XMLString::release(&buf);
+    ],
+    [AC_MSG_RESULT([yes])]
+    [AC_DEFINE([OPENSAML_XERCESC_HAS_XMLBYTE_RELEASE], [1], [Define to 1 if Xerces XMLString includes XMLByte release.])],
+    [AC_MSG_RESULT([no])])
 
 # XML-Security settings
 AC_ARG_WITH(xmlsec,

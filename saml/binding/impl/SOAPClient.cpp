@@ -45,7 +45,7 @@ void SOAPClient::send(const soap11::Envelope& env, const char* from, MetadataCre
     m_criteria = &to;
     m_peer = &(to.getRole());
     
-    const QName& role = m_peer->getElementQName();
+    const xmltooling::QName& role = m_peer->getElementQName();
     if (XMLString::equals(role.getLocalPart(),RoleDescriptor::LOCAL_NAME))
         m_policy.setRole(m_peer->getSchemaType());
     else

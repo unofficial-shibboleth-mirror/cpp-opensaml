@@ -295,7 +295,7 @@ int main(int argc,char* argv[])
                     
                     const XMLCh* ns = rns ? XMLString::transcode(rns) : samlconstants::SAML20MD_NS;
                     auto_ptr_XMLCh n(rname);
-                    QName q(ns, n.get());
+                    xmltooling::QName q(ns, n.get());
 
                     Locker locker(metadata.get());
                     MetadataProvider::Criteria mc(issuer, &q, protocol);

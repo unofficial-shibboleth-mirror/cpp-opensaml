@@ -155,12 +155,16 @@ long SAML1POSTEncoder::encode(
     log.debug("marshalled response:\n%s", xmlbuf.c_str());
     
     // Replace with base-64 encoded version.
-    unsigned int len=0;
+    xsecsize_t len=0;
     XMLByte* out=Base64::encode(reinterpret_cast<const XMLByte*>(xmlbuf.data()),xmlbuf.size(),&len);
     if (out) {
         xmlbuf.erase();
         xmlbuf.append(reinterpret_cast<char*>(out),len);
+#ifdef OPENSAML_XERCESC_HAS_XMLBYTE_RELEASE
         XMLString::release(&out);
+#else
+        XMLString::release((char**)&out);
+#endif
     }
     else {
         throw BindingException("Base64 encoding of XML failed.");

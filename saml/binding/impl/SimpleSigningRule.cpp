@@ -146,7 +146,7 @@ void SimpleSigningRule::evaluate(const XMLObject& message, const GenericRequest*
         // Serializing the XMLObject doesn't guarantee the signature will verify (this is
         // why XMLSignature exists, and why this isn't really "simpler").
 
-        unsigned int x;
+        xsecsize_t x;
         pch = httpRequest->getParameter("SAMLRequest");
         if (pch) {
             XMLByte* decoded=Base64::decode(reinterpret_cast<const XMLByte*>(pch),&x);
@@ -155,7 +155,11 @@ void SimpleSigningRule::evaluate(const XMLObject& message, const GenericRequest*
                 return;
             }
             input = string("SAMLRequest=") + reinterpret_cast<const char*>(decoded);
+#ifdef OPENSAML_XERCESC_HAS_XMLBYTE_RELEASE
             XMLString::release(&decoded);
+#else
+            XMLString::release((char**)&decoded);
+#endif
         }
         else {
             pch = httpRequest->getParameter("SAMLResponse");
@@ -165,7 +169,11 @@ void SimpleSigningRule::evaluate(const XMLObject& message, const GenericRequest*
                 return;
             }
             input = string("SAMLResponse=") + reinterpret_cast<const char*>(decoded);
+#ifdef OPENSAML_XERCESC_HAS_XMLBYTE_RELEASE
             XMLString::release(&decoded);
+#else
+            XMLString::release((char**)&decoded);
+#endif
         }
 
         pch = httpRequest->getParameter("RelayState");
@@ -178,11 +186,11 @@ void SimpleSigningRule::evaluate(const XMLObject& message, const GenericRequest*
     KeyInfo* keyInfo=NULL;
     pch = request->getParameter("KeyInfo");
     if (pch) {
-        unsigned int x;
+        xsecsize_t x;
         XMLByte* decoded=Base64::decode(reinterpret_cast<const XMLByte*>(pch),&x);
         if (decoded) {
             try {
-                istringstream kstrm(pch);
+                istringstream kstrm((char*)decoded);
                 DOMDocument* doc = XMLToolingConfig::getConfig().getParser().parse(kstrm);
                 XercesJanitor<DOMDocument> janitor(doc);
                 XMLObject* kxml = XMLObjectBuilder::buildOneFromElement(doc->getDocumentElement(), true);
@@ -193,6 +201,11 @@ void SimpleSigningRule::evaluate(const XMLObject& message, const GenericRequest*
             catch (XMLToolingException& ex) {
                 log.warn("Failed to load KeyInfo from message: %s", ex.what());
             }
+#ifdef OPENSAML_XERCESC_HAS_XMLBYTE_RELEASE
+            XMLString::release(&decoded);
+#else
+            XMLString::release((char**)&decoded);
+#endif
         }
         else {
             log.warn("Failed to load KeyInfo from message: Unable to decode base64-encoded KeyInfo.");

@@ -84,8 +84,8 @@ public:
 
     //TODO possibly move this functionality up to SAMLObjectBaseTestCase, as optional helper method
     XMLObject * buildObject() {
-        const XMLObjectBuilder* builder = XMLObjectBuilder::getBuilder(QName(typeNS,typeName));
-        QName type(typeNS,typeName,typePrefix);
+        const XMLObjectBuilder* builder = XMLObjectBuilder::getBuilder(xmltooling::QName(typeNS,typeName));
+        xmltooling::QName type(typeNS,typeName,typePrefix);
         return builder->buildObject(elementNS, elementName, elementPrefix, &type);
     }
 

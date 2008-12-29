@@ -81,7 +81,7 @@ namespace opensaml {
 
         BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,Status);
             XMLOBJECTVALIDATOR_REQUIRE(Status,StatusCode);
-            const QName* value=ptr->getStatusCode()->getValue();
+            const xmltooling::QName* value=ptr->getStatusCode()->getValue();
             if (!value || (*value!=StatusCode::SUCCESS && *value!=StatusCode::REQUESTER &&
                 *value!=StatusCode::RESPONDER && *value!=StatusCode::VERSIONMISMATCH))
                 throw ValidationException("Top-level status code not one of the allowable values.");
@@ -99,25 +99,25 @@ namespace opensaml {
 };
 
 #define REGISTER_ELEMENT(cname) \
-    q=QName(SAML1P_NS,cname::LOCAL_NAME); \
+    q=xmltooling::QName(SAML1P_NS,cname::LOCAL_NAME); \
     XMLObjectBuilder::registerBuilder(q,new cname##Builder()); \
     SchemaValidators.registerValidator(q,new cname##SchemaValidator())
 
 #define REGISTER_TYPE(cname) \
-    q=QName(SAML1P_NS,cname::TYPE_NAME); \
+    q=xmltooling::QName(SAML1P_NS,cname::TYPE_NAME); \
     XMLObjectBuilder::registerBuilder(q,new cname##Builder()); \
     SchemaValidators.registerValidator(q,new cname##SchemaValidator())
 
 #define REGISTER_ELEMENT_NOVAL(cname) \
-    q=QName(SAML1P_NS,cname::LOCAL_NAME); \
+    q=xmltooling::QName(SAML1P_NS,cname::LOCAL_NAME); \
     XMLObjectBuilder::registerBuilder(q,new cname##Builder());
 
 #define REGISTER_TYPE_NOVAL(cname) \
-    q=QName(SAML1P_NS,cname::TYPE_NAME); \
+    q=xmltooling::QName(SAML1P_NS,cname::TYPE_NAME); \
     XMLObjectBuilder::registerBuilder(q,new cname##Builder());
 
 void opensaml::saml1p::registerProtocolClasses() {
-    QName q;
+    xmltooling::QName q;
     REGISTER_ELEMENT(AssertionArtifact);
     REGISTER_ELEMENT(AttributeQuery);
     REGISTER_ELEMENT(AuthenticationQuery);

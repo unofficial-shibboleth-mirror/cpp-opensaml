@@ -140,8 +140,8 @@ long SAML2ECPEncoder::encode(
     body->getUnknownXMLObjects().push_back(xmlObject);
 
     ElementProxy* hdrblock;
-    QName qMU(SOAP11ENV_NS, Header::MUSTUNDERSTAND_ATTRIB_NAME, SOAP11ENV_PREFIX);
-    QName qActor(SOAP11ENV_NS, Header::ACTOR_ATTRIB_NAME, SOAP11ENV_PREFIX);
+    xmltooling::QName qMU(SOAP11ENV_NS, Header::MUSTUNDERSTAND_ATTRIB_NAME, SOAP11ENV_PREFIX);
+    xmltooling::QName qActor(SOAP11ENV_NS, Header::ACTOR_ATTRIB_NAME, SOAP11ENV_PREFIX);
     
     if (request) {
         // Create paos:Request header.
@@ -150,8 +150,8 @@ long SAML2ECPEncoder::encode(
         hdrblock = dynamic_cast<ElementProxy*>(m_anyBuilder.buildObject(PAOS_NS, saml1p::Request::LOCAL_NAME, PAOS_PREFIX));
         hdrblock->setAttribute(qMU, XML_ONE);
         hdrblock->setAttribute(qActor, m_actor.get());
-        hdrblock->setAttribute(QName(NULL, service), SAML20ECP_NS);
-        hdrblock->setAttribute(QName(NULL, responseConsumerURL), request->getAssertionConsumerServiceURL());
+        hdrblock->setAttribute(xmltooling::QName(NULL, service), SAML20ECP_NS);
+        hdrblock->setAttribute(xmltooling::QName(NULL, responseConsumerURL), request->getAssertionConsumerServiceURL());
         header->getUnknownXMLObjects().push_back(hdrblock);
 
         // Create ecp:Request header.
@@ -160,9 +160,9 @@ long SAML2ECPEncoder::encode(
         hdrblock->setAttribute(qMU, XML_ONE);
         hdrblock->setAttribute(qActor, m_actor.get());
         if (!request->IsPassive())
-            hdrblock->setAttribute(QName(NULL,IsPassive), XML_ZERO);
+            hdrblock->setAttribute(xmltooling::QName(NULL,IsPassive), XML_ZERO);
         if (m_providerName)
-            hdrblock->setAttribute(QName(NULL,ProviderName), m_providerName);
+            hdrblock->setAttribute(xmltooling::QName(NULL,ProviderName), m_providerName);
         hdrblock->getUnknownXMLObjects().push_back(request->getIssuer()->clone());
         if (request->getScoping() && request->getScoping()->getIDPList())
             hdrblock->getUnknownXMLObjects().push_back(request->getScoping()->getIDPList()->clone());
@@ -175,7 +175,7 @@ long SAML2ECPEncoder::encode(
         hdrblock = dynamic_cast<ElementProxy*>(m_anyBuilder.buildObject(SAML20ECP_NS, Response::LOCAL_NAME, SAML20ECP_PREFIX));
         hdrblock->setAttribute(qMU, XML_ONE);
         hdrblock->setAttribute(qActor, m_actor.get());
-        hdrblock->setAttribute(QName(NULL,AuthnRequest::ASSERTIONCONSUMERSERVICEURL_ATTRIB_NAME), response->getDestination());
+        hdrblock->setAttribute(xmltooling::QName(NULL,AuthnRequest::ASSERTIONCONSUMERSERVICEURL_ATTRIB_NAME), response->getDestination());
         header->getUnknownXMLObjects().push_back(hdrblock);
     }
     
