@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2009 Internet2
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -86,8 +86,9 @@ pair<const EntityDescriptor*,const RoleDescriptor*> DynamicMetadataProvider::get
         auto_ptr_char temp(criteria.entityID_unicode);
         name = temp.get();
     }
-    else if (criteria.artifact)
+    else if (criteria.artifact) {
         name = criteria.artifact->getSource();
+    }
     else
         return entity;
 
@@ -100,13 +101,13 @@ pair<const EntityDescriptor*,const RoleDescriptor*> DynamicMetadataProvider::get
 
         // Verify the entityID.
         if (criteria.entityID_unicode && !XMLString::equals(criteria.entityID_unicode, entity2->getEntityID())) {
-            Category::getInstance(SAML_LOGCAT".MetadataProvider.Dynamic").error("metadata instance did not match expected entityID");
+            log.error("metadata instance did not match expected entityID");
             return entity;
         }
         else {
             auto_ptr_XMLCh temp2(name.c_str());
             if (!XMLString::equals(temp2.get(), entity2->getEntityID())) {
-                Category::getInstance(SAML_LOGCAT".MetadataProvider.Dynamic").error("metadata instance did not match expected entityID");
+                log.error("metadata instance did not match expected entityID");
                 return entity;
             }
         }
@@ -140,9 +141,7 @@ pair<const EntityDescriptor*,const RoleDescriptor*> DynamicMetadataProvider::get
         m_lock->rdlock();
     }
     catch (exception& e) {
-        Category::getInstance(SAML_LOGCAT".MetadataProvider.Dynamic").error(
-            "error while resolving entityID (%s): %s", name.c_str(), e.what()
-            );
+        log.error("error while resolving entityID (%s): %s", name.c_str(), e.what());
         return entity;
     }
 
@@ -153,14 +152,16 @@ pair<const EntityDescriptor*,const RoleDescriptor*> DynamicMetadataProvider::get
 EntityDescriptor* DynamicMetadataProvider::resolve(const Criteria& criteria) const
 {
     string name;
-    if (criteria.entityID_ascii)
+    if (criteria.entityID_ascii) {
         name = criteria.entityID_ascii;
+    }
     else if (criteria.entityID_unicode) {
         auto_ptr_char temp(criteria.entityID_unicode);
         name = temp.get();
     }
-    else if (criteria.artifact)
-        name = criteria.artifact->getSource();
+    else if (criteria.artifact) {
+        throw MetadataException("Unable to resolve metadata dynamically from an artifact.");
+    }
 
     try {
         DOMDocument* doc=NULL;
