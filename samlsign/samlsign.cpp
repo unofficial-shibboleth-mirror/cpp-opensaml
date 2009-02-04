@@ -1,6 +1,6 @@
 /*
- *  Copyright 2001-2007 Internet2
- * 
+ *  Copyright 2001-2009 Internet2
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -48,7 +48,6 @@
 
 #include <fstream>
 #include <xercesc/framework/LocalFileInputSource.hpp>
-#include <xercesc/framework/URLInputSource.hpp>
 #include <xercesc/framework/StdInInputSource.hpp>
 #include <xercesc/framework/Wrapper4InputSource.hpp>
 
@@ -67,7 +66,7 @@ template<class T> T* buildPlugin(const char* path, PluginManager<T,string,const 
     ifstream in(path);
     DOMDocument* doc=XMLToolingConfig::getConfig().getParser().parse(in);
     XercesJanitor<DOMDocument> janitor(doc);
-    
+
     static const XMLCh _type[] = UNICODE_LITERAL_4(t,y,p,e);
     auto_ptr_char type(doc->getDocumentElement()->getAttributeNS(NULL,_type));
     if (type.get() && *type.get())
@@ -101,10 +100,10 @@ class DummyCredentialResolver : public CredentialResolver
 public:
     DummyCredentialResolver() {}
     ~DummyCredentialResolver() {}
-    
+
     Lockable* lock() {return this;}
     void unlock() {}
-    
+
     const Credential* resolve(const CredentialCriteria* criteria=NULL) const {return NULL;}
     vector<const Credential*>::size_type resolve(
         vector<const Credential*>& results, const CredentialCriteria* criteria=NULL
@@ -181,7 +180,7 @@ int main(int argc,char* argv[])
         cerr << "either -k or -R option required when signing, see documentation for usage" << endl;
         return -1;
     }
-    
+
     XMLToolingConfig& xmlconf = XMLToolingConfig::getConfig();
     xmlconf.log_config();
     SAMLConfig& conf=SAMLConfig::getConfig();
@@ -193,16 +192,16 @@ int main(int argc,char* argv[])
 
     try {
         // Parse the specified document.
-        static XMLCh base[]={chLatin_f, chLatin_i, chLatin_l, chLatin_e, chColon, chForwardSlash, chForwardSlash, chForwardSlash, chNull};
         DOMDocument* doc=NULL;
         if (url_param) {
-            URLInputSource src(base,url_param);
+            auto_ptr_XMLCh wideurl(url_param);
+            URLInputSource src(wideurl.get());
             Wrapper4InputSource dsrc(&src,false);
             doc=xmlconf.getParser().parse(dsrc);
         }
         else if (path_param) {
             auto_ptr_XMLCh widenit(path_param);
-            LocalFileInputSource src(base,widenit.get());
+            LocalFileInputSource src(widenit.get());
             Wrapper4InputSource dsrc(&src,false);
             doc=xmlconf.getParser().parse(dsrc);
         }
@@ -211,7 +210,7 @@ int main(int argc,char* argv[])
             Wrapper4InputSource dsrc(&src,false);
             doc=xmlconf.getParser().parse(dsrc);
         }
-    
+
         // Unmarshall it.
         XercesJanitor<DOMDocument> jan(doc);
         auto_ptr<XMLObject> sourcewrapper(XMLObjectBuilder::buildOneFromElement(doc->getDocumentElement(), true));
@@ -292,7 +291,7 @@ int main(int argc,char* argv[])
                     }
                     auto_ptr<MetadataProvider> metadata(buildPlugin(m_param, conf.MetadataProviderManager));
                     metadata->init();
-                    
+
                     const XMLCh* ns = rns ? XMLString::transcode(rns) : samlconstants::SAML20MD_NS;
                     auto_ptr_XMLCh n(rname);
                     xmltooling::QName q(ns, n.get());

@@ -26,7 +26,6 @@
 #include "saml2/metadata/DynamicMetadataProvider.h"
 
 #include <xercesc/framework/Wrapper4InputSource.hpp>
-#include <xercesc/framework/URLInputSource.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xmltooling/logging.h>
 #include <xmltooling/util/XMLHelper.h>
