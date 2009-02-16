@@ -29,6 +29,7 @@
 #include <fstream>
 #include <sstream>
 #include <xercesc/util/Base64.hpp>
+#include <xmltooling/io/HTTPResponse.h>
 #include <xmltooling/logging.h>
 #include <xmltooling/util/NDC.h>
 #include <xmltooling/util/PathResolver.h>
@@ -180,6 +181,12 @@ long SAML1POSTEncoder::encode(
     stringstream s;
     engine->run(infile, s, pmap);
     genericResponse.setContentType("text/html");
+    HTTPResponse* httpResponse = dynamic_cast<HTTPResponse*>(&genericResponse);
+    if (httpResponse) {
+        httpResponse->setResponseHeader("Expires", "01-Jan-1997 12:00:00 GMT");
+        httpResponse->setResponseHeader("Cache-Control", "no-cache, no-store, must-revalidate, private");
+        httpResponse->setResponseHeader("Pragma", "no-cache");
+    }
     long ret = genericResponse.sendResponse(s);
 
     // Cleanup by destroying XML.

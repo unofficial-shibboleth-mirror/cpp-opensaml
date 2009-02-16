@@ -97,6 +97,7 @@ long SAML2SOAPEncoder::encode(
     genericResponse.setContentType("text/xml");
     HTTPResponse* httpResponse = dynamic_cast<HTTPResponse*>(&genericResponse);
     if (httpResponse) {
+        httpResponse->setResponseHeader("Expires", "01-Jan-1997 12:00:00 GMT");
         httpResponse->setResponseHeader("Cache-Control", "no-cache, no-store, must-revalidate, private");
         httpResponse->setResponseHeader("Pragma", "no-cache");
     }

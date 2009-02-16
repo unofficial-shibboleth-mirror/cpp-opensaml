@@ -201,6 +201,9 @@ long SAML2ArtifactEncoder::encode(
         stringstream s;
         engine->run(infile, s, params);
         httpResponse->setContentType("text/html");
+        httpResponse->setResponseHeader("Expires", "01-Jan-1997 12:00:00 GMT");
+        httpResponse->setResponseHeader("Cache-Control", "no-cache, no-store, must-revalidate, private");
+        httpResponse->setResponseHeader("Pragma", "no-cache");
         return httpResponse->sendResponse(s);
     }
 }
