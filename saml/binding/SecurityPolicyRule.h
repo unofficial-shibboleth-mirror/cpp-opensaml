@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2009 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,12 +54,17 @@ namespace opensaml {
          * 
          * <p>An exception will be raised if the message is invalid according to
          * a policy rule.
+         *
+         * <p>The return value is used to indicate whether a message was ignored or
+         * successfully processed. A false value signals that the rule wasn't successful
+         * but was also not unsuccessful, because the rule was inapplicable to the message.
          * 
          * @param message   the incoming message
          * @param request   the protocol request
          * @param policy    SecurityPolicy to provide various components and track message data
+         * @return  indicator as to whether a message was understood and processed
          */
-        virtual void evaluate(
+        virtual bool evaluate(
             const xmltooling::XMLObject& message,
             const xmltooling::GenericRequest* request,
             SecurityPolicy& policy

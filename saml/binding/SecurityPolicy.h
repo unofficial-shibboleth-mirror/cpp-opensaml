@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2009 Internet2
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -91,6 +91,9 @@ namespace opensaml {
          * Returns a reference to a MetadataProvider::Criteria instance suitable for use with the
          * installed MetadataProvider.
          *
+         * <p>The object will be cleared/reset when returned, so do not mutate it and then
+         * call the method again before using it.
+         *
          * @return reference to a MetadataProvider::Criteria instance
          */
         virtual saml2md::MetadataProvider::Criteria& getMetadataProviderCriteria() const;
@@ -152,6 +155,17 @@ namespace opensaml {
         }
 
         /**
+         * Sets a MetadataProvider::Criteria instance suitable for use with the
+         * installed MetadataProvider.
+         *
+         * <p>The policy will take ownership of the criteria object when this
+         * method completes.
+         *
+         * @param criteria a MetadataProvider::Criteria instance, or NULL
+         */
+        void setMetadataProviderCriteria(saml2md::MetadataProvider::Criteria* criteria);
+
+        /**
          * Sets a peer role element/type for to the policy.
          *
          * @param role the peer role element/type or NULL
@@ -211,7 +225,17 @@ namespace opensaml {
          *
          * @param messageOnly   true iff security and issuer state should be left in place
          */
-        void reset(bool messageOnly=false);
+        virtual void reset(bool messageOnly=false);
+
+        /**
+         * Resets the policy object and/or clears any per-message state for only this specific class.
+         *
+         * <p>Resets can be complete (the default) or merely clear the previous message ID and timestamp
+         * when evaluating multiple layers of a message.
+         *
+         * @param messageOnly   true iff security and issuer state should be left in place
+         */
+        void _reset(bool messageOnly=false);
 
         /**
          * Returns the message identifier as determined by the registered policies.

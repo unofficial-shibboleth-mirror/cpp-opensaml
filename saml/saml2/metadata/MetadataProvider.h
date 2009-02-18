@@ -1,6 +1,6 @@
 /*
  *  Copyright 2001-2007 Internet2
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,7 +16,7 @@
 
 /**
  * @file saml/saml2/metadata/MetadataProvider.h
- * 
+ *
  * Supplies an individual source of metadata.
  */
 
@@ -29,7 +29,7 @@
 #include <xmltooling/security/CredentialResolver.h>
 
 namespace opensaml {
-    
+
     class SAML_API SAMLArtifact;
 
     namespace saml2md {
@@ -47,7 +47,7 @@ namespace opensaml {
 
         /**
          * Supplies an individual source of metadata.
-         * 
+         *
          * The source can be a local file, remote service, or the result of a
          * dynamic lookup, can include local caching, etc. Providers
          * <strong>MUST</strong> be locked before any lookup operations.
@@ -58,37 +58,37 @@ namespace opensaml {
         protected:
             /**
              * Constructor.
-             * 
+             *
              * If a DOM is supplied, a set of default logic will be used to identify
              * and build MetadataFilter plugins and install them into the provider.
-             * 
+             *
              * The following XML content is supported:
-             * 
+             *
              * <ul>
              *  <li>&lt;MetadataFilter&gt; elements with a type attribute and type-specific content
              *  <li>&lt;Exclude&gt; elements representing a BlacklistMetadataFilter
-             *  <li>&lt;BlacklistMetadataFilter&gt; element containing &lt;Exclude&gt; elements 
+             *  <li>&lt;BlacklistMetadataFilter&gt; element containing &lt;Exclude&gt; elements
              *  <li>&lt;Include&gt; elements representing a WhitelistMetadataFilter
-             *  <li>&lt;SignatureMetadataFilter&gt; element containing a &lt;KeyResolver&gt; element 
-             *  <li>&lt;WhitelistMetadataFilter&gt; element containing &lt;Include&gt; elements 
+             *  <li>&lt;SignatureMetadataFilter&gt; element containing a &lt;KeyResolver&gt; element
+             *  <li>&lt;WhitelistMetadataFilter&gt; element containing &lt;Include&gt; elements
              * </ul>
-             * 
+             *
              * XML namespaces are ignored in the processing of these elements.
-             * 
+             *
              * @param e DOM to supply configuration for provider
              */
             MetadataProvider(const xercesc::DOMElement* e=NULL);
-            
+
         public:
             /**
              * Destructor will delete any installed filters.
              */
             virtual ~MetadataProvider();
-            
+
             /**
              * Adds a metadata filter to apply to any resolved metadata. Will not be applied
              * to metadata that is already loaded.
-             * 
+             *
              * @param newFilter metadata filter to add
              */
             virtual void addMetadataFilter(MetadataFilter* newFilter) {
@@ -97,7 +97,7 @@ namespace opensaml {
 
             /**
              * Removes a metadata filter. The caller must delete the filter if necessary.
-             * 
+             *
              * @param oldFilter metadata filter to remove
              * @return  the old filter
              */
@@ -110,7 +110,7 @@ namespace opensaml {
                 }
                 return NULL;
             }
-            
+
             /**
              * Should be called after instantiating provider and adding filters, but before
              * performing any lookup operations. Allows the provider to defer initialization
@@ -119,23 +119,23 @@ namespace opensaml {
              * this method so as to report/log any errors that would affect later processing.
              */
             virtual void init()=0;
-            
+
             /**
              * Gets the entire metadata tree, after the registered filter has been applied.
              * The caller MUST unlock the provider when finished with the data.
-             * 
+             *
              * @return the entire metadata tree
              */
             virtual const xmltooling::XMLObject* getMetadata() const=0;
-        
+
             /**
              * Gets the metadata for a given group of entities. If a valid group is returned,
              * the resolver will be left in a locked state. The caller MUST unlock the
              * resolver when finished with the group.
-             * 
+             *
              * @param name                  the name of the group
              * @param requireValidMetadata  indicates whether the metadata for the group must be valid/current
-             * 
+             *
              * @return the group's metadata or NULL if there is no metadata or no valid metadata
              */
             virtual const EntitiesDescriptor* getEntitiesDescriptor(const XMLCh* name, bool requireValidMetadata=true) const;
@@ -144,10 +144,10 @@ namespace opensaml {
              * Gets the metadata for a given group of entities. If a valid group is returned,
              * the resolver will be left in a locked state. The caller MUST unlock the
              * resolver when finished with the group.
-             * 
+             *
              * @param name                  the name of the group
              * @param requireValidMetadata  indicates whether the metadata for the group must be valid/current
-             * 
+             *
              * @return the group's metadata or NULL if there is no metadata or no valid metadata
              */
             virtual const EntitiesDescriptor* getEntitiesDescriptor(const char* name, bool requireValidMetadata=true) const=0;
@@ -161,10 +161,10 @@ namespace opensaml {
                  */
                 Criteria() : entityID_unicode(NULL), entityID_ascii(NULL), artifact(NULL), role(NULL), protocol(NULL), protocol2(NULL), validOnly(true) {
                 }
-            
+
                 /**
                  * Constructor.
-                 * 
+                 *
                  * @param id    entityID to lookup
                  * @param q     element/type of role, if any
                  * @param prot  protocol support constant, if any
@@ -173,10 +173,10 @@ namespace opensaml {
                 Criteria(const XMLCh* id, const xmltooling::QName* q=NULL, const XMLCh* prot=NULL, bool valid=true)
                     : entityID_unicode(id), entityID_ascii(NULL), artifact(NULL), role(q), protocol(prot), protocol2(NULL), validOnly(valid) {
                 }
-                
+
                 /**
                  * Constructor.
-                 * 
+                 *
                  * @param id    entityID to lookup
                  * @param q     element/type of role, if any
                  * @param prot  protocol support constant, if any
@@ -188,7 +188,7 @@ namespace opensaml {
 
                 /**
                  * Constructor.
-                 * 
+                 *
                  * @param a     artifact to lookup
                  * @param q     element/type of role, if any
                  * @param prot  protocol support constant, if any
@@ -197,9 +197,22 @@ namespace opensaml {
                 Criteria(const SAMLArtifact* a, const xmltooling::QName* q=NULL, const XMLCh* prot=NULL, bool valid=true)
                     : entityID_unicode(NULL), entityID_ascii(NULL), artifact(a), role(q), protocol(prot), protocol2(NULL), validOnly(valid) {
                 }
-                
+
                 virtual ~Criteria() {}
-                
+
+                /**
+                 * Restores the object to its default state.
+                 */
+                virtual void reset() {
+                    entityID_unicode=NULL;
+                    entityID_ascii=NULL;
+                    artifact=NULL;
+                    role=NULL;
+                    protocol=NULL;
+                    protocol2=NULL;
+                    validOnly=true;
+                }
+
                 /** Unique ID of entity. */
                 const XMLCh* entityID_unicode;
                 /** Unique ID of entity. */
@@ -215,14 +228,14 @@ namespace opensaml {
                 /** Controls whether stale metadata is ignored. */
                 bool validOnly;
             };
-            
+
             /**
              * Gets entity metadata based on supplied criteria. If a valid entity is returned,
              * the provider will be left in a locked state. The caller MUST unlock the
              * provider when finished with the entity.
-             *  
+             *
              * @param criteria  lookup criteria
-             * 
+             *
              * @return the entity's metadata (and optionally a role) or NULL if there is no qualifying metadata
              */
             virtual std::pair<const EntityDescriptor*,const RoleDescriptor*> getEntityDescriptor(const Criteria& criteria) const=0;
@@ -230,7 +243,7 @@ namespace opensaml {
         protected:
             /**
              * Applies any installed filters to a metadata instance.
-             * 
+             *
              * @param xmlObject the metadata to be filtered
              */
             void doFilters(xmltooling::XMLObject& xmlObject) const;
@@ -247,7 +260,7 @@ namespace opensaml {
          * Registers MetadataProvider classes into the runtime.
          */
         void SAML_API registerMetadataProviders();
-        
+
         /** MetadataProvider based on local or remote XML file */
         #define XML_METADATA_PROVIDER  "XML"
 

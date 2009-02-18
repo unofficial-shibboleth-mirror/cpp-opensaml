@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2009 Internet2
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,16 +53,21 @@ SecurityPolicy::IssuerMatchingPolicy SecurityPolicy::m_defaultMatching;
 
 SecurityPolicy::~SecurityPolicy()
 {
-    reset(false);
+    XMLString::release(&m_messageID);
+    delete m_metadataCriteria;
+    delete m_issuer;
 }
 
 void SecurityPolicy::reset(bool messageOnly)
 {
+    _reset();
+}
+
+void SecurityPolicy::_reset(bool messageOnly)
+{
     XMLString::release(&m_messageID);
     m_messageID=NULL;
     m_issueInstant=0;
-    delete m_metadataCriteria;
-    m_metadataCriteria=NULL;
     if (!messageOnly) {
         delete m_issuer;
         m_issuer=NULL;
@@ -75,7 +80,16 @@ MetadataProvider::Criteria& SecurityPolicy::getMetadataProviderCriteria() const
 {
     if (!m_metadataCriteria)
         m_metadataCriteria=new MetadataProvider::Criteria();
+    else
+        m_metadataCriteria->reset();
     return *m_metadataCriteria;
+}
+
+void SecurityPolicy::setMetadataProviderCriteria(saml2md::MetadataProvider::Criteria* criteria)
+{
+    if (m_metadataCriteria)
+        delete m_metadataCriteria;
+    m_metadataCriteria=criteria;
 }
 
 void SecurityPolicy::evaluate(const XMLObject& message, const GenericRequest* request)

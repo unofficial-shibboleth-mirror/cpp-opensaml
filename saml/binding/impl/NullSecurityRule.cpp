@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2009 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,9 +40,10 @@ namespace opensaml {
         const char* getType() const {
             return NULLSECURITY_POLICY_RULE;
         }
-        void evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const {
+        bool evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const {
             m_log.warn("security enforced using NULL policy rule, be sure you know what you're doing");
             policy.setAuthenticated(true);
+            return true;
         }
 
     private:

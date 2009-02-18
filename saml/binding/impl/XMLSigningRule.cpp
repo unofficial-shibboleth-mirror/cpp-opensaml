@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2009 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,7 +50,7 @@ namespace opensaml {
         const char* getType() const {
             return XMLSIGNING_POLICY_RULE;
         }
-        void evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const;
+        bool evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const;
 
     private:
         bool m_errorFatal;
@@ -72,24 +72,24 @@ XMLSigningRule::XMLSigningRule(const DOMElement* e) : m_errorFatal(false)
     }
 }
 
-void XMLSigningRule::evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const
+bool XMLSigningRule::evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const
 {
     Category& log=Category::getInstance(SAML_LOGCAT".SecurityPolicyRule.XMLSigning");
     
     if (!policy.getIssuerMetadata()) {
         log.debug("ignoring message, no issuer metadata supplied");
-        return;
+        return false;
     }
 
     const SignatureTrustEngine* sigtrust;
     if (!(sigtrust=dynamic_cast<const SignatureTrustEngine*>(policy.getTrustEngine()))) {
         log.debug("ignoring message, no SignatureTrustEngine supplied");
-        return;
+        return false;
     }
     
     const SignableObject* signable = dynamic_cast<const SignableObject*>(&message);
     if (!signable || !signable->getSignature())
-        return;
+        return false;
     
     log.debug("validating signature profile");
     try {
@@ -100,7 +100,7 @@ void XMLSigningRule::evaluate(const XMLObject& message, const GenericRequest* re
         log.error("signature profile failed to validate: %s", ve.what());
         if (m_errorFatal)
             throw;
-        return;
+        return false;
     }
     
     // Set up criteria object.
@@ -110,9 +110,10 @@ void XMLSigningRule::evaluate(const XMLObject& message, const GenericRequest* re
         log.error("unable to verify message signature with supplied trust engine");
         if (m_errorFatal)
             throw SecurityPolicyException("Message was signed, but signature could not be verified.");
-        return;
+        return false;
     }
 
     log.debug("signature verified against message issuer");
     policy.setAuthenticated(true);
+    return true;
 }

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2009 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ namespace opensaml {
         const char* getType() const {
             return CLIENTCERTAUTH_POLICY_RULE;
         }
-        void evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const;
+        bool evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const;
 
     private:
         bool m_errorFatal;
@@ -69,27 +69,27 @@ ClientCertAuthRule::ClientCertAuthRule(const DOMElement* e) : m_errorFatal(false
     }
 }
 
-void ClientCertAuthRule::evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const
+bool ClientCertAuthRule::evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const
 {
     Category& log=Category::getInstance(SAML_LOGCAT".SecurityPolicyRule.ClientCertAuth");
     
     if (!request)
-        return;
+        return false;
     
     if (!policy.getIssuerMetadata()) {
         log.debug("ignoring message, no issuer metadata supplied");
-        return;
+        return false;
     }
 
     const X509TrustEngine* x509trust;
     if (!(x509trust=dynamic_cast<const X509TrustEngine*>(policy.getTrustEngine()))) {
         log.debug("ignoring message, no X509TrustEngine supplied");
-        return;
+        return false;
     }
     
     const std::vector<XSECCryptoX509*>& chain = request->getClientCertificates();
     if (chain.empty())
-        return;
+        return false;
     
     // Set up criteria object, including peer name to enforce cert name checking.
     MetadataCredentialCriteria cc(*(policy.getIssuerMetadata()));
@@ -101,9 +101,10 @@ void ClientCertAuthRule::evaluate(const XMLObject& message, const GenericRequest
         if (m_errorFatal)
             throw SecurityPolicyException("Client certificate supplied, but could not be verified.");
         log.error("unable to verify certificate chain with supplied trust engine");
-        return;
+        return false;
     }
     
     log.debug("client certificate verified against message issuer");
     policy.setAuthenticated(true);
+    return true;
 }
