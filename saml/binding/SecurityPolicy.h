@@ -70,11 +70,7 @@ namespace opensaml {
             const xmltooling::QName* role=NULL,
             const xmltooling::TrustEngine* trustEngine=NULL,
             bool validate=true
-            ) : m_metadataCriteria(NULL), m_messageID(NULL), m_issueInstant(0), m_issuer(NULL), m_issuerRole(NULL), m_authenticated(false),
-                m_matchingPolicy(NULL), m_metadata(metadataProvider), m_role(NULL), m_trust(trustEngine), m_validate(validate), m_entityOnly(true) {
-            if (role)
-                m_role = new xmltooling::QName(*role);
-        }
+            );
 
         virtual ~SecurityPolicy();
 
@@ -132,6 +128,26 @@ namespace opensaml {
          */
         bool requireEntityIssuer() const {
             return m_entityOnly;
+        }
+
+        /**
+         * Returns the entityID of the receiving entity.
+         *
+         * @return entityID of the peer processing the message
+         */
+        const XMLCh* getRecipient() {
+            return m_recipient;
+        }
+
+        /**
+         * Gets the effective time of message processing.
+         *
+         * @return  the time at which the message is being processed
+         */
+        time_t getTime() {
+            if (m_ts == 0)
+                return m_ts = time(NULL);
+            return m_ts;
         }
 
         /**
@@ -202,6 +218,27 @@ namespace opensaml {
          */
         void requireEntityIssuer(bool entityOnly=true) {
             m_entityOnly = entityOnly;
+        }
+
+        /**
+         * Sets entityID of receiving entity.
+         *
+         * @param recipient the entityID of the peer processing the message
+         */
+        void setRecipient(const XMLCh* recipient) {
+            m_recipient = recipient;
+        }
+
+        /**
+         * Sets effective time of message processing.
+         *
+         * <p>Assumed to be the time of policy instantiation, can be adjusted to pre- or post-date
+         * message processing.
+         *
+         * @param ts    the time at which the message is being processed
+         */
+        void setTime(time_t ts) {
+            m_ts = ts;
         }
 
         /**
@@ -410,6 +447,10 @@ namespace opensaml {
         const xmltooling::TrustEngine* m_trust;
         bool m_validate;
         bool m_entityOnly;
+
+        // contextual information
+        const XMLCh* m_recipient;
+        time_t m_ts;
     };
 
 };

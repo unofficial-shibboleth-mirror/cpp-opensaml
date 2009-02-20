@@ -419,6 +419,14 @@
 						>
 					</File>
 				</Filter>
+				<Filter
+					Name="profile"
+					>
+					<File
+						RelativePath=".\saml1\profile\SAML1PolicyTest.cpp"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="signature"
@@ -700,6 +708,14 @@
 					</File>
 					<File
 						RelativePath=".\saml2\binding\SAML2RedirectTest.cpp"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="profile"
+					>
+					<File
+						RelativePath=".\saml2\profile\SAML2PolicyTest.cpp"
 						>
 					</File>
 				</Filter>
@@ -1460,6 +1476,50 @@
 							<Tool
 								Name="VCCustomBuildTool"
 								CommandLine="perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
+								Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
+							/>
+						</FileConfiguration>
+					</File>
+				</Filter>
+				<Filter
+					Name="profile"
+					>
+					<File
+						RelativePath=".\saml1\profile\SAML1PolicyTest.h"
+						>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCustomBuildTool"
+								CommandLine="perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+								Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug|x64"
+							>
+							<Tool
+								Name="VCCustomBuildTool"
+								CommandLine="perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+								Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCustomBuildTool"
+								CommandLine="perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
+								Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|x64"
+							>
+							<Tool
+								Name="VCCustomBuildTool"
+								CommandLine="perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;"
 								Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
 							/>
 						</FileConfiguration>
@@ -4054,6 +4114,50 @@
 					</File>
 					<File
 						RelativePath=".\saml2\binding\SAML2RedirectTest.h"
+						>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCustomBuildTool"
+								CommandLine="perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
+								Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug|x64"
+							>
+							<Tool
+								Name="VCCustomBuildTool"
+								CommandLine="perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
+								Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCustomBuildTool"
+								CommandLine="perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
+								Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|x64"
+							>
+							<Tool
+								Name="VCCustomBuildTool"
+								CommandLine="perl.exe -w \cxxtest\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o &quot;$(InputDir)$(InputName)&quot;.cpp &quot;$(InputPath)&quot;&#x0D;&#x0A;"
+								Outputs="&quot;$(InputDir)$(InputName)&quot;.cpp"
+							/>
+						</FileConfiguration>
+					</File>
+				</Filter>
+				<Filter
+					Name="profile"
+					>
+					<File
+						RelativePath=".\saml2\profile\SAML2PolicyTest.h"
 						>
 						<FileConfiguration
 							Name="Debug|Win32"

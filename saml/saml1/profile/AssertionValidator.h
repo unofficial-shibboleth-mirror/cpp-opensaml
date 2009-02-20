@@ -1,6 +1,6 @@
 /*
  *  Copyright 2001-2007 Internet2
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,7 +16,7 @@
 
 /**
  * @file saml/saml1/profile/AssertionValidator.h
- * 
+ *
  * SAML 1.x basic assertion validator
  */
 
@@ -28,11 +28,12 @@
 
 namespace opensaml {
     namespace saml1 {
-        
+
         class SAML_API Assertion;
         class SAML_API Condition;
-        
+
         /**
+         * @deprecated
          * SAML 1.x basic assertion validator provides time and audience condition checking.
          */
         class SAML_API AssertionValidator : public virtual xmltooling::Validator
@@ -40,7 +41,7 @@ namespace opensaml {
         public:
             /**
              * Constructor
-             * 
+             *
              * @param recipient name of assertion recipient (implicit audience)
              * @param audiences additional audience values
              * @param ts        timestamp to evaluate assertion conditions, or 0 to bypass check
@@ -50,12 +51,12 @@ namespace opensaml {
             }
 
             virtual ~AssertionValidator() {}
-    
+
             void validate(const xmltooling::XMLObject* xmlObject) const;
 
             /**
              * Type-safe validation method.
-             * 
+             *
              * @param assertion assertion to validate
              */
             virtual void validateAssertion(const Assertion& assertion) const;
@@ -66,7 +67,7 @@ namespace opensaml {
              * <p>The base class version only understands AudienceRestrictionConditions.
              * All other condition types will be rejected and require subclassing to
              * prevent validation failure.
-             * 
+             *
              * @param condition condition to validate
              */
             virtual void validateCondition(const Condition* condition) const;
@@ -74,14 +75,14 @@ namespace opensaml {
         protected:
             /** Name of recipient (implicit audience). */
             const XMLCh* m_recipient;
-            
+
             /** Additional audience values. */
             const std::vector<const XMLCh*>* m_audiences;
 
             /** Timestamp to evaluate assertion conditions. */
             time_t m_ts;
         };
-        
+
     };
 };
 

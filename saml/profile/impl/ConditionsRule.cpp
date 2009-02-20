@@ -1,0 +1,227 @@
+/*
+ *  Copyright 2009 Internet2
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * ConditionsRule.cpp
+ *
+ * SAML Conditions SecurityPolicyRule
+ */
+
+#include "internal.h"
+#include "exceptions.h"
+#include "binding/SecurityPolicyRule.h"
+#include "saml1/core/Assertions.h"
+#include "saml2/core/Assertions.h"
+
+#include <xmltooling/logging.h>
+
+using namespace opensaml;
+using namespace xmltooling::logging;
+using namespace xmltooling;
+using namespace std;
+
+namespace opensaml {
+    class SAML_DLLLOCAL ConditionsRule : public SecurityPolicyRule
+    {
+    public:
+        ConditionsRule(const DOMElement* e);
+
+        virtual ~ConditionsRule() {
+            for_each(m_rules.begin(), m_rules.end(), xmltooling::cleanup<SecurityPolicyRule>());
+            if (m_doc)
+                m_doc->release();
+        }
+        const char* getType() const {
+            return CONDITIONS_POLICY_RULE;
+        }
+        bool evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const;
+
+    private:
+        DOMDocument* m_doc;
+        vector<SecurityPolicyRule*> m_rules;
+    };
+
+    SecurityPolicyRule* SAML_DLLLOCAL ConditionsRuleFactory(const DOMElement* const & e)
+    {
+        return new ConditionsRule(e);
+    }
+
+    static const XMLCh Rule[] =     UNICODE_LITERAL_4(R,u,l,e);
+    static const XMLCh type[] =     UNICODE_LITERAL_4(t,y,p,e);
+
+    const char config[] =
+        "<Rule type=\"Conditions\" xmlns:saml2=\"urn:oasis:names:tc:SAML:2.0:assertion\" xmlns:saml=\"urn:oasis:names:tc:SAML:1.0:assertion\">"
+            "<Rule type=\"Audience\"/>"
+            "<Rule type=\"Ignore\">saml:DoNotCacheCondition</Rule>"
+            "<Rule type=\"Ignore\">saml2:OneTimeUse</Rule>"
+            "<Rule type=\"Ignore\">saml2:ProxyRestriction</Rule>"
+        "</Rule>";
+};
+
+ConditionsRule::ConditionsRule(const DOMElement* e) : m_doc(NULL)
+{
+    Category& log=Category::getInstance(SAML_LOGCAT".SecurityPolicyRule.Conditions");
+
+    if (!e || !e->hasChildNodes()) {
+        // Default the configuration.
+        istringstream in(config);
+        m_doc = XMLToolingConfig::getConfig().getParser().parse(in);
+        e = m_doc->getDocumentElement();
+    }
+
+    e = XMLHelper::getFirstChildElement(e, Rule);
+    while (e) {
+        auto_ptr_char temp(e->getAttributeNS(NULL, type));
+        if (temp.get() && *temp.get()) {
+            try {
+                log.info("building SecurityPolicyRule of type %s", temp.get());
+                m_rules.push_back(SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(temp.get(),e));
+            }
+            catch (exception& ex) {
+                log.crit("error building SecurityPolicyRule: %s", ex.what());
+            }
+        }
+        e = XMLHelper::getNextSiblingElement(e, Rule);
+    }
+}
+
+bool ConditionsRule::evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const
+{
+    const saml2::Assertion* a2=dynamic_cast<const saml2::Assertion*>(&message);
+    if (a2) {
+        const saml2::Conditions* conds = a2->getConditions();
+        if (!conds)
+            return true;
+
+        // First verify the time conditions, using the specified timestamp.
+        time_t now = policy.getTime();
+        unsigned int skew = XMLToolingConfig::getConfig().clock_skew_secs;
+        time_t t = conds->getNotBeforeEpoch();
+        if (now + skew < t)
+            throw SecurityPolicyException("Assertion is not yet valid.");
+        t = conds->getNotOnOrAfterEpoch();
+        if (t <= now - skew)
+            throw SecurityPolicyException("Assertion is no longer valid.");
+
+        // Now we process conditions, starting with the known types and then extensions.
+
+        bool valid;
+
+        const vector<saml2::AudienceRestriction*>& acvec = conds->getAudienceRestrictions();
+        for (vector<saml2::AudienceRestriction*>::const_iterator ac = acvec.begin(); ac!=acvec.end(); ++ac) {
+            valid = false;
+            for (vector<SecurityPolicyRule*>::const_iterator r = m_rules.begin(); r != m_rules.end(); ++r) {
+                if ((*r)->evaluate(*(*ac), request, policy))
+                    valid = true;
+            }
+            if (!valid)
+                throw SecurityPolicyException("AudienceRestriction was not understood by policy.");
+        }
+
+        const vector<saml2::OneTimeUse*>& otvec = conds->getOneTimeUses();
+        for (vector<saml2::OneTimeUse*>::const_iterator ot = otvec.begin(); ot!=otvec.end(); ++ot) {
+            valid = false;
+            for (vector<SecurityPolicyRule*>::const_iterator r = m_rules.begin(); r != m_rules.end(); ++r) {
+                if ((*r)->evaluate(*(*ot), request, policy))
+                    valid = true;
+            }
+            if (!valid)
+                throw SecurityPolicyException("OneTimeUse was not understood by policy.");
+        }
+
+        const vector<saml2::ProxyRestriction*> pvec = conds->getProxyRestrictions();
+        for (vector<saml2::ProxyRestriction*>::const_iterator p = pvec.begin(); p!=pvec.end(); ++p) {
+            valid = false;
+            for (vector<SecurityPolicyRule*>::const_iterator r = m_rules.begin(); r != m_rules.end(); ++r) {
+                if ((*r)->evaluate(*(*p), request, policy))
+                    valid = true;
+            }
+            if (!valid)
+                throw SecurityPolicyException("ProxyRestriction was not understood by policy.");
+        }
+
+        const vector<saml2::Condition*>& convec = conds->getConditions();
+        for (vector<saml2::Condition*>::const_iterator c = convec.begin(); c!=convec.end(); ++c) {
+            valid = false;
+            for (vector<SecurityPolicyRule*>::const_iterator r = m_rules.begin(); r != m_rules.end(); ++r) {
+                if ((*r)->evaluate(*(*c), request, policy))
+                    valid = true;
+            }
+            if (!valid)
+                throw SecurityPolicyException("Condition ($1) was not understood by policy.", params(1,(*c)->getElementQName().toString().c_str()));
+        }
+
+        return true;
+    }
+
+    const saml1::Assertion* a1=dynamic_cast<const saml1::Assertion*>(&message);
+    if (a1) {
+        const saml1::Conditions* conds = a1->getConditions();
+        if (!conds)
+            return true;
+
+        // First verify the time conditions, using the specified timestamp.
+        time_t now = policy.getTime();
+        unsigned int skew = XMLToolingConfig::getConfig().clock_skew_secs;
+        time_t t = conds->getNotBeforeEpoch();
+        if (now + skew < t)
+            throw SecurityPolicyException("Assertion is not yet valid.");
+        t = conds->getNotOnOrAfterEpoch();
+        if (t <= now - skew)
+            throw SecurityPolicyException("Assertion is no longer valid.");
+
+        // Now we process conditions, starting with the known types and then extensions.
+
+        bool valid;
+
+        const vector<saml1::AudienceRestrictionCondition*>& acvec = conds->getAudienceRestrictionConditions();
+        for (vector<saml1::AudienceRestrictionCondition*>::const_iterator ac = acvec.begin(); ac!=acvec.end(); ++ac) {
+            valid = false;
+            for (vector<SecurityPolicyRule*>::const_iterator r = m_rules.begin(); r != m_rules.end(); ++r) {
+                if ((*r)->evaluate(*(*ac), request, policy))
+                    valid = true;
+            }
+            if (!valid)
+                throw SecurityPolicyException("AudienceRestrictionCondition was not understood by policy.");
+        }
+
+        const vector<saml1::DoNotCacheCondition*>& dncvec = conds->getDoNotCacheConditions();
+        for (vector<saml1::DoNotCacheCondition*>::const_iterator dnc = dncvec.begin(); dnc!=dncvec.end(); ++dnc) {
+            valid = false;
+            for (vector<SecurityPolicyRule*>::const_iterator r = m_rules.begin(); r != m_rules.end(); ++r) {
+                if ((*r)->evaluate(*(*dnc), request, policy))
+                    valid = true;
+            }
+            if (!valid)
+                throw SecurityPolicyException("DoNotCacheCondition was not understood by policy.");
+        }
+
+        const vector<saml1::Condition*>& convec = conds->getConditions();
+        for (vector<saml1::Condition*>::const_iterator c = convec.begin(); c!=convec.end(); ++c) {
+            valid = false;
+            for (vector<SecurityPolicyRule*>::const_iterator r = m_rules.begin(); r != m_rules.end(); ++r) {
+                if ((*r)->evaluate(*(*c), request, policy))
+                    valid = true;
+            }
+            if (!valid)
+                throw SecurityPolicyException("Condition ($1) was not understood by policy.", params(1,(*c)->getElementQName().toString().c_str()));
+        }
+
+        return true;
+    }
+
+    return false;
+}

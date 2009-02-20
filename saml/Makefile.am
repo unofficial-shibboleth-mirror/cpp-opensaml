@@ -96,7 +96,8 @@ saml2mdinclude_HEADERS = \
 
 saml2profinclude_HEADERS = \
 	saml2/profile/AssertionValidator.h \
-	saml2/profile/BrowserSSOProfileValidator.h
+	saml2/profile/BrowserSSOProfileValidator.h \
+	saml2/profile/SAML2AssertionPolicy.h
 
 noinst_HEADERS = \
 	internal.h
@@ -114,6 +115,9 @@ libsaml_la_SOURCES = \
 	binding/impl/SimpleSigningRule.cpp \
 	binding/impl/SOAPClient.cpp \
 	binding/impl/XMLSigningRule.cpp \
+	profile/impl/AudienceRestrictionRule.cpp \
+    profile/impl/ConditionsRule.cpp \
+    profile/impl/IgnoreRule.cpp \
 	saml1/core/impl/AssertionsImpl.cpp \
 	saml1/core/impl/AssertionsSchemaValidators.cpp \
 	saml1/core/impl/ProtocolsImpl.cpp \
@@ -164,6 +168,7 @@ libsaml_la_SOURCES = \
 	saml2/binding/impl/SAML2SOAPClient.cpp \
 	saml2/profile/Assertion20Validator.cpp \
 	saml2/profile/BrowserSSOProfile20Validator.cpp \
+	saml2/profile/SAML2AssertionPolicy.cpp \
 	encryption/EncryptedKeyResolver.cpp \
 	signature/ContentReference.cpp \
 	signature/SignatureProfileValidator.cpp \

@@ -1,6 +1,6 @@
 /*
  *  Copyright 2001-2007 Internet2
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,8 +16,8 @@
 
 /**
  * @file saml/saml1/profile/BrowserSSOProfileValidator.h
- * 
- * SAML 1.x Browser SSO Profile Assertion Validator 
+ *
+ * SAML 1.x Browser SSO Profile Assertion Validator
  */
 
 #ifndef __saml1_ssoval_h__
@@ -27,8 +27,9 @@
 
 namespace opensaml {
     namespace saml1 {
-        
+
         /**
+         * @deprecated
          * SAML 1.x Browser SSO Profile Assertion Validator
          *
          * <p>In addition to standard core requirements for validity, SSO assertions
@@ -40,7 +41,7 @@ namespace opensaml {
         public:
             /**
              * Constructor
-             * 
+             *
              * @recipient       name of assertion recipient (implicit audience)
              * @param audiences additional audience values
              * @param ts        timestamp to evaluate assertion conditions, or 0 to bypass check
@@ -49,10 +50,10 @@ namespace opensaml {
                 : AssertionValidator(recipient, audiences, ts) {
             }
             virtual ~BrowserSSOProfileValidator() {}
-    
+
             void validateAssertion(const Assertion& assertion) const;
         };
-        
+
     };
 };
 

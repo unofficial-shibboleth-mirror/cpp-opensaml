@@ -33,6 +33,7 @@ samltest_h = \
     saml1/core/impl/AuthenticationStatementTest.h \
     saml1/binding/SAML1ArtifactTest.h \
     saml1/binding/SAML1POSTTest.h \
+    saml1/profile/SAML1PolicyTest.h \ 
     saml2/core/impl/Action20Test.h \
     saml2/core/impl/Advice20Test.h \
     saml2/core/impl/Artifact20Test.h \
@@ -93,7 +94,8 @@ samltest_h = \
     saml2/binding/SAML2ArtifactTest.h \
     saml2/binding/SAML2POSTTest.h \
     saml2/binding/SAML2RedirectTest.h \
-    saml2/metadata/XMLMetadataProviderTest.h
+    saml2/metadata/XMLMetadataProviderTest.h \
+    saml2/profile/SAML2PolicyTest.h
 
 noinst_HEADERS = \
 	binding.h \

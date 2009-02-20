@@ -32,7 +32,10 @@ using namespace xmltooling;
 using namespace std;
 
 namespace opensaml {
+    SAML_DLLLOCAL PluginManager<SecurityPolicyRule,string,const DOMElement*>::Factory AudienceRestrictionRuleFactory;
     SAML_DLLLOCAL PluginManager<SecurityPolicyRule,string,const DOMElement*>::Factory ClientCertAuthRuleFactory;
+    SAML_DLLLOCAL PluginManager<SecurityPolicyRule,string,const DOMElement*>::Factory ConditionsRuleFactory;
+    SAML_DLLLOCAL PluginManager<SecurityPolicyRule,string,const DOMElement*>::Factory IgnoreRuleFactory;
     SAML_DLLLOCAL PluginManager<SecurityPolicyRule,string,const DOMElement*>::Factory MessageFlowRuleFactory;
     SAML_DLLLOCAL PluginManager<SecurityPolicyRule,string,const DOMElement*>::Factory NullSecurityRuleFactory;
     SAML_DLLLOCAL PluginManager<SecurityPolicyRule,string,const DOMElement*>::Factory SimpleSigningRuleFactory;
@@ -42,7 +45,10 @@ namespace opensaml {
 void SAML_API opensaml::registerSecurityPolicyRules()
 {
     SAMLConfig& conf=SAMLConfig::getConfig();
+    conf.SecurityPolicyRuleManager.registerFactory(AUDIENCE_POLICY_RULE, AudienceRestrictionRuleFactory);
     conf.SecurityPolicyRuleManager.registerFactory(CLIENTCERTAUTH_POLICY_RULE, ClientCertAuthRuleFactory);
+    conf.SecurityPolicyRuleManager.registerFactory(CONDITIONS_POLICY_RULE, ConditionsRuleFactory);
+    conf.SecurityPolicyRuleManager.registerFactory(IGNORE_POLICY_RULE, IgnoreRuleFactory);
     conf.SecurityPolicyRuleManager.registerFactory(MESSAGEFLOW_POLICY_RULE, MessageFlowRuleFactory);
     conf.SecurityPolicyRuleManager.registerFactory(NULLSECURITY_POLICY_RULE, NullSecurityRuleFactory);
     conf.SecurityPolicyRuleManager.registerFactory(SIMPLESIGNING_POLICY_RULE, SimpleSigningRuleFactory);
@@ -50,6 +56,30 @@ void SAML_API opensaml::registerSecurityPolicyRules()
 }
 
 SecurityPolicy::IssuerMatchingPolicy SecurityPolicy::m_defaultMatching;
+
+SecurityPolicy::SecurityPolicy(
+    const saml2md::MetadataProvider* metadataProvider,
+    const xmltooling::QName* role,
+    const xmltooling::TrustEngine* trustEngine,
+    bool validate
+    ) : m_metadataCriteria(NULL),
+        m_messageID(NULL),
+        m_issueInstant(0),
+        m_issuer(NULL),
+        m_issuerRole(NULL),
+        m_authenticated(false),
+        m_matchingPolicy(NULL),
+        m_metadata(metadataProvider),
+        m_role(NULL),
+        m_trust(trustEngine),
+        m_validate(validate),
+        m_entityOnly(true),
+        m_recipient(NULL),
+        m_ts(0)
+{
+    if (role)
+        m_role = new xmltooling::QName(*role);
+}
 
 SecurityPolicy::~SecurityPolicy()
 {

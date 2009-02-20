@@ -768,6 +768,10 @@
 							/>
 						</FileConfiguration>
 					</File>
+					<File
+						RelativePath=".\saml2\profile\SAML2AssertionPolicy.cpp"
+						>
+					</File>
 				</Filter>
 			</Filter>
 			<Filter
@@ -869,6 +873,26 @@
 					RelativePath=".\zlib\zutil.c"
 					>
 				</File>
+			</Filter>
+			<Filter
+				Name="profile"
+				>
+				<Filter
+					Name="impl"
+					>
+					<File
+						RelativePath=".\profile\impl\AudienceRestrictionRule.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\profile\impl\ConditionsRule.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\profile\impl\IgnoreRule.cpp"
+						>
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
 		<Filter
@@ -1072,6 +1096,10 @@
 					</File>
 					<File
 						RelativePath=".\saml2\profile\BrowserSSOProfileValidator.h"
+						>
+					</File>
+					<File
+						RelativePath=".\saml2\profile\SAML2AssertionPolicy.h"
 						>
 					</File>
 				</Filter>
