@@ -79,9 +79,11 @@
 <pathentry kind="out" path="saml/Debug"/>
 <pathentry kind="out" path="samltest/Debug"/>
 <pathentry kind="con" path="org.eclipse.cdt.make.core.DISCOVERED_SCANNER_INFO"/>
-<pathentry excluding="util/|saml1/|signature/|saml2/|encryption/|security/|security/impl/|saml1/binding/|saml1/binding/impl/|saml2/binding/|saml2/binding/impl/|binding/|binding/impl/|zlib/|saml1/profile/|saml1/profile/impl/|saml2/profile/|saml2/profile/impl/|profile/impl/" kind="src" path="saml"/>
+<pathentry excluding="util/|saml1/|signature/|saml2/|encryption/|security/|security/impl/|saml1/binding/|saml1/binding/impl/|saml2/binding/|saml2/binding/impl/|binding/|binding/impl/|zlib/|saml1/profile/|saml1/profile/impl/|saml2/profile/|saml2/profile/impl/|profile|profile/impl/" kind="src" path="saml"/>
 <pathentry excluding="impl/" kind="src" path="saml/binding"/>
 <pathentry kind="src" path="saml/binding/impl"/>
+<pathentry excluding="impl/" kind="src" path="saml/profile"/>
+<pathentry kind="src" path="saml/profile/impl"/>
 <pathentry excluding="impl/" kind="src" path="saml/saml1/core"/>
 <pathentry kind="src" path="saml/saml1/core/impl"/>
 <pathentry excluding="impl/" kind="src" path="saml/saml1/binding"/>
@@ -101,16 +103,15 @@
 <pathentry excluding="saml1/core/impl/|signature/|saml2/core/impl/|saml2/metadata/|security/|saml1/binding/|saml2/binding/|encryption/|saml2/profile/|saml1/profile/" kind="src" path="samltest"/>
 <pathentry kind="src" path="samltest/saml1/binding"/>
 <pathentry kind="src" path="samltest/saml1/core/impl"/>
+<pathentry kind="src" path="samltest/saml1/profile"/>
 <pathentry kind="src" path="samltest/saml2/binding"/>
 <pathentry kind="src" path="samltest/saml2/core/impl"/>
 <pathentry kind="src" path="samltest/saml2/metadata"/>
+<pathentry kind="src" path="samltest/saml2/profile"/>
 <pathentry kind="src" path="samltest/security"/>
 <pathentry kind="src" path="samltest/signature"/>
 <pathentry kind="src" path="samltest/encryption"/>
 <pathentry kind="src" path="samlsign"/>
-<pathentry kind="src" path="samltest/saml2/profile"/>
-<pathentry kind="src" path="saml/profile/impl"/>
-<pathentry kind="src" path="samltest/saml1/profile"/>
 </storageModule>
 </cconfiguration>
 </storageModule>

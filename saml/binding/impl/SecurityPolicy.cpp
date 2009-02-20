@@ -74,7 +74,6 @@ SecurityPolicy::SecurityPolicy(
         m_trust(trustEngine),
         m_validate(validate),
         m_entityOnly(true),
-        m_recipient(NULL),
         m_ts(0)
 {
     if (role)

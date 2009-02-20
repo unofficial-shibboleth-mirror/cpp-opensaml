@@ -131,12 +131,21 @@ namespace opensaml {
         }
 
         /**
-         * Returns the entityID of the receiving entity.
+         * Returns the SAML audiences that represent the receiving peer.
          *
-         * @return entityID of the peer processing the message
+         * @return audience values of the peer processing the message
          */
-        const XMLCh* getRecipient() {
-            return m_recipient;
+        const std::vector<const XMLCh*>& getAudiences() const {
+            return m_audiences;
+        }
+
+        /**
+         * Returns the SAML audiences that represent the receiving peer.
+         *
+         * @return audience values of the peer processing the message
+         */
+        std::vector<const XMLCh*>& getAudiences() {
+            return m_audiences;
         }
 
         /**
@@ -144,7 +153,7 @@ namespace opensaml {
          *
          * @return  the time at which the message is being processed
          */
-        time_t getTime() {
+        time_t getTime() const {
             if (m_ts == 0)
                 return m_ts = time(NULL);
             return m_ts;
@@ -218,15 +227,6 @@ namespace opensaml {
          */
         void requireEntityIssuer(bool entityOnly=true) {
             m_entityOnly = entityOnly;
-        }
-
-        /**
-         * Sets entityID of receiving entity.
-         *
-         * @param recipient the entityID of the peer processing the message
-         */
-        void setRecipient(const XMLCh* recipient) {
-            m_recipient = recipient;
         }
 
         /**
@@ -449,8 +449,8 @@ namespace opensaml {
         bool m_entityOnly;
 
         // contextual information
-        const XMLCh* m_recipient;
-        time_t m_ts;
+        mutable time_t m_ts;
+        std::vector<const XMLCh*> m_audiences;
     };
 
 };

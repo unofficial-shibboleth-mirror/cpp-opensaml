@@ -54,7 +54,7 @@ public:
             TSM_ASSERT_THROWS("Policy should have tripped on AudienceRestriction", m_policy->evaluate(*assertion.get()), SecurityPolicyException);
 
             auto_ptr_XMLCh recipient("https://sp.example.org");
-            m_policy->setRecipient(recipient.get());
+            m_policy->getAudiences().push_back(recipient.get());
             m_policy->evaluate(*assertion.get());
         }
         catch (exception& ex) {
