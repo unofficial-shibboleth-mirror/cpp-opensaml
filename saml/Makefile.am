@@ -132,8 +132,9 @@ libsaml_la_SOURCES = \
 	saml1/binding/impl/SAML1SOAPDecoder.cpp \
 	saml1/binding/impl/SAML1SOAPEncoder.cpp \
 	saml1/binding/impl/SAML1SOAPClient.cpp \
-	saml1/profile/AssertionValidator.cpp \
-	saml1/profile/BrowserSSOProfileValidator.cpp \
+	saml1/profile/impl/AssertionValidator.cpp \
+	saml1/profile/impl/BrowserSSOProfileValidator.cpp \
+	saml1/profile/impl/SAML1BrowserSSORule.cpp \
 	saml2/core/impl/Assertions.cpp \
 	saml2/core/impl/Assertions20Impl.cpp \
 	saml2/core/impl/Assertions20SchemaValidators.cpp \
@@ -166,9 +167,10 @@ libsaml_la_SOURCES = \
 	saml2/binding/impl/SAML2SOAPDecoder.cpp \
 	saml2/binding/impl/SAML2SOAPEncoder.cpp \
 	saml2/binding/impl/SAML2SOAPClient.cpp \
-	saml2/profile/Assertion20Validator.cpp \
-	saml2/profile/BrowserSSOProfile20Validator.cpp \
-	saml2/profile/SAML2AssertionPolicy.cpp \
+	saml2/profile/impl/Assertion20Validator.cpp \
+	saml2/profile/impl/BrowserSSOProfile20Validator.cpp \
+    saml2/profile/impl/BearerConfirmationRule.cpp \
+	saml2/profile/impl/SAML2AssertionPolicy.cpp \
 	encryption/EncryptedKeyResolver.cpp \
 	signature/ContentReference.cpp \
 	signature/SignatureProfileValidator.cpp \

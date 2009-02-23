@@ -1,6 +1,6 @@
 /*
  *  Copyright 2001-2007 Internet2
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,7 +16,7 @@
 
 /**
  * BrowserSSOProfileValidator.cpp
- * 
+ *
  * SAML 1.x Browser SSO Profile Assertion Validator
  */
 
@@ -75,8 +75,6 @@ void BrowserSSOProfileValidator::validateAssertion(const Assertion& assertion) c
     for_each(authn.begin(), authn.end(), _checkMethod());
     const vector<AttributeStatement*>& attr = assertion.getAttributeStatements();
     for_each(attr.begin(), attr.end(), _checkMethod());
-    const vector<SubjectStatement*>& sub = assertion.getSubjectStatements();
-    for_each(sub.begin(), sub.end(), _checkMethod());
 
     // Pass up for additional checking.
     AssertionValidator::validateAssertion(assertion);

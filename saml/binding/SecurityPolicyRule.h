@@ -135,6 +135,24 @@ namespace opensaml {
      * over the message. The transport layer is not considered.
      */
     #define XMLSIGNING_POLICY_RULE      "XMLSigning"
+
+    /**
+     * SecurityPolicyRule for SAML 1.x Browser SSO profile validation.
+     *
+     * Enforces presence of time conditions and proper subject confirmation.
+     */
+    #define SAML1BROWSERSSO_POLICY_RULE "SAML1BrowserSSO"
+
+    /**
+     * SecurityPolicyRule for SAML 2.0 bearer SubjectConfirmation.
+     *
+     * <p>Optionally enforces message delivery requirements based on SubjectConfirmationData.
+     *
+     * <p>The XML attributes "checkValidity", "checkRecipient", and "checkCorrelation" can be set
+     * "false" to disable checks of NotBefore/NotOnOrAfter, Recipient, and InResponseTo confirmation
+     * data respectively.
+     */
+    #define BEARER_POLICY_RULE "Bearer"
 };
 
 #endif /* __saml_secrule_h__ */

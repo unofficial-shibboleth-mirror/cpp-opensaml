@@ -40,6 +40,14 @@ namespace opensaml {
     SAML_DLLLOCAL PluginManager<SecurityPolicyRule,string,const DOMElement*>::Factory NullSecurityRuleFactory;
     SAML_DLLLOCAL PluginManager<SecurityPolicyRule,string,const DOMElement*>::Factory SimpleSigningRuleFactory;
     SAML_DLLLOCAL PluginManager<SecurityPolicyRule,string,const DOMElement*>::Factory XMLSigningRuleFactory;
+
+    namespace saml1 {
+        SAML_DLLLOCAL PluginManager<SecurityPolicyRule,string,const DOMElement*>::Factory BrowserSSORuleFactory;
+    }
+
+    namespace saml2 {
+        SAML_DLLLOCAL PluginManager<SecurityPolicyRule,string,const DOMElement*>::Factory BearerConfirmationRuleFactory;
+    }
 };
 
 void SAML_API opensaml::registerSecurityPolicyRules()
@@ -53,6 +61,8 @@ void SAML_API opensaml::registerSecurityPolicyRules()
     conf.SecurityPolicyRuleManager.registerFactory(NULLSECURITY_POLICY_RULE, NullSecurityRuleFactory);
     conf.SecurityPolicyRuleManager.registerFactory(SIMPLESIGNING_POLICY_RULE, SimpleSigningRuleFactory);
     conf.SecurityPolicyRuleManager.registerFactory(XMLSIGNING_POLICY_RULE, XMLSigningRuleFactory);
+    conf.SecurityPolicyRuleManager.registerFactory(SAML1BROWSERSSO_POLICY_RULE, saml1::BrowserSSORuleFactory);
+    conf.SecurityPolicyRuleManager.registerFactory(BEARER_POLICY_RULE, saml2::BearerConfirmationRuleFactory);
 }
 
 SecurityPolicy::IssuerMatchingPolicy SecurityPolicy::m_defaultMatching;
@@ -74,7 +84,8 @@ SecurityPolicy::SecurityPolicy(
         m_trust(trustEngine),
         m_validate(validate),
         m_entityOnly(true),
-        m_ts(0)
+        m_ts(0),
+        m_correlationID(NULL)
 {
     if (role)
         m_role = new xmltooling::QName(*role);

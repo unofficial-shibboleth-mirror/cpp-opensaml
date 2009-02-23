@@ -34,8 +34,7 @@ namespace opensaml {
          * SAML 2.0 Browser SSO Profile Assertion Validator
          *
          * <p>In addition to standard core requirements for validity, SSO assertions
-         * <strong>MUST</strong> have NotBefore/NotOnOrAfter attributes and each subject statement
-         * <strong>MUST</strong> be confirmable via bearer method.
+         * <strong>MUST</strong> be bearer-confirmable.
          */
         class SAML_API BrowserSSOProfileValidator : public AssertionValidator
         {

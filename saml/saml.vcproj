@@ -436,14 +436,22 @@
 				<Filter
 					Name="profile"
 					>
-					<File
-						RelativePath=".\saml1\profile\AssertionValidator.cpp"
+					<Filter
+						Name="impl"
 						>
-					</File>
-					<File
-						RelativePath=".\saml1\profile\BrowserSSOProfileValidator.cpp"
-						>
-					</File>
+						<File
+							RelativePath=".\saml1\profile\impl\AssertionValidator.cpp"
+							>
+						</File>
+						<File
+							RelativePath=".\saml1\profile\impl\BrowserSSOProfileValidator.cpp"
+							>
+						</File>
+						<File
+							RelativePath=".\saml1\profile\impl\SAML1BrowserSSORule.cpp"
+							>
+						</File>
+					</Filter>
 				</Filter>
 			</Filter>
 			<Filter
@@ -688,90 +696,26 @@
 				<Filter
 					Name="profile"
 					>
-					<File
-						RelativePath=".\saml2\profile\Assertion20Validator.cpp"
+					<Filter
+						Name="impl"
 						>
-						<FileConfiguration
-							Name="Debug|Win32"
+						<File
+							RelativePath=".\saml2\profile\impl\Assertion20Validator.cpp"
 							>
-							<Tool
-								Name="VCCLCompilerTool"
-								ObjectFile="$(IntDir)\$(InputName)1.obj"
-								XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-							/>
-						</FileConfiguration>
-						<FileConfiguration
-							Name="Debug|x64"
+						</File>
+						<File
+							RelativePath=".\saml2\profile\impl\BearerConfirmationRule.cpp"
 							>
-							<Tool
-								Name="VCCLCompilerTool"
-								ObjectFile="$(IntDir)\$(InputName)1.obj"
-								XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-							/>
-						</FileConfiguration>
-						<FileConfiguration
-							Name="Release|Win32"
+						</File>
+						<File
+							RelativePath=".\saml2\profile\impl\BrowserSSOProfile20Validator.cpp"
 							>
-							<Tool
-								Name="VCCLCompilerTool"
-								ObjectFile="$(IntDir)\$(InputName)1.obj"
-								XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-							/>
-						</FileConfiguration>
-						<FileConfiguration
-							Name="Release|x64"
+						</File>
+						<File
+							RelativePath=".\saml2\profile\impl\SAML2AssertionPolicy.cpp"
 							>
-							<Tool
-								Name="VCCLCompilerTool"
-								ObjectFile="$(IntDir)\$(InputName)1.obj"
-								XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-							/>
-						</FileConfiguration>
-					</File>
-					<File
-						RelativePath=".\saml2\profile\BrowserSSOProfile20Validator.cpp"
-						>
-						<FileConfiguration
-							Name="Debug|Win32"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-								ObjectFile="$(IntDir)\$(InputName)1.obj"
-								XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-							/>
-						</FileConfiguration>
-						<FileConfiguration
-							Name="Debug|x64"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-								ObjectFile="$(IntDir)\$(InputName)1.obj"
-								XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-							/>
-						</FileConfiguration>
-						<FileConfiguration
-							Name="Release|Win32"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-								ObjectFile="$(IntDir)\$(InputName)1.obj"
-								XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-							/>
-						</FileConfiguration>
-						<FileConfiguration
-							Name="Release|x64"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-								ObjectFile="$(IntDir)\$(InputName)1.obj"
-								XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-							/>
-						</FileConfiguration>
-					</File>
-					<File
-						RelativePath=".\saml2\profile\SAML2AssertionPolicy.cpp"
-						>
-					</File>
+						</File>
+					</Filter>
 				</Filter>
 			</Filter>
 			<Filter

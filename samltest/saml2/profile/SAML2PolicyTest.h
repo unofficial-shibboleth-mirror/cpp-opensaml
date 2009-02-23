@@ -24,18 +24,18 @@ using namespace opensaml;
 
 class SAML2PolicyTest : public CxxTest::TestSuite {
     SecurityPolicy* m_policy;
-    SecurityPolicyRule* m_rule;
+    vector<SecurityPolicyRule*> m_rules;
 public:
     void setUp() {
         m_policy = NULL;
-        m_rule = NULL;
-        m_rule = SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(CONDITIONS_POLICY_RULE, NULL);
+        m_rules.push_back(SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(CONDITIONS_POLICY_RULE, NULL));
+        m_rules.push_back(SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(BEARER_POLICY_RULE, NULL));
         m_policy = new SecurityPolicy();
-        m_policy->getRules().push_back(m_rule);
+        m_policy->getRules().assign(m_rules.begin(), m_rules.end());
     }
 
     void tearDown() {
-        delete m_rule;
+        for_each(m_rules.begin(), m_rules.end(), xmltooling::cleanup<SecurityPolicyRule>());
         delete m_policy;
     }
 
@@ -51,10 +51,18 @@ public:
                 );
             janitor.release();
 
+            auto_ptr_XMLCh requestID("_12345");
+            m_policy->setCorrelationID(requestID.get());
+
             TSM_ASSERT_THROWS("Policy should have tripped on AudienceRestriction", m_policy->evaluate(*assertion.get()), SecurityPolicyException);
 
             auto_ptr_XMLCh recipient("https://sp.example.org");
             m_policy->getAudiences().push_back(recipient.get());
+            TSM_ASSERT_THROWS("Policy should have tripped on InResponseTo correlation", m_policy->evaluate(*assertion.get()), SecurityPolicyException);
+
+            dynamic_cast<saml2::SubjectConfirmationData*>(
+                assertion->getSubject()->getSubjectConfirmations().front()->getSubjectConfirmationData()
+                )->setInResponseTo(requestID.get());
             m_policy->evaluate(*assertion.get());
         }
         catch (exception& ex) {

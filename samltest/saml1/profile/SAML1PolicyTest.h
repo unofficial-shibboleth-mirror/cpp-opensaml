@@ -24,18 +24,18 @@ using namespace opensaml;
 
 class SAML1PolicyTest : public CxxTest::TestSuite {
     SecurityPolicy* m_policy;
-    SecurityPolicyRule* m_rule;
+    vector<SecurityPolicyRule*> m_rules;
 public:
     void setUp() {
         m_policy = NULL;
-        m_rule = NULL;
-        m_rule = SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(CONDITIONS_POLICY_RULE, NULL);
+        m_rules.push_back(SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(CONDITIONS_POLICY_RULE, NULL));
+        m_rules.push_back(SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(SAML1BROWSERSSO_POLICY_RULE, NULL));
         m_policy = new SecurityPolicy();
-        m_policy->getRules().push_back(m_rule);
+        m_policy->getRules().assign(m_rules.begin(), m_rules.end());
     }
 
     void tearDown() {
-        delete m_rule;
+        for_each(m_rules.begin(), m_rules.end(), xmltooling::cleanup<SecurityPolicyRule>());
         delete m_policy;
     }
 
