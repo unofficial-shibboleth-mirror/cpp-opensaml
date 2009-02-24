@@ -1,6 +1,6 @@
 /*
  *  Copyright 2001-2007 Internet2
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,7 +16,7 @@
 
 /**
  * SAML2RedirectDecoder.cpp
- * 
+ *
  * SAML 2.0 HTTP Redirect binding message encoder
  */
 
@@ -44,19 +44,19 @@ using namespace xmltooling;
 using namespace std;
 
 namespace opensaml {
-    namespace saml2p {              
+    namespace saml2p {
         class SAML_DLLLOCAL SAML2RedirectDecoder : public SAML2MessageDecoder
         {
         public:
             SAML2RedirectDecoder() {}
             virtual ~SAML2RedirectDecoder() {}
-            
+
             xmltooling::XMLObject* decode(
                 std::string& relayState,
                 const GenericRequest& genericRequest,
                 SecurityPolicy& policy
                 ) const;
-        };                
+        };
 
         MessageDecoder* SAML_DLLLOCAL SAML2RedirectDecoderFactory(const pair<const DOMElement*,const XMLCh*>& p)
         {
@@ -80,8 +80,6 @@ XMLObject* SAML2RedirectDecoder::decode(
     const HTTPRequest* httpRequest=dynamic_cast<const HTTPRequest*>(&genericRequest);
     if (!httpRequest)
         throw BindingException("Unable to cast request object to HTTPRequest type.");
-    if (strcmp(httpRequest->getMethod(),"GET"))
-        throw BindingException("Invalid HTTP method ($1).", params(1, httpRequest->getMethod()));
     const char* msg = httpRequest->getParameter("SAMLResponse");
     if (!msg)
         msg = httpRequest->getParameter("SAMLRequest");
@@ -103,7 +101,7 @@ XMLObject* SAML2RedirectDecoder::decode(
     XMLByte* decoded=Base64::decode(reinterpret_cast<const XMLByte*>(msg),&x);
     if (!decoded)
         throw BindingException("Unable to decode base64 in Redirect binding message.");
-    
+
     // Now we have to inflate it.
     stringstream s;
     if (inflate(reinterpret_cast<char*>(decoded), x, s)==0) {
@@ -121,7 +119,7 @@ XMLObject* SAML2RedirectDecoder::decode(
 #else
     XMLString::release((char**)&decoded);
 #endif
-    
+
     // Parse and bind the document into an XMLObject.
     DOMDocument* doc = (policy.getValidating() ? XMLToolingConfig::getConfig().getValidatingParser()
         : XMLToolingConfig::getConfig().getParser()).parse(s);
@@ -141,10 +139,10 @@ XMLObject* SAML2RedirectDecoder::decode(
     else {
         root = static_cast<saml2::RootObject*>(request);
     }
-    
+
     if (!policy.getValidating())
         SchemaValidators.validate(root);
-    
+
     // Run through the policy.
     extractMessageDetails(*root, genericRequest, samlconstants::SAML20P_NS, policy);
     policy.evaluate(*root, &genericRequest);
