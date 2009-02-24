@@ -77,8 +77,6 @@ XMLObject* SAML1ArtifactDecoder::decode(
     const HTTPRequest* httpRequest=dynamic_cast<const HTTPRequest*>(&genericRequest);
     if (!httpRequest)
         throw BindingException("Unable to cast request object to HTTPRequest type.");
-    if (strcmp(httpRequest->getMethod(),"GET"))
-        throw BindingException("Invalid HTTP method ($1).", params(1, httpRequest->getMethod()));
     vector<const char*> SAMLart;
     const char* TARGET = httpRequest->getParameter("TARGET");
     if (httpRequest->getParameters("SAMLart", SAMLart)==0 || !TARGET)
