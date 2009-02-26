@@ -54,7 +54,7 @@ namespace opensaml {
         END_XMLOBJECTVALIDATOR;
 
         BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,localizedURIType);
-            XMLOBJECTVALIDATOR_REQUIRE(localizedNameType,TextContent);
+            XMLOBJECTVALIDATOR_REQUIRE(localizedURIType,TextContent);
             XMLOBJECTVALIDATOR_REQUIRE(localizedURIType,Lang);
         END_XMLOBJECTVALIDATOR;
 
