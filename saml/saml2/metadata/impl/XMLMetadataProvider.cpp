@@ -27,6 +27,7 @@
 
 #include <xmltooling/util/NDC.h>
 #include <xmltooling/util/ReloadableXMLFile.h>
+#include <xmltooling/validation/ValidatorSuite.h>
 
 using namespace opensaml::saml2md;
 using namespace xmltooling::logging;
@@ -101,6 +102,8 @@ pair<bool,DOMElement*> XMLMetadataProvider::load()
             );
 
     // Preprocess the metadata.
+    if (!m_validate)
+        SchemaValidators.validate(xmlObject.get());
     doFilters(*xmlObject.get());
     xmlObject->releaseThisAndChildrenDOM();
     xmlObject->setDocument(NULL);

@@ -29,6 +29,7 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xmltooling/logging.h>
 #include <xmltooling/util/XMLHelper.h>
+#include <xmltooling/validation/ValidatorSuite.h>
 
 using namespace opensaml::saml2md;
 using namespace xmltooling::logging;
@@ -112,6 +113,8 @@ pair<const EntityDescriptor*,const RoleDescriptor*> DynamicMetadataProvider::get
         }
 
         // Filter it, which may throw.
+        if (!m_validate)
+            SchemaValidators.validate(entity2.get());
         doFilters(*entity2.get());
 
         time_t now = time(NULL);
