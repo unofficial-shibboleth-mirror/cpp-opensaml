@@ -34,62 +34,61 @@ namespace opensaml {
 
     namespace saml2 {
         class SAML_API SubjectConfirmation;
+
+        /**
+         * Policy subclass to track SAML 2.0 Assertion SubjectConfirmation.
+         */
+        class SAML_API SAML2AssertionPolicy : virtual public SecurityPolicy
+        {
+        public:
+            /**
+             * Constructor for policy.
+             *
+             * @param metadataProvider  locked MetadataProvider instance
+             * @param role              identifies the role (generally IdP or SP) of the policy peer
+             * @param trustEngine       TrustEngine to authenticate policy peer
+             * @param validate          true iff XML parsing should be done with validation
+             */
+            SAML2AssertionPolicy(
+                const saml2md::MetadataProvider* metadataProvider=NULL,
+                const xmltooling::QName* role=NULL,
+                const xmltooling::TrustEngine* trustEngine=NULL,
+                bool validate=true
+                ) : SecurityPolicy(metadataProvider, role, trustEngine, validate) {
+            }
+
+            virtual ~SAML2AssertionPolicy() {}
+
+            virtual void reset(bool messageOnly=false);
+            void _reset(bool messageOnly=false) {
+                m_confirmation = false;
+            }
+
+            /**
+             * Returns the subject confirmation that was successfully accepted by the policy.
+             *
+             * @return a successfully evaluated SubjectConfirmation
+             */
+            const saml2::SubjectConfirmation* getSubjectConfirmation() const {
+                return m_confirmation;
+            }
+
+            /**
+             * Sets the SubjectConfirmation that was successfully accepted by the policy.
+             *
+             * <p>The lifetime of the SubjectConfirmation object <strong>MUST</strong> be longer
+             * than the lifetime of the policy object.
+             *
+             * @param confirmation the successfully evaluated SubjectConfirmation
+             */
+            void setSubjectConfirmation(const saml2::SubjectConfirmation* confirmation) {
+                m_confirmation = confirmation;
+            }
+
+        private:
+            const saml2::SubjectConfirmation* m_confirmation;
+        };
     };
-
-    /**
-     * Policy subclass to track SAML 2.0 Assertion SubjectConfirmation.
-     */
-    class SAML_API SAML2AssertionPolicy : virtual public SecurityPolicy
-    {
-    public:
-        /**
-         * Constructor for policy.
-         *
-         * @param metadataProvider  locked MetadataProvider instance
-         * @param role              identifies the role (generally IdP or SP) of the policy peer
-         * @param trustEngine       TrustEngine to authenticate policy peer
-         * @param validate          true iff XML parsing should be done with validation
-         */
-        SAML2AssertionPolicy(
-            const saml2md::MetadataProvider* metadataProvider=NULL,
-            const xmltooling::QName* role=NULL,
-            const xmltooling::TrustEngine* trustEngine=NULL,
-            bool validate=true
-            ) : SecurityPolicy(metadataProvider, role, trustEngine, validate) {
-        }
-
-        virtual ~SAML2AssertionPolicy() {}
-
-        virtual void reset(bool messageOnly=false);
-        void _reset(bool messageOnly=false) {
-            m_confirmation = false;
-        }
-
-        /**
-         * Returns the subject confirmation that was successfully accepted by the policy.
-         *
-         * @return a successfully evaluated SubjectConfirmation
-         */
-        const saml2::SubjectConfirmation* getSubjectConfirmation() const {
-            return m_confirmation;
-        }
-
-        /**
-         * Sets the SubjectConfirmation that was successfully accepted by the policy.
-         *
-         * <p>The lifetime of the SubjectConfirmation object <strong>MUST</strong> be longer
-         * than the lifetime of the policy object.
-         *
-         * @param confirmation the successfully evaluated SubjectConfirmation
-         */
-        void setSubjectConfirmation(const saml2::SubjectConfirmation* confirmation) {
-            m_confirmation = confirmation;
-        }
-
-    private:
-        const saml2::SubjectConfirmation* m_confirmation;
-    };
-
 };
 
 #if defined (_MSC_VER)
