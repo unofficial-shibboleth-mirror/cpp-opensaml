@@ -100,7 +100,7 @@ SecurityPolicy::~SecurityPolicy()
 
 void SecurityPolicy::reset(bool messageOnly)
 {
-    _reset();
+    _reset(messageOnly);
 }
 
 void SecurityPolicy::_reset(bool messageOnly)
