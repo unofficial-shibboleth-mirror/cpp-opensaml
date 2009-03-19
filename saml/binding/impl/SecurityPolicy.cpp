@@ -73,7 +73,6 @@ SecurityPolicy::SecurityPolicy(
     const xmltooling::TrustEngine* trustEngine,
     bool validate
     ) : m_metadataCriteria(NULL),
-        m_messageID(NULL),
         m_issueInstant(0),
         m_issuer(NULL),
         m_issuerRole(NULL),
@@ -84,8 +83,7 @@ SecurityPolicy::SecurityPolicy(
         m_trust(trustEngine),
         m_validate(validate),
         m_entityOnly(true),
-        m_ts(0),
-        m_correlationID(NULL)
+        m_ts(0)
 {
     if (role)
         m_role = new xmltooling::QName(*role);
@@ -93,7 +91,6 @@ SecurityPolicy::SecurityPolicy(
 
 SecurityPolicy::~SecurityPolicy()
 {
-    XMLString::release(&m_messageID);
     delete m_metadataCriteria;
     delete m_issuer;
 }
@@ -105,8 +102,7 @@ void SecurityPolicy::reset(bool messageOnly)
 
 void SecurityPolicy::_reset(bool messageOnly)
 {
-    XMLString::release(&m_messageID);
-    m_messageID=NULL;
+    m_messageID.erase();
     m_issueInstant=0;
     if (!messageOnly) {
         delete m_issuer;

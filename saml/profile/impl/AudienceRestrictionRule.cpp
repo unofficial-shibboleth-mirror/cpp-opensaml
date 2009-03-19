@@ -72,8 +72,8 @@ bool AudienceRestrictionRule::evaluate(const XMLObject& message, const GenericRe
     if (ac2) {
         const vector<saml2::Audience*>& auds2 = ac2->getAudiences();
         for (vector<saml2::Audience*>::const_iterator a1 = auds2.begin(); a1!=auds2.end(); ++a1) {
-            for (vector<const XMLCh*>::const_iterator a2 = policy.getAudiences().begin(); a2!=policy.getAudiences().end(); ++a2) {
-                if (XMLString::equals((*a1)->getAudienceURI(), *a2))
+            for (vector<xstring>::const_iterator a2 = policy.getAudiences().begin(); a2!=policy.getAudiences().end(); ++a2) {
+                if (XMLString::equals((*a1)->getAudienceURI(), a2->c_str()))
                     return true;
             }
             for (vector<const XMLCh*>::const_iterator a2 = m_audiences.begin(); a2!=m_audiences.end(); ++a2) {
@@ -94,8 +94,8 @@ bool AudienceRestrictionRule::evaluate(const XMLObject& message, const GenericRe
     if (ac1) {
         const vector<saml1::Audience*>& auds1 = ac1->getAudiences();
         for (vector<saml1::Audience*>::const_iterator a1 = auds1.begin(); a1!=auds1.end(); ++a1) {
-            for (vector<const XMLCh*>::const_iterator a2 = policy.getAudiences().begin(); a2!=policy.getAudiences().end(); ++a2) {
-                if (XMLString::equals((*a1)->getAudienceURI(), *a2))
+            for (vector<xstring>::const_iterator a2 = policy.getAudiences().begin(); a2!=policy.getAudiences().end(); ++a2) {
+                if (XMLString::equals((*a1)->getAudienceURI(), a2->c_str()))
                     return true;
             }
             for (vector<const XMLCh*>::const_iterator a2 = m_audiences.begin(); a2!=m_audiences.end(); ++a2) {

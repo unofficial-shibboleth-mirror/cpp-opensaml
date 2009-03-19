@@ -135,7 +135,7 @@ namespace opensaml {
          *
          * @return audience values of the peer processing the message
          */
-        const std::vector<const XMLCh*>& getAudiences() const {
+        const std::vector<xmltooling::xstring>& getAudiences() const {
             return m_audiences;
         }
 
@@ -144,7 +144,7 @@ namespace opensaml {
          *
          * @return audience values of the peer processing the message
          */
-        std::vector<const XMLCh*>& getAudiences() {
+        std::vector<xmltooling::xstring>& getAudiences() {
             return m_audiences;
         }
 
@@ -166,7 +166,7 @@ namespace opensaml {
          * @return correlated message identifier
          */
         const XMLCh* getCorrelationID() const {
-            return m_correlationID;
+            return m_correlationID.c_str();
         }
 
         /**
@@ -258,7 +258,9 @@ namespace opensaml {
          * @param correlationID correlated message identifier
          */
         void setCorrelationID(const XMLCh* correlationID) {
-            m_correlationID = correlationID;
+            m_correlationID.erase();
+            if (correlationID)
+                m_correlationID = correlationID;
         }
 
         /**
@@ -270,9 +272,7 @@ namespace opensaml {
          *
          * @throws BindingException raised if the message/request is invalid according to the supplied rules
          */
-        void evaluate(
-            const xmltooling::XMLObject& message, const xmltooling::GenericRequest* request=NULL
-            );
+        void evaluate(const xmltooling::XMLObject& message, const xmltooling::GenericRequest* request=NULL);
 
         /**
          * Resets the policy object and/or clears any per-message state.
@@ -300,7 +300,7 @@ namespace opensaml {
          * @return message identifier as determined by the registered policies
          */
         const XMLCh* getMessageID() const {
-            return m_messageID;
+            return m_messageID.c_str();
         }
 
         /**
@@ -345,8 +345,9 @@ namespace opensaml {
          * @param id message identifier
          */
         void setMessageID(const XMLCh* id) {
-            xercesc::XMLString::release(&m_messageID);
-            m_messageID = xercesc::XMLString::replicate(id);
+            m_messageID.erase();
+            if (id)
+                m_messageID = id;
         }
 
         /**
@@ -453,7 +454,7 @@ namespace opensaml {
 
     private:
         // information extracted from message
-        XMLCh* m_messageID;
+        xmltooling::xstring m_messageID;
         time_t m_issueInstant;
         saml2::Issuer* m_issuer;
         const saml2md::RoleDescriptor* m_issuerRole;
@@ -470,8 +471,8 @@ namespace opensaml {
 
         // contextual information
         mutable time_t m_ts;
-        const XMLCh* m_correlationID;
-        std::vector<const XMLCh*> m_audiences;
+        xmltooling::xstring m_correlationID;
+        std::vector<xmltooling::xstring> m_audiences;
     };
 
 };
