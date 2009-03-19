@@ -105,7 +105,7 @@ bool BearerConfirmationRule::evaluate(const XMLObject& message, const GenericReq
                     }
                 }
 
-                if (m_correlation && policy.getCorrelationID()) {
+                if (m_correlation && policy.getCorrelationID() && *(policy.getCorrelationID())) {
                     if (!XMLString::equals(policy.getCorrelationID(), data ? data->getInResponseTo() : NULL)) {
                         msg = "bearer confirmation failed with request correlation mismatch";
                         continue;
