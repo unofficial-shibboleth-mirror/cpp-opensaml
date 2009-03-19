@@ -59,16 +59,16 @@ namespace opensaml {
         return new ConditionsRule(e);
     }
 
-    static const XMLCh Rule[] =     UNICODE_LITERAL_4(R,u,l,e);
+    static const XMLCh Rule[] =     UNICODE_LITERAL_10(P,o,l,i,c,y,R,u,l,e);
     static const XMLCh type[] =     UNICODE_LITERAL_4(t,y,p,e);
 
     const char config[] =
-        "<Rule type=\"Conditions\" xmlns:saml2=\"urn:oasis:names:tc:SAML:2.0:assertion\" xmlns:saml=\"urn:oasis:names:tc:SAML:1.0:assertion\">"
-            "<Rule type=\"Audience\"/>"
-            "<Rule type=\"Ignore\">saml:DoNotCacheCondition</Rule>"
-            "<Rule type=\"Ignore\">saml2:OneTimeUse</Rule>"
-            "<Rule type=\"Ignore\">saml2:ProxyRestriction</Rule>"
-        "</Rule>";
+        "<PolicyRule type=\"Conditions\" xmlns:saml2=\"urn:oasis:names:tc:SAML:2.0:assertion\" xmlns:saml=\"urn:oasis:names:tc:SAML:1.0:assertion\">"
+            "<PolicyRule type=\"Audience\"/>"
+            "<PolicyRule type=\"Ignore\">saml:DoNotCacheCondition</PolicyRule>"
+            "<PolicyRule type=\"Ignore\">saml2:OneTimeUse</PolicyRule>"
+            "<PolicyRule type=\"Ignore\">saml2:ProxyRestriction</PolicyRule>"
+        "</PolicyRule>";
 };
 
 ConditionsRule::ConditionsRule(const DOMElement* e) : m_doc(NULL)
