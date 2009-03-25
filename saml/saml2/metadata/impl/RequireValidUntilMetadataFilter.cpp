@@ -41,7 +41,7 @@ namespace opensaml {
             RequireValidUntilMetadataFilter(const DOMElement* e);
             ~RequireValidUntilMetadataFilter() {}
             
-            const char* getId() const { return BLACKLIST_METADATA_FILTER; }
+            const char* getId() const { return REQUIREVALIDUNTIL_METADATA_FILTER; }
             void doFilter(XMLObject& xmlObject) const;
 
         private:
