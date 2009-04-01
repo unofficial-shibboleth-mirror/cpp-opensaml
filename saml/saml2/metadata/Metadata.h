@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2009 Internet2
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -382,6 +382,13 @@ namespace opensaml {
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
 
+        BEGIN_XMLOBJECT(SAML_API,EntityAttributes,xmltooling::XMLObject,SAML Metadata Extension for Entity Attributes element);
+            DECL_TYPED_FOREIGN_CHILDREN(Attribute,saml2);
+            DECL_TYPED_FOREIGN_CHILDREN(Assertion,saml2);
+            /** EntityAttributesType local name */
+            static const XMLCh TYPE_NAME[];
+        END_XMLOBJECT;
+
         /**
          * Predicate to test a role for validity and protocol support.
          */
@@ -479,6 +486,7 @@ namespace opensaml {
 
         DECL_XMLOBJECTBUILDER(SAML_API,ActionNamespace,samlconstants::SAML20MD_QUERY_EXT_NS,samlconstants::SAML20MD_QUERY_EXT_PREFIX);
         DECL_XMLOBJECTBUILDER(SAML_API,SourceID,samlconstants::SAML1MD_NS,samlconstants::SAML1MD_PREFIX);
+        DECL_XMLOBJECTBUILDER(SAML_API,EntityAttributes,samlconstants::SAML20MD_ENTITY_ATTRIBUTE_NS,samlconstants::SAML20MD_ENTITY_ATTRIBUTE_PREFIX);
 
         /**
          * Builder for localizedNameType objects.

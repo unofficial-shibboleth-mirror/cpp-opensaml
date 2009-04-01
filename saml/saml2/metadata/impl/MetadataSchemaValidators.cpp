@@ -1,5 +1,5 @@
 /*
-*  Copyright 2001-2007 Internet2
+*  Copyright 2001-2009 Internet2
  *
 * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,6 +33,7 @@ using namespace xmltooling;
 using namespace std;
 using samlconstants::SAML20MD_NS;
 using samlconstants::SAML20MD_QUERY_EXT_NS;
+using samlconstants::SAML20MD_ENTITY_ATTRIBUTE_NS;
 
 namespace opensaml {
     namespace saml2md {
@@ -245,6 +246,12 @@ namespace opensaml {
             if (ptr->getEntityDescriptors().empty() && ptr->getEntitiesDescriptors().empty())
                 throw ValidationException("EntitiesDescriptor must contain at least one child descriptor.");
         END_XMLOBJECTVALIDATOR;
+
+        BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,EntityAttributes);
+            if (!ptr->hasChildren())
+                throw ValidationException("EntityAttributes must contain at least one child element.");
+        END_XMLOBJECTVALIDATOR;
+
     };
 };
 
@@ -349,4 +356,12 @@ void opensaml::saml2md::registerMetadataClasses() {
     q=xmltooling::QName(SAML20MD_QUERY_EXT_NS,AuthzDecisionQueryDescriptorType::TYPE_NAME);
     XMLObjectBuilder::registerBuilder(q,new AuthzDecisionQueryDescriptorTypeBuilder());
     SchemaValidators.registerValidator(q,new RoleDescriptorSchemaValidator());
+
+    q=xmltooling::QName(SAML20MD_ENTITY_ATTRIBUTE_NS,EntityAttributes::LOCAL_NAME);
+    XMLObjectBuilder::registerBuilder(q,new EntityAttributesBuilder());
+    SchemaValidators.registerValidator(q,new EntityAttributesSchemaValidator());
+
+    q=xmltooling::QName(SAML20MD_ENTITY_ATTRIBUTE_NS,EntityAttributes::TYPE_NAME);
+    XMLObjectBuilder::registerBuilder(q,new EntityAttributesBuilder());
+    SchemaValidators.registerValidator(q,new EntityAttributesSchemaValidator());
 }

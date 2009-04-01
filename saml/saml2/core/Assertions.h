@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2009 Internet2
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -185,6 +185,22 @@ namespace opensaml {
             DECL_INTEGER_ATTRIB(Count,COUNT);
             DECL_TYPED_CHILDREN(Audience);
             /** ProxyRestrictionType local name */
+            static const XMLCh TYPE_NAME[];
+        END_XMLOBJECT;
+
+        BEGIN_XMLOBJECT(SAML_API,Delegate,xmltooling::XMLObject,SAML 2.0 Delegation Restriction Condition Delegate element);
+            DECL_STRING_ATTRIB(ConfirmationMethod,CONFIRMATIONMETHOD);
+            DECL_DATETIME_ATTRIB(DelegationInstant,DELEGATIONINSTANT);
+            DECL_TYPED_CHILD(BaseID);
+            DECL_TYPED_CHILD(NameID);
+            DECL_TYPED_CHILD(EncryptedID);
+            /** DelegateType local name */
+            static const XMLCh TYPE_NAME[];
+        END_XMLOBJECT;
+
+        BEGIN_XMLOBJECT(SAML_API,DelegationRestrictionType,Condition,SAML 2.0 Delegation Restriction Condition type);
+            DECL_TYPED_CHILDREN(Delegate);
+            /** DelegationRestrictionType local name */
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
 
@@ -417,6 +433,8 @@ namespace opensaml {
         DECL_SAML2OBJECTBUILDER(SubjectConfirmationData);
         DECL_SAML2OBJECTBUILDER(SubjectLocality);
 
+        DECL_XMLOBJECTBUILDER(SAML_API,Delegate,samlconstants::SAML20_DELEGATION_CONDITION_NS,samlconstants::SAML20_DELEGATION_CONDITION_PREFIX);
+
         /**
          * Builder for NameIDType objects.
          *
@@ -481,6 +499,56 @@ namespace opensaml {
 #endif
                 }
                 throw xmltooling::XMLObjectException("Unable to obtain typed builder for Condition.");
+            }
+        };
+
+        /**
+         * Builder for DelegationRestrictionType objects.
+         *
+         * This is customized to return a Condition element with an xsi:type of DelegationRestrictionType.
+         */
+        class SAML_API DelegationRestrictionTypeBuilder : public xmltooling::ConcreteXMLObjectBuilder {
+        public:
+            virtual ~DelegationRestrictionTypeBuilder() {}
+            /** Default builder. */
+#ifdef HAVE_COVARIANT_RETURNS
+            virtual DelegationRestrictionType* buildObject() const {
+#else
+            virtual xmltooling::XMLObject* buildObject() const {
+#endif
+                xmltooling::QName schemaType(
+                    samlconstants::SAML20_DELEGATION_CONDITION_NS,
+                    DelegationRestrictionType::TYPE_NAME,
+                    samlconstants::SAML20_DELEGATION_CONDITION_PREFIX
+                    );
+                return buildObject(
+                    samlconstants::SAML20_DELEGATION_CONDITION_NS,
+                    DelegationRestrictionType::LOCAL_NAME,
+                    samlconstants::SAML20_DELEGATION_CONDITION_PREFIX,
+                    &schemaType
+                    );
+            }
+            /** Builder that allows element/type override. */
+#ifdef HAVE_COVARIANT_RETURNS
+            virtual DelegationRestrictionType* buildObject(
+#else
+            virtual xmltooling::XMLObject* buildObject(
+#endif
+                const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=NULL, const xmltooling::QName* schemaType=NULL
+                ) const;
+
+            /** Singleton builder. */
+            static DelegationRestrictionType* buildDelegationRestrictionType() {
+                const DelegationRestrictionTypeBuilder* b = dynamic_cast<const DelegationRestrictionTypeBuilder*>(
+                    XMLObjectBuilder::getBuilder(xmltooling::QName(samlconstants::SAML20_DELEGATION_CONDITION_NS,DelegationRestrictionType::TYPE_NAME))
+                    );
+                if (b)
+#ifdef HAVE_COVARIANT_RETURNS
+                    return b->buildObject();
+#else
+                    return dynamic_cast<DelegationRestrictionType*>(b->buildObject());
+#endif
+                throw xmltooling::XMLObjectException("Unable to obtain typed builder for DelegationRestrictionType.");
             }
         };
 

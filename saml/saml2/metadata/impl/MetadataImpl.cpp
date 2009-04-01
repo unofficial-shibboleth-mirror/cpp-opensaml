@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2009 Internet2
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 /**
  * MetadataImpl.cpp
  *
- * Implementation classes for SAML 2.0 Assertions schema
+ * Implementation classes for SAML 2.0 Metadata schema
  */
 
 #include "internal.h"
@@ -37,7 +37,6 @@
 using namespace samlconstants;
 using namespace opensaml::saml2md;
 using namespace opensaml::saml2;
-using namespace opensaml;
 using namespace xmlencryption;
 using namespace xmlsignature;
 using namespace xmltooling;
@@ -2432,6 +2431,50 @@ namespace opensaml {
             }
         };
 
+        class SAML_DLLLOCAL EntityAttributesImpl : public virtual EntityAttributes,
+            public AbstractComplexElement,
+            public AbstractDOMCachingXMLObject,
+            public AbstractXMLObjectMarshaller,
+            public AbstractXMLObjectUnmarshaller
+        {
+        public:
+            virtual ~EntityAttributesImpl() {}
+
+            EntityAttributesImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
+            }
+
+            EntityAttributesImpl(const EntityAttributesImpl& src)
+                    : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
+                for (list<XMLObject*>::const_iterator i=src.m_children.begin(); i!=src.m_children.end(); i++) {
+                    if (*i) {
+                        Attribute* a=dynamic_cast<Attribute*>(*i);
+                        if (a) {
+                            getAttributes().push_back(a->cloneAttribute());
+                            continue;
+                        }
+
+                        saml2::Assertion* as=dynamic_cast<saml2::Assertion*>(*i);
+                        if (as) {
+                            getAssertions().push_back(as->cloneAssertion());
+                            continue;
+                        }
+                    }
+                }
+            }
+
+            IMPL_XMLOBJECT_CLONE(EntityAttributes);
+
+            IMPL_TYPED_FOREIGN_CHILDREN(Attribute,saml2,m_children.end());
+            IMPL_TYPED_FOREIGN_CHILDREN(Assertion,saml2,m_children.end());
+
+        protected:
+            void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
+                PROC_TYPED_FOREIGN_CHILDREN(Attribute,saml2,SAML20_NS,false);
+                PROC_TYPED_FOREIGN_CHILDREN(Assertion,saml2,SAML20_NS,false);
+                AbstractXMLObjectUnmarshaller::processChildElement(childXMLObject,root);
+            }
+        };
     };
 };
 
@@ -2498,6 +2541,7 @@ IMPL_XMLOBJECTBUILDER(TelephoneNumber);
 
 IMPL_XMLOBJECTBUILDER(ActionNamespace);
 IMPL_XMLOBJECTBUILDER(SourceID);
+IMPL_XMLOBJECTBUILDER(EntityAttributes);
 
 #ifdef HAVE_COVARIANT_RETURNS
 RoleDescriptor* RoleDescriptorBuilder::buildObject(
@@ -2564,6 +2608,8 @@ const XMLCh EntityDescriptor::LOCAL_NAME[] =            UNICODE_LITERAL_16(E,n,t
 const XMLCh EntityDescriptor::TYPE_NAME[] =             UNICODE_LITERAL_20(E,n,t,i,t,y,D,e,s,c,r,i,p,t,o,r,T,y,p,e);
 const XMLCh EntityDescriptor::ID_ATTRIB_NAME[] =        UNICODE_LITERAL_2(I,D);
 const XMLCh EntityDescriptor::ENTITYID_ATTRIB_NAME[] =  UNICODE_LITERAL_8(e,n,t,i,t,y,I,D);
+const XMLCh EntityAttributes::LOCAL_NAME[] =            UNICODE_LITERAL_16(E,n,t,i,t,y,A,t,t,r,i,b,u,t,e,s);
+const XMLCh EntityAttributes::TYPE_NAME[] =             UNICODE_LITERAL_20(E,n,t,i,t,y,A,t,t,r,i,b,u,t,e,s,T,y,p,e);
 const XMLCh Extensions::LOCAL_NAME[] =                  UNICODE_LITERAL_10(E,x,t,e,n,s,i,o,n,s);
 const XMLCh Extensions::TYPE_NAME[] =                   UNICODE_LITERAL_14(E,x,t,e,n,s,i,o,n,s,T,y,p,e);
 const XMLCh GivenName::LOCAL_NAME[] =                   UNICODE_LITERAL_9(G,i,v,e,n,N,a,m,e);

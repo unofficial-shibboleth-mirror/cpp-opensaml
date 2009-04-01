@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2009 Internet2
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,6 +45,7 @@ using xmlconstants::XMLSIG_NS;
 using xmlconstants::XMLENC_NS;
 using xmlconstants::XML_BOOL_NULL;
 using samlconstants::SAML20_NS;
+using samlconstants::SAML20_DELEGATION_CONDITION_NS;
 
 
 #if defined (_MSC_VER)
@@ -345,6 +346,113 @@ namespace opensaml {
             }
         };
 
+        class SAML_DLLLOCAL DelegateImpl : public virtual Delegate,
+            public AbstractComplexElement,
+            public AbstractDOMCachingXMLObject,
+            public AbstractXMLObjectMarshaller,
+            public AbstractXMLObjectUnmarshaller
+        {
+            void init() {
+                m_ConfirmationMethod=NULL;
+                m_DelegationInstant=NULL;
+                m_BaseID=NULL;
+                m_NameID=NULL;
+                m_EncryptedID=NULL;
+                m_children.push_back(NULL);
+                m_children.push_back(NULL);
+                m_children.push_back(NULL);
+                m_pos_BaseID=m_children.begin();
+                m_pos_NameID=m_pos_BaseID;
+                ++m_pos_NameID;
+                m_pos_EncryptedID=m_pos_NameID;
+                ++m_pos_EncryptedID;
+            }
+        public:
+            virtual ~DelegateImpl() {
+                XMLString::release(&m_ConfirmationMethod);
+                delete m_DelegationInstant;
+            }
+
+            DelegateImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
+                init();
+            }
+
+            DelegateImpl(const DelegateImpl& src)
+                    : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
+                init();
+                setConfirmationMethod(src.getConfirmationMethod());
+                setDelegationInstant(src.getDelegationInstant());
+                if (src.getBaseID())
+                    setBaseID(src.getBaseID()->cloneBaseID());
+                if (src.getNameID())
+                    setNameID(src.getNameID()->cloneNameID());
+                if (src.getEncryptedID())
+                    setEncryptedID(src.getEncryptedID()->cloneEncryptedID());
+            }
+
+            IMPL_XMLOBJECT_CLONE(Delegate);
+            IMPL_STRING_ATTRIB(ConfirmationMethod);
+            IMPL_DATETIME_ATTRIB(DelegationInstant,0);
+            IMPL_TYPED_CHILD(NameID);
+            IMPL_TYPED_CHILD(BaseID);
+            IMPL_TYPED_CHILD(EncryptedID);
+
+        protected:
+            void marshallAttributes(DOMElement* domElement) const {
+                MARSHALL_STRING_ATTRIB(ConfirmationMethod,CONFIRMATIONMETHOD,NULL);
+                MARSHALL_DATETIME_ATTRIB(DelegationInstant,DELEGATIONINSTANT,NULL);
+            }
+
+            void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
+                PROC_TYPED_CHILD(BaseID,SAML20_NS,false);
+                PROC_TYPED_CHILD(NameID,SAML20_NS,false);
+                PROC_TYPED_CHILD(EncryptedID,SAML20_NS,false);
+                AbstractXMLObjectUnmarshaller::processChildElement(childXMLObject,root);
+            }
+
+            void processAttribute(const DOMAttr* attribute) {
+                PROC_STRING_ATTRIB(ConfirmationMethod,CONFIRMATIONMETHOD,NULL);
+                PROC_DATETIME_ATTRIB(DelegationInstant,DELEGATIONINSTANT,NULL);
+                AbstractXMLObjectUnmarshaller::processAttribute(attribute);
+            }
+        };
+
+        class SAML_DLLLOCAL DelegationRestrictionTypeImpl : public virtual DelegationRestrictionType,
+            public AbstractComplexElement,
+            public AbstractDOMCachingXMLObject,
+            public AbstractXMLObjectMarshaller,
+            public AbstractXMLObjectUnmarshaller
+        {
+        public:
+            virtual ~DelegationRestrictionTypeImpl() {}
+
+            DelegationRestrictionTypeImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
+            }
+
+            DelegationRestrictionTypeImpl(const DelegationRestrictionTypeImpl& src)
+                    : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
+                VectorOf(Delegate) v=getDelegates();
+                for (vector<Delegate*>::const_iterator i=src.m_Delegates.begin(); i!=src.m_Delegates.end(); i++) {
+                    if (*i) {
+                        v.push_back((*i)->cloneDelegate());
+                    }
+                }
+            }
+
+            IMPL_XMLOBJECT_CLONE(DelegationRestrictionType);
+            Condition* cloneCondition() const {
+                return cloneDelegationRestrictionType();
+            }
+            IMPL_TYPED_CHILDREN(Delegate,m_children.end());
+
+        protected:
+            void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
+                PROC_TYPED_CHILDREN(Delegate,SAML20_DELEGATION_CONDITION_NS,false);
+                AbstractXMLObjectUnmarshaller::processChildElement(childXMLObject,root);
+            }
+        };
 
         class SAML_DLLLOCAL ConditionsImpl : public virtual Conditions,
             public AbstractComplexElement,
@@ -1551,6 +1659,8 @@ IMPL_XMLOBJECTBUILDER(AuthnStatement);
 IMPL_XMLOBJECTBUILDER(AuthzDecisionStatement);
 IMPL_XMLOBJECTBUILDER(Condition);
 IMPL_XMLOBJECTBUILDER(Conditions);
+IMPL_XMLOBJECTBUILDER(Delegate);
+IMPL_XMLOBJECTBUILDER(DelegationRestrictionType);
 IMPL_XMLOBJECTBUILDER(EncryptedAssertion);
 IMPL_XMLOBJECTBUILDER(EncryptedAttribute);
 IMPL_XMLOBJECTBUILDER(EncryptedID);
@@ -1617,6 +1727,12 @@ const XMLCh Conditions::LOCAL_NAME[] =              UNICODE_LITERAL_10(C,o,n,d,i
 const XMLCh Conditions::TYPE_NAME[] =               UNICODE_LITERAL_14(C,o,n,d,i,t,i,o,n,s,T,y,p,e);
 const XMLCh Conditions::NOTBEFORE_ATTRIB_NAME[] =   UNICODE_LITERAL_9(N,o,t,B,e,f,o,r,e);
 const XMLCh Conditions::NOTONORAFTER_ATTRIB_NAME[] =UNICODE_LITERAL_12(N,o,t,O,n,O,r,A,f,t,e,r);
+const XMLCh Delegate::LOCAL_NAME[] =                UNICODE_LITERAL_8(D,e,l,e,g,a,t,e);
+const XMLCh Delegate::TYPE_NAME[] =                 UNICODE_LITERAL_12(D,e,l,e,g,a,t,e,T,y,p,e);
+const XMLCh Delegate::CONFIRMATIONMETHOD_ATTRIB_NAME[] = UNICODE_LITERAL_18(C,o,n,f,i,r,m,a,t,i,o,n,M,e,t,h,o,d);
+const XMLCh Delegate::DELEGATIONINSTANT_ATTRIB_NAME[] = UNICODE_LITERAL_17(D,e,l,e,g,a,t,i,o,n,I,n,s,t,a,n,t);
+const XMLCh DelegationRestrictionType::LOCAL_NAME[] = UNICODE_LITERAL_9(C,o,n,d,i,t,i,o,n);
+const XMLCh DelegationRestrictionType::TYPE_NAME[] =UNICODE_LITERAL_21(D,e,l,e,g,a,t,i,o,n,R,e,s,t,r,i,c,t,i,o,n);
 const XMLCh EncryptedAssertion::LOCAL_NAME[] =      UNICODE_LITERAL_18(E,n,c,r,y,p,t,e,d,A,s,s,e,r,t,i,o,n);
 const XMLCh EncryptedAttribute::LOCAL_NAME[] =      UNICODE_LITERAL_18(E,n,c,r,y,p,t,e,d,A,t,t,r,i,b,u,t,e);
 const XMLCh EncryptedElementType::LOCAL_NAME[] =    {chNull};
