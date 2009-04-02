@@ -8,7 +8,10 @@
     <system systemId="urn:oasis:names:tc:SAML:2.0:profiles:attribute:DCE" uri="@-PKGXMLDIR-@/saml-schema-dce-2.0.xsd"/>
     <system systemId="urn:oasis:names:tc:SAML:2.0:profiles:attribute:X500" uri="@-PKGXMLDIR-@/saml-schema-x500-2.0.xsd"/>
     <system systemId="urn:oasis:names:tc:SAML:2.0:profiles:attribute:XACML" uri="@-PKGXMLDIR-@/saml-schema-xacml-2.0.xsd"/>
+    <system systemId="urn:oasis:names:tc:SAML:metadata:attribute" uri="@-PKGXMLDIR-@/sstc-metadata-attr.xsd"/>
 	<system systemId="urn:oasis:names:tc:SAML:profiles:v1metadata" uri="@-PKGXMLDIR-@/sstc-saml1x-metadata.xsd"/>
+    <system systemId="urn:oasis:names:tc:SAML:attribute:ext" uri="@-PKGXMLDIR-@/sstc-saml-attribute-ext.xsd"/>
+    <system systemId="urn:oasis:names:tc:SAML:2.0:conditions:delegation" uri="@-PKGXMLDIR-@/sstc-saml-delegation.xsd"/>
 	<system systemId="urn:oasis:names:tc:SAML:metadata:ext:query" uri="@-PKGXMLDIR-@/sstc-saml-metadata-ext-query.xsd"/>
 	<system systemId="urn:oasis:names:tc:SAML:protocol:ext:third-party" uri="@-PKGXMLDIR-@/sstc-saml-protocol-ext-thirdparty.xsd"/>
 </catalog>
