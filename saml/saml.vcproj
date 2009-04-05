@@ -712,6 +712,10 @@
 							>
 						</File>
 						<File
+							RelativePath=".\saml2\profile\impl\DelegationRestrictionRule.cpp"
+							>
+						</File>
+						<File
 							RelativePath=".\saml2\profile\impl\SAML2AssertionPolicy.cpp"
 							>
 						</File>

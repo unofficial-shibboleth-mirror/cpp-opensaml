@@ -52,12 +52,13 @@ namespace opensaml {
         /**
          * Evaluates the rule against the given request and message.
          *
-         * <p>An exception will be raised if the message is invalid according to
+         * <p>An exception will be raised if the message is fatally invalid according to
          * a policy rule.
          *
          * <p>The return value is used to indicate whether a message was ignored or
          * successfully processed. A false value signals that the rule wasn't successful
-         * but was also not unsuccessful, because the rule was inapplicable to the message.
+         * because the rule was inapplicable to the message, but allows other rules to
+         * return an alternate result.
          *
          * @param message   the incoming message
          * @param request   the protocol request
@@ -80,6 +81,11 @@ namespace opensaml {
      * SecurityPolicyRule for evaluation of SAML AudienceRestriction Conditions.
      */
     #define AUDIENCE_POLICY_RULE        "Audience"
+
+    /**
+     * SecurityPolicyRule for evaluation of SAML DelegationRestriction Conditions.
+     */
+    #define DELEGATION_POLICY_RULE        "Delegation"
 
     /**
      * SecurityPolicyRule for TLS client certificate authentication.

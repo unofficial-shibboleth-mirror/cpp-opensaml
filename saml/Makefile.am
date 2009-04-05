@@ -170,6 +170,7 @@ libsaml_la_SOURCES = \
 	saml2/profile/impl/Assertion20Validator.cpp \
 	saml2/profile/impl/BrowserSSOProfile20Validator.cpp \
     saml2/profile/impl/BearerConfirmationRule.cpp \
+    saml2/profile/impl/DelegationRestrictionRule.cpp \
 	saml2/profile/impl/SAML2AssertionPolicy.cpp \
 	encryption/EncryptedKeyResolver.cpp \
 	signature/ContentReference.cpp \

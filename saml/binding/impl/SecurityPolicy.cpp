@@ -47,6 +47,7 @@ namespace opensaml {
 
     namespace saml2 {
         SAML_DLLLOCAL PluginManager<SecurityPolicyRule,string,const DOMElement*>::Factory BearerConfirmationRuleFactory;
+        SAML_DLLLOCAL PluginManager<SecurityPolicyRule,string,const DOMElement*>::Factory DelegationRestrictionRuleFactory;
     }
 };
 
@@ -63,6 +64,7 @@ void SAML_API opensaml::registerSecurityPolicyRules()
     conf.SecurityPolicyRuleManager.registerFactory(XMLSIGNING_POLICY_RULE, XMLSigningRuleFactory);
     conf.SecurityPolicyRuleManager.registerFactory(SAML1BROWSERSSO_POLICY_RULE, saml1::BrowserSSORuleFactory);
     conf.SecurityPolicyRuleManager.registerFactory(BEARER_POLICY_RULE, saml2::BearerConfirmationRuleFactory);
+    conf.SecurityPolicyRuleManager.registerFactory(DELEGATION_POLICY_RULE, saml2::DelegationRestrictionRuleFactory);
 }
 
 SecurityPolicy::IssuerMatchingPolicy SecurityPolicy::m_defaultMatching;

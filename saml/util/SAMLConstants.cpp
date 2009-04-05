@@ -207,7 +207,7 @@ const XMLCh samlconstants::SAML20MD_ENTITY_ATTRIBUTE_PREFIX[] = UNICODE_LITERAL_
 const XMLCh samlconstants::SAML20_DELEGATION_CONDITION_NS[] = // urn:oasis:names:tc:SAML:2.0:conditions:delegation
 { chLatin_u, chLatin_r, chLatin_n, chColon, chLatin_o, chLatin_a, chLatin_s, chLatin_i, chLatin_s, chColon,
   chLatin_n, chLatin_a, chLatin_m, chLatin_e, chLatin_s, chColon, chLatin_t, chLatin_c, chColon,
-  chLatin_S, chLatin_A, chLatin_M, chLatin_L, chColon, chDigit_2, chDigit_0, chColon,
+  chLatin_S, chLatin_A, chLatin_M, chLatin_L, chColon, chDigit_2, chPeriod, chDigit_0, chColon,
   chLatin_c, chLatin_o, chLatin_n, chLatin_d, chLatin_i, chLatin_t, chLatin_i, chLatin_o, chLatin_n, chLatin_s, chColon,
   chLatin_d, chLatin_e, chLatin_l, chLatin_e, chLatin_g, chLatin_a, chLatin_t, chLatin_i, chLatin_o, chLatin_n, chNull
 };
