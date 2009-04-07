@@ -49,6 +49,9 @@ namespace opensaml {
             if (!ptr->hasChildren()) {
                 XMLOBJECTVALIDATOR_ONEOF(Conditions,NotBefore,NotOnOrAfter);
             }
+            else if (ptr->getDoNotCacheConditions().size() > 1) {
+                throw ValidationException("Multiple DoNotCacheCondition elements are not permitted.");
+            }
         END_XMLOBJECTVALIDATOR;
 
         BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,SubjectConfirmation);

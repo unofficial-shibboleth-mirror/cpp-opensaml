@@ -92,6 +92,12 @@ namespace opensaml {
             if (!ptr->hasChildren()) {
                 XMLOBJECTVALIDATOR_ONEOF(Conditions,NotBefore,NotOnOrAfter);
             }
+            else if (ptr->getOneTimeUses().size() > 1) {
+                throw ValidationException("Multiple OneTimeUse condition elements are not permitted.");
+            }
+            else if (ptr->getProxyRestrictions().size() > 1) {
+                throw ValidationException("Multiple ProxyRestriction condition elements are not permitted.");
+            }
         END_XMLOBJECTVALIDATOR;
 
         BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,KeyInfoConfirmationDataType);
