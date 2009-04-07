@@ -102,8 +102,15 @@ pair<bool,DOMElement*> XMLMetadataProvider::load()
             );
 
     // Preprocess the metadata.
-    if (!m_validate)
-        SchemaValidators.validate(xmlObject.get());
+    if (!m_validate) {
+        try {
+            SchemaValidators.validate(xmlObject.get());
+        }
+        catch (exception& ex) {
+            m_log.error("metadata intance failed manual schema validation checking: ", ex.what());
+            throw MetadataException("Metadata instance failed manual schema validation checking.");
+        }
+    }
     doFilters(*xmlObject.get());
     xmlObject->releaseThisAndChildrenDOM();
     xmlObject->setDocument(NULL);
