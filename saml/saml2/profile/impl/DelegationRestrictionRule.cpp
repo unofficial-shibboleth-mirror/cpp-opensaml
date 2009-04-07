@@ -56,6 +56,7 @@ namespace opensaml {
                 MATCH_NEWEST,
                 MATCH_OLDEST
             } m_match;
+            time_t m_maxTime;
         };
 
         SecurityPolicyRule* SAML_DLLLOCAL DelegationRestrictionRuleFactory(const DOMElement* const & e)
@@ -108,11 +109,11 @@ namespace opensaml {
         static XMLCh any[] =    UNICODE_LITERAL_8(a,n,y,O,r,d,e,r);
         static XMLCh newest[] = UNICODE_LITERAL_6(n,e,w,e,s,t);
         static XMLCh oldest[] = UNICODE_LITERAL_6(o,l,d,e,s,t);
-
+        static XMLCh maxTimeSinceDelegation[] = UNICODE_LITERAL_22(m,a,x,T,i,m,e,S,i,n,c,e,D,e,l,e,g,a,t,i,o,n);
     }
 };
 
-DelegationRestrictionRule::DelegationRestrictionRule(const DOMElement* e) : m_match(MATCH_ANY)
+DelegationRestrictionRule::DelegationRestrictionRule(const DOMElement* e) : m_match(MATCH_ANY), m_maxTime(0)
 {
     if (e) {
         const XMLCh* m = e->getAttributeNS(NULL, match);
@@ -122,6 +123,9 @@ DelegationRestrictionRule::DelegationRestrictionRule(const DOMElement* e) : m_ma
             m_match = MATCH_OLDEST;
         else if (m && *m && !XMLString::equals(m, any))
             throw SecurityPolicyException("Invalid value for \"match\" attribute in Delegation rule.");
+        m = e->getAttributeNS(NULL, maxTimeSinceDelegation);
+        if (m && *m)
+            m_maxTime = XMLString::parseInt(m);
 
         try {
             DOMElement* d = XMLHelper::getFirstChildElement(e, samlconstants::SAML20_DELEGATION_CONDITION_NS, Delegate::LOCAL_NAME);
@@ -147,24 +151,29 @@ bool DelegationRestrictionRule::evaluate(const XMLObject& message, const Generic
     const DelegationRestrictionType* drt=dynamic_cast<const DelegationRestrictionType*>(&message);
     if (!drt)
         return false;
-
-    // If we have no embedded Delegates, the condition evaluates to true.
-    if (m_delegates.empty())
-        return true;
-
     const vector<Delegate*>& dels = drt->getDelegates();
-    if (m_match == MATCH_ANY) {
-        // Each Delegate in the condition MUST match an embedded Delegate.
-        for (vector<Delegate*>::const_iterator d1 = dels.begin(); d1 != dels.end(); ++d1) {
-            if (find_if(m_delegates.begin(), m_delegates.end(), _isSameDelegate(*d1)) == m_delegates.end())
+
+    if (!m_delegates.empty()) {
+        if (m_match == MATCH_ANY) {
+            // Each Delegate in the condition MUST match an embedded Delegate.
+            for (vector<Delegate*>::const_iterator d1 = dels.begin(); d1 != dels.end(); ++d1) {
+                if (find_if(m_delegates.begin(), m_delegates.end(), _isSameDelegate(*d1)) == m_delegates.end())
+                    return false;
+            }
+        }
+        else if (m_match == MATCH_OLDEST) {
+            if (search(dels.begin(), dels.end(), m_delegates.begin(), m_delegates.end(), _isSameDelegate()) != dels.begin())
+                return false;
+        }
+        else if (m_match == MATCH_NEWEST) {
+            if (search(dels.rbegin(), dels.rend(), m_delegates.begin(), m_delegates.end(), _isSameDelegate()) != dels.rbegin())
                 return false;
         }
     }
-    else if (m_match == MATCH_OLDEST) {
-        return (search(dels.begin(), dels.end(), m_delegates.begin(), m_delegates.end(), _isSameDelegate()) == dels.begin());
-    }
-    else if (m_match == MATCH_NEWEST) {
-        return (search(dels.rbegin(), dels.rend(), m_delegates.begin(), m_delegates.end(), _isSameDelegate()) == dels.rbegin());
+
+    if (m_maxTime > 0) {
+        return (!dels.empty() && dels.front()->getDelegationInstant() &&
+            (time(NULL) - dels.front()->getDelegationInstantEpoch() - XMLToolingConfig::getConfig().clock_skew_secs <= m_maxTime));
     }
 
     return true;
