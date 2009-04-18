@@ -26,6 +26,8 @@
 #include "saml2/metadata/Metadata.h"
 #include "util/SAMLConstants.h"
 
+#include <xmltooling/impl/AnyElement.h>
+
 using namespace opensaml::saml2md;
 using namespace opensaml;
 using namespace xmltooling;
@@ -59,6 +61,9 @@ void SAML_API opensaml::registerMessageDecoders()
     conf.MessageDecoderManager.registerFactory(samlconstants::SAML20_BINDING_HTTP_REDIRECT, saml2p::SAML2RedirectDecoderFactory);
     conf.MessageDecoderManager.registerFactory(samlconstants::SAML20_BINDING_SOAP, saml2p::SAML2SOAPDecoderFactory);
     conf.MessageDecoderManager.registerFactory(samlconstants::SAML20_BINDING_PAOS, saml2p::SAML2ECPDecoderFactory);
+
+    static const XMLCh RelayState[] = UNICODE_LITERAL_10(R,e,l,a,y,S,t,a,t,e);
+    XMLObjectBuilder::registerBuilder(xmltooling::QName(samlconstants::SAML20ECP_NS, RelayState), new AnyElementBuilder());
 }
 
 bool MessageDecoder::ArtifactResolver::isSupported(const SSODescriptorType& ssoDescriptor) const
