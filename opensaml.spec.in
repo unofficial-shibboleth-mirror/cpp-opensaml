@@ -29,6 +29,7 @@ This package contains the saml runtime library.
 Summary: OpenSAML development Headers
 Group: Development/Libraries
 Requires: %{name} = %{version}
+Requires: xmltooling-devel >= 1.2
 
 %description devel
 OpenSAML is an open source implementation of the OASIS Security Assertion
