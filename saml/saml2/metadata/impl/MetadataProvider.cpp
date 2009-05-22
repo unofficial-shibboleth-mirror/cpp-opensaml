@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2009 Internet2
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,6 +45,7 @@ namespace opensaml {
         SAML_DLLLOCAL PluginManager<MetadataFilter,string,const DOMElement*>::Factory WhitelistMetadataFilterFactory;
         SAML_DLLLOCAL PluginManager<MetadataFilter,string,const DOMElement*>::Factory SignatureMetadataFilterFactory;
         SAML_DLLLOCAL PluginManager<MetadataFilter,string,const DOMElement*>::Factory RequireValidUntilMetadataFilterFactory;
+        SAML_DLLLOCAL PluginManager<MetadataFilter,string,const DOMElement*>::Factory EntityRoleMetadataFilterFactory;
     };
 };
 
@@ -63,6 +64,9 @@ void SAML_API opensaml::saml2md::registerMetadataFilters()
     SAMLConfig::getConfig().MetadataFilterManager.registerFactory(WHITELIST_METADATA_FILTER, WhitelistMetadataFilterFactory);
     SAMLConfig::getConfig().MetadataFilterManager.registerFactory(SIGNATURE_METADATA_FILTER, SignatureMetadataFilterFactory);
     SAMLConfig::getConfig().MetadataFilterManager.registerFactory(REQUIREVALIDUNTIL_METADATA_FILTER, RequireValidUntilMetadataFilterFactory);
+    // additional name matching Java code
+    SAMLConfig::getConfig().MetadataFilterManager.registerFactory("RequiredValidUntil", RequireValidUntilMetadataFilterFactory);
+    SAMLConfig::getConfig().MetadataFilterManager.registerFactory(ENTITYROLE_METADATA_FILTER, EntityRoleMetadataFilterFactory);
 }
 
 static const XMLCh _MetadataFilter[] =  UNICODE_LITERAL_14(M,e,t,a,d,a,t,a,F,i,l,t,e,r);

@@ -520,6 +520,10 @@
 							>
 						</File>
 						<File
+							RelativePath=".\saml2\metadata\impl\EntityRoleMetadataFilter.cpp"
+							>
+						</File>
+						<File
 							RelativePath=".\saml2\metadata\impl\MetadataImpl.cpp"
 							>
 						</File>

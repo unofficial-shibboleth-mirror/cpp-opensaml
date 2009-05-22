@@ -1,6 +1,6 @@
 /*
- *  Copyright 2001-2007 Internet2
- * 
+ *  Copyright 2001-2009 Internet2
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,7 +16,7 @@
 
 /**
  * @file saml/saml2/metadata/MetadataFilter.h
- * 
+ *
  * Processes metadata after it's been unmarshalled.
  */
 
@@ -32,10 +32,10 @@
 namespace opensaml {
 
     namespace saml2md {
-        
+
         /**
          * A metadata filter is used to process metadata after resolution and unmarshalling.
-         * 
+         *
          * Some filters might remove everything but identity provider roles, decreasing the data a service provider
          * needs to work with, or a filter could be used to perform integrity checking on the retrieved metadata by
          * verifying a digital signature.
@@ -47,18 +47,18 @@ namespace opensaml {
             MetadataFilter() {}
         public:
             virtual ~MetadataFilter() {}
-            
+
             /**
              * Returns an identifying string for the filter.
-             * 
+             *
              * @return the ID string
              */
             virtual const char* getId() const=0;
-            
+
             /**
              * Filters the given metadata. Exceptions should generally not be thrown to
              * signal the removal of information, only for systemic processing failure.
-             * 
+             *
              * @param xmlObject the metadata to be filtered.
              */
             virtual void doFilter(xmltooling::XMLObject& xmlObject) const=0;
@@ -68,7 +68,7 @@ namespace opensaml {
          * Registers MetadataFilter classes into the runtime.
          */
         void SAML_API registerMetadataFilters();
-        
+
         /** MetadataFilter that deletes blacklisted entities. */
         #define BLACKLIST_METADATA_FILTER  "Blacklist"
 
@@ -80,7 +80,10 @@ namespace opensaml {
 
         /** MetadataFilter that enforces expiration requirements. */
         #define REQUIREVALIDUNTIL_METADATA_FILTER  "RequireValidUntil"
-        
+
+        /** MetadataFilter that removes non-retained roles. */
+        #define ENTITYROLE_METADATA_FILTER  "EntityRoleWhiteList"
+
         DECL_XMLTOOLING_EXCEPTION(MetadataFilterException,SAML_EXCEPTIONAPI(SAML_API),opensaml::saml2md,MetadataException,Exceptions related to metadata filtering);
     };
 };
