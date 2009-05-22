@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2009 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,19 +50,10 @@ namespace opensaml {
             bool found(const XMLCh* id) const {
                 if (!id)
                     return false;
-#ifdef HAVE_GOOD_STL
                 return m_set.count(id)==1;
-#else
-                auto_ptr_char id2(id);
-                return m_set.count(id2.get())==1;
-#endif
             }
 
-#ifdef HAVE_GOOD_STL
             set<xstring> m_set;
-#else
-            set<string> m_set;
-#endif
         }; 
 
         MetadataFilter* SAML_DLLLOCAL BlacklistMetadataFilterFactory(const DOMElement* const & e)
@@ -80,12 +71,7 @@ BlacklistMetadataFilter::BlacklistMetadataFilter(const DOMElement* e)
     e = XMLHelper::getFirstChildElement(e);
     while (e) {
         if (XMLString::equals(e->getLocalName(), Exclude) && e->hasChildNodes()) {
-#ifdef HAVE_GOOD_STL
             m_set.insert(e->getFirstChild()->getNodeValue());
-#else
-            auto_ptr_char id(e->getFirstChild()->getNodeValue());
-            m_set.insert(id.get());
-#endif
         }
         e = XMLHelper::getNextSiblingElement(e);
     }
