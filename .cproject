@@ -69,6 +69,7 @@
 <pathentry kind="mac" name="WIN32" path="" value=""/>
 <pathentry kind="mac" name="SAML_API" path="" value=""/>
 <pathentry kind="mac" name="SAML_DLLLOCAL" path="" value=""/>
+<pathentry kind="mac" name="SAML_LOGCAT" path="" value="&quot;OpenSAML&quot;"/>
 <pathentry include="C:/log4shib-1.0/include" kind="inc" path="" system="true"/>
 <pathentry include="C:/xerces-c-3.0.1-x86-windows-vc-9.0/include" kind="inc" path="" system="true"/>
 <pathentry include="C:/xml-security-c-1.4.0/include" kind="inc" path="" system="true"/>
