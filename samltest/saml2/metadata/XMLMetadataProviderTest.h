@@ -70,7 +70,7 @@ public:
         }
         
         Locker locker(metadataProvider.get());
-        const EntityDescriptor* descriptor = metadataProvider->getEntityDescriptor(MetadataProvider::Criteria(entityID)).first;
+        const EntityDescriptor* descriptor = metadataProvider->getEntityDescriptor(MetadataProvider::Criteria(entityID,NULL,NULL,false)).first;
         TSM_ASSERT("Retrieved entity descriptor was null", descriptor!=NULL);
         assertEquals("Entity's ID does not match requested ID", entityID, descriptor->getEntityID());
         TSM_ASSERT_EQUALS("Unexpected number of roles", 1, descriptor->getIDPSSODescriptors().size());
@@ -80,7 +80,7 @@ public:
         auto_ptr<SAML2ArtifactType0004> artifact(
             new SAML2ArtifactType0004(SAMLConfig::getConfig().hashSHA1("urn:mace:incommon:washington.edu"),1)
             );
-        descriptor = metadataProvider->getEntityDescriptor(MetadataProvider::Criteria(artifact.get())).first;
+        descriptor = metadataProvider->getEntityDescriptor(MetadataProvider::Criteria(artifact.get(),NULL,NULL,false)).first;
         TSM_ASSERT("Retrieved entity descriptor was null", descriptor!=NULL);
         assertEquals("Entity's ID does not match requested ID", entityID, descriptor->getEntityID());
     }
@@ -108,9 +108,9 @@ public:
         }
 
         Locker locker(metadataProvider.get());
-        const EntityDescriptor* descriptor = metadataProvider->getEntityDescriptor(MetadataProvider::Criteria(entityID)).first;
+        const EntityDescriptor* descriptor = metadataProvider->getEntityDescriptor(MetadataProvider::Criteria(entityID,NULL,NULL,false)).first;
         TSM_ASSERT("Retrieved entity descriptor was not null", descriptor==NULL);
-        descriptor = metadataProvider->getEntityDescriptor(MetadataProvider::Criteria(entityID2)).first;
+        descriptor = metadataProvider->getEntityDescriptor(MetadataProvider::Criteria(entityID2,NULL,NULL,false)).first;
         TSM_ASSERT("Retrieved entity descriptor was null", descriptor!=NULL);
         assertEquals("Entity's ID does not match requested ID", entityID2, descriptor->getEntityID());
     }
@@ -138,9 +138,9 @@ public:
         }
 
         Locker locker(metadataProvider.get());
-        const EntityDescriptor* descriptor = metadataProvider->getEntityDescriptor(MetadataProvider::Criteria(entityID2)).first;
+        const EntityDescriptor* descriptor = metadataProvider->getEntityDescriptor(MetadataProvider::Criteria(entityID2,NULL,NULL,false)).first;
         TSM_ASSERT("Retrieved entity descriptor was not null", descriptor==NULL);
-        descriptor = metadataProvider->getEntityDescriptor(MetadataProvider::Criteria(entityID)).first;
+        descriptor = metadataProvider->getEntityDescriptor(MetadataProvider::Criteria(entityID,NULL,NULL,false)).first;
         TSM_ASSERT("Retrieved entity descriptor was null", descriptor!=NULL);
         assertEquals("Entity's ID does not match requested ID", entityID, descriptor->getEntityID());
     }
