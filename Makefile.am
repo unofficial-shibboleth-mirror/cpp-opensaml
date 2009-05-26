@@ -15,7 +15,6 @@ SUBDIRS = doc schemas saml samltest samlsign
 
 if DX_COND_doc
 all-local: opensaml.spec pkginfo doxygen-doc
-APIDOCS = doc/api
 else
 all-local: opensaml.spec pkginfo
 endif
@@ -37,7 +36,6 @@ pkginfo: pkginfo.in Makefile
 	mv $@.tmp $@
 
 EXTRA_DIST = $(DX_CONFIG) \
-	$(APIDOCS) \
 	cpp-opensaml2.sln \
 	libtool.m4 \
 	doxygen.m4 \
