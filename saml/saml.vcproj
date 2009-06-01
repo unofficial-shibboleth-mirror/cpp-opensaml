@@ -979,10 +979,6 @@
 						>
 					</File>
 					<File
-						RelativePath=".\saml2\metadata\ChainingMetadataProvider.h"
-						>
-					</File>
-					<File
 						RelativePath=".\saml2\metadata\DynamicMetadataProvider.h"
 						>
 					</File>
