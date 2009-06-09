@@ -70,13 +70,16 @@
 <pathentry kind="mac" name="SAML_API" path="" value=""/>
 <pathentry kind="mac" name="SAML_DLLLOCAL" path="" value=""/>
 <pathentry kind="mac" name="SAML_LOGCAT" path="" value="&quot;OpenSAML&quot;"/>
-<pathentry include="C:/log4shib-1.0/include" kind="inc" path="" system="true"/>
+<pathentry kind="mac" name="XMLTOOLING_LOG4SHIB" path="" value=""/>
+<pathentry kind="mac" name="OPENSAML_LOG4SHIB" path="" value=""/>
+<pathentry include="C:/log4shib-1.0.2/include" kind="inc" path="" system="true"/>
 <pathentry include="C:/xerces-c-3.0.1-x86-windows-vc-9.0/include" kind="inc" path="" system="true"/>
-<pathentry include="C:/xml-security-c-1.4.0/include" kind="inc" path="" system="true"/>
+<pathentry include="C:/xml-security-c-1.5.0/include" kind="inc" path="" system="true"/>
 <pathentry include="C:/cxxtest" kind="inc" path="" system="true"/>
 <pathentry base-path="cpp-xmltooling" include="" kind="inc" path="" system="true"/>
 <pathentry base-path="cpp-opensaml2" include="" kind="inc" path="" system="true"/>
 <pathentry base-path="cpp-opensaml2" include="saml" kind="inc" path="" system="true"/>
+<pathentry include="C:/Program Files/Microsoft Visual Studio 9.0/VC/include" kind="inc" path="" system="true"/>
 <pathentry kind="out" path=""/>
 <pathentry kind="out" path="debug"/>
 <pathentry kind="out" path="saml/Debug"/>
