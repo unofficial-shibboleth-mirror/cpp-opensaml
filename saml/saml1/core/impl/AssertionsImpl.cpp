@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2009 Internet2
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -64,7 +64,7 @@ namespace opensaml {
                 : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
             }
 
-            ConditionImpl(const ConditionImpl& src) : AnyElementImpl(src) {}
+            ConditionImpl(const ConditionImpl& src) : AbstractXMLObject(src), AnyElementImpl(src) {}
 
             IMPL_XMLOBJECT_CLONE(Condition);
         };
@@ -257,7 +257,7 @@ namespace opensaml {
                 : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
             }
 
-            SubjectConfirmationDataImpl(const SubjectConfirmationDataImpl& src) : AnyElementImpl(src) {
+            SubjectConfirmationDataImpl(const SubjectConfirmationDataImpl& src) : AbstractXMLObject(src), AnyElementImpl(src) {
             }
 
             IMPL_XMLOBJECT_CLONE(SubjectConfirmationData);
@@ -373,7 +373,7 @@ namespace opensaml {
                 : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
             }
 
-            StatementImpl(const StatementImpl& src) : AnyElementImpl(src) {}
+            StatementImpl(const StatementImpl& src) : AbstractXMLObject(src), AnyElementImpl(src) {}
 
             IMPL_XMLOBJECT_CLONE(Statement);
         };
@@ -836,7 +836,7 @@ namespace opensaml {
                 : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
             }
 
-            AttributeValueImpl(const AttributeValueImpl& src) : AnyElementImpl(src) {}
+            AttributeValueImpl(const AttributeValueImpl& src) : AbstractXMLObject(src), AnyElementImpl(src) {}
 
             IMPL_XMLOBJECT_CLONE(AttributeValue);
         };

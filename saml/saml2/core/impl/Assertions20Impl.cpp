@@ -232,7 +232,7 @@ namespace opensaml {
                 : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
             }
 
-            ConditionImpl(const ConditionImpl& src) : AnyElementImpl(src) {}
+            ConditionImpl(const ConditionImpl& src) : AbstractXMLObject(src), AnyElementImpl(src) {}
 
             IMPL_XMLOBJECT_CLONE(Condition);
         };
@@ -608,7 +608,7 @@ namespace opensaml {
             }
 
             SubjectConfirmationDataImpl(const SubjectConfirmationDataImpl& src)
-                    : SubjectConfirmationDataTypeImpl(src), AnyElementImpl(src) {
+                    : AbstractXMLObject(src), SubjectConfirmationDataTypeImpl(src), AnyElementImpl(src) {
             }
 
             IMPL_XMLOBJECT_CLONE(SubjectConfirmationData);
@@ -916,7 +916,7 @@ namespace opensaml {
                 : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
             }
 
-            StatementImpl(const StatementImpl& src) : AnyElementImpl(src) {}
+            StatementImpl(const StatementImpl& src) : AbstractXMLObject(src), AnyElementImpl(src) {}
 
             IMPL_XMLOBJECT_CLONE(Statement);
         };
@@ -931,7 +931,7 @@ namespace opensaml {
                 : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
             }
 
-            AuthnContextDeclImpl(const AuthnContextDeclImpl& src) : AnyElementImpl(src) {
+            AuthnContextDeclImpl(const AuthnContextDeclImpl& src) : AbstractXMLObject(src), AnyElementImpl(src) {
             }
 
             IMPL_XMLOBJECT_CLONE(AuthnContextDecl);
@@ -1240,7 +1240,7 @@ namespace opensaml {
                 : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
             }
 
-            AttributeValueImpl(const AttributeValueImpl& src) : AnyElementImpl(src) {
+            AttributeValueImpl(const AttributeValueImpl& src) : AbstractXMLObject(src), AnyElementImpl(src) {
             }
 
             IMPL_XMLOBJECT_CLONE(AttributeValue);
