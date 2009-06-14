@@ -1,8 +1,8 @@
-VERSION 2.1
+VERSION 2.2
 
 Issues addressed by this release:
 ---------------------------------
-https://bugs.internet2.edu/jira/secure/IssueNavigator.jspa?reset=true&&pid=10010&fixfor=10133&status=5&status=6&sorter/field=issuekey&sorter/order=ASC
+https://bugs.internet2.edu/jira/secure/IssueNavigator.jspa?reset=true&&pid=10010&fixfor=10150&status=5&status=6&sorter/field=issuekey&sorter/order=ASC
 
 Documentation:
 --------------
