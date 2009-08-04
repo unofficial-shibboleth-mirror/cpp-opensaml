@@ -225,8 +225,10 @@ long SAML2ECPEncoder::encode(
         stringstream s;
         s << *rootElement;
         
-        if (log.isDebugEnabled())
-            log.debug("marshalled envelope:\n%s", s.str().c_str());
+        if (log.isDebugEnabled()) {
+            string forlog(s.str());
+            log.debug("marshalled envelope:\n%s", forlog.c_str());
+        }
 
         log.debug("sending serialized envelope");
         long ret = genericResponse.sendResponse(s);
