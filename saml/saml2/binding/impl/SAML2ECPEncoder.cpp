@@ -180,7 +180,7 @@ long SAML2ECPEncoder::encode(
         header->getUnknownXMLObjects().push_back(hdrblock);
     }
     
-    if (relayState) {
+    if (relayState && *relayState) {
         // Create ecp:RelayState header.
         static const XMLCh RelayState[] = UNICODE_LITERAL_10(R,e,l,a,y,S,t,a,t,e);
         hdrblock = dynamic_cast<ElementProxy*>(m_anyBuilder.buildObject(SAML20ECP_NS, RelayState, SAML20ECP_PREFIX));
