@@ -1,14 +1,14 @@
 PortSystem 1.0
 
 name               opensaml
-version            2.2.1
+version            @-VERSION-@
 categories         shibboleth
 maintainers        cantor.2@osu.edu
 description        OpenSAML 2 library for C++
 long_description   SAML 2.0/1.x toolkit
 homepage           http://www.opensaml.org/
 master_sites       http://shibboleth.internet2.edu/downloads/opensaml/cpp/${version}/
-checksums          sha1 37d190a7cd88d151ca7ffd43cc914ad47425b114
+checksums          sha1 @CHECKSUM@
 
 depends_lib        port:xmltooling \
                    port:xml-security-c \
@@ -20,16 +20,3 @@ configure.args     --disable-static \
                    --with-xmltooling=${prefix} \
                    --with-xerces=${prefix} \
                    --with-xmlsec=${prefix}
-
-platform darwin 8 {
-	configure.env-append MACOSX_DEPLOYMENT_TARGET=10.4
-	build.env-append MACOSX_DEPLOYMENT_TARGET=10.4
-	destroot.env-append MACOSX_DEPLOYMENT_TARGET=10.4
-}
-
-platform darwin 9 {
-	configure.env-append MACOSX_DEPLOYMENT_TARGET=10.4
-	build.env-append MACOSX_DEPLOYMENT_TARGET=10.4
-	destroot.env-append MACOSX_DEPLOYMENT_TARGET=10.4
-}
-
