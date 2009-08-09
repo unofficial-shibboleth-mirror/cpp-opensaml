@@ -36,12 +36,12 @@ Markup Language Specification. It contains a set of open source C++ classes
 that support the SAML 1.0, 1.1, and 2.0 specifications.
 
 %if 0%{?suse_version} > 1030
-%package -n libsaml22
+%package -n libsaml4
 Summary:    OpenSAML SAML library
 Group:      Development/Libraries
 Provides:   opensaml = %{version}
 
-%description -n libsaml22
+%description -n libsaml4
 OpenSAML is an open source implementation of the OASIS Security Assertion
 Markup Language Specification. It contains a set of open source C++ classes
 that support the SAML 1.0, 1.1, and 2.0 specifications.
@@ -51,7 +51,7 @@ This package contains just the shared library.
 
 %if 0%{?suse_version} > 1030
 %package -n libsaml-devel
-Requires: libsaml22 = %version
+Requires: libsaml4 = %version
 %else
 %package devel
 Requires: %name = %version
@@ -104,7 +104,7 @@ This package includes files needed for development with opensaml.
 
 %ifnos solaris2.8 solaris2.9 solaris2.10
 %if 0%{?suse_version} > 1030
-%post -n libsaml22 -p /sbin/ldconfig
+%post -n libsaml4 -p /sbin/ldconfig
 %else
 %post -p /sbin/ldconfig
 %endif
@@ -112,7 +112,7 @@ This package includes files needed for development with opensaml.
 
 %ifnos solaris2.8 solaris2.9 solaris2.10
 %if 0%{?suse_version} > 1030
-%postun -n libsaml22 -p /sbin/ldconfig
+%postun -n libsaml4 -p /sbin/ldconfig
 %else
 %postun -p /sbin/ldconfig
 %endif
@@ -122,12 +122,12 @@ This package includes files needed for development with opensaml.
 %defattr(-,root,root,-)
 %{_bindir}/samlsign
 %if 0%{?suse_version} > 1030
-%files -n libsaml22
+%files -n libsaml4
 %defattr(-,root,root,-)
 %endif
 %{_libdir}/libsaml.so.*
 %dir %{_datadir}/xml/%{name}
-%{_datadir}/xml/%{name}
+%{_datadir}/xml/%{name}/*
 
 %if 0%{?suse_version} > 1030
 %files -n libsaml-devel
