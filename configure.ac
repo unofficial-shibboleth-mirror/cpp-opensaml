@@ -273,5 +273,7 @@ AM_CONDITIONAL(BUILD_UNITTEST,test -f ${CXXTEST})
 AC_SUBST(DX_INCLUDE)
 LIBTOOL="$LIBTOOL --silent"
 
-# output makefiles
-AC_OUTPUT(Makefile saml/Makefile samltest/Makefile samlsign/Makefile schemas/Makefile doc/Makefile)
+# output packaging and makefiles
+AC_CONFIG_FILES([opensaml.spec pkginfo Portfile])
+AC_CONFIG_FILES([Makefile saml/Makefile samltest/Makefile samlsign/Makefile schemas/Makefile doc/Makefile])
+AC_OUTPUT

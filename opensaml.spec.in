@@ -1,5 +1,5 @@
-Name:		opensaml
-Version:	@-VERSION-@
+Name:		@PACKAGE@
+Version:	@PACKAGE_VERSION@
 Release:	1
 Summary:    OpenSAML SAML library
 Group:		System Environment/Libraries
@@ -81,7 +81,7 @@ OpenSAML is an open source implementation of the OASIS Security Assertion
 Markup Language Specification. It contains a set of open source C++ classes
 that support the SAML 1.0, 1.1, and 2.0 specifications.
 
-This package includes files needed for development with opensaml.
+This package includes files needed for development with OpenSAML.
 
 
 %prep
@@ -126,8 +126,8 @@ This package includes files needed for development with opensaml.
 %defattr(-,root,root,-)
 %endif
 %{_libdir}/libsaml.so.*
-%dir %{_datadir}/xml/%{name}
-%{_datadir}/xml/%{name}/*
+%dir %{_datadir}/xml/@PACKAGE@
+%{_datadir}/xml/@PACKAGE@/*
 
 %if 0%{?suse_version} > 1030
 %files -n libsaml-devel

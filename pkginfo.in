@@ -1,5 +1,5 @@
 PKG=SHIBosaml
-VERSION=@-VERSION-@
+VERSION=@PACKAGE_VERSION@
 NAME=opensaml-c
 CATEGORY=application,security
 DESC=OpenSAML library for C++
