@@ -39,7 +39,7 @@ that support the SAML 1.0, 1.1, and 2.0 specifications.
 %package -n libsaml4
 Summary:    OpenSAML SAML library
 Group:      Development/Libraries
-Provides:   opensaml = %{version}
+Provides:   @PACKAGE@ = %{version}
 
 %description -n libsaml4
 OpenSAML is an open source implementation of the OASIS Security Assertion
