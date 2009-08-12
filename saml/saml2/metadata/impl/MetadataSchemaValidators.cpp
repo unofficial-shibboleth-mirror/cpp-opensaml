@@ -98,8 +98,10 @@ namespace opensaml {
         END_XMLOBJECTVALIDATOR;
 
         BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,ContactPerson);
+            /* Pending errata decision.
             if (!ptr->hasChildren())
                 throw ValidationException("ContactPerson must have at least one child element.");
+                */
             if (!XMLString::equals(ptr->getContactType(),ContactPerson::CONTACT_TECHNICAL) &&
                 !XMLString::equals(ptr->getContactType(),ContactPerson::CONTACT_SUPPORT) &&
                 !XMLString::equals(ptr->getContactType(),ContactPerson::CONTACT_ADMINISTRATIVE) &&
