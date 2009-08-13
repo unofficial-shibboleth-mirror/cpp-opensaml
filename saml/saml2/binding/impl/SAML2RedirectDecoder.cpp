@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2009 Internet2
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -140,8 +140,7 @@ XMLObject* SAML2RedirectDecoder::decode(
         root = static_cast<saml2::RootObject*>(request);
     }
 
-    if (!policy.getValidating())
-        SchemaValidators.validate(root);
+    SchemaValidators.validate(root);
 
     // Run through the policy.
     extractMessageDetails(*root, genericRequest, samlconstants::SAML20P_NS, policy);

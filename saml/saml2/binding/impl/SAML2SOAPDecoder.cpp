@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2009 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -98,8 +98,7 @@ XMLObject* SAML2SOAPDecoder::decode(
     if (!env)
         throw BindingException("Decoded message was not a SOAP 1.1 Envelope.");
 
-    if (!policy.getValidating())
-        SchemaValidators.validate(env);
+    SchemaValidators.validate(env);
     
     Body* body = env->getBody();
     if (body && body->hasChildren()) {
