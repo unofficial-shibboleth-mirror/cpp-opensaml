@@ -101,16 +101,15 @@ pair<bool,DOMElement*> XMLMetadataProvider::load()
             "Root of metadata instance not recognized: $1", params(1,xmlObject->getElementQName().toString().c_str())
             );
 
-    // Preprocess the metadata.
-    if (!m_validate) {
-        try {
-            SchemaValidators.validate(xmlObject.get());
-        }
-        catch (exception& ex) {
-            m_log.error("metadata intance failed manual schema validation checking: %s", ex.what());
-            throw MetadataException("Metadata instance failed manual schema validation checking.");
-        }
+    // Preprocess the metadata (even if we schema-validated).
+    try {
+        SchemaValidators.validate(xmlObject.get());
     }
+    catch (exception& ex) {
+        m_log.error("metadata intance failed manual validation checking: %s", ex.what());
+        throw MetadataException("Metadata instance failed manual validation checking.");
+    }
+
     doFilters(*xmlObject.get());
     xmlObject->releaseThisAndChildrenDOM();
     xmlObject->setDocument(NULL);

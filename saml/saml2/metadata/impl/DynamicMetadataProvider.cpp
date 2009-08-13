@@ -112,14 +112,13 @@ pair<const EntityDescriptor*,const RoleDescriptor*> DynamicMetadataProvider::get
             }
         }
 
-        if (!m_validate) {
-            try {
-                SchemaValidators.validate(entity2.get());
-            }
-            catch (exception& ex) {
-                log.error("metadata intance failed manual schema validation checking: %s", ex.what());
-                throw MetadataException("Metadata instance failed manual schema validation checking.");
-            }
+        // Preprocess the metadata (even if we schema-validated).
+        try {
+            SchemaValidators.validate(entity2.get());
+        }
+        catch (exception& ex) {
+            log.error("metadata intance failed manual validation checking: %s", ex.what());
+            throw MetadataException("Metadata instance failed manual validation checking.");
         }
 
         // Filter it, which may throw.
