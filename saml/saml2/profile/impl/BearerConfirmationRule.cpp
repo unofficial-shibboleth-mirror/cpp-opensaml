@@ -84,7 +84,7 @@ bool BearerConfirmationRule::evaluate(const XMLObject& message, const GenericReq
 
     logging::Category& log = logging::Category::getInstance(SAML_LOGCAT".SecurityPolicyRule.BearerConfirmation");
 
-    const char* msg=NULL;
+    const char* msg="assertion is missing bearer SubjectConfirmation";
     const Subject* subject = a->getSubject();
     if (subject) {
         const vector<SubjectConfirmation*>& confs = subject->getSubjectConfirmations();
@@ -137,7 +137,7 @@ bool BearerConfirmationRule::evaluate(const XMLObject& message, const GenericReq
         }
     }
 
-    log.error(msg);
+    log.error(msg ? msg : "no error message");
     if (m_fatal)
         throw SecurityPolicyException("Unable to locate satisfiable bearer SubjectConfirmation in assertion.");
     return false;
