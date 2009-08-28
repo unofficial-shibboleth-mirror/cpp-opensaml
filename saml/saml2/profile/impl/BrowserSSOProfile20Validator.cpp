@@ -40,7 +40,7 @@ void BrowserSSOProfileValidator::validateAssertion(const Assertion& assertion) c
     Category& log = Category::getInstance(SAML_LOGCAT".AssertionValidator");
 
     // The assertion MUST have proper confirmation requirements.
-    const char* msg=NULL;
+    const char* msg="assertion is missing bearer SubjectConfirmation";
     const Subject* subject = assertion.getSubject();
     if (subject) {
         const vector<SubjectConfirmation*>& confs = subject->getSubjectConfirmations();
@@ -86,6 +86,6 @@ void BrowserSSOProfileValidator::validateAssertion(const Assertion& assertion) c
         }
     }
 
-    log.error(msg);
+    log.error(msg ? msg : "no error message");
     throw ValidationException("Unable to locate satisfiable bearer SubjectConfirmation in assertion.");
 }
