@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2009 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -94,8 +94,11 @@ void ContentReference::addInclusivePrefix(const XMLCh* prefix)
 
 void ContentReference::addPrefixes(const std::set<Namespace>& namespaces)
 {
-    for (set<Namespace>::const_iterator n = namespaces.begin(); n!=namespaces.end(); ++n)
-        addInclusivePrefix(n->getNamespacePrefix());
+    for (set<Namespace>::const_iterator n = namespaces.begin(); n!=namespaces.end(); ++n) {
+        // Check for xmlns:xml.
+        if (!XMLString::equals(n->getNamespacePrefix(), xmlconstants::XML_PREFIX) || !XMLString::equals(n->getNamespaceURI(), xmlconstants::XML_NS))
+            addInclusivePrefix(n->getNamespacePrefix());
+    }
 }
 
 void ContentReference::addPrefixes(const XMLObject& xmlObject)
