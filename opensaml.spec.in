@@ -36,12 +36,12 @@ Markup Language Specification. It contains a set of open source C++ classes
 that support the SAML 1.0, 1.1, and 2.0 specifications.
 
 %if 0%{?suse_version} > 1030
-%package -n libsaml4
+%package -n libsaml5
 Summary:    OpenSAML SAML library
 Group:      Development/Libraries
 Provides:   @PACKAGE@ = %{version}
 
-%description -n libsaml4
+%description -n libsaml5
 OpenSAML is an open source implementation of the OASIS Security Assertion
 Markup Language Specification. It contains a set of open source C++ classes
 that support the SAML 1.0, 1.1, and 2.0 specifications.
@@ -51,7 +51,7 @@ This package contains just the shared library.
 
 %if 0%{?suse_version} > 1030
 %package -n libsaml-devel
-Requires: libsaml4 = %version
+Requires: libsaml5 = %version
 %else
 %package devel
 Requires: %name = %version
@@ -104,7 +104,7 @@ This package includes files needed for development with OpenSAML.
 
 %ifnos solaris2.8 solaris2.9 solaris2.10
 %if 0%{?suse_version} > 1030
-%post -n libsaml4 -p /sbin/ldconfig
+%post -n libsaml5 -p /sbin/ldconfig
 %else
 %post -p /sbin/ldconfig
 %endif
@@ -112,7 +112,7 @@ This package includes files needed for development with OpenSAML.
 
 %ifnos solaris2.8 solaris2.9 solaris2.10
 %if 0%{?suse_version} > 1030
-%postun -n libsaml4 -p /sbin/ldconfig
+%postun -n libsaml5 -p /sbin/ldconfig
 %else
 %postun -p /sbin/ldconfig
 %endif
@@ -122,7 +122,7 @@ This package includes files needed for development with OpenSAML.
 %defattr(-,root,root,-)
 %{_bindir}/samlsign
 %if 0%{?suse_version} > 1030
-%files -n libsaml4
+%files -n libsaml5
 %defattr(-,root,root,-)
 %endif
 %{_libdir}/libsaml.so.*
@@ -140,6 +140,9 @@ This package includes files needed for development with OpenSAML.
 %doc %{pkgdocdir}
 
 %changelog
+* Mon Aug 31 2009   Scott Cantor  <cantor.2@osu.edu>  - 2.3-1
+- Bump soname for SUSE packaging.
+
 * Sat Aug 8 2009  Scott Cantor  <cantor.2@osu.edu>  - 2.2.1-1
 - SuSE conventions
 - Stop packaging unit tester
