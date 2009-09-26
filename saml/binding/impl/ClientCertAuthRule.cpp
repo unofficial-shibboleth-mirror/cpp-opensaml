@@ -28,6 +28,7 @@
 #include "saml2/metadata/MetadataProvider.h"
 
 #include <xmltooling/logging.h>
+#include <xmltooling/security/Credential.h>
 #include <xmltooling/security/X509TrustEngine.h>
 #include <xmltooling/util/ReplayCache.h>
 

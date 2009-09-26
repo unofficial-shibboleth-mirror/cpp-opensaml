@@ -23,6 +23,7 @@
 #include "internal.h"
 #include "exceptions.h"
 #include "saml/binding/SAMLArtifact.h"
+#include "saml2/metadata/Metadata.h"
 #include "saml2/metadata/ObservableMetadataProvider.h"
 #include "saml2/metadata/MetadataCredentialCriteria.h"
 

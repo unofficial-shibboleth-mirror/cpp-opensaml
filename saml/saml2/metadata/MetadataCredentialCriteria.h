@@ -24,7 +24,6 @@
 #define __saml_metacrit_h__
 
 #include <saml/base.h>
-#include <saml/saml2/metadata/MetadataCredentialContext.h>
 #include <xmltooling/security/CredentialCriteria.h>
 
 namespace opensaml {
@@ -41,13 +40,7 @@ namespace opensaml {
              *
              * @param role      source of metadata-supplied credentials
              */
-            MetadataCredentialCriteria(const RoleDescriptor& role) : m_role(role) {
-                const EntityDescriptor* entity = dynamic_cast<const EntityDescriptor*>(role.getParent());
-                if (entity) {
-                    xmltooling::auto_ptr_char name(entity->getEntityID());
-                    setPeerName(name.get());
-                }
-            }
+            MetadataCredentialCriteria(const RoleDescriptor& role);
     
             virtual ~MetadataCredentialCriteria() {}
             
@@ -60,19 +53,7 @@ namespace opensaml {
                 return m_role;
             }
 
-            bool matches(const xmltooling::Credential& credential) const {
-                const MetadataCredentialContext* context = dynamic_cast<const MetadataCredentialContext*>(credential.getCredentalContext());
-                if (context) {
-                    // Check for a usage mismatch.
-                    if ((getUsage() & (xmltooling::Credential::SIGNING_CREDENTIAL | xmltooling::Credential::TLS_CREDENTIAL)) &&
-                            XMLString::equals(context->getKeyDescriptor().getUse(),KeyDescriptor::KEYTYPE_ENCRYPTION))
-                        return false;
-                    else if ((getUsage() & xmltooling::Credential::ENCRYPTION_CREDENTIAL) &&
-                            XMLString::equals(context->getKeyDescriptor().getUse(),KeyDescriptor::KEYTYPE_SIGNING))
-                        return false;
-                }
-                return CredentialCriteria::matches(credential);
-            }
+            bool matches(const xmltooling::Credential& credential) const;
 
         private:
             const RoleDescriptor& m_role;

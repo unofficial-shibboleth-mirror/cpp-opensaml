@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-/* siterefresh.cpp - command-line tool to refresh and verify metadata
-
-   Scott Cantor
-   5/12/03
-
-   $Id:siterefresh.cpp 2252 2007-05-20 20:20:57Z cantor $
-*/
+/**
+ * samlsign.cpp
+ *
+ * Command-line tool to sign and verify objects.
+ */
 
 #if defined (_MSC_VER) || defined(__BORLANDC__)
 # include "config_win32.h"
@@ -41,6 +39,7 @@
 #include <saml/util/SAMLConstants.h>
 #include <xmltooling/logging.h>
 #include <xmltooling/XMLToolingConfig.h>
+#include <xmltooling/security/Credential.h>
 #include <xmltooling/security/SignatureTrustEngine.h>
 #include <xmltooling/signature/Signature.h>
 #include <xmltooling/signature/SignatureValidator.h>
