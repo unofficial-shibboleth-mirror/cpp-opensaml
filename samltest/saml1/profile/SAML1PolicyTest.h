@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2009 Internet2
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 #include "internal.h"
 
 #include <saml/SAMLConfig.h>
+#include <saml/binding/SecurityPolicy.h>
 #include <saml/binding/SecurityPolicyRule.h>
 #include <saml/saml1/core/Assertions.h>
 

@@ -19,11 +19,13 @@
 #include <saml/SAMLConfig.h>
 #include <saml/binding/MessageDecoder.h>
 #include <saml/binding/MessageEncoder.h>
+#include <saml/binding/SecurityPolicy.h>
 #include <saml/binding/SecurityPolicyRule.h>
 #include <saml/saml2/metadata/Metadata.h>
 #include <saml/saml2/metadata/MetadataProvider.h>
 #include <xmltooling/io/HTTPRequest.h>
 #include <xmltooling/io/HTTPResponse.h>
+#include <xmltooling/security/Credential.h>
 #include <xmltooling/security/TrustEngine.h>
 #include <xmltooling/util/URLEncoder.h>
 
