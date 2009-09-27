@@ -26,6 +26,7 @@
 #include <saml/base.h>
 
 #include <vector>
+#include <xercesc/util/XMLUniDefs.hpp>
 
 namespace xmltooling {
     class XMLTOOL_API GenericRequest;
