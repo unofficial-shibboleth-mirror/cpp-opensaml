@@ -33,6 +33,7 @@
 
 #include <ctime>
 #include <xercesc/util/XMLUniDefs.hpp>
+#include <xsec/framework/XSECDefs.hpp>
 
 using namespace samlconstants;
 using namespace opensaml::saml2md;
@@ -1002,8 +1003,8 @@ namespace opensaml {
                     return true;
                 if (m_ProtocolSupportEnumeration) {
                     // Look for first character.
-                    unsigned int len=XMLString::stringLen(protocol);
-                    unsigned int pos=0;
+                    xsecsize_t len=XMLString::stringLen(protocol);
+                    xsecsize_t pos=0;
                     int index=XMLString::indexOf(m_ProtocolSupportEnumeration,protocol[0],pos);
                     while (index>=0) {
                         // Only possible match is if it's the first character or a space comes before it.
