@@ -22,6 +22,7 @@
 
 #include "internal.h"
 #include "exceptions.h"
+#include "binding/SecurityPolicy.h"
 #include "saml2/binding/SAML2MessageDecoder.h"
 #include "saml2/binding/SAML2Redirect.h"
 #include "saml2/core/Protocols.h"
@@ -30,6 +31,7 @@
 
 #include <xercesc/util/Base64.hpp>
 #include <xmltooling/logging.h>
+#include <xmltooling/XMLToolingConfig.h>
 #include <xmltooling/io/HTTPRequest.h>
 #include <xmltooling/util/NDC.h>
 #include <xmltooling/validation/ValidatorSuite.h>

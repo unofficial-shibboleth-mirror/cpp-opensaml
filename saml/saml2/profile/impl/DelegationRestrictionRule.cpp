@@ -26,7 +26,9 @@
 #include "saml2/core/Assertions.h"
 #include "util/SAMLConstants.h"
 
+#include <ctime>
 #include <xmltooling/logging.h>
+#include <xmltooling/XMLToolingConfig.h>
 
 using namespace opensaml::saml2;
 using namespace opensaml;

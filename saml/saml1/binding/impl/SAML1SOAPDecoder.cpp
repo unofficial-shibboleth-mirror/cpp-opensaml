@@ -22,10 +22,13 @@
 
 #include "internal.h"
 #include "exceptions.h"
+#include "binding/SecurityPolicy.h"
 #include "saml1/binding/SAML1MessageDecoder.h"
 #include "saml1/core/Protocols.h"
 
 #include <xmltooling/logging.h>
+#include <xmltooling/XMLToolingConfig.h>
+#include <xmltooling/io/GenericRequest.h>
 #include <xmltooling/soap/SOAP.h>
 #include <xmltooling/util/NDC.h>
 #include <xmltooling/validation/ValidatorSuite.h>

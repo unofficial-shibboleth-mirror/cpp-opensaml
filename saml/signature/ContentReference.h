@@ -34,6 +34,11 @@ namespace opensaml {
 
     class SAML_API SignableObject;
 
+#if defined (_MSC_VER)
+    #pragma warning( push )
+    #pragma warning( disable : 4251 )
+#endif
+
     /**
      * SAML-specific signature reference profile.
      */
@@ -102,6 +107,9 @@ namespace opensaml {
         const XMLCh* m_c14n;
     };
 
+#if defined (_MSC_VER)
+    #pragma warning( pop )
+#endif
 };
 
 #endif /* __saml_sigref_h__ */

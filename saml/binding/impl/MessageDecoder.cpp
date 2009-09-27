@@ -66,6 +66,11 @@ void SAML_API opensaml::registerMessageDecoders()
     XMLObjectBuilder::registerBuilder(xmltooling::QName(samlconstants::SAML20ECP_NS, RelayState), new AnyElementBuilder());
 }
 
+bool MessageDecoder::isUserAgentPresent() const
+{
+    return true;
+}
+
 bool MessageDecoder::ArtifactResolver::isSupported(const SSODescriptorType& ssoDescriptor) const
 {
     EndpointManager<ArtifactResolutionService> mgr(ssoDescriptor.getArtifactResolutionServices());

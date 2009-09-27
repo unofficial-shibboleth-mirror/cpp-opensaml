@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2009 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,4 +61,14 @@ void SAML_API opensaml::registerMessageEncoders()
     conf.MessageEncoderManager.registerFactory(samlconstants::SAML20_BINDING_HTTP_REDIRECT, saml2p::SAML2RedirectEncoderFactory);
     conf.MessageEncoderManager.registerFactory(samlconstants::SAML20_BINDING_SOAP, saml2p::SAML2SOAPEncoderFactory);
     conf.MessageEncoderManager.registerFactory(samlconstants::SAML20_BINDING_PAOS, saml2p::SAML2ECPEncoderFactory);
+}
+
+bool MessageEncoder::isCompact() const
+{
+    return false;
+}
+
+bool MessageEncoder::isUserAgentPresent() const
+{
+    return true;
 }

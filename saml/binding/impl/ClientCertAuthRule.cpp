@@ -22,12 +22,14 @@
 
 #include "internal.h"
 #include "exceptions.h"
+#include "binding/SecurityPolicy.h"
 #include "binding/SecurityPolicyRule.h"
 #include "saml2/metadata/Metadata.h"
 #include "saml2/metadata/MetadataCredentialCriteria.h"
 #include "saml2/metadata/MetadataProvider.h"
 
 #include <xmltooling/logging.h>
+#include <xmltooling/io/GenericRequest.h>
 #include <xmltooling/security/Credential.h>
 #include <xmltooling/security/X509TrustEngine.h>
 #include <xmltooling/util/ReplayCache.h>
@@ -88,7 +90,7 @@ bool ClientCertAuthRule::evaluate(const XMLObject& message, const GenericRequest
         return false;
     }
     
-    const std::vector<XSECCryptoX509*>& chain = request->getClientCertificates();
+    const vector<XSECCryptoX509*>& chain = request->getClientCertificates();
     if (chain.empty())
         return false;
     

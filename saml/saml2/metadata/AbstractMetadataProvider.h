@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2009 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,10 @@
 #include <xmltooling/security/Credential.h>
 #include <xmltooling/security/CredentialCriteria.h>
 #include <xmltooling/util/Threads.h>
+
+namespace xmltooling {
+    class XMLTOOL_API KeyInfoResolver;
+};
 
 namespace opensaml {
     namespace saml2md {

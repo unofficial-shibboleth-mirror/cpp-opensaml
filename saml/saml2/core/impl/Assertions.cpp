@@ -30,6 +30,7 @@
 #include "saml2/metadata/MetadataCredentialCriteria.h"
 
 #include <xmltooling/logging.h>
+#include <xmltooling/XMLToolingConfig.h>
 #include <xmltooling/encryption/Encrypter.h>
 #include <xmltooling/encryption/Decrypter.h>
 #include <xmltooling/security/Credential.h>

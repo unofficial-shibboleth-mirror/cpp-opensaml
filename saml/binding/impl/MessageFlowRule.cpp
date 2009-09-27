@@ -22,9 +22,11 @@
 
 #include "internal.h"
 #include "exceptions.h"
+#include "binding/SecurityPolicy.h"
 #include "binding/SecurityPolicyRule.h"
 
 #include <xmltooling/logging.h>
+#include <xmltooling/XMLToolingConfig.h>
 #include <xmltooling/util/ReplayCache.h>
 #include <xercesc/util/XMLUniDefs.hpp>
 

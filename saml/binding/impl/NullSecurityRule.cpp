@@ -21,6 +21,7 @@
  */
 
 #include "internal.h"
+#include "binding/SecurityPolicy.h"
 #include "binding/SecurityPolicyRule.h"
 
 #include <xmltooling/logging.h>

@@ -22,6 +22,7 @@
 
 #include "internal.h"
 #include "exceptions.h"
+#include "binding/SecurityPolicy.h"
 #include "binding/SecurityPolicyRule.h"
 #include "saml2/core/Assertions.h"
 #include "saml2/metadata/Metadata.h"
@@ -30,6 +31,7 @@
 
 #include <xercesc/util/Base64.hpp>
 #include <xmltooling/logging.h>
+#include <xmltooling/XMLToolingConfig.h>
 #include <xmltooling/io/HTTPRequest.h>
 #include <xmltooling/security/SignatureTrustEngine.h>
 

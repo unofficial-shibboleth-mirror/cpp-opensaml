@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2009 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,11 +23,13 @@
 #ifndef __saml_soap11client_h__
 #define __saml_soap11client_h__
 
-#include <saml/binding/SecurityPolicy.h>
 #include <saml/saml2/metadata/MetadataCredentialCriteria.h>
+
 #include <xmltooling/soap/SOAPClient.h>
 
 namespace opensaml {
+
+    class SAML_API SecurityPolicy;
 
     /**
      * Specialized SOAPClient for SAML SOAP bindings.
@@ -40,12 +42,9 @@ namespace opensaml {
          * 
          * @param policy        reference to SecurityPolicy to apply
          */
-        SOAPClient(SecurityPolicy& policy)
-            : soap11::SOAPClient(policy.getValidating()), m_policy(policy), m_force(true), m_peer(NULL), m_criteria(NULL) {
-        }
+        SOAPClient(SecurityPolicy& policy);
         
-        virtual ~SOAPClient() {
-        }
+        virtual ~SOAPClient() {}
 
         /**
          * Controls whether to force transport/peer authentication via an X509TrustEngine.

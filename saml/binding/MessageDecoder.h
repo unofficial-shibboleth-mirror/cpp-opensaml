@@ -23,13 +23,17 @@
 #ifndef __saml_decoder_h__
 #define __saml_decoder_h__
 
-#include <saml/binding/SecurityPolicy.h>
-#include <xmltooling/XMLObject.h>
-#include <xmltooling/io/GenericRequest.h>
+#include <saml/base.h>
+
+namespace xmltooling {
+    class XMLTOOL_API GenericRequest;
+    class XMLTOOL_API XMLObject;
+};
 
 namespace opensaml {
 
     class SAML_API SAMLArtifact;
+    class SAML_API SecurityPolicy;
     namespace saml1p {
         class SAML_API Response;
     };
@@ -58,9 +62,7 @@ namespace opensaml {
          *
          * @return true iff the message was delivered by a user agent
          */
-        virtual bool isUserAgentPresent() const {
-            return true;
-        }
+        virtual bool isUserAgentPresent() const;
 
         /**
          * Interface to caller-supplied artifact resolution mechanism.

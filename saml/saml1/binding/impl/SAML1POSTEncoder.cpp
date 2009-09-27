@@ -31,6 +31,7 @@
 #include <xercesc/util/Base64.hpp>
 #include <xmltooling/io/HTTPResponse.h>
 #include <xmltooling/logging.h>
+#include <xmltooling/XMLToolingConfig.h>
 #include <xmltooling/util/NDC.h>
 #include <xmltooling/util/PathResolver.h>
 #include <xmltooling/util/TemplateEngine.h>

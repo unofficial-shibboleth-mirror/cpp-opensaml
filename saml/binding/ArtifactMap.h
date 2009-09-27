@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2009 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,9 +24,11 @@
 #define __saml_artmap_h__
 
 #include <saml/base.h>
-#include <xmltooling/XMLObject.h>
-#include <xmltooling/util/StorageService.h>
-#include <xmltooling/util/Threads.h>
+
+namespace xmltooling {
+    class XMLTOOL_API StorageService;
+    class XMLTOOL_API XMLObject;
+};
 
 namespace opensaml {
 

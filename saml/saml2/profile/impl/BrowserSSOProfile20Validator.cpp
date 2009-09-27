@@ -25,6 +25,7 @@
 #include "saml2/profile/BrowserSSOProfileValidator.h"
 
 #include <xmltooling/logging.h>
+#include <xmltooling/XMLToolingConfig.h>
 #include <xmltooling/util/NDC.h>
 
 using namespace opensaml::saml2;

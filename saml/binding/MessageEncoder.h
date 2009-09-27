@@ -25,10 +25,11 @@
 
 #include <saml/base.h>
 
-#include <istream>
-#include <xmltooling/XMLObject.h>
-#include <xmltooling/io/GenericResponse.h>
-#include <xmltooling/security/Credential.h>
+namespace xmltooling {
+    class XMLTOOL_API Credential;
+    class XMLTOOL_API GenericResponse;
+    class XMLTOOL_API XMLObject;
+};
 
 namespace opensaml {
 
@@ -54,18 +55,14 @@ namespace opensaml {
          *
          * @return  true iff the encoding has size constraints
          */
-        virtual bool isCompact() const {
-            return false;
-        }
+        virtual bool isCompact() const;
 
         /**
          * Indicates whether a web browser or similar user agent will receive the message.
          *
          * @return true iff the message will be handled by a user agent
          */
-        virtual bool isUserAgentPresent() const {
-            return true;
-        }
+        virtual bool isUserAgentPresent() const;
 
         /**
          * Interface to caller-supplied artifact generation mechanism.

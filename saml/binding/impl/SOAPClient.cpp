@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2009 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@
 #include "internal.h"
 #include "exceptions.h"
 #include "version.h"
+#include "binding/SecurityPolicy.h"
 #include "binding/SOAPClient.h"
 #include "saml2/metadata/Metadata.h"
 #include "saml2/metadata/MetadataProvider.h"
@@ -36,6 +37,11 @@ using namespace opensaml::saml2md;
 using namespace opensaml;
 using namespace xmltooling;
 using namespace std;
+
+SOAPClient::SOAPClient(SecurityPolicy& policy)
+    : soap11::SOAPClient(policy.getValidating()), m_policy(policy), m_force(true), m_peer(NULL), m_criteria(NULL)
+{
+}
 
 void SOAPClient::send(const soap11::Envelope& env, const char* from, MetadataCredentialCriteria& to, const char* endpoint)
 {

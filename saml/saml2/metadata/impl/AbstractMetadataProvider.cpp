@@ -28,6 +28,7 @@
 #include "saml2/metadata/MetadataCredentialCriteria.h"
 
 #include <xercesc/util/XMLUniDefs.hpp>
+#include <xmltooling/XMLToolingConfig.h>
 #include <xmltooling/security/KeyInfoResolver.h>
 #include <xmltooling/util/XMLHelper.h>
 

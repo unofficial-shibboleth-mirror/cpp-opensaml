@@ -27,6 +27,7 @@
 #include "saml2/profile/SAML2AssertionPolicy.h"
 
 #include <xmltooling/logging.h>
+#include <xmltooling/XMLToolingConfig.h>
 #include <xmltooling/io/HTTPRequest.h>
 
 using namespace opensaml::saml2;

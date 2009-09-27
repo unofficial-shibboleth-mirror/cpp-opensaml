@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2009 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,9 +23,15 @@
 #ifndef __saml1_soap11client_h__
 #define __saml1_soap11client_h__
 
-#include <saml/binding/SOAPClient.h>
+#include <saml/base.h>
 
 namespace opensaml {
+
+    class SAML_API SOAPClient;
+
+    namespace saml2md {
+        class SAML_API MetadataCredentialCriteria;
+    };
 
     namespace saml1p {
         

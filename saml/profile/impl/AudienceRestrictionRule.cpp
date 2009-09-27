@@ -22,6 +22,7 @@
 
 #include "internal.h"
 #include "exceptions.h"
+#include "binding/SecurityPolicy.h"
 #include "binding/SecurityPolicyRule.h"
 #include "saml1/core/Assertions.h"
 #include "saml2/core/Assertions.h"

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2009 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,8 @@
 
 #include "internal.h"
 #include "exceptions.h"
+#include "binding/SecurityPolicy.h"
+#include "binding/SOAPClient.h"
 #include "saml2/binding/SAML2SOAPClient.h"
 #include "saml2/core/Protocols.h"
 #include "saml2/metadata/Metadata.h"

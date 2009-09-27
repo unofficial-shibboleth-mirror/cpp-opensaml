@@ -27,13 +27,16 @@
 
 #include <ctime>
 #include <vector>
-#include <xmltooling/io/GenericRequest.h>
-#include <xmltooling/security/TrustEngine.h>
 
 #if defined (_MSC_VER)
     #pragma warning( push )
     #pragma warning( disable : 4250 4251 )
 #endif
+
+namespace xmltooling {
+    class XMLTOOL_API GenericRequest;
+    class XMLTOOL_API TrustEngine;
+};
 
 namespace opensaml {
 

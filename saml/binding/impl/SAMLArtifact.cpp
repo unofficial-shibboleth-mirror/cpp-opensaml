@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2009 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,13 +17,15 @@
 /**
  * SAMLArtifact.cpp
  * 
- * Base class for SAML 1.x and 2.0 artifacts 
+ * Base class for SAML 1.x and 2.0 artifacts.
  */
 
 #include "internal.h"
 #include "binding/SAMLArtifact.h"
 
 #include <xercesc/util/Base64.hpp>
+#include <xsec/framework/XSECDefs.hpp>
+#include <xmltooling/unicode.h>
 
 using namespace opensaml;
 using namespace xmltooling;
@@ -75,6 +77,21 @@ SAMLArtifact::SAMLArtifact(const char* s)
 #endif
 }
 
+string SAMLArtifact::getBytes() const
+{
+    return m_raw;
+}
+
+string SAMLArtifact::getTypeCode() const
+{
+    return m_raw.substr(0,TYPECODE_LENGTH);
+}
+
+string SAMLArtifact::getRemainingArtifact() const
+{
+    return m_raw.substr(TYPECODE_LENGTH);
+}
+
 string SAMLArtifact::encode() const
 {
     xsecsize_t len=0;
@@ -109,6 +126,12 @@ SAMLArtifact* SAMLArtifact::parse(const char* s)
 #endif
     
     return SAMLConfig::getConfig().SAMLArtifactManager.newPlugin(type,s);
+}
+
+SAMLArtifact* SAMLArtifact::parse(const XMLCh* s)
+{
+    auto_ptr_char temp(s);
+    return parse(temp.get());
 }
 
 string SAMLArtifact::toHex(const string& s)
