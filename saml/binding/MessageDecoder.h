@@ -25,6 +25,8 @@
 
 #include <saml/base.h>
 
+#include <vector>
+
 namespace xmltooling {
     class XMLTOOL_API GenericRequest;
     class XMLTOOL_API XMLObject;
