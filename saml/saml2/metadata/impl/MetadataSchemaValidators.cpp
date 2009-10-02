@@ -17,13 +17,14 @@
 /**
  * MetadataSchemaValidators.cpp
  *
- * Schema-based validators for SAML 2.0 Metadata classes
+ * Schema-based validators for SAML 2.0 Metadata classes.
  */
 
 #include "internal.h"
 #include "exceptions.h"
 #include "saml2/metadata/Metadata.h"
 
+#include <xmltooling/encryption/Encryption.h>
 #include <xmltooling/validation/ValidatorSuite.h>
 
 using namespace opensaml::saml2md;

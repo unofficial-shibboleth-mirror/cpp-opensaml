@@ -73,6 +73,26 @@ DynamicMetadataProvider::~DynamicMetadataProvider()
     delete m_lock;
 }
 
+const XMLObject* DynamicMetadataProvider::getMetadata() const
+{
+    throw MetadataException("getMetadata operation not implemented on this provider.");
+}
+
+Lockable* DynamicMetadataProvider::lock()
+{
+    m_lock->rdlock();
+    return this;
+}
+
+void DynamicMetadataProvider::unlock()
+{
+    m_lock->unlock();
+}
+
+void DynamicMetadataProvider::init()
+{
+}
+
 pair<const EntityDescriptor*,const RoleDescriptor*> DynamicMetadataProvider::getEntityDescriptor(const Criteria& criteria) const
 {
     // Check cache while holding the read lock.

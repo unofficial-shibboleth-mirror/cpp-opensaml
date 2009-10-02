@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2009 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,18 +17,25 @@
 /**
  * @file saml/signature/ContentReference.h
  * 
- * SAML-specific signature reference profile 
+ * SAML-specific signature reference profile.
  */
 
 #ifndef __saml_sigref_h__
 #define __saml_sigref_h__
 
 #include <saml/base.h>
-#include <xmltooling/XMLObject.h>
-#include <xmltooling/signature/ContentReference.h>
 
 #include <set>
 #include <string>
+#ifdef HAVE_GOOD_STL
+# include <xmltooling/unicode.h>
+#endif
+#include <xmltooling/signature/ContentReference.h>
+
+namespace xmltooling {
+    class XMLTOOL_API Namespace;
+    class XMLTOOL_API XMLObject;
+};
 
 namespace opensaml {
 

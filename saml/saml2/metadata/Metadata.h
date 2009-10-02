@@ -17,7 +17,7 @@
 /**
  * @file saml/saml2/metadata/Metadata.h
  *
- * XMLObjects representing the SAML 2.0 Metadata schema
+ * XMLObjects representing the SAML 2.0 Metadata schema.
  */
 
 #ifndef __saml2_metadata_h__
@@ -30,6 +30,10 @@
 
 #define DECL_SAML2MDOBJECTBUILDER(cname) \
     DECL_XMLOBJECTBUILDER(SAML_API,cname,samlconstants::SAML20MD_NS,samlconstants::SAML20MD_PREFIX)
+
+namespace xmlencryption {
+    class XMLTOOL_API EncryptionMethod;
+};
 
 namespace opensaml {
 

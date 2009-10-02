@@ -17,7 +17,7 @@
 /**
  * SAML2ArtifactEncoder.cpp
  * 
- * SAML 2.0 HTTP-Artifact binding message encoder
+ * SAML 2.0 HTTP-Artifact binding message encoder.
  */
 
 #include "internal.h"
@@ -27,12 +27,14 @@
 #include "saml2/binding/SAML2Artifact.h"
 #include "saml2/core/Protocols.h"
 #include "saml2/metadata/Metadata.h"
+#include "signature/ContentReference.h"
 
 #include <fstream>
 #include <sstream>
 #include <xmltooling/logging.h>
 #include <xmltooling/XMLToolingConfig.h>
 #include <xmltooling/io/HTTPResponse.h>
+#include <xmltooling/signature/Signature.h>
 #include <xmltooling/util/NDC.h>
 #include <xmltooling/util/PathResolver.h>
 #include <xmltooling/util/TemplateEngine.h>

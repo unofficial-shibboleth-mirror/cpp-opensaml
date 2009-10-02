@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2009 Internet2
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 /**
  * @file saml/saml1/core/Protocols.h
  *
- * XMLObjects representing the SAML 1.x Protocols schema
+ * XMLObjects representing the SAML 1.x Protocols schema.
  */
 
 #ifndef __saml1_protocols_h__
@@ -26,13 +26,20 @@
 #include <saml/RootObject.h>
 #include <saml/util/SAMLConstants.h>
 
-#include <xmltooling/XMLObjectBuilder.h>
-#include <xmltooling/signature/KeyInfo.h>
-#include <xmltooling/signature/Signature.h>
-#include <xmltooling/util/DateTime.h>
+#include <xmltooling/ConcreteXMLObjectBuilder.h>
+#include <xmltooling/ElementExtensibleXMLObject.h>
 
 #define DECL_SAML1POBJECTBUILDER(cname) \
     DECL_XMLOBJECTBUILDER(SAML_API,cname,samlconstants::SAML1P_NS,samlconstants::SAML1P_PREFIX)
+
+namespace xmltooling {
+    class XMLTOOL_API DateTime;
+};
+
+namespace xmlsignature {
+    class XMLTOOL_API KeyInfo;
+    class XMLTOOL_API Signature;
+};
 
 namespace opensaml {
 

@@ -17,19 +17,21 @@
 /**
  * Assertions20Impl.cpp
  *
- * Implementation classes for SAML 2.0 Assertions schema
+ * Implementation classes for SAML 2.0 Assertions schema.
  */
 
 #include "internal.h"
 #include "exceptions.h"
 #include "saml/encryption/EncryptedKeyResolver.h"
 #include "saml2/core/Assertions.h"
+#include "signature/ContentReference.h"
 
 #include <xmltooling/AbstractComplexElement.h>
 #include <xmltooling/AbstractSimpleElement.h>
 #include <xmltooling/impl/AnyElement.h>
 #include <xmltooling/io/AbstractXMLObjectMarshaller.h>
 #include <xmltooling/io/AbstractXMLObjectUnmarshaller.h>
+#include <xmltooling/signature/Signature.h>
 #include <xmltooling/util/XMLHelper.h>
 
 #include <ctime>

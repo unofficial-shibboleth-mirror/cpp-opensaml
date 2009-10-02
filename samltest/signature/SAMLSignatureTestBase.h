@@ -22,6 +22,7 @@
 #include <xmltooling/security/CredentialCriteria.h>
 #include <xmltooling/security/CredentialResolver.h>
 #include <xmltooling/signature/KeyInfo.h>
+#include <xmltooling/signature/Signature.h>
 #include <xmltooling/signature/SignatureValidator.h>
 
 using namespace xmlsignature;

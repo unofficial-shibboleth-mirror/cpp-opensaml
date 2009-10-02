@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2009 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,10 @@
 #include "internal.h"
 #include <saml/saml2/core/Assertions.h>
 #include <saml/util/SAMLConstants.h>
+#include <xmltooling/signature/KeyInfo.h>
 
 using namespace opensaml::saml2;
-using namespace xmlsignature;
+using xmlsignature::KeyInfoBuilder;
 
 //TODO need testing for ElementProxy and wildcard attributes/elements
 

@@ -17,7 +17,7 @@
 /**
  * @file saml/saml2/core/Assertions.h
  *
- * XMLObjects representing the SAML 2.0 Assertions schema
+ * XMLObjects representing the SAML 2.0 Assertions schema.
  */
 
 #ifndef __saml2_assertions_h__
@@ -26,15 +26,27 @@
 #include <saml/Assertion.h>
 #include <saml/util/SAMLConstants.h>
 
-#include <xmltooling/XMLObjectBuilder.h>
-#include <xmltooling/encryption/Encryption.h>
-#include <xmltooling/security/CredentialCriteria.h>
-#include <xmltooling/security/CredentialResolver.h>
-#include <xmltooling/signature/Signature.h>
-#include <xmltooling/util/DateTime.h>
+#include <xmltooling/ConcreteXMLObjectBuilder.h>
+#include <xmltooling/ElementProxy.h>
 
 #define DECL_SAML2OBJECTBUILDER(cname) \
     DECL_XMLOBJECTBUILDER(SAML_API,cname,samlconstants::SAML20_NS,samlconstants::SAML20_PREFIX)
+
+namespace xmltooling {
+    class XMLTOOL_API CredentialCriteria;
+    class XMLTOOL_API CredentialResolver;
+    class XMLTOOL_API DateTime;
+};
+
+namespace xmlencryption {
+    class XMLTOOL_API EncryptedData;
+    class XMLTOOL_API EncryptedKey;
+};
+
+namespace xmlsignature {
+    class XMLTOOL_API KeyInfo;
+    class XMLTOOL_API Signature;
+};
 
 namespace opensaml {
 

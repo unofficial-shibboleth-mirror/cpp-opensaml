@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2009 Internet2
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,10 @@
 
 #include <saml/saml2/metadata/AbstractMetadataProvider.h>
 
+namespace xmltooling {
+    class XMLTOOL_API RWLock;
+};
+
 namespace opensaml {
     namespace saml2md {
 
@@ -43,22 +47,10 @@ namespace opensaml {
 
             virtual ~DynamicMetadataProvider();
 
-            xmltooling::Lockable* lock() {
-                m_lock->rdlock();
-                return this;
-            }
-
-            void unlock() {
-                m_lock->unlock();
-            }
-
-            void init() {
-            }
-
-            const xmltooling::XMLObject* getMetadata() const {
-                throw MetadataException("getMetadata operation not implemented on this provider.");
-            }
-
+            void init();
+            xmltooling::Lockable* lock();
+            void unlock();
+            const xmltooling::XMLObject* getMetadata() const;
             std::pair<const EntityDescriptor*,const RoleDescriptor*> getEntityDescriptor(const Criteria& criteria) const;
 
         protected:

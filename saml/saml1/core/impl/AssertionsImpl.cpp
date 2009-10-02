@@ -17,18 +17,21 @@
 /**
  * AssertionsImpl.cpp
  *
- * Implementation classes for SAML 1.x Assertions schema
+ * Implementation classes for SAML 1.x Assertions schema.
  */
 
 #include "internal.h"
 #include "exceptions.h"
 #include "saml1/core/Assertions.h"
+#include "signature/ContentReference.h"
 
 #include <xmltooling/AbstractComplexElement.h>
 #include <xmltooling/AbstractSimpleElement.h>
 #include <xmltooling/impl/AnyElement.h>
 #include <xmltooling/io/AbstractXMLObjectMarshaller.h>
 #include <xmltooling/io/AbstractXMLObjectUnmarshaller.h>
+#include <xmltooling/signature/KeyInfo.h>
+#include <xmltooling/signature/Signature.h>
 #include <xmltooling/util/XMLHelper.h>
 
 #include <ctime>

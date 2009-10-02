@@ -115,6 +115,12 @@ void SecurityPolicy::_reset(bool messageOnly)
     }
 }
 
+void SecurityPolicy::setRole(const xmltooling::QName* role)
+{
+    delete m_role;
+    m_role = role ? new xmltooling::QName(*role) : NULL;
+}
+
 MetadataProvider::Criteria& SecurityPolicy::getMetadataProviderCriteria() const
 {
     if (!m_metadataCriteria)

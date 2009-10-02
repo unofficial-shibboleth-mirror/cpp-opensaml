@@ -17,15 +17,17 @@
 /**
  * MetadataProvider.cpp
  *
- * Registration of factories for built-in providers
+ * Registration of factories for built-in providers.
  */
 
 #include "internal.h"
 #include "saml2/metadata/MetadataFilter.h"
 #include "saml2/metadata/MetadataProvider.h"
 
+#include <algorithm>
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xmltooling/logging.h>
+#include <xmltooling/unicode.h>
 #include <xmltooling/util/NDC.h>
 #include <xmltooling/util/XMLHelper.h>
 

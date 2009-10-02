@@ -17,7 +17,7 @@
 /**
  * SAML2POSTEncoder.cpp
  * 
- * SAML 2.0 HTTP-POST binding message encoder
+ * SAML 2.0 HTTP-POST binding message encoder.
  */
 
 #include "internal.h"
@@ -34,6 +34,8 @@
 #include <xmltooling/XMLToolingConfig.h>
 #include <xmltooling/io/HTTPResponse.h>
 #include <xmltooling/security/Credential.h>
+#include <xmltooling/signature/KeyInfo.h>
+#include <xmltooling/signature/Signature.h>
 #include <xmltooling/util/NDC.h>
 #include <xmltooling/util/PathResolver.h>
 #include <xmltooling/util/TemplateEngine.h>

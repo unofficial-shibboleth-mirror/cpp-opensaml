@@ -25,18 +25,22 @@
 
 #include <saml/saml2/metadata/ObservableMetadataProvider.h>
 
-#include <xmltooling/security/Credential.h>
-#include <xmltooling/security/CredentialCriteria.h>
-#include <xmltooling/util/Threads.h>
-
 namespace xmltooling {
+    class XMLTOOL_API Credential;
+    class XMLTOOL_API CredentialCriteria;
     class XMLTOOL_API KeyInfoResolver;
+    class XMLTOOL_API Mutex;
 };
 
 namespace opensaml {
     namespace saml2md {
         
         class SAML_API MetadataFilter;
+
+#if defined (_MSC_VER)
+        #pragma warning( push )
+        #pragma warning( disable : 4251 )
+#endif
 
         /**
          * Base class for caching metadata providers.
@@ -117,6 +121,11 @@ namespace opensaml {
             mutable credmap_t m_credentialMap;
             const credmap_t::mapped_type& resolveCredentials(const RoleDescriptor& role) const;
         };
+
+#if defined (_MSC_VER)
+        #pragma warning( pop )
+        #pragma warning( disable : 4251 )
+#endif
         
     };
 };

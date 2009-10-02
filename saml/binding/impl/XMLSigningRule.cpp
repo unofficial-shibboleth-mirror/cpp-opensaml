@@ -32,6 +32,7 @@
 
 #include <xmltooling/logging.h>
 #include <xmltooling/security/SignatureTrustEngine.h>
+#include <xmltooling/signature/Signature.h>
 
 using namespace opensaml::saml2md;
 using namespace opensaml;

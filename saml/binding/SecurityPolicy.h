@@ -27,6 +27,7 @@
 
 #include <ctime>
 #include <vector>
+#include <xmltooling/unicode.h>
 
 #if defined (_MSC_VER)
     #pragma warning( push )
@@ -208,10 +209,7 @@ namespace opensaml {
          *
          * @param role the peer role element/type or NULL
          */
-        void setRole(const xmltooling::QName* role) {
-            delete m_role;
-            m_role = role ? new xmltooling::QName(*role) : NULL;
-        }
+        void setRole(const xmltooling::QName* role);
 
         /**
          * Sets a TrustEngine for the policy.

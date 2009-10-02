@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2009 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,12 +21,14 @@
 
 #include <cxxtest/TestSuite.h>
 
-#include <fstream>
 #include <saml/exceptions.h>
 #include <saml/util/SAMLConstants.h>
+
+#include <fstream>
 #include <xmltooling/XMLObject.h>
 #include <xmltooling/XMLObjectBuilder.h>
 #include <xmltooling/XMLToolingConfig.h>
+#include <xmltooling/util/DateTime.h>
 #include <xmltooling/validation/Validator.h>
 
 using namespace xmltooling;

@@ -17,7 +17,7 @@
 /**
  * SimpleSigningRule.cpp
  * 
- * Blob-oriented signature checking SecurityPolicyRule
+ * Blob-oriented signature checking SecurityPolicyRule.
  */
 
 #include "internal.h"
@@ -34,6 +34,8 @@
 #include <xmltooling/XMLToolingConfig.h>
 #include <xmltooling/io/HTTPRequest.h>
 #include <xmltooling/security/SignatureTrustEngine.h>
+#include <xmltooling/signature/KeyInfo.h>
+#include <xmltooling/signature/Signature.h>
 
 using namespace opensaml::saml2md;
 using namespace opensaml;

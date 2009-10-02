@@ -17,13 +17,14 @@
 /**
  * @file saml/util/SAMLConstants.h
  *
- * SAML XML namespace constants
+ * SAML XML namespace constants.
  */
 
 #ifndef __saml_xmlconstants_h__
 #define __saml_xmlconstants_h__
 
-#include <xmltooling/util/XMLConstants.h>
+#include <saml/base.h>
+#include <xercesc/util/XercesDefs.hpp>
 
 /**
  * SAML related constants.

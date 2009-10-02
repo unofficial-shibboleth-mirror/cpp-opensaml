@@ -31,6 +31,7 @@
 #include <xmltooling/security/CredentialCriteria.h>
 #include <xmltooling/security/CredentialResolver.h>
 #include <xmltooling/security/SignatureTrustEngine.h>
+#include <xmltooling/signature/Signature.h>
 #include <xmltooling/signature/SignatureValidator.h>
 #include <xmltooling/util/NDC.h>
 

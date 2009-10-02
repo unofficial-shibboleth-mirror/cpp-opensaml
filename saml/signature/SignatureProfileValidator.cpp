@@ -17,11 +17,12 @@
 /**
  * SignatureProfileValidator.cpp
  * 
- * SAML-specific signature verification 
+ * SAML-specific signature verification.
  */
  
 #include "internal.h"
 #include "exceptions.h"
+#include "signature/SignableObject.h"
 #include "signature/SignatureProfileValidator.h"
 
 #include <xmltooling/signature/Signature.h>

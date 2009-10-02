@@ -20,11 +20,7 @@
  * Processes metadata after it's been unmarshalled.
  */
 
-#include <saml/base.h>
-#include <saml/exceptions.h>
 #include <saml/saml2/metadata/MetadataProvider.h>
-
-#include <xmltooling/XMLObject.h>
 
 #ifndef __saml2_metadatafilt_h__
 #define __saml2_metadatafilt_h__

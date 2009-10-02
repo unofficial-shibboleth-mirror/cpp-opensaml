@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2009 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,15 +17,18 @@
 /**
  * @file saml/signature/SignatureProfileValidator.h
  * 
- * SAML-specific signature profile validator 
+ * SAML-specific signature profile validator.
  */
 
 #ifndef __saml_sigval_h__
 #define __saml_sigval_h__
 
 #include <saml/base.h>
-#include <saml/signature/SignableObject.h>
 #include <xmltooling/validation/Validator.h>
+
+namespace xmlsignature {
+    class XMLTOOL_API Signature;
+};
 
 namespace opensaml {
 
