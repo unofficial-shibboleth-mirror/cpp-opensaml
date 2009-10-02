@@ -30,6 +30,7 @@
 #include <memory>
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xmltooling/logging.h>
+#include <xmltooling/util/Threads.h>
 #include <xmltooling/util/XMLHelper.h>
 
 

@@ -548,6 +548,10 @@
 							>
 						</File>
 						<File
+							RelativePath=".\saml2\metadata\impl\ObservableMetadataProvider.cpp"
+							>
+						</File>
+						<File
 							RelativePath=".\saml2\metadata\impl\RequireValidUntilMetadataFilter.cpp"
 							>
 						</File>
