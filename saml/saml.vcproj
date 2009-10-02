@@ -524,6 +524,10 @@
 							>
 						</File>
 						<File
+							RelativePath=".\saml2\metadata\impl\MetadataCredentialContext.cpp"
+							>
+						</File>
+						<File
 							RelativePath=".\saml2\metadata\impl\MetadataCredentialCriteria.cpp"
 							>
 						</File>

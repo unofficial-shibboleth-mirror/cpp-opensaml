@@ -21,6 +21,7 @@
  */
 
 #include "internal.h"
+#include "saml2/metadata/Metadata.h"
 #include "saml2/metadata/MetadataCredentialContext.h"
 #include "saml2/metadata/MetadataCredentialCriteria.h"
 

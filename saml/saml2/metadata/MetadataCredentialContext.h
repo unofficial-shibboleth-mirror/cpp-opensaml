@@ -23,12 +23,14 @@
 #ifndef __saml_metacredctx_h__
 #define __saml_metacredctx_h__
 
-#include <saml/saml2/metadata/Metadata.h>
+#include <saml/base.h>
 #include <xmltooling/security/KeyInfoCredentialContext.h>
 
 namespace opensaml {
     namespace saml2md {
         
+        class SAML_API KeyDescriptor;
+
         /**
          * Metadata-based CredentialContext subclass.
          */
@@ -40,9 +42,7 @@ namespace opensaml {
              *
              * @param descriptor    source of metadata-supplied credential
              */
-            MetadataCredentialContext(const KeyDescriptor& descriptor)
-                : KeyInfoCredentialContext(descriptor.getKeyInfo()), m_descriptor(descriptor) {
-            }
+            MetadataCredentialContext(const KeyDescriptor& descriptor);
     
             virtual ~MetadataCredentialContext() {}
             
