@@ -31,6 +31,7 @@
 #include <xmltooling/security/X509TrustEngine.h>
 #include <xmltooling/soap/SOAP.h>
 #include <xmltooling/soap/HTTPSOAPTransport.h>
+#include <xsec/framework/XSECDefs.hpp>
 
 using namespace opensaml::saml2;
 using namespace opensaml::saml2md;

@@ -1,5 +1,5 @@
 /*
-*  Copyright 2001-2007 Internet2
+*  Copyright 2001-2009 Internet2
  *
 * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,13 +17,14 @@
 /**
  * AssertionsSchemaValidators.cpp
  *
- * Schema-based validators for SAML 1.x Assertions classes
+ * Schema-based validators for SAML 1.x Assertions classes.
  */
 
 #include "internal.h"
 #include "exceptions.h"
 #include "saml1/core/Assertions.h"
 
+#include <xmltooling/validation/Validator.h>
 #include <xmltooling/validation/ValidatorSuite.h>
 
 using namespace opensaml::saml1;

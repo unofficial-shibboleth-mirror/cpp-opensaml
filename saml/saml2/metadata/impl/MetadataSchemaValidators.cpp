@@ -25,6 +25,7 @@
 #include "saml2/metadata/Metadata.h"
 
 #include <xmltooling/encryption/Encryption.h>
+#include <xmltooling/validation/Validator.h>
 #include <xmltooling/validation/ValidatorSuite.h>
 
 using namespace opensaml::saml2md;

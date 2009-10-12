@@ -31,6 +31,7 @@
 #include <xmltooling/XMLToolingConfig.h>
 #include <xmltooling/security/Credential.h>
 #include <xmltooling/security/KeyInfoResolver.h>
+#include <xmltooling/util/Threads.h>
 #include <xmltooling/util/XMLHelper.h>
 
 using namespace opensaml::saml2md;

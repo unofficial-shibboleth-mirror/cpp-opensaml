@@ -24,6 +24,7 @@
 #include "exceptions.h"
 #include "saml2/core/Assertions.h"
 
+#include <xmltooling/validation/Validator.h>
 #include <xmltooling/validation/ValidatorSuite.h>
 
 using namespace opensaml::saml2;

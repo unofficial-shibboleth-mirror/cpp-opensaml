@@ -33,6 +33,7 @@
 #include <xmltooling/io/AbstractXMLObjectUnmarshaller.h>
 #include <xmltooling/signature/KeyInfo.h>
 #include <xmltooling/signature/Signature.h>
+#include <xmltooling/util/DateTime.h>
 #include <xmltooling/util/XMLHelper.h>
 
 #include <ctime>
