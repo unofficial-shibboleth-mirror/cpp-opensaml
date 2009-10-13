@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2009 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 /**
  * SAML2ArtifactType0004.cpp
  * 
- * Type 0x0004 SAML 2.0 artifact class 
+ * Type 0x0004 SAML 2.0 artifact class.
  */
 
 #include "internal.h"
@@ -82,4 +82,32 @@ SAML2ArtifactType0004::SAML2ArtifactType0004(const string& sourceid, int index, 
     m_raw+=(char)(index % 256);
     m_raw.append(sourceid,0,SOURCEID_LENGTH);
     m_raw.append(handle,0,HANDLE_LENGTH);
+}
+
+SAML2ArtifactType0004::SAML2ArtifactType0004(const SAML2ArtifactType0004& src) : SAML2Artifact(src)
+{
+}
+
+SAML2ArtifactType0004::~SAML2ArtifactType0004()
+{
+}
+
+SAML2ArtifactType0004* SAML2ArtifactType0004::clone() const
+{
+    return new SAML2ArtifactType0004(*this);
+}
+
+string SAML2ArtifactType0004::getSource() const
+{
+    return toHex(getSourceID());
+}
+
+string SAML2ArtifactType0004::getSourceID() const
+{
+    return m_raw.substr(TYPECODE_LENGTH + INDEX_LENGTH, SOURCEID_LENGTH);    // bytes 5-24
+}
+
+string SAML2ArtifactType0004::getMessageHandle() const
+{
+    return m_raw.substr(TYPECODE_LENGTH + INDEX_LENGTH + SOURCEID_LENGTH, HANDLE_LENGTH);    // bytes 25-44
 }

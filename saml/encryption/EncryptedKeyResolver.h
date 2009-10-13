@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2009 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 /**
  * @file saml/encryption/EncryptedKeyResolver.h
  * 
- * SAML-specific encrypted key resolver 
+ * SAML-specific encrypted key resolver.
  */
 
 #ifndef __saml_enckeyres_h__
@@ -46,10 +46,9 @@ namespace opensaml {
          * 
          * @param ref   reference to encrypted element
          */
-        EncryptedKeyResolver(const saml2::EncryptedElementType& ref) : m_ref(ref) {
-        }
+        EncryptedKeyResolver(const saml2::EncryptedElementType& ref);
         
-        virtual ~EncryptedKeyResolver() {}
+        virtual ~EncryptedKeyResolver();
 
         const xmlencryption::EncryptedKey* resolveKey(const xmlencryption::EncryptedData& encryptedData, const XMLCh* recipient=NULL) const;
      

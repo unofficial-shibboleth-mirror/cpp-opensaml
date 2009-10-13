@@ -23,11 +23,38 @@
 #include "internal.h"
 #include "saml2/profile/SAML2AssertionPolicy.h"
 
+using namespace opensaml::saml2md;
 using namespace opensaml::saml2;
 using namespace opensaml;
+using namespace xmltooling;
+
+SAML2AssertionPolicy::SAML2AssertionPolicy(
+    const MetadataProvider* metadataProvider, const xmltooling::QName* role, const TrustEngine* trustEngine, bool validate
+    ) : SecurityPolicy(metadataProvider, role, trustEngine, validate)
+{
+}
+
+SAML2AssertionPolicy::~SAML2AssertionPolicy()
+{
+}
 
 void SAML2AssertionPolicy::reset(bool messageOnly)
 {
     SecurityPolicy::reset(messageOnly);
     SAML2AssertionPolicy::_reset(messageOnly);
+}
+
+void SAML2AssertionPolicy::_reset(bool messageOnly)
+{
+    m_confirmation = false;
+}
+
+const SubjectConfirmation* SAML2AssertionPolicy::getSubjectConfirmation() const
+{
+    return m_confirmation;
+}
+
+void SAML2AssertionPolicy::setSubjectConfirmation(const SubjectConfirmation* confirmation)
+{
+    m_confirmation = confirmation;
 }

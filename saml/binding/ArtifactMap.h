@@ -25,6 +25,9 @@
 
 #include <saml/base.h>
 
+#include <string>
+#include <xercesc/dom/DOM.hpp>
+
 namespace xmltooling {
     class XMLTOOL_API StorageService;
     class XMLTOOL_API XMLObject;

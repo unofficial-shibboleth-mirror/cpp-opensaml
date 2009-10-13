@@ -33,6 +33,15 @@ using namespace xmltooling::logging;
 using namespace xmltooling;
 using namespace std;
 
+AssertionValidator::AssertionValidator(const XMLCh* recipient, const vector<const XMLCh*>* audiences, time_t ts)
+    : m_recipient(recipient), m_audiences(audiences), m_ts(ts)
+{
+}
+
+AssertionValidator::~AssertionValidator()
+{
+}
+
 void AssertionValidator::validate(const xmltooling::XMLObject* xmlObject) const
 {
     const Assertion* a=dynamic_cast<const Assertion*>(xmlObject);

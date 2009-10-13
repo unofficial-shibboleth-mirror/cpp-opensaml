@@ -68,7 +68,13 @@ void SAML_API opensaml::registerSecurityPolicyRules()
     conf.SecurityPolicyRuleManager.registerFactory(DELEGATION_POLICY_RULE, saml2::DelegationRestrictionRuleFactory);
 }
 
-SecurityPolicy::IssuerMatchingPolicy SecurityPolicy::m_defaultMatching;
+SecurityPolicyRule::SecurityPolicyRule()
+{
+}
+
+SecurityPolicyRule::~SecurityPolicyRule()
+{
+}
 
 SecurityPolicy::SecurityPolicy(
     const saml2md::MetadataProvider* metadataProvider,
@@ -98,6 +104,118 @@ SecurityPolicy::~SecurityPolicy()
     delete m_issuer;
 }
 
+const MetadataProvider* SecurityPolicy::getMetadataProvider() const
+{
+    return m_metadata;
+}
+
+MetadataProvider::Criteria& SecurityPolicy::getMetadataProviderCriteria() const
+{
+    if (!m_metadataCriteria)
+        m_metadataCriteria=new MetadataProvider::Criteria();
+    else
+        m_metadataCriteria->reset();
+    return *m_metadataCriteria;
+}
+
+const xmltooling::QName* SecurityPolicy::getRole() const
+{
+    return m_role;
+}
+
+const TrustEngine* SecurityPolicy::getTrustEngine() const
+{
+    return m_trust;
+}
+
+bool SecurityPolicy::getValidating() const
+{
+    return m_validate;
+}
+
+bool SecurityPolicy::requireEntityIssuer() const
+{
+    return m_entityOnly;
+}
+
+const vector<xstring>& SecurityPolicy::getAudiences() const
+{
+    return m_audiences;
+}
+
+vector<xstring>& SecurityPolicy::getAudiences()
+{
+    return m_audiences;
+}
+
+time_t SecurityPolicy::getTime() const
+{
+    if (m_ts == 0)
+        return m_ts = time(NULL);
+    return m_ts;
+}
+
+const XMLCh* SecurityPolicy::getCorrelationID() const
+{
+    return m_correlationID.c_str();
+}
+
+vector<const SecurityPolicyRule*>& SecurityPolicy::getRules()
+{
+    return m_rules;
+}
+
+void SecurityPolicy::setMetadataProvider(const MetadataProvider* metadata)
+{
+    m_metadata = metadata;
+}
+
+void SecurityPolicy::setMetadataProviderCriteria(MetadataProvider::Criteria* criteria)
+{
+    if (m_metadataCriteria)
+        delete m_metadataCriteria;
+    m_metadataCriteria=criteria;
+}
+
+void SecurityPolicy::setRole(const xmltooling::QName* role)
+{
+    delete m_role;
+    m_role = role ? new xmltooling::QName(*role) : NULL;
+}
+
+void SecurityPolicy::setTrustEngine(const TrustEngine* trust)
+{
+    m_trust = trust;
+}
+
+void SecurityPolicy::setValidating(bool validate)
+{
+    m_validate = validate;
+}
+
+void SecurityPolicy::requireEntityIssuer(bool entityOnly)
+{
+    m_entityOnly = entityOnly;
+}
+
+void SecurityPolicy::setTime(time_t ts)
+{
+    m_ts = ts;
+}
+
+void SecurityPolicy::setCorrelationID(const XMLCh* correlationID)
+{
+    m_correlationID.erase();
+    if (correlationID)
+        m_correlationID = correlationID;
+}
+
+void SecurityPolicy::evaluate(const XMLObject& message, const GenericRequest* request)
+{
+    for (vector<const SecurityPolicyRule*>::const_iterator i=m_rules.begin(); i!=m_rules.end(); ++i)
+        (*i)->evaluate(message,request,*this);
+}
+
 void SecurityPolicy::reset(bool messageOnly)
 {
     _reset(messageOnly);
@@ -115,32 +233,41 @@ void SecurityPolicy::_reset(bool messageOnly)
     }
 }
 
-void SecurityPolicy::setRole(const xmltooling::QName* role)
+const XMLCh* SecurityPolicy::getMessageID() const
 {
-    delete m_role;
-    m_role = role ? new xmltooling::QName(*role) : NULL;
+    return m_messageID.c_str();
 }
 
-MetadataProvider::Criteria& SecurityPolicy::getMetadataProviderCriteria() const
+time_t SecurityPolicy::getIssueInstant() const
 {
-    if (!m_metadataCriteria)
-        m_metadataCriteria=new MetadataProvider::Criteria();
-    else
-        m_metadataCriteria->reset();
-    return *m_metadataCriteria;
+    return m_issueInstant;
 }
 
-void SecurityPolicy::setMetadataProviderCriteria(saml2md::MetadataProvider::Criteria* criteria)
+const Issuer* SecurityPolicy::getIssuer() const
 {
-    if (m_metadataCriteria)
-        delete m_metadataCriteria;
-    m_metadataCriteria=criteria;
+    return m_issuer;
 }
 
-void SecurityPolicy::evaluate(const XMLObject& message, const GenericRequest* request)
+const RoleDescriptor* SecurityPolicy::getIssuerMetadata() const
 {
-    for (vector<const SecurityPolicyRule*>::const_iterator i=m_rules.begin(); i!=m_rules.end(); ++i)
-        (*i)->evaluate(message,request,*this);
+    return m_issuerRole;
+}
+
+bool SecurityPolicy::isAuthenticated() const
+{
+    return m_authenticated;
+}
+
+void SecurityPolicy::setMessageID(const XMLCh* id)
+{
+    m_messageID.erase();
+    if (id)
+        m_messageID = id;
+}
+
+void SecurityPolicy::setIssueInstant(time_t issueInstant)
+{
+    m_issueInstant = issueInstant;
 }
 
 void SecurityPolicy::setIssuer(const Issuer* issuer)
@@ -173,6 +300,19 @@ void SecurityPolicy::setIssuerMetadata(const RoleDescriptor* issuerRole)
     if (issuerRole && m_issuerRole && issuerRole!=m_issuerRole)
         throw SecurityPolicyException("A rule supplied a RoleDescriptor that conflicts with previous results.");
     m_issuerRole=issuerRole;
+}
+
+void SecurityPolicy::setAuthenticated(bool auth)
+{
+    m_authenticated = auth;
+}
+
+SecurityPolicy::IssuerMatchingPolicy::IssuerMatchingPolicy()
+{
+}
+
+SecurityPolicy::IssuerMatchingPolicy::~IssuerMatchingPolicy()
+{
 }
 
 bool SecurityPolicy::IssuerMatchingPolicy::issuerMatches(const Issuer* issuer1, const Issuer* issuer2) const
@@ -227,4 +367,17 @@ bool SecurityPolicy::IssuerMatchingPolicy::issuerMatches(const Issuer* issuer1, 
         return false;
 
     return true;
+}
+
+SecurityPolicy::IssuerMatchingPolicy SecurityPolicy::m_defaultMatching;
+
+const SecurityPolicy::IssuerMatchingPolicy& SecurityPolicy::getIssuerMatchingPolicy() const
+{
+    return m_matchingPolicy ? *m_matchingPolicy : m_defaultMatching;
+}
+
+void SecurityPolicy::setIssuerMatchingPolicy(IssuerMatchingPolicy* matchingPolicy)
+{
+    delete m_matchingPolicy;
+    m_matchingPolicy = matchingPolicy;
 }

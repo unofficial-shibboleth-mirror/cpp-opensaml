@@ -39,6 +39,15 @@ using namespace xmltooling::logging;
 using namespace xmltooling;
 using namespace std;
 
+SAML1SOAPClient::SAML1SOAPClient(opensaml::SOAPClient& soaper, bool fatalSAMLErrors) : m_soaper(soaper), m_fatal(fatalSAMLErrors), m_correlate(NULL)
+{
+}
+
+SAML1SOAPClient::~SAML1SOAPClient()
+{
+    XMLString::release(&m_correlate);
+}
+
 void SAML1SOAPClient::sendSAML(Request* request, const char* from, MetadataCredentialCriteria& to, const char* endpoint)
 {
     auto_ptr<Envelope> env(EnvelopeBuilder::buildEnvelope());

@@ -21,7 +21,6 @@
  */
 
 #include "internal.h"
-#include "exceptions.h"
 #include "binding/SecurityPolicy.h"
 #include "saml1/binding/SAML1MessageDecoder.h"
 #include "saml1/core/Assertions.h"
@@ -38,6 +37,14 @@ using namespace opensaml;
 using namespace xmltooling::logging;
 using namespace xmltooling;
 using namespace std;
+
+SAML1MessageDecoder::SAML1MessageDecoder()
+{
+}
+
+SAML1MessageDecoder::~SAML1MessageDecoder()
+{
+}
 
 void SAML1MessageDecoder::extractMessageDetails(
     const XMLObject& message, const GenericRequest& req, const XMLCh* protocol, SecurityPolicy& policy

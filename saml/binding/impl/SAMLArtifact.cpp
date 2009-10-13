@@ -58,6 +58,18 @@ void SAML_API opensaml::registerSAMLArtifacts()
 
 const unsigned int SAMLArtifact::TYPECODE_LENGTH = 2;
 
+SAMLArtifact::SAMLArtifact()
+{
+}
+
+SAMLArtifact::~SAMLArtifact()
+{
+}
+
+SAMLArtifact::SAMLArtifact(const SAMLArtifact& src) : m_raw(src.m_raw)
+{
+}
+
 // Basic constructor just decodes the string and saves it off.
 // Subclasses will handle pulling it apart.
 

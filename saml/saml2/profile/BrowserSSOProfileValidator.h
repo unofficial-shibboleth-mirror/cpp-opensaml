@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2009 Internet2
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 /**
  * @file saml/saml2/profile/BrowserSSOProfileValidator.h
  *
- * SAML 2.0 Browser SSO Profile Assertion Validator
+ * SAML 2.0 Browser SSO Profile Assertion Validator.
  */
 
 #ifndef __saml2_ssoval_h__
@@ -25,8 +25,9 @@
 
 #include <saml/saml2/profile/AssertionValidator.h>
 
-namespace opensaml {
+#include <xmltooling/unicode.h>
 
+namespace opensaml {
     namespace saml2 {
 
         /**
@@ -54,9 +55,9 @@ namespace opensaml {
                 time_t ts=0,
                 const char* destination=NULL,
                 const char* requestID=NULL
-                ) : AssertionValidator(recipient, audiences, ts), m_destination(destination), m_requestID(requestID) {
-            }
-            virtual ~BrowserSSOProfileValidator() {}
+                );
+
+            virtual ~BrowserSSOProfileValidator();
 
             void validateAssertion(const Assertion& assertion) const;
 
@@ -65,9 +66,7 @@ namespace opensaml {
              *
              * @return  address information
              */
-            const char* getAddress() const {
-                return m_address.c_str();
-            }
+            const char* getAddress() const;
 
         protected:
             /** Server location to which assertion was delivered. */

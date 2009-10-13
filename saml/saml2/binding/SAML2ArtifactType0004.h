@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2009 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 /**
  * @file saml/saml2/binding/SAML2ArtifactType0004.h
  * 
- * Type 0x0004 SAML 2.0 artifact class
+ * Type 0x0004 SAML 2.0 artifact class.
  */
 
 #ifndef __saml_artifacttype0004_h__
@@ -29,7 +29,7 @@ namespace opensaml {
     namespace saml2p {
         
         /**
-         * Type 0x0004 SAML 2.0 artifact class
+         * Type 0x0004 SAML 2.0 artifact class.
          */
         class SAML_API SAML2ArtifactType0004 : public SAML2Artifact
         {
@@ -59,15 +59,12 @@ namespace opensaml {
              */        
             SAML2ArtifactType0004(const std::string& sourceid, int index, const std::string& handle);
     
-            virtual ~SAML2ArtifactType0004() {}
+            virtual ~SAML2ArtifactType0004();
             
-            virtual SAML2ArtifactType0004* clone() const {
-                return new SAML2ArtifactType0004(*this);
-            }
-            
-            virtual std::string getSource() const {
-                return toHex(getSourceID());
-            }
+            // Virtual function overrides.
+            SAML2ArtifactType0004* clone() const;
+            std::string getSource() const;
+            std::string getMessageHandle() const;
 
             /**
              * Returns the binary data that identifies the source.
@@ -75,14 +72,8 @@ namespace opensaml {
              * 
              * @return the binary source ID
              */
-            virtual std::string getSourceID() const {
-                return m_raw.substr(TYPECODE_LENGTH + INDEX_LENGTH, SOURCEID_LENGTH);    // bytes 5-24
-            }
+            virtual std::string getSourceID() const;
             
-            virtual std::string getMessageHandle() const {
-                return m_raw.substr(TYPECODE_LENGTH + INDEX_LENGTH + SOURCEID_LENGTH, HANDLE_LENGTH);    // bytes 25-44
-            }
-
             /** Length of source ID */            
             static const unsigned int SOURCEID_LENGTH;
 
@@ -95,7 +86,7 @@ namespace opensaml {
              * 
              * @param src   object to copy
              */
-            SAML2ArtifactType0004(const SAML2ArtifactType0004& src) : SAML2Artifact(src) {}
+            SAML2ArtifactType0004(const SAML2ArtifactType0004& src);
         };
         
     };

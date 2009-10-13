@@ -57,11 +57,9 @@ namespace opensaml {
          * 
          * @param signableObject    reference to object being signed
          */
-        ContentReference(const SignableObject& signableObject)
-            : m_signableObject(signableObject), m_digest(NULL), m_c14n(NULL) {
-        }
+        ContentReference(const SignableObject& signableObject);
     
-        virtual ~ContentReference() {}
+        virtual ~ContentReference();
 
         /**
          * Given a "blank" native signature, creates signature reference
@@ -86,9 +84,7 @@ namespace opensaml {
          * 
          * @param digest    the digest algorithm
          */
-        void setDigestAlgorithm(const XMLCh* digest) {
-            m_digest = digest;
-        }
+        void setDigestAlgorithm(const XMLCh* digest);
 
         /**
          * Sets the canonicalization method to include in the reference,
@@ -96,9 +92,7 @@ namespace opensaml {
          * 
          * @param c14n  the canonicalization method
          */
-        void setCanonicalizationMethod(const XMLCh* c14n) {
-            m_c14n = c14n;
-        }
+        void setCanonicalizationMethod(const XMLCh* c14n);
         
     private:
         void addPrefixes(const std::set<xmltooling::Namespace>& namespaces);

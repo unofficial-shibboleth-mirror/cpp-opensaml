@@ -17,7 +17,7 @@
 /**
  * @file saml/saml2/binding/SAML2Artifact.h
  * 
- * Base class for SAML 2.0 artifacts
+ * Base class for SAML 2.0 artifacts.
  */
 
 #ifndef __saml2_artifact_h__
@@ -29,13 +29,13 @@ namespace opensaml {
     namespace saml2p {
         
         /**
-         * Base class for SAML 2.0 artifacts
+         * Base class for SAML 2.0 artifacts.
          */
         class SAML_API SAML2Artifact : public SAMLArtifact
         {
             SAML2Artifact& operator=(const SAML2Artifact& src);
         public:
-            virtual ~SAML2Artifact() {}
+            virtual ~SAML2Artifact();
             
             /**
              * Returns the endpoint index of the artifact.
@@ -48,21 +48,21 @@ namespace opensaml {
             static const unsigned int INDEX_LENGTH;
 
         protected:
-            SAML2Artifact() {}
+            SAML2Artifact();
 
             /**
              * Constructor.
              * 
              * @param s raw artifact string
              */
-            SAML2Artifact(const char* s) : SAMLArtifact(s) {}
+            SAML2Artifact(const char* s);
     
             /**
              * Copy constructor.
              * 
              * @param src   object to copy
              */
-            SAML2Artifact(const SAML2Artifact& src) : SAMLArtifact(src) {}
+            SAML2Artifact(const SAML2Artifact& src);
         };
         
     };

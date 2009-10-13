@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2009 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 /**
  * @file saml/saml1/binding/SAMLArtifactType0001.h
  * 
- * Type 0x0001 SAML 1.x artifact class
+ * Type 0x0001 SAML 1.x artifact class.
  */
 
 #ifndef __saml_artifacttype0001_h__
@@ -57,15 +57,12 @@ namespace opensaml {
              */        
             SAMLArtifactType0001(const std::string& sourceid, const std::string& handle);
     
-            virtual ~SAMLArtifactType0001() {}
+            virtual ~SAMLArtifactType0001();
             
-            virtual SAMLArtifactType0001* clone() const {
-                return new SAMLArtifactType0001(*this);
-            }
-            
-            virtual std::string getSource() const {
-                return toHex(getSourceID());
-            }
+            // Virtual function overrides.
+            SAMLArtifactType0001* clone() const;
+            std::string getSource() const;
+            std::string getMessageHandle() const;
 
             /**
              * Returns the binary data that identifies the source.
@@ -73,18 +70,12 @@ namespace opensaml {
              * 
              * @return the binary source ID
              */
-            virtual std::string getSourceID() const {
-                return m_raw.substr(TYPECODE_LENGTH,SOURCEID_LENGTH);                   // bytes 3-22
-            }
+            virtual std::string getSourceID() const;
             
-            virtual std::string getMessageHandle() const {
-                return m_raw.substr(TYPECODE_LENGTH+SOURCEID_LENGTH, HANDLE_LENGTH);    // bytes 23-42
-            }
-
-            /** Length of source ID */            
+            /** Length of source ID */
             static const unsigned int SOURCEID_LENGTH;
 
-            /** Length of assertion handle */            
+            /** Length of assertion handle */
             static const unsigned int HANDLE_LENGTH;
     
         protected:
@@ -93,7 +84,7 @@ namespace opensaml {
              * 
              * @param src   object to copy
              */
-            SAMLArtifactType0001(const SAMLArtifactType0001& src) : SAMLArtifact(src) {}
+            SAMLArtifactType0001(const SAMLArtifactType0001& src);
         };
         
     };

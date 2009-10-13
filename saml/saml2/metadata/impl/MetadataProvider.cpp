@@ -17,7 +17,7 @@
 /**
  * MetadataProvider.cpp
  *
- * Registration of factories for built-in providers.
+ * Supplies an individual source of metadata.
  */
 
 #include "internal.h"
@@ -133,6 +133,22 @@ MetadataProvider::~MetadataProvider()
     for_each(m_filters.begin(),m_filters.end(),xmltooling::cleanup<MetadataFilter>());
 }
 
+void MetadataProvider::addMetadataFilter(MetadataFilter* newFilter)
+{
+    m_filters.push_back(newFilter);
+}
+
+MetadataFilter* MetadataProvider::removeMetadataFilter(MetadataFilter* oldFilter)
+{
+    for (vector<MetadataFilter*>::iterator i=m_filters.begin(); i!=m_filters.end(); i++) {
+        if (oldFilter==(*i)) {
+            m_filters.erase(i);
+            return oldFilter;
+        }
+    }
+    return NULL;
+}
+
 void MetadataProvider::doFilters(XMLObject& xmlObject) const
 {
 #ifdef _DEBUG
@@ -149,4 +165,47 @@ const EntitiesDescriptor* MetadataProvider::getEntitiesDescriptor(const XMLCh* n
 {
     auto_ptr_char temp(name);
     return getEntitiesDescriptor(temp.get(),strict);
+}
+
+MetadataProvider::Criteria::Criteria()
+    : entityID_unicode(NULL), entityID_ascii(NULL), artifact(NULL), role(NULL), protocol(NULL), protocol2(NULL), validOnly(true)
+{
+}
+
+MetadataProvider::Criteria::Criteria(const XMLCh* id, const xmltooling::QName* q, const XMLCh* prot, bool valid)
+    : entityID_unicode(id), entityID_ascii(NULL), artifact(NULL), role(q), protocol(prot), protocol2(NULL), validOnly(valid)
+{
+}
+
+MetadataProvider::Criteria::Criteria(const char* id, const xmltooling::QName* q, const XMLCh* prot, bool valid)
+    : entityID_unicode(NULL), entityID_ascii(id), artifact(NULL), role(q), protocol(prot), protocol2(NULL), validOnly(valid)
+{
+}
+
+MetadataProvider::Criteria::Criteria(const SAMLArtifact* a, const xmltooling::QName* q, const XMLCh* prot, bool valid)
+    : entityID_unicode(NULL), entityID_ascii(NULL), artifact(a), role(q), protocol(prot), protocol2(NULL), validOnly(valid)
+{
+}
+
+MetadataProvider::Criteria::~Criteria()
+{
+}
+
+void MetadataProvider::Criteria::reset()
+{
+    entityID_unicode=NULL;
+    entityID_ascii=NULL;
+    artifact=NULL;
+    role=NULL;
+    protocol=NULL;
+    protocol2=NULL;
+    validOnly=true;
+}
+
+MetadataFilter::MetadataFilter()
+{
+}
+
+MetadataFilter::~MetadataFilter()
+{
 }

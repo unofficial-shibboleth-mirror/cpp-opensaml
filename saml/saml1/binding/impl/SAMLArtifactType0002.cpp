@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2009 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 /**
  * SAMLArtifactType0002.cpp
  * 
- * Type 0x0002 SAML 1.x artifact class 
+ * Type 0x0002 SAML 1.x artifact class.
  */
 
 #include "internal.h"
@@ -38,6 +38,10 @@ namespace opensaml {
 };
 
 const unsigned int SAMLArtifactType0002::HANDLE_LENGTH = 20;
+
+SAMLArtifactType0002::SAMLArtifactType0002(const SAMLArtifactType0002& src) : SAMLArtifact(src)
+{
+}
 
 SAMLArtifactType0002::SAMLArtifactType0002(const char* s) : SAMLArtifact(s)
 {
@@ -73,4 +77,23 @@ SAMLArtifactType0002::SAMLArtifactType0002(const string& sourceLocation, const s
     m_raw+=(char)0x2;
     m_raw.append(handle,0,HANDLE_LENGTH);
     m_raw+=sourceLocation;
+}
+
+SAMLArtifactType0002::~SAMLArtifactType0002()
+{
+}
+
+SAMLArtifactType0002* SAMLArtifactType0002::clone() const
+{
+    return new SAMLArtifactType0002(*this);
+}
+
+string SAMLArtifactType0002::getMessageHandle() const
+{
+    return m_raw.substr(TYPECODE_LENGTH, HANDLE_LENGTH);    // bytes 3-22
+}
+
+string SAMLArtifactType0002::getSource() const
+{
+    return m_raw.c_str() + TYPECODE_LENGTH + HANDLE_LENGTH; // bytes 23-terminating null
 }

@@ -51,12 +51,9 @@ namespace opensaml {
              * @param soaper            reference to SOAPClient object to use for call
              * @param fatalSAMLErrors   true iff a non-successful SAML Status code should be fatal
              */
-            SAML2SOAPClient(SOAPClient& soaper, bool fatalSAMLErrors=true) : m_soaper(soaper), m_fatal(fatalSAMLErrors), m_correlate(NULL) {
-            }
+            SAML2SOAPClient(SOAPClient& soaper, bool fatalSAMLErrors=true);
 
-            virtual ~SAML2SOAPClient() {
-                xercesc::XMLString::release(&m_correlate);
-            }
+            virtual ~SAML2SOAPClient();
     
             /**
              * Specialized method for sending SAML 2.0 requests. The SOAP layer will be

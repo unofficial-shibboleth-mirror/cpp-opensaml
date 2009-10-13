@@ -38,8 +38,8 @@ namespace opensaml {
     class SAML_API SignatureProfileValidator : public virtual xmltooling::Validator
     {
     public:
-        SignatureProfileValidator() {}
-        virtual ~SignatureProfileValidator() {}
+        SignatureProfileValidator();
+        virtual ~SignatureProfileValidator();
 
         void validate(const xmltooling::XMLObject* xmlObject) const;
         

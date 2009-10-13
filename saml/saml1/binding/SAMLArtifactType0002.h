@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2009 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 /**
  * @file saml/saml1/binding/SAMLArtifactType0002.h
  * 
- * Type 0x0002 SAML 1.x artifact class
+ * Type 0x0002 SAML 1.x artifact class.
  */
 
 #ifndef __saml_artifacttype0002_h__
@@ -57,19 +57,13 @@ namespace opensaml {
              */        
             SAMLArtifactType0002(const std::string& sourceLocation, const std::string& handle);
     
-            virtual ~SAMLArtifactType0002() {}
-            
-            virtual SAMLArtifactType0002* clone() const {
-                return new SAMLArtifactType0002(*this);
-            }
-            
-            virtual std::string getMessageHandle() const {
-                return m_raw.substr(TYPECODE_LENGTH, HANDLE_LENGTH);    // bytes 3-22
-            }
+            virtual ~SAMLArtifactType0002();
 
-            virtual std::string getSource() const {
-                return m_raw.c_str() + TYPECODE_LENGTH + HANDLE_LENGTH; // bytes 23-terminating null
-            }
+            // Virtual function overrides.
+            SAMLArtifactType0002* clone() const;
+            std::string getSource() const;
+            std::string getMessageHandle() const;
+
             
             /** Length of assertion handle */
             static const unsigned int HANDLE_LENGTH;
@@ -80,7 +74,7 @@ namespace opensaml {
              * 
              * @param src   object to copy
              */
-            SAMLArtifactType0002(const SAMLArtifactType0002& src) : SAMLArtifact(src) {}
+            SAMLArtifactType0002(const SAMLArtifactType0002& src);
         };
         
     };

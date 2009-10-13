@@ -25,6 +25,11 @@
 
 #include <saml/saml2/metadata/ObservableMetadataProvider.h>
 
+#include <ctime>
+#include <map>
+#include <vector>
+#include <string>
+
 namespace xmltooling {
     class XMLTOOL_API Credential;
     class XMLTOOL_API CredentialCriteria;

@@ -26,6 +26,7 @@
 #include "binding/SecurityPolicy.h"
 #include "binding/SOAPClient.h"
 #include "saml2/metadata/Metadata.h"
+#include "saml2/metadata/MetadataCredentialCriteria.h"
 #include "saml2/metadata/MetadataProvider.h"
 
 #include <xmltooling/security/X509TrustEngine.h>
@@ -42,6 +43,15 @@ using namespace std;
 SOAPClient::SOAPClient(SecurityPolicy& policy)
     : soap11::SOAPClient(policy.getValidating()), m_policy(policy), m_force(true), m_peer(NULL), m_criteria(NULL)
 {
+}
+
+SOAPClient::~SOAPClient()
+{
+}
+
+void SOAPClient::forceTransportAuthentication(bool force)
+{
+    m_force = force;
 }
 
 void SOAPClient::send(const soap11::Envelope& env, const char* from, MetadataCredentialCriteria& to, const char* endpoint)
@@ -107,4 +117,9 @@ void SOAPClient::reset()
     m_peer = NULL;
     soap11::SOAPClient::reset();
     m_policy.reset();
+}
+
+SecurityPolicy& SOAPClient::getPolicy() const
+{
+    return m_policy;
 }

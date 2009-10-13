@@ -1,6 +1,6 @@
 
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2009 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
 /**
  * SAMLConfig.cpp
  * 
- * Library configuration 
+ * Library configuration.
  */
 
 #include "internal.h"
@@ -101,6 +101,19 @@ SAMLConfig& SAMLConfig::getConfig()
 SAMLInternalConfig& SAMLInternalConfig::getInternalConfig()
 {
     return g_config;
+}
+
+SAMLConfig::SAMLConfig() : m_artifactMap(NULL)
+{
+}
+
+SAMLConfig::~SAMLConfig()
+{
+}
+
+ArtifactMap* SAMLConfig::getArtifactMap() const
+{
+    return m_artifactMap;
 }
 
 void SAMLConfig::setArtifactMap(ArtifactMap* artifactMap)
@@ -227,6 +240,30 @@ string SAMLInternalConfig::hashSHA1(const char* s, bool toHex)
         }
     }
     throw XMLSecurityException("Unable to generate SHA-1 hash.");
+}
+
+SignableObject::SignableObject()
+{
+}
+
+SignableObject::~SignableObject()
+{
+}
+
+RootObject::RootObject()
+{
+}
+
+RootObject::~RootObject()
+{
+}
+
+Assertion::Assertion()
+{
+}
+
+Assertion::~Assertion()
+{
 }
 
 using namespace saml2p;

@@ -54,24 +54,19 @@ namespace opensaml {
                 const xmltooling::QName* role=NULL,
                 const xmltooling::TrustEngine* trustEngine=NULL,
                 bool validate=true
-                ) : SecurityPolicy(metadataProvider, role, trustEngine, validate) {
-            }
+                );
 
-            virtual ~SAML2AssertionPolicy() {}
+            virtual ~SAML2AssertionPolicy();
 
             virtual void reset(bool messageOnly=false);
-            void _reset(bool messageOnly=false) {
-                m_confirmation = false;
-            }
+            void _reset(bool messageOnly=false);
 
             /**
              * Returns the subject confirmation that was successfully accepted by the policy.
              *
              * @return a successfully evaluated SubjectConfirmation
              */
-            const saml2::SubjectConfirmation* getSubjectConfirmation() const {
-                return m_confirmation;
-            }
+            const saml2::SubjectConfirmation* getSubjectConfirmation() const;
 
             /**
              * Sets the SubjectConfirmation that was successfully accepted by the policy.
@@ -81,9 +76,7 @@ namespace opensaml {
              *
              * @param confirmation the successfully evaluated SubjectConfirmation
              */
-            void setSubjectConfirmation(const saml2::SubjectConfirmation* confirmation) {
-                m_confirmation = confirmation;
-            }
+            void setSubjectConfirmation(const saml2::SubjectConfirmation* confirmation);
 
         private:
             const saml2::SubjectConfirmation* m_confirmation;

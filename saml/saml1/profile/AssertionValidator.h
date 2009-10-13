@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2009 Internet2
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,13 +17,16 @@
 /**
  * @file saml/saml1/profile/AssertionValidator.h
  *
- * SAML 1.x basic assertion validator
+ * SAML 1.x basic assertion validator.
  */
 
 #ifndef __saml1_assval_h__
 #define __saml1_assval_h__
 
 #include <saml/base.h>
+
+#include <ctime>
+#include <vector>
 #include <xmltooling/validation/Validator.h>
 
 namespace opensaml {
@@ -46,11 +49,9 @@ namespace opensaml {
              * @param audiences additional audience values
              * @param ts        timestamp to evaluate assertion conditions, or 0 to bypass check
              */
-            AssertionValidator(const XMLCh* recipient, const std::vector<const XMLCh*>* audiences=NULL, time_t ts=0)
-                : m_recipient(recipient), m_audiences(audiences), m_ts(ts) {
-            }
+            AssertionValidator(const XMLCh* recipient, const std::vector<const XMLCh*>* audiences=NULL, time_t ts=0);
 
-            virtual ~AssertionValidator() {}
+            virtual ~AssertionValidator();
 
             void validate(const xmltooling::XMLObject* xmlObject) const;
 

@@ -63,6 +63,14 @@ void SAML_API opensaml::registerMessageEncoders()
     conf.MessageEncoderManager.registerFactory(samlconstants::SAML20_BINDING_PAOS, saml2p::SAML2ECPEncoderFactory);
 }
 
+MessageEncoder::MessageEncoder()
+{
+}
+
+MessageEncoder::~MessageEncoder()
+{
+}
+
 bool MessageEncoder::isCompact() const
 {
     return false;
@@ -71,4 +79,12 @@ bool MessageEncoder::isCompact() const
 bool MessageEncoder::isUserAgentPresent() const
 {
     return true;
+}
+
+MessageEncoder::ArtifactGenerator::ArtifactGenerator()
+{
+}
+
+MessageEncoder::ArtifactGenerator::~ArtifactGenerator()
+{
 }

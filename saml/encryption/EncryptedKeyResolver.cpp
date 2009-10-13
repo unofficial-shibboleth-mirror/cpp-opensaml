@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2009 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 /**
  * EncryptedKeyResolver.cpp
  * 
- * SAML-specific encrypted key resolver 
+ * SAML-specific encrypted key resolver.
  */
  
 #include "internal.h"
@@ -25,7 +25,16 @@
 #include "saml2/core/Assertions.h"
 
 using namespace xmlencryption;
+using opensaml::saml2::EncryptedElementType;
 using namespace std;
+
+opensaml::EncryptedKeyResolver::EncryptedKeyResolver(const EncryptedElementType& ref) : m_ref(ref)
+{
+}
+
+opensaml::EncryptedKeyResolver::~EncryptedKeyResolver()
+{
+}
 
 const EncryptedKey* opensaml::EncryptedKeyResolver::resolveKey(const EncryptedData& encryptedData, const XMLCh* recipient) const
 {

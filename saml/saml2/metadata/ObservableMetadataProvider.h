@@ -64,9 +64,9 @@ namespace opensaml {
             class SAML_API Observer {
                 MAKE_NONCOPYABLE(Observer);
             protected:
-                Observer() {}
+                Observer();
             public:
-                virtual ~Observer() {}
+                virtual ~Observer();
         
                 /**
                  * Called when a provider signals an event has occured.

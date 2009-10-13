@@ -83,9 +83,7 @@ namespace opensaml {
          *
          * @return the supplied MetadataProvider or NULL
          */
-        const saml2md::MetadataProvider* getMetadataProvider() const {
-            return m_metadata;
-        }
+        const saml2md::MetadataProvider* getMetadataProvider() const;
 
         /**
          * Returns a reference to a MetadataProvider::Criteria instance suitable for use with the
@@ -103,65 +101,49 @@ namespace opensaml {
          *
          * @return the peer role element/type, or an empty QName
          */
-        const xmltooling::QName* getRole() const {
-            return m_role;
-        }
+        const xmltooling::QName* getRole() const;
 
         /**
          * Returns the TrustEngine supplied to the policy.
          *
          * @return the supplied TrustEngine or NULL
          */
-        const xmltooling::TrustEngine* getTrustEngine() const {
-            return m_trust;
-        }
+        const xmltooling::TrustEngine* getTrustEngine() const;
 
         /**
          * Returns XML message validation setting.
          *
          * @return validation flag
          */
-        bool getValidating() const {
-            return m_validate;
-        }
+        bool getValidating() const;
 
         /**
          * Returns flag controlling non-entity issuer support.
          *
          * @return flag controlling non-entity issuer support
          */
-        bool requireEntityIssuer() const {
-            return m_entityOnly;
-        }
+        bool requireEntityIssuer() const;
 
         /**
          * Returns the SAML audiences that represent the receiving peer.
          *
          * @return audience values of the peer processing the message
          */
-        const std::vector<xmltooling::xstring>& getAudiences() const {
-            return m_audiences;
-        }
+        const std::vector<xmltooling::xstring>& getAudiences() const;
 
         /**
          * Returns the SAML audiences that represent the receiving peer.
          *
          * @return audience values of the peer processing the message
          */
-        std::vector<xmltooling::xstring>& getAudiences() {
-            return m_audiences;
-        }
+        std::vector<xmltooling::xstring>& getAudiences();
 
         /**
          * Gets the effective time of message processing.
          *
          * @return  the time at which the message is being processed
          */
-        time_t getTime() const {
-            if (m_ts == 0)
-                return m_ts = time(NULL);
-            return m_ts;
-        }
+        time_t getTime() const;
 
         /**
          * Returns the message identifier to which the message being evaluated
@@ -169,9 +151,7 @@ namespace opensaml {
          *
          * @return correlated message identifier
          */
-        const XMLCh* getCorrelationID() const {
-            return m_correlationID.c_str();
-        }
+        const XMLCh* getCorrelationID() const;
 
         /**
          * Gets a mutable array of installed policy rules.
@@ -180,18 +160,14 @@ namespace opensaml {
          *
          * @return  mutable array of rules
          */
-        std::vector<const SecurityPolicyRule*>& getRules() {
-            return m_rules;
-        }
+        std::vector<const SecurityPolicyRule*>& getRules();
 
         /**
          * Sets a locked MetadataProvider for the policy.
          *
          * @param metadata a locked MetadataProvider or NULL
          */
-        void setMetadataProvider(const saml2md::MetadataProvider* metadata) {
-            m_metadata = metadata;
-        }
+        void setMetadataProvider(const saml2md::MetadataProvider* metadata);
 
         /**
          * Sets a MetadataProvider::Criteria instance suitable for use with the
@@ -216,9 +192,7 @@ namespace opensaml {
          *
          * @param trust a TrustEngine or NULL
          */
-        void setTrustEngine(const xmltooling::TrustEngine* trust) {
-            m_trust = trust;
-        }
+        void setTrustEngine(const xmltooling::TrustEngine* trust);
 
         /**
          * Controls schema validation of incoming XML messages.
@@ -227,18 +201,14 @@ namespace opensaml {
          *
          * @param validate  validation setting
          */
-        void setValidating(bool validate=true) {
-            m_validate = validate;
-        }
+        void setValidating(bool validate=true);
 
         /**
          * Sets flag controlling non-entity issuer support.
          *
          * @param entityOnly require that Issuer be in entity format
          */
-        void requireEntityIssuer(bool entityOnly=true) {
-            m_entityOnly = entityOnly;
-        }
+        void requireEntityIssuer(bool entityOnly=true);
 
         /**
          * Sets effective time of message processing.
@@ -248,9 +218,7 @@ namespace opensaml {
          *
          * @param ts    the time at which the message is being processed
          */
-        void setTime(time_t ts) {
-            m_ts = ts;
-        }
+        void setTime(time_t ts);
 
         /**
          * Sets the message identifier to which the message being evaluated
@@ -258,11 +226,7 @@ namespace opensaml {
          *
          * @param correlationID correlated message identifier
          */
-        void setCorrelationID(const XMLCh* correlationID) {
-            m_correlationID.erase();
-            if (correlationID)
-                m_correlationID = correlationID;
-        }
+        void setCorrelationID(const XMLCh* correlationID);
 
         /**
          * Evaluates the policy against the given request and message,
@@ -300,65 +264,49 @@ namespace opensaml {
          *
          * @return message identifier as determined by the registered policies
          */
-        const XMLCh* getMessageID() const {
-            return m_messageID.c_str();
-        }
+        const XMLCh* getMessageID() const;
 
         /**
          * Returns the message timestamp as determined by the registered policies.
          *
          * @return message timestamp as determined by the registered policies
          */
-        time_t getIssueInstant() const {
-            return m_issueInstant;
-        }
+        time_t getIssueInstant() const;
 
         /**
          * Gets the issuer of the message as determined by the registered policies.
          *
          * @return issuer of the message as determined by the registered policies
          */
-        const saml2::Issuer* getIssuer() const {
-            return m_issuer;
-        }
+        const saml2::Issuer* getIssuer() const;
 
         /**
          * Gets the metadata for the role the issuer is operating in.
          *
          * @return metadata for the role the issuer is operating in
          */
-        const saml2md::RoleDescriptor* getIssuerMetadata() const {
-            return m_issuerRole;
-        }
+        const saml2md::RoleDescriptor* getIssuerMetadata() const;
 
         /**
          * Returns the authentication status of the message as determined by the registered policies.
          *
          * @return true iff a SecurityPolicyRule has indicated the issuer/message has been authenticated
          */
-        bool isAuthenticated() const {
-            return m_authenticated;
-        }
+        bool isAuthenticated() const;
 
         /**
          * Sets the message identifier as determined by the registered policies.
          *
          * @param id message identifier
          */
-        void setMessageID(const XMLCh* id) {
-            m_messageID.erase();
-            if (id)
-                m_messageID = id;
-        }
+        void setMessageID(const XMLCh* id);
 
         /**
          * Sets the message timestamp as determined by the registered policies.
          *
          * @param issueInstant message timestamp
          */
-        void setIssueInstant(time_t issueInstant) {
-            m_issueInstant = issueInstant;
-        }
+        void setIssueInstant(time_t issueInstant);
 
         /**
          * Sets the issuer of the message as determined by the registered policies.
@@ -386,16 +334,14 @@ namespace opensaml {
          *
          * @param auth indicates whether the issuer/message has been authenticated
          */
-        void setAuthenticated(bool auth) {
-            m_authenticated = auth;
-        }
+        void setAuthenticated(bool auth);
 
         /** Allows override of rules for comparing saml2:Issuer information. */
         class SAML_API IssuerMatchingPolicy {
             MAKE_NONCOPYABLE(IssuerMatchingPolicy);
         public:
-            IssuerMatchingPolicy() {}
-            virtual ~IssuerMatchingPolicy() {}
+            IssuerMatchingPolicy();
+            virtual ~IssuerMatchingPolicy();
 
             /**
              * Returns true iff the two operands "match". Applications can override this method to
@@ -429,9 +375,7 @@ namespace opensaml {
          *
          * @return the effective IssuerMatchingPolicy
          */
-        const IssuerMatchingPolicy& getIssuerMatchingPolicy() const {
-            return m_matchingPolicy ? *m_matchingPolicy : m_defaultMatching;
-        }
+        const IssuerMatchingPolicy& getIssuerMatchingPolicy() const;
 
         /**
          * Sets the IssuerMatchingPolicy in effect. Setting no policy will
@@ -441,10 +385,7 @@ namespace opensaml {
          *
          * @param matchingPolicy the IssuerMatchingPolicy to use
          */
-        void setIssuerMatchingPolicy(IssuerMatchingPolicy* matchingPolicy) {
-            delete m_matchingPolicy;
-            m_matchingPolicy = matchingPolicy;
-        }
+        void setIssuerMatchingPolicy(IssuerMatchingPolicy* matchingPolicy);
 
     protected:
         /** A shared matching object that just supports the default matching rules. */

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2009 Internet2
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 /**
  * @file saml/saml1/profile/BrowserSSOProfileValidator.h
  *
- * SAML 1.x Browser SSO Profile Assertion Validator
+ * SAML 1.x Browser SSO Profile Assertion Validator.
  */
 
 #ifndef __saml1_ssoval_h__
@@ -46,10 +46,9 @@ namespace opensaml {
              * @param audiences additional audience values
              * @param ts        timestamp to evaluate assertion conditions, or 0 to bypass check
              */
-            BrowserSSOProfileValidator(const XMLCh* recipient, const std::vector<const XMLCh*>* audiences=NULL, time_t ts=0)
-                : AssertionValidator(recipient, audiences, ts) {
-            }
-            virtual ~BrowserSSOProfileValidator() {}
+            BrowserSSOProfileValidator(const XMLCh* recipient, const std::vector<const XMLCh*>* audiences=NULL, time_t ts=0);
+
+            virtual ~BrowserSSOProfileValidator();
 
             void validateAssertion(const Assertion& assertion) const;
         };

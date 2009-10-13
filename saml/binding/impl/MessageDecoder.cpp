@@ -66,9 +66,30 @@ void SAML_API opensaml::registerMessageDecoders()
     XMLObjectBuilder::registerBuilder(xmltooling::QName(samlconstants::SAML20ECP_NS, RelayState), new AnyElementBuilder());
 }
 
+MessageDecoder::MessageDecoder() : m_artifactResolver(NULL)
+{
+}
+
+MessageDecoder::~MessageDecoder()
+{
+}
+
 bool MessageDecoder::isUserAgentPresent() const
 {
     return true;
+}
+
+void MessageDecoder::setArtifactResolver(const ArtifactResolver* artifactResolver)
+{
+    m_artifactResolver = artifactResolver;
+}
+
+MessageDecoder::ArtifactResolver::ArtifactResolver()
+{
+}
+
+MessageDecoder::ArtifactResolver::~ArtifactResolver()
+{
 }
 
 bool MessageDecoder::ArtifactResolver::isSupported(const SSODescriptorType& ssoDescriptor) const

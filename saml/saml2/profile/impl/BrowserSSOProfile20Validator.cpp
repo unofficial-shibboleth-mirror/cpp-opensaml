@@ -33,6 +33,20 @@ using namespace xmltooling::logging;
 using namespace xmltooling;
 using namespace std;
 
+BrowserSSOProfileValidator::BrowserSSOProfileValidator(
+    const XMLCh* recipient,
+    const vector<const XMLCh*>* audiences,
+    time_t ts,
+    const char* destination,
+    const char* requestID
+    ) : AssertionValidator(recipient, audiences, ts), m_destination(destination), m_requestID(requestID)
+{
+}
+
+BrowserSSOProfileValidator::~BrowserSSOProfileValidator()
+{
+}
+
 void BrowserSSOProfileValidator::validateAssertion(const Assertion& assertion) const
 {
 #ifdef _DEBUG
@@ -89,4 +103,9 @@ void BrowserSSOProfileValidator::validateAssertion(const Assertion& assertion) c
 
     log.error(msg ? msg : "no error message");
     throw ValidationException("Unable to locate satisfiable bearer SubjectConfirmation in assertion.");
+}
+
+const char* BrowserSSOProfileValidator::getAddress() const
+{
+    return m_address.c_str();
 }

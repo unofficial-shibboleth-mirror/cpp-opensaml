@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2009 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,16 +44,14 @@ namespace opensaml {
              */
             MetadataCredentialContext(const KeyDescriptor& descriptor);
     
-            virtual ~MetadataCredentialContext() {}
+            virtual ~MetadataCredentialContext();
             
             /**
              * Return the KeyDescriptor associated with the credential.
              *
              * @return the associated KeyDescriptor
              */
-            const KeyDescriptor& getKeyDescriptor() const {
-                return m_descriptor;
-            }
+            const KeyDescriptor& getKeyDescriptor() const;
 
         private:
             const KeyDescriptor& m_descriptor;

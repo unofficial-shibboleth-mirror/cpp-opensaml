@@ -38,6 +38,14 @@ using namespace xmlsignature;
 using namespace xmltooling;
 using namespace std;
 
+SignatureProfileValidator::SignatureProfileValidator()
+{
+}
+
+SignatureProfileValidator::~SignatureProfileValidator()
+{
+}
+
 void SignatureProfileValidator::validate(const XMLObject* xmlObject) const
 {
     const Signature* sigObj=dynamic_cast<const Signature*>(xmlObject);

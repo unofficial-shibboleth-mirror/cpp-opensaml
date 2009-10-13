@@ -64,3 +64,11 @@ const ObservableMetadataProvider::Observer* ObservableMetadataProvider::removeOb
     }
     return NULL;
 }
+
+ObservableMetadataProvider::Observer::Observer()
+{
+}
+
+ObservableMetadataProvider::Observer::~Observer()
+{
+}

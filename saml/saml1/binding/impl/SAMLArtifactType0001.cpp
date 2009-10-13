@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2009 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 /**
  * SAMLArtifactType0001.cpp
  * 
- * Type 0x0001 SAML 1.x artifact class 
+ * Type 0x0001 SAML 1.x artifact class.
  */
 
 #include "internal.h"
@@ -39,6 +39,10 @@ namespace opensaml {
 
 const unsigned int SAMLArtifactType0001::SOURCEID_LENGTH = 20;
 const unsigned int SAMLArtifactType0001::HANDLE_LENGTH = 20;
+
+SAMLArtifactType0001::SAMLArtifactType0001(const SAMLArtifactType0001& src) : SAMLArtifact(src)
+{
+}
 
 SAMLArtifactType0001::SAMLArtifactType0001(const char* s) : SAMLArtifact(s)
 {
@@ -74,4 +78,28 @@ SAMLArtifactType0001::SAMLArtifactType0001(const string& sourceid, const string&
     m_raw+=(char)0x1;
     m_raw.append(sourceid,0,SOURCEID_LENGTH);
     m_raw.append(handle,0,HANDLE_LENGTH);
+}
+
+SAMLArtifactType0001::~SAMLArtifactType0001()
+{
+}
+
+SAMLArtifactType0001* SAMLArtifactType0001::clone() const
+{
+    return new SAMLArtifactType0001(*this);
+}
+
+string SAMLArtifactType0001::getSource() const
+{
+    return toHex(getSourceID());
+}
+
+string SAMLArtifactType0001::getSourceID() const
+{
+    return m_raw.substr(TYPECODE_LENGTH,SOURCEID_LENGTH);                   // bytes 3-22
+}
+
+string SAMLArtifactType0001::getMessageHandle() const
+{
+    return m_raw.substr(TYPECODE_LENGTH+SOURCEID_LENGTH, HANDLE_LENGTH);    // bytes 23-42
 }

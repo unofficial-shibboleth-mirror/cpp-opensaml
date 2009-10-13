@@ -38,7 +38,7 @@ namespace opensaml {
     class SAML_API SignableObject : public virtual xmltooling::XMLObject
     {
     public:
-        virtual ~SignableObject() {}
+        virtual ~SignableObject();
         
         /**
          * Returns the enveloped Signature from the object.
@@ -55,7 +55,7 @@ namespace opensaml {
         virtual void setSignature(xmlsignature::Signature* sig)=0;
 
     protected:
-        SignableObject() {}
+        SignableObject();
     };
 
 };

@@ -17,7 +17,7 @@
 /**
  * @file saml/RootObject.h
  * 
- * Base class for SAML objects at the root of core schemas 
+ * Base class for SAML objects at the root of core schemas.
  */
 
 #ifndef __saml_root_h__
@@ -38,7 +38,7 @@ namespace opensaml {
     class SAML_API RootObject : public SignableObject
     {
     public:
-        virtual ~RootObject() {}
+        virtual ~RootObject();
 
         /**
          * Returns the unique SAML ID of the object.
@@ -62,7 +62,7 @@ namespace opensaml {
         virtual time_t getIssueInstantEpoch() const=0;
 
     protected:
-        RootObject() {}
+        RootObject();
     };
 
 };

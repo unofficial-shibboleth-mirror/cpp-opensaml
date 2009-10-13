@@ -48,7 +48,7 @@ namespace opensaml {
     {
         MAKE_NONCOPYABLE(MessageEncoder);
     public:
-        virtual ~MessageEncoder() {}
+        virtual ~MessageEncoder();
 
         /**
          * Indicates whether the encoding format requires that messages be as compact as possible.
@@ -77,9 +77,9 @@ namespace opensaml {
         class SAML_API ArtifactGenerator {
             MAKE_NONCOPYABLE(ArtifactGenerator);
         protected:
-            ArtifactGenerator() {}
+            ArtifactGenerator();
         public:
-            virtual ~ArtifactGenerator() {}
+            virtual ~ArtifactGenerator();
             
             /**
              * Generate a SAML 1.x artifact suitable for consumption by the relying party.
@@ -133,7 +133,7 @@ namespace opensaml {
             ) const=0;
 
     protected:
-        MessageEncoder() {}
+        MessageEncoder();
     };
 
     /**

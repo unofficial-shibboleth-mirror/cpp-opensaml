@@ -30,3 +30,12 @@ MetadataCredentialContext::MetadataCredentialContext(const KeyDescriptor& descri
     : KeyInfoCredentialContext(descriptor.getKeyInfo()), m_descriptor(descriptor)
 {
 }
+
+MetadataCredentialContext::~MetadataCredentialContext()
+{
+}
+
+const KeyDescriptor& MetadataCredentialContext::getKeyDescriptor() const
+{
+    return m_descriptor;
+}

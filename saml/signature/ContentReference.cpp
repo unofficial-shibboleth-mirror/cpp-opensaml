@@ -34,6 +34,15 @@ using namespace opensaml;
 using namespace xmltooling;
 using namespace std;
 
+ContentReference::ContentReference(const SignableObject& signableObject)
+    : m_signableObject(signableObject), m_digest(NULL), m_c14n(NULL)
+{
+}
+
+ContentReference::~ContentReference()
+{
+}
+
 void ContentReference::createReferences(DSIGSignature* sig)
 {
     DSIGReference* ref=NULL;
@@ -91,6 +100,16 @@ void ContentReference::addInclusivePrefix(const XMLCh* prefix)
     else
         m_prefixes.insert("#default");
 #endif
+}
+
+void ContentReference::setDigestAlgorithm(const XMLCh* digest)
+{
+    m_digest = digest;
+}
+
+void ContentReference::setCanonicalizationMethod(const XMLCh* c14n)
+{
+    m_c14n = c14n;
 }
 
 void ContentReference::addPrefixes(const std::set<Namespace>& namespaces)

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2009 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 /**
  * SAML2Artifact.cpp
  * 
- * Base class for SAML 2.0 artifacts 
+ * Base class for SAML 2.0 artifacts.
  */
 
 #include "internal.h"
@@ -26,6 +26,22 @@
 using namespace opensaml::saml2p;
 
 const unsigned int SAML2Artifact::INDEX_LENGTH = 2;
+
+SAML2Artifact::SAML2Artifact()
+{
+}
+
+SAML2Artifact::SAML2Artifact(const char* s) : SAMLArtifact(s)
+{
+}
+
+SAML2Artifact::SAML2Artifact(const SAML2Artifact& src) : SAMLArtifact(src)
+{
+}
+
+SAML2Artifact::~SAML2Artifact()
+{
+}
 
 int SAML2Artifact::getEndpointIndex() const
 {

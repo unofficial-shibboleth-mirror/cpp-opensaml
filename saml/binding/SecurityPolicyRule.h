@@ -44,9 +44,9 @@ namespace opensaml {
     {
         MAKE_NONCOPYABLE(SecurityPolicyRule);
     protected:
-        SecurityPolicyRule() {}
+        SecurityPolicyRule();
     public:
-        virtual ~SecurityPolicyRule() {}
+        virtual ~SecurityPolicyRule();
 
         /**
          * Returns the rule's class/type.

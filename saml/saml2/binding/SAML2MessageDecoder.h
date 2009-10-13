@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2009 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,6 @@
 #include <saml/binding/MessageDecoder.h>
 
 namespace opensaml {
-
     namespace saml2p {
         
         /**
@@ -35,8 +34,8 @@ namespace opensaml {
         class SAML_API SAML2MessageDecoder : public MessageDecoder
         {
         protected:
-            SAML2MessageDecoder() {}
-            virtual ~SAML2MessageDecoder() {}
+            SAML2MessageDecoder();
+            virtual ~SAML2MessageDecoder();
 
         public:
             void extractMessageDetails (

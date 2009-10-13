@@ -58,7 +58,7 @@ namespace opensaml {
     {
     MAKE_NONCOPYABLE(SAMLConfig);
     public:
-        virtual ~SAMLConfig() {}
+        virtual ~SAMLConfig();
 
         /**
          * Returns the global configuration object for the library.
@@ -106,9 +106,7 @@ namespace opensaml {
          * 
          * @return  global ArtifactMap or NULL
          */
-        ArtifactMap* getArtifactMap() const {
-            return m_artifactMap;
-        }
+        ArtifactMap* getArtifactMap() const;
 
         /**
          * Generate random information using the underlying security library
@@ -163,7 +161,7 @@ namespace opensaml {
         xmltooling::PluginManager<saml2md::MetadataFilter,std::string,const xercesc::DOMElement*> MetadataFilterManager;
 
     protected:
-        SAMLConfig() : m_artifactMap(NULL) {}
+        SAMLConfig();
         
         /** Global ArtifactMap instance for use by artifact-related functions. */
         ArtifactMap* m_artifactMap;

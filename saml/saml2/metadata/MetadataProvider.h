@@ -24,6 +24,8 @@
 #define __saml2_metadataprov_h__
 
 #include <saml/base.h>
+
+#include <vector>
 #include <xmltooling/exceptions.h>
 #include <xmltooling/security/CredentialResolver.h>
 
@@ -95,9 +97,7 @@ namespace opensaml {
              *
              * @param newFilter metadata filter to add
              */
-            virtual void addMetadataFilter(MetadataFilter* newFilter) {
-                m_filters.push_back(newFilter);
-            }
+            virtual void addMetadataFilter(MetadataFilter* newFilter);
 
             /**
              * Removes a metadata filter. The caller must delete the filter if necessary.
@@ -105,15 +105,7 @@ namespace opensaml {
              * @param oldFilter metadata filter to remove
              * @return  the old filter
              */
-            virtual MetadataFilter* removeMetadataFilter(MetadataFilter* oldFilter) {
-                for (std::vector<MetadataFilter*>::iterator i=m_filters.begin(); i!=m_filters.end(); i++) {
-                    if (oldFilter==(*i)) {
-                        m_filters.erase(i);
-                        return oldFilter;
-                    }
-                }
-                return NULL;
-            }
+            virtual MetadataFilter* removeMetadataFilter(MetadataFilter* oldFilter);
 
             /**
              * Should be called after instantiating provider and adding filters, but before
@@ -163,8 +155,7 @@ namespace opensaml {
                 /**
                  * Default constructor.
                  */
-                Criteria() : entityID_unicode(NULL), entityID_ascii(NULL), artifact(NULL), role(NULL), protocol(NULL), protocol2(NULL), validOnly(true) {
-                }
+                Criteria();
 
                 /**
                  * Constructor.
@@ -174,9 +165,7 @@ namespace opensaml {
                  * @param prot  protocol support constant, if any
                  * @param valid true iff stale metadata should be ignored
                  */
-                Criteria(const XMLCh* id, const xmltooling::QName* q=NULL, const XMLCh* prot=NULL, bool valid=true)
-                    : entityID_unicode(id), entityID_ascii(NULL), artifact(NULL), role(q), protocol(prot), protocol2(NULL), validOnly(valid) {
-                }
+                Criteria(const XMLCh* id, const xmltooling::QName* q=NULL, const XMLCh* prot=NULL, bool valid=true);
 
                 /**
                  * Constructor.
@@ -186,9 +175,7 @@ namespace opensaml {
                  * @param prot  protocol support constant, if any
                  * @param valid true iff stale metadata should be ignored
                  */
-                Criteria(const char* id, const xmltooling::QName* q=NULL, const XMLCh* prot=NULL, bool valid=true)
-                    : entityID_unicode(NULL), entityID_ascii(id), artifact(NULL), role(q), protocol(prot), protocol2(NULL), validOnly(valid) {
-                }
+                Criteria(const char* id, const xmltooling::QName* q=NULL, const XMLCh* prot=NULL, bool valid=true);
 
                 /**
                  * Constructor.
@@ -198,24 +185,14 @@ namespace opensaml {
                  * @param prot  protocol support constant, if any
                  * @param valid true iff stale metadata should be ignored
                  */
-                Criteria(const SAMLArtifact* a, const xmltooling::QName* q=NULL, const XMLCh* prot=NULL, bool valid=true)
-                    : entityID_unicode(NULL), entityID_ascii(NULL), artifact(a), role(q), protocol(prot), protocol2(NULL), validOnly(valid) {
-                }
+                Criteria(const SAMLArtifact* a, const xmltooling::QName* q=NULL, const XMLCh* prot=NULL, bool valid=true);
 
-                virtual ~Criteria() {}
+                virtual ~Criteria();
 
                 /**
                  * Restores the object to its default state.
                  */
-                virtual void reset() {
-                    entityID_unicode=NULL;
-                    entityID_ascii=NULL;
-                    artifact=NULL;
-                    role=NULL;
-                    protocol=NULL;
-                    protocol2=NULL;
-                    validOnly=true;
-                }
+                virtual void reset();
 
                 /** Unique ID of entity. */
                 const XMLCh* entityID_unicode;

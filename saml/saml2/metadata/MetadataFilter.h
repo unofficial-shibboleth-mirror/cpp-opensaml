@@ -26,7 +26,6 @@
 #define __saml2_metadatafilt_h__
 
 namespace opensaml {
-
     namespace saml2md {
 
         /**
@@ -40,9 +39,9 @@ namespace opensaml {
         {
             MAKE_NONCOPYABLE(MetadataFilter);
         protected:
-            MetadataFilter() {}
+            MetadataFilter();
         public:
-            virtual ~MetadataFilter() {}
+            virtual ~MetadataFilter();
 
             /**
              * Returns an identifying string for the filter.

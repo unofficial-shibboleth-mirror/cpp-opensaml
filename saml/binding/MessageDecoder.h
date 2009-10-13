@@ -58,7 +58,7 @@ namespace opensaml {
     {
         MAKE_NONCOPYABLE(MessageDecoder);
     public:
-        virtual ~MessageDecoder() {}
+        virtual ~MessageDecoder();
 
         /**
          * Indicates whether a web browser or similar user agent delivered the message.
@@ -81,10 +81,10 @@ namespace opensaml {
         class SAML_API ArtifactResolver {
             MAKE_NONCOPYABLE(ArtifactResolver);
         protected:
-            ArtifactResolver() {}
+            ArtifactResolver();
 
         public:
-            virtual ~ArtifactResolver() {}
+            virtual ~ArtifactResolver();
 
             /**
              * Resolves one or more SAML 1.x artifacts into a response containing a set of
@@ -136,9 +136,7 @@ namespace opensaml {
          *
          * @param artifactResolver   an ArtifactResolver implementation to use
          */
-        void setArtifactResolver(const ArtifactResolver* artifactResolver) {
-            m_artifactResolver = artifactResolver;
-        }
+        void setArtifactResolver(const ArtifactResolver* artifactResolver);
 
         /**
          * Decodes a transport request into a SAML protocol message, and evaluates it
@@ -161,7 +159,7 @@ namespace opensaml {
             ) const=0;
 
     protected:
-        MessageDecoder() : m_artifactResolver(NULL) {}
+        MessageDecoder();
 
         /** Pointer to an ArtifactResolver implementation. */
         const ArtifactResolver* m_artifactResolver;

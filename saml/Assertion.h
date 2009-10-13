@@ -34,9 +34,9 @@ namespace opensaml {
     class SAML_API Assertion : public virtual RootObject
     {
     public:
-        virtual ~Assertion() {}
+        virtual ~Assertion();
     protected:
-        Assertion() {}
+        Assertion();
     };
 
 };

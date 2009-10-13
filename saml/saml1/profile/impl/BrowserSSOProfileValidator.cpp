@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2009 Internet2
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 /**
  * BrowserSSOProfileValidator.cpp
  *
- * SAML 1.x Browser SSO Profile Assertion Validator
+ * SAML 1.x Browser SSO Profile Assertion Validator.
  */
 
 #include "internal.h"
@@ -58,6 +58,15 @@ namespace {
         }
     };
 };
+
+BrowserSSOProfileValidator::BrowserSSOProfileValidator(const XMLCh* recipient, const std::vector<const XMLCh*>* audiences, time_t ts)
+    : AssertionValidator(recipient, audiences, ts)
+{
+}
+
+BrowserSSOProfileValidator::~BrowserSSOProfileValidator()
+{
+}
 
 void BrowserSSOProfileValidator::validateAssertion(const Assertion& assertion) const
 {

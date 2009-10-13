@@ -26,6 +26,7 @@
 #include <saml/base.h>
 
 #include <string>
+#include <xmltooling/exceptions.h>
 
 namespace opensaml {
 
@@ -36,7 +37,7 @@ namespace opensaml {
     {
         SAMLArtifact& operator=(const SAMLArtifact& src);
     public:
-        virtual ~SAMLArtifact() {}
+        virtual ~SAMLArtifact();
 
         /**
          * Returns artifact encoded into null-terminated base64 for transmission.
@@ -122,7 +123,7 @@ namespace opensaml {
         static std::string toHex(const std::string& s);
         
     protected:
-        SAMLArtifact() {}
+        SAMLArtifact();
 
         /**
          * Decodes a base64-encoded artifact into its raw form.
@@ -131,7 +132,7 @@ namespace opensaml {
          */        
         SAMLArtifact(const char* s);
 
-        SAMLArtifact(const SAMLArtifact& src) : m_raw(src.m_raw) {}
+        SAMLArtifact(const SAMLArtifact& src);
         
         /** Raw binary data that makes up an artifact. */
         std::string m_raw;
