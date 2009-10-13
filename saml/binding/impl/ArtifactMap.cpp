@@ -31,6 +31,7 @@
 #include <xmltooling/XMLObjectBuilder.h>
 #include <xmltooling/XMLToolingConfig.h>
 #include <xmltooling/util/NDC.h>
+#include <xmltooling/util/ParserPool.h>
 #include <xmltooling/util/StorageService.h>
 #include <xmltooling/util/XMLHelper.h>
 #include <xmltooling/util/Threads.h>

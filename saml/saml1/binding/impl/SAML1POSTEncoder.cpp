@@ -29,6 +29,7 @@
 #include <fstream>
 #include <sstream>
 #include <xercesc/util/Base64.hpp>
+#include <xsec/framework/XSECDefs.hpp>
 #include <xmltooling/io/HTTPResponse.h>
 #include <xmltooling/logging.h>
 #include <xmltooling/XMLToolingConfig.h>

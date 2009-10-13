@@ -35,6 +35,7 @@
 #include <xmltooling/encryption/Decrypter.h>
 #include <xmltooling/security/Credential.h>
 #include <xmltooling/signature/KeyInfo.h>
+#include <xmltooling/util/ParserPool.h>
 
 #include <xsec/utils/XSECPlatformUtils.hpp>
 

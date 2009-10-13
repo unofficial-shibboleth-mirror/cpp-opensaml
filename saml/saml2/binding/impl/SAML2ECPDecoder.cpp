@@ -17,7 +17,7 @@
 /**
  * SAML2ECPDecoder.cpp
  * 
- * SAML 2.0 ECP profile message decoder
+ * SAML 2.0 ECP profile message decoder.
  */
 
 #include "internal.h"
@@ -31,6 +31,7 @@
 #include <xmltooling/io/HTTPRequest.h>
 #include <xmltooling/soap/SOAP.h>
 #include <xmltooling/util/NDC.h>
+#include <xmltooling/util/ParserPool.h>
 #include <xmltooling/util/Predicates.h>
 #include <xmltooling/validation/ValidatorSuite.h>
 

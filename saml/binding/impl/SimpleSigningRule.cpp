@@ -36,6 +36,7 @@
 #include <xmltooling/security/SignatureTrustEngine.h>
 #include <xmltooling/signature/KeyInfo.h>
 #include <xmltooling/signature/Signature.h>
+#include <xmltooling/util/ParserPool.h>
 
 using namespace opensaml::saml2md;
 using namespace opensaml;

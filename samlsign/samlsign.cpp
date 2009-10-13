@@ -43,6 +43,7 @@
 #include <xmltooling/security/SignatureTrustEngine.h>
 #include <xmltooling/signature/Signature.h>
 #include <xmltooling/signature/SignatureValidator.h>
+#include <xmltooling/util/ParserPool.h>
 #include <xmltooling/util/XMLHelper.h>
 
 #include <fstream>

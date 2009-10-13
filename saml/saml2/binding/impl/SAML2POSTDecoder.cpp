@@ -17,7 +17,7 @@
 /**
  * SAML2POSTDecoder.cpp
  * 
- * SAML 2.0 HTTP POST binding message encoder
+ * SAML 2.0 HTTP POST binding message encoder.
  */
 
 #include "internal.h"
@@ -35,6 +35,7 @@
 #include <xmltooling/XMLToolingConfig.h>
 #include <xmltooling/io/HTTPRequest.h>
 #include <xmltooling/util/NDC.h>
+#include <xmltooling/util/ParserPool.h>
 #include <xmltooling/validation/ValidatorSuite.h>
 
 using namespace opensaml::saml2md;

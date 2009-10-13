@@ -17,7 +17,7 @@
 /**
  * ConditionsRule.cpp
  *
- * SAML Conditions SecurityPolicyRule
+ * SAML Conditions SecurityPolicyRule.
  */
 
 #include "internal.h"
@@ -29,6 +29,7 @@
 
 #include <xmltooling/logging.h>
 #include <xmltooling/XMLToolingConfig.h>
+#include <xmltooling/util/ParserPool.h>
 
 using namespace opensaml;
 using namespace xmltooling::logging;
