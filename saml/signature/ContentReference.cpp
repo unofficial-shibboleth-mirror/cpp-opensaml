@@ -48,7 +48,7 @@ void ContentReference::createReferences(DSIGSignature* sig)
     DSIGReference* ref=NULL;
     const XMLCh* id=m_signableObject.getXMLID();
     if (!id || !*id)
-        ref=sig->createReference(&chNull);  // whole doc reference
+        ref=sig->createReference(&chNull, m_digest ? m_digest : DSIGConstants::s_unicodeStrURISHA1);  // whole doc reference
     else {
         XMLCh* buf=new XMLCh[XMLString::stringLen(id) + 2];
         buf[0]=chPound;
