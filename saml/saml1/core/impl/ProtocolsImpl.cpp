@@ -379,6 +379,11 @@ namespace opensaml {
             const XMLCh* getID() const {
                 return getRequestID();
             }
+            void releaseDOM() const {
+                if (getDOM())
+                    getDOM()->removeAttributeNS(NULL, REQUESTID_ATTRIB_NAME);
+                AbstractDOMCachingXMLObject::releaseDOM();
+            }
             IMPL_DATETIME_ATTRIB(IssueInstant,0);
             IMPL_TYPED_CHILDREN(RespondWith,m_pos_Signature);
 
@@ -716,6 +721,11 @@ namespace opensaml {
             }
             const XMLCh* getID() const {
                 return getResponseID();
+            }
+            void releaseDOM() const {
+                if (getDOM())
+                    getDOM()->removeAttributeNS(NULL, RESPONSEID_ATTRIB_NAME);
+                AbstractDOMCachingXMLObject::releaseDOM();
             }
             IMPL_STRING_ATTRIB(InResponseTo);
             IMPL_DATETIME_ATTRIB(IssueInstant,0);

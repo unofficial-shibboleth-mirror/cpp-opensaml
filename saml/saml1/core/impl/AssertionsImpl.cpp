@@ -1047,6 +1047,11 @@ namespace opensaml {
             const XMLCh* getID() const {
                 return getAssertionID();
             }
+            void releaseDOM() const {
+                if (getDOM())
+                    getDOM()->removeAttributeNS(NULL, ASSERTIONID_ATTRIB_NAME);
+                AbstractDOMCachingXMLObject::releaseDOM();
+            }
             IMPL_STRING_ATTRIB(Issuer);
             IMPL_DATETIME_ATTRIB(IssueInstant,0);
             IMPL_TYPED_CHILD(Conditions);

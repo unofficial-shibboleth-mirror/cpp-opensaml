@@ -315,7 +315,7 @@ namespace opensaml {
             }
             
             IMPL_STRING_ATTRIB(Version);
-            IMPL_ID_ATTRIB(ID);
+            IMPL_ID_ATTRIB_EX(ID,ID,NULL);
             IMPL_DATETIME_ATTRIB(IssueInstant,0);
             IMPL_STRING_ATTRIB(Destination);
             IMPL_STRING_ATTRIB(Consent);
@@ -1075,7 +1075,7 @@ namespace opensaml {
             }
             
             IMPL_STRING_ATTRIB(Version);
-            IMPL_ID_ATTRIB(ID);
+            IMPL_ID_ATTRIB_EX(ID,ID,NULL);
             IMPL_STRING_ATTRIB(InResponseTo);
             IMPL_DATETIME_ATTRIB(IssueInstant,0);
             IMPL_STRING_ATTRIB(Destination);

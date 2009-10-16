@@ -993,7 +993,7 @@ namespace opensaml {
                     m_Signature->setContentReference(new opensaml::ContentReference(*this));
             }
 
-            IMPL_ID_ATTRIB(ID);
+            IMPL_ID_ATTRIB_EX(ID,ID,NULL);
             IMPL_STRING_ATTRIB(ProtocolSupportEnumeration);
             IMPL_STRING_ATTRIB(ErrorURL);
             IMPL_DATETIME_ATTRIB(ValidUntil,SAMLTIME_MAX);
@@ -2017,7 +2017,7 @@ namespace opensaml {
                     m_Signature->setContentReference(new opensaml::ContentReference(*this));
             }
 
-            IMPL_ID_ATTRIB(ID);
+            IMPL_ID_ATTRIB_EX(ID,ID,NULL);
             IMPL_STRING_ATTRIB(AffiliationOwnerID);
             IMPL_DATETIME_ATTRIB(ValidUntil,SAMLTIME_MAX);
             IMPL_DURATION_ATTRIB(CacheDuration,0);
@@ -2225,7 +2225,7 @@ namespace opensaml {
                     m_Signature->setContentReference(new opensaml::ContentReference(*this));
             }
 
-            IMPL_ID_ATTRIB(ID);
+            IMPL_ID_ATTRIB_EX(ID,ID,NULL);
             IMPL_STRING_ATTRIB(EntityID);
             IMPL_DATETIME_ATTRIB(ValidUntil,SAMLTIME_MAX);
             IMPL_DURATION_ATTRIB(CacheDuration,0);
@@ -2405,7 +2405,7 @@ namespace opensaml {
                     m_Signature->setContentReference(new opensaml::ContentReference(*this));
             }
 
-            IMPL_ID_ATTRIB(ID);
+            IMPL_ID_ATTRIB_EX(ID,ID,NULL);
             IMPL_STRING_ATTRIB(Name);
             IMPL_DATETIME_ATTRIB(ValidUntil,SAMLTIME_MAX);
             IMPL_DURATION_ATTRIB(CacheDuration,0);

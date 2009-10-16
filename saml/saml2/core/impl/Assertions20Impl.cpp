@@ -1588,7 +1588,7 @@ namespace opensaml {
 
             IMPL_XMLOBJECT_CLONE(Assertion);
             IMPL_STRING_ATTRIB(Version);
-            IMPL_ID_ATTRIB(ID);
+            IMPL_ID_ATTRIB_EX(ID,ID,NULL);
             IMPL_DATETIME_ATTRIB(IssueInstant,0);
             IMPL_TYPED_CHILD(Issuer);
             IMPL_TYPED_CHILD(Subject);
