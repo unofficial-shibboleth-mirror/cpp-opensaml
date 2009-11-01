@@ -77,9 +77,15 @@
 <targetPlatform id="org.eclipse.linuxtools.cdt.autotools.toolchain.targetPlatform.66175432" isAbstract="false" name="GNU Autotools Target Platform" superClass="org.eclipse.linuxtools.cdt.autotools.toolchain.targetPlatform"/>
 <builder buildPath="${workspace_loc:/cpp-opensaml2/build}" id="org.eclipse.linuxtools.cdt.autotools.toolchain.builder.858504417" keepEnvironmentInBuildfile="false" name="Autotools Makefile Generator" superClass="org.eclipse.linuxtools.cdt.autotools.toolchain.builder"/>
 <tool id="org.eclipse.linuxtools.cdt.autotools.gnu.toolchain.tool.configure.641724614" name="configure" superClass="org.eclipse.linuxtools.cdt.autotools.gnu.toolchain.tool.configure">
-<option id="org.eclipse.linuxtools.cdt.autotools.option.configure.symbols.1201952487" superClass="org.eclipse.linuxtools.cdt.autotools.option.configure.symbols" valueType="definedSymbols">
+<option id="org.eclipse.linuxtools.cdt.autotools.option.configure.symbols.1201952487" name="symbols" superClass="org.eclipse.linuxtools.cdt.autotools.option.configure.symbols" valueType="definedSymbols">
 <listOptionValue builtIn="false" value="SAML_API"/>
 <listOptionValue builtIn="false" value="SAML_DLLLOCAL"/>
+</option>
+<option id="org.eclipse.linuxtools.cdt.autotools.option.configure.includes.1775498412" name="includes" superClass="org.eclipse.linuxtools.cdt.autotools.option.configure.includes" valueType="includePath">
+<listOptionValue builtIn="false" value="&quot;${workspace_loc:/cpp-xmltooling}&quot;"/>
+<listOptionValue builtIn="false" value="&quot;C:\log4shib-1.0.3\include&quot;"/>
+<listOptionValue builtIn="false" value="&quot;C:\xerces-c-3.0.1-x86-windows-vc-9.0\include&quot;"/>
+<listOptionValue builtIn="false" value="&quot;C:\xml-security-c-1.5.1\include&quot;"/>
 </option>
 <inputType id="org.eclipse.linuxtools.cdt.autotools.inputType.configure.333195913" superClass="org.eclipse.linuxtools.cdt.autotools.inputType.configure"/>
 <inputType id="org.eclipse.linuxtools.cdt.autotools.inputType.configure1.1782120512" superClass="org.eclipse.linuxtools.cdt.autotools.inputType.configure1"/>
