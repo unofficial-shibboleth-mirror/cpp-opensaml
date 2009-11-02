@@ -11,13 +11,13 @@ BuildRoot:	%{_tmppath}/%{name}-%{version}-root
 %if 0%{?suse_version} > 1030
 BuildRequires:  libXerces-c-devel >= 2.8.0
 BuildRequires:  libxml-security-c-devel >= 1.4.0
-BuildRequires:  libxmltooling-devel >= 1.2
+BuildRequires:  libxmltooling-devel >= 1.3
 %{?_with_log4cpp:BuildRequires: liblog4cpp-devel >= 1.0}
 %{!?_with_log4cpp:BuildRequires: liblog4shib-devel}
 %else
 BuildRequires:  xerces%{?xercesver}-c-devel >= 2.8.0
 BuildRequires:  xml-security-c-devel >= 1.4.0
-BuildRequires:  xmltooling-devel >= 1.2
+BuildRequires:  xmltooling-devel >= 1.3
 %{?_with_log4cpp:BuildRequires: log4cpp-devel >= 1.0}
 %{!?_with_log4cpp:BuildRequires: log4shib-devel}
 %endif
@@ -64,13 +64,13 @@ Group: Development/Libraries
 %if 0%{?suse_version} > 1030
 Requires: libXerces-c-devel >= 2.8.0
 Requires: libxml-security-c-devel >= 1.4.0
-Requires: libxmltooling-devel >= 1.2
+Requires: libxmltooling-devel >= 1.3
 %{?_with_log4cpp:Requires: liblog4cpp-devel >= 1.0}
 %{!?_with_log4cpp:Requires: liblog4shib-devel}
 %else
 Requires: xerces%{?xercesver}-c-devel >= 2.8.0
 Requires: xml-security-c-devel >= 1.4.0
-Requires: xmltooling-devel >= 1.2
+Requires: xmltooling-devel >= 1.3
 %{?_with_log4cpp:Requires: log4cpp-devel >= 1.0}
 %{!?_with_log4cpp:Requires: log4shib-devel}
 %endif
