@@ -20,6 +20,7 @@
 #include <saml/saml1/core/Assertions.h>
 #include <saml/saml1/core/Protocols.h>
 #include <saml/saml1/binding/SAMLArtifactType0001.h>
+#include <xmltooling/security/SecurityHelper.h>
 #include <xmltooling/signature/Signature.h>
 #include <xmltooling/validation/ValidatorSuite.h>
 
@@ -106,7 +107,10 @@ public:
     }
 
     SAMLArtifact* generateSAML1Artifact(const EntityDescriptor* relyingParty) const {
-        return new SAMLArtifactType0001(SAMLConfig::getConfig().hashSHA1("https://idp.example.org/"));
+        static const char* providerIdStr = "https://idp.example.org/";
+        return new SAMLArtifactType0001(
+            SecurityHelper::doHash("SHA1", providerIdStr, strlen(providerIdStr), false)
+        );
     }
     
     saml2p::SAML2Artifact* generateSAML2Artifact(const EntityDescriptor* relyingParty) const {

@@ -19,6 +19,7 @@
 #include <saml/binding/ArtifactMap.h>
 #include <saml/saml2/core/Protocols.h>
 #include <saml/saml2/binding/SAML2ArtifactType0004.h>
+#include <xmltooling/security/SecurityHelper.h>
 #include <xmltooling/validation/ValidatorSuite.h>
 
 using namespace opensaml::saml2p;
@@ -111,7 +112,10 @@ public:
     }
     
     saml2p::SAML2Artifact* generateSAML2Artifact(const EntityDescriptor* relyingParty) const {
-        return new SAML2ArtifactType0004(SAMLConfig::getConfig().hashSHA1("https://idp.example.org/"),1);
+        static const char* providerIdStr = "https://idp.example.org/";
+        return new SAML2ArtifactType0004(
+            SecurityHelper::doHash("SHA1", providerIdStr, strlen(providerIdStr), false), 1
+            );
     }
     
     saml1p::Response* resolve(

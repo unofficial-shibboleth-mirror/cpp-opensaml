@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2009 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@
 #include <saml/saml2/binding/SAML2ArtifactType0004.h>
 #include <saml/saml2/metadata/Metadata.h>
 #include <saml/saml2/metadata/MetadataProvider.h>
+#include <xmltooling/security/SecurityHelper.h>
 
 using namespace opensaml::saml2md;
 using namespace opensaml::saml2p;
@@ -77,8 +78,11 @@ public:
         TSM_ASSERT("Role lookup failed", find_if(descriptor->getIDPSSODescriptors(), isValidForProtocol(supportedProtocol))!=NULL);
         TSM_ASSERT("Role lookup failed", find_if(descriptor->getIDPSSODescriptors(), isValidForProtocol(supportedProtocol2))!=NULL);
 
+        static const char* providerIdStr = "urn:mace:incommon:washington.edu";
         auto_ptr<SAML2ArtifactType0004> artifact(
-            new SAML2ArtifactType0004(SAMLConfig::getConfig().hashSHA1("urn:mace:incommon:washington.edu"),1)
+            new SAML2ArtifactType0004(
+                SecurityHelper::doHash("SHA1", providerIdStr, strlen(providerIdStr), false), 1
+                )
             );
         descriptor = metadataProvider->getEntityDescriptor(MetadataProvider::Criteria(artifact.get(),NULL,NULL,false)).first;
         TSM_ASSERT("Retrieved entity descriptor was null", descriptor!=NULL);

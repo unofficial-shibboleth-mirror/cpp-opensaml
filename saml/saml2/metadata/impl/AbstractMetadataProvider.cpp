@@ -31,6 +31,7 @@
 #include <xmltooling/XMLToolingConfig.h>
 #include <xmltooling/security/Credential.h>
 #include <xmltooling/security/KeyInfoResolver.h>
+#include <xmltooling/security/SecurityHelper.h>
 #include <xmltooling/util/Threads.h>
 #include <xmltooling/util/XMLHelper.h>
 
@@ -117,7 +118,7 @@ void AbstractMetadataProvider::index(EntityDescriptor* site, time_t validUntil, 
             }
             
             // Hash the ID.
-            m_sources.insert(sitemap_t::value_type(SAMLConfig::getConfig().hashSHA1(id.get(), true),site));
+            m_sources.insert(sitemap_t::value_type(SecurityHelper::doHash("SHA1", id.get(), strlen(id.get())),site));
                 
             // Load endpoints for type 0x0002 artifacts.
             const vector<ArtifactResolutionService*>& locs=const_cast<const IDPSSODescriptor*>(*i)->getArtifactResolutionServices();
@@ -131,7 +132,7 @@ void AbstractMetadataProvider::index(EntityDescriptor* site, time_t validUntil, 
         // SAML 2.0?
         if ((*i)->hasSupport(samlconstants::SAML20P_NS)) {
             // Hash the ID.
-            m_sources.insert(sitemap_t::value_type(SAMLConfig::getConfig().hashSHA1(id.get(), true),site));
+            m_sources.insert(sitemap_t::value_type(SecurityHelper::doHash("SHA1", id.get(), strlen(id.get())),site));
         }
     }
 }

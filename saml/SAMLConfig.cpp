@@ -52,6 +52,7 @@
 
 #include <xmltooling/logging.h>
 #include <xmltooling/XMLToolingConfig.h>
+#include <xmltooling/security/SecurityHelper.h>
 #include <xmltooling/signature/Signature.h>
 #include <xmltooling/util/NDC.h>
 #include <xmltooling/util/PathResolver.h>
@@ -217,29 +218,7 @@ XMLCh* SAMLInternalConfig::generateIdentifier()
 
 string SAMLInternalConfig::hashSHA1(const char* s, bool toHex)
 {
-    static char DIGITS[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
-
-    auto_ptr<XSECCryptoHash> hasher(XSECPlatformUtils::g_cryptoProvider->hashSHA1());
-    if (hasher.get()) {
-        unsigned char buf[21];
-        hasher->hash(reinterpret_cast<unsigned char*>(const_cast<char*>(s)),strlen(s));
-        if (hasher->finish(buf,20)==20) {
-            string ret;
-            if (toHex) {
-                for (unsigned int i=0; i<20; i++) {
-                    ret+=(DIGITS[((unsigned char)(0xF0 & buf[i])) >> 4 ]);
-                    ret+=(DIGITS[0x0F & buf[i]]);
-                }
-            }
-            else {
-                for (unsigned int i=0; i<20; i++) {
-                    ret+=buf[i];
-                }
-            }
-            return ret;
-        }
-    }
-    throw XMLSecurityException("Unable to generate SHA-1 hash.");
+    return SecurityHelper::doHash("SHA1", s, strlen(s), toHex);
 }
 
 SignableObject::SignableObject()

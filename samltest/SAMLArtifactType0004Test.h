@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2009 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 #include "internal.h"
 #include <saml/SAMLConfig.h>
 #include <saml/saml2/binding/SAML2ArtifactType0004.h>
+#include <xmltooling/security/SecurityHelper.h>
 
 using namespace opensaml::saml2p;
 using namespace opensaml;
@@ -32,7 +33,7 @@ public:
     }
     
     void testSAMLArtifactType0004(void) {
-        string sourceId = SAMLConfig::getConfig().hashSHA1(providerIdStr.c_str());
+        string sourceId = SecurityHelper::doHash("SHA1", providerIdStr.data(), providerIdStr.length(), false);
         auto_ptr<SAML2ArtifactType0004> artifact(new SAML2ArtifactType0004(sourceId,666));
         auto_ptr<SAML2Artifact> tempArtifact(dynamic_cast<SAML2Artifact*>(SAMLArtifact::parse(artifact->encode().c_str())));
         

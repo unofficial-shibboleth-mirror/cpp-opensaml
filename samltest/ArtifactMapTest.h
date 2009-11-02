@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2009 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@
 #include "saml/binding/ArtifactMap.h"
 #include <saml/saml2/binding/SAML2ArtifactType0004.h>
 #include <saml/saml2/core/Protocols.h>
+#include <xmltooling/security/SecurityHelper.h>
 
 using namespace opensaml::saml2p;
 using namespace opensaml;
@@ -40,7 +41,9 @@ public:
     void testArtifactMap(void) {
         auto_ptr<Response> response(ResponseBuilder::buildResponse());
 
-        SAML2ArtifactType0004 artifact(SAMLConfig::getConfig().hashSHA1(providerIdStr.c_str()),666,handle);
+        SAML2ArtifactType0004 artifact(
+            SecurityHelper::doHash("SHA1", providerIdStr.data(), providerIdStr.length(), false), 666, handle
+            );
         
         ArtifactMap* artifactMap = SAMLConfig::getConfig().getArtifactMap();
         artifactMap->storeContent(response.get(), &artifact, providerIdStr.c_str());

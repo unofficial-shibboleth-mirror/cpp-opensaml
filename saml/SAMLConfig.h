@@ -133,6 +133,7 @@ namespace opensaml {
         virtual XMLCh* generateIdentifier()=0;
         
         /**
+         * @deprecated
          * Generate the SHA-1 hash of a string
          * 
          * @param s     NULL-terminated string to hash
