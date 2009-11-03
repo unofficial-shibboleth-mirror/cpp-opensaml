@@ -1,4 +1,6 @@
 /Debug
 /Release
 /*.user
+/Makefile.in
+/Makefile
 /x64
