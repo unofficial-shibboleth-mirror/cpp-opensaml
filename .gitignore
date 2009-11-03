@@ -41,3 +41,5 @@
 /doxyfile
 /release
 /x64
+/Portfile
+/*.gz
