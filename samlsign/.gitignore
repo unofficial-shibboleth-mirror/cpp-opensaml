@@ -4,3 +4,6 @@
 /Makefile.in
 /Makefile
 /x64
+/samlsign
+/.libs
+/.deps
