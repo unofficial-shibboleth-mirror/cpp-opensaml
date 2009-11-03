@@ -26,6 +26,8 @@
 #include "binding/SecurityPolicyRule.h"
 #include "saml2/core/Assertions.h"
 
+#include <xercesc/util/XMLUniDefs.hpp>
+
 using namespace opensaml::saml2md;
 using namespace opensaml::saml2;
 using namespace opensaml;

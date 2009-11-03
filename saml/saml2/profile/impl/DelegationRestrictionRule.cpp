@@ -27,6 +27,7 @@
 #include "util/SAMLConstants.h"
 
 #include <ctime>
+#include <xercesc/util/XMLUniDefs.hpp>
 #include <xmltooling/logging.h>
 #include <xmltooling/XMLToolingConfig.h>
 

@@ -60,6 +60,8 @@ namespace opensaml {
             /** Caps the allowable cache duration of a metadata instance. */
             time_t m_maxCacheDuration;
 
+            using AbstractMetadataProvider::resolve;
+
             /**
              * Resolves a metadata instance using the supplied criteria.
              *

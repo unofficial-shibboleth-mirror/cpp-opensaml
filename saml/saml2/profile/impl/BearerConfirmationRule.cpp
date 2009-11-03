@@ -26,6 +26,7 @@
 #include "saml2/core/Assertions.h"
 #include "saml2/profile/SAML2AssertionPolicy.h"
 
+#include <xercesc/util/XMLUniDefs.hpp>
 #include <xmltooling/logging.h>
 #include <xmltooling/XMLToolingConfig.h>
 #include <xmltooling/io/HTTPRequest.h>

@@ -27,6 +27,7 @@
 #include "saml1/core/Assertions.h"
 #include "saml2/core/Assertions.h"
 
+#include <xercesc/util/XMLUniDefs.hpp>
 #include <xmltooling/logging.h>
 #include <xmltooling/XMLToolingConfig.h>
 #include <xmltooling/util/ParserPool.h>

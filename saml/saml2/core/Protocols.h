@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2009 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,8 @@
 #define __saml2_protocols_h__
 
 #include <saml/saml2/core/Assertions.h>
+
+#include <xercesc/util/XMLUniDefs.hpp>
 
 #define DECL_SAML2POBJECTBUILDER(cname) \
     DECL_XMLOBJECTBUILDER(SAML_API,cname,samlconstants::SAML20P_NS,samlconstants::SAML20P_PREFIX)
