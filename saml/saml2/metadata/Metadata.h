@@ -24,9 +24,11 @@
 #define __saml2_metadata_h__
 
 #include <saml/saml2/core/Assertions.h>
-#include <xmltooling/util/Predicates.h>
 
 #include <ctime>
+#include <xercesc/util/XMLUniDefs.hpp>
+#include <xmltooling/util/Predicates.h>
+
 
 #define DECL_SAML2MDOBJECTBUILDER(cname) \
     DECL_XMLOBJECTBUILDER(SAML_API,cname,samlconstants::SAML20MD_NS,samlconstants::SAML20MD_PREFIX)
