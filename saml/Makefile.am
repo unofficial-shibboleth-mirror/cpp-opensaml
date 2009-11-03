@@ -115,8 +115,8 @@ libsaml_la_SOURCES = \
 	binding/impl/SOAPClient.cpp \
 	binding/impl/XMLSigningRule.cpp \
 	profile/impl/AudienceRestrictionRule.cpp \
-    profile/impl/ConditionsRule.cpp \
-    profile/impl/IgnoreRule.cpp \
+	profile/impl/ConditionsRule.cpp \
+	profile/impl/IgnoreRule.cpp \
 	saml1/core/impl/AssertionsImpl.cpp \
 	saml1/core/impl/AssertionsSchemaValidators.cpp \
 	saml1/core/impl/ProtocolsImpl.cpp \
@@ -145,7 +145,7 @@ libsaml_la_SOURCES = \
 	saml2/metadata/impl/DynamicMetadataProvider.cpp \
 	saml2/metadata/impl/EntityRoleMetadataFilter.cpp \
 	saml2/metadata/impl/MetadataCredentialContext.cpp \
-    saml2/metadata/impl/MetadataCredentialCriteria.cpp \
+	saml2/metadata/impl/MetadataCredentialCriteria.cpp \
 	saml2/metadata/impl/MetadataImpl.cpp \
 	saml2/metadata/impl/MetadataProvider.cpp \
 	saml2/metadata/impl/MetadataSchemaValidators.cpp \
@@ -159,9 +159,9 @@ libsaml_la_SOURCES = \
 	saml2/binding/impl/SAML2ArtifactType0004.cpp \
 	saml2/binding/impl/SAML2ArtifactDecoder.cpp \
 	saml2/binding/impl/SAML2ArtifactEncoder.cpp \
-    saml2/binding/impl/SAML2ECPDecoder.cpp \
-    saml2/binding/impl/SAML2ECPEncoder.cpp \
-    saml2/binding/impl/SAML2MessageDecoder.cpp \
+	saml2/binding/impl/SAML2ECPDecoder.cpp \
+	saml2/binding/impl/SAML2ECPEncoder.cpp \
+	saml2/binding/impl/SAML2MessageDecoder.cpp \
 	saml2/binding/impl/SAML2POSTDecoder.cpp \
 	saml2/binding/impl/SAML2POSTEncoder.cpp \
 	saml2/binding/impl/SAML2Redirect.cpp \
@@ -172,8 +172,8 @@ libsaml_la_SOURCES = \
 	saml2/binding/impl/SAML2SOAPClient.cpp \
 	saml2/profile/impl/Assertion20Validator.cpp \
 	saml2/profile/impl/BrowserSSOProfile20Validator.cpp \
-    saml2/profile/impl/BearerConfirmationRule.cpp \
-    saml2/profile/impl/DelegationRestrictionRule.cpp \
+	saml2/profile/impl/BearerConfirmationRule.cpp \
+	saml2/profile/impl/DelegationRestrictionRule.cpp \
 	saml2/profile/impl/SAML2AssertionPolicy.cpp \
 	encryption/EncryptedKeyResolver.cpp \
 	signature/ContentReference.cpp \
@@ -183,7 +183,7 @@ libsaml_la_SOURCES = \
 
 # this is different from the project version
 # http://sources.redhat.com/autobook/autobook/autobook_91.html
-libsaml_la_LDFLAGS = -version-info 5:0:0
+libsaml_la_LDFLAGS = -version-info 6:0:0
 
 install-exec-hook:
 	for la in $(lib_LTLIBRARIES) ; do rm -f $(DESTDIR)$(libdir)/$$la ; done
