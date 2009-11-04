@@ -108,12 +108,12 @@ long SAML1POSTEncoder::encode(
     xmltooling::NDC ndc("encode");
 #endif
     Category& log = Category::getInstance(SAML_LOGCAT".MessageEncoder.SAML1POST");
+    log.debug("validating input");
 
     TemplateEngine* engine = XMLToolingConfig::getConfig().getTemplateEngine();
-    if (!engine)
-        throw BindingException("Encoding response using POST requires a TemplateEngine instance.");
-    
-    log.debug("validating input");
+    if (!engine || !destination)
+        throw BindingException("Encoding response using POST requires a TemplateEngine instance and a destination.");
+    HTTPResponse::sanitizeURL(destination);
     if (xmlObject->getParent())
         throw BindingException("Cannot encode XML content with parent.");
     Response* response = dynamic_cast<Response*>(xmlObject);
