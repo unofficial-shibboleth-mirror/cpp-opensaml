@@ -116,8 +116,9 @@ XMLObject* SAML2ArtifactDecoder::decode(
     // Check the type.
     auto_ptr<SAML2Artifact> artifact2(dynamic_cast<SAML2Artifact*>(artifact));
     if (!artifact2.get()) {
-        throw BindingException("Artifact binding requires SAML 2.0 artifact.");
         delete artifact;
+        log.error("wrong artifact type");
+        throw BindingException("Artifact binding requires SAML 2.0 artifact.");
     }
 
     log.debug("attempting to determine source of artifact...");
@@ -158,8 +159,10 @@ XMLObject* SAML2ArtifactDecoder::decode(
 
     // Now extract details from the payload and check that message.
     XMLObject* payload = response->getPayload();
-    if (!payload)
+    if (!payload) {
+        log.error("ArtifactResponse message did not contain a protocol message");
         throw BindingException("ArtifactResponse message did not contain a protocol message.");
+    }
     extractMessageDetails(*payload, genericRequest, samlconstants::SAML20P_NS, policy);
     policy.evaluate(*payload, &genericRequest);
 
