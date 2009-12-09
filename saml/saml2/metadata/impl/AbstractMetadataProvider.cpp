@@ -28,6 +28,7 @@
 #include "saml2/metadata/MetadataCredentialCriteria.h"
 
 #include <xercesc/util/XMLUniDefs.hpp>
+#include <xmltooling/logging.h>
 #include <xmltooling/XMLToolingConfig.h>
 #include <xmltooling/security/Credential.h>
 #include <xmltooling/security/KeyInfoResolver.h>
@@ -36,6 +37,7 @@
 #include <xmltooling/util/XMLHelper.h>
 
 using namespace opensaml::saml2md;
+using namespace xmltooling::logging;
 using namespace xmltooling;
 using namespace std;
 using opensaml::SAMLArtifact;
@@ -174,9 +176,17 @@ const EntitiesDescriptor* AbstractMetadataProvider::getEntitiesDescriptor(const 
         if (now < i->second->getValidUntilEpoch())
             return i->second;
     
-    if (!strict && range.first!=range.second)
-        return range.first->second;
-        
+    if (range.first != range.second) {
+        Category& log = Category::getInstance(SAML_LOGCAT".MetadataProvider");
+        if (strict) {
+            log.warn("ignored expired metadata group (%s)", range.first->first.c_str());
+        }
+        else {
+            log.info("no valid metadata found, returning expired metadata group (%s)", range.first->first.c_str());
+            return range.first->second;
+        }
+    }
+
     return NULL;
 }
 
@@ -206,9 +216,17 @@ pair<const EntityDescriptor*,const RoleDescriptor*> AbstractMetadataProvider::ge
         }
     }
     
-    if (!result.first && !criteria.validOnly && range.first!=range.second)
-        result.first = range.first->second;
-        
+    if (!result.first && range.first!=range.second) {
+        Category& log = Category::getInstance(SAML_LOGCAT".MetadataProvider");
+        if (criteria.validOnly) {
+            log.warn("ignored expired metadata instance for (%s)", range.first->first.c_str());
+        }
+        else {
+            log.info("no valid metadata found, returning expired instance for (%s)", range.first->first.c_str());
+            result.first = range.first->second;
+        }
+    }
+
     if (result.first && criteria.role) {
         result.second = result.first->getRoleDescriptor(*criteria.role, criteria.protocol);
         if (!result.second && criteria.protocol2)
