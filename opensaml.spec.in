@@ -1,4 +1,4 @@
-Name:		@PACKAGE@
+Name:		@PACKAGE_NAME@
 Version:	@PACKAGE_VERSION@
 Release:	1
 Summary:    OpenSAML SAML library
@@ -39,12 +39,12 @@ Markup Language Specification. It contains a set of open source C++ classes
 that support the SAML 1.0, 1.1, and 2.0 specifications.
 
 %if 0%{?suse_version} > 1030
-%package -n libsaml6
+%package -n libsaml7
 Summary:    OpenSAML SAML library
 Group:      Development/Libraries
-Provides:   @PACKAGE@ = %{version}
+Provides:   @PACKAGE_NAME@ = %{version}
 
-%description -n libsaml6
+%description -n libsaml7
 OpenSAML is an open source implementation of the OASIS Security Assertion
 Markup Language Specification. It contains a set of open source C++ classes
 that support the SAML 1.0, 1.1, and 2.0 specifications.
@@ -54,7 +54,7 @@ This package contains just the shared library.
 
 %if 0%{?suse_version} > 1030
 %package -n libsaml-devel
-Requires: libsaml6 = %version
+Requires: libsaml7 = %version
 %else
 %package devel
 Requires: %name = %version
@@ -107,7 +107,7 @@ This package includes files needed for development with OpenSAML.
 
 %ifnos solaris2.8 solaris2.9 solaris2.10
 %if 0%{?suse_version} > 1030
-%post -n libsaml6 -p /sbin/ldconfig
+%post -n libsaml7 -p /sbin/ldconfig
 %else
 %post -p /sbin/ldconfig
 %endif
@@ -115,7 +115,7 @@ This package includes files needed for development with OpenSAML.
 
 %ifnos solaris2.8 solaris2.9 solaris2.10
 %if 0%{?suse_version} > 1030
-%postun -n libsaml6 -p /sbin/ldconfig
+%postun -n libsaml7 -p /sbin/ldconfig
 %else
 %postun -p /sbin/ldconfig
 %endif
@@ -125,12 +125,12 @@ This package includes files needed for development with OpenSAML.
 %defattr(-,root,root,-)
 %{_bindir}/samlsign
 %if 0%{?suse_version} > 1030
-%files -n libsaml6
+%files -n libsaml7
 %defattr(-,root,root,-)
 %endif
 %{_libdir}/libsaml.so.*
-%dir %{_datadir}/xml/@PACKAGE@
-%{_datadir}/xml/@PACKAGE@/*
+%dir %{_datadir}/xml/@PACKAGE_NAME@-@PACKAGE_VERSION@
+%{_datadir}/xml/@PACKAGE_NAME@-@PACKAGE_VERSION@/*
 
 %if 0%{?suse_version} > 1030
 %files -n libsaml-devel
@@ -140,9 +140,13 @@ This package includes files needed for development with OpenSAML.
 %defattr(-,root,root,-)
 %{_includedir}/*
 %{_libdir}/*.so
+%{_libdir}/pkgconfig/@PACKAGE_NAME@.pc
 %doc %{pkgdocdir}
 
 %changelog
+* Fri Dec 25 2009   Scott Cantor  <cantor.2@osu.edu>  - 2.4-1
+- Add pkg-config support.
+
 * Mon Aug 31 2009   Scott Cantor  <cantor.2@osu.edu>  - 2.3-1
 - Bump soname for SUSE packaging.
 

@@ -19,7 +19,10 @@ else
 all-local:
 endif
 
-GENFILES = opensaml.spec pkginfo Portfile
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = @PACKAGE_NAME@.pc
+
+GENFILES = @PACKAGE_NAME@.spec pkginfo Portfile
 
 EXTRA_DIST = $(DX_CONFIG) \
 	cpp-opensaml2.sln \
