@@ -66,40 +66,30 @@ void ContentReference::createReferences(DSIGSignature* sig)
     
     ref->appendEnvelopedSignatureTransform();
     DSIGTransformC14n* c14n=ref->appendCanonicalizationTransform(m_c14n ? m_c14n : DSIGConstants::s_unicodeStrURIEXC_C14N_NOC);
+
     if (!m_c14n || m_c14n == DSIGConstants::s_unicodeStrURIEXC_C14N_NOC || m_c14n == DSIGConstants::s_unicodeStrURIEXC_C14N_COM) {
-        addPrefixes(m_signableObject);
-#ifdef HAVE_GOOD_STL
+        // Compute inclusive prefix set.
+        set<xstring> prefix_set;
+        XMLHelper::getNonVisiblyUsedPrefixes(m_signableObject, prefix_set);
+        prefix_set.insert(m_prefixes.begin(), m_prefixes.end());
+
+        // Build up the string of prefixes.
         xstring prefixes;
-        for (set<xstring>::const_iterator p = m_prefixes.begin(); p!=m_prefixes.end(); ++p)
-            prefixes += *p + chSpace;
+        static const XMLCh _default[] = { chPound, chLatin_d, chLatin_e, chLatin_f, chLatin_a, chLatin_u, chLatin_l, chLatin_t, chNull };
+        for (set<xstring>::const_iterator p = prefix_set.begin(); p != prefix_set.end(); ++p) {
+            prefixes += (p->empty() ? _default : p->c_str());
+            prefixes += chSpace;
+        }
         if (!prefixes.empty()) {
             prefixes.erase(prefixes.begin() + prefixes.size() - 1);
             c14n->setInclusiveNamespaces(XMLString::replicate(prefixes.c_str()));
         }
-#else
-        for (set<string>::const_iterator p = m_prefixes.begin(); p!=m_prefixes.end(); ++p)
-            c14n->addInclusiveNamespace(p->c_str());
-#endif
     }
 }
 
 void ContentReference::addInclusivePrefix(const XMLCh* prefix)
 {
-    static const XMLCh _default[] = { chPound, chLatin_d, chLatin_e, chLatin_f, chLatin_a, chLatin_u, chLatin_l, chLatin_t, chNull };
-
-#ifdef HAVE_GOOD_STL
-    if (prefix && *prefix)
-        m_prefixes.insert(prefix);
-    else
-        m_prefixes.insert(_default);
-#else
-    if (prefix && *prefix) {
-        auto_ptr_char p(prefix);
-        m_prefixes.insert(p.get());
-    }
-    else
-        m_prefixes.insert("#default");
-#endif
+    m_prefixes.insert(prefix ? prefix : &chNull);
 }
 
 void ContentReference::setDigestAlgorithm(const XMLCh* digest)
@@ -110,23 +100,4 @@ void ContentReference::setDigestAlgorithm(const XMLCh* digest)
 void ContentReference::setCanonicalizationMethod(const XMLCh* c14n)
 {
     m_c14n = c14n;
-}
-
-void ContentReference::addPrefixes(const std::set<Namespace>& namespaces)
-{
-    for (set<Namespace>::const_iterator n = namespaces.begin(); n!=namespaces.end(); ++n) {
-        // Check for xmlns:xml.
-        if (!XMLString::equals(n->getNamespacePrefix(), xmlconstants::XML_PREFIX) || !XMLString::equals(n->getNamespaceURI(), xmlconstants::XML_NS))
-            addInclusivePrefix(n->getNamespacePrefix());
-    }
-}
-
-void ContentReference::addPrefixes(const XMLObject& xmlObject)
-{
-    addPrefixes(xmlObject.getNamespaces());
-    const list<XMLObject*>& children = xmlObject.getOrderedChildren();
-    for (list<XMLObject*>::const_iterator child = children.begin(); child!=children.end(); ++child) {
-        if (*child)
-            addPrefixes(*(*child));
-    }
 }

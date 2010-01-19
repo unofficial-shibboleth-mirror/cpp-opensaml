@@ -5,17 +5,15 @@
 <ds:Reference URI="#rident">
 <ds:Transforms>
 <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
-<ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#">
-<ec:InclusiveNamespaces xmlns:ec="http://www.w3.org/2001/10/xml-exc-c14n#" PrefixList="ds saml samlp"/>
-</ds:Transform>
+<ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
 </ds:Transforms>
 <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
-<ds:DigestValue>DZzCmg8AWJp4jG9J7OGIZ72oSlE=</ds:DigestValue>
+<ds:DigestValue>LLd/E9wNLNBk2y3QM5Hnus2bfbU=</ds:DigestValue>
 </ds:Reference>
 </ds:SignedInfo>
-<ds:SignatureValue>CkkbbVTtfN4Ib5/tydsNYKob2vBM0aPNyVre4iCWaxMpCqeuyLzsBQI+H9a0YfZX
-ykSBgP+mmPku5U1Lu3zn9+X5JK4lztDH4VsQteXJIRUnHipWZQSOeso8Wq5JQ/+0
-Qrp+HPi+9L8K1FGYJ5/Wfl2XlMSET/bM4jk6GiykFiw=</ds:SignatureValue>
+<ds:SignatureValue>sJJgyDky3ddp2PGAgBEHAl3BhPs9uI8gJSeb9NQ3C/frkX8S/maAWaX49nzncX9s
+8npru0M8CvluArgE7EtPAPoSfcT+M1nmpqn5vikkMN1V6rd7ogwTik9A/c7zv+E7
+OZwJtSDDBV7dwB3645iJUHW4SGxRyJUOiaAKHf7thwc=</ds:SignatureValue>
 <ds:KeyInfo><ds:KeyName>sp.example.org</ds:KeyName><ds:X509Data><ds:X509SubjectName>CN=sp.example.org,O=Internet2,C=US</ds:X509SubjectName><ds:X509Certificate>MIICjzCCAfigAwIBAgIJAKk8t1hYcMkhMA0GCSqGSIb3DQEBBAUAMDoxCzAJBgNV
 BAYTAlVTMRIwEAYDVQQKEwlJbnRlcm5ldDIxFzAVBgNVBAMTDnNwLmV4YW1wbGUu
 b3JnMB4XDTA1MDYyMDE1NDgzNFoXDTMyMTEwNTE1NDgzNFowOjELMAkGA1UEBhMC
@@ -41,17 +39,15 @@ AuthenticationMethod="method"><saml:Subject><saml:NameIdentifier>John Doe</saml:
 <ds:Reference URI="#aident">
 <ds:Transforms>
 <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
-<ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#">
-<ec:InclusiveNamespaces xmlns:ec="http://www.w3.org/2001/10/xml-exc-c14n#" PrefixList="ds saml"/>
-</ds:Transform>
+<ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
 </ds:Transforms>
 <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
 <ds:DigestValue>/owFROXYYru5+/j0TpHEz+hjXqY=</ds:DigestValue>
 </ds:Reference>
 </ds:SignedInfo>
-<ds:SignatureValue>xttzgmYBtjqoxeKRkScW6dIkE5pGyBeTcajAevaquJeAKrRcagu2on/4Apq5xsse
-tgdkQnMUV+yPHKw+t0tXGUJCnL286/ePGdz2TAVIg5idT7H6TxFLgUbCO4xoKH4h
-zGQjxxPZvXbb7z9XTAqIkyW1QbaC20i+IOkk1ZQiBEU=</ds:SignatureValue>
+<ds:SignatureValue>d4SsRgDSjboTRA2YUD68TPp+17AqRmxbY/LrWJhueIC/JY+Ct7+Fd6bugUXliIeD
+NVRDACsEB7PqYWZ99+Ecf8XAmQYCw5elj8mWxPp0o+UVHtBZOR2bC+/YjNitSM+x
+G/F3JgZqfunUcg7mcj6WEAUt4pjKhjaTY8Z7QJltdKc=</ds:SignatureValue>
 <ds:KeyInfo><ds:KeyName>sp.example.org</ds:KeyName><ds:X509Data><ds:X509SubjectName>CN=sp.example.org,O=Internet2,C=US</ds:X509SubjectName><ds:X509Certificate>MIICjzCCAfigAwIBAgIJAKk8t1hYcMkhMA0GCSqGSIb3DQEBBAUAMDoxCzAJBgNV
 BAYTAlVTMRIwEAYDVQQKEwlJbnRlcm5ldDIxFzAVBgNVBAMTDnNwLmV4YW1wbGUu
 b3JnMB4XDTA1MDYyMDE1NDgzNFoXDTMyMTEwNTE1NDgzNFowOjELMAkGA1UEBhMC

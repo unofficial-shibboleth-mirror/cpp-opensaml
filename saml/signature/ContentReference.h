@@ -95,15 +95,8 @@ namespace opensaml {
         void setCanonicalizationMethod(const XMLCh* c14n);
         
     private:
-        void addPrefixes(const std::set<xmltooling::Namespace>& namespaces);
-        void addPrefixes(const xmltooling::XMLObject& xmlObject);
-
         const SignableObject& m_signableObject;
-#ifdef HAVE_GOOD_STL
         std::set<xmltooling::xstring> m_prefixes;
-#else
-        std::set<std::string> m_prefixes;
-#endif
         const XMLCh* m_digest;
         const XMLCh* m_c14n;
     };
