@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2009 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -164,7 +164,18 @@ XMLObject* EncryptedElementType::decrypt(const CredentialResolver& credResolver,
         if (plaintext->getNodeType()==DOMNode::ELEMENT_NODE) {
             // Import the tree into a new Document that we can bind to the unmarshalled object.
             XercesJanitor<DOMDocument> newdoc(XMLToolingConfig::getConfig().getParser().newDocument());
-            DOMElement* treecopy = static_cast<DOMElement*>(newdoc->importNode(plaintext, true));
+            DOMElement* treecopy;
+            try {
+                treecopy = static_cast<DOMElement*>(newdoc->importNode(plaintext, true));
+            }
+            catch (XMLException& ex) {
+                frag->release();
+                auto_ptr_char temp(ex.getMessage());
+                throw DecryptionException(
+                    string("Error importing decypted DOM into new document: ") + (temp.get() ? temp.get() : "no message")
+                    );
+            }
+            frag->release();
             newdoc->appendChild(treecopy);
             auto_ptr<XMLObject> ret(XMLObjectBuilder::buildOneFromElement(treecopy, true));
             newdoc.release();
