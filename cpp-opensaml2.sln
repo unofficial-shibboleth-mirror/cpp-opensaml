@@ -85,6 +85,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{08D28DE8-0
 		postinstall = postinstall
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Doc", "Doc", "{91D9712D-5D39-42BE-A320-4B55A90D9610}"
+	ProjectSection(SolutionItems) = preProject
+		doc\LICENSE.txt = doc\LICENSE.txt
+		doc\LOG4CPP.LICENSE = doc\LOG4CPP.LICENSE
+		doc\Makefile.am = doc\Makefile.am
+		doc\NOTICE.txt = doc\NOTICE.txt
+		doc\README.txt = doc\README.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
