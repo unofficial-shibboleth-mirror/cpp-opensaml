@@ -332,6 +332,10 @@
 	</References>
 	<Files>
 		<File
+			RelativePath=".\Makefile.am"
+			>
+		</File>
+		<File
 			RelativePath=".\samlsign.cpp"
 			>
 		</File>
