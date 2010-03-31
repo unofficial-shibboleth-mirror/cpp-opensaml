@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2010 Internet2
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,12 +21,15 @@
  */
 
 #include "internal.h"
+#include "binding/SAMLArtifact.h"
 #include "saml2/metadata/Metadata.h"
 #include "saml2/metadata/MetadataFilter.h"
 #include "saml2/metadata/AbstractMetadataProvider.h"
 
+#include <fstream>
 #include <xmltooling/util/NDC.h>
 #include <xmltooling/util/ReloadableXMLFile.h>
+#include <xmltooling/util/Threads.h>
 #include <xmltooling/validation/ValidatorSuite.h>
 
 using namespace opensaml::saml2md;
@@ -54,7 +57,7 @@ namespace opensaml {
             }
 
             void init() {
-                load(); // guarantees an exception or the metadata is loaded
+                background_load(); // guarantees an exception or the metadata is loaded
             }
 
             const XMLObject* getMetadata() const {
@@ -62,7 +65,7 @@ namespace opensaml {
             }
 
         protected:
-            pair<bool,DOMElement*> load();
+            pair<bool,DOMElement*> background_load();
 
         private:
             using AbstractMetadataProvider::index;
@@ -84,8 +87,11 @@ namespace opensaml {
     #pragma warning( pop )
 #endif
 
-pair<bool,DOMElement*> XMLMetadataProvider::load()
+pair<bool,DOMElement*> XMLMetadataProvider::background_load()
 {
+    // Turn off auto-backup so we can filter first.
+    m_backupIndicator = false;
+
     // Load from source using base class.
     pair<bool,DOMElement*> raw = ReloadableXMLFile::load();
 
@@ -110,11 +116,48 @@ pair<bool,DOMElement*> XMLMetadataProvider::load()
         throw MetadataException("Metadata instance failed manual validation checking.");
     }
 
-    doFilters(*xmlObject.get());
+    // If the backup indicator is flipped, then this was a remote load and we need a backup.
+    // This is the best place to take a backup, since it's superficially "correct" metadata.
+    string backupKey;
+    if (m_backupIndicator) {
+        // We compute a random filename extension to the "real" location.
+        SAMLConfig::getConfig().generateRandomBytes(backupKey, 2);
+        backupKey = m_backing + '.' + SAMLArtifact::toHex(backupKey);
+        m_log.debug("backing up remote metadata resource to (%s)", backupKey.c_str());
+        try {
+            ofstream backer(backupKey.c_str());
+            backer << *raw.second->getOwnerDocument();
+        }
+        catch (exception& ex) {
+            m_log.crit("exception while backing up metadata: %s", ex.what());
+            backupKey.erase();
+        }
+    }
+
+    try {
+        doFilters(*xmlObject.get());
+    }
+    catch (exception&) {
+        if (!backupKey.empty())
+            remove(backupKey.c_str());
+        throw;
+    }
+
+    if (!backupKey.empty()) {
+        m_log.debug("committing backup file to permanent location (%s)", m_backing.c_str());
+        Locker locker(getBackupLock());
+        remove(m_backing.c_str());
+        if (rename(backupKey.c_str(), m_backing.c_str()) != 0)
+            m_log.crit("unable to rename metadata backup file");
+    }
+
     xmlObject->releaseThisAndChildrenDOM();
     xmlObject->setDocument(NULL);
 
-    // Swap it in.
+    // Swap it in after acquiring write lock if necessary.
+    if (m_lock)
+        m_lock->wrlock();
+    SharedLock locker(m_lock, false);
     bool changed = m_object!=NULL;
     delete m_object;
     m_object = xmlObject.release();
@@ -122,7 +165,7 @@ pair<bool,DOMElement*> XMLMetadataProvider::load()
     if (changed)
         emitChangeEvent();
 
-    // If a remote resource, reduce the reload interval if cacheDuration is set.
+    // If a remote resource, adjust the reload interval if cacheDuration is set.
     if (!m_local) {
         const CacheableSAMLObject* cacheable = dynamic_cast<const CacheableSAMLObject*>(m_object);
         if (cacheable && cacheable->getCacheDuration() && cacheable->getCacheDurationEpoch() < m_maxCacheDuration)
@@ -136,18 +179,11 @@ pair<bool,DOMElement*> XMLMetadataProvider::load()
 
 void XMLMetadataProvider::index()
 {
-    time_t exp = SAMLTIME_MAX;
-
     clearDescriptorIndex();
     EntitiesDescriptor* group=dynamic_cast<EntitiesDescriptor*>(m_object);
     if (group) {
-        if (!m_local && group->getCacheDuration())
-            exp = time(NULL) + group->getCacheDurationEpoch();
-        AbstractMetadataProvider::index(group, exp);
+        AbstractMetadataProvider::index(group, SAMLTIME_MAX);
         return;
     }
-    EntityDescriptor* site=dynamic_cast<EntityDescriptor*>(m_object);
-    if (!m_local && site->getCacheDuration())
-        exp = time(NULL) + site->getCacheDurationEpoch();
-    AbstractMetadataProvider::index(site, exp);
+    AbstractMetadataProvider::index(dynamic_cast<EntityDescriptor*>(m_object), SAMLTIME_MAX);
 }
