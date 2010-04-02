@@ -53,12 +53,8 @@ namespace opensaml {
                     m_object(NULL), m_maxCacheDuration(m_reloadInterval) {
             }
             virtual ~XMLMetadataProvider() {
-                if (m_lock)
-                    m_lock->wrlock();
+                shutdown();
                 delete m_object;
-                m_object = NULL;
-                if (m_lock)
-                    m_lock->unlock();
             }
 
             void init() {
