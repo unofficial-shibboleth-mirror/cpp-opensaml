@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2009 Internet2
+ *  Copyright 2001-2010 Internet2
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -97,10 +97,16 @@ void DynamicMetadataProvider::init()
 
 pair<const EntityDescriptor*,const RoleDescriptor*> DynamicMetadataProvider::getEntityDescriptor(const Criteria& criteria) const
 {
-    // Check cache while holding the read lock.
     pair<const EntityDescriptor*,const RoleDescriptor*> entity = AbstractMetadataProvider::getEntityDescriptor(criteria);
-    if (entity.first)   // even if the role isn't found, we're done
-        return entity;
+    if (entity.first) {
+        // Check to see if we're within the caching interval.
+        cachemap_t::iterator cit = m_cacheMap.find(entity.first->getEntityID());
+        if (cit != m_cacheMap.end()) {
+            if (time(NULL) <= cit->second)
+                return entity;
+            m_cacheMap.erase(cit);
+        }
+    }
 
     string name;
     if (criteria.entityID_ascii)
@@ -116,7 +122,10 @@ pair<const EntityDescriptor*,const RoleDescriptor*> DynamicMetadataProvider::get
         return entity;
 
     Category& log = Category::getInstance(SAML_LOGCAT".MetadataProvider.Dynamic");
-    log.info("resolving metadata for (%s)", name.c_str());
+    if (entity.first)
+        log.info("metadata for (%s) is beyond caching interval, attempting to refresh", name.c_str());
+    else
+        log.info("resolving metadata for (%s)", name.c_str());
 
     try {
         // Try resolving it.
@@ -148,7 +157,6 @@ pair<const EntityDescriptor*,const RoleDescriptor*> DynamicMetadataProvider::get
         doFilters(*entity2.get());
 
         time_t now = time(NULL);
-
         if (entity2->getValidUntil() && entity2->getValidUntilEpoch() < now + 60)
             throw MetadataException("Metadata was already invalid at the time of retrieval.");
 
@@ -161,12 +169,15 @@ pair<const EntityDescriptor*,const RoleDescriptor*> DynamicMetadataProvider::get
         // Notify observers.
         emitChangeEvent();
 
-        // Make sure we clear out any existing copies, including stale metadata or if somebody snuck in.
-        time_t exp = m_maxCacheDuration;
+        // Note the cache duration.
+        time_t cacheExp = m_maxCacheDuration;
         if (entity2->getCacheDuration())
-            exp = min(m_maxCacheDuration, entity2->getCacheDurationEpoch());
-        exp += now;
-        index(entity2.release(), exp, true);
+            cacheExp = min(m_maxCacheDuration, entity2->getCacheDurationEpoch());
+        cacheExp = max(cacheExp, 60);
+        m_cacheMap[entity2->getEntityID()] = time(NULL) + cacheExp;
+
+        // Make sure we clear out any existing copies, including stale metadata or if somebody snuck in.
+        index(entity2.release(), SAMLTIME_MAX, true);
 
         // Downgrade back to a read lock.
         m_lock->unlock();
@@ -174,6 +185,16 @@ pair<const EntityDescriptor*,const RoleDescriptor*> DynamicMetadataProvider::get
     }
     catch (exception& e) {
         log.error("error while resolving entityID (%s): %s", name.c_str(), e.what());
+        // This will return entries that are beyond their cache period,
+        // but not beyond their validity unless that criteria option was set.
+        // If it is a cache-expired entry, bump the cache period to prevent retries.
+        if (entity.first) {
+            time_t cacheExp = 600;
+            if (entity.first->getCacheDuration())
+                cacheExp = min(m_maxCacheDuration, entity.first->getCacheDurationEpoch());
+            cacheExp = max(cacheExp, 60);
+            m_cacheMap[entity.first->getEntityID()] = time(NULL) + cacheExp;
+        }
         return entity;
     }
 

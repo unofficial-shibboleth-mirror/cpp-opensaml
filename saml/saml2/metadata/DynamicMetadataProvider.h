@@ -70,6 +70,8 @@ namespace opensaml {
 
         private:
             mutable xmltooling::RWLock* m_lock;
+            typedef std::map<xmltooling::xstring,time_t> cachemap_t;
+            mutable cachemap_t m_cacheMap;
         };
 
     };
