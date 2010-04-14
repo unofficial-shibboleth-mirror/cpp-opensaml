@@ -66,7 +66,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="..\..\cpp-xmltooling\$(ConfigurationName)\xmltooling1D.lib xerces-c_3D.lib xsec_1D.lib log4shib1D.lib"
+				AdditionalDependencies="..\..\cpp-xmltooling\$(ConfigurationName)\xmltooling1D.lib xerces-c_3D.lib xsec_1D.lib log4shib1D.lib zlib1d.lib"
 				OutputFile="$(OutDir)\$(ProjectName)2_4D.dll"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
@@ -146,7 +146,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="..\..\cpp-xmltooling\$(PlatformName)\$(ConfigurationName)\xmltooling1D.lib xerces-c_3D.lib xsec_1D.lib log4shib1D.lib"
+				AdditionalDependencies="..\..\cpp-xmltooling\$(PlatformName)\$(ConfigurationName)\xmltooling1D.lib xerces-c_3D.lib xsec_1D.lib log4shib1D.lib zlib1d.lib"
 				OutputFile="$(OutDir)\$(ProjectName)2_4D.dll"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
@@ -221,7 +221,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="..\..\cpp-xmltooling\$(ConfigurationName)\xmltooling1.lib xerces-c_3.lib xsec_1.lib log4shib1.lib"
+				AdditionalDependencies="..\..\cpp-xmltooling\$(ConfigurationName)\xmltooling1.lib xerces-c_3.lib xsec_1.lib log4shib1.lib zlib1.lib"
 				OutputFile="$(OutDir)\$(ProjectName)2_4.dll"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
@@ -299,7 +299,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="..\..\cpp-xmltooling\$(PlatformName)\$(ConfigurationName)\xmltooling1.lib xerces-c_3.lib xsec_1.lib log4shib1.lib"
+				AdditionalDependencies="..\..\cpp-xmltooling\$(PlatformName)\$(ConfigurationName)\xmltooling1.lib xerces-c_3.lib xsec_1.lib log4shib1.lib zlib1.lib"
 				OutputFile="$(OutDir)\$(ProjectName)2_4.dll"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
@@ -799,46 +799,6 @@
 				</Filter>
 			</Filter>
 			<Filter
-				Name="zlib"
-				>
-				<File
-					RelativePath=".\zlib\adler32.c"
-					>
-				</File>
-				<File
-					RelativePath=".\zlib\compress.c"
-					>
-				</File>
-				<File
-					RelativePath=".\zlib\crc32.c"
-					>
-				</File>
-				<File
-					RelativePath=".\zlib\deflate.c"
-					>
-				</File>
-				<File
-					RelativePath=".\zlib\inffast.c"
-					>
-				</File>
-				<File
-					RelativePath=".\zlib\inflate.c"
-					>
-				</File>
-				<File
-					RelativePath=".\zlib\inftrees.c"
-					>
-				</File>
-				<File
-					RelativePath=".\zlib\trees.c"
-					>
-				</File>
-				<File
-					RelativePath=".\zlib\zutil.c"
-					>
-				</File>
-			</Filter>
-			<Filter
 				Name="profile"
 				>
 				<Filter
@@ -1101,50 +1061,6 @@
 				</File>
 				<File
 					RelativePath=".\binding\SOAPClient.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="zlib"
-				>
-				<File
-					RelativePath=".\zlib\crc32.h"
-					>
-				</File>
-				<File
-					RelativePath=".\zlib\deflate.h"
-					>
-				</File>
-				<File
-					RelativePath=".\zlib\inffast.h"
-					>
-				</File>
-				<File
-					RelativePath=".\zlib\inffixed.h"
-					>
-				</File>
-				<File
-					RelativePath=".\zlib\inflate.h"
-					>
-				</File>
-				<File
-					RelativePath=".\zlib\inftrees.h"
-					>
-				</File>
-				<File
-					RelativePath=".\zlib\trees.h"
-					>
-				</File>
-				<File
-					RelativePath=".\zlib\zconf.h"
-					>
-				</File>
-				<File
-					RelativePath=".\zlib\zlib.h"
-					>
-				</File>
-				<File
-					RelativePath=".\zlib\zutil.h"
 					>
 				</File>
 			</Filter>
