@@ -48,8 +48,8 @@ This package contains the utility programs.
 %package -n libsaml7
 Summary:    OpenSAML SAML library
 Group:      Development/Libraries
-Provides:   @PACKAGE_NAME@ = %{version}
-Obsoletes:  @PACKAGE_NAME@
+Provides:   @PACKAGE_NAME@ = %{version}-%{release}
+Obsoletes:  @PACKAGE_NAME@ < %{version}-%{release}
 
 %description -n libsaml7
 OpenSAML is an open source implementation of the OASIS Security Assertion
@@ -61,9 +61,9 @@ This package contains just the shared library.
 %package -n libsaml-devel
 Summary:	OpenSAML development Headers
 Group:		Development/Libraries
-Requires:	libsaml7 = %version
-Provides:	@PACKAGE_NAME@-devel = %{version}
-Obsoletes:	@PACKAGE_NAME@-devel
+Requires:	libsaml7 = %{version}-%{release}
+Provides:	@PACKAGE_NAME@-devel = %{version}-%{release}
+Obsoletes:	@PACKAGE_NAME@-devel < %{version}-%{release}
 %if 0%{?suse_version} > 1030
 BuildRequires:  libXerces-c-devel >= 2.8.0
 %else
