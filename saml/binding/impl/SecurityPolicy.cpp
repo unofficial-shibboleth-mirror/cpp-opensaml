@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2009 Internet2
+ *  Copyright 2001-2010 Internet2
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -83,14 +83,14 @@ SecurityPolicy::SecurityPolicy(
     const xmltooling::QName* role,
     const xmltooling::TrustEngine* trustEngine,
     bool validate
-    ) : m_metadataCriteria(NULL),
+    ) : m_metadataCriteria(nullptr),
         m_issueInstant(0),
-        m_issuer(NULL),
-        m_issuerRole(NULL),
+        m_issuer(nullptr),
+        m_issuerRole(nullptr),
         m_authenticated(false),
-        m_matchingPolicy(NULL),
+        m_matchingPolicy(nullptr),
         m_metadata(metadataProvider),
-        m_role(NULL),
+        m_role(nullptr),
         m_trust(trustEngine),
         m_validate(validate),
         m_entityOnly(true),
@@ -153,7 +153,7 @@ vector<xstring>& SecurityPolicy::getAudiences()
 time_t SecurityPolicy::getTime() const
 {
     if (m_ts == 0)
-        return m_ts = time(NULL);
+        return m_ts = time(nullptr);
     return m_ts;
 }
 
@@ -182,7 +182,7 @@ void SecurityPolicy::setMetadataProviderCriteria(MetadataProvider::Criteria* cri
 void SecurityPolicy::setRole(const xmltooling::QName* role)
 {
     delete m_role;
-    m_role = role ? new xmltooling::QName(*role) : NULL;
+    m_role = role ? new xmltooling::QName(*role) : nullptr;
 }
 
 void SecurityPolicy::setTrustEngine(const TrustEngine* trust)
@@ -229,8 +229,8 @@ void SecurityPolicy::_reset(bool messageOnly)
     m_issueInstant=0;
     if (!messageOnly) {
         delete m_issuer;
-        m_issuer=NULL;
-        m_issuerRole=NULL;
+        m_issuer=nullptr;
+        m_issuerRole=nullptr;
         m_authenticated=false;
     }
 }
@@ -280,7 +280,7 @@ void SecurityPolicy::setIssuer(const Issuer* issuer)
     if (!m_issuer) {
         if (m_entityOnly && issuer->getFormat() && !XMLString::equals(issuer->getFormat(), NameIDType::ENTITY))
             throw SecurityPolicyException("A non-entity Issuer was supplied, violating policy.");
-        m_issuerRole = NULL;
+        m_issuerRole = nullptr;
         m_issuer=issuer->cloneIssuer();
     }
 }
@@ -291,7 +291,7 @@ void SecurityPolicy::setIssuer(const XMLCh* issuer)
         throw SecurityPolicyException("An Issuer was supplied that conflicts with previous results.");
 
     if (!m_issuer && issuer && *issuer) {
-        m_issuerRole = NULL;
+        m_issuerRole = nullptr;
         m_issuer = IssuerBuilder::buildIssuer();
         m_issuer->setName(issuer);
     }
@@ -319,7 +319,7 @@ SecurityPolicy::IssuerMatchingPolicy::~IssuerMatchingPolicy()
 
 bool SecurityPolicy::IssuerMatchingPolicy::issuerMatches(const Issuer* issuer1, const Issuer* issuer2) const
 {
-    // NULL matches anything for the purposes of this interface.
+    // nullptr matches anything for the purposes of this interface.
     if (!issuer1 || !issuer2)
         return true;
 
@@ -348,7 +348,7 @@ bool SecurityPolicy::IssuerMatchingPolicy::issuerMatches(const Issuer* issuer1, 
 
 bool SecurityPolicy::IssuerMatchingPolicy::issuerMatches(const Issuer* issuer1, const XMLCh* issuer2) const
 {
-    // NULL matches anything for the purposes of this interface.
+    // nullptr matches anything for the purposes of this interface.
     if (!issuer1 || !issuer2 || !*issuer2)
         return true;
 

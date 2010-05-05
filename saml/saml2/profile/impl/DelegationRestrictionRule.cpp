@@ -1,5 +1,5 @@
 /*
- *  Copyright 2009 Internet2
+ *  Copyright 2009-2010 Internet2
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 /**
  * DelegationRestrictionRule.cpp
  *
- * SAML DelegationRestriction SecurityPolicyRule
+ * SAML DelegationRestriction SecurityPolicyRule.
  */
 
 #include "internal.h"
@@ -85,7 +85,7 @@ namespace opensaml {
                         XMLString::equals(n1->getSPNameQualifier(), n2->getSPNameQualifier()));
             }
         public:
-            _isSameDelegate() : m_operand(NULL) {}
+            _isSameDelegate() : m_operand(nullptr) {}
             _isSameDelegate(const Delegate* d) : m_operand(d) {}
 
             // d1 is the input from the message, d2 is from the policy
@@ -119,14 +119,14 @@ namespace opensaml {
 DelegationRestrictionRule::DelegationRestrictionRule(const DOMElement* e) : m_match(MATCH_ANY), m_maxTime(0)
 {
     if (e) {
-        const XMLCh* m = e->getAttributeNS(NULL, match);
+        const XMLCh* m = e->getAttributeNS(nullptr, match);
         if (XMLString::equals(m, newest))
             m_match = MATCH_NEWEST;
         else if (XMLString::equals(m, oldest))
             m_match = MATCH_OLDEST;
         else if (m && *m && !XMLString::equals(m, any))
             throw SecurityPolicyException("Invalid value for \"match\" attribute in Delegation rule.");
-        m = e->getAttributeNS(NULL, maxTimeSinceDelegation);
+        m = e->getAttributeNS(nullptr, maxTimeSinceDelegation);
         if (m && *m)
             m_maxTime = XMLString::parseInt(m);
 
@@ -176,7 +176,7 @@ bool DelegationRestrictionRule::evaluate(const XMLObject& message, const Generic
 
     if (m_maxTime > 0) {
         return (!dels.empty() && dels.front()->getDelegationInstant() &&
-            (time(NULL) - dels.front()->getDelegationInstantEpoch() - XMLToolingConfig::getConfig().clock_skew_secs <= m_maxTime));
+            (time(nullptr) - dels.front()->getDelegationInstantEpoch() - XMLToolingConfig::getConfig().clock_skew_secs <= m_maxTime));
     }
 
     return true;

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ public:
     void testSingleElementUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         SessionIndex* si = dynamic_cast<SessionIndex*>(xo.get());
-        TS_ASSERT(si!=NULL);
+        TS_ASSERT(si!=nullptr);
         assertEquals("SessionIndex text content", expectedContent, si->getSessionIndex());
     }
 

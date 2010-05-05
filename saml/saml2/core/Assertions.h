@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2009 Internet2
+ *  Copyright 2001-2010 Internet2
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -103,7 +103,7 @@ namespace opensaml {
                 const saml2md::MetadataProvider& metadataProvider,
                 saml2md::MetadataCredentialCriteria& criteria,
                 bool compact=false,
-                const XMLCh* algorithm=NULL
+                const XMLCh* algorithm=nullptr
                 );
 
             /**
@@ -120,7 +120,7 @@ namespace opensaml {
                 const EncryptableObject& xmlObject,
                 const std::vector< std::pair<const saml2md::MetadataProvider*, saml2md::MetadataCredentialCriteria*> >& recipients,
                 bool compact=false,
-                const XMLCh* algorithm=NULL
+                const XMLCh* algorithm=nullptr
                 );
 
             /**
@@ -135,7 +135,7 @@ namespace opensaml {
              * @return  the decrypted and unmarshalled object
              */
             virtual xmltooling::XMLObject* decrypt(
-                const xmltooling::CredentialResolver& credResolver, const XMLCh* recipient, xmltooling::CredentialCriteria* criteria=NULL
+                const xmltooling::CredentialResolver& credResolver, const XMLCh* recipient, xmltooling::CredentialCriteria* criteria=nullptr
                 ) const;
         END_XMLOBJECT;
 
@@ -461,11 +461,11 @@ namespace opensaml {
 #else
             virtual xmltooling::XMLObject* buildObject(
 #endif
-                const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=NULL, const xmltooling::QName* schemaType=NULL
+                const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=nullptr, const xmltooling::QName* schemaType=nullptr
                 ) const;
 
             /** Singleton builder. */
-            static NameIDType* buildNameIDType(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=NULL) {
+            static NameIDType* buildNameIDType(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=nullptr) {
                 const NameIDTypeBuilder* b = dynamic_cast<const NameIDTypeBuilder*>(
                     XMLObjectBuilder::getBuilder(xmltooling::QName(samlconstants::SAML20_NS,NameIDType::TYPE_NAME))
                     );
@@ -495,7 +495,7 @@ namespace opensaml {
 #else
             virtual xmltooling::XMLObject* buildObject(
 #endif
-                const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=NULL, const xmltooling::QName* schemaType=NULL
+                const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=nullptr, const xmltooling::QName* schemaType=nullptr
                 ) const;
 
             /** Singleton builder. */
@@ -546,7 +546,7 @@ namespace opensaml {
 #else
             virtual xmltooling::XMLObject* buildObject(
 #endif
-                const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=NULL, const xmltooling::QName* schemaType=NULL
+                const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=nullptr, const xmltooling::QName* schemaType=nullptr
                 ) const;
 
             /** Singleton builder. */
@@ -592,7 +592,7 @@ namespace opensaml {
 #else
             virtual xmltooling::XMLObject* buildObject(
 #endif
-                const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=NULL, const xmltooling::QName* schemaType=NULL
+                const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=nullptr, const xmltooling::QName* schemaType=nullptr
                 ) const;
 
             /** Singleton builder. */
@@ -624,7 +624,7 @@ namespace opensaml {
 #else
             virtual xmltooling::XMLObject* buildObject(
 #endif
-                const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=NULL, const xmltooling::QName* schemaType=NULL
+                const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=nullptr, const xmltooling::QName* schemaType=nullptr
                 ) const;
 
             /** Singleton builder. */

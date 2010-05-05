@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2009 Internet2
+ *  Copyright 2001-2010 Internet2
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -97,7 +97,7 @@ XMLObject* SAML1ArtifactDecoder::decode(
             // Check replay.
             ReplayCache* replayCache = XMLToolingConfig::getConfig().getReplayCache();
             if (replayCache) {
-                if (!replayCache->check("SAML1Artifact", *raw, time(NULL) + (2*XMLToolingConfig::getConfig().clock_skew_secs))) {
+                if (!replayCache->check("SAML1Artifact", *raw, time(nullptr) + (2*XMLToolingConfig::getConfig().clock_skew_secs))) {
                     log.error("replay detected of artifact (%s)", *raw);
                     throw BindingException("Rejecting replayed artifact ($1).", params(1,*raw));
                 }

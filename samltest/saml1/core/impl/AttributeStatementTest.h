@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,14 +34,14 @@ public:
     void testSingleElementUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         AttributeStatement& as = dynamic_cast<AttributeStatement&>(*xo.get());
-        TSM_ASSERT("<Subject> element present", as.getSubject()==NULL);
+        TSM_ASSERT("<Subject> element present", as.getSubject()==nullptr);
         TSM_ASSERT_EQUALS("Non zero count of <Attribute> elements", 0, as.getAttributes().size());
     }
 
     void testChildElementsUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         AttributeStatement& as = dynamic_cast<AttributeStatement&>(*xo.get());
-        TSM_ASSERT("<Subject> element not present", as.getSubject()!=NULL);
+        TSM_ASSERT("<Subject> element not present", as.getSubject()!=nullptr);
         TSM_ASSERT_EQUALS("count of <Attribute> elements", 5, as.getAttributes().size());
 
         as.getAttributes().erase(as.getAttributes().begin());

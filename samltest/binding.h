@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2009 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,9 +48,9 @@ protected:
 
 public:
     void setUp() {
-        m_creds=NULL;
-        m_metadata=NULL;
-        m_trust=NULL;
+        m_creds=nullptr;
+        m_metadata=nullptr;
+        m_trust=nullptr;
         m_fields.clear();
         m_headers.clear();
         m_method.erase();
@@ -66,7 +66,7 @@ public:
             auto_ptr_XMLCh path("path");
             string s = data_path + "binding/example-metadata.xml";
             auto_ptr_XMLCh file(s.c_str());
-            doc->getDocumentElement()->setAttributeNS(NULL,path.get(),file.get());
+            doc->getDocumentElement()->setAttributeNS(nullptr,path.get(),file.get());
     
             m_metadata = SAMLConfig::getConfig().MetadataProviderManager.newPlugin(
                 XML_METADATA_PROVIDER,doc->getDocumentElement()
@@ -81,11 +81,11 @@ public:
                 FILESYSTEM_CREDENTIAL_RESOLVER,doc2->getDocumentElement()
                 );
                 
-            m_trust = XMLToolingConfig::getConfig().TrustEngineManager.newPlugin(EXPLICIT_KEY_TRUSTENGINE, NULL);
+            m_trust = XMLToolingConfig::getConfig().TrustEngineManager.newPlugin(EXPLICIT_KEY_TRUSTENGINE, nullptr);
 
-            m_rules.push_back(SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(MESSAGEFLOW_POLICY_RULE,NULL));
-            m_rules.push_back(SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(SIMPLESIGNING_POLICY_RULE,NULL));
-            m_rules.push_back(SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(XMLSIGNING_POLICY_RULE,NULL));
+            m_rules.push_back(SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(MESSAGEFLOW_POLICY_RULE,nullptr));
+            m_rules.push_back(SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(SIMPLESIGNING_POLICY_RULE,nullptr));
+            m_rules.push_back(SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(XMLSIGNING_POLICY_RULE,nullptr));
         }
         catch (XMLToolingException& ex) {
             TS_TRACE(ex.what());
@@ -101,9 +101,9 @@ public:
         delete m_creds;
         delete m_metadata;
         delete m_trust;
-        m_creds=NULL;
-        m_metadata=NULL;
-        m_trust=NULL;
+        m_creds=nullptr;
+        m_metadata=nullptr;
+        m_trust=nullptr;
         m_fields.clear();
         m_headers.clear();
         m_method.erase();
@@ -146,7 +146,7 @@ public:
     }
     
     const char* getRequestBody() const {
-        return NULL;
+        return nullptr;
     }
     
     const char* getQueryString() const {
@@ -172,7 +172,7 @@ public:
     
     const char* getParameter(const char* name) const {
         map<string,string>::const_iterator i=m_fields.find(name);
-        return i==m_fields.end() ? NULL : i->second.c_str();
+        return i==m_fields.end() ? nullptr : i->second.c_str();
     }
 
     vector<const char*>::size_type getParameters(const char* name, vector<const char*>& values) const {

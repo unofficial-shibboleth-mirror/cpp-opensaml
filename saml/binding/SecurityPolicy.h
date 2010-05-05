@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2009 Internet2
+ *  Copyright 2001-2010 Internet2
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -70,9 +70,9 @@ namespace opensaml {
          * @param validate          true iff XML parsing should be done with validation
          */
         SecurityPolicy(
-            const saml2md::MetadataProvider* metadataProvider=NULL,
-            const xmltooling::QName* role=NULL,
-            const xmltooling::TrustEngine* trustEngine=NULL,
+            const saml2md::MetadataProvider* metadataProvider=nullptr,
+            const xmltooling::QName* role=nullptr,
+            const xmltooling::TrustEngine* trustEngine=nullptr,
             bool validate=true
             );
 
@@ -81,7 +81,7 @@ namespace opensaml {
         /**
          * Returns the locked MetadataProvider supplied to the policy.
          *
-         * @return the supplied MetadataProvider or NULL
+         * @return the supplied MetadataProvider or nullptr
          */
         const saml2md::MetadataProvider* getMetadataProvider() const;
 
@@ -106,7 +106,7 @@ namespace opensaml {
         /**
          * Returns the TrustEngine supplied to the policy.
          *
-         * @return the supplied TrustEngine or NULL
+         * @return the supplied TrustEngine or nullptr
          */
         const xmltooling::TrustEngine* getTrustEngine() const;
 
@@ -165,7 +165,7 @@ namespace opensaml {
         /**
          * Sets a locked MetadataProvider for the policy.
          *
-         * @param metadata a locked MetadataProvider or NULL
+         * @param metadata a locked MetadataProvider or nullptr
          */
         void setMetadataProvider(const saml2md::MetadataProvider* metadata);
 
@@ -176,21 +176,21 @@ namespace opensaml {
          * <p>The policy will take ownership of the criteria object when this
          * method completes.
          *
-         * @param criteria a MetadataProvider::Criteria instance, or NULL
+         * @param criteria a MetadataProvider::Criteria instance, or nullptr
          */
         void setMetadataProviderCriteria(saml2md::MetadataProvider::Criteria* criteria);
 
         /**
          * Sets a peer role element/type for to the policy.
          *
-         * @param role the peer role element/type or NULL
+         * @param role the peer role element/type or nullptr
          */
         void setRole(const xmltooling::QName* role);
 
         /**
          * Sets a TrustEngine for the policy.
          *
-         * @param trust a TrustEngine or NULL
+         * @param trust a TrustEngine or nullptr
          */
         void setTrustEngine(const xmltooling::TrustEngine* trust);
 
@@ -237,7 +237,7 @@ namespace opensaml {
          *
          * @throws BindingException raised if the message/request is invalid according to the supplied rules
          */
-        void evaluate(const xmltooling::XMLObject& message, const xmltooling::GenericRequest* request=NULL);
+        void evaluate(const xmltooling::XMLObject& message, const xmltooling::GenericRequest* request=nullptr);
 
         /**
          * Resets the policy object and/or clears any per-message state.

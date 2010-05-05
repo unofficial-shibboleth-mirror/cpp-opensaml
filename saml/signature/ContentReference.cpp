@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2009 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 /**
  * ContentReference.cpp
  * 
- * SAML-specific signature reference profile 
+ * SAML-specific signature reference profile.
  */
  
 #include "internal.h"
@@ -35,7 +35,7 @@ using namespace xmltooling;
 using namespace std;
 
 ContentReference::ContentReference(const SignableObject& signableObject)
-    : m_signableObject(signableObject), m_digest(NULL), m_c14n(NULL)
+    : m_signableObject(signableObject), m_digest(nullptr), m_c14n(nullptr)
 {
 }
 
@@ -45,7 +45,7 @@ ContentReference::~ContentReference()
 
 void ContentReference::createReferences(DSIGSignature* sig)
 {
-    DSIGReference* ref=NULL;
+    DSIGReference* ref = nullptr;
     const XMLCh* id=m_signableObject.getXMLID();
     if (!id || !*id)
         ref=sig->createReference(&chNull, m_digest ? m_digest : DSIGConstants::s_unicodeStrURISHA1);  // whole doc reference

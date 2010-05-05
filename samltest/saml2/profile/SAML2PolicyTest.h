@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2009 Internet2
+ *  Copyright 2001-2010 Internet2
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,9 +28,9 @@ class SAML2PolicyTest : public CxxTest::TestSuite {
     vector<SecurityPolicyRule*> m_rules;
 public:
     void setUp() {
-        m_policy = NULL;
-        m_rules.push_back(SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(CONDITIONS_POLICY_RULE, NULL));
-        m_rules.push_back(SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(BEARER_POLICY_RULE, NULL));
+        m_policy = nullptr;
+        m_rules.push_back(SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(CONDITIONS_POLICY_RULE, nullptr));
+        m_rules.push_back(SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(BEARER_POLICY_RULE, nullptr));
         m_policy = new SecurityPolicy();
         m_policy->getRules().assign(m_rules.begin(), m_rules.end());
     }

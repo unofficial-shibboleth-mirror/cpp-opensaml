@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,11 +42,11 @@ public:
     void testSingleElementUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         AuthenticationStatement& as = dynamic_cast<AuthenticationStatement&>(*xo.get());
-        TSM_ASSERT("AuthenticationMethod attribute present", as.getAuthenticationMethod()==NULL);
-        TSM_ASSERT("AuthenticationInstant attribute present", as.getAuthenticationInstant()==NULL);
+        TSM_ASSERT("AuthenticationMethod attribute present", as.getAuthenticationMethod()==nullptr);
+        TSM_ASSERT("AuthenticationInstant attribute present", as.getAuthenticationInstant()==nullptr);
 
-        TSM_ASSERT("Subject element", as.getSubject()==NULL);
-        TSM_ASSERT("SubjectLocality element", as.getSubjectLocality()==NULL);
+        TSM_ASSERT("Subject element", as.getSubject()==nullptr);
+        TSM_ASSERT("SubjectLocality element", as.getSubjectLocality()==nullptr);
         TSM_ASSERT_EQUALS("AuthorityBinding element count", 0, as.getAuthorityBindings().size());
     }
 
@@ -65,8 +65,8 @@ public:
         auto_ptr<AuthenticationStatement> as2(as1.cloneAuthenticationStatement());
         AuthenticationStatement& as=*as2.get();
 
-        TSM_ASSERT("Subject element", as.getSubject()!=NULL);
-        TSM_ASSERT("SubjectLocality element", as.getSubjectLocality()!=NULL);
+        TSM_ASSERT("Subject element", as.getSubject()!=nullptr);
+        TSM_ASSERT("SubjectLocality element", as.getSubjectLocality()!=nullptr);
 
         TSM_ASSERT_EQUALS("AuthorityBinding element count", 2, as.getAuthorityBindings().size());
         as.getAuthorityBindings().erase(as.getAuthorityBindings().begin());

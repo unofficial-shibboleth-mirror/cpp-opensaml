@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,45 +58,45 @@ public:
     void testSingleElementUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         AuthzDecisionQuery* query = dynamic_cast<AuthzDecisionQuery*>(xo.get());
-        TS_ASSERT(query!=NULL);
+        TS_ASSERT(query!=nullptr);
         assertEquals("ID attribute", expectedID, query->getID());
         assertEquals("Version attribute", expectedVersion, query->getVersion());
         TSM_ASSERT_EQUALS("IssueInstant attribute", expectedIssueInstant->getEpoch(), query->getIssueInstant()->getEpoch());
         assertEquals("Resource attribute", expectedResource, query->getResource());
 
-        TS_ASSERT(query->getIssuer()==NULL);
-        TS_ASSERT(query->getSignature()==NULL);
-        TS_ASSERT(query->getExtensions()==NULL);
-        TS_ASSERT(query->getSubject()==NULL);
+        TS_ASSERT(query->getIssuer()==nullptr);
+        TS_ASSERT(query->getSignature()==nullptr);
+        TS_ASSERT(query->getExtensions()==nullptr);
+        TS_ASSERT(query->getSubject()==nullptr);
         TSM_ASSERT_EQUALS("# of Action child elements", 0, query->getActions().size());
-        TS_ASSERT(query->getEvidence()==NULL);
+        TS_ASSERT(query->getEvidence()==nullptr);
     }
 
     void testSingleElementOptionalAttributesUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
         AuthzDecisionQuery* query = dynamic_cast<AuthzDecisionQuery*>(xo.get());
-        TS_ASSERT(query!=NULL);
+        TS_ASSERT(query!=nullptr);
         assertEquals("Consent attribute", expectedConsent, query->getConsent());
         assertEquals("Destination attribute", expectedDestination, query->getDestination());
 
-        TS_ASSERT(query->getIssuer()==NULL);
-        TS_ASSERT(query->getSignature()==NULL);
-        TS_ASSERT(query->getExtensions()==NULL);
-        TS_ASSERT(query->getSubject()==NULL);
+        TS_ASSERT(query->getIssuer()==nullptr);
+        TS_ASSERT(query->getSignature()==nullptr);
+        TS_ASSERT(query->getExtensions()==nullptr);
+        TS_ASSERT(query->getSubject()==nullptr);
         TSM_ASSERT_EQUALS("# of Action child elements", 0, query->getActions().size());
-        TS_ASSERT(query->getEvidence()==NULL);
+        TS_ASSERT(query->getEvidence()==nullptr);
     }
 
     void testChildElementsUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         AuthzDecisionQuery* query= dynamic_cast<AuthzDecisionQuery*>(xo.get());
-        TS_ASSERT(query!=NULL);
-        TS_ASSERT(query->getIssuer()!=NULL);
-        TS_ASSERT(query->getSignature()==NULL);
-        TS_ASSERT(query->getExtensions()==NULL);
-        TS_ASSERT(query->getSubject()!=NULL);
+        TS_ASSERT(query!=nullptr);
+        TS_ASSERT(query->getIssuer()!=nullptr);
+        TS_ASSERT(query->getSignature()==nullptr);
+        TS_ASSERT(query->getExtensions()==nullptr);
+        TS_ASSERT(query->getSubject()!=nullptr);
         TSM_ASSERT_EQUALS("# of Action child elements", 2, query->getActions().size());
-        TS_ASSERT(query->getEvidence()!=NULL);
+        TS_ASSERT(query->getEvidence()!=nullptr);
     }
 
     void testSingleElementMarshall() {

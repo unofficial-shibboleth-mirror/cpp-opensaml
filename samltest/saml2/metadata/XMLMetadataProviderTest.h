@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2009 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,7 +57,7 @@ public:
         auto_ptr_XMLCh path("path");
         string s = data_path + "saml2/metadata/InCommon-metadata.xml";
         auto_ptr_XMLCh file(s.c_str());
-        doc->getDocumentElement()->setAttributeNS(NULL,path.get(),file.get());
+        doc->getDocumentElement()->setAttributeNS(nullptr,path.get(),file.get());
 
         auto_ptr<MetadataProvider> metadataProvider(
             SAMLConfig::getConfig().MetadataProviderManager.newPlugin(XML_METADATA_PROVIDER,doc->getDocumentElement())
@@ -71,12 +71,12 @@ public:
         }
         
         Locker locker(metadataProvider.get());
-        const EntityDescriptor* descriptor = metadataProvider->getEntityDescriptor(MetadataProvider::Criteria(entityID,NULL,NULL,false)).first;
-        TSM_ASSERT("Retrieved entity descriptor was null", descriptor!=NULL);
+        const EntityDescriptor* descriptor = metadataProvider->getEntityDescriptor(MetadataProvider::Criteria(entityID,nullptr,nullptr,false)).first;
+        TSM_ASSERT("Retrieved entity descriptor was null", descriptor!=nullptr);
         assertEquals("Entity's ID does not match requested ID", entityID, descriptor->getEntityID());
         TSM_ASSERT_EQUALS("Unexpected number of roles", 1, descriptor->getIDPSSODescriptors().size());
-        TSM_ASSERT("Role lookup failed", find_if(descriptor->getIDPSSODescriptors(), isValidForProtocol(supportedProtocol))!=NULL);
-        TSM_ASSERT("Role lookup failed", find_if(descriptor->getIDPSSODescriptors(), isValidForProtocol(supportedProtocol2))!=NULL);
+        TSM_ASSERT("Role lookup failed", find_if(descriptor->getIDPSSODescriptors(), isValidForProtocol(supportedProtocol))!=nullptr);
+        TSM_ASSERT("Role lookup failed", find_if(descriptor->getIDPSSODescriptors(), isValidForProtocol(supportedProtocol2))!=nullptr);
 
         static const char* providerIdStr = "urn:mace:incommon:washington.edu";
         auto_ptr<SAML2ArtifactType0004> artifact(
@@ -84,8 +84,8 @@ public:
                 SecurityHelper::doHash("SHA1", providerIdStr, strlen(providerIdStr), false), 1
                 )
             );
-        descriptor = metadataProvider->getEntityDescriptor(MetadataProvider::Criteria(artifact.get(),NULL,NULL,false)).first;
-        TSM_ASSERT("Retrieved entity descriptor was null", descriptor!=NULL);
+        descriptor = metadataProvider->getEntityDescriptor(MetadataProvider::Criteria(artifact.get(),nullptr,nullptr,false)).first;
+        TSM_ASSERT("Retrieved entity descriptor was null", descriptor!=nullptr);
         assertEquals("Entity's ID does not match requested ID", entityID, descriptor->getEntityID());
     }
 
@@ -98,7 +98,7 @@ public:
         auto_ptr_XMLCh path("path");
         string s = data_path + "saml2/metadata/InCommon-metadata.xml";
         auto_ptr_XMLCh file(s.c_str());
-        doc->getDocumentElement()->setAttributeNS(NULL,path.get(),file.get());
+        doc->getDocumentElement()->setAttributeNS(nullptr,path.get(),file.get());
 
         auto_ptr<MetadataProvider> metadataProvider(
             SAMLConfig::getConfig().MetadataProviderManager.newPlugin(XML_METADATA_PROVIDER,doc->getDocumentElement())
@@ -112,10 +112,10 @@ public:
         }
 
         Locker locker(metadataProvider.get());
-        const EntityDescriptor* descriptor = metadataProvider->getEntityDescriptor(MetadataProvider::Criteria(entityID,NULL,NULL,false)).first;
-        TSM_ASSERT("Retrieved entity descriptor was not null", descriptor==NULL);
-        descriptor = metadataProvider->getEntityDescriptor(MetadataProvider::Criteria(entityID2,NULL,NULL,false)).first;
-        TSM_ASSERT("Retrieved entity descriptor was null", descriptor!=NULL);
+        const EntityDescriptor* descriptor = metadataProvider->getEntityDescriptor(MetadataProvider::Criteria(entityID,nullptr,nullptr,false)).first;
+        TSM_ASSERT("Retrieved entity descriptor was not null", descriptor==nullptr);
+        descriptor = metadataProvider->getEntityDescriptor(MetadataProvider::Criteria(entityID2,nullptr,nullptr,false)).first;
+        TSM_ASSERT("Retrieved entity descriptor was null", descriptor!=nullptr);
         assertEquals("Entity's ID does not match requested ID", entityID2, descriptor->getEntityID());
     }
 
@@ -128,7 +128,7 @@ public:
         auto_ptr_XMLCh path("path");
         string s = data_path + "saml2/metadata/InCommon-metadata.xml";
         auto_ptr_XMLCh file(s.c_str());
-        doc->getDocumentElement()->setAttributeNS(NULL,path.get(),file.get());
+        doc->getDocumentElement()->setAttributeNS(nullptr,path.get(),file.get());
 
         auto_ptr<MetadataProvider> metadataProvider(
             SAMLConfig::getConfig().MetadataProviderManager.newPlugin(XML_METADATA_PROVIDER,doc->getDocumentElement())
@@ -142,10 +142,10 @@ public:
         }
 
         Locker locker(metadataProvider.get());
-        const EntityDescriptor* descriptor = metadataProvider->getEntityDescriptor(MetadataProvider::Criteria(entityID2,NULL,NULL,false)).first;
-        TSM_ASSERT("Retrieved entity descriptor was not null", descriptor==NULL);
-        descriptor = metadataProvider->getEntityDescriptor(MetadataProvider::Criteria(entityID,NULL,NULL,false)).first;
-        TSM_ASSERT("Retrieved entity descriptor was null", descriptor!=NULL);
+        const EntityDescriptor* descriptor = metadataProvider->getEntityDescriptor(MetadataProvider::Criteria(entityID2,nullptr,nullptr,false)).first;
+        TSM_ASSERT("Retrieved entity descriptor was not null", descriptor==nullptr);
+        descriptor = metadataProvider->getEntityDescriptor(MetadataProvider::Criteria(entityID,nullptr,nullptr,false)).first;
+        TSM_ASSERT("Retrieved entity descriptor was null", descriptor!=nullptr);
         assertEquals("Entity's ID does not match requested ID", entityID, descriptor->getEntityID());
     }
 };

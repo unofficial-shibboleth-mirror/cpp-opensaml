@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -73,11 +73,11 @@ public:
         cc.setUsage(Credential::SIGNING_CREDENTIAL);
         Locker locker(m_resolver);
         const Credential* cred = m_resolver->resolve(&cc);
-        TSM_ASSERT("Retrieved credential was null", cred!=NULL);
+        TSM_ASSERT("Retrieved credential was null", cred!=nullptr);
 
-        DOMElement* rootElement = NULL;
+        DOMElement* rootElement = nullptr;
         try {
-            rootElement=assertion->marshall((DOMDocument*)NULL,&sigs,cred);
+            rootElement=assertion->marshall((DOMDocument*)nullptr,&sigs,cred);
         }
         catch (XMLToolingException& e) {
             TS_TRACE(e.what());

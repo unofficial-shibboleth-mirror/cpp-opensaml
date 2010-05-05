@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2009 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -69,7 +69,7 @@ namespace opensaml {
              * 
              * @param e DOM to supply configuration for provider
              */
-            AbstractMetadataProvider(const xercesc::DOMElement* e=NULL);
+            AbstractMetadataProvider(const xercesc::DOMElement* e=nullptr);
             
         public:
             virtual ~AbstractMetadataProvider();
@@ -80,9 +80,9 @@ namespace opensaml {
             void emitChangeEvent() const;
             std::pair<const EntityDescriptor*,const RoleDescriptor*> getEntityDescriptor(const Criteria& criteria) const;
             const EntitiesDescriptor* getEntitiesDescriptor(const char* name, bool requireValidMetadata=true) const;
-            const xmltooling::Credential* resolve(const xmltooling::CredentialCriteria* criteria=NULL) const;
+            const xmltooling::Credential* resolve(const xmltooling::CredentialCriteria* criteria=nullptr) const;
             std::vector<const xmltooling::Credential*>::size_type resolve(
-                std::vector<const xmltooling::Credential*>& results, const xmltooling::CredentialCriteria* criteria=NULL
+                std::vector<const xmltooling::Credential*>& results, const xmltooling::CredentialCriteria* criteria=nullptr
                 ) const;
 
         protected:

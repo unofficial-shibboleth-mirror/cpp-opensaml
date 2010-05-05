@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -92,7 +92,7 @@ public:
     void testSingleElementUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         NameIDType* nameid = dynamic_cast<NameIDType*>(xo.get());
-        TS_ASSERT(nameid!=NULL);
+        TS_ASSERT(nameid!=nullptr);
 
         checkNameAndType(nameid);
 
@@ -102,7 +102,7 @@ public:
     void testSingleElementOptionalAttributesUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
         NameIDType* nameid = dynamic_cast<NameIDType*>(xo.get());
-        TS_ASSERT(nameid!=NULL);
+        TS_ASSERT(nameid!=nullptr);
 
         checkNameAndType(nameid);
 
@@ -116,7 +116,7 @@ public:
 
     void testSingleElementMarshall() {
         NameIDType* nameid = dynamic_cast<NameIDType*>(buildObject());
-        TS_ASSERT(nameid!=NULL);
+        TS_ASSERT(nameid!=nullptr);
         checkNameAndType(nameid);
 
         nameid->setName(expectedContent);
@@ -125,7 +125,7 @@ public:
 
     void testSingleElementOptionalAttributesMarshall() {
         NameIDType* nameid = dynamic_cast<NameIDType*>(buildObject());
-        TS_ASSERT(nameid!=NULL);
+        TS_ASSERT(nameid!=nullptr);
         checkNameAndType(nameid);
 
         nameid->setNameQualifier(expectedNameQualifier);

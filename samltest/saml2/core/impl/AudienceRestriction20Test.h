@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ public:
     void testSingleElementUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         AudienceRestriction* ar = dynamic_cast<AudienceRestriction*>(xo.get());
-        TS_ASSERT(ar!=NULL);
+        TS_ASSERT(ar!=nullptr);
 
         TSM_ASSERT_EQUALS("# of Audience child elements", 0, ar->getAudiences().size());
     }
@@ -44,7 +44,7 @@ public:
     void testChildElementsUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         AudienceRestriction* ar= dynamic_cast<AudienceRestriction*>(xo.get());
-        TS_ASSERT(ar!=NULL);
+        TS_ASSERT(ar!=nullptr);
 
         TSM_ASSERT_EQUALS("# of Audience child elements", 2, ar->getAudiences().size());
     }

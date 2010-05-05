@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ public:
     void testSingleElementUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         AttributeStatement* statement = dynamic_cast<AttributeStatement*>(xo.get());
-        TS_ASSERT(statement!=NULL);
+        TS_ASSERT(statement!=nullptr);
 
         TSM_ASSERT_EQUALS("# of Attribute child elements", 0, statement->getAttributes().size());
         TSM_ASSERT_EQUALS("# of EncryptedAttribute child elements", 0, statement->getEncryptedAttributes().size());
@@ -45,7 +45,7 @@ public:
     void testChildElementsUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         AttributeStatement* statement= dynamic_cast<AttributeStatement*>(xo.get());
-        TS_ASSERT(statement!=NULL);
+        TS_ASSERT(statement!=nullptr);
 
         TSM_ASSERT_EQUALS("# of Attribute child elements", 3, statement->getAttributes().size());
         TSM_ASSERT_EQUALS("# of EncryptedAttribute child elements", 1, statement->getEncryptedAttributes().size());

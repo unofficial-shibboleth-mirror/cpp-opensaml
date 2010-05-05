@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2009 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -134,7 +134,7 @@ XMLObject* SAML2ECPDecoder::decode(
                 const vector<XMLObject*>& blocks = const_cast<const Header*>(env->getHeader())->getUnknownXMLObjects();
                 vector<XMLObject*>::const_iterator h =
                     find_if(blocks.begin(), blocks.end(), hasQName(xmltooling::QName(samlconstants::SAML20ECP_NS, RelayState)));
-                const ElementProxy* ep = dynamic_cast<const ElementProxy*>(h != blocks.end() ? *h : NULL);
+                const ElementProxy* ep = dynamic_cast<const ElementProxy*>(h != blocks.end() ? *h : nullptr);
                 if (ep) {
                     auto_ptr_char rs(ep->getTextContent());
                     if (rs.get())

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2009 Internet2
+ *  Copyright 2001-2010 Internet2
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -73,11 +73,11 @@ namespace opensaml {
             }
 
             RespondWithImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
-                : AbstractXMLObject(nsURI, localName, prefix, schemaType), m_qname(NULL) {
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType), m_qname(nullptr) {
             }
 
             RespondWithImpl(const RespondWithImpl& src)
-                    : AbstractXMLObject(src), AbstractSimpleElement(src), AbstractDOMCachingXMLObject(src), m_qname(NULL) {
+                    : AbstractXMLObject(src), AbstractSimpleElement(src), AbstractDOMCachingXMLObject(src), m_qname(nullptr) {
                 setQName(src.getQName());
             }
 
@@ -92,7 +92,7 @@ namespace opensaml {
                     setTextContent(temp.get());
                 }
                 else
-                    setTextContent(NULL);
+                    setTextContent(nullptr);
             }
 
             IMPL_XMLOBJECT_CLONE(RespondWith);
@@ -119,8 +119,8 @@ namespace opensaml {
             public AbstractXMLObjectUnmarshaller
         {
             void init() {
-                m_Subject=NULL;
-                m_children.push_back(NULL);
+                m_Subject=nullptr;
+                m_children.push_back(nullptr);
                 m_pos_Subject=m_children.begin();
             }
         protected:
@@ -154,7 +154,7 @@ namespace opensaml {
         class SAML_DLLLOCAL AuthenticationQueryImpl : public virtual AuthenticationQuery, public SubjectQueryImpl
         {
             void init() {
-                m_AuthenticationMethod=NULL;
+                m_AuthenticationMethod=nullptr;
             }
         public:
             virtual ~AuthenticationQueryImpl() {
@@ -182,12 +182,12 @@ namespace opensaml {
 
         protected:
             void marshallAttributes(DOMElement* domElement) const {
-                MARSHALL_STRING_ATTRIB(AuthenticationMethod,AUTHENTICATIONMETHOD,NULL);
+                MARSHALL_STRING_ATTRIB(AuthenticationMethod,AUTHENTICATIONMETHOD,nullptr);
                 SubjectQueryImpl::marshallAttributes(domElement);
             }
 
             void processAttribute(const DOMAttr* attribute) {
-                PROC_STRING_ATTRIB(AuthenticationMethod,AUTHENTICATIONMETHOD,NULL);
+                PROC_STRING_ATTRIB(AuthenticationMethod,AUTHENTICATIONMETHOD,nullptr);
                 SubjectQueryImpl::processAttribute(attribute);
             }
         };
@@ -195,7 +195,7 @@ namespace opensaml {
         class SAML_DLLLOCAL AttributeQueryImpl : public virtual AttributeQuery, public SubjectQueryImpl
         {
             void init() {
-                m_Resource=NULL;
+                m_Resource=nullptr;
             }
         public:
             virtual ~AttributeQueryImpl() {
@@ -230,7 +230,7 @@ namespace opensaml {
 
         protected:
             void marshallAttributes(DOMElement* domElement) const {
-                MARSHALL_STRING_ATTRIB(Resource,RESOURCE,NULL);
+                MARSHALL_STRING_ATTRIB(Resource,RESOURCE,nullptr);
                 SubjectQueryImpl::marshallAttributes(domElement);
             }
 
@@ -240,7 +240,7 @@ namespace opensaml {
             }
 
             void processAttribute(const DOMAttr* attribute) {
-                PROC_STRING_ATTRIB(Resource,RESOURCE,NULL);
+                PROC_STRING_ATTRIB(Resource,RESOURCE,nullptr);
                 SubjectQueryImpl::processAttribute(attribute);
             }
         };
@@ -248,9 +248,9 @@ namespace opensaml {
         class SAML_DLLLOCAL AuthorizationDecisionQueryImpl : public virtual AuthorizationDecisionQuery, public SubjectQueryImpl
         {
             void init() {
-                m_Resource=NULL;
-                m_Evidence=NULL;
-                m_children.push_back(NULL);
+                m_Resource=nullptr;
+                m_Evidence=nullptr;
+                m_children.push_back(nullptr);
                 m_pos_Evidence=m_pos_Subject;
                 ++m_pos_Evidence;
             }
@@ -290,7 +290,7 @@ namespace opensaml {
 
         protected:
             void marshallAttributes(DOMElement* domElement) const {
-                MARSHALL_STRING_ATTRIB(Resource,RESOURCE,NULL);
+                MARSHALL_STRING_ATTRIB(Resource,RESOURCE,nullptr);
                 SubjectQueryImpl::marshallAttributes(domElement);
             }
 
@@ -301,7 +301,7 @@ namespace opensaml {
             }
 
             void processAttribute(const DOMAttr* attribute) {
-                PROC_STRING_ATTRIB(Resource,RESOURCE,NULL);
+                PROC_STRING_ATTRIB(Resource,RESOURCE,nullptr);
                 SubjectQueryImpl::processAttribute(attribute);
             }
         };
@@ -313,11 +313,11 @@ namespace opensaml {
             public AbstractXMLObjectUnmarshaller
         {
             void init() {
-                m_MinorVersion=NULL;
-                m_RequestID=NULL;
-                m_IssueInstant=NULL;
-                m_children.push_back(NULL);
-                m_Signature=NULL;
+                m_MinorVersion=nullptr;
+                m_RequestID=nullptr;
+                m_IssueInstant=nullptr;
+                m_children.push_back(nullptr);
+                m_Signature=nullptr;
                 m_pos_Signature=m_children.begin();
             }
         protected:
@@ -374,14 +374,14 @@ namespace opensaml {
             IMPL_STRING_ATTRIB(RequestID);    // have to special-case getXMLID
             const XMLCh* getXMLID() const {
                 pair<bool,int> v = getMinorVersion();
-                return (!v.first || v.second > 0) ? m_RequestID : NULL;
+                return (!v.first || v.second > 0) ? m_RequestID : nullptr;
             }
             const XMLCh* getID() const {
                 return getRequestID();
             }
             void releaseDOM() const {
                 if (getDOM())
-                    getDOM()->removeAttributeNS(NULL, REQUESTID_ATTRIB_NAME);
+                    getDOM()->removeAttributeNS(nullptr, REQUESTID_ATTRIB_NAME);
                 AbstractDOMCachingXMLObject::releaseDOM();
             }
             IMPL_DATETIME_ATTRIB(IssueInstant,0);
@@ -390,25 +390,25 @@ namespace opensaml {
         protected:
             void marshallAttributes(DOMElement* domElement) const {
                 static const XMLCh MAJORVERSION[] = UNICODE_LITERAL_12(M,a,j,o,r,V,e,r,s,i,o,n);
-                domElement->setAttributeNS(NULL,MAJORVERSION,XML_ONE);
+                domElement->setAttributeNS(nullptr,MAJORVERSION,XML_ONE);
                 if (!m_MinorVersion)
                     const_cast<RequestAbstractTypeImpl*>(this)->m_MinorVersion=XMLString::replicate(XML_ONE);
-                MARSHALL_INTEGER_ATTRIB(MinorVersion,MINORVERSION,NULL);
+                MARSHALL_INTEGER_ATTRIB(MinorVersion,MINORVERSION,nullptr);
                 if (!m_RequestID)
                     const_cast<RequestAbstractTypeImpl*>(this)->m_RequestID=SAMLConfig::getConfig().generateIdentifier();
-                domElement->setAttributeNS(NULL, REQUESTID_ATTRIB_NAME, m_RequestID);
+                domElement->setAttributeNS(nullptr, REQUESTID_ATTRIB_NAME, m_RequestID);
                 if (*m_MinorVersion!=chDigit_0) {
 #ifdef XMLTOOLING_XERCESC_BOOLSETIDATTRIBUTE
-                    domElement->setIdAttributeNS(NULL, REQUESTID_ATTRIB_NAME, true);
+                    domElement->setIdAttributeNS(nullptr, REQUESTID_ATTRIB_NAME, true);
 #else
-                    domElement->setIdAttributeNS(NULL, REQUESTID_ATTRIB_NAME);
+                    domElement->setIdAttributeNS(nullptr, REQUESTID_ATTRIB_NAME);
 #endif
                 }
                 if (!m_IssueInstant) {
-                    const_cast<RequestAbstractTypeImpl*>(this)->m_IssueInstantEpoch=time(NULL);
+                    const_cast<RequestAbstractTypeImpl*>(this)->m_IssueInstantEpoch=time(nullptr);
                     const_cast<RequestAbstractTypeImpl*>(this)->m_IssueInstant=new DateTime(m_IssueInstantEpoch);
                 }
-                MARSHALL_DATETIME_ATTRIB(IssueInstant,ISSUEINSTANT,NULL);
+                MARSHALL_DATETIME_ATTRIB(IssueInstant,ISSUEINSTANT,nullptr);
             }
 
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
@@ -422,30 +422,30 @@ namespace opensaml {
                 AbstractXMLObjectUnmarshaller::unmarshallAttributes(domElement);
                 if (m_RequestID && (!m_MinorVersion || *m_MinorVersion!=chDigit_0)) {
 #ifdef XMLTOOLING_XERCESC_BOOLSETIDATTRIBUTE
-                    const_cast<DOMElement*>(domElement)->setIdAttributeNS(NULL, REQUESTID_ATTRIB_NAME, true);
+                    const_cast<DOMElement*>(domElement)->setIdAttributeNS(nullptr, REQUESTID_ATTRIB_NAME, true);
 #else
-                    const_cast<DOMElement*>(domElement)->setIdAttributeNS(NULL, REQUESTID_ATTRIB_NAME);
+                    const_cast<DOMElement*>(domElement)->setIdAttributeNS(nullptr, REQUESTID_ATTRIB_NAME);
 #endif
                 }
             }
 
             void processAttribute(const DOMAttr* attribute) {
                 static const XMLCh MAJORVERSION[] = UNICODE_LITERAL_12(M,a,j,o,r,V,e,r,s,i,o,n);
-                if (XMLHelper::isNodeNamed(attribute,NULL,MAJORVERSION)) {
+                if (XMLHelper::isNodeNamed(attribute,nullptr,MAJORVERSION)) {
                     if (!XMLString::equals(attribute->getValue(),XML_ONE))
                         throw UnmarshallingException("Request has invalid major version.");
                 }
-                PROC_INTEGER_ATTRIB(MinorVersion,MINORVERSION,NULL);
-                PROC_STRING_ATTRIB(RequestID,REQUESTID,NULL);
-                PROC_DATETIME_ATTRIB(IssueInstant,ISSUEINSTANT,NULL);
+                PROC_INTEGER_ATTRIB(MinorVersion,MINORVERSION,nullptr);
+                PROC_STRING_ATTRIB(RequestID,REQUESTID,nullptr);
+                PROC_DATETIME_ATTRIB(IssueInstant,ISSUEINSTANT,nullptr);
             }
         };
 
         class SAML_DLLLOCAL RequestImpl : public virtual Request, public RequestAbstractTypeImpl
         {
             void init() {
-                m_children.push_back(NULL);
-                m_Query=NULL;
+                m_children.push_back(nullptr);
+                m_Query=nullptr;
                 m_pos_Query=m_pos_Signature;
                 ++m_pos_Query;
             }
@@ -526,9 +526,9 @@ namespace opensaml {
             public AbstractXMLObjectUnmarshaller
         {
             void init() {
-                m_Value=NULL;
-                m_children.push_back(NULL);
-                m_StatusCode=NULL;
+                m_Value=nullptr;
+                m_children.push_back(nullptr);
+                m_StatusCode=nullptr;
                 m_pos_StatusCode=m_children.begin();
             }
         public:
@@ -555,7 +555,7 @@ namespace opensaml {
 
         protected:
             void marshallAttributes(DOMElement* domElement) const {
-                MARSHALL_QNAME_ATTRIB(Value,VALUE,NULL);
+                MARSHALL_QNAME_ATTRIB(Value,VALUE,nullptr);
             }
 
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
@@ -564,7 +564,7 @@ namespace opensaml {
             }
 
             void processAttribute(const DOMAttr* attribute) {
-                PROC_QNAME_ATTRIB(Value,VALUE,NULL);
+                PROC_QNAME_ATTRIB(Value,VALUE,nullptr);
             }
         };
 
@@ -604,15 +604,15 @@ namespace opensaml {
             public AbstractXMLObjectUnmarshaller
         {
             void init() {
-                m_children.push_back(NULL);
-                m_children.push_back(NULL);
-                m_children.push_back(NULL);
-                m_StatusCode=NULL;
+                m_children.push_back(nullptr);
+                m_children.push_back(nullptr);
+                m_children.push_back(nullptr);
+                m_StatusCode=nullptr;
                 m_pos_StatusCode=m_children.begin();
-                m_StatusMessage=NULL;
+                m_StatusMessage=nullptr;
                 m_pos_StatusMessage=m_pos_StatusCode;
                 ++m_pos_StatusMessage;
-                m_StatusDetail=NULL;
+                m_StatusDetail=nullptr;
                 m_pos_StatusDetail=m_pos_StatusMessage;
                 ++m_pos_StatusDetail;
             }
@@ -656,13 +656,13 @@ namespace opensaml {
             public AbstractXMLObjectUnmarshaller
         {
             void init() {
-                m_MinorVersion=NULL;
-                m_ResponseID=NULL;
-                m_InResponseTo=NULL;
-                m_IssueInstant=NULL;
-                m_Recipient=NULL;
-                m_children.push_back(NULL);
-                m_Signature=NULL;
+                m_MinorVersion=nullptr;
+                m_ResponseID=nullptr;
+                m_InResponseTo=nullptr;
+                m_IssueInstant=nullptr;
+                m_Recipient=nullptr;
+                m_children.push_back(nullptr);
+                m_Signature=nullptr;
                 m_pos_Signature=m_children.begin();
             }
         protected:
@@ -717,14 +717,14 @@ namespace opensaml {
             IMPL_STRING_ATTRIB(ResponseID);    // have to special-case getXMLID
             const XMLCh* getXMLID() const {
                 pair<bool,int> v = getMinorVersion();
-                return (!v.first || v.second > 0) ? m_ResponseID : NULL;
+                return (!v.first || v.second > 0) ? m_ResponseID : nullptr;
             }
             const XMLCh* getID() const {
                 return getResponseID();
             }
             void releaseDOM() const {
                 if (getDOM())
-                    getDOM()->removeAttributeNS(NULL, RESPONSEID_ATTRIB_NAME);
+                    getDOM()->removeAttributeNS(nullptr, RESPONSEID_ATTRIB_NAME);
                 AbstractDOMCachingXMLObject::releaseDOM();
             }
             IMPL_STRING_ATTRIB(InResponseTo);
@@ -734,27 +734,27 @@ namespace opensaml {
         protected:
             void marshallAttributes(DOMElement* domElement) const {
                 static const XMLCh MAJORVERSION[] = UNICODE_LITERAL_12(M,a,j,o,r,V,e,r,s,i,o,n);
-                domElement->setAttributeNS(NULL,MAJORVERSION,XML_ONE);
+                domElement->setAttributeNS(nullptr,MAJORVERSION,XML_ONE);
                 if (!m_MinorVersion)
                     const_cast<ResponseAbstractTypeImpl*>(this)->m_MinorVersion=XMLString::replicate(XML_ONE);
-                MARSHALL_INTEGER_ATTRIB(MinorVersion,MINORVERSION,NULL);
+                MARSHALL_INTEGER_ATTRIB(MinorVersion,MINORVERSION,nullptr);
                 if (!m_ResponseID)
                     const_cast<ResponseAbstractTypeImpl*>(this)->m_ResponseID=SAMLConfig::getConfig().generateIdentifier();
-                domElement->setAttributeNS(NULL, RESPONSEID_ATTRIB_NAME, m_ResponseID);
+                domElement->setAttributeNS(nullptr, RESPONSEID_ATTRIB_NAME, m_ResponseID);
                 if (*m_MinorVersion!=chDigit_0) {
 #ifdef XMLTOOLING_XERCESC_BOOLSETIDATTRIBUTE
-                    domElement->setIdAttributeNS(NULL, RESPONSEID_ATTRIB_NAME, true);
+                    domElement->setIdAttributeNS(nullptr, RESPONSEID_ATTRIB_NAME, true);
 #else
-                    domElement->setIdAttributeNS(NULL, RESPONSEID_ATTRIB_NAME);
+                    domElement->setIdAttributeNS(nullptr, RESPONSEID_ATTRIB_NAME);
 #endif
                 }
-                MARSHALL_STRING_ATTRIB(InResponseTo,INRESPONSETO,NULL);
+                MARSHALL_STRING_ATTRIB(InResponseTo,INRESPONSETO,nullptr);
                 if (!m_IssueInstant) {
-                    const_cast<ResponseAbstractTypeImpl*>(this)->m_IssueInstantEpoch=time(NULL);
+                    const_cast<ResponseAbstractTypeImpl*>(this)->m_IssueInstantEpoch=time(nullptr);
                     const_cast<ResponseAbstractTypeImpl*>(this)->m_IssueInstant=new DateTime(m_IssueInstantEpoch);
                 }
-                MARSHALL_DATETIME_ATTRIB(IssueInstant,ISSUEINSTANT,NULL);
-                MARSHALL_STRING_ATTRIB(Recipient,RECIPIENT,NULL);
+                MARSHALL_DATETIME_ATTRIB(IssueInstant,ISSUEINSTANT,nullptr);
+                MARSHALL_STRING_ATTRIB(Recipient,RECIPIENT,nullptr);
             }
 
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
@@ -767,32 +767,32 @@ namespace opensaml {
                 AbstractXMLObjectUnmarshaller::unmarshallAttributes(domElement);
                 if (m_ResponseID && (!m_MinorVersion || *m_MinorVersion!=chDigit_0)) {
 #ifdef XMLTOOLING_XERCESC_BOOLSETIDATTRIBUTE
-                    const_cast<DOMElement*>(domElement)->setIdAttributeNS(NULL, RESPONSEID_ATTRIB_NAME, true);
+                    const_cast<DOMElement*>(domElement)->setIdAttributeNS(nullptr, RESPONSEID_ATTRIB_NAME, true);
 #else
-                    const_cast<DOMElement*>(domElement)->setIdAttributeNS(NULL, RESPONSEID_ATTRIB_NAME);
+                    const_cast<DOMElement*>(domElement)->setIdAttributeNS(nullptr, RESPONSEID_ATTRIB_NAME);
 #endif
                 }
             }
 
             void processAttribute(const DOMAttr* attribute) {
                 static const XMLCh MAJORVERSION[] = UNICODE_LITERAL_12(M,a,j,o,r,V,e,r,s,i,o,n);
-                if (XMLHelper::isNodeNamed(attribute,NULL,MAJORVERSION)) {
+                if (XMLHelper::isNodeNamed(attribute,nullptr,MAJORVERSION)) {
                     if (!XMLString::equals(attribute->getValue(),XML_ONE))
                         throw UnmarshallingException("Response has invalid major version.");
                 }
-                PROC_INTEGER_ATTRIB(MinorVersion,MINORVERSION,NULL);
-                PROC_STRING_ATTRIB(ResponseID,RESPONSEID,NULL);
-                PROC_STRING_ATTRIB(InResponseTo,INRESPONSETO,NULL);
-                PROC_DATETIME_ATTRIB(IssueInstant,ISSUEINSTANT,NULL);
-                PROC_STRING_ATTRIB(Recipient,RECIPIENT,NULL);
+                PROC_INTEGER_ATTRIB(MinorVersion,MINORVERSION,nullptr);
+                PROC_STRING_ATTRIB(ResponseID,RESPONSEID,nullptr);
+                PROC_STRING_ATTRIB(InResponseTo,INRESPONSETO,nullptr);
+                PROC_DATETIME_ATTRIB(IssueInstant,ISSUEINSTANT,nullptr);
+                PROC_STRING_ATTRIB(Recipient,RECIPIENT,nullptr);
             }
         };
 
         class SAML_DLLLOCAL ResponseImpl : public virtual Response, public ResponseAbstractTypeImpl
         {
             void init() {
-                m_children.push_back(NULL);
-                m_Status=NULL;
+                m_children.push_back(nullptr);
+                m_Status=nullptr;
                 m_pos_Status=m_pos_Signature;
                 ++m_pos_Status;
             }

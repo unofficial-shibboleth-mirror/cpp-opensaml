@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,41 +49,41 @@ public:
     void testSingleElementUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         AuthnStatement* statement = dynamic_cast<AuthnStatement*>(xo.get());
-        TS_ASSERT(statement!=NULL);
+        TS_ASSERT(statement!=nullptr);
 
         TSM_ASSERT_EQUALS("AuthnInstant attribute", expectedAuthnInstant->getEpoch(), statement->getAuthnInstant()->getEpoch());
-        TS_ASSERT(statement->getSessionIndex()==NULL);
-        TS_ASSERT(statement->getSessionNotOnOrAfter()==NULL);
+        TS_ASSERT(statement->getSessionIndex()==nullptr);
+        TS_ASSERT(statement->getSessionNotOnOrAfter()==nullptr);
 
-        TS_ASSERT(statement->getSubjectLocality()==NULL);
-        TS_ASSERT(statement->getAuthnContext()==NULL);
+        TS_ASSERT(statement->getSubjectLocality()==nullptr);
+        TS_ASSERT(statement->getAuthnContext()==nullptr);
     }
 
     void testSingleElementOptionalAttributesUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
         AuthnStatement* statement = dynamic_cast<AuthnStatement*>(xo.get());
-        TS_ASSERT(statement!=NULL);
+        TS_ASSERT(statement!=nullptr);
 
         TSM_ASSERT_EQUALS("AuthnInstant attribute", expectedAuthnInstant->getEpoch(), statement->getAuthnInstant()->getEpoch());
         assertEquals("SessionIndex attribute", expectedSessionIndex, statement->getSessionIndex());
         TSM_ASSERT_EQUALS("SessionNotOnOrAfter attribute", expectedSessionNotOnOrAfter->getEpoch(), statement->getSessionNotOnOrAfter()->getEpoch());
 
-        TS_ASSERT(statement->getSubjectLocality()==NULL);
-        TS_ASSERT(statement->getAuthnContext()==NULL);
+        TS_ASSERT(statement->getSubjectLocality()==nullptr);
+        TS_ASSERT(statement->getAuthnContext()==nullptr);
 
     }
 
     void testChildElementsUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         AuthnStatement* statement= dynamic_cast<AuthnStatement*>(xo.get());
-        TS_ASSERT(statement!=NULL);
+        TS_ASSERT(statement!=nullptr);
 
-        TS_ASSERT(statement->getAuthnInstant()==NULL);
-        TS_ASSERT(statement->getSessionIndex()==NULL);
-        TS_ASSERT(statement->getSessionNotOnOrAfter()==NULL);
+        TS_ASSERT(statement->getAuthnInstant()==nullptr);
+        TS_ASSERT(statement->getSessionIndex()==nullptr);
+        TS_ASSERT(statement->getSessionNotOnOrAfter()==nullptr);
 
-        TS_ASSERT(statement->getSubjectLocality()!=NULL);
-        TS_ASSERT(statement->getAuthnContext()!=NULL);
+        TS_ASSERT(statement->getSubjectLocality()!=nullptr);
+        TS_ASSERT(statement->getAuthnContext()!=nullptr);
 
     }
 

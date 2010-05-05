@@ -1,5 +1,5 @@
 /*
- *  Copyright 2009 Internet2
+ *  Copyright 2009-2010 Internet2
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 /**
  * EntityRoleMetadataFilter.cpp
  *
- * Removes non-whitelisted roles from a metadata instance
+ * Removes non-whitelisted roles from a metadata instance.
  */
 
 #include "internal.h"
@@ -69,10 +69,10 @@ EntityRoleMetadataFilter::EntityRoleMetadataFilter(const DOMElement* e)
     : m_removeRolelessEntityDescriptors(true), m_removeEmptyEntitiesDescriptors(true),
         m_idp(false), m_sp(false), m_authn(false), m_attr(false), m_pdp(false), m_authnq(false), m_attrq(false), m_authzq(false)
 {
-    const XMLCh* flag = e ? e->getAttributeNS(NULL, removeRolelessEntityDescriptors) : NULL;
+    const XMLCh* flag = e ? e->getAttributeNS(nullptr, removeRolelessEntityDescriptors) : nullptr;
     if (flag && (*flag == chLatin_f || *flag == chDigit_0))
         m_removeRolelessEntityDescriptors = false;
-    flag = e ? e->getAttributeNS(NULL, removeEmptyEntitiesDescriptors) : NULL;
+    flag = e ? e->getAttributeNS(nullptr, removeEmptyEntitiesDescriptors) : nullptr;
     if (flag && (*flag == chLatin_f || *flag == chDigit_0))
         m_removeEmptyEntitiesDescriptors = false;
 

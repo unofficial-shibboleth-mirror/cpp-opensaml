@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2008 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,7 +60,7 @@ static const XMLCh maxValidityInterval[] =  UNICODE_LITERAL_19(m,a,x,V,a,l,i,d,i
 
 RequireValidUntilMetadataFilter::RequireValidUntilMetadataFilter(const DOMElement* e) : m_maxValidityInterval(60 * 60 * 24 * 7)
 {
-    const XMLCh* mvi = e ? e->getAttributeNS(NULL,maxValidityInterval) : NULL;
+    const XMLCh* mvi = e ? e->getAttributeNS(nullptr,maxValidityInterval) : nullptr;
     if (mvi && *mvi) {
         m_maxValidityInterval = XMLString::parseInt(mvi);
         if (m_maxValidityInterval == 0)
@@ -77,6 +77,6 @@ void RequireValidUntilMetadataFilter::doFilter(XMLObject& xmlObject) const
     if (!tbo->getValidUntil())
         throw MetadataFilterException("Metadata did not include a validUntil attribute.");
 
-    if (tbo->getValidUntilEpoch() - time(NULL) > m_maxValidityInterval)
+    if (tbo->getValidUntilEpoch() - time(nullptr) > m_maxValidityInterval)
         throw MetadataFilterException("Metadata validity interval is larger than permitted.");
 }

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,16 +39,16 @@ public:
     void testSingleElementUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         NewEncryptedID* encID = dynamic_cast<NewEncryptedID*>(xo.get());
-        TS_ASSERT(encID!=NULL);
-        TSM_ASSERT("EncryptedData child element", encID->getEncryptedData()==NULL);
+        TS_ASSERT(encID!=nullptr);
+        TSM_ASSERT("EncryptedData child element", encID->getEncryptedData()==nullptr);
         TSM_ASSERT_EQUALS("# of EncryptedKey child elements", 0, encID->getEncryptedKeys().size());
     }
 
     void testChildElementsUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         NewEncryptedID* encID = dynamic_cast<NewEncryptedID*>(xo.get());
-        TS_ASSERT(encID!=NULL);
-        TSM_ASSERT("EncryptedData child element", encID->getEncryptedData()!=NULL);
+        TS_ASSERT(encID!=nullptr);
+        TSM_ASSERT("EncryptedData child element", encID->getEncryptedData()!=nullptr);
         TSM_ASSERT_EQUALS("# of EncryptedKey child elements", 2, encID->getEncryptedKeys().size());
     }
 

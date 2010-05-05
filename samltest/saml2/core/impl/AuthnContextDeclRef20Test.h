@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ public:
     void testSingleElementUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         AuthnContextDeclRef* declref = dynamic_cast<AuthnContextDeclRef*>(xo.get());
-        TS_ASSERT(declref!=NULL);
+        TS_ASSERT(declref!=nullptr);
         assertEquals("AuthnContextDeclRef text content", expectedContent, declref->getReference());
     }
 

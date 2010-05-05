@@ -1,5 +1,5 @@
 /*
- *  Copyright 2009 Internet2
+ *  Copyright 2009-2010 Internet2
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,7 +59,7 @@ namespace opensaml {
 
 AudienceRestrictionRule::AudienceRestrictionRule(const DOMElement* e)
 {
-    e = e ? XMLHelper::getFirstChildElement(e, saml2::Audience::LOCAL_NAME) : NULL;
+    e = e ? XMLHelper::getFirstChildElement(e, saml2::Audience::LOCAL_NAME) : nullptr;
     while (e) {
         if (e->hasChildNodes())
             m_audiences.push_back(e->getFirstChild()->getNodeValue());

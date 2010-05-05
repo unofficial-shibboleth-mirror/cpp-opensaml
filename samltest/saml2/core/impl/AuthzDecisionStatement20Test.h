@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,25 +42,25 @@ public:
     void testSingleElementUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         AuthzDecisionStatement* statement = dynamic_cast<AuthzDecisionStatement*>(xo.get());
-        TS_ASSERT(statement!=NULL);
+        TS_ASSERT(statement!=nullptr);
 
         assertEquals("Resource attribute", expectedResource, statement->getResource());
         assertEquals("Decision attribute", expectedDecision, statement->getDecision());
 
         TSM_ASSERT_EQUALS("# of Action child elements", 0, statement->getActions().size());
-        TS_ASSERT(statement->getEvidence()==NULL);
+        TS_ASSERT(statement->getEvidence()==nullptr);
     }
 
     void testChildElementsUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         AuthzDecisionStatement* statement= dynamic_cast<AuthzDecisionStatement*>(xo.get());
-        TS_ASSERT(statement!=NULL);
+        TS_ASSERT(statement!=nullptr);
 
-        assertEquals("Resource attribute", NULL, statement->getResource());
-        assertEquals("Decision attribute", NULL, statement->getDecision());
+        assertEquals("Resource attribute", nullptr, statement->getResource());
+        assertEquals("Decision attribute", nullptr, statement->getDecision());
 
         TSM_ASSERT_EQUALS("# of Action child elements", 3, statement->getActions().size());
-        TS_ASSERT(statement->getEvidence()!=NULL);
+        TS_ASSERT(statement->getEvidence()!=nullptr);
     }
 
     void testSingleElementMarshall() {

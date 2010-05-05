@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2009 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,12 +58,12 @@ namespace opensaml {
                 GenericResponse& genericResponse,
                 XMLObject* xmlObject,
                 const char* destination,
-                const EntityDescriptor* recipient=NULL,
-                const char* relayState=NULL,
-                const ArtifactGenerator* artifactGenerator=NULL,
-                const Credential* credential=NULL,
-                const XMLCh* signatureAlg=NULL,
-                const XMLCh* digestAlg=NULL
+                const EntityDescriptor* recipient=nullptr,
+                const char* relayState=nullptr,
+                const ArtifactGenerator* artifactGenerator=nullptr,
+                const Credential* credential=nullptr,
+                const XMLCh* signatureAlg=nullptr,
+                const XMLCh* digestAlg=nullptr
                 ) const;
 
         protected:
@@ -122,7 +122,7 @@ long SAML1POSTEncoder::encode(
     if (!relayState)
         throw BindingException("SAML 1.x POST Encoder requires relay state (TARGET) value.");
     
-    DOMElement* rootElement = NULL;
+    DOMElement* rootElement = nullptr;
     if (credential) {
         // Signature based on native XML signing.
         if (response->getSignature()) {
@@ -144,7 +144,7 @@ long SAML1POSTEncoder::encode(
     
             // Sign response while marshalling.
             vector<Signature*> sigs(1,sig);
-            rootElement = response->marshall((DOMDocument*)NULL,&sigs,credential);
+            rootElement = response->marshall((DOMDocument*)nullptr,&sigs,credential);
         }
     }
     else {

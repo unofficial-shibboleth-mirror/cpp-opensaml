@@ -16,28 +16,6 @@
 <extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 </extensions>
 </storageModule>
-<storageModule moduleId="org.eclipse.cdt.core.pathentry">
-<pathentry kind="mac" name="_MSC_VER" path="" value=""/>
-<pathentry kind="mac" name="WIN32" path="" value=""/>
-<pathentry kind="mac" name="SAML_API" path="" value=""/>
-<pathentry kind="mac" name="SAML_DLLLOCAL" path="" value=""/>
-<pathentry kind="mac" name="SAML_LOGCAT" path="" value="&quot;OpenSAML&quot;"/>
-<pathentry kind="mac" name="XMLTOOLING_LOG4SHIB" path="" value=""/>
-<pathentry kind="mac" name="OPENSAML_LOG4SHIB" path="" value=""/>
-<pathentry include="C:/log4shib-1.0.2/include" kind="inc" path="" system="true"/>
-<pathentry include="C:/xerces-c-3.0.1-x86-windows-vc-9.0/include" kind="inc" path="" system="true"/>
-<pathentry include="C:/xml-security-c-1.5.1/include" kind="inc" path="" system="true"/>
-<pathentry include="C:/cxxtest" kind="inc" path="" system="true"/>
-<pathentry base-path="cpp-xmltooling" include="" kind="inc" path="" system="true"/>
-<pathentry base-path="cpp-opensaml2" include="" kind="inc" path="" system="true"/>
-<pathentry base-path="cpp-opensaml2" include="saml" kind="inc" path="" system="true"/>
-<pathentry include="C:/Program Files/Microsoft Visual Studio 9.0/VC/include" kind="inc" path="" system="true"/>
-<pathentry kind="out" path=""/>
-<pathentry kind="out" path="debug"/>
-<pathentry kind="out" path="saml/Debug"/>
-<pathentry kind="out" path="samltest/Debug"/>
-<pathentry kind="con" path="org.eclipse.cdt.make.core.DISCOVERED_SCANNER_INFO"/>
-</storageModule>
 <storageModule moduleId="cdtBuildSystem" version="4.0.0">
 <configuration artifactName="cpp-opensaml2" buildArtefactType="org.eclipse.linuxtools.cdt.autotools.buildArtefactType.autotools" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.linuxtools.cdt.autotools.buildArtefactType.autotools" cleanCommand="rm -rf" description="" errorParsers="org.eclipse.cdt.core.MakeErrorParser;org.eclipse.cdt.core.GCCErrorParser;org.eclipse.cdt.core.GLDErrorParser;org.eclipse.cdt.core.GASErrorParser" id="org.eclipse.linuxtools.cdt.autotools.configuration.build.1405330975" name="Build (GNU)" parent="org.eclipse.linuxtools.cdt.autotools.configuration.build">
 <folderInfo id="org.eclipse.linuxtools.cdt.autotools.configuration.build.1405330975." name="/" resourcePath="">
@@ -65,7 +43,7 @@
 </folderInfo>
 <sourceEntries>
 <entry excluding="samlsign|saml|samltest|debug|release|x64" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
-<entry excluding="saml1|saml2|saml2/profile|saml2/metadata|saml2/core|saml2/binding|saml1/core|saml1/profile|saml1/binding|zlib|util|signature|profile|encryption|binding|Debug/|Release/|x64/" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="saml"/>
+<entry excluding="saml1|saml2|saml2/profile|saml2/profile/impl|saml2/metadata|saml2/metadata/impl|saml2/core|saml2/core/impl|saml2/binding|saml2/binding/impl|saml1/core|saml1/profile|saml1/binding|zlib|util|signature|profile|profile/impl|encryption|binding|binding/impl|Debug/|Release/|x64/" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="saml"/>
 <entry excluding="impl" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="saml/binding"/>
 <entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="saml/binding/impl"/>
 <entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="saml/encryption"/>

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2009 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -111,9 +111,9 @@ namespace opensaml {
              public AbstractXMLObjectUnmarshaller
         {
             void init() {
-                m_Value=NULL;
-                m_StatusCode=NULL;
-                m_children.push_back(NULL);
+                m_Value=nullptr;
+                m_StatusCode=nullptr;
+                m_children.push_back(nullptr);
                 m_pos_StatusCode=m_children.begin();
             }
             public:
@@ -139,7 +139,7 @@ namespace opensaml {
 
             protected:
                 void marshallAttributes(DOMElement* domElement) const {
-                    MARSHALL_STRING_ATTRIB(Value,VALUE,NULL);
+                    MARSHALL_STRING_ATTRIB(Value,VALUE,nullptr);
                 }
 
                 void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
@@ -148,7 +148,7 @@ namespace opensaml {
                 }
 
                 void processAttribute(const DOMAttr* attribute) {
-                    PROC_STRING_ATTRIB(Value,VALUE,NULL);
+                    PROC_STRING_ATTRIB(Value,VALUE,nullptr);
                     AbstractXMLObjectUnmarshaller::processAttribute(attribute);
                 }
         };
@@ -190,12 +190,12 @@ namespace opensaml {
              public AbstractXMLObjectUnmarshaller
         {
             void init() {
-                m_StatusCode=NULL;
-                m_StatusMessage=NULL;
-                m_StatusDetail=NULL;
-                m_children.push_back(NULL);
-                m_children.push_back(NULL);
-                m_children.push_back(NULL);
+                m_StatusCode=nullptr;
+                m_StatusMessage=nullptr;
+                m_StatusDetail=nullptr;
+                m_children.push_back(nullptr);
+                m_children.push_back(nullptr);
+                m_children.push_back(nullptr);
                 m_pos_StatusCode=m_children.begin();
                 m_pos_StatusMessage=m_pos_StatusCode;
                 ++m_pos_StatusMessage;
@@ -245,17 +245,17 @@ namespace opensaml {
             public AbstractXMLObjectUnmarshaller
         {
             void init() {
-                m_ID=NULL;
-                m_Version=NULL;
-                m_IssueInstant=NULL;
-                m_Destination=NULL;
-                m_Consent=NULL;
-                m_Issuer=NULL;
-                m_Signature=NULL;
-                m_Extensions=NULL;
-                m_children.push_back(NULL);
-                m_children.push_back(NULL);
-                m_children.push_back(NULL);
+                m_ID=nullptr;
+                m_Version=nullptr;
+                m_IssueInstant=nullptr;
+                m_Destination=nullptr;
+                m_Consent=nullptr;
+                m_Issuer=nullptr;
+                m_Signature=nullptr;
+                m_Extensions=nullptr;
+                m_children.push_back(nullptr);
+                m_children.push_back(nullptr);
+                m_children.push_back(nullptr);
                 m_pos_Issuer=m_children.begin();
                 m_pos_Signature=m_pos_Issuer;
                 ++m_pos_Signature;
@@ -315,7 +315,7 @@ namespace opensaml {
             }
             
             IMPL_STRING_ATTRIB(Version);
-            IMPL_ID_ATTRIB_EX(ID,ID,NULL);
+            IMPL_ID_ATTRIB_EX(ID,ID,nullptr);
             IMPL_DATETIME_ATTRIB(IssueInstant,0);
             IMPL_STRING_ATTRIB(Destination);
             IMPL_STRING_ATTRIB(Consent);
@@ -326,17 +326,17 @@ namespace opensaml {
             void marshallAttributes(DOMElement* domElement) const {
                 if (!m_Version)
                     const_cast<RequestAbstractTypeImpl*>(this)->m_Version=XMLString::transcode("2.0");
-                MARSHALL_STRING_ATTRIB(Version,VER,NULL);
+                MARSHALL_STRING_ATTRIB(Version,VER,nullptr);
                 if (!m_ID)
                     const_cast<RequestAbstractTypeImpl*>(this)->m_ID=SAMLConfig::getConfig().generateIdentifier();
-                MARSHALL_ID_ATTRIB(ID,ID,NULL);
+                MARSHALL_ID_ATTRIB(ID,ID,nullptr);
                 if (!m_IssueInstant) {
-                    const_cast<RequestAbstractTypeImpl*>(this)->m_IssueInstantEpoch=time(NULL);
+                    const_cast<RequestAbstractTypeImpl*>(this)->m_IssueInstantEpoch=time(nullptr);
                     const_cast<RequestAbstractTypeImpl*>(this)->m_IssueInstant=new DateTime(m_IssueInstantEpoch);
                 }
-                MARSHALL_DATETIME_ATTRIB(IssueInstant,ISSUEINSTANT,NULL);
-                MARSHALL_STRING_ATTRIB(Destination,DESTINATION,NULL);
-                MARSHALL_STRING_ATTRIB(Consent,CONSENT,NULL);
+                MARSHALL_DATETIME_ATTRIB(IssueInstant,ISSUEINSTANT,nullptr);
+                MARSHALL_STRING_ATTRIB(Destination,DESTINATION,nullptr);
+                MARSHALL_STRING_ATTRIB(Consent,CONSENT,nullptr);
             }
     
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
@@ -347,11 +347,11 @@ namespace opensaml {
             }
     
             void processAttribute(const DOMAttr* attribute) {
-                PROC_ID_ATTRIB(ID,ID,NULL);
-                PROC_STRING_ATTRIB(Version,VER,NULL);
-                PROC_DATETIME_ATTRIB(IssueInstant,ISSUEINSTANT,NULL);
-                PROC_STRING_ATTRIB(Destination,DESTINATION,NULL);
-                PROC_STRING_ATTRIB(Consent,CONSENT,NULL);
+                PROC_ID_ATTRIB(ID,ID,nullptr);
+                PROC_STRING_ATTRIB(Version,VER,nullptr);
+                PROC_DATETIME_ATTRIB(IssueInstant,ISSUEINSTANT,nullptr);
+                PROC_STRING_ATTRIB(Destination,DESTINATION,nullptr);
+                PROC_STRING_ATTRIB(Consent,CONSENT,nullptr);
                 AbstractXMLObjectUnmarshaller::processAttribute(attribute);
             }
         };
@@ -393,8 +393,8 @@ namespace opensaml {
         {
             void init()
             {
-                m_Subject = NULL;
-                m_children.push_back(NULL);
+                m_Subject = nullptr;
+                m_children.push_back(nullptr);
                 m_pos_Subject = m_pos_Extensions;
                 ++m_pos_Subject;
             }
@@ -434,7 +434,7 @@ namespace opensaml {
             public AbstractXMLObjectUnmarshaller
         {
             void init() {
-                m_Comparison=NULL;
+                m_Comparison=nullptr;
             }
         public:
             virtual ~RequestedAuthnContextImpl() {
@@ -474,7 +474,7 @@ namespace opensaml {
     
         protected:
             void marshallAttributes(DOMElement* domElement) const {
-                MARSHALL_STRING_ATTRIB(Comparison,COMPARISON,NULL);
+                MARSHALL_STRING_ATTRIB(Comparison,COMPARISON,nullptr);
             }
     
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
@@ -484,7 +484,7 @@ namespace opensaml {
             }
     
             void processAttribute(const DOMAttr* attribute) {
-                PROC_STRING_ATTRIB(Comparison,COMPARISON,NULL);
+                PROC_STRING_ATTRIB(Comparison,COMPARISON,nullptr);
                 AbstractXMLObjectUnmarshaller::processAttribute(attribute);
             }
         };
@@ -493,9 +493,9 @@ namespace opensaml {
         class SAML_DLLLOCAL AuthnQueryImpl : public virtual AuthnQuery, public SubjectQueryImpl
         {
             void init() {
-                m_SessionIndex=NULL;
-                m_RequestedAuthnContext=NULL;
-                m_children.push_back(NULL);
+                m_SessionIndex=nullptr;
+                m_RequestedAuthnContext=nullptr;
+                m_children.push_back(nullptr);
                 m_pos_RequestedAuthnContext = m_pos_Subject;
                 ++m_pos_RequestedAuthnContext;
                 
@@ -531,7 +531,7 @@ namespace opensaml {
     
         protected:
             void marshallAttributes(DOMElement* domElement) const {
-                MARSHALL_STRING_ATTRIB(SessionIndex,SESSIONINDEX,NULL);
+                MARSHALL_STRING_ATTRIB(SessionIndex,SESSIONINDEX,nullptr);
                 SubjectQueryImpl::marshallAttributes(domElement);
             }
     
@@ -540,7 +540,7 @@ namespace opensaml {
                 SubjectQueryImpl::processChildElement(childXMLObject,root);
             }
             void processAttribute(const DOMAttr* attribute) {
-                PROC_STRING_ATTRIB(SessionIndex,SESSIONINDEX,NULL);
+                PROC_STRING_ATTRIB(SessionIndex,SESSIONINDEX,nullptr);
                 SubjectQueryImpl::processAttribute(attribute);
             }
         };
@@ -586,9 +586,9 @@ namespace opensaml {
         class SAML_DLLLOCAL AuthzDecisionQueryImpl : public virtual AuthzDecisionQuery, public SubjectQueryImpl
         {
             void init() {
-                m_Resource=NULL;
-                m_Evidence=NULL;
-                m_children.push_back(NULL);
+                m_Resource=nullptr;
+                m_Evidence=nullptr;
+                m_children.push_back(nullptr);
                 m_pos_Evidence=m_pos_Subject;
                 ++m_pos_Evidence;
                 
@@ -633,7 +633,7 @@ namespace opensaml {
     
         protected:
             void marshallAttributes(DOMElement* domElement) const {
-                MARSHALL_STRING_ATTRIB(Resource,RESOURCE,NULL);
+                MARSHALL_STRING_ATTRIB(Resource,RESOURCE,nullptr);
                 SubjectQueryImpl::marshallAttributes(domElement);
             }
     
@@ -643,7 +643,7 @@ namespace opensaml {
                 SubjectQueryImpl::processChildElement(childXMLObject,root);
             }
             void processAttribute(const DOMAttr* attribute) {
-                PROC_STRING_ATTRIB(Resource,RESOURCE,NULL);
+                PROC_STRING_ATTRIB(Resource,RESOURCE,nullptr);
                 SubjectQueryImpl::processAttribute(attribute);
             }
         };
@@ -655,8 +655,8 @@ namespace opensaml {
             public AbstractXMLObjectUnmarshaller
         {
             void init() {
-                m_Format=NULL;
-                m_SPNameQualifier=NULL;
+                m_Format=nullptr;
+                m_SPNameQualifier=nullptr;
                 m_AllowCreate=XML_BOOL_NULL;
             }
             public:
@@ -687,15 +687,15 @@ namespace opensaml {
 
             protected:
                 void marshallAttributes(DOMElement* domElement) const {
-                    MARSHALL_STRING_ATTRIB(Format,FORMAT,NULL);
-                    MARSHALL_STRING_ATTRIB(SPNameQualifier,SPNAMEQUALIFIER,NULL);
-                    MARSHALL_BOOLEAN_ATTRIB(AllowCreate,ALLOWCREATE,NULL);
+                    MARSHALL_STRING_ATTRIB(Format,FORMAT,nullptr);
+                    MARSHALL_STRING_ATTRIB(SPNameQualifier,SPNAMEQUALIFIER,nullptr);
+                    MARSHALL_BOOLEAN_ATTRIB(AllowCreate,ALLOWCREATE,nullptr);
                 }
 
                 void processAttribute(const DOMAttr* attribute) {
-                    PROC_STRING_ATTRIB(Format,FORMAT,NULL);
-                    PROC_STRING_ATTRIB(SPNameQualifier,SPNAMEQUALIFIER,NULL);
-                    PROC_BOOLEAN_ATTRIB(AllowCreate,ALLOWCREATE,NULL);
+                    PROC_STRING_ATTRIB(Format,FORMAT,nullptr);
+                    PROC_STRING_ATTRIB(SPNameQualifier,SPNAMEQUALIFIER,nullptr);
+                    PROC_BOOLEAN_ATTRIB(AllowCreate,ALLOWCREATE,nullptr);
                     AbstractXMLObjectUnmarshaller::processAttribute(attribute);
                 }
         };
@@ -707,9 +707,9 @@ namespace opensaml {
             public AbstractXMLObjectUnmarshaller
         {
             void init() {
-                m_ProviderID=NULL;
-                m_Name=NULL;
-                m_Loc=NULL;
+                m_ProviderID=nullptr;
+                m_Name=nullptr;
+                m_Loc=nullptr;
             }
             public:
                 virtual ~IDPEntryImpl()
@@ -740,15 +740,15 @@ namespace opensaml {
 
             protected:
                 void marshallAttributes(DOMElement* domElement) const {
-                    MARSHALL_STRING_ATTRIB(ProviderID,PROVIDERID,NULL);
-                    MARSHALL_STRING_ATTRIB(Name,NAME,NULL);
-                    MARSHALL_STRING_ATTRIB(Loc,LOC,NULL);
+                    MARSHALL_STRING_ATTRIB(ProviderID,PROVIDERID,nullptr);
+                    MARSHALL_STRING_ATTRIB(Name,NAME,nullptr);
+                    MARSHALL_STRING_ATTRIB(Loc,LOC,nullptr);
                 }
 
                 void processAttribute(const DOMAttr* attribute) {
-                    PROC_STRING_ATTRIB(ProviderID,PROVIDERID,NULL);
-                    PROC_STRING_ATTRIB(Name,NAME,NULL);
-                    PROC_STRING_ATTRIB(Loc,LOC,NULL);
+                    PROC_STRING_ATTRIB(ProviderID,PROVIDERID,nullptr);
+                    PROC_STRING_ATTRIB(Name,NAME,nullptr);
+                    PROC_STRING_ATTRIB(Loc,LOC,nullptr);
                     AbstractXMLObjectUnmarshaller::processAttribute(attribute);
                 }
         };
@@ -760,8 +760,8 @@ namespace opensaml {
             public AbstractXMLObjectUnmarshaller
         {
             void init() {
-                m_GetComplete=NULL;
-                m_children.push_back(NULL);
+                m_GetComplete=nullptr;
+                m_children.push_back(nullptr);
                 m_pos_GetComplete=m_children.begin();
                 
             }
@@ -810,9 +810,9 @@ namespace opensaml {
             public AbstractXMLObjectUnmarshaller
         {
             void init() {
-                m_ProxyCount=NULL;
-                m_IDPList=NULL;
-                m_children.push_back(NULL);
+                m_ProxyCount=nullptr;
+                m_IDPList=nullptr;
+                m_children.push_back(nullptr);
                 m_pos_IDPList=m_children.begin();
                 
             }
@@ -851,7 +851,7 @@ namespace opensaml {
     
         protected:
             void marshallAttributes(DOMElement* domElement) const {
-                    MARSHALL_INTEGER_ATTRIB(ProxyCount,PROXYCOUNT,NULL);
+                    MARSHALL_INTEGER_ATTRIB(ProxyCount,PROXYCOUNT,nullptr);
             }
     
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
@@ -861,7 +861,7 @@ namespace opensaml {
             }
 
             void processAttribute(const DOMAttr* attribute) {
-                PROC_INTEGER_ATTRIB(ProxyCount,PROXYCOUNT,NULL);
+                PROC_INTEGER_ATTRIB(ProxyCount,PROXYCOUNT,nullptr);
                 AbstractXMLObjectUnmarshaller::processAttribute(attribute);
             }
         };
@@ -871,22 +871,22 @@ namespace opensaml {
             void init() {
                 m_ForceAuthn=XML_BOOL_NULL;
                 m_IsPassive=XML_BOOL_NULL;
-                m_ProtocolBinding=NULL;
-                m_AssertionConsumerServiceIndex=NULL;
-                m_AssertionConsumerServiceURL=NULL;
-                m_AttributeConsumingServiceIndex=NULL;
-                m_ProviderName=NULL;
+                m_ProtocolBinding=nullptr;
+                m_AssertionConsumerServiceIndex=nullptr;
+                m_AssertionConsumerServiceURL=nullptr;
+                m_AttributeConsumingServiceIndex=nullptr;
+                m_ProviderName=nullptr;
 
-                m_Subject=NULL;
-                m_NameIDPolicy=NULL;
-                m_Conditions=NULL;
-                m_RequestedAuthnContext=NULL;
-                m_Scoping=NULL;
-                m_children.push_back(NULL);
-                m_children.push_back(NULL);
-                m_children.push_back(NULL);
-                m_children.push_back(NULL);
-                m_children.push_back(NULL);
+                m_Subject=nullptr;
+                m_NameIDPolicy=nullptr;
+                m_Conditions=nullptr;
+                m_RequestedAuthnContext=nullptr;
+                m_Scoping=nullptr;
+                m_children.push_back(nullptr);
+                m_children.push_back(nullptr);
+                m_children.push_back(nullptr);
+                m_children.push_back(nullptr);
+                m_children.push_back(nullptr);
                 m_pos_Subject=m_pos_Extensions;
                 ++m_pos_Subject;
                 m_pos_NameIDPolicy=m_pos_Subject;
@@ -958,13 +958,13 @@ namespace opensaml {
     
         protected:
             void marshallAttributes(DOMElement* domElement) const {
-                MARSHALL_BOOLEAN_ATTRIB(ForceAuthn,FORCEAUTHN,NULL);
-                MARSHALL_BOOLEAN_ATTRIB(IsPassive,ISPASSIVE,NULL);
-                MARSHALL_STRING_ATTRIB(ProtocolBinding,PROTOCOLBINDING,NULL);
-                MARSHALL_INTEGER_ATTRIB(AssertionConsumerServiceIndex,ASSERTIONCONSUMERSERVICEINDEX,NULL);
-                MARSHALL_STRING_ATTRIB(AssertionConsumerServiceURL,ASSERTIONCONSUMERSERVICEURL,NULL);
-                MARSHALL_INTEGER_ATTRIB(AttributeConsumingServiceIndex,ATTRIBUTECONSUMINGSERVICEINDEX,NULL);
-                MARSHALL_STRING_ATTRIB(ProviderName,PROVIDERNAME,NULL);
+                MARSHALL_BOOLEAN_ATTRIB(ForceAuthn,FORCEAUTHN,nullptr);
+                MARSHALL_BOOLEAN_ATTRIB(IsPassive,ISPASSIVE,nullptr);
+                MARSHALL_STRING_ATTRIB(ProtocolBinding,PROTOCOLBINDING,nullptr);
+                MARSHALL_INTEGER_ATTRIB(AssertionConsumerServiceIndex,ASSERTIONCONSUMERSERVICEINDEX,nullptr);
+                MARSHALL_STRING_ATTRIB(AssertionConsumerServiceURL,ASSERTIONCONSUMERSERVICEURL,nullptr);
+                MARSHALL_INTEGER_ATTRIB(AttributeConsumingServiceIndex,ATTRIBUTECONSUMINGSERVICEINDEX,nullptr);
+                MARSHALL_STRING_ATTRIB(ProviderName,PROVIDERNAME,nullptr);
                 RequestAbstractTypeImpl::marshallAttributes(domElement);
             }
     
@@ -977,13 +977,13 @@ namespace opensaml {
                 RequestAbstractTypeImpl::processChildElement(childXMLObject,root);
             }
             void processAttribute(const DOMAttr* attribute) {
-                PROC_BOOLEAN_ATTRIB(ForceAuthn,FORCEAUTHN,NULL);
-                PROC_BOOLEAN_ATTRIB(IsPassive,ISPASSIVE,NULL);
-                PROC_STRING_ATTRIB(ProtocolBinding,PROTOCOLBINDING,NULL);
-                PROC_INTEGER_ATTRIB(AssertionConsumerServiceIndex,ASSERTIONCONSUMERSERVICEINDEX,NULL);
-                PROC_STRING_ATTRIB(AssertionConsumerServiceURL,ASSERTIONCONSUMERSERVICEURL,NULL);
-                PROC_INTEGER_ATTRIB(AttributeConsumingServiceIndex,ATTRIBUTECONSUMINGSERVICEINDEX,NULL);
-                PROC_STRING_ATTRIB(ProviderName,PROVIDERNAME,NULL);
+                PROC_BOOLEAN_ATTRIB(ForceAuthn,FORCEAUTHN,nullptr);
+                PROC_BOOLEAN_ATTRIB(IsPassive,ISPASSIVE,nullptr);
+                PROC_STRING_ATTRIB(ProtocolBinding,PROTOCOLBINDING,nullptr);
+                PROC_INTEGER_ATTRIB(AssertionConsumerServiceIndex,ASSERTIONCONSUMERSERVICEINDEX,nullptr);
+                PROC_STRING_ATTRIB(AssertionConsumerServiceURL,ASSERTIONCONSUMERSERVICEURL,nullptr);
+                PROC_INTEGER_ATTRIB(AttributeConsumingServiceIndex,ATTRIBUTECONSUMINGSERVICEINDEX,nullptr);
+                PROC_STRING_ATTRIB(ProviderName,PROVIDERNAME,nullptr);
                 RequestAbstractTypeImpl::processAttribute(attribute);
             }
         };
@@ -995,20 +995,20 @@ namespace opensaml {
             public AbstractXMLObjectUnmarshaller
         {
             void init() {
-                m_ID=NULL;
-                m_InResponseTo=NULL;
-                m_Version=NULL;
-                m_IssueInstant=NULL;
-                m_Destination=NULL;
-                m_Consent=NULL;
-                m_Issuer=NULL;
-                m_Signature=NULL;
-                m_Extensions=NULL;
-                m_Status=NULL;
-                m_children.push_back(NULL);
-                m_children.push_back(NULL);
-                m_children.push_back(NULL);
-                m_children.push_back(NULL);
+                m_ID=nullptr;
+                m_InResponseTo=nullptr;
+                m_Version=nullptr;
+                m_IssueInstant=nullptr;
+                m_Destination=nullptr;
+                m_Consent=nullptr;
+                m_Issuer=nullptr;
+                m_Signature=nullptr;
+                m_Extensions=nullptr;
+                m_Status=nullptr;
+                m_children.push_back(nullptr);
+                m_children.push_back(nullptr);
+                m_children.push_back(nullptr);
+                m_children.push_back(nullptr);
                 m_pos_Issuer=m_children.begin();
                 m_pos_Signature=m_pos_Issuer;
                 ++m_pos_Signature;
@@ -1075,7 +1075,7 @@ namespace opensaml {
             }
             
             IMPL_STRING_ATTRIB(Version);
-            IMPL_ID_ATTRIB_EX(ID,ID,NULL);
+            IMPL_ID_ATTRIB_EX(ID,ID,nullptr);
             IMPL_STRING_ATTRIB(InResponseTo);
             IMPL_DATETIME_ATTRIB(IssueInstant,0);
             IMPL_STRING_ATTRIB(Destination);
@@ -1088,18 +1088,18 @@ namespace opensaml {
             void marshallAttributes(DOMElement* domElement) const {
                 if (!m_Version)
                     const_cast<StatusResponseTypeImpl*>(this)->m_Version=XMLString::transcode("2.0");
-                MARSHALL_STRING_ATTRIB(Version,VER,NULL);
+                MARSHALL_STRING_ATTRIB(Version,VER,nullptr);
                 if (!m_ID)
                     const_cast<StatusResponseTypeImpl*>(this)->m_ID=SAMLConfig::getConfig().generateIdentifier();
-                MARSHALL_ID_ATTRIB(ID,ID,NULL);
+                MARSHALL_ID_ATTRIB(ID,ID,nullptr);
                 if (!m_IssueInstant) {
-                    const_cast<StatusResponseTypeImpl*>(this)->m_IssueInstantEpoch=time(NULL);
+                    const_cast<StatusResponseTypeImpl*>(this)->m_IssueInstantEpoch=time(nullptr);
                     const_cast<StatusResponseTypeImpl*>(this)->m_IssueInstant=new DateTime(m_IssueInstantEpoch);
                 }
-                MARSHALL_DATETIME_ATTRIB(IssueInstant,ISSUEINSTANT,NULL);
-                MARSHALL_STRING_ATTRIB(Destination,DESTINATION,NULL);
-                MARSHALL_STRING_ATTRIB(Consent,CONSENT,NULL);
-                MARSHALL_STRING_ATTRIB(InResponseTo,INRESPONSETO,NULL);
+                MARSHALL_DATETIME_ATTRIB(IssueInstant,ISSUEINSTANT,nullptr);
+                MARSHALL_STRING_ATTRIB(Destination,DESTINATION,nullptr);
+                MARSHALL_STRING_ATTRIB(Consent,CONSENT,nullptr);
+                MARSHALL_STRING_ATTRIB(InResponseTo,INRESPONSETO,nullptr);
             }
     
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
@@ -1111,12 +1111,12 @@ namespace opensaml {
             }
     
             void processAttribute(const DOMAttr* attribute) {
-                PROC_ID_ATTRIB(ID,ID,NULL);
-                PROC_STRING_ATTRIB(Version,VER,NULL);
-                PROC_STRING_ATTRIB(InResponseTo,INRESPONSETO,NULL);
-                PROC_DATETIME_ATTRIB(IssueInstant,ISSUEINSTANT,NULL);
-                PROC_STRING_ATTRIB(Destination,DESTINATION,NULL);
-                PROC_STRING_ATTRIB(Consent,CONSENT,NULL);
+                PROC_ID_ATTRIB(ID,ID,nullptr);
+                PROC_STRING_ATTRIB(Version,VER,nullptr);
+                PROC_STRING_ATTRIB(InResponseTo,INRESPONSETO,nullptr);
+                PROC_DATETIME_ATTRIB(IssueInstant,ISSUEINSTANT,nullptr);
+                PROC_STRING_ATTRIB(Destination,DESTINATION,nullptr);
+                PROC_STRING_ATTRIB(Consent,CONSENT,nullptr);
                 AbstractXMLObjectUnmarshaller::processAttribute(attribute);
             }
         };
@@ -1166,8 +1166,8 @@ namespace opensaml {
         class SAML_DLLLOCAL ArtifactResolveImpl : public virtual ArtifactResolve, public RequestAbstractTypeImpl
         {
             void init() {
-                m_Artifact=NULL;
-                m_children.push_back(NULL);
+                m_Artifact=nullptr;
+                m_children.push_back(nullptr);
                 m_pos_Artifact=m_pos_Extensions;
                 ++m_pos_Artifact;
             }
@@ -1203,8 +1203,8 @@ namespace opensaml {
         class SAML_DLLLOCAL ArtifactResponseImpl : public virtual ArtifactResponse, public StatusResponseTypeImpl
         {
             void init() {
-                m_Payload=NULL;
-                m_children.push_back(NULL);
+                m_Payload=nullptr;
+                m_children.push_back(nullptr);
                 m_pos_Payload=m_pos_Status;
                 ++m_pos_Payload;
             }
@@ -1257,8 +1257,8 @@ namespace opensaml {
             public AbstractXMLObjectUnmarshaller
         {
             void init() {
-                m_EncryptedData=NULL;
-                m_children.push_back(NULL);
+                m_EncryptedData=nullptr;
+                m_children.push_back(nullptr);
                 m_pos_EncryptedData=m_children.begin();
             }
             
@@ -1331,16 +1331,16 @@ namespace opensaml {
         class SAML_DLLLOCAL ManageNameIDRequestImpl : public virtual ManageNameIDRequest, public RequestAbstractTypeImpl
         {
             void init() {
-                m_NameID=NULL;
-                m_EncryptedID=NULL;
-                m_NewID=NULL;
-                m_NewEncryptedID=NULL;
-                m_Terminate=NULL;
-                m_children.push_back(NULL);
-                m_children.push_back(NULL);
-                m_children.push_back(NULL);
-                m_children.push_back(NULL);
-                m_children.push_back(NULL);
+                m_NameID=nullptr;
+                m_EncryptedID=nullptr;
+                m_NewID=nullptr;
+                m_NewEncryptedID=nullptr;
+                m_Terminate=nullptr;
+                m_children.push_back(nullptr);
+                m_children.push_back(nullptr);
+                m_children.push_back(nullptr);
+                m_children.push_back(nullptr);
+                m_children.push_back(nullptr);
                 m_pos_NameID=m_pos_Extensions;
                 ++m_pos_NameID;
                 m_pos_EncryptedID=m_pos_NameID;
@@ -1420,15 +1420,15 @@ namespace opensaml {
         class SAML_DLLLOCAL LogoutRequestImpl : public virtual LogoutRequest, public RequestAbstractTypeImpl
         {
             void init() {
-                m_Reason=NULL;
-                m_NotOnOrAfter=NULL;
+                m_Reason=nullptr;
+                m_NotOnOrAfter=nullptr;
 
-                m_BaseID=NULL;
-                m_NameID=NULL;
-                m_EncryptedID=NULL;
-                m_children.push_back(NULL);
-                m_children.push_back(NULL);
-                m_children.push_back(NULL);
+                m_BaseID=nullptr;
+                m_NameID=nullptr;
+                m_EncryptedID=nullptr;
+                m_children.push_back(nullptr);
+                m_children.push_back(nullptr);
+                m_children.push_back(nullptr);
                 m_pos_BaseID=m_pos_Extensions;
                 ++m_pos_BaseID;
                 m_pos_NameID=m_pos_BaseID;
@@ -1487,8 +1487,8 @@ namespace opensaml {
     
         protected:
             void marshallAttributes(DOMElement* domElement) const {
-                MARSHALL_STRING_ATTRIB(Reason,REASON,NULL);
-                MARSHALL_DATETIME_ATTRIB(NotOnOrAfter,NOTONORAFTER,NULL);
+                MARSHALL_STRING_ATTRIB(Reason,REASON,nullptr);
+                MARSHALL_DATETIME_ATTRIB(NotOnOrAfter,NOTONORAFTER,nullptr);
                 RequestAbstractTypeImpl::marshallAttributes(domElement);
             }
     
@@ -1500,8 +1500,8 @@ namespace opensaml {
                 RequestAbstractTypeImpl::processChildElement(childXMLObject,root);
             }
             void processAttribute(const DOMAttr* attribute) {
-                PROC_STRING_ATTRIB(Reason,REASON,NULL);
-                PROC_DATETIME_ATTRIB(NotOnOrAfter,NOTONORAFTER,NULL);
+                PROC_STRING_ATTRIB(Reason,REASON,nullptr);
+                PROC_DATETIME_ATTRIB(NotOnOrAfter,NOTONORAFTER,nullptr);
                 RequestAbstractTypeImpl::processAttribute(attribute);
             }
         };
@@ -1527,14 +1527,14 @@ namespace opensaml {
         class SAML_DLLLOCAL NameIDMappingRequestImpl : public virtual NameIDMappingRequest, public RequestAbstractTypeImpl
         {
             void init() {
-                m_BaseID=NULL;
-                m_NameID=NULL;
-                m_EncryptedID=NULL;
-                m_NameIDPolicy=NULL;
-                m_children.push_back(NULL);
-                m_children.push_back(NULL);
-                m_children.push_back(NULL);
-                m_children.push_back(NULL);
+                m_BaseID=nullptr;
+                m_NameID=nullptr;
+                m_EncryptedID=nullptr;
+                m_NameIDPolicy=nullptr;
+                m_children.push_back(nullptr);
+                m_children.push_back(nullptr);
+                m_children.push_back(nullptr);
+                m_children.push_back(nullptr);
                 m_pos_BaseID=m_pos_Extensions;
                 ++m_pos_BaseID;
                 m_pos_NameID=m_pos_BaseID;
@@ -1591,10 +1591,10 @@ namespace opensaml {
         class SAML_DLLLOCAL NameIDMappingResponseImpl : public virtual NameIDMappingResponse, public StatusResponseTypeImpl
         {
             void init() {
-                m_NameID=NULL;
-                m_EncryptedID=NULL;
-                m_children.push_back(NULL);
-                m_children.push_back(NULL);
+                m_NameID=nullptr;
+                m_EncryptedID=nullptr;
+                m_children.push_back(nullptr);
+                m_children.push_back(nullptr);
                 m_pos_NameID=m_pos_Status;
                 ++m_pos_NameID;
                 m_pos_EncryptedID=m_pos_NameID;

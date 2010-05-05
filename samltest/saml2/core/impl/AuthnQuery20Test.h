@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,42 +58,42 @@ public:
     void testSingleElementUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         AuthnQuery* query = dynamic_cast<AuthnQuery*>(xo.get());
-        TS_ASSERT(query!=NULL);
+        TS_ASSERT(query!=nullptr);
         assertEquals("ID attribute", expectedID, query->getID());
         assertEquals("Version attribute", expectedVersion, query->getVersion());
         TSM_ASSERT_EQUALS("IssueInstant attribute", expectedIssueInstant->getEpoch(), query->getIssueInstant()->getEpoch());
 
-        TS_ASSERT(query->getIssuer()==NULL);
-        TS_ASSERT(query->getSignature()==NULL);
-        TS_ASSERT(query->getExtensions()==NULL);
-        TS_ASSERT(query->getSubject()==NULL);
-        TS_ASSERT(query->getRequestedAuthnContext()==NULL);
+        TS_ASSERT(query->getIssuer()==nullptr);
+        TS_ASSERT(query->getSignature()==nullptr);
+        TS_ASSERT(query->getExtensions()==nullptr);
+        TS_ASSERT(query->getSubject()==nullptr);
+        TS_ASSERT(query->getRequestedAuthnContext()==nullptr);
     }
 
     void testSingleElementOptionalAttributesUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
         AuthnQuery* query = dynamic_cast<AuthnQuery*>(xo.get());
-        TS_ASSERT(query!=NULL);
+        TS_ASSERT(query!=nullptr);
         assertEquals("Consent attribute", expectedConsent, query->getConsent());
         assertEquals("Destination attribute", expectedDestination, query->getDestination());
         assertEquals("SessionIndex attribute", expectedSessionIndex, query->getSessionIndex());
 
-        TS_ASSERT(query->getIssuer()==NULL);
-        TS_ASSERT(query->getSignature()==NULL);
-        TS_ASSERT(query->getExtensions()==NULL);
-        TS_ASSERT(query->getSubject()==NULL);
-        TS_ASSERT(query->getRequestedAuthnContext()==NULL);
+        TS_ASSERT(query->getIssuer()==nullptr);
+        TS_ASSERT(query->getSignature()==nullptr);
+        TS_ASSERT(query->getExtensions()==nullptr);
+        TS_ASSERT(query->getSubject()==nullptr);
+        TS_ASSERT(query->getRequestedAuthnContext()==nullptr);
     }
 
     void testChildElementsUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         AuthnQuery* query= dynamic_cast<AuthnQuery*>(xo.get());
-        TS_ASSERT(query!=NULL);
-        TS_ASSERT(query->getIssuer()!=NULL);
-        TS_ASSERT(query->getSignature()==NULL);
-        TS_ASSERT(query->getExtensions()==NULL);
-        TS_ASSERT(query->getSubject()!=NULL);
-        TS_ASSERT(query->getRequestedAuthnContext()!=NULL);
+        TS_ASSERT(query!=nullptr);
+        TS_ASSERT(query->getIssuer()!=nullptr);
+        TS_ASSERT(query->getSignature()==nullptr);
+        TS_ASSERT(query->getExtensions()==nullptr);
+        TS_ASSERT(query->getSubject()!=nullptr);
+        TS_ASSERT(query->getRequestedAuthnContext()!=nullptr);
     }
 
     void testSingleElementMarshall() {

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,22 +36,22 @@ public:
     void testSingleElementUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         Subject* subject = dynamic_cast<Subject*>(xo.get());
-        TS_ASSERT(subject!=NULL);
+        TS_ASSERT(subject!=nullptr);
 
-        TS_ASSERT(subject->getBaseID()==NULL);
-        TS_ASSERT(subject->getNameID()==NULL);
-        TS_ASSERT(subject->getEncryptedID()==NULL);
+        TS_ASSERT(subject->getBaseID()==nullptr);
+        TS_ASSERT(subject->getNameID()==nullptr);
+        TS_ASSERT(subject->getEncryptedID()==nullptr);
         TSM_ASSERT_EQUALS("# of SubjectConfirmation child elements", 0, subject->getSubjectConfirmations().size());
     }
 
     void testChildElementsUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         Subject* subject= dynamic_cast<Subject*>(xo.get());
-        TS_ASSERT(subject!=NULL);
+        TS_ASSERT(subject!=nullptr);
 
-        TS_ASSERT(subject->getBaseID()==NULL);
-        TS_ASSERT(subject->getNameID()!=NULL);
-        TS_ASSERT(subject->getEncryptedID()==NULL);
+        TS_ASSERT(subject->getBaseID()==nullptr);
+        TS_ASSERT(subject->getNameID()!=nullptr);
+        TS_ASSERT(subject->getEncryptedID()==nullptr);
         TSM_ASSERT_EQUALS("# of SubjectConfirmation child elements", 2, subject->getSubjectConfirmations().size());
     }
 

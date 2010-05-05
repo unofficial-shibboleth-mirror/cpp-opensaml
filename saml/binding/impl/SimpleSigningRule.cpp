@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2009 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -92,7 +92,7 @@ bool SimpleSigningRule::appendParameter(string& s, const char* data, const char*
 SimpleSigningRule::SimpleSigningRule(const DOMElement* e) : m_errorFatal(false)
 {
     if (e) {
-        const XMLCh* flag = e->getAttributeNS(NULL, errorFatal);
+        const XMLCh* flag = e->getAttributeNS(nullptr, errorFatal);
         m_errorFatal = (flag && (*flag==chLatin_t || *flag==chDigit_1)); 
     }
 }
@@ -188,7 +188,7 @@ bool SimpleSigningRule::evaluate(const XMLObject& message, const GenericRequest*
     }
 
     // Check for KeyInfo, but defensively (we might be able to run without it).
-    KeyInfo* keyInfo=NULL;
+    KeyInfo* keyInfo=nullptr;
     pch = request->getParameter("KeyInfo");
     if (pch) {
         xsecsize_t x;

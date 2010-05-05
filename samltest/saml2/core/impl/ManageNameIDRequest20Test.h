@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,51 +55,51 @@ public:
     void testSingleElementUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         ManageNameIDRequest* request = dynamic_cast<ManageNameIDRequest*>(xo.get());
-        TS_ASSERT(request!=NULL);
+        TS_ASSERT(request!=nullptr);
         assertEquals("ID attribute", expectedID, request->getID());
         assertEquals("Version attribute", expectedVersion, request->getVersion());
         TSM_ASSERT_EQUALS("IssueInstant attribute", expectedIssueInstant->getEpoch(), request->getIssueInstant()->getEpoch());
 
-        TS_ASSERT(request->getIssuer()==NULL);
-        TS_ASSERT(request->getSignature()==NULL);
-        TS_ASSERT(request->getExtensions()==NULL);
-        TS_ASSERT(request->getNameID()==NULL);
-        TS_ASSERT(request->getEncryptedID()==NULL);
-        TS_ASSERT(request->getNewID()==NULL);
-        TS_ASSERT(request->getNewEncryptedID()==NULL);
-        TS_ASSERT(request->getTerminate()==NULL);
+        TS_ASSERT(request->getIssuer()==nullptr);
+        TS_ASSERT(request->getSignature()==nullptr);
+        TS_ASSERT(request->getExtensions()==nullptr);
+        TS_ASSERT(request->getNameID()==nullptr);
+        TS_ASSERT(request->getEncryptedID()==nullptr);
+        TS_ASSERT(request->getNewID()==nullptr);
+        TS_ASSERT(request->getNewEncryptedID()==nullptr);
+        TS_ASSERT(request->getTerminate()==nullptr);
     }
 
     void testSingleElementOptionalAttributesUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
         ManageNameIDRequest* request = dynamic_cast<ManageNameIDRequest*>(xo.get());
-        TS_ASSERT(request!=NULL);
+        TS_ASSERT(request!=nullptr);
 
         assertEquals("Consent attribute", expectedConsent, request->getConsent());
         assertEquals("Destination attribute", expectedDestination, request->getDestination());
 
-        TS_ASSERT(request->getIssuer()==NULL);
-        TS_ASSERT(request->getSignature()==NULL);
-        TS_ASSERT(request->getExtensions()==NULL);
-        TS_ASSERT(request->getNameID()==NULL);
-        TS_ASSERT(request->getEncryptedID()==NULL);
-        TS_ASSERT(request->getNewID()==NULL);
-        TS_ASSERT(request->getNewEncryptedID()==NULL);
-        TS_ASSERT(request->getTerminate()==NULL);
+        TS_ASSERT(request->getIssuer()==nullptr);
+        TS_ASSERT(request->getSignature()==nullptr);
+        TS_ASSERT(request->getExtensions()==nullptr);
+        TS_ASSERT(request->getNameID()==nullptr);
+        TS_ASSERT(request->getEncryptedID()==nullptr);
+        TS_ASSERT(request->getNewID()==nullptr);
+        TS_ASSERT(request->getNewEncryptedID()==nullptr);
+        TS_ASSERT(request->getTerminate()==nullptr);
     }
 
     void testChildElementsUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         ManageNameIDRequest* request= dynamic_cast<ManageNameIDRequest*>(xo.get());
-        TS_ASSERT(request!=NULL);
-        TS_ASSERT(request->getIssuer()!=NULL);
-        TS_ASSERT(request->getSignature()==NULL);
-        TS_ASSERT(request->getExtensions()==NULL);
-        TS_ASSERT(request->getNameID()!=NULL);
-        TS_ASSERT(request->getEncryptedID()==NULL);
-        TS_ASSERT(request->getNewID()!=NULL);
-        TS_ASSERT(request->getNewEncryptedID()==NULL);
-        TS_ASSERT(request->getTerminate()==NULL);
+        TS_ASSERT(request!=nullptr);
+        TS_ASSERT(request->getIssuer()!=nullptr);
+        TS_ASSERT(request->getSignature()==nullptr);
+        TS_ASSERT(request->getExtensions()==nullptr);
+        TS_ASSERT(request->getNameID()!=nullptr);
+        TS_ASSERT(request->getEncryptedID()==nullptr);
+        TS_ASSERT(request->getNewID()!=nullptr);
+        TS_ASSERT(request->getNewEncryptedID()==nullptr);
+        TS_ASSERT(request->getTerminate()==nullptr);
     }
 
     void testSingleElementMarshall() {

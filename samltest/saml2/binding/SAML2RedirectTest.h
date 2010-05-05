@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,16 +51,16 @@ public:
             cc.setUsage(Credential::SIGNING_CREDENTIAL);
             Locker clocker(m_creds);
             const Credential* cred = m_creds->resolve(&cc);
-            TSM_ASSERT("Retrieved credential was null", cred!=NULL);
+            TSM_ASSERT("Retrieved credential was null", cred!=nullptr);
 
             // Freshen timestamp and ID.
-            toSend->setIssueInstant(time(NULL));
-            toSend->setID(NULL);
+            toSend->setIssueInstant(time(nullptr));
+            toSend->setID(nullptr);
     
             // Encode message.
             auto_ptr<MessageEncoder> encoder(
                 SAMLConfig::getConfig().MessageEncoderManager.newPlugin(
-                    samlconstants::SAML20_BINDING_HTTP_REDIRECT, pair<const DOMElement*,const XMLCh*>(NULL,NULL)
+                    samlconstants::SAML20_BINDING_HTTP_REDIRECT, pair<const DOMElement*,const XMLCh*>(nullptr,nullptr)
                     )
                 );
             Locker locker(m_metadata);
@@ -70,7 +70,7 @@ public:
                 "https://sp.example.org/SAML/SSO",
                 m_metadata->getEntityDescriptor(MetadataProvider::Criteria("https://sp.example.org/")).first,
                 "state",
-                NULL,
+                nullptr,
                 cred
                 );
             toSend.release();
@@ -79,7 +79,7 @@ public:
             string relayState;
             auto_ptr<MessageDecoder> decoder(
                 SAMLConfig::getConfig().MessageDecoderManager.newPlugin(
-                    samlconstants::SAML20_BINDING_HTTP_REDIRECT, pair<const DOMElement*,const XMLCh*>(NULL,NULL)
+                    samlconstants::SAML20_BINDING_HTTP_REDIRECT, pair<const DOMElement*,const XMLCh*>(nullptr,nullptr)
                     )
                 );
             auto_ptr<Response> response(dynamic_cast<Response*>(decoder->decode(relayState,*this,policy)));

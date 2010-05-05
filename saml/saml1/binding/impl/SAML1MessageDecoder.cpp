@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2009 Internet2
+ *  Copyright 2001-2010 Internet2
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,8 +57,8 @@ void SAML1MessageDecoder::extractMessageDetails(
 
     Category& log = Category::getInstance(SAML_LOGCAT".MessageDecoder.SAML1");
 
-    const Request* request=NULL;
-    const Response* response=NULL;
+    const Request* request=nullptr;
+    const Response* response=nullptr;
     if (XMLString::equals(q.getLocalPart(), Request::LOCAL_NAME))
         request = dynamic_cast<const Request*>(&message);
     if (!request && XMLString::equals(q.getLocalPart(), Response::LOCAL_NAME))

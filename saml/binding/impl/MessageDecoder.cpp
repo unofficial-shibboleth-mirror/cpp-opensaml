@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2009 Internet2
+ *  Copyright 2001-2010 Internet2
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,7 +66,7 @@ void SAML_API opensaml::registerMessageDecoders()
     XMLObjectBuilder::registerBuilder(xmltooling::QName(samlconstants::SAML20ECP_NS, RelayState), new AnyElementBuilder());
 }
 
-MessageDecoder::MessageDecoder() : m_artifactResolver(NULL)
+MessageDecoder::MessageDecoder() : m_artifactResolver(nullptr)
 {
 }
 
@@ -97,11 +97,11 @@ bool MessageDecoder::ArtifactResolver::isSupported(const SSODescriptorType& ssoD
     EndpointManager<ArtifactResolutionService> mgr(ssoDescriptor.getArtifactResolutionServices());
     if (ssoDescriptor.hasSupport(samlconstants::SAML20P_NS)) {
         auto_ptr_XMLCh binding(samlconstants::SAML20_BINDING_SOAP);
-        return (mgr.getByBinding(binding.get()) != NULL);
+        return (mgr.getByBinding(binding.get()) != nullptr);
     }
     else if (ssoDescriptor.hasSupport(samlconstants::SAML11_PROTOCOL_ENUM) || ssoDescriptor.hasSupport(samlconstants::SAML10_PROTOCOL_ENUM)) {
         auto_ptr_XMLCh binding(samlconstants::SAML1_BINDING_SOAP);
-        return (mgr.getByBinding(binding.get()) != NULL);
+        return (mgr.getByBinding(binding.get()) != nullptr);
     }
 
     return false;

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ public:
         auto_ptr_XMLCh path("path");
         string s = data_path + "security/example-metadata.xml";
         auto_ptr_XMLCh file(s.c_str());
-        doc->getDocumentElement()->setAttributeNS(NULL,path.get(),file.get());
+        doc->getDocumentElement()->setAttributeNS(nullptr,path.get(),file.get());
 
         // Build metadata provider.
         auto_ptr<MetadataProvider> metadataProvider(
@@ -61,7 +61,7 @@ public:
         
         // Build trust engine.
         auto_ptr<TrustEngine> trustEngine(
-            XMLToolingConfig::getConfig().TrustEngineManager.newPlugin(EXPLICIT_KEY_TRUSTENGINE, NULL)
+            XMLToolingConfig::getConfig().TrustEngineManager.newPlugin(EXPLICIT_KEY_TRUSTENGINE, nullptr)
             );
         
         // Get signed assertion.
@@ -74,23 +74,23 @@ public:
 
         Locker locker(metadataProvider.get());
         const EntityDescriptor* descriptor = metadataProvider->getEntityDescriptor(MetadataProvider::Criteria("https://idp.example.org")).first;
-        TSM_ASSERT("Retrieved entity descriptor was null", descriptor!=NULL);
+        TSM_ASSERT("Retrieved entity descriptor was null", descriptor!=nullptr);
         
         RoleDescriptor* role=descriptor->getIDPSSODescriptors().front();
-        TSM_ASSERT("Role not present", role!=NULL);
+        TSM_ASSERT("Role not present", role!=nullptr);
         
         Signature* sig=assertion->getSignature();
-        TSM_ASSERT("Signature not present", sig!=NULL);
+        TSM_ASSERT("Signature not present", sig!=nullptr);
 
         MetadataCredentialCriteria cc(*role);
         cc.setPeerName("https://idp.example.org");
         TSM_ASSERT("Signature failed to validate.", dynamic_cast<SignatureTrustEngine*>(trustEngine.get())->validate(*sig, *metadataProvider, &cc));
 
         descriptor = metadataProvider->getEntityDescriptor(MetadataProvider::Criteria("https://idp2.example.org")).first;
-        TSM_ASSERT("Retrieved entity descriptor was null", descriptor!=NULL);
+        TSM_ASSERT("Retrieved entity descriptor was null", descriptor!=nullptr);
         
         role=descriptor->getIDPSSODescriptors().front();
-        TSM_ASSERT("Role not present", role!=NULL);
+        TSM_ASSERT("Role not present", role!=nullptr);
 
         MetadataCredentialCriteria cc2(*role);
         cc2.setPeerName("https://idp2.example.org");

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2009 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ class Response20Test : public CxxTest::TestSuite, public SAMLObjectBaseTestCase 
     XMLCh* expectedDestination; 
     DateTime* expectedIssueInstant; 
 
-    // Assertion marshaller autogenerates ID, Version and IssueInstant if they are NULL,
+    // Assertion marshaller autogenerates ID, Version and IssueInstant if they are nullptr,
     // so have to agree on something to put in the control XML
     XMLCh* assertionID1, * assertionID2, * assertionID3;
 
@@ -71,16 +71,16 @@ public:
     void testSingleElementUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         Response* response = dynamic_cast<Response*>(xo.get());
-        TS_ASSERT(response!=NULL);
+        TS_ASSERT(response!=nullptr);
 
         assertEquals("ID attribute", expectedID, response->getID());
         assertEquals("Version attribute", expectedVersion, response->getVersion());
         TSM_ASSERT_EQUALS("IssueInstant attribute", expectedIssueInstant->getEpoch(), response->getIssueInstant()->getEpoch());
 
-        TS_ASSERT(response->getIssuer()==NULL);
-        TS_ASSERT(response->getSignature()==NULL);
-        TS_ASSERT(response->getExtensions()==NULL);
-        TS_ASSERT(response->getStatus()==NULL);
+        TS_ASSERT(response->getIssuer()==nullptr);
+        TS_ASSERT(response->getSignature()==nullptr);
+        TS_ASSERT(response->getExtensions()==nullptr);
+        TS_ASSERT(response->getStatus()==nullptr);
         TSM_ASSERT_EQUALS("# of Assertion child elements", 0, response->getAssertions().size());
         TSM_ASSERT_EQUALS("# of EncryptedAssertion child elements", 0, response->getEncryptedAssertions().size());
     }
@@ -88,16 +88,16 @@ public:
     void testSingleElementOptionalAttributesUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
         Response* response = dynamic_cast<Response*>(xo.get());
-        TS_ASSERT(response!=NULL);
+        TS_ASSERT(response!=nullptr);
 
         assertEquals("Consent attribute", expectedConsent, response->getConsent());
         assertEquals("Destination attribute", expectedDestination, response->getDestination());
         assertEquals("InResponseTo attribute", expectedInResponseTo, response->getInResponseTo());
 
-        TS_ASSERT(response->getIssuer()==NULL);
-        TS_ASSERT(response->getSignature()==NULL);
-        TS_ASSERT(response->getExtensions()==NULL);
-        TS_ASSERT(response->getStatus()==NULL);
+        TS_ASSERT(response->getIssuer()==nullptr);
+        TS_ASSERT(response->getSignature()==nullptr);
+        TS_ASSERT(response->getExtensions()==nullptr);
+        TS_ASSERT(response->getStatus()==nullptr);
         TSM_ASSERT_EQUALS("# of Assertion child elements", 0, response->getAssertions().size());
         TSM_ASSERT_EQUALS("# of EncryptedAssertion child elements", 0, response->getEncryptedAssertions().size());
     }
@@ -105,19 +105,19 @@ public:
     void testChildElementsUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         Response* response= dynamic_cast<Response*>(xo.get());
-        TS_ASSERT(response!=NULL);
+        TS_ASSERT(response!=nullptr);
 
-        TS_ASSERT(response->getIssuer()!=NULL);
-        TS_ASSERT(response->getSignature()!=NULL);
-        TS_ASSERT(response->getExtensions()!=NULL);
-        TS_ASSERT(response->getStatus()!=NULL);
+        TS_ASSERT(response->getIssuer()!=nullptr);
+        TS_ASSERT(response->getSignature()!=nullptr);
+        TS_ASSERT(response->getExtensions()!=nullptr);
+        TS_ASSERT(response->getStatus()!=nullptr);
         TSM_ASSERT_EQUALS("# of Assertion child elements", 3, response->getAssertions().size());
         TSM_ASSERT_EQUALS("# of EncryptedAssertion child elements", 1, response->getEncryptedAssertions().size());
     }
 
     void testSingleElementMarshall() {
         Response* response = ResponseBuilder::buildResponse();
-        TS_ASSERT(response!=NULL);
+        TS_ASSERT(response!=nullptr);
 
         response->setID(expectedID);
         response->setIssueInstant(expectedIssueInstant);
@@ -127,7 +127,7 @@ public:
 
     void testSingleElementOptionalAttributesMarshall() {
         Response* response = ResponseBuilder::buildResponse();
-        TS_ASSERT(response!=NULL);
+        TS_ASSERT(response!=nullptr);
 
         response->setID(expectedID);
         response->setInResponseTo(expectedInResponseTo);
@@ -141,7 +141,7 @@ public:
 
     void testChildElementsMarshall() {
         Response* response = ResponseBuilder::buildResponse();
-        TS_ASSERT(response!=NULL);
+        TS_ASSERT(response!=nullptr);
 
         response->setID(expectedID);
         response->setIssueInstant(expectedIssueInstant);
@@ -155,7 +155,7 @@ public:
         response->setExtensions(ExtensionsBuilder::buildExtensions());
         response->setStatus(StatusBuilder::buildStatus());
 
-        Assertion* assertion=NULL;
+        Assertion* assertion=nullptr;
 
         assertion = AssertionBuilder::buildAssertion();
         assertion->setIssueInstant(expectedIssueInstant);

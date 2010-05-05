@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,11 +47,11 @@ public:
     void testSingleElementUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         Attribute* attribute = dynamic_cast<Attribute*>(xo.get());
-        TS_ASSERT(attribute!=NULL);
+        TS_ASSERT(attribute!=nullptr);
 
         assertEquals("Name attribute", expectedName, attribute->getName());
-        TS_ASSERT(attribute->getNameFormat()==NULL);
-        TS_ASSERT(attribute->getFriendlyName()==NULL);
+        TS_ASSERT(attribute->getNameFormat()==nullptr);
+        TS_ASSERT(attribute->getFriendlyName()==nullptr);
 
         TSM_ASSERT_EQUALS("# of AttributeValue child elements", 0, attribute->getAttributeValues().size());
 
@@ -60,7 +60,7 @@ public:
     void testSingleElementOptionalAttributesUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
         Attribute* attribute = dynamic_cast<Attribute*>(xo.get());
-        TS_ASSERT(attribute!=NULL);
+        TS_ASSERT(attribute!=nullptr);
 
         assertEquals("Name attribute", expectedName, attribute->getName());
         assertEquals("NameFormat attribute", expectedNameFormat, attribute->getNameFormat());
@@ -72,11 +72,11 @@ public:
     void testChildElementsUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         Attribute* attribute= dynamic_cast<Attribute*>(xo.get());
-        TS_ASSERT(attribute!=NULL);
+        TS_ASSERT(attribute!=nullptr);
 
-        TS_ASSERT(attribute->getName()==NULL);
-        TS_ASSERT(attribute->getNameFormat()==NULL);
-        TS_ASSERT(attribute->getFriendlyName()==NULL);
+        TS_ASSERT(attribute->getName()==nullptr);
+        TS_ASSERT(attribute->getNameFormat()==nullptr);
+        TS_ASSERT(attribute->getFriendlyName()==nullptr);
 
         TSM_ASSERT_EQUALS("# of AttributeValue child elements", 3, attribute->getAttributeValues().size());
 

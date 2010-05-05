@@ -58,9 +58,9 @@ namespace opensaml {
 DynamicMetadataProvider::DynamicMetadataProvider(const DOMElement* e)
     : AbstractMetadataProvider(e), m_maxCacheDuration(28800), m_lock(RWLock::create())
 {
-    const XMLCh* flag=e ? e->getAttributeNS(NULL,validate) : NULL;
+    const XMLCh* flag=e ? e->getAttributeNS(nullptr,validate) : nullptr;
     m_validate=(XMLString::equals(flag,xmlconstants::XML_TRUE) || XMLString::equals(flag,xmlconstants::XML_ONE));
-    flag = e ? e->getAttributeNS(NULL,maxCacheDuration) : NULL;
+    flag = e ? e->getAttributeNS(nullptr,maxCacheDuration) : nullptr;
     if (flag && *flag) {
         m_maxCacheDuration = XMLString::parseInt(flag);
         if (m_maxCacheDuration == 0)
@@ -102,7 +102,7 @@ pair<const EntityDescriptor*,const RoleDescriptor*> DynamicMetadataProvider::get
         // Check to see if we're within the caching interval.
         cachemap_t::iterator cit = m_cacheMap.find(entity.first->getEntityID());
         if (cit != m_cacheMap.end()) {
-            if (time(NULL) <= cit->second)
+            if (time(nullptr) <= cit->second)
                 return entity;
             m_cacheMap.erase(cit);
         }
@@ -156,7 +156,7 @@ pair<const EntityDescriptor*,const RoleDescriptor*> DynamicMetadataProvider::get
         // Filter it, which may throw.
         doFilters(*entity2.get());
 
-        time_t now = time(NULL);
+        time_t now = time(nullptr);
         if (entity2->getValidUntil() && entity2->getValidUntilEpoch() < now + 60)
             throw MetadataException("Metadata was already invalid at the time of retrieval.");
 
@@ -174,7 +174,7 @@ pair<const EntityDescriptor*,const RoleDescriptor*> DynamicMetadataProvider::get
         if (entity2->getCacheDuration())
             cacheExp = min(m_maxCacheDuration, entity2->getCacheDurationEpoch());
         cacheExp = max(cacheExp, 60);
-        m_cacheMap[entity2->getEntityID()] = time(NULL) + cacheExp;
+        m_cacheMap[entity2->getEntityID()] = time(nullptr) + cacheExp;
 
         // Make sure we clear out any existing copies, including stale metadata or if somebody snuck in.
         index(entity2.release(), SAMLTIME_MAX, true);
@@ -193,7 +193,7 @@ pair<const EntityDescriptor*,const RoleDescriptor*> DynamicMetadataProvider::get
             if (entity.first->getCacheDuration())
                 cacheExp = min(m_maxCacheDuration, entity.first->getCacheDurationEpoch());
             cacheExp = max(cacheExp, 60);
-            m_cacheMap[entity.first->getEntityID()] = time(NULL) + cacheExp;
+            m_cacheMap[entity.first->getEntityID()] = time(nullptr) + cacheExp;
         }
         return entity;
     }
@@ -217,7 +217,7 @@ EntityDescriptor* DynamicMetadataProvider::resolve(const Criteria& criteria) con
     }
 
     try {
-        DOMDocument* doc=NULL;
+        DOMDocument* doc=nullptr;
         auto_ptr_XMLCh widenit(name.c_str());
         URLInputSource src(widenit.get());
         Wrapper4InputSource dsrc(&src,false);

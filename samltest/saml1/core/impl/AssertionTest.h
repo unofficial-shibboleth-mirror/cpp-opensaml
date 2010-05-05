@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,12 +48,12 @@ public:
     void testSingleElementUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         Assertion& assertion = dynamic_cast<Assertion&>(*xo.get());
-        TSM_ASSERT("Issuer attribute", assertion.getIssuer()==NULL);
+        TSM_ASSERT("Issuer attribute", assertion.getIssuer()==nullptr);
         TSM_ASSERT_EQUALS("IssueInstant attribute", expectedIssueInstant->getEpoch(), assertion.getIssueInstant()->getEpoch());
         assertEquals("ID attribute", expectedID, assertion.getAssertionID());
 
-        TSM_ASSERT("Conditions element", assertion.getConditions()==NULL);
-        TSM_ASSERT("Advice element", assertion.getAdvice()==NULL);
+        TSM_ASSERT("Conditions element", assertion.getConditions()==nullptr);
+        TSM_ASSERT("Advice element", assertion.getAdvice()==nullptr);
 
         TSM_ASSERT_EQUALS("Statement element count", 0, assertion.getStatements().size());
         TSM_ASSERT_EQUALS("SubjectStatements element count", 0, assertion.getSubjectStatements().size());
@@ -71,8 +71,8 @@ public:
         assertEquals("ID attribute", expectedID, assertion.getAssertionID());
         TSM_ASSERT_EQUALS("Issuer expectedMinorVersion", expectedMinorVersion, assertion.getMinorVersion().second);
 
-        TSM_ASSERT("Conditions element", assertion.getConditions()==NULL);
-        TSM_ASSERT("Advice element", assertion.getAdvice()==NULL);
+        TSM_ASSERT("Conditions element", assertion.getConditions()==nullptr);
+        TSM_ASSERT("Advice element", assertion.getAdvice()==nullptr);
 
         TSM_ASSERT_EQUALS("Statement element count", 0, assertion.getStatements().size());
         TSM_ASSERT_EQUALS("SubjectStatements element count", 0, assertion.getSubjectStatements().size());
@@ -85,12 +85,12 @@ public:
         auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         Assertion& assertion = dynamic_cast<Assertion&>(*xo.get());
 
-        TSM_ASSERT("Issuer attribute", assertion.getIssuer()==NULL);
+        TSM_ASSERT("Issuer attribute", assertion.getIssuer()==nullptr);
         TSM_ASSERT_EQUALS("IssueInstant attribute", expectedIssueInstant->getEpoch(), assertion.getIssueInstant()->getEpoch());
         assertEquals("ID attribute", expectedID, assertion.getAssertionID());
 
-        TSM_ASSERT("Conditions element null", assertion.getConditions()!=NULL);
-        TSM_ASSERT("Advice element null", assertion.getAdvice()!=NULL);
+        TSM_ASSERT("Conditions element null", assertion.getConditions()!=nullptr);
+        TSM_ASSERT("Advice element null", assertion.getAdvice()!=nullptr);
 
         TSM_ASSERT_EQUALS("AuthenticationStatements element count", 2, assertion.getAuthenticationStatements().size());
         TSM_ASSERT_EQUALS("AttributeStatements element count", 3, assertion.getAttributeStatements().size());

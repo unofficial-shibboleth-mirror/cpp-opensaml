@@ -1,6 +1,6 @@
 
 /*
- *  Copyright 2001-2009 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -104,7 +104,7 @@ SAMLInternalConfig& SAMLInternalConfig::getInternalConfig()
     return g_config;
 }
 
-SAMLConfig::SAMLConfig() : m_artifactMap(NULL)
+SAMLConfig::SAMLConfig() : m_artifactMap(nullptr)
 {
 }
 
@@ -175,7 +175,7 @@ void SAMLInternalConfig::term(bool termXMLTooling)
     MetadataProviderManager.deregisterFactories();
 
     delete m_artifactMap;
-    m_artifactMap = NULL;
+    m_artifactMap = nullptr;
 
     if (termXMLTooling)
         XMLToolingConfig::getConfig().term();
@@ -250,13 +250,13 @@ using namespace saml2md;
 
 void opensaml::annotateException(XMLToolingException* e, const EntityDescriptor* entity, const Status* status, bool rethrow)
 {
-    const RoleDescriptor* role = NULL;
+    const RoleDescriptor* role = nullptr;
     if (entity) {
         const list<XMLObject*>& roles=entity->getOrderedChildren();
         for (list<XMLObject*>::const_iterator child=roles.begin(); !role && child!=roles.end(); ++child) {
             role=dynamic_cast<RoleDescriptor*>(*child);
             if (role && !role->isValid())
-                role = NULL;
+                role = nullptr;
         }
     }
     annotateException(e, role, status, rethrow);
@@ -275,8 +275,8 @@ void opensaml::annotateException(XMLToolingException* e, const RoleDescriptor* r
                     || XMLString::equals(ctype,ContactPerson::CONTACT_TECHNICAL))) {
                 GivenName* fname=(*c)->getGivenName();
                 SurName* lname=(*c)->getSurName();
-                auto_ptr_char first(fname ? fname->getName() : NULL);
-                auto_ptr_char last(lname ? lname->getName() : NULL);
+                auto_ptr_char first(fname ? fname->getName() : nullptr);
+                auto_ptr_char last(lname ? lname->getName() : nullptr);
                 if (first.get() && last.get()) {
                     string contact=string(first.get()) + ' ' + last.get();
                     e->addProperty("contactName",contact.c_str());
@@ -302,7 +302,7 @@ void opensaml::annotateException(XMLToolingException* e, const RoleDescriptor* r
     }
     
     if (status) {
-        auto_ptr_char sc(status->getStatusCode() ? status->getStatusCode()->getValue() : NULL);
+        auto_ptr_char sc(status->getStatusCode() ? status->getStatusCode()->getValue() : nullptr);
         if (sc.get() && *sc.get())
             e->addProperty("statusCode", sc.get());
         if (status->getStatusCode()->getStatusCode()) {

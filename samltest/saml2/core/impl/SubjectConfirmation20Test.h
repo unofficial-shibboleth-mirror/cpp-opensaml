@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,25 +40,25 @@ public:
     void testSingleElementUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         SubjectConfirmation* sc = dynamic_cast<SubjectConfirmation*>(xo.get());
-        TS_ASSERT(sc!=NULL);
+        TS_ASSERT(sc!=nullptr);
 
         assertEquals("Method attribute", expectedMethod, sc->getMethod());
 
-        TS_ASSERT(sc->getBaseID()==NULL);
-        TS_ASSERT(sc->getNameID()==NULL);
-        TS_ASSERT(sc->getEncryptedID()==NULL);
-        TS_ASSERT(sc->getSubjectConfirmationData()==NULL);
+        TS_ASSERT(sc->getBaseID()==nullptr);
+        TS_ASSERT(sc->getNameID()==nullptr);
+        TS_ASSERT(sc->getEncryptedID()==nullptr);
+        TS_ASSERT(sc->getSubjectConfirmationData()==nullptr);
     }
 
     void testChildElementsUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         SubjectConfirmation* sc= dynamic_cast<SubjectConfirmation*>(xo.get());
-        TS_ASSERT(sc!=NULL);
+        TS_ASSERT(sc!=nullptr);
 
-        TS_ASSERT(sc->getBaseID()==NULL);
-        TS_ASSERT(sc->getNameID()!=NULL);
-        TS_ASSERT(sc->getEncryptedID()==NULL);
-        TS_ASSERT(sc->getSubjectConfirmationData()!=NULL);
+        TS_ASSERT(sc->getBaseID()==nullptr);
+        TS_ASSERT(sc->getNameID()!=nullptr);
+        TS_ASSERT(sc->getEncryptedID()==nullptr);
+        TS_ASSERT(sc->getSubjectConfirmationData()!=nullptr);
     }
 
     void testSingleElementMarshall() {

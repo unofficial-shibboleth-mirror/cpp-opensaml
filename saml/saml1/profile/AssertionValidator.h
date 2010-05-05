@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2009 Internet2
+ *  Copyright 2001-2010 Internet2
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,7 +49,7 @@ namespace opensaml {
              * @param audiences additional audience values
              * @param ts        timestamp to evaluate assertion conditions, or 0 to bypass check
              */
-            AssertionValidator(const XMLCh* recipient, const std::vector<const XMLCh*>* audiences=NULL, time_t ts=0);
+            AssertionValidator(const XMLCh* recipient, const std::vector<const XMLCh*>* audiences=nullptr, time_t ts=0);
 
             virtual ~AssertionValidator();
 

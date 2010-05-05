@@ -114,7 +114,6 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <ImportLibrary>$(TargetDir)$(ProjectName)2D.lib</ImportLibrary>
-      <TargetMachine>MachineX86</TargetMachine>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -141,7 +140,6 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <ImportLibrary>$(TargetDir)$(ProjectName)2D.lib</ImportLibrary>
-      <TargetMachine>MachineX64</TargetMachine>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -160,7 +158,6 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <ImportLibrary>$(TargetDir)$(ProjectName)2.lib</ImportLibrary>
-      <TargetMachine>MachineX86</TargetMachine>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -182,7 +179,6 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <ImportLibrary>$(TargetDir)$(ProjectName)2.lib</ImportLibrary>
-      <TargetMachine>MachineX64</TargetMachine>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

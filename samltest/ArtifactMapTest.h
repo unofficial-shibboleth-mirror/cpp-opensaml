@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2009 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,6 +51,6 @@ public:
 
         auto_ptr<XMLObject> xmlObject(artifactMap->retrieveContent(&artifact, providerIdStr.c_str()));
         TSM_ASSERT_THROWS("Artifact resolution improperly succeeded.", artifactMap->retrieveContent(&artifact), BindingException);
-        TSM_ASSERT("Mapped content was not a Response.", dynamic_cast<Response*>(xmlObject.get())!=NULL);
+        TSM_ASSERT("Mapped content was not a Response.", dynamic_cast<Response*>(xmlObject.get())!=nullptr);
     }
 };

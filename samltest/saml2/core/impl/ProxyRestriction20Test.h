@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ public:
     void testSingleElementUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         ProxyRestriction* pr = dynamic_cast<ProxyRestriction*>(xo.get());
-        TS_ASSERT(pr!=NULL);
+        TS_ASSERT(pr!=nullptr);
 
         TSM_ASSERT_EQUALS("Count attribute presence", false, pr->getCount().first);
         TSM_ASSERT_EQUALS("# of Audience child elements", 0, pr->getAudiences().size());
@@ -48,7 +48,7 @@ public:
     void testSingleElementOptionalAttributesUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
         ProxyRestriction* pr = dynamic_cast<ProxyRestriction*>(xo.get());
-        TS_ASSERT(pr!=NULL);
+        TS_ASSERT(pr!=nullptr);
 
         TSM_ASSERT_EQUALS("Count attribute presence", true, pr->getCount().first);
         TSM_ASSERT_EQUALS("Count attribute value", expectedCount, pr->getCount().second);
@@ -58,7 +58,7 @@ public:
     void testChildElementsUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         ProxyRestriction* pr= dynamic_cast<ProxyRestriction*>(xo.get());
-        TS_ASSERT(pr!=NULL);
+        TS_ASSERT(pr!=nullptr);
 
         TSM_ASSERT_EQUALS("Count attribute presence", false, pr->getCount().first);
         TSM_ASSERT_EQUALS("# of Audience child elements", 2, pr->getAudiences().size());

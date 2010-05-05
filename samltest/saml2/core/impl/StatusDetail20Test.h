@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ public:
     void testSingleElementUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         StatusDetail* sd= dynamic_cast<StatusDetail*>(xo.get());
-        TS_ASSERT(sd!=NULL);
+        TS_ASSERT(sd!=nullptr);
         TSM_ASSERT_EQUALS("StatusDetail child elements", sd->getUnknownXMLObjects().size(), 0);
     }
 
@@ -43,7 +43,7 @@ public:
     void IGNOREtestChildElementsUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         StatusDetail* sd= dynamic_cast<StatusDetail*>(xo.get());
-        TS_ASSERT(sd!=NULL);
+        TS_ASSERT(sd!=nullptr);
         TSM_ASSERT_EQUALS("StatusDetail child elements", sd->getUnknownXMLObjects().size(), 3);
     }
 

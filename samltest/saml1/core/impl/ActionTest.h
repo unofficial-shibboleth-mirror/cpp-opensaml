@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,9 +41,9 @@ public:
     void testSingleElementUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         Action* action = dynamic_cast<Action*>(xo.get());
-        TS_ASSERT(action!=NULL);
-        TSM_ASSERT("namespace attribute present", action->getNamespace()==NULL);
-        TSM_ASSERT("Contents present", action->getAction()==NULL);
+        TS_ASSERT(action!=nullptr);
+        TSM_ASSERT("namespace attribute present", action->getNamespace()==nullptr);
+        TSM_ASSERT("Contents present", action->getAction()==nullptr);
     }
 
     void testSingleElementOptionalAttributesUnmarshall() {

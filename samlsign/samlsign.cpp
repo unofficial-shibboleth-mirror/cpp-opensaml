@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2009 Internet2
+ *  Copyright 2001-2010 Internet2
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,7 +68,7 @@ template<class T> T* buildPlugin(const char* path, PluginManager<T,string,const 
     XercesJanitor<DOMDocument> janitor(doc);
 
     static const XMLCh _type[] = UNICODE_LITERAL_4(t,y,p,e);
-    auto_ptr_char type(doc->getDocumentElement()->getAttributeNS(NULL,_type));
+    auto_ptr_char type(doc->getDocumentElement()->getAttributeNS(nullptr,_type));
     if (type.get() && *type.get())
         return mgr.newPlugin(type.get(), doc->getDocumentElement());
     throw XMLToolingException("Missing type in plugin configuration.");
@@ -82,14 +82,14 @@ CredentialResolver* buildSimpleResolver(const char* key, const char* cert)
 
     DOMDocument* doc = XMLToolingConfig::getConfig().getParser().newDocument();
     XercesJanitor<DOMDocument> janitor(doc);
-    DOMElement* root = doc->createElementNS(NULL, _CredentialResolver);
+    DOMElement* root = doc->createElementNS(nullptr, _CredentialResolver);
     if (key) {
         auto_ptr_XMLCh widenit(key);
-        root->setAttributeNS(NULL, _key, widenit.get());
+        root->setAttributeNS(nullptr, _key, widenit.get());
     }
     if (cert) {
         auto_ptr_XMLCh widenit(cert);
-        root->setAttributeNS(NULL, _certificate, widenit.get());
+        root->setAttributeNS(nullptr, _certificate, widenit.get());
     }
 
     return XMLToolingConfig::getConfig().CredentialResolverManager.newPlugin(FILESYSTEM_CREDENTIAL_RESOLVER, root);
@@ -104,30 +104,30 @@ public:
     Lockable* lock() {return this;}
     void unlock() {}
 
-    const Credential* resolve(const CredentialCriteria* criteria=NULL) const {return NULL;}
+    const Credential* resolve(const CredentialCriteria* criteria=nullptr) const {return nullptr;}
     vector<const Credential*>::size_type resolve(
-        vector<const Credential*>& results, const CredentialCriteria* criteria=NULL
+        vector<const Credential*>& results, const CredentialCriteria* criteria=nullptr
         ) const {return 0;}
 };
 
 int main(int argc,char* argv[])
 {
     bool verify=true;
-    char* url_param=NULL;
-    char* path_param=NULL;
-    char* key_param=NULL;
-    char* cert_param=NULL;
-    char* cr_param=NULL;
-    char* t_param=NULL;
-    char* id_param=NULL;
+    char* url_param=nullptr;
+    char* path_param=nullptr;
+    char* key_param=nullptr;
+    char* cert_param=nullptr;
+    char* cr_param=nullptr;
+    char* t_param=nullptr;
+    char* id_param=nullptr;
 
     // metadata lookup options
-    char* m_param=NULL;
-    char* issuer=NULL;
-    char* prot = NULL;
-    const XMLCh* protocol = NULL;
-    char* rname = NULL;
-    char* rns = NULL;
+    char* m_param=nullptr;
+    char* issuer=nullptr;
+    char* prot = nullptr;
+    const XMLCh* protocol = nullptr;
+    char* rname = nullptr;
+    char* rns = nullptr;
 
     for (int i=1; i<argc; i++) {
         if (!strcmp(argv[i],"-u") && i+1<argc)
@@ -192,7 +192,7 @@ int main(int argc,char* argv[])
 
     try {
         // Parse the specified document.
-        DOMDocument* doc=NULL;
+        DOMDocument* doc=nullptr;
         if (url_param) {
             auto_ptr_XMLCh wideurl(url_param);
             URLInputSource src(wideurl.get());
@@ -240,7 +240,7 @@ int main(int argc,char* argv[])
             if (cert_param || cr_param) {
                 // Build a resolver to supply trusted credentials.
                 auto_ptr<CredentialResolver> cr(
-                    cr_param ? buildPlugin(cr_param, xmlconf.CredentialResolverManager) : buildSimpleResolver(NULL, cert_param)
+                    cr_param ? buildPlugin(cr_param, xmlconf.CredentialResolverManager) : buildSimpleResolver(nullptr, cert_param)
                     );
                 Locker locker(cr.get());
 
@@ -343,7 +343,7 @@ int main(int argc,char* argv[])
 
             // Sign response while re-marshalling.
             vector<Signature*> sigs(1,sig);
-            XMLHelper::serialize(signable->marshall((DOMDocument*)NULL,&sigs,cred), cout);
+            XMLHelper::serialize(signable->marshall((DOMDocument*)nullptr,&sigs,cred), cout);
         }
     }
     catch(exception& e) {

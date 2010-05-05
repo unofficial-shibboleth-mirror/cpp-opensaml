@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2009 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -106,7 +106,7 @@ protected:
     }
 
     void assertEquals(const char* failMessage, const XMLCh* expectedString, const XMLCh* testString) {
-        char* buf = NULL;
+        char* buf = nullptr;
         if (!XMLString::equals(expectedString, testString)) {
             buf = XMLString::transcode(testString);
             TS_TRACE(buf ? buf : "(NULL)");
@@ -147,7 +147,7 @@ public:
 class SAMLObjectValidatorBaseTestCase : virtual public SAMLObjectBaseTestCase {
 
     public:
-        SAMLObjectValidatorBaseTestCase() : target(NULL), targetQName(NULL), builder(NULL), validator(NULL) {}
+        SAMLObjectValidatorBaseTestCase() : target(nullptr), targetQName(nullptr), builder(nullptr), validator(nullptr) {}
 
         virtual ~SAMLObjectValidatorBaseTestCase() {
             delete validator;
@@ -230,9 +230,9 @@ class SAMLObjectValidatorBaseTestCase : virtual public SAMLObjectBaseTestCase {
          */
         XMLObject* buildXMLObject(xmltooling::QName &targetQName) {
             // Create the builder on the first request only, for efficiency
-            if (builder == NULL) {
+            if (builder == nullptr) {
                 builder = XMLObjectBuilder::getBuilder(targetQName);
-                TSM_ASSERT("Unable to retrieve builder for object QName: " + targetQName.toString(), builder!=NULL);
+                TSM_ASSERT("Unable to retrieve builder for object QName: " + targetQName.toString(), builder!=nullptr);
             }
             return builder->buildObject(targetQName.getNamespaceURI(), targetQName.getLocalPart(), targetQName.getPrefix());
 
@@ -245,16 +245,16 @@ class SAMLObjectValidatorBaseTestCase : virtual public SAMLObjectBaseTestCase {
 
             TSM_ASSERT("targetQName was empty", targetQName.hasLocalPart());
 
-            TSM_ASSERT("validator was null", validator!=NULL);
+            TSM_ASSERT("validator was null", validator!=nullptr);
 
             target = buildXMLObject(targetQName);
-            TSM_ASSERT("XMLObject target was NULL", target!=NULL);
+            TSM_ASSERT("XMLObject target was NULL", target!=nullptr);
             populateRequiredData();
         }
 
         void tearDown() {
             delete target;
-            target=NULL;
+            target=nullptr;
             SAMLObjectBaseTestCase::tearDown();
         }
 

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ namespace opensaml {
         class SAML_DLLLOCAL NullMetadataProvider : public DynamicMetadataProvider
         {
         public:
-            NullMetadataProvider(const DOMElement* e) : DynamicMetadataProvider(e), m_template(NULL) {
+            NullMetadataProvider(const DOMElement* e) : DynamicMetadataProvider(e), m_template(nullptr) {
                 e = XMLHelper::getFirstChildElement(e, samlconstants::SAML20MD_NS, EntityDescriptor::LOCAL_NAME);
                 if (e)
                     m_template = dynamic_cast<EntityDescriptor*>(XMLObjectBuilder::buildOneFromElement(const_cast<DOMElement*>(e)));

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2009 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ public:
         auto_ptr_XMLCh path("path");
         string s = data_path + "binding/example-metadata.xml";
         auto_ptr_XMLCh file(s.c_str());
-        doc->getDocumentElement()->setAttributeNS(NULL,path.get(),file.get());
+        doc->getDocumentElement()->setAttributeNS(nullptr,path.get(),file.get());
 
         m_metadata = opensaml::SAMLConfig::getConfig().MetadataProviderManager.newPlugin(
             XML_METADATA_PROVIDER,doc->getDocumentElement()
@@ -54,7 +54,7 @@ public:
 
     void tearDown() {
         delete m_metadata;
-        m_metadata=NULL;
+        m_metadata=nullptr;
         SAMLSignatureTestBase::tearDown();
     }
 
@@ -99,11 +99,11 @@ public:
         cc.setUsage(Credential::SIGNING_CREDENTIAL);
         Locker locker(m_resolver);
         const Credential* cred = m_resolver->resolve(&cc);
-        TSM_ASSERT("Retrieved credential was null", cred!=NULL);
+        TSM_ASSERT("Retrieved credential was null", cred!=nullptr);
 
-        DOMElement* rootElement = NULL;
+        DOMElement* rootElement = nullptr;
         try {
-            rootElement=assertion->marshall((DOMDocument*)NULL,&sigs,cred);
+            rootElement=assertion->marshall((DOMDocument*)nullptr,&sigs,cred);
         }
         catch (XMLToolingException& e) {
             TS_TRACE(e.what());
@@ -115,8 +115,8 @@ public:
         Locker mlocker(m_metadata);
         MetadataProvider::Criteria mc("https://sp.example.org/", &SPSSODescriptor::ELEMENT_QNAME, samlconstants::SAML20P_NS);
         pair<const EntityDescriptor*,const RoleDescriptor*> sp = m_metadata->getEntityDescriptor(mc);
-        TSM_ASSERT("No metadata for recipient.", sp.first!=NULL); 
-        TSM_ASSERT("No SP role for recipient.", sp.second!=NULL);
+        TSM_ASSERT("No metadata for recipient.", sp.first!=nullptr); 
+        TSM_ASSERT("No SP role for recipient.", sp.second!=nullptr);
         MetadataCredentialCriteria mcc(*sp.second);
         vector< pair<const MetadataProvider*,MetadataCredentialCriteria*> > recipients(
             1, pair<const MetadataProvider*,MetadataCredentialCriteria*>(m_metadata, &mcc)

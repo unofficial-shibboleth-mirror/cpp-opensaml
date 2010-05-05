@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ class ArtifactResponse20Test : public CxxTest::TestSuite, public SAMLObjectBaseT
     DateTime* expectedIssueInstant; 
 
     // The payload will be an AuthnRequest in this test.
-    // AuthnRequest marshaller autogenerates ID, Version and IssueInstant if they are NULL,
+    // AuthnRequest marshaller autogenerates ID, Version and IssueInstant if they are nullptr,
     // so have to agree on something to put in the control XML
     XMLCh* authnRequestID;
 
@@ -66,50 +66,50 @@ public:
     void testSingleElementUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         ArtifactResponse* response = dynamic_cast<ArtifactResponse*>(xo.get());
-        TS_ASSERT(response!=NULL);
+        TS_ASSERT(response!=nullptr);
 
         assertEquals("ID attribute", expectedID, response->getID());
         assertEquals("Version attribute", expectedVersion, response->getVersion());
         TSM_ASSERT_EQUALS("IssueInstant attribute", expectedIssueInstant->getEpoch(), response->getIssueInstant()->getEpoch());
 
-        TS_ASSERT(response->getIssuer()==NULL);
-        TS_ASSERT(response->getSignature()==NULL);
-        TS_ASSERT(response->getExtensions()==NULL);
-        TS_ASSERT(response->getStatus()==NULL);
-        TS_ASSERT(response->getPayload()==NULL);
+        TS_ASSERT(response->getIssuer()==nullptr);
+        TS_ASSERT(response->getSignature()==nullptr);
+        TS_ASSERT(response->getExtensions()==nullptr);
+        TS_ASSERT(response->getStatus()==nullptr);
+        TS_ASSERT(response->getPayload()==nullptr);
     }
 
     void testSingleElementOptionalAttributesUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
         ArtifactResponse* response = dynamic_cast<ArtifactResponse*>(xo.get());
-        TS_ASSERT(response!=NULL);
+        TS_ASSERT(response!=nullptr);
 
         assertEquals("Consent attribute", expectedConsent, response->getConsent());
         assertEquals("Destination attribute", expectedDestination, response->getDestination());
         assertEquals("InResponseTo attribute", expectedInResponseTo, response->getInResponseTo());
 
-        TS_ASSERT(response->getIssuer()==NULL);
-        TS_ASSERT(response->getSignature()==NULL);
-        TS_ASSERT(response->getExtensions()==NULL);
-        TS_ASSERT(response->getStatus()==NULL);
-        TS_ASSERT(response->getPayload()==NULL);
+        TS_ASSERT(response->getIssuer()==nullptr);
+        TS_ASSERT(response->getSignature()==nullptr);
+        TS_ASSERT(response->getExtensions()==nullptr);
+        TS_ASSERT(response->getStatus()==nullptr);
+        TS_ASSERT(response->getPayload()==nullptr);
     }
 
     void testChildElementsUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         ArtifactResponse* response= dynamic_cast<ArtifactResponse*>(xo.get());
-        TS_ASSERT(response!=NULL);
+        TS_ASSERT(response!=nullptr);
 
-        TS_ASSERT(response->getIssuer()!=NULL);
-        TS_ASSERT(response->getSignature()==NULL);
-        TS_ASSERT(response->getExtensions()==NULL);
-        TS_ASSERT(response->getStatus()!=NULL);
-        TS_ASSERT(response->getPayload()!=NULL);
+        TS_ASSERT(response->getIssuer()!=nullptr);
+        TS_ASSERT(response->getSignature()==nullptr);
+        TS_ASSERT(response->getExtensions()==nullptr);
+        TS_ASSERT(response->getStatus()!=nullptr);
+        TS_ASSERT(response->getPayload()!=nullptr);
     }
 
     void testSingleElementMarshall() {
         ArtifactResponse* response = ArtifactResponseBuilder::buildArtifactResponse();
-        TS_ASSERT(response!=NULL);
+        TS_ASSERT(response!=nullptr);
 
         response->setID(expectedID);
         response->setIssueInstant(expectedIssueInstant);
@@ -119,7 +119,7 @@ public:
 
     void testSingleElementOptionalAttributesMarshall() {
         ArtifactResponse* response = ArtifactResponseBuilder::buildArtifactResponse();
-        TS_ASSERT(response!=NULL);
+        TS_ASSERT(response!=nullptr);
 
         response->setID(expectedID);
         response->setInResponseTo(expectedInResponseTo);
@@ -133,7 +133,7 @@ public:
 
     void testChildElementsMarshall() {
         ArtifactResponse* response = ArtifactResponseBuilder::buildArtifactResponse();
-        TS_ASSERT(response!=NULL);
+        TS_ASSERT(response!=nullptr);
 
         response->setID(expectedID);
         response->setIssueInstant(expectedIssueInstant);

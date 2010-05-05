@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2009 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,12 +62,12 @@ namespace opensaml {
                 GenericResponse& genericResponse,
                 XMLObject* xmlObject,
                 const char* destination,
-                const EntityDescriptor* recipient=NULL,
-                const char* relayState=NULL,
-                const ArtifactGenerator* artifactGenerator=NULL,
-                const Credential* credential=NULL,
-                const XMLCh* signatureAlg=NULL,
-                const XMLCh* digestAlg=NULL
+                const EntityDescriptor* recipient=nullptr,
+                const char* relayState=nullptr,
+                const ArtifactGenerator* artifactGenerator=nullptr,
+                const Credential* credential=nullptr,
+                const XMLCh* signatureAlg=nullptr,
+                const XMLCh* digestAlg=nullptr
                 ) const;
         };
 
@@ -102,7 +102,7 @@ long SAML2RedirectEncoder::encode(
     if (xmlObject->getParent())
         throw BindingException("Cannot encode XML content with parent.");
     
-    StatusResponseType* response = NULL;
+    StatusResponseType* response = nullptr;
     RequestAbstractType* request = dynamic_cast<RequestAbstractType*>(xmlObject);
     if (!request) {
         response = dynamic_cast<StatusResponseType*>(xmlObject);
@@ -113,7 +113,7 @@ long SAML2RedirectEncoder::encode(
     // Check for XML signature.
     if (request ? request->getSignature() : response->getSignature()) {
         log.debug("message already signed, removing native signature due to size considerations");
-        request ? request->setSignature(NULL) : response->setSignature(NULL);
+        request ? request->setSignature(nullptr) : response->setSignature(nullptr);
     }
     
     log.debug("marshalling, deflating, base64-encoding the message");

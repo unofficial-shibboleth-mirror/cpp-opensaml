@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2009 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,12 +60,12 @@ namespace opensaml {
                 GenericResponse& genericResponse,
                 XMLObject* xmlObject,
                 const char* destination,
-                const EntityDescriptor* recipient=NULL,
-                const char* relayState=NULL,
-                const ArtifactGenerator* artifactGenerator=NULL,
-                const Credential* credential=NULL,
-                const XMLCh* signatureAlg=NULL,
-                const XMLCh* digestAlg=NULL
+                const EntityDescriptor* recipient=nullptr,
+                const char* relayState=nullptr,
+                const ArtifactGenerator* artifactGenerator=nullptr,
+                const Credential* credential=nullptr,
+                const XMLCh* signatureAlg=nullptr,
+                const XMLCh* digestAlg=nullptr
                 ) const;
         
         private:
@@ -125,7 +125,7 @@ long SAML2ArtifactEncoder::encode(
     if (xmlObject->getParent())
         throw BindingException("Cannot encode XML content with parent.");
 
-    StatusResponseType* response = NULL;
+    StatusResponseType* response = nullptr;
     RequestAbstractType* request = dynamic_cast<RequestAbstractType*>(xmlObject);
     if (!request) {
         response = dynamic_cast<StatusResponseType*>(xmlObject);
@@ -140,7 +140,7 @@ long SAML2ArtifactEncoder::encode(
     // Obtain a fresh artifact.
     if (!artifactGenerator)
         throw BindingException("SAML 2.0 HTTP-Artifact Encoder requires an ArtifactGenerator instance.");
-    auto_ptr_char recipientID(recipient ? recipient->getEntityID() : NULL);
+    auto_ptr_char recipientID(recipient ? recipient->getEntityID() : nullptr);
     log.debug("obtaining new artifact for relying party (%s)", recipientID.get() ? recipientID.get() : "unknown");
     auto_ptr<SAMLArtifact> artifact(artifactGenerator->generateSAML2Artifact(recipient));
 
@@ -165,7 +165,7 @@ long SAML2ArtifactEncoder::encode(
             
             // Sign response while marshalling.
             vector<Signature*> sigs(1,sig);
-            xmlObject->marshall((DOMDocument*)NULL,&sigs,credential);
+            xmlObject->marshall((DOMDocument*)nullptr,&sigs,credential);
         }
     }
 

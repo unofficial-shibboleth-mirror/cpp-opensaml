@@ -1,5 +1,5 @@
 /*
- *  Copyright 2009 Internet2
+ *  Copyright 2009-2010 Internet2
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,9 +50,9 @@ namespace opensaml {
              * @param validate          true iff XML parsing should be done with validation
              */
             SAML2AssertionPolicy(
-                const saml2md::MetadataProvider* metadataProvider=NULL,
-                const xmltooling::QName* role=NULL,
-                const xmltooling::TrustEngine* trustEngine=NULL,
+                const saml2md::MetadataProvider* metadataProvider=nullptr,
+                const xmltooling::QName* role=nullptr,
+                const xmltooling::TrustEngine* trustEngine=nullptr,
                 bool validate=true
                 );
 

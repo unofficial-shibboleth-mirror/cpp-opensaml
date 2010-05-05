@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2009 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,12 +58,12 @@ namespace opensaml {
                 GenericResponse& genericResponse,
                 XMLObject* xmlObject,
                 const char* destination,
-                const EntityDescriptor* recipient=NULL,
-                const char* relayState=NULL,
-                const ArtifactGenerator* artifactGenerator=NULL,
-                const Credential* credential=NULL,
-                const XMLCh* signatureAlg=NULL,
-                const XMLCh* digestAlg=NULL
+                const EntityDescriptor* recipient=nullptr,
+                const char* relayState=nullptr,
+                const ArtifactGenerator* artifactGenerator=nullptr,
+                const Credential* credential=nullptr,
+                const XMLCh* signatureAlg=nullptr,
+                const XMLCh* digestAlg=nullptr
                 ) const;
         };
 
@@ -104,7 +104,7 @@ long SAML1SOAPEncoder::encode(
     }
 
     bool detachOnFailure = false;
-    DOMElement* rootElement = NULL;
+    DOMElement* rootElement = nullptr;
     
     // Check for a naked Response.
     Response* response = dynamic_cast<Response*>(xmlObject);
@@ -123,7 +123,7 @@ long SAML1SOAPEncoder::encode(
     if (env) {
         if (!response) {
             response = (env->getBody() && env->getBody()->hasChildren()) ?
-                dynamic_cast<Response*>(env->getBody()->getUnknownXMLObjects().front()) : NULL;
+                dynamic_cast<Response*>(env->getBody()->getUnknownXMLObjects().front()) : nullptr;
         }
         try {
             // Now check for signing requirements.
@@ -148,7 +148,7 @@ long SAML1SOAPEncoder::encode(
             
                     // Sign message while marshalling.
                     vector<Signature*> sigs(1,sig);
-                    rootElement = env->marshall((DOMDocument*)NULL,&sigs,credential);
+                    rootElement = env->marshall((DOMDocument*)nullptr,&sigs,credential);
                 }
             }
             else {

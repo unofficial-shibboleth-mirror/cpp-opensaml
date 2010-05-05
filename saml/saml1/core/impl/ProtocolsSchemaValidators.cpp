@@ -1,5 +1,5 @@
 /*
-*  Copyright 2001-2009 Internet2
+*  Copyright 2001-2010 Internet2
  *
 * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,7 +66,7 @@ namespace opensaml {
             if (!minor.first)
                 throw ValidationException("Request must have MinorVersion");
             int count=0;
-            if (ptr->getQuery()!=NULL)
+            if (ptr->getQuery()!=nullptr)
                 count++;
             if (!ptr->getAssertionIDReferences().empty())
                 count++;

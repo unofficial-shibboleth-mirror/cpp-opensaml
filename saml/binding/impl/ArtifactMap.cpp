@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2009 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,7 +58,7 @@ namespace opensaml {
     
     private:
         struct SAML_DLLLOCAL Mapping {
-            Mapping() : m_xml(NULL), m_expires(0) {}
+            Mapping() : m_xml(nullptr), m_expires(0) {}
             XMLObject* m_xml;
             string m_relying;
             time_t m_expires;
@@ -97,7 +97,7 @@ void ArtifactMappings::storeContent(XMLObject* content, const SAMLArtifact* arti
     Lock wrapper(m_lock);
 
     // Garbage collect any expired artifacts.
-    time_t now=time(NULL);
+    time_t now=time(nullptr);
     multimap<time_t,string>::iterator stop=m_expMap.upper_bound(now);
     for (multimap<time_t,string>::iterator i=m_expMap.begin(); i!=stop; m_expMap.erase(i++)) {
         delete m_artMap[i->second].m_xml;
@@ -134,14 +134,14 @@ XMLObject* ArtifactMappings::retrieveContent(const SAMLArtifact* artifact, const
         }
     }
     
-    if (time(NULL) >= i->second.m_expires) {
+    if (time(nullptr) >= i->second.m_expires) {
         removeMapping(i);
         throw BindingException("Requested artifact has expired.");
     }
     
     log.debug("resolved artifact for (%s)", relyingParty ? relyingParty : "unknown");
     XMLObject* ret = i->second.m_xml;
-    i->second.m_xml = NULL; // clear member so it doesn't get deleted
+    i->second.m_xml = nullptr; // clear member so it doesn't get deleted
     removeMapping(i);
     return ret;
 }
@@ -155,23 +155,23 @@ string ArtifactMappings::getRelyingParty(const SAMLArtifact* artifact)
 }
 
 ArtifactMap::ArtifactMap(xmltooling::StorageService* storage, const char* context, unsigned int artifactTTL)
-    : m_storage(storage), m_context((context && *context) ? context : "opensaml::ArtifactMap"), m_mappings(NULL), m_artifactTTL(artifactTTL)
+    : m_storage(storage), m_context((context && *context) ? context : "opensaml::ArtifactMap"), m_mappings(nullptr), m_artifactTTL(artifactTTL)
 {
     if (!m_storage)
         m_mappings = new ArtifactMappings();
 }
 
 ArtifactMap::ArtifactMap(const DOMElement* e, xmltooling::StorageService* storage)
-    : m_storage(storage), m_mappings(NULL), m_artifactTTL(180)
+    : m_storage(storage), m_mappings(nullptr), m_artifactTTL(180)
 {
     if (e) {
-        auto_ptr_char c(e->getAttributeNS(NULL, context));
+        auto_ptr_char c(e->getAttributeNS(nullptr, context));
         if (c.get() && *c.get())
             m_context = c.get();
         else
             m_context = "opensaml::ArtifactMap";
         
-        const XMLCh* TTL = e->getAttributeNS(NULL, artifactTTL);
+        const XMLCh* TTL = e->getAttributeNS(nullptr, artifactTTL);
         if (TTL) {
             m_artifactTTL = XMLString::parseInt(TTL);
             if (!m_artifactTTL)
@@ -201,8 +201,8 @@ void ArtifactMap::storeContent(XMLObject* content, const SAMLArtifact* artifact,
     // Build a DOM with the same document to store the relyingParty mapping.
     if (relyingParty) {
         auto_ptr_XMLCh temp(relyingParty);
-        root = root->getOwnerDocument()->createElementNS(NULL,Mapping);
-        root->setAttributeNS(NULL,_relyingParty,temp.get());
+        root = root->getOwnerDocument()->createElementNS(nullptr,Mapping);
+        root->setAttributeNS(nullptr,_relyingParty,temp.get());
         root->appendChild(content->getDOM());
     }
     
@@ -213,7 +213,7 @@ void ArtifactMap::storeContent(XMLObject* content, const SAMLArtifact* artifact,
         m_context.c_str(),
         SAMLArtifact::toHex(artifact->getMessageHandle()).c_str(),
         xmlbuf.c_str(),
-        time(NULL) + m_artifactTTL
+        time(nullptr) + m_artifactTTL
         )) {
         throw IOException("Attempt to insert duplicate artifact into map.");
     }
@@ -246,8 +246,8 @@ XMLObject* ArtifactMap::retrieveContent(const SAMLArtifact* artifact, const char
     
     // Check the root element.
     DOMElement* messageRoot = doc->getDocumentElement();
-    if (XMLHelper::isNodeNamed(messageRoot, NULL, Mapping)) {
-        auto_ptr_char temp(messageRoot->getAttributeNS(NULL,_relyingParty));
+    if (XMLHelper::isNodeNamed(messageRoot, nullptr, Mapping)) {
+        auto_ptr_char temp(messageRoot->getAttributeNS(nullptr,_relyingParty));
         if (!relyingParty || strcmp(temp.get(),relyingParty)) {
             log.warn("request from (%s) for artifact issued to (%s)", relyingParty ? relyingParty : "unknown", temp.get());
             throw BindingException("Unauthorized artifact mapping request.");
@@ -279,8 +279,8 @@ string ArtifactMap::getRelyingParty(const SAMLArtifact* artifact)
     
     // Check the root element.
     DOMElement* messageRoot = doc->getDocumentElement();
-    if (XMLHelper::isNodeNamed(messageRoot, NULL, Mapping)) {
-        auto_ptr_char temp(messageRoot->getAttributeNS(NULL,_relyingParty));
+    if (XMLHelper::isNodeNamed(messageRoot, nullptr, Mapping)) {
+        auto_ptr_char temp(messageRoot->getAttributeNS(nullptr,_relyingParty));
         return temp.get();
     }
     return string();

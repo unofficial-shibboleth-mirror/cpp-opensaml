@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2009 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ using namespace xmltooling;
 using namespace std;
 
 SOAPClient::SOAPClient(SecurityPolicy& policy)
-    : soap11::SOAPClient(policy.getValidating()), m_policy(policy), m_force(true), m_peer(NULL), m_criteria(NULL)
+    : soap11::SOAPClient(policy.getValidating()), m_policy(policy), m_force(true), m_peer(nullptr), m_criteria(nullptr)
 {
 }
 
@@ -113,8 +113,8 @@ soap11::Envelope* SOAPClient::receive()
 
 void SOAPClient::reset()
 {
-    m_criteria = NULL;
-    m_peer = NULL;
+    m_criteria = nullptr;
+    m_peer = nullptr;
     soap11::SOAPClient::reset();
     m_policy.reset();
 }

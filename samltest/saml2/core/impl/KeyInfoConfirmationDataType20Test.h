@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2009 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,20 +59,20 @@ public:
     void testSingleElementUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         KeyInfoConfirmationDataType* scd = dynamic_cast<KeyInfoConfirmationDataType*>(xo.get());
-        TS_ASSERT(scd!=NULL);
+        TS_ASSERT(scd!=nullptr);
 
-        TS_ASSERT(scd->getNotBefore()==NULL);
-        TS_ASSERT(scd->getNotOnOrAfter()==NULL);
-        TS_ASSERT(scd->getRecipient()==NULL);
-        TS_ASSERT(scd->getInResponseTo()==NULL);
-        TS_ASSERT(scd->getAddress()==NULL);
+        TS_ASSERT(scd->getNotBefore()==nullptr);
+        TS_ASSERT(scd->getNotOnOrAfter()==nullptr);
+        TS_ASSERT(scd->getRecipient()==nullptr);
+        TS_ASSERT(scd->getInResponseTo()==nullptr);
+        TS_ASSERT(scd->getAddress()==nullptr);
         TSM_ASSERT_EQUALS("# of KeyInfo child elements", 0, scd->getKeyInfos().size());
     }
 
     void testSingleElementOptionalAttributesUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
         KeyInfoConfirmationDataType* scd = dynamic_cast<KeyInfoConfirmationDataType*>(xo.get());
-        TS_ASSERT(scd!=NULL);
+        TS_ASSERT(scd!=nullptr);
 
         TSM_ASSERT_EQUALS("NotBefore attribute", expectedNotBefore->getEpoch(), scd->getNotBefore()->getEpoch());
         TSM_ASSERT_EQUALS("NotOnOrAfter attribute", expectedNotOnOrAfter->getEpoch(), scd->getNotOnOrAfter()->getEpoch());
@@ -87,13 +87,13 @@ public:
     void testChildElementsUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         KeyInfoConfirmationDataType* scd= dynamic_cast<KeyInfoConfirmationDataType*>(xo.get());
-        TS_ASSERT(scd!=NULL);
+        TS_ASSERT(scd!=nullptr);
 
-        TS_ASSERT(scd->getNotBefore()==NULL);
-        TS_ASSERT(scd->getNotOnOrAfter()==NULL);
-        TS_ASSERT(scd->getRecipient()==NULL);
-        TS_ASSERT(scd->getInResponseTo()==NULL);
-        TS_ASSERT(scd->getAddress()==NULL);
+        TS_ASSERT(scd->getNotBefore()==nullptr);
+        TS_ASSERT(scd->getNotOnOrAfter()==nullptr);
+        TS_ASSERT(scd->getRecipient()==nullptr);
+        TS_ASSERT(scd->getInResponseTo()==nullptr);
+        TS_ASSERT(scd->getAddress()==nullptr);
         TSM_ASSERT_EQUALS("# of KeyInfo child elements", 1, scd->getKeyInfos().size());
 
         //TODO need to test with some wildcard child elements

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ public:
     void testSingleElementUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         Audience* audience = dynamic_cast<Audience*>(xo.get());
-        TS_ASSERT(audience!=NULL);
+        TS_ASSERT(audience!=nullptr);
         assertEquals("Audience text content", expectedContent, audience->getAudienceURI());
     }
 

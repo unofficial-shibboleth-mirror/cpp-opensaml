@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2009 Internet2
+ *  Copyright 2001-2010 Internet2
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -69,7 +69,7 @@ namespace opensaml {
             DECL_DATETIME_ATTRIB(ValidUntil,VALIDUNTIL);
             /** Returns true iff the object is valid at the current time. */
             bool isValid() const {
-                return time(NULL) <= getValidUntilEpoch();
+                return time(nullptr) <= getValidUntilEpoch();
             }
             /** Returns true iff the object is valid at the supplied time. */
             bool isValid(time_t t) const {
@@ -406,7 +406,7 @@ namespace opensaml {
              *
              * @param protocol  support constant to test for
              */
-            isValidForProtocol(const XMLCh* protocol) : m_time(time(NULL)), m_protocol(protocol) {
+            isValidForProtocol(const XMLCh* protocol) : m_time(time(nullptr)), m_protocol(protocol) {
             }
 
             /**
@@ -508,11 +508,11 @@ namespace opensaml {
 #else
             virtual xmltooling::XMLObject* buildObject(
 #endif
-                const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=NULL, const xmltooling::QName* schemaType=NULL
+                const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=nullptr, const xmltooling::QName* schemaType=nullptr
                 ) const;
 
             /** Singleton builder. */
-            static localizedNameType* buildlocalizedNameType(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=NULL) {
+            static localizedNameType* buildlocalizedNameType(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=nullptr) {
                 const localizedNameTypeBuilder* b = dynamic_cast<const localizedNameTypeBuilder*>(
                     XMLObjectBuilder::getBuilder(xmltooling::QName(samlconstants::SAML20MD_NS,localizedNameType::TYPE_NAME))
                     );
@@ -542,11 +542,11 @@ namespace opensaml {
 #else
             virtual xmltooling::XMLObject* buildObject(
 #endif
-                const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=NULL, const xmltooling::QName* schemaType=NULL
+                const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=nullptr, const xmltooling::QName* schemaType=nullptr
                 ) const;
 
             /** Singleton builder. */
-            static localizedURIType* buildlocalizedURIType(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=NULL) {
+            static localizedURIType* buildlocalizedURIType(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=nullptr) {
                 const localizedURITypeBuilder* b = dynamic_cast<const localizedURITypeBuilder*>(
                     XMLObjectBuilder::getBuilder(xmltooling::QName(samlconstants::SAML20MD_NS,localizedURIType::TYPE_NAME))
                     );
@@ -576,11 +576,11 @@ namespace opensaml {
 #else
             virtual xmltooling::XMLObject* buildObject(
 #endif
-                const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=NULL, const xmltooling::QName* schemaType=NULL
+                const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=nullptr, const xmltooling::QName* schemaType=nullptr
                 ) const;
 
             /** Singleton builder. */
-            static EndpointType* buildEndpointType(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=NULL) {
+            static EndpointType* buildEndpointType(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=nullptr) {
                 const EndpointTypeBuilder* b = dynamic_cast<const EndpointTypeBuilder*>(
                     XMLObjectBuilder::getBuilder(xmltooling::QName(samlconstants::SAML20MD_NS,EndpointType::TYPE_NAME))
                     );
@@ -610,11 +610,11 @@ namespace opensaml {
 #else
             virtual xmltooling::XMLObject* buildObject(
 #endif
-                const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=NULL, const xmltooling::QName* schemaType=NULL
+                const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=nullptr, const xmltooling::QName* schemaType=nullptr
                 ) const;
 
             /** Singleton builder. */
-            static IndexedEndpointType* buildIndexedEndpointType(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=NULL) {
+            static IndexedEndpointType* buildIndexedEndpointType(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=nullptr) {
                 const IndexedEndpointTypeBuilder* b = dynamic_cast<const IndexedEndpointTypeBuilder*>(
                     XMLObjectBuilder::getBuilder(xmltooling::QName(samlconstants::SAML20MD_NS,IndexedEndpointType::TYPE_NAME))
                     );
@@ -644,7 +644,7 @@ namespace opensaml {
 #else
             virtual xmltooling::XMLObject* buildObject(
 #endif
-                const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=NULL, const xmltooling::QName* schemaType=NULL
+                const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=nullptr, const xmltooling::QName* schemaType=nullptr
                 ) const;
 
             /** Singleton builder. */
@@ -691,7 +691,7 @@ namespace opensaml {
 #else
             virtual xmltooling::XMLObject* buildObject(
 #endif
-                const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=NULL, const xmltooling::QName* schemaType=NULL
+                const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=nullptr, const xmltooling::QName* schemaType=nullptr
                 ) const;
 
             /** Singleton builder. */
@@ -738,7 +738,7 @@ namespace opensaml {
 #else
             virtual xmltooling::XMLObject* buildObject(
 #endif
-                const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=NULL, const xmltooling::QName* schemaType=NULL
+                const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=nullptr, const xmltooling::QName* schemaType=nullptr
                 ) const;
 
             /** Singleton builder. */
@@ -785,7 +785,7 @@ namespace opensaml {
 #else
             virtual xmltooling::XMLObject* buildObject(
 #endif
-                const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=NULL, const xmltooling::QName* schemaType=NULL
+                const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix=nullptr, const xmltooling::QName* schemaType=nullptr
                 ) const;
 
             /** Singleton builder. */

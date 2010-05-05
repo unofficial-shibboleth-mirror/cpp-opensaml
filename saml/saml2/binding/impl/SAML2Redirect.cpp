@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 /**
  * @file saml/saml2/binding/SAML2Redirect.h
  * 
- * SAML 2.0 HTTP Redirect compression functionality
+ * SAML 2.0 HTTP Redirect compression functionality.
  */
 
 #include "internal.h"
@@ -56,7 +56,7 @@ char* opensaml::saml2p::deflate(char* in, unsigned int in_len, unsigned int* out
     
     z.zalloc = saml_zalloc;
     z.zfree = saml_zfree;
-    z.opaque = NULL;
+    z.opaque = nullptr;
     z.next_in = (Bytef*)in;
     z.avail_in = in_len;
     *out_len = 0;
@@ -64,7 +64,7 @@ char* opensaml::saml2p::deflate(char* in, unsigned int in_len, unsigned int* out
     int ret = deflateInit2(&z, 9, Z_DEFLATED, -15, 9, Z_DEFAULT_STRATEGY);
     if (ret != Z_OK) {
         log.error("zlib deflateInit2 failed with error code (%d)", ret);
-        return NULL;
+        return nullptr;
     }
   
     int dlen = in_len + (in_len >> 8) + 12;  /* orig_size * 1.001 + 12 */
@@ -96,7 +96,7 @@ unsigned int opensaml::saml2p::inflate(char* in, unsigned int in_len, ostream& o
     
     z.zalloc = saml_zalloc;
     z.zfree = saml_zfree;
-    z.opaque = NULL;
+    z.opaque = nullptr;
     z.next_in = (Bytef*)in;
     z.avail_in = in_len;
   

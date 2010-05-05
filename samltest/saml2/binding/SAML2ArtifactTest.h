@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,15 +56,15 @@ public:
             cc.setUsage(Credential::SIGNING_CREDENTIAL);
             Locker clocker(m_creds);
             const Credential* cred = m_creds->resolve(&cc);
-            TSM_ASSERT("Retrieved credential was null", cred!=NULL);
+            TSM_ASSERT("Retrieved credential was null", cred!=nullptr);
 
             // Freshen timestamp.
-            toSend->setIssueInstant(time(NULL));
+            toSend->setIssueInstant(time(nullptr));
 
             // Encode message.
             auto_ptr<MessageEncoder> encoder(
                 SAMLConfig::getConfig().MessageEncoderManager.newPlugin(
-                    samlconstants::SAML20_BINDING_HTTP_ARTIFACT, pair<const DOMElement*,const XMLCh*>(NULL,NULL)
+                    samlconstants::SAML20_BINDING_HTTP_ARTIFACT, pair<const DOMElement*,const XMLCh*>(nullptr,nullptr)
                     )
                 );
             Locker locker(m_metadata);
@@ -83,7 +83,7 @@ public:
             string relayState;
             auto_ptr<MessageDecoder> decoder(
                 SAMLConfig::getConfig().MessageDecoderManager.newPlugin(
-                    samlconstants::SAML20_BINDING_HTTP_ARTIFACT, pair<const DOMElement*,const XMLCh*>(NULL,NULL)
+                    samlconstants::SAML20_BINDING_HTTP_ARTIFACT, pair<const DOMElement*,const XMLCh*>(nullptr,nullptr)
                     )
                 );
             decoder->setArtifactResolver(this);
@@ -134,7 +134,7 @@ public:
         XMLObject* xmlObject =
             SAMLConfig::getConfig().getArtifactMap()->retrieveContent(&artifact, "https://sp.example.org/");
         Response* payload = dynamic_cast<Response*>(xmlObject);
-        TSM_ASSERT("Not a response.", payload!=NULL);
+        TSM_ASSERT("Not a response.", payload!=nullptr);
 
         auto_ptr<ArtifactResponse> response(ArtifactResponseBuilder::buildArtifactResponse());
         response->setPayload(payload);

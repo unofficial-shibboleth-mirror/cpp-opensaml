@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2009 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ using namespace xmltooling;
 using namespace std;
 
 SAML2SOAPClient::SAML2SOAPClient(opensaml::SOAPClient& soaper, bool fatalSAMLErrors)
-    : m_soaper(soaper), m_fatal(fatalSAMLErrors), m_correlate(NULL)
+    : m_soaper(soaper), m_fatal(fatalSAMLErrors), m_correlate(nullptr)
 {
 }
 
@@ -92,7 +92,7 @@ StatusResponseType* SAML2SOAPClient::receiveSAML()
                 // Check Status.
                 Status* status = response->getStatus();
                 if (status) {
-                    const XMLCh* code = status->getStatusCode() ? status->getStatusCode()->getValue() : NULL;
+                    const XMLCh* code = status->getStatusCode() ? status->getStatusCode()->getValue() : nullptr;
                     if (code && !XMLString::equals(code,StatusCode::SUCCESS) && handleError(*status)) {
                         BindingException ex("SAML response contained an error.");
                         annotateException(&ex, policy.getIssuerMetadata(), status);   // throws it
@@ -112,13 +112,13 @@ StatusResponseType* SAML2SOAPClient::receiveSAML()
         else
             ex.raise();
     }
-    return NULL;
+    return nullptr;
 }
 
 bool SAML2SOAPClient::handleError(const Status& status)
 {
-    auto_ptr_char code((status.getStatusCode() ? status.getStatusCode()->getValue() : NULL));
-    auto_ptr_char str((status.getStatusMessage() ? status.getStatusMessage()->getMessage() : NULL));
+    auto_ptr_char code((status.getStatusCode() ? status.getStatusCode()->getValue() : nullptr));
+    auto_ptr_char str((status.getStatusMessage() ? status.getStatusMessage()->getMessage() : nullptr));
     Category::getInstance(SAML_LOGCAT".SOAPClient").error(
         "SOAP client detected a SAML error: (%s) (%s)",
         (code.get() ? code.get() : "no code"),

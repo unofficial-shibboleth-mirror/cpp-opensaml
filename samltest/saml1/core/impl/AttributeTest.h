@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,8 +42,8 @@ public:
     void testSingleElementUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         Attribute& a = dynamic_cast<Attribute&>(*xo.get());
-        TSM_ASSERT("AttributeName", a.getAttributeName()==NULL);
-        TSM_ASSERT("AttributeNamespace", a.getAttributeNamespace()==NULL);
+        TSM_ASSERT("AttributeName", a.getAttributeName()==nullptr);
+        TSM_ASSERT("AttributeNamespace", a.getAttributeNamespace()==nullptr);
         TSM_ASSERT_EQUALS("<AttributeValue> subelement found", 0, a.getAttributeValues().size());
     }
 
@@ -77,7 +77,7 @@ public:
         const XMLCh xsdstring[] = UNICODE_LITERAL_6(s,t,r,i,n,g);
        
         const XMLObjectBuilder* builder=XMLObjectBuilder::getBuilder(xmltooling::QName(samlconstants::SAML1_NS,AttributeValue::LOCAL_NAME));
-        TS_ASSERT(builder!=NULL);
+        TS_ASSERT(builder!=nullptr);
         xmltooling::QName xsitype(xmlconstants::XSD_NS,xsdstring,xmlconstants::XSD_PREFIX);
         for (int i=0; i<4; i++)
             a->getAttributeValues().push_back(builder->buildObject(samlconstants::SAML1_NS, AttributeValue::LOCAL_NAME, samlconstants::SAML1_PREFIX, &xsitype)); 

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,8 +42,8 @@ public:
     void testSingleElementUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         RequestedAuthnContext* rac = dynamic_cast<RequestedAuthnContext*>(xo.get());
-        TS_ASSERT(rac !=NULL);
-        TS_ASSERT(rac->getComparison()==NULL);
+        TS_ASSERT(rac !=nullptr);
+        TS_ASSERT(rac->getComparison()==nullptr);
 
         TSM_ASSERT_EQUALS("# of AuthnContextClassRef child elements", 0, rac->getAuthnContextClassRefs().size());
         TSM_ASSERT_EQUALS("# of AuthnContextDeclRef child elements", 0, rac->getAuthnContextDeclRefs().size());
@@ -52,7 +52,7 @@ public:
     void testSingleElementOptionalAttributesUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
         RequestedAuthnContext* rac = dynamic_cast<RequestedAuthnContext*>(xo.get());
-        TS_ASSERT(rac!=NULL);
+        TS_ASSERT(rac!=nullptr);
         assertEquals("Comparison attribute", expectedComparison, rac->getComparison());
 
         TSM_ASSERT_EQUALS("# of AuthnContextClassRef child elements", 0, rac->getAuthnContextClassRefs().size());
@@ -62,8 +62,8 @@ public:
     void testChildElementsUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         RequestedAuthnContext* rac = dynamic_cast<RequestedAuthnContext*>(xo.get());
-        TS_ASSERT(rac !=NULL);
-        TS_ASSERT(rac->getComparison()==NULL);
+        TS_ASSERT(rac !=nullptr);
+        TS_ASSERT(rac->getComparison()==nullptr);
 
         TSM_ASSERT_EQUALS("# of AuthnContextClassRef child elements", 3, rac->getAuthnContextClassRefs().size());
         TSM_ASSERT_EQUALS("# of AuthnContextDeclRef child elements", 0, rac->getAuthnContextDeclRefs().size());

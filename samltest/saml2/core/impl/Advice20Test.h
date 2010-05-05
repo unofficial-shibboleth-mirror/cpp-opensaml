@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ public:
     void testSingleElementUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         Advice* advice = dynamic_cast<Advice*>(xo.get());
-        TS_ASSERT(advice!=NULL);
+        TS_ASSERT(advice!=nullptr);
 
         TSM_ASSERT_EQUALS("# of AssertionIDRef child elements", 0, advice->getAssertionIDRefs().size());
         TSM_ASSERT_EQUALS("# of AssertionURIRef child elements", 0, advice->getAssertionURIRefs().size());
@@ -50,7 +50,7 @@ public:
     void testChildElementsUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         Advice* advice= dynamic_cast<Advice*>(xo.get());
-        TS_ASSERT(advice!=NULL);
+        TS_ASSERT(advice!=nullptr);
 
         TSM_ASSERT_EQUALS("# of AssertionIDRef child elements", 3, advice->getAssertionIDRefs().size());
         TSM_ASSERT_EQUALS("# of AssertionURIRef child elements", 2, advice->getAssertionURIRefs().size());

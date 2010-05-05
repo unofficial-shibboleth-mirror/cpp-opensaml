@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2009 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,8 +55,8 @@ namespace opensaml {
         {
         public:
             SAML2ECPEncoder(const DOMElement* e, const XMLCh* ns) : m_actor("http://schemas.xmlsoap.org/soap/actor/next"),
-                    m_providerName(e ? e->getAttributeNS(ns, ProviderName) : NULL), m_idpList(NULL) {
-                DOMElement* child = e ? XMLHelper::getFirstChildElement(e, SAML20P_NS, IDPList::LOCAL_NAME) : NULL;
+                    m_providerName(e ? e->getAttributeNS(ns, ProviderName) : nullptr), m_idpList(nullptr) {
+                DOMElement* child = e ? XMLHelper::getFirstChildElement(e, SAML20P_NS, IDPList::LOCAL_NAME) : nullptr;
                 if (child)
                     m_idpList = dynamic_cast<IDPList*>(XMLObjectBuilder::buildOneFromElement(child));
             }
@@ -68,12 +68,12 @@ namespace opensaml {
                 GenericResponse& genericResponse,
                 XMLObject* xmlObject,
                 const char* destination,
-                const EntityDescriptor* recipient=NULL,
-                const char* relayState=NULL,
-                const ArtifactGenerator* artifactGenerator=NULL,
-                const Credential* credential=NULL,
-                const XMLCh* signatureAlg=NULL,
-                const XMLCh* digestAlg=NULL
+                const EntityDescriptor* recipient=nullptr,
+                const char* relayState=nullptr,
+                const ArtifactGenerator* artifactGenerator=nullptr,
+                const Credential* credential=nullptr,
+                const XMLCh* signatureAlg=nullptr,
+                const XMLCh* digestAlg=nullptr
                 ) const;
             
         private:
@@ -111,7 +111,7 @@ long SAML2ECPEncoder::encode(
     if (xmlObject->getParent())
         throw BindingException("Cannot encode XML content with parent.");
 
-    Response* response = NULL;
+    Response* response = nullptr;
     AuthnRequest* request = dynamic_cast<AuthnRequest*>(xmlObject);
     if (!request) {
         response = dynamic_cast<Response*>(xmlObject);
@@ -152,8 +152,8 @@ long SAML2ECPEncoder::encode(
         hdrblock = dynamic_cast<ElementProxy*>(m_anyBuilder.buildObject(PAOS_NS, saml1p::Request::LOCAL_NAME, PAOS_PREFIX));
         hdrblock->setAttribute(qMU, XML_ONE);
         hdrblock->setAttribute(qActor, m_actor.get());
-        hdrblock->setAttribute(xmltooling::QName(NULL, service), SAML20ECP_NS);
-        hdrblock->setAttribute(xmltooling::QName(NULL, responseConsumerURL), request->getAssertionConsumerServiceURL());
+        hdrblock->setAttribute(xmltooling::QName(nullptr, service), SAML20ECP_NS);
+        hdrblock->setAttribute(xmltooling::QName(nullptr, responseConsumerURL), request->getAssertionConsumerServiceURL());
         header->getUnknownXMLObjects().push_back(hdrblock);
 
         // Create ecp:Request header.
@@ -162,9 +162,9 @@ long SAML2ECPEncoder::encode(
         hdrblock->setAttribute(qMU, XML_ONE);
         hdrblock->setAttribute(qActor, m_actor.get());
         if (!request->IsPassive())
-            hdrblock->setAttribute(xmltooling::QName(NULL,IsPassive), XML_ZERO);
+            hdrblock->setAttribute(xmltooling::QName(nullptr,IsPassive), XML_ZERO);
         if (m_providerName)
-            hdrblock->setAttribute(xmltooling::QName(NULL,ProviderName), m_providerName);
+            hdrblock->setAttribute(xmltooling::QName(nullptr,ProviderName), m_providerName);
         hdrblock->getUnknownXMLObjects().push_back(request->getIssuer()->clone());
         if (request->getScoping() && request->getScoping()->getIDPList())
             hdrblock->getUnknownXMLObjects().push_back(request->getScoping()->getIDPList()->clone());
@@ -177,7 +177,7 @@ long SAML2ECPEncoder::encode(
         hdrblock = dynamic_cast<ElementProxy*>(m_anyBuilder.buildObject(SAML20ECP_NS, Response::LOCAL_NAME, SAML20ECP_PREFIX));
         hdrblock->setAttribute(qMU, XML_ONE);
         hdrblock->setAttribute(qActor, m_actor.get());
-        hdrblock->setAttribute(xmltooling::QName(NULL,AuthnRequest::ASSERTIONCONSUMERSERVICEURL_ATTRIB_NAME), response->getDestination());
+        hdrblock->setAttribute(xmltooling::QName(nullptr,AuthnRequest::ASSERTIONCONSUMERSERVICEURL_ATTRIB_NAME), response->getDestination());
         header->getUnknownXMLObjects().push_back(hdrblock);
     }
     
@@ -193,7 +193,7 @@ long SAML2ECPEncoder::encode(
     }
     
     try {
-        DOMElement* rootElement = NULL;
+        DOMElement* rootElement = nullptr;
         if (credential) {
             if (request->getSignature()) {
                 log.debug("message already signed, skipping signature operation");
@@ -215,7 +215,7 @@ long SAML2ECPEncoder::encode(
         
                 // Sign message while marshalling.
                 vector<Signature*> sigs(1,sig);
-                rootElement = env->marshall((DOMDocument*)NULL,&sigs,credential);
+                rootElement = env->marshall((DOMDocument*)nullptr,&sigs,credential);
             }
         }
         else {

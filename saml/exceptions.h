@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -64,7 +64,7 @@ namespace opensaml {
     void SAML_API annotateException(
         xmltooling::XMLToolingException* e,
         const saml2md::EntityDescriptor* entity,
-        const saml2p::Status* status=NULL,
+        const saml2p::Status* status=nullptr,
         bool rethrow=true
         );
     
@@ -89,7 +89,7 @@ namespace opensaml {
     void SAML_API annotateException(
         xmltooling::XMLToolingException* e,
         const saml2md::RoleDescriptor* role,
-        const saml2p::Status* status=NULL,
+        const saml2p::Status* status=nullptr,
         bool rethrow=true
         );
 };

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2009 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,14 +56,14 @@ namespace opensaml {
              * Returns endpoint that supports a particular binding.
              * 
              * @param binding   binding to locate
-             * @return a supporting endpoint, favoring the default, or NULL
+             * @return a supporting endpoint, favoring the default, or nullptr
              */
             const _Tx* getByBinding(const XMLCh* binding) const {
                 for (typename std::vector<_Tx*>::const_iterator i = m_endpoints.begin(); i!=m_endpoints.end(); ++i) {
                     if (xercesc::XMLString::equals(binding,(*i)->getBinding()))
                         return *i;
                 }
-                return NULL;
+                return nullptr;
             }
         };
 
@@ -83,7 +83,7 @@ namespace opensaml {
              *
              * @param endpoints array of endpoints to manage
              */
-            IndexedEndpointManager(const typename std::vector<_Tx*>& endpoints) : EndpointManager<_Tx>(endpoints), m_default(NULL) {
+            IndexedEndpointManager(const typename std::vector<_Tx*>& endpoints) : EndpointManager<_Tx>(endpoints), m_default(nullptr) {
             }
             
             /**
@@ -98,14 +98,14 @@ namespace opensaml {
                     if ((*i)->isDefault())
                         return m_default=*i;
                 }
-                return (EndpointManager<_Tx>::m_endpoints.empty()) ? m_default=NULL : m_default=EndpointManager<_Tx>::m_endpoints.front();
+                return (EndpointManager<_Tx>::m_endpoints.empty()) ? m_default=nullptr : m_default=EndpointManager<_Tx>::m_endpoints.front();
             }
             
             /**
              * Returns indexed endpoint.
              * 
              * @param index index to locate
-             * @return matching endpoint, or NULL
+             * @return matching endpoint, or nullptr
              */
             const _Tx* getByIndex(unsigned short index) const {
                 for (typename std::vector<_Tx*>::const_iterator i = EndpointManager<_Tx>::m_endpoints.begin(); i!=EndpointManager<_Tx>::m_endpoints.end(); ++i) {
@@ -113,14 +113,14 @@ namespace opensaml {
                     if (comp.first && index == comp.second)
                         return *i;
                 }
-                return NULL;
+                return nullptr;
             }
             
             /**
              * Returns endpoint that supports a particular binding.
              * 
              * @param binding   binding to locate
-             * @return a supporting endpoint, favoring the default, or NULL
+             * @return a supporting endpoint, favoring the default, or nullptr
              */
             const _Tx* getByBinding(const XMLCh* binding) const {
                 if (getDefault() && xercesc::XMLString::equals(binding,m_default->getBinding()))

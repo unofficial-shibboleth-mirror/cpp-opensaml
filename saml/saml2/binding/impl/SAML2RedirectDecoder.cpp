@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2009 Internet2
+ *  Copyright 2001-2010 Internet2
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -130,8 +130,8 @@ XMLObject* SAML2RedirectDecoder::decode(
     auto_ptr<XMLObject> xmlObject(XMLObjectBuilder::buildOneFromElement(doc->getDocumentElement(), true));
     janitor.release();
 
-    saml2::RootObject* root = NULL;
-    StatusResponseType* response = NULL;
+    saml2::RootObject* root = nullptr;
+    StatusResponseType* response = nullptr;
     RequestAbstractType* request = dynamic_cast<RequestAbstractType*>(xmlObject.get());
     if (!request) {
         response = dynamic_cast<StatusResponseType*>(xmlObject.get());

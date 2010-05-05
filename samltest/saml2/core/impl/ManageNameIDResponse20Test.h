@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,47 +58,47 @@ public:
     void testSingleElementUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         ManageNameIDResponse* response = dynamic_cast<ManageNameIDResponse*>(xo.get());
-        TS_ASSERT(response!=NULL);
+        TS_ASSERT(response!=nullptr);
 
         assertEquals("ID attribute", expectedID, response->getID());
         assertEquals("Version attribute", expectedVersion, response->getVersion());
         TSM_ASSERT_EQUALS("IssueInstant attribute", expectedIssueInstant->getEpoch(), response->getIssueInstant()->getEpoch());
 
-        TS_ASSERT(response->getIssuer()==NULL);
-        TS_ASSERT(response->getSignature()==NULL);
-        TS_ASSERT(response->getExtensions()==NULL);
-        TS_ASSERT(response->getStatus()==NULL);
+        TS_ASSERT(response->getIssuer()==nullptr);
+        TS_ASSERT(response->getSignature()==nullptr);
+        TS_ASSERT(response->getExtensions()==nullptr);
+        TS_ASSERT(response->getStatus()==nullptr);
     }
 
     void testSingleElementOptionalAttributesUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
         ManageNameIDResponse* response = dynamic_cast<ManageNameIDResponse*>(xo.get());
-        TS_ASSERT(response!=NULL);
+        TS_ASSERT(response!=nullptr);
 
         assertEquals("Consent attribute", expectedConsent, response->getConsent());
         assertEquals("Destination attribute", expectedDestination, response->getDestination());
         assertEquals("InResponseTo attribute", expectedInResponseTo, response->getInResponseTo());
 
-        TS_ASSERT(response->getIssuer()==NULL);
-        TS_ASSERT(response->getSignature()==NULL);
-        TS_ASSERT(response->getExtensions()==NULL);
-        TS_ASSERT(response->getStatus()==NULL);
+        TS_ASSERT(response->getIssuer()==nullptr);
+        TS_ASSERT(response->getSignature()==nullptr);
+        TS_ASSERT(response->getExtensions()==nullptr);
+        TS_ASSERT(response->getStatus()==nullptr);
     }
 
     void testChildElementsUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         ManageNameIDResponse* response= dynamic_cast<ManageNameIDResponse*>(xo.get());
-        TS_ASSERT(response!=NULL);
+        TS_ASSERT(response!=nullptr);
 
-        TS_ASSERT(response->getIssuer()!=NULL);
-        TS_ASSERT(response->getSignature()==NULL);
-        TS_ASSERT(response->getExtensions()==NULL);
-        TS_ASSERT(response->getStatus()!=NULL);
+        TS_ASSERT(response->getIssuer()!=nullptr);
+        TS_ASSERT(response->getSignature()==nullptr);
+        TS_ASSERT(response->getExtensions()==nullptr);
+        TS_ASSERT(response->getStatus()!=nullptr);
     }
 
     void testSingleElementMarshall() {
         ManageNameIDResponse* response = ManageNameIDResponseBuilder::buildManageNameIDResponse();
-        TS_ASSERT(response!=NULL);
+        TS_ASSERT(response!=nullptr);
 
         response->setID(expectedID);
         response->setIssueInstant(expectedIssueInstant);
@@ -108,7 +108,7 @@ public:
 
     void testSingleElementOptionalAttributesMarshall() {
         ManageNameIDResponse* response = ManageNameIDResponseBuilder::buildManageNameIDResponse();
-        TS_ASSERT(response!=NULL);
+        TS_ASSERT(response!=nullptr);
 
         response->setID(expectedID);
         response->setInResponseTo(expectedInResponseTo);
@@ -122,7 +122,7 @@ public:
 
     void testChildElementsMarshall() {
         ManageNameIDResponse* response = ManageNameIDResponseBuilder::buildManageNameIDResponse();
-        TS_ASSERT(response!=NULL);
+        TS_ASSERT(response!=nullptr);
 
         response->setID(expectedID);
         response->setIssueInstant(expectedIssueInstant);

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2010 Internet2
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,17 +48,17 @@ public:
     void testSingleElementUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         Assertion* assertion = dynamic_cast<Assertion*>(xo.get());
-        TS_ASSERT(assertion!=NULL);
+        TS_ASSERT(assertion!=nullptr);
 
         assertEquals("ID attribute", expectedID, assertion->getID());
         assertEquals("Version attribute", expectedVersion, assertion->getVersion());
         TSM_ASSERT_EQUALS("IssueInstant attribute", expectedIssueInstant->getEpoch(), assertion->getIssueInstant()->getEpoch());
 
-        TS_ASSERT(assertion->getIssuer()==NULL);
-        TS_ASSERT(assertion->getSignature()==NULL);
-        TS_ASSERT(assertion->getSubject()==NULL);
-        TS_ASSERT(assertion->getConditions()==NULL);
-        TS_ASSERT(assertion->getAdvice()==NULL);
+        TS_ASSERT(assertion->getIssuer()==nullptr);
+        TS_ASSERT(assertion->getSignature()==nullptr);
+        TS_ASSERT(assertion->getSubject()==nullptr);
+        TS_ASSERT(assertion->getConditions()==nullptr);
+        TS_ASSERT(assertion->getAdvice()==nullptr);
 
         TSM_ASSERT_EQUALS("# of Statement child elements", 0, assertion->getStatements().size());
         TSM_ASSERT_EQUALS("# of AuthnStatement child elements", 0, assertion->getAuthnStatements().size());
@@ -69,17 +69,17 @@ public:
     void testChildElementsUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         Assertion* assertion= dynamic_cast<Assertion*>(xo.get());
-        TS_ASSERT(assertion!=NULL);
+        TS_ASSERT(assertion!=nullptr);
 
         assertEquals("ID attribute", expectedID, assertion->getID());
         assertEquals("Version attribute", expectedVersion, assertion->getVersion());
         TSM_ASSERT_EQUALS("IssueInstant attribute", expectedIssueInstant->getEpoch(), assertion->getIssueInstant()->getEpoch());
 
-        TS_ASSERT(assertion->getIssuer()!=NULL);
-        TS_ASSERT(assertion->getSignature()==NULL);
-        TS_ASSERT(assertion->getSubject()!=NULL);
-        TS_ASSERT(assertion->getConditions()!=NULL);
-        TS_ASSERT(assertion->getAdvice()!=NULL);
+        TS_ASSERT(assertion->getIssuer()!=nullptr);
+        TS_ASSERT(assertion->getSignature()==nullptr);
+        TS_ASSERT(assertion->getSubject()!=nullptr);
+        TS_ASSERT(assertion->getConditions()!=nullptr);
+        TS_ASSERT(assertion->getAdvice()!=nullptr);
 
         TSM_ASSERT_EQUALS("# of Statement child elements", 1, assertion->getStatements().size());
         TSM_ASSERT_EQUALS("# of AuthnStatement child elements", 1, assertion->getAuthnStatements().size());
@@ -116,7 +116,7 @@ public:
         assertEquals(expectedChildElementsDOM, assertion);
 
         // Note: assertEquals() above has already 'delete'-ed the XMLObject* it was passed
-        assertion=NULL;
+        assertion=nullptr;
         assertion=AssertionBuilder::buildAssertion();
         assertion->setID(expectedID);
         assertion->setIssueInstant(expectedIssueInstant);

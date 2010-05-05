@@ -1,5 +1,5 @@
 /*
-*  Copyright 2001-2009 Internet2
+*  Copyright 2001-2010 Internet2
  * 
 * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -96,7 +96,7 @@ namespace opensaml {
             //TODO test this !!!
             // If this is a top-level StatusCode (ie. parent is a Status),
             // then there are only 4 valid values per SAML Core.
-            if (ptr->getParent()!=NULL && ptr->getParent()->getElementQName().hasLocalPart())
+            if (ptr->getParent()!=nullptr && ptr->getParent()->getElementQName().hasLocalPart())
             {
                 xmltooling::QName pq = ptr->getParent()->getElementQName();
 
@@ -170,7 +170,7 @@ namespace opensaml {
         BEGIN_XMLOBJECTVALIDATOR_SUB(SAML_DLLLOCAL,AuthnRequest,RequestAbstractType);
             RequestAbstractTypeSchemaValidator::validate(xmlObject);
             if (ptr->getAssertionConsumerServiceIndex().first 
-                    && (ptr->getAssertionConsumerServiceURL()!=NULL || ptr->getProtocolBinding()!=NULL))
+                    && (ptr->getAssertionConsumerServiceURL()!=nullptr || ptr->getProtocolBinding()!=nullptr))
                 throw xmltooling::ValidationException("On AuthnRequest AssertionConsumerServiceIndex is mutually exclusive with both AssertionConsumerServiceURL and ProtocolBinding");
         END_XMLOBJECTVALIDATOR;
 

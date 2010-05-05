@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,19 +57,19 @@ public:
     void testSingleElementUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         SubjectConfirmationData* scd = dynamic_cast<SubjectConfirmationData*>(xo.get());
-        TS_ASSERT(scd!=NULL);
+        TS_ASSERT(scd!=nullptr);
 
-        TS_ASSERT(scd->getNotBefore()==NULL);
-        TS_ASSERT(scd->getNotOnOrAfter()==NULL);
-        TS_ASSERT(scd->getRecipient()==NULL);
-        TS_ASSERT(scd->getInResponseTo()==NULL);
-        TS_ASSERT(scd->getAddress()==NULL);
+        TS_ASSERT(scd->getNotBefore()==nullptr);
+        TS_ASSERT(scd->getNotOnOrAfter()==nullptr);
+        TS_ASSERT(scd->getRecipient()==nullptr);
+        TS_ASSERT(scd->getInResponseTo()==nullptr);
+        TS_ASSERT(scd->getAddress()==nullptr);
     }
 
     void testSingleElementOptionalAttributesUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
         SubjectConfirmationData* scd = dynamic_cast<SubjectConfirmationData*>(xo.get());
-        TS_ASSERT(scd!=NULL);
+        TS_ASSERT(scd!=nullptr);
 
         TSM_ASSERT_EQUALS("NotBefore attribute", expectedNotBefore->getEpoch(), scd->getNotBefore()->getEpoch());
         TSM_ASSERT_EQUALS("NotOnOrAfter attribute", expectedNotOnOrAfter->getEpoch(), scd->getNotOnOrAfter()->getEpoch());
@@ -83,13 +83,13 @@ public:
     void testChildElementsUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         SubjectConfirmationData* scd= dynamic_cast<SubjectConfirmationData*>(xo.get());
-        TS_ASSERT(scd!=NULL);
+        TS_ASSERT(scd!=nullptr);
 
-        TS_ASSERT(scd->getNotBefore()==NULL);
-        TS_ASSERT(scd->getNotOnOrAfter()==NULL);
-        TS_ASSERT(scd->getRecipient()==NULL);
-        TS_ASSERT(scd->getInResponseTo()==NULL);
-        TS_ASSERT(scd->getAddress()==NULL);
+        TS_ASSERT(scd->getNotBefore()==nullptr);
+        TS_ASSERT(scd->getNotOnOrAfter()==nullptr);
+        TS_ASSERT(scd->getRecipient()==nullptr);
+        TS_ASSERT(scd->getInResponseTo()==nullptr);
+        TS_ASSERT(scd->getAddress()==nullptr);
 
         //TODO need to test with some wildcard child elements
     }

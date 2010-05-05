@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2009 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 /**
  * XMLSigningRule.cpp
  * 
- * XML Signature checking SecurityPolicyRule
+ * XML Signature checking SecurityPolicyRule.
  */
 
 #include "internal.h"
@@ -69,7 +69,7 @@ namespace opensaml {
 XMLSigningRule::XMLSigningRule(const DOMElement* e) : m_errorFatal(false)
 {
     if (e) {
-        const XMLCh* flag = e->getAttributeNS(NULL, errorFatal);
+        const XMLCh* flag = e->getAttributeNS(nullptr, errorFatal);
         m_errorFatal = (flag && (*flag==chLatin_t || *flag==chDigit_1)); 
     }
 }

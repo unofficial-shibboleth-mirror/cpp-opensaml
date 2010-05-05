@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2010 Internet2
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 /**
  * BrowserSSOProfile20Validator.cpp
  *
- * SAML 2.0 Browser SSO Profile Assertion Validator
+ * SAML 2.0 Browser SSO Profile Assertion Validator.
  */
 
 #include "internal.h"
@@ -64,14 +64,14 @@ void BrowserSSOProfileValidator::validateAssertion(const Assertion& assertion) c
                 const SubjectConfirmationDataType* data = dynamic_cast<const SubjectConfirmationDataType*>((*sc)->getSubjectConfirmationData());
 
                 if (m_destination.get()) {
-                    if (!XMLString::equals(m_destination.get(), data ? data->getRecipient() : NULL)) {
+                    if (!XMLString::equals(m_destination.get(), data ? data->getRecipient() : nullptr)) {
                         msg = "bearer confirmation failed with recipient mismatch";
                         continue;
                     }
                 }
 
                 if (m_requestID.get()) {
-                    if (!XMLString::equals(m_requestID.get(), data ? data->getInResponseTo() : NULL)) {
+                    if (!XMLString::equals(m_requestID.get(), data ? data->getInResponseTo() : nullptr)) {
                         msg = "bearer confirmation failed with request correlation mismatch";
                         continue;
                     }

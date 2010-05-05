@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,14 +47,14 @@ public:
     void testSingleElementUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         IDPEntry* entry = dynamic_cast<IDPEntry*>(xo.get());
-        TS_ASSERT(entry!=NULL);
+        TS_ASSERT(entry!=nullptr);
         assertEquals("ProviderID attribute", expectedProviderID, entry->getProviderID());
     }
 
     void testSingleElementOptionalAttributesUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
         IDPEntry* entry = dynamic_cast<IDPEntry*>(xo.get());
-        TS_ASSERT(entry!=NULL);
+        TS_ASSERT(entry!=nullptr);
         assertEquals("ProviderID attribute", expectedProviderID, entry->getProviderID());
         assertEquals("Name attribute", expectedName, entry->getName());
         assertEquals("Loc attribute", expectedLoc, entry->getLoc());

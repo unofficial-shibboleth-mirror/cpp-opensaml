@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2009 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,11 +46,11 @@ static const XMLCh _KeyInfoResolver[] = UNICODE_LITERAL_15(K,e,y,I,n,f,o,R,e,s,o
 static const XMLCh type[] =             UNICODE_LITERAL_4(t,y,p,e);
 
 AbstractMetadataProvider::AbstractMetadataProvider(const DOMElement* e)
-    : ObservableMetadataProvider(e), m_resolver(NULL), m_credentialLock(NULL)
+    : ObservableMetadataProvider(e), m_resolver(nullptr), m_credentialLock(nullptr)
 {
-    e = e ? XMLHelper::getFirstChildElement(e, _KeyInfoResolver) : NULL;
+    e = e ? XMLHelper::getFirstChildElement(e, _KeyInfoResolver) : nullptr;
     if (e) {
-        auto_ptr_char t(e->getAttributeNS(NULL,type));
+        auto_ptr_char t(e->getAttributeNS(nullptr,type));
         if (t.get())
             m_resolver = XMLToolingConfig::getConfig().KeyInfoResolverManager.newPlugin(t.get(),e);
         else
@@ -171,7 +171,7 @@ const EntitiesDescriptor* AbstractMetadataProvider::getEntitiesDescriptor(const 
 {
     pair<groupmap_t::const_iterator,groupmap_t::const_iterator> range=const_cast<const groupmap_t&>(m_groups).equal_range(name);
 
-    time_t now=time(NULL);
+    time_t now=time(nullptr);
     for (groupmap_t::const_iterator i=range.first; i!=range.second; i++)
         if (now < i->second->getValidUntilEpoch())
             return i->second;
@@ -187,7 +187,7 @@ const EntitiesDescriptor* AbstractMetadataProvider::getEntitiesDescriptor(const 
         }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 pair<const EntityDescriptor*,const RoleDescriptor*> AbstractMetadataProvider::getEntityDescriptor(const Criteria& criteria) const
@@ -202,13 +202,13 @@ pair<const EntityDescriptor*,const RoleDescriptor*> AbstractMetadataProvider::ge
     else if (criteria.artifact)
         range = const_cast<const sitemap_t&>(m_sources).equal_range(criteria.artifact->getSource());
     else
-        return pair<const EntityDescriptor*,const RoleDescriptor*>(NULL,NULL);
+        return pair<const EntityDescriptor*,const RoleDescriptor*>(nullptr,nullptr);
     
     pair<const EntityDescriptor*,const RoleDescriptor*> result;
-    result.first = NULL;
-    result.second = NULL;
+    result.first = nullptr;
+    result.second = nullptr;
     
-    time_t now=time(NULL);
+    time_t now=time(nullptr);
     for (sitemap_t::const_iterator i=range.first; i!=range.second; i++) {
         if (now < i->second->getValidUntilEpoch()) {
             result.first = i->second;
@@ -248,7 +248,7 @@ const Credential* AbstractMetadataProvider::resolve(const CredentialCriteria* cr
     for (credmap_t::mapped_type::const_iterator c = creds.begin(); c!=creds.end(); ++c)
         if (metacrit->matches(*(*c)))
             return *c;
-    return NULL;
+    return nullptr;
 }
 
 vector<const Credential*>::size_type AbstractMetadataProvider::resolve(

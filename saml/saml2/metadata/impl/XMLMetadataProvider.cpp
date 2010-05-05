@@ -50,7 +50,7 @@ namespace opensaml {
         public:
             XMLMetadataProvider(const DOMElement* e)
                 : AbstractMetadataProvider(e), ReloadableXMLFile(e, Category::getInstance(SAML_LOGCAT".MetadataProvider.XML")),
-                    m_object(NULL), m_maxCacheDuration(m_reloadInterval) {
+                    m_object(nullptr), m_maxCacheDuration(m_reloadInterval) {
             }
             virtual ~XMLMetadataProvider() {
                 shutdown();
@@ -97,7 +97,7 @@ pair<bool,DOMElement*> XMLMetadataProvider::background_load()
     pair<bool,DOMElement*> raw = ReloadableXMLFile::load();
 
     // If we own it, wrap it for now.
-    XercesJanitor<DOMDocument> docjanitor(raw.first ? raw.second->getOwnerDocument() : NULL);
+    XercesJanitor<DOMDocument> docjanitor(raw.first ? raw.second->getOwnerDocument() : nullptr);
 
     // Unmarshall objects, binding the document.
     auto_ptr<XMLObject> xmlObject(XMLObjectBuilder::buildOneFromElement(raw.second, true));
@@ -153,13 +153,13 @@ pair<bool,DOMElement*> XMLMetadataProvider::background_load()
     }
 
     xmlObject->releaseThisAndChildrenDOM();
-    xmlObject->setDocument(NULL);
+    xmlObject->setDocument(nullptr);
 
     // Swap it in after acquiring write lock if necessary.
     if (m_lock)
         m_lock->wrlock();
     SharedLock locker(m_lock, false);
-    bool changed = m_object!=NULL;
+    bool changed = m_object!=nullptr;
     delete m_object;
     m_object = xmlObject.release();
     index();
@@ -175,7 +175,7 @@ pair<bool,DOMElement*> XMLMetadataProvider::background_load()
             m_reloadInterval = m_maxCacheDuration;
     }
 
-    return make_pair(false,(DOMElement*)NULL);
+    return make_pair(false,(DOMElement*)nullptr);
 }
 
 void XMLMetadataProvider::index()

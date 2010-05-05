@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,22 +36,22 @@ public:
     void testSingleElementUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         AuthnContext* ac = dynamic_cast<AuthnContext*>(xo.get());
-        TS_ASSERT(ac!=NULL);
+        TS_ASSERT(ac!=nullptr);
 
-        TS_ASSERT(ac->getAuthnContextClassRef()==NULL);
-        TS_ASSERT(ac->getAuthnContextDecl()==NULL);
-        TS_ASSERT(ac->getAuthnContextDeclRef()==NULL);
+        TS_ASSERT(ac->getAuthnContextClassRef()==nullptr);
+        TS_ASSERT(ac->getAuthnContextDecl()==nullptr);
+        TS_ASSERT(ac->getAuthnContextDeclRef()==nullptr);
         TSM_ASSERT_EQUALS("# of AuthenticatingAuthority child elements", 0, ac->getAuthenticatingAuthoritys().size());
     }
 
     void testChildElementsUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         AuthnContext* ac= dynamic_cast<AuthnContext*>(xo.get());
-        TS_ASSERT(ac!=NULL);
+        TS_ASSERT(ac!=nullptr);
 
-        TS_ASSERT(ac->getAuthnContextClassRef()!=NULL);
-        TS_ASSERT(ac->getAuthnContextDecl()==NULL);
-        TS_ASSERT(ac->getAuthnContextDeclRef()!=NULL);
+        TS_ASSERT(ac->getAuthnContextClassRef()!=nullptr);
+        TS_ASSERT(ac->getAuthnContextDecl()==nullptr);
+        TS_ASSERT(ac->getAuthnContextDeclRef()!=nullptr);
         TSM_ASSERT_EQUALS("# of AuthenticatingAuthority child elements", 2, ac->getAuthenticatingAuthoritys().size());
     }
 

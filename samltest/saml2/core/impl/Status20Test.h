@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,19 +35,19 @@ public:
     void testSingleElementUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         Status* status = dynamic_cast<Status*>(xo.get());
-        TS_ASSERT(status!=NULL);
-        TSM_ASSERT("StatusCode child element", status->getStatusCode()==NULL);
-        TSM_ASSERT("StatusMessage child element", status->getStatusMessage()==NULL);
-        TSM_ASSERT("StatusDetail child element", status->getStatusDetail()==NULL);
+        TS_ASSERT(status!=nullptr);
+        TSM_ASSERT("StatusCode child element", status->getStatusCode()==nullptr);
+        TSM_ASSERT("StatusMessage child element", status->getStatusMessage()==nullptr);
+        TSM_ASSERT("StatusDetail child element", status->getStatusDetail()==nullptr);
     }
 
     void testChildElementsUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         Status* status = dynamic_cast<Status*>(xo.get());
-        TS_ASSERT(status!=NULL);
-        TSM_ASSERT("StatusCode child element", status->getStatusCode()!=NULL);
-        TSM_ASSERT("StatusMessage child element", status->getStatusMessage()!=NULL);
-        TSM_ASSERT("StatusDetail child element", status->getStatusDetail()!=NULL);
+        TS_ASSERT(status!=nullptr);
+        TSM_ASSERT("StatusCode child element", status->getStatusCode()!=nullptr);
+        TSM_ASSERT("StatusMessage child element", status->getStatusMessage()!=nullptr);
+        TSM_ASSERT("StatusDetail child element", status->getStatusDetail()!=nullptr);
     }
 
     void testSingleElementMarshall() {

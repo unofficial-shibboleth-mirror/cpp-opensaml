@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2009 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,12 +60,12 @@ namespace opensaml {
                 GenericResponse& genericResponse,
                 XMLObject* xmlObject,
                 const char* destination,
-                const EntityDescriptor* recipient=NULL,
-                const char* relayState=NULL,
-                const ArtifactGenerator* artifactGenerator=NULL,
-                const Credential* credential=NULL,
-                const XMLCh* signatureAlg=NULL,
-                const XMLCh* digestAlg=NULL
+                const EntityDescriptor* recipient=nullptr,
+                const char* relayState=nullptr,
+                const ArtifactGenerator* artifactGenerator=nullptr,
+                const Credential* credential=nullptr,
+                const XMLCh* signatureAlg=nullptr,
+                const XMLCh* digestAlg=nullptr
                 ) const;
 
         private:        
@@ -124,7 +124,7 @@ long SAML2POSTEncoder::encode(
     if (xmlObject->getParent())
         throw BindingException("Cannot encode XML content with parent.");
     
-    StatusResponseType* response = NULL;
+    StatusResponseType* response = nullptr;
     RequestAbstractType* request = dynamic_cast<RequestAbstractType*>(xmlObject);
     if (!request) {
         response = dynamic_cast<StatusResponseType*>(xmlObject);
@@ -132,7 +132,7 @@ long SAML2POSTEncoder::encode(
             throw BindingException("XML content for SAML 2.0 HTTP-POST Encoder must be a SAML 2.0 protocol message.");
     }
     
-    DOMElement* rootElement = NULL;
+    DOMElement* rootElement = nullptr;
     if (credential && !m_simple) {
         // Signature based on native XML signing.
         if (request ? request->getSignature() : response->getSignature()) {
@@ -154,12 +154,12 @@ long SAML2POSTEncoder::encode(
             
             // Sign response while marshalling.
             vector<Signature*> sigs(1,sig);
-            rootElement = xmlObject->marshall((DOMDocument*)NULL,&sigs,credential);
+            rootElement = xmlObject->marshall((DOMDocument*)nullptr,&sigs,credential);
         }
     }
     else {
         log.debug("marshalling the message");
-        rootElement = xmlObject->marshall((DOMDocument*)NULL);
+        rootElement = xmlObject->marshall((DOMDocument*)nullptr);
     }
     
     // Serialize the message.
@@ -188,7 +188,7 @@ long SAML2POSTEncoder::encode(
         auto_ptr<KeyInfo> keyInfo(credential->getKeyInfo());
         if (keyInfo.get()) {
             string& kstring = pmap.m_map["KeyInfo"];
-            XMLHelper::serialize(keyInfo->marshall((DOMDocument*)NULL), kstring);
+            XMLHelper::serialize(keyInfo->marshall((DOMDocument*)nullptr), kstring);
             xsecsize_t len=0;
             XMLByte* out=Base64::encode(reinterpret_cast<const XMLByte*>(kstring.data()),kstring.size(),&len);
             if (!out)

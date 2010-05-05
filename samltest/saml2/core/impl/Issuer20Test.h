@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ public:
     void testSingleElementUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         Issuer* issuer = dynamic_cast<Issuer*>(xo.get());
-        TS_ASSERT(issuer!=NULL);
+        TS_ASSERT(issuer!=nullptr);
 
         assertEquals("Element content", expectedContent, issuer->getName());
     }
@@ -60,7 +60,7 @@ public:
     void testSingleElementOptionalAttributesUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
         Issuer* issuer = dynamic_cast<Issuer*>(xo.get());
-        TS_ASSERT(issuer!=NULL);
+        TS_ASSERT(issuer!=nullptr);
 
         assertEquals("NameQualifier attribute", expectedNameQualifier, issuer->getNameQualifier());
         assertEquals("SPNameQualifier attribute", expectedSPNameQualifier, issuer->getSPNameQualifier());
@@ -72,7 +72,7 @@ public:
 
     void testSingleElementMarshall() {
         Issuer* issuer = IssuerBuilder::buildIssuer();
-        TS_ASSERT(issuer!=NULL);
+        TS_ASSERT(issuer!=nullptr);
 
         issuer->setName(expectedContent);
         assertEquals(expectedDOM, issuer);
@@ -80,7 +80,7 @@ public:
 
     void testSingleElementOptionalAttributesMarshall() {
         Issuer* issuer = IssuerBuilder::buildIssuer();
-        TS_ASSERT(issuer!=NULL);
+        TS_ASSERT(issuer!=nullptr);
 
         issuer->setNameQualifier(expectedNameQualifier);
         issuer->setSPNameQualifier(expectedSPNameQualifier);

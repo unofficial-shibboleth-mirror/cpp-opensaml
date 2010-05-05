@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2009 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,12 +58,12 @@ public:
             cc.setUsage(Credential::SIGNING_CREDENTIAL);
             Locker clocker(m_creds);
             const Credential* cred = m_creds->resolve(&cc);
-            TSM_ASSERT("Retrieved credential was null", cred!=NULL);
+            TSM_ASSERT("Retrieved credential was null", cred!=nullptr);
 
             // Encode message.
             auto_ptr<MessageEncoder> encoder(
                 SAMLConfig::getConfig().MessageEncoderManager.newPlugin(
-                    samlconstants::SAML1_PROFILE_BROWSER_ARTIFACT, pair<const DOMElement*,const XMLCh*>(NULL,NULL)
+                    samlconstants::SAML1_PROFILE_BROWSER_ARTIFACT, pair<const DOMElement*,const XMLCh*>(nullptr,nullptr)
                     )
                 );
             Locker locker(m_metadata);
@@ -82,7 +82,7 @@ public:
             string relayState;
             auto_ptr<MessageDecoder> decoder(
                 SAMLConfig::getConfig().MessageDecoderManager.newPlugin(
-                    samlconstants::SAML1_PROFILE_BROWSER_ARTIFACT, pair<const DOMElement*,const XMLCh*>(NULL,NULL)
+                    samlconstants::SAML1_PROFILE_BROWSER_ARTIFACT, pair<const DOMElement*,const XMLCh*>(nullptr,nullptr)
                     )
                 );
             decoder->setArtifactResolver(this);
@@ -126,7 +126,7 @@ public:
         XMLObject* xmlObject =
             SAMLConfig::getConfig().getArtifactMap()->retrieveContent(artifacts.front(), "https://sp.example.org/");
         saml1::Assertion* assertion = dynamic_cast<saml1::Assertion*>(xmlObject);
-        TSM_ASSERT("Not an assertion.", assertion!=NULL);
+        TSM_ASSERT("Not an assertion.", assertion!=nullptr);
         auto_ptr<Response> response(ResponseBuilder::buildResponse());
         response->getAssertions().push_back(assertion);
         Status* status = StatusBuilder::buildStatus();
@@ -140,8 +140,8 @@ public:
         cc.setUsage(Credential::SIGNING_CREDENTIAL);
         Locker clocker(m_creds);
         const Credential* cred = m_creds->resolve(&cc);
-        TSM_ASSERT("Retrieved credential was null", cred!=NULL);
-        response->marshall((DOMDocument*)NULL,&sigs,cred);
+        TSM_ASSERT("Retrieved credential was null", cred!=nullptr);
+        response->marshall((DOMDocument*)nullptr,&sigs,cred);
         SchemaValidators.validate(response.get());
         policy.evaluate(*(response.get()), this);
         return response.release();

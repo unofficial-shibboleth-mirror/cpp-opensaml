@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,14 +46,14 @@ public:
     void testSingleElementUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         NameIDPolicy* policy = dynamic_cast<NameIDPolicy*>(xo.get());
-        TS_ASSERT(policy!=NULL);
+        TS_ASSERT(policy!=nullptr);
         TSM_ASSERT_EQUALS("AllowCreate attribute presence", xmlconstants::XML_BOOL_NULL, policy->getAllowCreate());
     }
 
     void testSingleElementOptionalAttributesUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
         NameIDPolicy* policy = dynamic_cast<NameIDPolicy*>(xo.get());
-        TS_ASSERT(policy!=NULL);
+        TS_ASSERT(policy!=nullptr);
         assertEquals("Format attribute", expectedFormat, policy->getFormat());
         assertEquals("SPNameQualifier attribute", expectedSPNameQualifier, policy->getSPNameQualifier());
         TSM_ASSERT_DIFFERS("AllowCreate attribute presence", xmlconstants::XML_BOOL_NULL, policy->getAllowCreate());

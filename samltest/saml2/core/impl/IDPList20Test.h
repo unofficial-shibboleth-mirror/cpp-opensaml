@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,17 +37,17 @@ public:
     void testSingleElementUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         IDPList* list = dynamic_cast<IDPList*>(xo.get());
-        TS_ASSERT(list!=NULL);
+        TS_ASSERT(list!=nullptr);
 
-        TS_ASSERT(list->getGetComplete()==NULL);
+        TS_ASSERT(list->getGetComplete()==nullptr);
         TSM_ASSERT_EQUALS("# of IDPEntry child elements", 0, list->getIDPEntrys().size());
     }
 
     void testChildElementsUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         IDPList* list= dynamic_cast<IDPList*>(xo.get());
-        TS_ASSERT(list!=NULL);
-        TS_ASSERT(list->getGetComplete()!=NULL);
+        TS_ASSERT(list!=nullptr);
+        TS_ASSERT(list->getGetComplete()!=nullptr);
         TSM_ASSERT_EQUALS("# of IDPEntry child elements", 3, list->getIDPEntrys().size());
     }
 

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2009 Internet2
+ *  Copyright 2001-2010 Internet2
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -83,7 +83,7 @@ namespace opensaml {
              *
              * @param e DOM to supply configuration for provider
              */
-            MetadataProvider(const xercesc::DOMElement* e=NULL);
+            MetadataProvider(const xercesc::DOMElement* e=nullptr);
 
         public:
             /**
@@ -132,7 +132,7 @@ namespace opensaml {
              * @param name                  the name of the group
              * @param requireValidMetadata  indicates whether the metadata for the group must be valid/current
              *
-             * @return the group's metadata or NULL if there is no metadata or no valid metadata
+             * @return the group's metadata or nullptr if there is no metadata or no valid metadata
              */
             virtual const EntitiesDescriptor* getEntitiesDescriptor(const XMLCh* name, bool requireValidMetadata=true) const;
 
@@ -144,7 +144,7 @@ namespace opensaml {
              * @param name                  the name of the group
              * @param requireValidMetadata  indicates whether the metadata for the group must be valid/current
              *
-             * @return the group's metadata or NULL if there is no metadata or no valid metadata
+             * @return the group's metadata or nullptr if there is no metadata or no valid metadata
              */
             virtual const EntitiesDescriptor* getEntitiesDescriptor(const char* name, bool requireValidMetadata=true) const=0;
 
@@ -165,7 +165,7 @@ namespace opensaml {
                  * @param prot  protocol support constant, if any
                  * @param valid true iff stale metadata should be ignored
                  */
-                Criteria(const XMLCh* id, const xmltooling::QName* q=NULL, const XMLCh* prot=NULL, bool valid=true);
+                Criteria(const XMLCh* id, const xmltooling::QName* q=nullptr, const XMLCh* prot=nullptr, bool valid=true);
 
                 /**
                  * Constructor.
@@ -175,7 +175,7 @@ namespace opensaml {
                  * @param prot  protocol support constant, if any
                  * @param valid true iff stale metadata should be ignored
                  */
-                Criteria(const char* id, const xmltooling::QName* q=NULL, const XMLCh* prot=NULL, bool valid=true);
+                Criteria(const char* id, const xmltooling::QName* q=nullptr, const XMLCh* prot=nullptr, bool valid=true);
 
                 /**
                  * Constructor.
@@ -185,7 +185,7 @@ namespace opensaml {
                  * @param prot  protocol support constant, if any
                  * @param valid true iff stale metadata should be ignored
                  */
-                Criteria(const SAMLArtifact* a, const xmltooling::QName* q=NULL, const XMLCh* prot=NULL, bool valid=true);
+                Criteria(const SAMLArtifact* a, const xmltooling::QName* q=nullptr, const XMLCh* prot=nullptr, bool valid=true);
 
                 virtual ~Criteria();
 
@@ -217,7 +217,7 @@ namespace opensaml {
              *
              * @param criteria  lookup criteria
              *
-             * @return the entity's metadata (and optionally a role) or NULL if there is no qualifying metadata
+             * @return the entity's metadata (and optionally a role) or nullptr if there is no qualifying metadata
              */
             virtual std::pair<const EntityDescriptor*,const RoleDescriptor*> getEntityDescriptor(const Criteria& criteria) const=0;
 

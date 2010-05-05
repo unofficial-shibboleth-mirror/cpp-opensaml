@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2009 Internet2
+ *  Copyright 2001-2010 Internet2
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 /**
  * MessageFlowRule.cpp
  *
- * SAML replay and freshness checking SecurityPolicyRule
+ * SAML replay and freshness checking SecurityPolicyRule.
  */
 
 #include "internal.h"
@@ -65,10 +65,10 @@ MessageFlowRule::MessageFlowRule(const DOMElement* e)
     : m_checkReplay(true), m_expires(XMLToolingConfig::getConfig().clock_skew_secs)
 {
     if (e) {
-        const XMLCh* attr = e->getAttributeNS(NULL, checkReplay);
+        const XMLCh* attr = e->getAttributeNS(nullptr, checkReplay);
         if (attr && (*attr==chLatin_f || *attr==chDigit_0))
             m_checkReplay = false;
-        attr = e->getAttributeNS(NULL, expires);
+        attr = e->getAttributeNS(nullptr, expires);
         if (attr)
             m_expires = XMLString::parseInt(attr);
     }

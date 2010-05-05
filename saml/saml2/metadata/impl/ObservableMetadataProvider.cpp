@@ -1,5 +1,5 @@
 /*
- *  Copyright 2009 Internet2
+ *  Copyright 2009-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,7 +62,7 @@ const ObservableMetadataProvider::Observer* ObservableMetadataProvider::removeOb
             return oldObserver;
         }
     }
-    return NULL;
+    return nullptr;
 }
 
 ObservableMetadataProvider::Observer::Observer()

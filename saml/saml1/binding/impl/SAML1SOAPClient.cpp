@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2009 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ using namespace xmltooling::logging;
 using namespace xmltooling;
 using namespace std;
 
-SAML1SOAPClient::SAML1SOAPClient(opensaml::SOAPClient& soaper, bool fatalSAMLErrors) : m_soaper(soaper), m_fatal(fatalSAMLErrors), m_correlate(NULL)
+SAML1SOAPClient::SAML1SOAPClient(opensaml::SOAPClient& soaper, bool fatalSAMLErrors) : m_soaper(soaper), m_fatal(fatalSAMLErrors), m_correlate(nullptr)
 {
 }
 
@@ -84,7 +84,7 @@ Response* SAML1SOAPClient::receiveSAML()
                 // Check Status.
                 Status* status = response->getStatus();
                 if (status) {
-                    const xmltooling::QName* code = status->getStatusCode() ? status->getStatusCode()->getValue() : NULL;
+                    const xmltooling::QName* code = status->getStatusCode() ? status->getStatusCode()->getValue() : nullptr;
                     if (code && *code != StatusCode::SUCCESS && handleError(*status)) {
                         BindingException ex("SAML Response contained an error.");
                         if (m_soaper.getPolicy().getIssuerMetadata())
@@ -107,13 +107,13 @@ Response* SAML1SOAPClient::receiveSAML()
         else
             ex.raise();
     }
-    return NULL;
+    return nullptr;
 }
 
 bool SAML1SOAPClient::handleError(const Status& status)
 {
-    const xmltooling::QName* code = status.getStatusCode() ? status.getStatusCode()->getValue() : NULL;
-    auto_ptr_char str((status.getStatusMessage() ? status.getStatusMessage()->getMessage() : NULL));
+    const xmltooling::QName* code = status.getStatusCode() ? status.getStatusCode()->getValue() : nullptr;
+    auto_ptr_char str((status.getStatusMessage() ? status.getStatusMessage()->getMessage() : nullptr));
     Category::getInstance(SAML_LOGCAT".SOAPClient").error(
         "SOAP client detected a SAML error: (%s) (%s)",
         (code ? code->toString().c_str() : "no code"),

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2007 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,31 +40,31 @@ public:
     void testSingleElementUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         Scoping* scoping = dynamic_cast<Scoping*>(xo.get());
-        TS_ASSERT(scoping!=NULL);
+        TS_ASSERT(scoping!=nullptr);
 
         TSM_ASSERT_EQUALS("ProxyCount attribute presence", false, scoping->getProxyCount().first);
-        TS_ASSERT(scoping->getIDPList()==NULL);
+        TS_ASSERT(scoping->getIDPList()==nullptr);
         TSM_ASSERT_EQUALS("# of RequesterID child elements", 0, scoping->getRequesterIDs().size());
     }
 
     void testSingleElementOptionalAttributesUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
         Scoping* scoping = dynamic_cast<Scoping*>(xo.get());
-        TS_ASSERT(scoping!=NULL);
+        TS_ASSERT(scoping!=nullptr);
 
         TSM_ASSERT_EQUALS("ProxyCount attribute presence", true, scoping->getProxyCount().first);
         TSM_ASSERT_EQUALS("ProxyCount attribute value", expectedProxycount, scoping->getProxyCount().second);
-        TS_ASSERT(scoping->getIDPList()==NULL);
+        TS_ASSERT(scoping->getIDPList()==nullptr);
         TSM_ASSERT_EQUALS("# of RequesterID child elements", 0, scoping->getRequesterIDs().size());
     }
 
     void testChildElementsUnmarshall() {
         auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         Scoping* scoping= dynamic_cast<Scoping*>(xo.get());
-        TS_ASSERT(scoping!=NULL);
+        TS_ASSERT(scoping!=nullptr);
 
         TSM_ASSERT_EQUALS("ProxyCount attribute presence", false, scoping->getProxyCount().first);
-        TS_ASSERT(scoping->getIDPList()!=NULL);
+        TS_ASSERT(scoping->getIDPList()!=nullptr);
         TSM_ASSERT_EQUALS("# of RequesterID child elements", 3, scoping->getRequesterIDs().size());
     }
 

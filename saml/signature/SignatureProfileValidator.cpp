@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2009 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -71,7 +71,7 @@ void SignatureProfileValidator::validateSignature(const Signature& sigObj) const
         if (ref) {
             const XMLCh* URI=ref->getURI();
             const XMLCh* ID=signableObj->getXMLID();
-            if (URI==NULL || *URI==0 || (*URI==chPound && ID && !XMLString::compareString(URI+1,ID))) {
+            if (URI==nullptr || *URI==0 || (*URI==chPound && ID && !XMLString::compareString(URI+1,ID))) {
                 DSIGTransformList* tlist=ref->getTransforms();
                 if (tlist->getSize() <= 2) { 
                     for (unsigned int i=0; tlist && i<tlist->getSize(); i++) {

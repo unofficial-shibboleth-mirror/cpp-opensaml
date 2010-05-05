@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2009 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,7 +50,7 @@ namespace opensaml {
         
         virtual ~EncryptedKeyResolver();
 
-        const xmlencryption::EncryptedKey* resolveKey(const xmlencryption::EncryptedData& encryptedData, const XMLCh* recipient=NULL) const;
+        const xmlencryption::EncryptedKey* resolveKey(const xmlencryption::EncryptedData& encryptedData, const XMLCh* recipient=nullptr) const;
      
     protected:
         /** Reference to encrypted element. */

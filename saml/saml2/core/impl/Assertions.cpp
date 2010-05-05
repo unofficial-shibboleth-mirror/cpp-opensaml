@@ -73,7 +73,7 @@ void EncryptedElementType::encrypt(
         algorithm = DSIGConstants::s_unicodeStrURIAES256_CBC;
 
     Encrypter encrypter;
-    Encrypter::EncryptionParams ep(algorithm, NULL, 0, NULL, compact);
+    Encrypter::EncryptionParams ep(algorithm, nullptr, 0, nullptr, compact);
     Encrypter::KeyEncryptionParams kep(*KEK);
     setEncryptedData(encrypter.encryptElement(xmlObject.getDOM(),ep,&kep));
 }
@@ -95,7 +95,7 @@ void EncryptedElementType::encrypt(
     if (XSECPlatformUtils::g_cryptoProvider->getRandom(keyBuffer,32)<32)
         throw EncryptionException("Unable to generate encryption key; was PRNG seeded?");
     Encrypter encrypter;
-    Encrypter::EncryptionParams ep(algorithm, keyBuffer, 32, NULL, compact);
+    Encrypter::EncryptionParams ep(algorithm, keyBuffer, 32, nullptr, compact);
     setEncryptedData(encrypter.encryptElement(xmlObject.getDOM(),ep));
     getEncryptedData()->setId(SAMLConfig::getConfig().generateIdentifier());
 

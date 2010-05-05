@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2009 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,7 +62,7 @@ public:
         //printResults(artifact,providerIdStr.c_str());
     }
 
-    void printResults(SAMLArtifact& artifact, const char* str=NULL) {
+    void printResults(SAMLArtifact& artifact, const char* str=nullptr) {
         // print heading:
         cout << "Artifact Type " << SAMLArtifact::toHex(artifact.getTypeCode());
         cout << " (size = " << artifact.getBytes().size() << ")" << endl;

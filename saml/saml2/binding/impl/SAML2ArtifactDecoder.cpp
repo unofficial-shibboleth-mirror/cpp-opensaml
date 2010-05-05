@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2009 Internet2
+ *  Copyright 2001-2010 Internet2
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 /**
  * SAML2ArtifactDecoder.cpp
  *
- * SAML 2.0 Artifact binding message decoder
+ * SAML 2.0 Artifact binding message decoder.
  */
 
 #include "internal.h"
@@ -91,14 +91,14 @@ XMLObject* SAML2ArtifactDecoder::decode(
         throw BindingException("Artifact binding requires ArtifactResolver and MetadataProvider implementations be supplied.");
 
     // Import the artifact.
-    SAMLArtifact* artifact=NULL;
+    SAMLArtifact* artifact=nullptr;
     try {
         log.debug("processing encoded artifact (%s)", SAMLart);
 
         // Check replay.
         ReplayCache* replayCache = XMLToolingConfig::getConfig().getReplayCache();
         if (replayCache) {
-            if (!replayCache->check("SAML2Artifact", SAMLart, time(NULL) + (2*XMLToolingConfig::getConfig().clock_skew_secs))) {
+            if (!replayCache->check("SAML2Artifact", SAMLart, time(nullptr) + (2*XMLToolingConfig::getConfig().clock_skew_secs))) {
                 log.error("replay detected of artifact (%s)", SAMLart);
                 throw BindingException("Rejecting replayed artifact ($1).", params(1,SAMLart));
             }
