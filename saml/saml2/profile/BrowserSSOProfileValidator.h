@@ -30,6 +30,11 @@
 namespace opensaml {
     namespace saml2 {
 
+#if defined (_MSC_VER)
+    #pragma warning( push )
+    #pragma warning( disable : 4251 )
+#endif
+
         /**
          * @deprecated
          * SAML 2.0 Browser SSO Profile Assertion Validator
@@ -79,6 +84,10 @@ namespace opensaml {
             /** Address in confirmed bearer SubjectConfirmationData. */
             mutable std::string m_address;
         };
+
+#if defined (_MSC_VER)
+    #pragma warning( pop )
+#endif
 
     };
 };

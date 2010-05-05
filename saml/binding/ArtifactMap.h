@@ -38,6 +38,11 @@ namespace opensaml {
     class SAML_API SAMLArtifact;
     class SAML_DLLLOCAL ArtifactMappings;
     
+#if defined (_MSC_VER)
+    #pragma warning( push )
+    #pragma warning( disable : 4251 )
+#endif
+
     /**
      * Helper class for SAMLArtifact mapping and retrieval.
      */
@@ -104,6 +109,11 @@ namespace opensaml {
         ArtifactMappings* m_mappings;
         unsigned int m_artifactTTL;
     };
+
+#if defined (_MSC_VER)
+    #pragma warning( pop )
+#endif
+
 };
 
 #endif /* __saml_artmap_h__ */

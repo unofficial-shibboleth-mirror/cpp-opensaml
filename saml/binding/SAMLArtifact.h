@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2009 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +29,11 @@
 #include <xmltooling/exceptions.h>
 
 namespace opensaml {
+
+#if defined (_MSC_VER)
+    #pragma warning( push )
+    #pragma warning( disable : 4251 )
+#endif
 
     /**
      * Base class for SAML 1.x and 2.0 artifacts.
@@ -137,6 +142,10 @@ namespace opensaml {
         /** Raw binary data that makes up an artifact. */
         std::string m_raw;
     };
+
+#if defined (_MSC_VER)
+    #pragma warning( pop )
+#endif
 
     DECL_XMLTOOLING_EXCEPTION(ArtifactException,SAML_EXCEPTIONAPI(SAML_API),opensaml,xmltooling::XMLToolingException,Exceptions related to artifact parsing);
     
