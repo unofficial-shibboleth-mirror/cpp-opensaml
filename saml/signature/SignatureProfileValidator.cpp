@@ -30,7 +30,6 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xsec/dsig/DSIGReference.hpp>
 #include <xsec/dsig/DSIGSignature.hpp>
-#include <xsec/dsig/DSIGTransformC14n.hpp>
 #include <xsec/dsig/DSIGTransformList.hpp>
 
 using namespace opensaml;
