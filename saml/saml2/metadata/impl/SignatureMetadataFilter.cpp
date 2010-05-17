@@ -392,10 +392,10 @@ void SignatureMetadataFilter::verifySignature(Signature* sig, const XMLCh* peerN
                 catch (exception&) {
                 }
             }
-            throw MetadataFilterException("CredentialResolver did not supply a successful verification key.");
+            throw MetadataFilterException("Unable to verify signature with supplied key(s).");
         }
         else {
-            throw MetadataFilterException("CredentialResolver did not supply a successful verification key.");
+            throw MetadataFilterException("CredentialResolver did not supply any candidate keys.");
         }
     }
     else if (m_trust) {
