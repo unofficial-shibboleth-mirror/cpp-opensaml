@@ -186,6 +186,7 @@ pair<bool,DOMElement*> XMLMetadataProvider::load(bool backup)
         remove(m_backing.c_str());
         if (rename(backupKey.c_str(), m_backing.c_str()) != 0)
             m_log.crit("unable to rename metadata backup file");
+        preserveCacheTag();
     }
 
     xmlObject->releaseThisAndChildrenDOM();
@@ -207,7 +208,7 @@ pair<bool,DOMElement*> XMLMetadataProvider::load(bool backup)
     // validUntil is the tightest interval amongst the children.
 
     // If a remote resource, adjust the reload interval.
-    if (!backup) {
+    if (!backup && !m_local) {
         m_backoffFactor = 1;
         m_reloadInterval = computeNextRefresh();
         m_log.info("adjusted reload interval to %d seconds", m_reloadInterval);
@@ -226,26 +227,28 @@ pair<bool,DOMElement*> XMLMetadataProvider::background_load()
         if (ex == HTTPResponse::XMLTOOLING_HTTP_STATUS_NOTMODIFIED) {
             // Unchanged document, so re-establish previous refresh interval.
             m_reloadInterval = computeNextRefresh();
-            m_log.info("adjusted reload interval to %d seconds", m_reloadInterval);
+            m_log.info("remote resource (%s) unchanged, adjusted reload interval to %u seconds", m_source.c_str(), m_reloadInterval);
         }
         else {
             // Any other status code, just treat as an error.
             m_reloadInterval = m_minRefreshDelay * m_backoffFactor++;
             if (m_reloadInterval > m_maxRefreshDelay)
                 m_reloadInterval = m_maxRefreshDelay;
-            m_log.warn("adjusted reload interval to %d seconds", m_reloadInterval);
+            m_log.warn("adjusted reload interval to %u seconds", m_reloadInterval);
         }
         if (!m_loaded && !m_backing.empty())
             return load(true);
         throw;
     }
     catch (exception&) {
-        m_reloadInterval = m_minRefreshDelay * m_backoffFactor++;
-        if (m_reloadInterval > m_maxRefreshDelay)
-            m_reloadInterval = m_maxRefreshDelay;
-        m_log.warn("adjusted reload interval to %d seconds", m_reloadInterval);
-        if (!m_loaded && !m_backing.empty())
-            return load(true);
+        if (!m_local) {
+            m_reloadInterval = m_minRefreshDelay * m_backoffFactor++;
+            if (m_reloadInterval > m_maxRefreshDelay)
+                m_reloadInterval = m_maxRefreshDelay;
+            m_log.warn("adjusted reload interval to %u seconds", m_reloadInterval);
+            if (!m_loaded && !m_backing.empty())
+                return load(true);
+        }
         throw;
     }
 }
