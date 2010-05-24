@@ -57,9 +57,6 @@ namespace opensaml {
             /** Controls XML schema validation. */
             bool m_validate;
 
-            /** Caps the allowable cache duration of a metadata instance. */
-            time_t m_maxCacheDuration;
-
             /**
              * Resolves a metadata instance using the supplied criteria.
              *
@@ -70,6 +67,8 @@ namespace opensaml {
 
         private:
             mutable xmltooling::RWLock* m_lock;
+            double m_refreshDelayFactor;
+            time_t m_minCacheDuration, m_maxCacheDuration;
             typedef std::map<xmltooling::xstring,time_t> cachemap_t;
             mutable cachemap_t m_cacheMap;
         };
