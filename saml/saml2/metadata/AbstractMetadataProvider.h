@@ -90,8 +90,29 @@ namespace opensaml {
             xmltooling::KeyInfoResolver* m_resolver;
 
             /**
-             * Loads an entity into the cache for faster lookup. This includes
-             * processing known reverse lookup strategies for artifacts.
+             * Loads an entity into the cache for faster lookup.
+             * <p>This includes processing known reverse lookup strategies for artifacts.
+             * The validUntil parameter will contain the smallest value found on output.
+             * 
+             * @param site          entity definition
+             * @param validUntil    maximum expiration time of the entity definition
+             * @param replace       true iff existing entries for the same entity should be cleared/replaced
+             */
+            virtual void indexEntity(EntityDescriptor* site, time_t& validUntil, bool replace=false) const;
+
+            /**
+             * Loads a group of entities into the cache for faster lookup.
+             * <p>The validUntil parameter will contain the smallest value found on output.
+             * 
+             * @param group         group definition
+             * @param validUntil    maximum expiration time of the group definition
+             */
+            virtual void indexGroup(EntitiesDescriptor* group, time_t& validUntil) const;
+
+            /**
+             * @deprecated
+             * Loads an entity into the cache for faster lookup.
+             * <p>This includes processing known reverse lookup strategies for artifacts.
              * 
              * @param site          entity definition
              * @param validUntil    maximum expiration time of the entity definition
@@ -100,13 +121,14 @@ namespace opensaml {
             virtual void index(EntityDescriptor* site, time_t validUntil, bool replace=false) const;
 
             /**
+             * @deprecated
              * Loads a group of entities into the cache for faster lookup.
              * 
              * @param group         group definition
              * @param validUntil    maximum expiration time of the group definition
              */
             virtual void index(EntitiesDescriptor* group, time_t validUntil) const;
-        
+
             /**
              * Clear the cache of known entities and groups.
              *
