@@ -73,7 +73,7 @@ public:
         janitor2.release();
 
         Locker locker(metadataProvider.get());
-        const EntityDescriptor* descriptor = metadataProvider->getEntityDescriptor(MetadataProvider::Criteria("https://idp.example.org")).first;
+        const EntityDescriptor* descriptor = metadataProvider->getEntityDescriptor(MetadataProvider::Criteria("https://idp3.example.org")).first;
         TSM_ASSERT("Retrieved entity descriptor was null", descriptor!=nullptr);
         
         RoleDescriptor* role=descriptor->getIDPSSODescriptors().front();
@@ -83,7 +83,7 @@ public:
         TSM_ASSERT("Signature not present", sig!=nullptr);
 
         MetadataCredentialCriteria cc(*role);
-        cc.setPeerName("https://idp.example.org");
+        cc.setPeerName("https://idp3.example.org");
         TSM_ASSERT("Signature failed to validate.", dynamic_cast<SignatureTrustEngine*>(trustEngine.get())->validate(*sig, *metadataProvider, &cc));
 
         descriptor = metadataProvider->getEntityDescriptor(MetadataProvider::Criteria("https://idp2.example.org")).first;
