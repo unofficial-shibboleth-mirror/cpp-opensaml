@@ -182,7 +182,7 @@ int main(int argc,char* argv[])
     }
 
     XMLToolingConfig& xmlconf = XMLToolingConfig::getConfig();
-    xmlconf.log_config();
+    xmlconf.log_config(getenv("OPENSAML_LOG_CONFIG"));
     SAMLConfig& conf=SAMLConfig::getConfig();
     if (!conf.init())
         return -2;
