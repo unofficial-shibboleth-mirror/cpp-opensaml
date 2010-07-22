@@ -69,7 +69,6 @@ namespace opensaml {
                 ) const;
         
         private:
-            bool m_post;
             string m_template;
         };
 
@@ -83,18 +82,12 @@ namespace opensaml {
     static const XMLCh postArtifact[] = UNICODE_LITERAL_12(p,o,s,t,A,r,t,i,f,a,c,t);
 };
 
-SAML2ArtifactEncoder::SAML2ArtifactEncoder(const DOMElement* e, const XMLCh* ns) : m_post(false)
+SAML2ArtifactEncoder::SAML2ArtifactEncoder(const DOMElement* e, const XMLCh* ns)
 {
-    if (e) {
-        const XMLCh* flag = e->getAttributeNS(ns, postArtifact);
-        m_post = (flag && (*flag==chLatin_t || *flag==chDigit_1));
-        if (m_post) {
-            auto_ptr_char t(e->getAttributeNS(ns, _template));
-            if (t.get() && *t.get()) {
-                m_template = t.get();
-                XMLToolingConfig::getConfig().getPathResolver()->resolve(m_template, PathResolver::XMLTOOLING_CFG_FILE);
-            }
-        }
+    if (XMLHelper::getAttrBool(e, false, postArtifact, ns)) {
+        m_template = XMLHelper::getAttrString(e, nullptr, _template, ns);
+        if (!m_template.empty())
+            XMLToolingConfig::getConfig().getPathResolver()->resolve(m_template, PathResolver::XMLTOOLING_CFG_FILE);
     }
 }
 

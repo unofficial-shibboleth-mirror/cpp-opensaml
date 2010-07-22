@@ -66,16 +66,12 @@ namespace opensaml {
     };
 };
 
-BearerConfirmationRule::BearerConfirmationRule(const DOMElement* e) : m_validity(true), m_recipient(true), m_correlation(true), m_fatal(true)
+BearerConfirmationRule::BearerConfirmationRule(const DOMElement* e)
+    : m_validity(XMLHelper::getAttrBool(e, true, checkValidity)),
+        m_recipient(XMLHelper::getAttrBool(e, true, checkRecipient)),
+        m_correlation(XMLHelper::getAttrBool(e, true, checkCorrelation)),
+        m_fatal(XMLHelper::getAttrBool(e, true, missingFatal))
 {
-    const XMLCh* flag = e ? e->getAttributeNS(nullptr, checkValidity) : nullptr;
-    m_validity = (!flag || (*flag != chLatin_f && *flag != chDigit_0));
-    flag = e ? e->getAttributeNS(nullptr, checkRecipient) : nullptr;
-    m_recipient = (!flag || (*flag != chLatin_f && *flag != chDigit_0));
-    flag = e ? e->getAttributeNS(nullptr, checkCorrelation) : nullptr;
-    m_correlation = (!flag || (*flag != chLatin_f && *flag != chDigit_0));
-    flag = e ? e->getAttributeNS(nullptr, missingFatal) : nullptr;
-    m_fatal = (!flag || (*flag != chLatin_f && *flag != chDigit_0));
 }
 
 bool BearerConfirmationRule::evaluate(const XMLObject& message, const GenericRequest* request, opensaml::SecurityPolicy& policy) const

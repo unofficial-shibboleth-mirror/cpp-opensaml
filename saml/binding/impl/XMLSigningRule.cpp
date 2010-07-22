@@ -66,12 +66,8 @@ namespace opensaml {
     static const XMLCh errorFatal[] = UNICODE_LITERAL_10(e,r,r,o,r,F,a,t,a,l);
 };
 
-XMLSigningRule::XMLSigningRule(const DOMElement* e) : m_errorFatal(false)
+XMLSigningRule::XMLSigningRule(const DOMElement* e) : m_errorFatal(XMLHelper::getAttrBool(e, false, errorFatal))
 {
-    if (e) {
-        const XMLCh* flag = e->getAttributeNS(nullptr, errorFatal);
-        m_errorFatal = (flag && (*flag==chLatin_t || *flag==chDigit_1)); 
-    }
 }
 
 bool XMLSigningRule::evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const

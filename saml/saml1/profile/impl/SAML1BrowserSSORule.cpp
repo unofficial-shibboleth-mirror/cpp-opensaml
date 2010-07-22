@@ -38,19 +38,19 @@ namespace opensaml {
         class SAML_DLLLOCAL BrowserSSORule : public opensaml::SecurityPolicyRule
         {
         public:
-            BrowserSSORule(const DOMElement* e) {}
+            BrowserSSORule() {}
+            virtual ~BrowserSSORule() {}
 
-            virtual ~BrowserSSORule() {
-            }
             const char* getType() const {
                 return SAML1BROWSERSSO_POLICY_RULE;
             }
+
             bool evaluate(const XMLObject& message, const GenericRequest* request, opensaml::SecurityPolicy& policy) const;
         };
 
-        opensaml::SecurityPolicyRule* SAML_DLLLOCAL BrowserSSORuleFactory(const DOMElement* const & e)
+        opensaml::SecurityPolicyRule* SAML_DLLLOCAL BrowserSSORuleFactory(const DOMElement* const &)
         {
-            return new BrowserSSORule(e);
+            return new BrowserSSORule();
         }
 
         class SAML_DLLLOCAL _checkMethod : public unary_function<const SubjectStatement*,void>,

@@ -58,33 +58,13 @@ namespace opensaml {
 };
 
 DynamicMetadataProvider::DynamicMetadataProvider(const DOMElement* e)
-    : AbstractMetadataProvider(e), m_maxCacheDuration(28800), m_lock(RWLock::create()), m_refreshDelayFactor(0.75), m_minCacheDuration(600)
+    : AbstractMetadataProvider(e),
+        m_maxCacheDuration(XMLHelper::getAttrInt(e, 28800, maxCacheDuration)),
+        m_lock(RWLock::create()),
+        m_refreshDelayFactor(0.75),
+        m_minCacheDuration(XMLHelper::getAttrInt(e, 600, minCacheDuration)),
+        m_validate(XMLHelper::getAttrBool(e, false, validate))
 {
-    const XMLCh* flag=e ? e->getAttributeNS(nullptr, validate) : nullptr;
-    m_validate=(XMLString::equals(flag,xmlconstants::XML_TRUE) || XMLString::equals(flag,xmlconstants::XML_ONE));
-
-    flag = e ? e->getAttributeNS(nullptr, minCacheDuration) : nullptr;
-    if (flag && *flag) {
-        m_minCacheDuration = XMLString::parseInt(flag);
-        if (m_minCacheDuration == 0) {
-            Category::getInstance(SAML_LOGCAT".MetadataProvider.Dynamic").error(
-                "invalid minCacheDuration setting, using default"
-                );
-            m_minCacheDuration = 600;
-        }
-    }
-
-    flag = e ? e->getAttributeNS(nullptr, maxCacheDuration) : nullptr;
-    if (flag && *flag) {
-        m_maxCacheDuration = XMLString::parseInt(flag);
-        if (m_maxCacheDuration == 0) {
-            Category::getInstance(SAML_LOGCAT".MetadataProvider.Dynamic").error(
-                "invalid maxCacheDuration setting, using default"
-                );
-            m_maxCacheDuration = 28800;
-        }
-    }
-
     if (m_minCacheDuration > m_maxCacheDuration) {
         Category::getInstance(SAML_LOGCAT".MetadataProvider.Dynamic").error(
             "minCacheDuration setting exceeds maxCacheDuration setting, lowering to match it"
@@ -92,10 +72,10 @@ DynamicMetadataProvider::DynamicMetadataProvider(const DOMElement* e)
         m_minCacheDuration = m_maxCacheDuration;
     }
 
-    flag = e ? e->getAttributeNS(nullptr, refreshDelayFactor) : NULL;
-    if (flag && *flag) {
-        auto_ptr_char delay(flag);
-        m_refreshDelayFactor = atof(delay.get());
+    const XMLCh* delay = e ? e->getAttributeNS(nullptr, refreshDelayFactor) : nullptr;
+    if (delay && *delay) {
+        auto_ptr_char temp(delay);
+        m_refreshDelayFactor = atof(temp.get());
         if (m_refreshDelayFactor <= 0.0 || m_refreshDelayFactor >= 1.0) {
             Category::getInstance(SAML_LOGCAT".MetadataProvider.Dynamic").error(
                 "invalid refreshDelayFactor setting, using default"

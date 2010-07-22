@@ -88,11 +88,11 @@ ConditionsRule::ConditionsRule(const DOMElement* e) : m_doc(nullptr)
 
     e = XMLHelper::getFirstChildElement(e, Rule);
     while (e) {
-        auto_ptr_char temp(e->getAttributeNS(nullptr, type));
-        if (temp.get() && *temp.get()) {
+        string t = XMLHelper::getAttrString(e, nullptr, type);
+        if (!t.empty()) {
             try {
-                log.info("building SecurityPolicyRule of type %s", temp.get());
-                m_rules.push_back(SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(temp.get(),e));
+                log.info("building SecurityPolicyRule of type %s", t.c_str());
+                m_rules.push_back(SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(t.c_str(), e));
             }
             catch (exception& ex) {
                 log.crit("error building SecurityPolicyRule: %s", ex.what());

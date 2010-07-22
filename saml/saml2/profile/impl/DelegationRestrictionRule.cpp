@@ -116,19 +116,17 @@ namespace opensaml {
     }
 };
 
-DelegationRestrictionRule::DelegationRestrictionRule(const DOMElement* e) : m_match(MATCH_ANY), m_maxTime(0)
+DelegationRestrictionRule::DelegationRestrictionRule(const DOMElement* e)
+    : m_match(MATCH_ANY), m_maxTime(XMLHelper::getAttrInt(e, 0, maxTimeSinceDelegation))
 {
     if (e) {
-        const XMLCh* m = e->getAttributeNS(nullptr, match);
+        const XMLCh* m = e ? e->getAttributeNS(nullptr, match) : nullptr;
         if (XMLString::equals(m, newest))
             m_match = MATCH_NEWEST;
         else if (XMLString::equals(m, oldest))
             m_match = MATCH_OLDEST;
         else if (m && *m && !XMLString::equals(m, any))
             throw SecurityPolicyException("Invalid value for \"match\" attribute in Delegation rule.");
-        m = e->getAttributeNS(nullptr, maxTimeSinceDelegation);
-        if (m && *m)
-            m_maxTime = XMLString::parseInt(m);
 
         try {
             DOMElement* d = XMLHelper::getFirstChildElement(e, samlconstants::SAML20_DELEGATION_CONDITION_NS, Delegate::LOCAL_NAME);

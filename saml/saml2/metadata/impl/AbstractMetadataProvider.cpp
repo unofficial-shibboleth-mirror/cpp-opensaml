@@ -48,11 +48,11 @@ static const XMLCh type[] =             UNICODE_LITERAL_4(t,y,p,e);
 AbstractMetadataProvider::AbstractMetadataProvider(const DOMElement* e)
     : ObservableMetadataProvider(e), m_resolver(nullptr), m_credentialLock(nullptr)
 {
-    e = e ? XMLHelper::getFirstChildElement(e, _KeyInfoResolver) : nullptr;
+    e = XMLHelper::getFirstChildElement(e, _KeyInfoResolver);
     if (e) {
-        auto_ptr_char t(e->getAttributeNS(nullptr,type));
-        if (t.get())
-            m_resolver = XMLToolingConfig::getConfig().KeyInfoResolverManager.newPlugin(t.get(),e);
+        string t = XMLHelper::getAttrString(e, nullptr, type);
+        if (!t.empty())
+            m_resolver = XMLToolingConfig::getConfig().KeyInfoResolverManager.newPlugin(t.c_str(), e);
         else
             throw UnknownExtensionException("<KeyInfoResolver> element found with no type attribute");
     }

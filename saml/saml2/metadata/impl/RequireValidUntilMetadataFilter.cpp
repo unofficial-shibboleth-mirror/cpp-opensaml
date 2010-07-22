@@ -58,14 +58,9 @@ namespace opensaml {
 
 static const XMLCh maxValidityInterval[] =  UNICODE_LITERAL_19(m,a,x,V,a,l,i,d,i,t,y,I,n,t,e,r,v,a,l);
 
-RequireValidUntilMetadataFilter::RequireValidUntilMetadataFilter(const DOMElement* e) : m_maxValidityInterval(60 * 60 * 24 * 7)
+RequireValidUntilMetadataFilter::RequireValidUntilMetadataFilter(const DOMElement* e)
+    : m_maxValidityInterval(XMLHelper::getAttrInt(e, 60 * 60 * 24 * 7, maxValidityInterval))
 {
-    const XMLCh* mvi = e ? e->getAttributeNS(nullptr,maxValidityInterval) : nullptr;
-    if (mvi && *mvi) {
-        m_maxValidityInterval = XMLString::parseInt(mvi);
-        if (m_maxValidityInterval == 0)
-            m_maxValidityInterval = 60 * 60 * 24 * 7;
-    }
 }
 
 void RequireValidUntilMetadataFilter::doFilter(XMLObject& xmlObject) const

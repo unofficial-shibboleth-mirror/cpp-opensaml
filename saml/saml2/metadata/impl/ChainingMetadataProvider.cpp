@@ -140,13 +140,13 @@ ChainingMetadataProvider::ChainingMetadataProvider(const DOMElement* e)
     if (XMLString::equals(e ? e->getAttributeNS(nullptr, precedence) : nullptr, last))
         m_firstMatch = false;
 
-    e = e ? XMLHelper::getFirstChildElement(e, _MetadataProvider) : nullptr;
+    e = XMLHelper::getFirstChildElement(e, _MetadataProvider);
     while (e) {
-        auto_ptr_char temp(e->getAttributeNS(nullptr, _type));
-        if (temp.get() && *temp.get()) {
+        string t = XMLHelper::getAttrString(e, nullptr, _type);
+        if (!t.empty()) {
             try {
-                m_log.info("building MetadataProvider of type %s", temp.get());
-                auto_ptr<MetadataProvider> provider(SAMLConfig::getConfig().MetadataProviderManager.newPlugin(temp.get(), e));
+                m_log.info("building MetadataProvider of type %s", t.c_str());
+                auto_ptr<MetadataProvider> provider(SAMLConfig::getConfig().MetadataProviderManager.newPlugin(t.c_str(), e));
                 ObservableMetadataProvider* obs = dynamic_cast<ObservableMetadataProvider*>(provider.get());
                 if (obs)
                     obs->addObserver(this);

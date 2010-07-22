@@ -66,16 +66,10 @@ static const XMLCh removeRolelessEntityDescriptors[] =  UNICODE_LITERAL_31(r,e,m
 static const XMLCh removeEmptyEntitiesDescriptors[] =   UNICODE_LITERAL_30(r,e,m,o,v,e,E,m,p,t,y,E,n,t,i,t,i,e,s,D,e,s,c,r,i,p,t,o,r,s);
 
 EntityRoleMetadataFilter::EntityRoleMetadataFilter(const DOMElement* e)
-    : m_removeRolelessEntityDescriptors(true), m_removeEmptyEntitiesDescriptors(true),
+    : m_removeRolelessEntityDescriptors(XMLHelper::getAttrBool(e, true, removeRolelessEntityDescriptors)),
+        m_removeEmptyEntitiesDescriptors(XMLHelper::getAttrBool(e, true, removeEmptyEntitiesDescriptors)),
         m_idp(false), m_sp(false), m_authn(false), m_attr(false), m_pdp(false), m_authnq(false), m_attrq(false), m_authzq(false)
 {
-    const XMLCh* flag = e ? e->getAttributeNS(nullptr, removeRolelessEntityDescriptors) : nullptr;
-    if (flag && (*flag == chLatin_f || *flag == chDigit_0))
-        m_removeRolelessEntityDescriptors = false;
-    flag = e ? e->getAttributeNS(nullptr, removeEmptyEntitiesDescriptors) : nullptr;
-    if (flag && (*flag == chLatin_f || *flag == chDigit_0))
-        m_removeEmptyEntitiesDescriptors = false;
-
     e = XMLHelper::getFirstChildElement(e, RetainedRole);
     while (e) {
         auto_ptr<xmltooling::QName> q(XMLHelper::getNodeValueAsQName(e));

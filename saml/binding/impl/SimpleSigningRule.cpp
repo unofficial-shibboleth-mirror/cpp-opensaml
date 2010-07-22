@@ -89,12 +89,8 @@ bool SimpleSigningRule::appendParameter(string& s, const char* data, const char*
     return true;
 }
 
-SimpleSigningRule::SimpleSigningRule(const DOMElement* e) : m_errorFatal(false)
+SimpleSigningRule::SimpleSigningRule(const DOMElement* e) : m_errorFatal(XMLHelper::getAttrBool(e, false, errorFatal))
 {
-    if (e) {
-        const XMLCh* flag = e->getAttributeNS(nullptr, errorFatal);
-        m_errorFatal = (flag && (*flag==chLatin_t || *flag==chDigit_1)); 
-    }
 }
 
 bool SimpleSigningRule::evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const

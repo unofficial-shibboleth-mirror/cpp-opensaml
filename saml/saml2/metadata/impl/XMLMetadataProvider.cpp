@@ -46,9 +46,6 @@ using namespace std;
 namespace opensaml {
     namespace saml2md {
 
-        static const XMLCh minRefreshDelay[] =      UNICODE_LITERAL_15(m,i,n,R,e,f,r,e,s,h,D,e,l,a,y);
-        static const XMLCh refreshDelayFactor[] =   UNICODE_LITERAL_18(r,e,f,r,e,s,h,D,e,l,a,y,F,a,c,t,o,r);
-
         class SAML_DLLLOCAL XMLMetadataProvider : public AbstractMetadataProvider, public ReloadableXMLFile
         {
         public:
@@ -88,6 +85,8 @@ namespace opensaml {
             return new XMLMetadataProvider(e);
         }
 
+        static const XMLCh minRefreshDelay[] =      UNICODE_LITERAL_15(m,i,n,R,e,f,r,e,s,h,D,e,l,a,y);
+        static const XMLCh refreshDelayFactor[] =   UNICODE_LITERAL_18(r,e,f,r,e,s,h,D,e,l,a,y,F,a,c,t,o,r);
     };
 };
 
@@ -97,11 +96,12 @@ namespace opensaml {
 
 XMLMetadataProvider::XMLMetadataProvider(const DOMElement* e)
     : AbstractMetadataProvider(e), ReloadableXMLFile(e, Category::getInstance(SAML_LOGCAT".MetadataProvider.XML"), false),
-        m_object(nullptr), m_refreshDelayFactor(0.75), m_backoffFactor(1), m_minRefreshDelay(600),
+        m_object(nullptr), m_refreshDelayFactor(0.75), m_backoffFactor(1),
+        m_minRefreshDelay(XMLHelper::getAttrInt(e, 600, minRefreshDelay)),
         m_maxRefreshDelay(m_reloadInterval), m_lastValidUntil(SAMLTIME_MAX)
 {
     if (!m_local && m_maxRefreshDelay) {
-        const XMLCh* setting = e ? e->getAttributeNS(nullptr, refreshDelayFactor) : NULL;
+        const XMLCh* setting = e->getAttributeNS(nullptr, refreshDelayFactor);
         if (setting && *setting) {
             auto_ptr_char delay(setting);
             m_refreshDelayFactor = atof(delay.get());
@@ -110,17 +110,10 @@ XMLMetadataProvider::XMLMetadataProvider(const DOMElement* e)
                 m_refreshDelayFactor = 0.75;
             }
         }
-        setting = e ? e->getAttributeNS(nullptr, minRefreshDelay) : NULL;
-        if (setting && *setting) {
-            m_minRefreshDelay = XMLString::parseInt(setting);
-            if (m_minRefreshDelay == 0) {
-                m_log.error("invalid minRefreshDelay setting, using default");
-                m_minRefreshDelay = 600;
-            }
-            else if (m_minRefreshDelay > m_maxRefreshDelay) {
-                m_log.error("minRefreshDelay setting exceeds maxRefreshDelay/refreshInterval setting, lowering to match it");
-                m_minRefreshDelay = m_maxRefreshDelay;
-            }
+
+        if (m_minRefreshDelay > m_maxRefreshDelay) {
+            m_log.error("minRefreshDelay setting exceeds maxRefreshDelay/refreshInterval setting, lowering to match it");
+            m_minRefreshDelay = m_maxRefreshDelay;
         }
     }
 }

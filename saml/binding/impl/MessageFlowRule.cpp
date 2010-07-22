@@ -28,6 +28,7 @@
 #include <xmltooling/logging.h>
 #include <xmltooling/XMLToolingConfig.h>
 #include <xmltooling/util/ReplayCache.h>
+#include <xmltooling/util/XMLHelper.h>
 #include <xercesc/util/XMLUniDefs.hpp>
 
 using namespace opensaml;
@@ -62,16 +63,9 @@ static const XMLCh checkReplay[] = UNICODE_LITERAL_11(c,h,e,c,k,R,e,p,l,a,y);
 static const XMLCh expires[] = UNICODE_LITERAL_7(e,x,p,i,r,e,s);
 
 MessageFlowRule::MessageFlowRule(const DOMElement* e)
-    : m_checkReplay(true), m_expires(XMLToolingConfig::getConfig().clock_skew_secs)
+    : m_checkReplay(XMLHelper::getAttrBool(e, true, checkReplay)),
+        m_expires(XMLHelper::getAttrInt(e, XMLToolingConfig::getConfig().clock_skew_secs, expires))
 {
-    if (e) {
-        const XMLCh* attr = e->getAttributeNS(nullptr, checkReplay);
-        if (attr && (*attr==chLatin_f || *attr==chDigit_0))
-            m_checkReplay = false;
-        attr = e->getAttributeNS(nullptr, expires);
-        if (attr)
-            m_expires = XMLString::parseInt(attr);
-    }
 }
 
 bool MessageFlowRule::evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const
