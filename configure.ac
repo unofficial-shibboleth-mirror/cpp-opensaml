@@ -243,9 +243,19 @@ AC_ARG_WITH(xmltooling,
     fi])
 LIBS="-lxmltooling $LIBS"
 AC_CHECK_HEADER([xmltooling/XMLToolingConfig.h],,AC_MSG_ERROR([unable to find xmltooling header files]))
+
 AC_TRY_LINK(
-    [#include <xmltooling/io/HTTPResponse.h>],
-    [xmltooling::HTTPResponse::sanitizeURL("http://test")],
+	[
+#include <xmltooling/XMLToolingConfig.h>
+#include <xmltooling/version.h>
+	],
+	[
+#if _XMLTOOLING_VERSION >= 10400
+xmltooling::XMLToolingConfig::getConfig();
+#else
+#error Need XMLTooling version 1.4 or higher
+#endif
+	],
     [AC_DEFINE(HAVE_XMLTOOLING,1,[Define if xmltooling library was found])],
     [AC_MSG_ERROR([unable to link with XMLTooling, or version was too old])])
 
