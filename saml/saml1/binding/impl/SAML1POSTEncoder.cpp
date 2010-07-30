@@ -81,7 +81,7 @@ namespace opensaml {
 static const XMLCh _template[] = UNICODE_LITERAL_8(t,e,m,p,l,a,t,e);
 
 SAML1POSTEncoder::SAML1POSTEncoder(const DOMElement* e, const XMLCh* ns)
-    : m_template(XMLHelper::getAttrString(e, nullptr, _template, ns))
+    : m_template(XMLHelper::getAttrString(e, "bindingTemplate.html", _template, ns))
 {
     if (m_template.empty())
         throw XMLToolingException("SAML1POSTEncoder requires template XML attribute.");

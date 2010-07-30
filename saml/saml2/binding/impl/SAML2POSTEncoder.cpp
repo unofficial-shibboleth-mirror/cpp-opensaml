@@ -88,7 +88,7 @@ namespace opensaml {
 static const XMLCh _template[] = UNICODE_LITERAL_8(t,e,m,p,l,a,t,e);
 
 SAML2POSTEncoder::SAML2POSTEncoder(const DOMElement* e, const XMLCh* ns, bool simple)
-    : m_template(XMLHelper::getAttrString(e, nullptr, _template, ns)), m_simple(simple)
+    : m_template(XMLHelper::getAttrString(e, "bindingTemplate.html", _template, ns)), m_simple(simple)
 {
     if (m_template.empty())
         throw XMLToolingException("SAML2POSTEncoder requires template XML attribute.");

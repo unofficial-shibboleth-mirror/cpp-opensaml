@@ -85,7 +85,7 @@ namespace opensaml {
 SAML2ArtifactEncoder::SAML2ArtifactEncoder(const DOMElement* e, const XMLCh* ns)
 {
     if (XMLHelper::getAttrBool(e, false, postArtifact, ns)) {
-        m_template = XMLHelper::getAttrString(e, nullptr, _template, ns);
+        m_template = XMLHelper::getAttrString(e, "bindingTemplate.html", _template, ns);
         if (!m_template.empty())
             XMLToolingConfig::getConfig().getPathResolver()->resolve(m_template, PathResolver::XMLTOOLING_CFG_FILE);
     }
