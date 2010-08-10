@@ -65,6 +65,13 @@ namespace opensaml {
         virtual bool isUserAgentPresent() const;
 
         /**
+         * Returns identifier for the protocol family associated with the encoder.
+         *
+         * @return  a protocol family identifier, or nullptr
+         */
+        virtual const XMLCh* getProtocolFamily() const;
+
+        /**
          * Interface to caller-supplied artifact generation mechanism.
          * 
          * Generating an artifact for storage and retrieval requires knowledge of

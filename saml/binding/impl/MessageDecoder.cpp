@@ -74,6 +74,11 @@ MessageDecoder::~MessageDecoder()
 {
 }
 
+const XMLCh* MessageDecoder::getProtocolFamily() const
+{
+    return nullptr;
+}
+
 bool MessageDecoder::isUserAgentPresent() const
 {
     return true;

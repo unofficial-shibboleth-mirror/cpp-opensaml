@@ -55,7 +55,11 @@ namespace opensaml {
         public:
             SAML2ArtifactEncoder(const DOMElement* e, const XMLCh* ns);
             virtual ~SAML2ArtifactEncoder() {}
-            
+
+            const XMLCh* getProtocolFamily() const {
+                return samlconstants::SAML20P_NS;
+            }
+
             long encode(
                 GenericResponse& genericResponse,
                 XMLObject* xmlObject,

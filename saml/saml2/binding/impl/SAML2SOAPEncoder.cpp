@@ -54,6 +54,10 @@ namespace opensaml {
                 return false;
             }
 
+            const XMLCh* getProtocolFamily() const {
+                return samlconstants::SAML20P_NS;
+            }
+
             long encode(
                 GenericResponse& genericResponse,
                 XMLObject* xmlObject,

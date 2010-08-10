@@ -51,7 +51,11 @@ namespace opensaml {
         public:
             SAML1ArtifactEncoder() {}
             virtual ~SAML1ArtifactEncoder() {}
-            
+
+            const XMLCh* getProtocolFamily() const {
+                return samlconstants::SAML11_PROTOCOL_ENUM;
+            }
+
             long encode(
                 GenericResponse& genericResponse,
                 XMLObject* xmlObject,

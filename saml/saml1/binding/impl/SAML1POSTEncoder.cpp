@@ -53,7 +53,11 @@ namespace opensaml {
         public:
             SAML1POSTEncoder(const DOMElement* e, const XMLCh* ns);
             virtual ~SAML1POSTEncoder() {}
-            
+
+            const XMLCh* getProtocolFamily() const {
+                return samlconstants::SAML11_PROTOCOL_ENUM;
+            }
+
             long encode(
                 GenericResponse& genericResponse,
                 XMLObject* xmlObject,

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2009 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,6 +38,7 @@ namespace opensaml {
             virtual ~SAML2MessageDecoder();
 
         public:
+            const XMLCh* getProtocolFamily() const;
             void extractMessageDetails (
                 const xmltooling::XMLObject& message,
                 const xmltooling::GenericRequest& genericRequest,

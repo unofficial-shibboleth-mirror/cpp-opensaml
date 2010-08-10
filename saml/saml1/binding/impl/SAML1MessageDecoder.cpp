@@ -46,6 +46,11 @@ SAML1MessageDecoder::~SAML1MessageDecoder()
 {
 }
 
+const XMLCh* SAML1MessageDecoder::getProtocolFamily() const
+{
+    return samlconstants::SAML11_PROTOCOL_ENUM;
+}
+
 void SAML1MessageDecoder::extractMessageDetails(
     const XMLObject& message, const GenericRequest& req, const XMLCh* protocol, SecurityPolicy& policy
     ) const
