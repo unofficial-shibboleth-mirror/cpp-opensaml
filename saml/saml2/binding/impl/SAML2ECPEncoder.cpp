@@ -68,6 +68,10 @@ namespace opensaml {
                 return samlconstants::SAML20P_NS;
             }
 
+            const char* getShortName() const {
+                return "ECP";
+            }
+
             long encode(
                 GenericResponse& genericResponse,
                 XMLObject* xmlObject,

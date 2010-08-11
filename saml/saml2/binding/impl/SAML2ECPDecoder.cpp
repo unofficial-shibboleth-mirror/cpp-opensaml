@@ -50,6 +50,10 @@ namespace opensaml {
             SAML2ECPDecoder() {}
             virtual ~SAML2ECPDecoder() {}
 
+            const char* getShortName() const {
+                return "ECP";
+            }
+
             xmltooling::XMLObject* decode(
                 std::string& relayState,
                 const GenericRequest& genericRequest,

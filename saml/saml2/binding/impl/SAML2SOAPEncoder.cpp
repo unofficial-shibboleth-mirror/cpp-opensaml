@@ -58,6 +58,10 @@ namespace opensaml {
                 return samlconstants::SAML20P_NS;
             }
 
+            const char* getShortName() const {
+                return "SOAP";
+            }
+
             long encode(
                 GenericResponse& genericResponse,
                 XMLObject* xmlObject,

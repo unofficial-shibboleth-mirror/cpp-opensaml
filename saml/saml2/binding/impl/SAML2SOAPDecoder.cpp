@@ -53,6 +53,10 @@ namespace opensaml {
                 return false;
             }
 
+            const char* getShortName() const {
+                return "SOAP";
+            }
+
             xmltooling::XMLObject* decode(
                 std::string& relayState,
                 const GenericRequest& genericRequest,

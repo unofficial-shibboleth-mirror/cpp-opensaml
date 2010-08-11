@@ -60,6 +60,10 @@ namespace opensaml {
                 return samlconstants::SAML20P_NS;
             }
 
+            const char* getShortName() const {
+                return "Artifact";
+            }
+
             long encode(
                 GenericResponse& genericResponse,
                 XMLObject* xmlObject,

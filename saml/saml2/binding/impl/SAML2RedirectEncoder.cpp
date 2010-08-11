@@ -62,6 +62,10 @@ namespace opensaml {
                 return samlconstants::SAML20P_NS;
             }
 
+            const char* getShortName() const {
+                return "Redirect";
+            }
+
             long encode(
                 GenericResponse& genericResponse,
                 XMLObject* xmlObject,

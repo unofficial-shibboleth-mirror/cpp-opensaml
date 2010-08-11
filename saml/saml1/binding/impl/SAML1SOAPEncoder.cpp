@@ -54,6 +54,10 @@ namespace opensaml {
                 return false;
             }
 
+            const char* getShortName() const {
+                return "POST";
+            }
+
             const XMLCh* getProtocolFamily() const {
                 return samlconstants::SAML11_PROTOCOL_ENUM;
             }

@@ -51,19 +51,33 @@ namespace opensaml {
         class SAML_DLLLOCAL SAML2POSTDecoder : public SAML2MessageDecoder
         {
         public:
-            SAML2POSTDecoder() {}
+            SAML2POSTDecoder(const DOMElement* e, const XMLCh* ns, bool simple=false) {
+            }
+
             virtual ~SAML2POSTDecoder() {}
-            
+
+            const char* getShortName() const {
+                return m_simple ? "POST-SimpleSign" : "POST";
+            }
+
             xmltooling::XMLObject* decode(
                 std::string& relayState,
                 const GenericRequest& genericRequest,
                 SecurityPolicy& policy
                 ) const;
+
+        private:
+            bool m_simple;
         };                
 
         MessageDecoder* SAML_DLLLOCAL SAML2POSTDecoderFactory(const pair<const DOMElement*,const XMLCh*>& p)
         {
-            return new SAML2POSTDecoder();
+            return new SAML2POSTDecoder(p.first, p.second, false);
+        }
+
+        MessageDecoder* SAML_DLLLOCAL SAML2POSTSimpleSignDecoderFactory(const pair<const DOMElement*,const XMLCh*>& p)
+        {
+            return new SAML2POSTDecoder(p.first, p.second, true);
         }
     };
 };

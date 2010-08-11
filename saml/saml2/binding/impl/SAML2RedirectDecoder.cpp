@@ -54,6 +54,10 @@ namespace opensaml {
             SAML2RedirectDecoder() {}
             virtual ~SAML2RedirectDecoder() {}
 
+            const char* getShortName() const {
+                return "Redirect";
+            }
+
             xmltooling::XMLObject* decode(
                 std::string& relayState,
                 const GenericRequest& genericRequest,

@@ -72,6 +72,13 @@ namespace opensaml {
         virtual const XMLCh* getProtocolFamily() const;
 
         /**
+         * Returns a shorthand name for the binding/encoding supported by the encoder.
+         *
+         * @return  a short name for the binding/encoding, or nullptr
+         */
+        virtual const char* getShortName() const;
+
+        /**
          * Interface to caller-supplied artifact generation mechanism.
          * 
          * Generating an artifact for storage and retrieval requires knowledge of

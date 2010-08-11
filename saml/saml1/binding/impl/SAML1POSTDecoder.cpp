@@ -54,7 +54,11 @@ namespace opensaml {
         public:
             SAML1POSTDecoder() {}
             virtual ~SAML1POSTDecoder() {}
-            
+
+            const char* getShortName() const {
+                return "POST";
+            }
+
             xmltooling::XMLObject* decode(
                 std::string& relayState,
                 const GenericRequest& genericRequest,
