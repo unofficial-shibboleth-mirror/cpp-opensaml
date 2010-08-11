@@ -68,13 +68,6 @@ namespace opensaml {
         virtual const XMLCh* getProtocolFamily() const;
 
         /**
-         * Returns a shorthand name for the binding/encoding supported by the decoder.
-         *
-         * @return  a short name for the binding/encoding, or nullptr
-         */
-        virtual const char* getShortName() const;
-
-        /**
          * Indicates whether a web browser or similar user agent delivered the message.
          *
          * @return true iff the message was delivered by a user agent

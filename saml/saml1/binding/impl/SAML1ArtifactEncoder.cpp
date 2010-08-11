@@ -56,10 +56,6 @@ namespace opensaml {
                 return samlconstants::SAML11_PROTOCOL_ENUM;
             }
 
-            const char* getShortName() const {
-                return "Artifact";
-            }
-
             long encode(
                 GenericResponse& genericResponse,
                 XMLObject* xmlObject,

@@ -76,11 +76,6 @@ const XMLCh* MessageEncoder::getProtocolFamily() const
     return nullptr;
 }
 
-const char* MessageEncoder::getShortName() const
-{
-    return nullptr;
-}
-
 bool MessageEncoder::isCompact() const
 {
     return false;

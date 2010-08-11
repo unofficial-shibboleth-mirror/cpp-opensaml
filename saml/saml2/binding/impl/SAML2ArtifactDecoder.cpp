@@ -51,10 +51,6 @@ namespace opensaml {
             SAML2ArtifactDecoder() {}
             virtual ~SAML2ArtifactDecoder() {}
 
-            const char* getShortName() const {
-                return "Artifact";
-            }
-
             xmltooling::XMLObject* decode(
                 std::string& relayState,
                 const GenericRequest& genericRequest,
