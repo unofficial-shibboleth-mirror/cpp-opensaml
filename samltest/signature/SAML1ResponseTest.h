@@ -112,15 +112,17 @@ public:
         
         auto_ptr<XMLObject> response2(b->buildFromDocument(doc));
         assertEquals("Unmarshalled response does not match", expectedChildElementsDOM, response2.get(), false);
+
+        auto_ptr<Response> response3(dynamic_cast<Response*>(response2.get())->cloneResponse());
         
         try {
             opensaml::SignatureProfileValidator spv;
-            spv.validate(dynamic_cast<Response*>(response2.get())->getAssertions().front()->getSignature());
-            spv.validate(dynamic_cast<Response*>(response2.get())->getSignature());
+            spv.validate(dynamic_cast<Response*>(response3.get())->getAssertions().front()->getSignature());
+            spv.validate(dynamic_cast<Response*>(response3.get())->getSignature());
 
             SignatureValidator sv(cred);
-            sv.validate(dynamic_cast<Response*>(response2.get())->getAssertions().front()->getSignature());
-            sv.validate(dynamic_cast<Response*>(response2.get())->getSignature());
+            sv.validate(dynamic_cast<Response*>(response3.get())->getAssertions().front()->getSignature());
+            sv.validate(dynamic_cast<Response*>(response3.get())->getSignature());
         }
         catch (XMLToolingException& e) {
             TS_TRACE(e.what());
