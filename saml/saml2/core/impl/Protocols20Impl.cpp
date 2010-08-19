@@ -117,7 +117,9 @@ namespace opensaml {
                 m_pos_StatusCode=m_children.begin();
             }
             public:
-                virtual ~StatusCodeImpl() {}
+                virtual ~StatusCodeImpl() {
+                    XMLString::release(&m_Value);
+                }
 
                 StatusCodeImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
                     : AbstractXMLObject(nsURI, localName, prefix, schemaType)

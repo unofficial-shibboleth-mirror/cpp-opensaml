@@ -760,7 +760,9 @@ namespace opensaml {
                 ++m_pos_SubjectConfirmationData;
             }
         public:
-            virtual ~SubjectConfirmationImpl() {}
+            virtual ~SubjectConfirmationImpl() {
+                XMLString::release(&m_Method);
+            }
 
             SubjectConfirmationImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
                 : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
