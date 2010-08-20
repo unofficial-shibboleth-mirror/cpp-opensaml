@@ -82,7 +82,7 @@ void ContentReference::createReferences(DSIGSignature* sig)
         }
         if (!prefixes.empty()) {
             prefixes.erase(prefixes.begin() + prefixes.size() - 1);
-            c14n->setInclusiveNamespaces(XMLString::replicate(prefixes.c_str()));
+            c14n->setInclusiveNamespaces(prefixes.c_str());
         }
     }
 }
