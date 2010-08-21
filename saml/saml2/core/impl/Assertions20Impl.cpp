@@ -1602,6 +1602,11 @@ namespace opensaml {
             IMPL_TYPED_CHILDREN(AuthzDecisionStatement, m_children.end());
 
         protected:
+            void prepareForMarshalling() const {
+                if (m_Signature)
+                    declareNonVisibleNamespaces();
+            }
+
             void marshallAttributes(DOMElement* domElement) const {
                 if (!m_Version)
                     const_cast<AssertionImpl*>(this)->m_Version=XMLString::transcode("2.0");

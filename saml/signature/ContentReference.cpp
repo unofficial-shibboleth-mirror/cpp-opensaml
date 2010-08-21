@@ -34,6 +34,25 @@ using namespace opensaml;
 using namespace xmltooling;
 using namespace std;
 
+void SignableObject::declareNonVisibleNamespaces() const
+{
+    ContentReference* cr = getSignature() ? dynamic_cast<ContentReference*>(getSignature()->getContentReference()) : nullptr;
+
+    // Compute inclusive prefix set.
+    map<xstring,xstring> decls;
+    XMLHelper::getNonVisiblyUsedPrefixes(*this, decls);
+
+    for (map<xstring,xstring>::const_iterator decl = decls.begin(); decl != decls.end(); ++decl) {
+
+        // Pin it to the object root. An existing copy of the prefix on the root will take precedence.
+        addNamespace(Namespace(decl->second.c_str(), decl->first.c_str(), true, Namespace::NonVisiblyUsed));
+
+        // Add to content reference, if any.
+        if (cr)
+            cr->addInclusivePrefix(decl->first.c_str());
+    }
+}
+
 ContentReference::ContentReference(const SignableObject& signableObject)
     : m_signableObject(signableObject), m_digest(nullptr), m_c14n(nullptr)
 {
@@ -68,15 +87,10 @@ void ContentReference::createReferences(DSIGSignature* sig)
     DSIGTransformC14n* c14n=ref->appendCanonicalizationTransform(m_c14n ? m_c14n : DSIGConstants::s_unicodeStrURIEXC_C14N_NOC);
 
     if (!m_c14n || m_c14n == DSIGConstants::s_unicodeStrURIEXC_C14N_NOC || m_c14n == DSIGConstants::s_unicodeStrURIEXC_C14N_COM) {
-        // Compute inclusive prefix set.
-        set<xstring> prefix_set;
-        XMLHelper::getNonVisiblyUsedPrefixes(m_signableObject, prefix_set);
-        prefix_set.insert(m_prefixes.begin(), m_prefixes.end());
-
         // Build up the string of prefixes.
         xstring prefixes;
         static const XMLCh _default[] = { chPound, chLatin_d, chLatin_e, chLatin_f, chLatin_a, chLatin_u, chLatin_l, chLatin_t, chNull };
-        for (set<xstring>::const_iterator p = prefix_set.begin(); p != prefix_set.end(); ++p) {
+        for (set<xstring>::const_iterator p = m_prefixes.begin(); p != m_prefixes.end(); ++p) {
             prefixes += (p->empty() ? _default : p->c_str());
             prefixes += chSpace;
         }

@@ -1086,6 +1086,11 @@ namespace opensaml {
             }
 
         protected:
+            void prepareForMarshalling() const {
+                if (m_Signature)
+                    declareNonVisibleNamespaces();
+            }
+
             void marshallAttributes(DOMElement* domElement) const {
                 MARSHALL_ID_ATTRIB(ID,ID,nullptr);
                 MARSHALL_STRING_ATTRIB(ProtocolSupportEnumeration,PROTOCOLSUPPORTENUMERATION,nullptr);
@@ -2048,6 +2053,11 @@ namespace opensaml {
             }
 
         protected:
+            void prepareForMarshalling() const {
+                if (m_Signature)
+                    declareNonVisibleNamespaces();
+            }
+
             void marshallAttributes(DOMElement* domElement) const {
                 MARSHALL_ID_ATTRIB(ID,ID,nullptr);
                 MARSHALL_STRING_ATTRIB(AffiliationOwnerID,AFFILIATIONOWNERID,nullptr);
@@ -2291,6 +2301,11 @@ namespace opensaml {
             }
 
         protected:
+            void prepareForMarshalling() const {
+                if (m_Signature)
+                    declareNonVisibleNamespaces();
+            }
+
             void marshallAttributes(DOMElement* domElement) const {
                 MARSHALL_ID_ATTRIB(ID,ID,nullptr);
                 MARSHALL_STRING_ATTRIB(EntityID,ENTITYID,nullptr);
@@ -2414,6 +2429,11 @@ namespace opensaml {
             IMPL_TYPED_CHILDREN(EntitiesDescriptor,m_children.end());
 
         protected:
+            void prepareForMarshalling() const {
+                if (m_Signature)
+                    declareNonVisibleNamespaces();
+            }
+
             void marshallAttributes(DOMElement* domElement) const {
                 MARSHALL_ID_ATTRIB(ID,ID,nullptr);
                 MARSHALL_STRING_ATTRIB(Name,NAME,nullptr);

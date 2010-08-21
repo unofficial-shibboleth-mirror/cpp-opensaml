@@ -56,6 +56,13 @@ namespace opensaml {
 
     protected:
         SignableObject();
+
+        /**
+         * Search the object for non-visible namespaces, and pin them
+         * on the root of the object where necessary, adding them to
+         * the inclusive prefix list for signing purposes.
+         */
+        void declareNonVisibleNamespaces() const;
     };
 
 };

@@ -84,6 +84,10 @@ public:
         sc->setValue(&StatusCode::SUCCESS);
         Status* status=StatusBuilder::buildStatus();
         status->setStatusCode(sc);
+        sc = StatusCodeBuilder::buildStatusCode();
+        xmltooling::QName subcode("urn:mace:shibboleth", "NoReally", "shib");
+        sc->setValue(&subcode);
+        status->getStatusCode()->setStatusCode(sc);
 
         auto_ptr<Response> response(ResponseBuilder::buildResponse());
         response->setResponseID(rid.get());

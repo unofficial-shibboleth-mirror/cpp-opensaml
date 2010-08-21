@@ -325,6 +325,11 @@ namespace opensaml {
             IMPL_TYPED_CHILD(Extensions);
     
         protected:
+            void prepareForMarshalling() const {
+                if (m_Signature)
+                    declareNonVisibleNamespaces();
+            }
+
             void marshallAttributes(DOMElement* domElement) const {
                 if (!m_Version)
                     const_cast<RequestAbstractTypeImpl*>(this)->m_Version=XMLString::transcode("2.0");
@@ -1087,6 +1092,11 @@ namespace opensaml {
             IMPL_TYPED_CHILD(Status);
     
         protected:
+            void prepareForMarshalling() const {
+                if (m_Signature)
+                    declareNonVisibleNamespaces();
+            }
+
             void marshallAttributes(DOMElement* domElement) const {
                 if (!m_Version)
                     const_cast<StatusResponseTypeImpl*>(this)->m_Version=XMLString::transcode("2.0");

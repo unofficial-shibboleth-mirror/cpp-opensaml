@@ -1063,6 +1063,11 @@ namespace opensaml {
             IMPL_TYPED_CHILDREN(AuthorizationDecisionStatement, m_pos_Signature);
 
         protected:
+            void prepareForMarshalling() const {
+                if (m_Signature)
+                    declareNonVisibleNamespaces();
+            }
+
             void marshallAttributes(DOMElement* domElement) const {
                 static const XMLCh MAJORVERSION[] = UNICODE_LITERAL_12(M,a,j,o,r,V,e,r,s,i,o,n);
                 domElement->setAttributeNS(nullptr,MAJORVERSION,XML_ONE);
