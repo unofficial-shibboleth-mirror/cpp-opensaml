@@ -57,8 +57,14 @@ namespace opensaml {
             }
 
             void init() {
-                background_load();
-                startup();
+                try {
+                    background_load();
+                    startup();
+                }
+                catch (...) {
+                    startup();
+                    throw;
+                }
             }
 
             const XMLObject* getMetadata() const {
