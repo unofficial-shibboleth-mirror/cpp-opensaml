@@ -33,6 +33,11 @@
 #define DECL_SAML2MDOBJECTBUILDER(cname) \
     DECL_XMLOBJECTBUILDER(SAML_API,cname,samlconstants::SAML20MD_NS,samlconstants::SAML20MD_PREFIX)
 
+namespace xmltooling {
+    class XMLTOOL_API Credential;
+    class XMLTOOL_API CredentialResolver;
+}
+
 namespace xmlencryption {
     class XMLTOOL_API EncryptionMethod;
 };
@@ -44,6 +49,9 @@ namespace opensaml {
      * SAML 2.0 metadata namespace
      */
     namespace saml2md {
+
+        class SAML_API DigestMethod;
+        class SAML_API SigningMethod;
 
         /**
          * Base class for metadata objects that feature a cacheDuration attribute.
@@ -181,6 +189,12 @@ namespace opensaml {
             DECL_TYPED_CHILDREN(KeyDescriptor);
             DECL_TYPED_CHILD(Organization);
             DECL_TYPED_CHILDREN(ContactPerson);
+            /** Returns the first digest method supported by the role and the underlying implementation, if any. */
+            virtual const DigestMethod* getDigestMethod() const;
+            /** Returns the first signing method supported by the role and the underlying implementation, if any, along with a matching credential. */
+            virtual std::pair<const SigningMethod*,const xmltooling::Credential*> getSigningMethod(
+                const xmltooling::CredentialResolver& resolver, xmltooling::CredentialCriteria& cc
+                ) const;
         END_XMLOBJECT;
 
         BEGIN_XMLOBJECT2(SAML_API,RoleDescriptorType,RoleDescriptor,xmltooling::ElementExtensibleXMLObject,SAML 2.0 RoleDescriptor extension);
@@ -395,6 +409,20 @@ namespace opensaml {
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
 
+        BEGIN_XMLOBJECT(SAML_API,DigestMethod,xmltooling::ElementExtensibleXMLObject,SAML Metadata Extension for Algorithm Support DigestMethod element);
+            DECL_STRING_ATTRIB(Algorithm,ALGORITHM);
+            /** DigestMethodType local name */
+            static const XMLCh TYPE_NAME[];
+        END_XMLOBJECT;
+
+        BEGIN_XMLOBJECT(SAML_API,SigningMethod,xmltooling::ElementExtensibleXMLObject,SAML Metadata Extension for Algorithm Support SigningMethod element);
+            DECL_STRING_ATTRIB(Algorithm,ALGORITHM);
+            DECL_INTEGER_ATTRIB(MinKeySize,MINKEYSIZE);
+            DECL_INTEGER_ATTRIB(MaxKeySize,MAXKEYSIZE);
+            /** SigningMethodType local name */
+            static const XMLCh TYPE_NAME[];
+        END_XMLOBJECT;
+
         /**
          * Predicate to test a role for validity and protocol support.
          */
@@ -493,6 +521,8 @@ namespace opensaml {
         DECL_XMLOBJECTBUILDER(SAML_API,ActionNamespace,samlconstants::SAML20MD_QUERY_EXT_NS,samlconstants::SAML20MD_QUERY_EXT_PREFIX);
         DECL_XMLOBJECTBUILDER(SAML_API,SourceID,samlconstants::SAML1MD_NS,samlconstants::SAML1MD_PREFIX);
         DECL_XMLOBJECTBUILDER(SAML_API,EntityAttributes,samlconstants::SAML20MD_ENTITY_ATTRIBUTE_NS,samlconstants::SAML20MD_ENTITY_ATTRIBUTE_PREFIX);
+        DECL_XMLOBJECTBUILDER(SAML_API,DigestMethod,samlconstants::SAML20MD_ALGSUPPORT_NS,samlconstants::SAML20MD_ALGSUPPORT_PREFIX);
+        DECL_XMLOBJECTBUILDER(SAML_API,SigningMethod,samlconstants::SAML20MD_ALGSUPPORT_NS,samlconstants::SAML20MD_ALGSUPPORT_PREFIX);
 
         /**
          * Builder for localizedNameType objects.

@@ -35,6 +35,7 @@ using namespace xmltooling;
 using namespace std;
 using samlconstants::SAML20MD_NS;
 using samlconstants::SAML20MD_QUERY_EXT_NS;
+using samlconstants::SAML20MD_ALGSUPPORT_NS;
 using samlconstants::SAML20MD_ENTITY_ATTRIBUTE_NS;
 
 namespace opensaml {
@@ -256,6 +257,13 @@ namespace opensaml {
                 throw ValidationException("EntityAttributes must contain at least one child element.");
         END_XMLOBJECTVALIDATOR;
 
+        BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,DigestMethod);
+            XMLOBJECTVALIDATOR_REQUIRE(DigestMethod,Algorithm);
+        END_XMLOBJECTVALIDATOR;
+
+        BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,SigningMethod);
+            XMLOBJECTVALIDATOR_REQUIRE(SigningMethod,Algorithm);
+        END_XMLOBJECTVALIDATOR;
     };
 };
 
@@ -368,4 +376,20 @@ void opensaml::saml2md::registerMetadataClasses() {
     q=xmltooling::QName(SAML20MD_ENTITY_ATTRIBUTE_NS,EntityAttributes::TYPE_NAME);
     XMLObjectBuilder::registerBuilder(q,new EntityAttributesBuilder());
     SchemaValidators.registerValidator(q,new EntityAttributesSchemaValidator());
+
+    q=xmltooling::QName(SAML20MD_ALGSUPPORT_NS,DigestMethod::LOCAL_NAME);
+    XMLObjectBuilder::registerBuilder(q,new DigestMethodBuilder());
+    SchemaValidators.registerValidator(q,new DigestMethodSchemaValidator());
+
+    q=xmltooling::QName(SAML20MD_ALGSUPPORT_NS,DigestMethod::TYPE_NAME);
+    XMLObjectBuilder::registerBuilder(q,new DigestMethodBuilder());
+    SchemaValidators.registerValidator(q,new DigestMethodSchemaValidator());
+
+    q=xmltooling::QName(SAML20MD_ALGSUPPORT_NS,SigningMethod::LOCAL_NAME);
+    XMLObjectBuilder::registerBuilder(q,new SigningMethodBuilder());
+    SchemaValidators.registerValidator(q,new SigningMethodSchemaValidator());
+
+    q=xmltooling::QName(SAML20MD_ALGSUPPORT_NS,SigningMethod::TYPE_NAME);
+    XMLObjectBuilder::registerBuilder(q,new SigningMethodBuilder());
+    SchemaValidators.registerValidator(q,new SigningMethodSchemaValidator());
 }

@@ -53,6 +53,7 @@ namespace opensaml {
                 return m_role;
             }
 
+            void reset();
             bool matches(const xmltooling::Credential& credential) const;
 
         private:

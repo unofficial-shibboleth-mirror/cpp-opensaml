@@ -27,10 +27,13 @@
 
 #include <xmltooling/AbstractComplexElement.h>
 #include <xmltooling/AbstractSimpleElement.h>
+#include <xmltooling/XMLToolingConfig.h>
 #include <xmltooling/encryption/Encryption.h>
 #include <xmltooling/impl/AnyElement.h>
 #include <xmltooling/io/AbstractXMLObjectMarshaller.h>
 #include <xmltooling/io/AbstractXMLObjectUnmarshaller.h>
+#include <xmltooling/security/CredentialCriteria.h>
+#include <xmltooling/security/CredentialResolver.h>
 #include <xmltooling/signature/KeyInfo.h>
 #include <xmltooling/signature/Signature.h>
 #include <xmltooling/util/DateTime.h>
@@ -2501,6 +2504,107 @@ namespace opensaml {
                 AbstractXMLObjectUnmarshaller::processChildElement(childXMLObject,root);
             }
         };
+
+        class SAML_DLLLOCAL DigestMethodImpl : public virtual DigestMethod,
+            public AbstractComplexElement,
+            public AbstractDOMCachingXMLObject,
+            public AbstractXMLObjectMarshaller,
+            public AbstractXMLObjectUnmarshaller
+        {
+        public:
+            virtual ~DigestMethodImpl() {
+                XMLString::release(&m_Algorithm);
+            }
+
+            DigestMethodImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
+                m_Algorithm = nullptr;
+            }
+
+            DigestMethodImpl(const DigestMethodImpl& src)
+                    : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
+                setAlgorithm(src.getAlgorithm());
+                VectorOf(XMLObject) v=getUnknownXMLObjects();
+                for (vector<XMLObject*>::const_iterator i=src.m_UnknownXMLObjects.begin(); i!=src.m_UnknownXMLObjects.end(); ++i)
+                    v.push_back((*i)->clone());
+            }
+
+            IMPL_STRING_ATTRIB(Algorithm);
+
+            IMPL_XMLOBJECT_CLONE(DigestMethod);
+            IMPL_XMLOBJECT_CHILDREN(UnknownXMLObject,m_children.end());
+
+        protected:
+            void marshallAttributes(DOMElement* domElement) const {
+                MARSHALL_STRING_ATTRIB(Algorithm,ALGORITHM,nullptr);
+            }
+
+            void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
+                // Unknown child.
+                getUnknownXMLObjects().push_back(childXMLObject);
+            }
+
+            void processAttribute(const DOMAttr* attribute) {
+                PROC_STRING_ATTRIB(Algorithm,ALGORITHM,nullptr);
+            }
+        };
+
+        class SAML_DLLLOCAL SigningMethodImpl : public virtual SigningMethod,
+            public AbstractComplexElement,
+            public AbstractDOMCachingXMLObject,
+            public AbstractXMLObjectMarshaller,
+            public AbstractXMLObjectUnmarshaller
+        {
+        public:
+            virtual ~SigningMethodImpl() {
+                XMLString::release(&m_Algorithm);
+                XMLString::release(&m_MinKeySize);
+                XMLString::release(&m_MaxKeySize);
+            }
+
+            SigningMethodImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
+                m_Algorithm = nullptr;
+                m_MinKeySize = nullptr;
+                m_MaxKeySize = nullptr;
+            }
+
+            SigningMethodImpl(const SigningMethodImpl& src)
+                    : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
+                setAlgorithm(src.getAlgorithm());
+                setMinKeySize(src.m_MinKeySize);
+                setMaxKeySize(src.m_MaxKeySize);
+                VectorOf(XMLObject) v=getUnknownXMLObjects();
+                for (vector<XMLObject*>::const_iterator i=src.m_UnknownXMLObjects.begin(); i!=src.m_UnknownXMLObjects.end(); ++i)
+                    v.push_back((*i)->clone());
+            }
+
+            IMPL_XMLOBJECT_CLONE(SigningMethod);
+            IMPL_XMLOBJECT_CHILDREN(UnknownXMLObject,m_children.end());
+
+            IMPL_STRING_ATTRIB(Algorithm);
+            IMPL_INTEGER_ATTRIB(MinKeySize);
+            IMPL_INTEGER_ATTRIB(MaxKeySize);
+
+        protected:
+            void marshallAttributes(DOMElement* domElement) const {
+                MARSHALL_STRING_ATTRIB(Algorithm,ALGORITHM,nullptr);
+                MARSHALL_INTEGER_ATTRIB(MinKeySize,MINKEYSIZE,nullptr);
+                MARSHALL_INTEGER_ATTRIB(MaxKeySize,MAXKEYSIZE,nullptr);
+            }
+
+            void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
+                // Unknown child.
+                getUnknownXMLObjects().push_back(childXMLObject);
+            }
+
+            void processAttribute(const DOMAttr* attribute) {
+                PROC_STRING_ATTRIB(Algorithm,ALGORITHM,nullptr);
+                PROC_INTEGER_ATTRIB(MinKeySize,MINKEYSIZE,nullptr);
+                PROC_INTEGER_ATTRIB(MaxKeySize,MAXKEYSIZE,nullptr);
+            }
+        };
+
     };
 };
 
@@ -2568,6 +2672,8 @@ IMPL_XMLOBJECTBUILDER(TelephoneNumber);
 IMPL_XMLOBJECTBUILDER(ActionNamespace);
 IMPL_XMLOBJECTBUILDER(SourceID);
 IMPL_XMLOBJECTBUILDER(EntityAttributes);
+IMPL_XMLOBJECTBUILDER(DigestMethod);
+IMPL_XMLOBJECTBUILDER(SigningMethod);
 
 #ifdef HAVE_COVARIANT_RETURNS
 RoleDescriptor* RoleDescriptorBuilder::buildObject(
@@ -2578,6 +2684,101 @@ xmltooling::XMLObject* RoleDescriptorBuilder::buildObject(
     ) const
 {
     return new RoleDescriptorTypeImpl(nsURI,localName,prefix,schemaType);
+}
+
+const DigestMethod* RoleDescriptor::getDigestMethod() const
+{
+    bool roleLevel = false;
+    XMLToolingConfig& conf = XMLToolingConfig::getConfig();
+
+    if (getExtensions()) {
+        const vector<XMLObject*>& exts = const_cast<const Extensions*>(getExtensions())->getUnknownXMLObjects();
+        for (vector<XMLObject*>::const_iterator i = exts.begin(); i != exts.end(); ++i) {
+            const opensaml::saml2md::DigestMethod* dm = dynamic_cast<opensaml::saml2md::DigestMethod*>(*i);
+            if (dm) {
+                if (dm->getAlgorithm() && conf.isXMLAlgorithmSupported(dm->getAlgorithm()))
+                    return dm;
+                roleLevel = true;
+            }
+        }
+    }
+
+    if (!roleLevel) {
+        const EntityDescriptor* entity = dynamic_cast<EntityDescriptor*>(getParent());
+        if (entity && entity->getExtensions()) {
+            const vector<XMLObject*>& exts = const_cast<const Extensions*>(entity->getExtensions())->getUnknownXMLObjects();
+            for (vector<XMLObject*>::const_iterator i = exts.begin(); i != exts.end(); ++i) {
+                const opensaml::saml2md::DigestMethod* dm = dynamic_cast<opensaml::saml2md::DigestMethod*>(*i);
+                if (dm && dm->getAlgorithm() && conf.isXMLAlgorithmSupported(dm->getAlgorithm()))
+                    return dm;
+            }
+        }
+    }
+
+    return nullptr;
+}
+
+pair<const SigningMethod*,const Credential*> RoleDescriptor::getSigningMethod(const CredentialResolver& resolver, CredentialCriteria& cc) const
+{
+    bool roleLevel = false;
+    XMLToolingConfig& conf = XMLToolingConfig::getConfig();
+
+    if (getExtensions()) {
+        const vector<XMLObject*>& exts = const_cast<const Extensions*>(getExtensions())->getUnknownXMLObjects();
+        for (vector<XMLObject*>::const_iterator i = exts.begin(); i != exts.end(); ++i) {
+            const SigningMethod* sm = dynamic_cast<SigningMethod*>(*i);
+            if (sm) {
+                roleLevel = true;
+                if (sm->getAlgorithm() && conf.isXMLAlgorithmSupported(sm->getAlgorithm())) {
+                    cc.setXMLAlgorithm(sm->getAlgorithm());
+                    pair<bool,int> minsize = sm->getMinKeySize(), maxsize = sm->getMaxKeySize();
+                    if (minsize.first || maxsize.first) {
+                        cc.setKeySize(minsize.first ? minsize.second : 0);
+                        cc.setMaxKeySize(maxsize.first ? maxsize.second : UINT_MAX);
+                    }
+                    else {
+                        cc.setKeySize(0);
+                        cc.setMaxKeySize(0);
+                    }
+                    const Credential* cred = resolver.resolve(&cc);
+                    if (cred)
+                        return make_pair(sm, cred);
+                }
+            }
+        }
+    }
+
+    if (!roleLevel) {
+        const EntityDescriptor* entity = dynamic_cast<EntityDescriptor*>(getParent());
+        if (entity && entity->getExtensions()) {
+            const vector<XMLObject*>& exts = const_cast<const Extensions*>(entity->getExtensions())->getUnknownXMLObjects();
+            for (vector<XMLObject*>::const_iterator i = exts.begin(); i != exts.end(); ++i) {
+                const SigningMethod* sm = dynamic_cast<SigningMethod*>(*i);
+                if (sm) {
+                    if (sm->getAlgorithm() && conf.isXMLAlgorithmSupported(sm->getAlgorithm())) {
+                        cc.setXMLAlgorithm(sm->getAlgorithm());
+                        pair<bool,int> minsize = sm->getMinKeySize(), maxsize = sm->getMaxKeySize();
+                        if (minsize.first || maxsize.first) {
+                            cc.setKeySize(minsize.first ? minsize.second : 0);
+                            cc.setMaxKeySize(maxsize.first ? maxsize.second : UINT_MAX);
+                        }
+                        else {
+                            cc.setKeySize(0);
+                            cc.setMaxKeySize(0);
+                        }
+                        const Credential* cred = resolver.resolve(&cc);
+                        if (cred)
+                            return make_pair(sm, cred);
+                    }
+                }
+            }
+        }
+    }
+
+    cc.setKeySize(0);
+    cc.setMaxKeySize(0);
+    cc.setXMLAlgorithm(nullptr);
+    return pair<const SigningMethod*,const Credential*>(nullptr, resolver.resolve(&cc));
 }
 
 const XMLCh ActionNamespace::LOCAL_NAME[] =             UNICODE_LITERAL_15(A,c,t,i,o,n,N,a,m,e,s,p,a,c,e);
@@ -2620,6 +2821,9 @@ const XMLCh ContactPerson::CONTACT_SUPPORT[] =          UNICODE_LITERAL_7(s,u,p,
 const XMLCh ContactPerson::CONTACT_ADMINISTRATIVE[] =   UNICODE_LITERAL_14(a,d,m,i,n,i,s,t,r,a,t,i,v,e);
 const XMLCh ContactPerson::CONTACT_BILLING[] =          UNICODE_LITERAL_7(b,i,l,l,i,n,g);
 const XMLCh ContactPerson::CONTACT_OTHER[] =            UNICODE_LITERAL_5(o,t,h,e,r);
+const XMLCh DigestMethod::LOCAL_NAME[] =                UNICODE_LITERAL_12(D,i,g,e,s,t,M,e,t,h,o,d);
+const XMLCh DigestMethod::TYPE_NAME[] =                 UNICODE_LITERAL_16(D,i,g,e,s,t,M,e,t,h,o,d,T,y,p,e);
+const XMLCh DigestMethod::ALGORITHM_ATTRIB_NAME[] =     UNICODE_LITERAL_9(A,l,g,o,r,i,t,h,m);
 const XMLCh EmailAddress::LOCAL_NAME[] =                UNICODE_LITERAL_12(E,m,a,i,l,A,d,d,r,e,s,s);
 const XMLCh EndpointType::LOCAL_NAME[] =                {chNull};
 const XMLCh EndpointType::TYPE_NAME[] =                 UNICODE_LITERAL_12(E,n,d,p,o,i,n,t,T,y,p,e);
@@ -2679,6 +2883,11 @@ const XMLCh RoleDescriptor::PROTOCOLSUPPORTENUMERATION_ATTRIB_NAME[] =  UNICODE_
 const XMLCh RoleDescriptor::ERRORURL_ATTRIB_NAME[] =    UNICODE_LITERAL_8(e,r,r,o,r,U,R,L);
 const XMLCh ServiceDescription::LOCAL_NAME[] =          UNICODE_LITERAL_18(S,e,r,v,i,c,e,D,e,s,c,r,i,p,t,i,o,n);
 const XMLCh ServiceName::LOCAL_NAME[] =                 UNICODE_LITERAL_11(S,e,r,v,i,c,e,N,a,m,e);
+const XMLCh SigningMethod::LOCAL_NAME[] =               UNICODE_LITERAL_13(S,i,g,n,i,n,g,M,e,t,h,o,d);
+const XMLCh SigningMethod::TYPE_NAME[] =                UNICODE_LITERAL_17(S,i,g,n,i,n,g,M,e,t,h,o,d,T,y,p,e);
+const XMLCh SigningMethod::ALGORITHM_ATTRIB_NAME[] =    UNICODE_LITERAL_9(A,l,g,o,r,i,t,h,m);
+const XMLCh SigningMethod::MINKEYSIZE_ATTRIB_NAME[] =   UNICODE_LITERAL_10(M,i,n,K,e,y,S,i,z,e);
+const XMLCh SigningMethod::MAXKEYSIZE_ATTRIB_NAME[] =   UNICODE_LITERAL_10(M,a,x,K,e,y,S,i,z,e);
 const XMLCh SingleLogoutService::LOCAL_NAME[] =         UNICODE_LITERAL_19(S,i,n,g,l,e,L,o,g,o,u,t,S,e,r,v,i,c,e);
 const XMLCh SingleSignOnService::LOCAL_NAME[] =         UNICODE_LITERAL_19(S,i,n,g,l,e,S,i,g,n,O,n,S,e,r,v,i,c,e);
 const XMLCh SourceID::LOCAL_NAME[] =                    UNICODE_LITERAL_8(S,o,u,r,c,e,I,D);
