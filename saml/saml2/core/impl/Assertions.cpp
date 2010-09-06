@@ -241,7 +241,7 @@ XMLObject* EncryptedElementType::decrypt(const CredentialResolver& credResolver,
 {
     if (!getEncryptedData())
         throw DecryptionException("No encrypted data present.");
-    EncryptedKeyResolver ekr(*this);
+    opensaml::EncryptedKeyResolver ekr(*this);
     Decrypter decrypter(&credResolver, criteria, &ekr);
     DOMDocumentFragment* frag = decrypter.decryptData(*getEncryptedData(), recipient);
     if (frag->hasChildNodes() && frag->getFirstChild()==frag->getLastChild()) {

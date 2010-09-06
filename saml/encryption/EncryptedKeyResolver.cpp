@@ -44,8 +44,11 @@ const EncryptedKey* opensaml::EncryptedKeyResolver::resolveKey(const EncryptedDa
 
     const vector<EncryptedKey*>& keys=m_ref.getEncryptedKeys();
     for (vector<EncryptedKey*>::const_iterator i=keys.begin(); i!=keys.end(); i++) {
-        if (XMLString::equals(recipient,(*i)->getRecipient()))
+        if ((*i)->getRecipient() == nullptr)
+            return (*i);
+        else if (XMLString::equals(recipient,(*i)->getRecipient()))
             return (*i);
     }
+
     return nullptr;
 }
