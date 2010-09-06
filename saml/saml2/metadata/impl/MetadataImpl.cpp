@@ -2696,7 +2696,7 @@ const DigestMethod* RoleDescriptor::getDigestMethod() const
         for (vector<XMLObject*>::const_iterator i = exts.begin(); i != exts.end(); ++i) {
             const opensaml::saml2md::DigestMethod* dm = dynamic_cast<opensaml::saml2md::DigestMethod*>(*i);
             if (dm) {
-                if (dm->getAlgorithm() && conf.isXMLAlgorithmSupported(dm->getAlgorithm()))
+                if (dm->getAlgorithm() && conf.isXMLAlgorithmSupported(dm->getAlgorithm(), XMLToolingConfig::ALGTYPE_DIGEST))
                     return dm;
                 roleLevel = true;
             }
@@ -2709,7 +2709,7 @@ const DigestMethod* RoleDescriptor::getDigestMethod() const
             const vector<XMLObject*>& exts = const_cast<const Extensions*>(entity->getExtensions())->getUnknownXMLObjects();
             for (vector<XMLObject*>::const_iterator i = exts.begin(); i != exts.end(); ++i) {
                 const opensaml::saml2md::DigestMethod* dm = dynamic_cast<opensaml::saml2md::DigestMethod*>(*i);
-                if (dm && dm->getAlgorithm() && conf.isXMLAlgorithmSupported(dm->getAlgorithm()))
+                if (dm && dm->getAlgorithm() && conf.isXMLAlgorithmSupported(dm->getAlgorithm(), XMLToolingConfig::ALGTYPE_DIGEST))
                     return dm;
             }
         }
@@ -2729,7 +2729,7 @@ pair<const SigningMethod*,const Credential*> RoleDescriptor::getSigningMethod(co
             const SigningMethod* sm = dynamic_cast<SigningMethod*>(*i);
             if (sm) {
                 roleLevel = true;
-                if (sm->getAlgorithm() && conf.isXMLAlgorithmSupported(sm->getAlgorithm())) {
+                if (sm->getAlgorithm() && conf.isXMLAlgorithmSupported(sm->getAlgorithm(), XMLToolingConfig::ALGTYPE_SIGN)) {
                     cc.setXMLAlgorithm(sm->getAlgorithm());
                     pair<bool,int> minsize = sm->getMinKeySize(), maxsize = sm->getMaxKeySize();
                     if (minsize.first || maxsize.first) {
@@ -2755,7 +2755,7 @@ pair<const SigningMethod*,const Credential*> RoleDescriptor::getSigningMethod(co
             for (vector<XMLObject*>::const_iterator i = exts.begin(); i != exts.end(); ++i) {
                 const SigningMethod* sm = dynamic_cast<SigningMethod*>(*i);
                 if (sm) {
-                    if (sm->getAlgorithm() && conf.isXMLAlgorithmSupported(sm->getAlgorithm())) {
+                    if (sm->getAlgorithm() && conf.isXMLAlgorithmSupported(sm->getAlgorithm(), XMLToolingConfig::ALGTYPE_SIGN)) {
                         cc.setXMLAlgorithm(sm->getAlgorithm());
                         pair<bool,int> minsize = sm->getMinKeySize(), maxsize = sm->getMaxKeySize();
                         if (minsize.first || maxsize.first) {

@@ -54,28 +54,73 @@ void EncryptedElementType::encrypt(
     const XMLCh* algorithm
     )
 {
-    // With one recipient, we let the library generate the encryption key for us.
-    // Get the key encryption key to use.
-    criteria.setUsage(Credential::ENCRYPTION_CREDENTIAL);
-    const Credential* KEK = metadataProvider.resolve(&criteria);
-    if (!KEK)
-        throw EncryptionException("No key encryption credential found.");
+    XMLToolingConfig& conf = XMLToolingConfig::getConfig();
 
-    // Try and find EncryptionMethod information surrounding the credential.
-    const MetadataCredentialContext* metaCtx = dynamic_cast<const MetadataCredentialContext*>(KEK->getCredentalContext());
-    if (metaCtx) {
-        const vector<EncryptionMethod*> encMethods = metaCtx->getKeyDescriptor().getEncryptionMethods();
-        if (!encMethods.empty())
-            algorithm = encMethods.front()->getAlgorithm();
+    // With one recipient, we let the library generate the encryption key for us.
+    // Get the key encryption key to use. To make use of EncryptionMethod, we have
+    // to examine each possible credential in conjunction with the algorithms we
+    // support.
+    criteria.setUsage(Credential::ENCRYPTION_CREDENTIAL);
+    vector<const Credential*> creds;
+    if (metadataProvider.resolve(creds, &criteria) == 0)
+        throw EncryptionException("No peer encryption credential found.");
+
+    const XMLCh* dataalg;
+    const XMLCh* keyalg;
+    const Credential* KEK = nullptr;
+
+    for (vector<const Credential*>::const_iterator c = creds.begin(); !KEK && c != creds.end(); ++c) {
+        // Try and find EncryptionMethod information surrounding the credential.
+        // All we're doing if they're present is setting algorithms where possible to
+        // the algorithms preferred by the credential, if we support them.
+        // The problem is that if we don't support them, the only case we can detect
+        // is if neither algorithm type is set *and* there's an EncryptionMethod present.
+        dataalg = keyalg = nullptr;
+        const MetadataCredentialContext* metaCtx = dynamic_cast<const MetadataCredentialContext*>((*c)->getCredentalContext());
+        if (metaCtx) {
+            const vector<EncryptionMethod*>& encMethods = metaCtx->getKeyDescriptor().getEncryptionMethods();
+            for (vector<EncryptionMethod*>::const_iterator meth = encMethods.begin(); meth != encMethods.end(); ++meth) {
+                if ((*meth)->getAlgorithm()) {
+                    if (!dataalg && conf.isXMLAlgorithmSupported((*meth)->getAlgorithm(), XMLToolingConfig::ALGTYPE_ENCRYPT))
+                        dataalg = (*meth)->getAlgorithm();
+                    else if (!keyalg && conf.isXMLAlgorithmSupported((*meth)->getAlgorithm(), XMLToolingConfig::ALGTYPE_KEYENCRYPT))
+                        keyalg = (*meth)->getAlgorithm();
+                }
+            }
+
+            if (!dataalg && !keyalg && !encMethods.empty()) {
+                // We know nothing, and something was specified that we don't support, so keep looking.
+                continue;
+            }
+        }
+
+        if (!keyalg && !(keyalg = Encrypter::getKeyTransportAlgorithm(*(*c), algorithm ? algorithm : dataalg))) {
+            // We can't derive a supported algorithm from the credential, so it will fail later anyway.
+            continue;
+        }
+
+        // Use this key.
+        KEK = *c;
     }
 
-    if (!algorithm || !*algorithm)
-        algorithm = DSIGConstants::s_unicodeStrURIAES256_CBC;
+    if (!KEK)
+        throw EncryptionException("No supported peer encryption credential found.");
+
+    // Passed in algorithm takes precedence.
+    if (algorithm && *algorithm)
+        dataalg = algorithm;
+    if (!dataalg) {
+#ifdef XSEC_OPENSSL_HAVE_AES
+        dataalg = DSIGConstants::s_unicodeStrURIAES256_CBC;
+#else
+        dataalg = DSIGConstants::s_unicodeStrURI3DES_CBC;
+#endif
+    }
 
     Encrypter encrypter;
-    Encrypter::EncryptionParams ep(algorithm, nullptr, 0, nullptr, compact);
-    Encrypter::KeyEncryptionParams kep(*KEK);
-    setEncryptedData(encrypter.encryptElement(xmlObject.getDOM(),ep,&kep));
+    Encrypter::EncryptionParams ep(dataalg, nullptr, 0, nullptr, compact);
+    Encrypter::KeyEncryptionParams kep(*KEK, keyalg);
+    setEncryptedData(encrypter.encryptElement(xmlObject.marshall(), ep, &kep));
 }
 
 void EncryptedElementType::encrypt(
@@ -87,8 +132,13 @@ void EncryptedElementType::encrypt(
 {
     // With multiple recipients, we have to generate an encryption key and then multicast it,
     // so we need to split the encryption and key wrapping steps.
-    if (!algorithm || !*algorithm)
+    if (!algorithm || !*algorithm) {
+#ifdef XSEC_OPENSSL_HAVE_AES
         algorithm = DSIGConstants::s_unicodeStrURIAES256_CBC;
+#else
+        algorithm = DSIGConstants::s_unicodeStrURI3DES_CBC;
+#endif
+    }
 
     // Generate a random key.
     unsigned char keyBuffer[32];
@@ -96,7 +146,7 @@ void EncryptedElementType::encrypt(
         throw EncryptionException("Unable to generate encryption key; was PRNG seeded?");
     Encrypter encrypter;
     Encrypter::EncryptionParams ep(algorithm, keyBuffer, 32, nullptr, compact);
-    setEncryptedData(encrypter.encryptElement(xmlObject.getDOM(),ep));
+    setEncryptedData(encrypter.encryptElement(xmlObject.marshall(), ep));
     getEncryptedData()->setId(SAMLConfig::getConfig().generateIdentifier());
 
     // Generate a uniquely named KeyInfo.
@@ -110,23 +160,58 @@ void EncryptedElementType::encrypt(
 
     // Now we encrypt the key for each recipient.
     for (vector< pair<const MetadataProvider*, MetadataCredentialCriteria*> >::const_iterator r = recipients.begin(); r!=recipients.end(); ++r) {
-        // Get key encryption key to use.
+        // Get key encryption keys to use.
         r->second->setUsage(Credential::ENCRYPTION_CREDENTIAL);
-        const Credential* KEK = r->first->resolve(r->second);
+        vector<const Credential*> creds;
+        if (r->first->resolve(creds, r->second) == 0) {
+            auto_ptr_char name(dynamic_cast<const EntityDescriptor*>(r->second->getRole().getParent())->getEntityID());
+            logging::Category::getInstance(SAML_LOGCAT".Encryption").warn("No key encryption credentials found for (%s).", name.get());
+            continue;
+        }
+
+        const XMLCh* keyalg;
+        const Credential* KEK = nullptr;
+
+        for (vector<const Credential*>::const_iterator c = creds.begin(); !KEK && c != creds.end(); ++c) {
+            // Try and find EncryptionMethod information surrounding the credential.
+            // All we're doing if they're present is setting algorithms where possible to
+            // the algorithms preferred by the credential, if we support them.
+            // The problem is that if we don't support them, the only case we can detect
+            // is if neither algorithm type is set *and* there's an EncryptionMethod present.
+            keyalg = nullptr;
+            const MetadataCredentialContext* metaCtx = dynamic_cast<const MetadataCredentialContext*>((*c)->getCredentalContext());
+            if (metaCtx) {
+                const vector<EncryptionMethod*>& encMethods = metaCtx->getKeyDescriptor().getEncryptionMethods();
+                for (vector<EncryptionMethod*>::const_iterator meth = encMethods.begin(); meth != encMethods.end(); ++meth) {
+                    if ((*meth)->getAlgorithm()) {
+                        if (!keyalg && XMLToolingConfig::getConfig().isXMLAlgorithmSupported((*meth)->getAlgorithm(), XMLToolingConfig::ALGTYPE_KEYENCRYPT))
+                            keyalg = (*meth)->getAlgorithm();
+                    }
+                }
+            }
+
+            if (!keyalg && !(keyalg = Encrypter::getKeyTransportAlgorithm(*(*c), algorithm))) {
+                // We can't derive a supported algorithm from the credential, so it will fail later anyway.
+                continue;
+            }
+
+            // Use this key.
+            KEK = *c;
+        }
+
         if (!KEK) {
             auto_ptr_char name(dynamic_cast<const EntityDescriptor*>(r->second->getRole().getParent())->getEntityID());
-            logging::Category::getInstance(SAML_LOGCAT".Encryption").warn("No key encryption credential found for (%s).", name.get());
+            logging::Category::getInstance(SAML_LOGCAT".Encryption").warn("no supported key encryption credential found for (%s).", name.get());
             continue;
         }
 
         // Encrypt the key and add it to the message.
         Encrypter::KeyEncryptionParams kep(
-            *KEK, Encrypter::getKeyTransportAlgorithm(*KEK, algorithm),
-            dynamic_cast<const EntityDescriptor*>(r->second->getRole().getParent())->getEntityID()
+            *KEK, keyalg, dynamic_cast<const EntityDescriptor*>(r->second->getRole().getParent())->getEntityID()
             );
         EncryptedKey* encryptedKey = encrypter.encryptKey(keyBuffer, ep.m_keyBufferSize, kep, compact);
         keys.push_back(encryptedKey);
-        if (keys.size()>1) {
+        if (keys.size() > 1) {
             // Copy details from the other key.
             encryptedKey->setCarriedKeyName(keys.front()->getCarriedKeyName()->cloneCarriedKeyName());
             encryptedKey->setReferenceList(keys.front()->getReferenceList()->cloneReferenceList());
