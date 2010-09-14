@@ -95,7 +95,6 @@ namespace opensaml {
         DECL_XMLOBJECT_SIMPLE(SAML_API,TelephoneNumber,Number,SAML 2.0 TelephoneNumber element);
 
         DECL_XMLOBJECT_SIMPLE(SAML_API,ActionNamespace,Namespace,SAML 2.0 Metadata Extension ActionNamespace element);
-        DECL_XMLOBJECT_SIMPLE(SAML_API,SourceID,ID,SAML 1.x Metadata Profile SourceID element);
 
         BEGIN_XMLOBJECT(SAML_API,localizedNameType,xmltooling::XMLObject,SAML 2.0 localizedNameType type);
             DECL_STRING_ATTRIB(Lang,LANG);
@@ -402,6 +401,10 @@ namespace opensaml {
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
 
+        // Known Metadata Extensions
+
+        DECL_XMLOBJECT_SIMPLE(SAML_API,SourceID,ID,SAML 1.x Metadata Profile SourceID element);
+
         BEGIN_XMLOBJECT(SAML_API,EntityAttributes,xmltooling::XMLObject,SAML Metadata Extension for Entity Attributes element);
             DECL_TYPED_FOREIGN_CHILDREN(Attribute,saml2);
             DECL_TYPED_FOREIGN_CHILDREN(Assertion,saml2);
@@ -420,6 +423,53 @@ namespace opensaml {
             DECL_INTEGER_ATTRIB(MinKeySize,MINKEYSIZE);
             DECL_INTEGER_ATTRIB(MaxKeySize,MAXKEYSIZE);
             /** SigningMethodType local name */
+            static const XMLCh TYPE_NAME[];
+        END_XMLOBJECT;
+
+        BEGIN_XMLOBJECT(SAML_API,DisplayName,localizedNameType,SAML Metadata Extension for Login UI DisplayName element);
+            DECL_SIMPLE_CONTENT(Name);
+        END_XMLOBJECT;
+
+        BEGIN_XMLOBJECT(SAML_API,Description,localizedNameType,SAML Metadata Extension for Login UI Description element);
+            DECL_SIMPLE_CONTENT(Description);
+        END_XMLOBJECT;
+
+        BEGIN_XMLOBJECT(SAML_API,Logo,xmltooling::XMLObject,SAML Metadata Extension for Login UI Logo element);
+            DECL_STRING_ATTRIB(Lang,LANG);
+            DECL_INTEGER_ATTRIB(Height,HEIGHT);
+            DECL_INTEGER_ATTRIB(Width,WIDTH);
+            DECL_SIMPLE_CONTENT(URL);
+            /** LogoType local name */
+            static const XMLCh TYPE_NAME[];
+        END_XMLOBJECT;
+
+        BEGIN_XMLOBJECT(SAML_API,InformationURL,localizedURIType,SAML Metadata Extension for Login UI InformationURL element);
+            DECL_SIMPLE_CONTENT(URL);
+        END_XMLOBJECT;
+
+        BEGIN_XMLOBJECT(SAML_API,PrivacyStatementURL,localizedURIType,SAML Metadata Extension for Login UI PrivacyStatementURL element);
+            DECL_SIMPLE_CONTENT(URL);
+        END_XMLOBJECT;
+
+        BEGIN_XMLOBJECT(SAML_API,UIInfo,xmltooling::ElementExtensibleXMLObject,SAML Metadata Extension for Login UI UIInfo element);
+            DECL_TYPED_CHILDREN(DisplayName);
+            DECL_TYPED_CHILDREN(Description);
+            DECL_TYPED_CHILDREN(Logo);
+            DECL_TYPED_CHILDREN(InformationURL);
+            DECL_TYPED_CHILDREN(PrivacyStatementURL);
+            /** UIInfoType local name */
+            static const XMLCh TYPE_NAME[];
+        END_XMLOBJECT;
+
+        DECL_XMLOBJECT_SIMPLE(SAML_API,IPHint,Hint,SAML Metadata Extension for Login UI IPHint element);
+        DECL_XMLOBJECT_SIMPLE(SAML_API,DomainHint,Hint,SAML Metadata Extension for Login UI DomainHint element);
+        DECL_XMLOBJECT_SIMPLE(SAML_API,GeolocationHint,Hint,SAML Metadata Extension for Login UI GeolocationHint element);
+
+        BEGIN_XMLOBJECT(SAML_API,DiscoHints,xmltooling::ElementExtensibleXMLObject,SAML Metadata Extension for Login UI DiscoHints element);
+            DECL_TYPED_CHILDREN(IPHint);
+            DECL_TYPED_CHILDREN(DomainHint);
+            DECL_TYPED_CHILDREN(GeolocationHint);
+            /** DiscoHintsType local name */
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
 
@@ -523,6 +573,17 @@ namespace opensaml {
         DECL_XMLOBJECTBUILDER(SAML_API,EntityAttributes,samlconstants::SAML20MD_ENTITY_ATTRIBUTE_NS,samlconstants::SAML20MD_ENTITY_ATTRIBUTE_PREFIX);
         DECL_XMLOBJECTBUILDER(SAML_API,DigestMethod,samlconstants::SAML20MD_ALGSUPPORT_NS,samlconstants::SAML20MD_ALGSUPPORT_PREFIX);
         DECL_XMLOBJECTBUILDER(SAML_API,SigningMethod,samlconstants::SAML20MD_ALGSUPPORT_NS,samlconstants::SAML20MD_ALGSUPPORT_PREFIX);
+
+        DECL_XMLOBJECTBUILDER(SAML_API,UIInfo,samlconstants::SAML20MD_UI_NS,samlconstants::SAML20MD_UI_PREFIX);
+        DECL_XMLOBJECTBUILDER(SAML_API,DisplayName,samlconstants::SAML20MD_UI_NS,samlconstants::SAML20MD_UI_PREFIX);
+        DECL_XMLOBJECTBUILDER(SAML_API,Description,samlconstants::SAML20MD_UI_NS,samlconstants::SAML20MD_UI_PREFIX);
+        DECL_XMLOBJECTBUILDER(SAML_API,Logo,samlconstants::SAML20MD_UI_NS,samlconstants::SAML20MD_UI_PREFIX);
+        DECL_XMLOBJECTBUILDER(SAML_API,InformationURL,samlconstants::SAML20MD_UI_NS,samlconstants::SAML20MD_UI_PREFIX);
+        DECL_XMLOBJECTBUILDER(SAML_API,PrivacyStatementURL,samlconstants::SAML20MD_UI_NS,samlconstants::SAML20MD_UI_PREFIX);
+        DECL_XMLOBJECTBUILDER(SAML_API,DiscoHints,samlconstants::SAML20MD_UI_NS,samlconstants::SAML20MD_UI_PREFIX);
+        DECL_XMLOBJECTBUILDER(SAML_API,IPHint,samlconstants::SAML20MD_UI_NS,samlconstants::SAML20MD_UI_PREFIX);
+        DECL_XMLOBJECTBUILDER(SAML_API,DomainHint,samlconstants::SAML20MD_UI_NS,samlconstants::SAML20MD_UI_PREFIX);
+        DECL_XMLOBJECTBUILDER(SAML_API,GeolocationHint,samlconstants::SAML20MD_UI_NS,samlconstants::SAML20MD_UI_PREFIX);
 
         /**
          * Builder for localizedNameType objects.

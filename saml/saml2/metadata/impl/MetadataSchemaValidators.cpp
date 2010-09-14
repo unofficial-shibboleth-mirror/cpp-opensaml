@@ -1,7 +1,7 @@
 /*
-*  Copyright 2001-2009 Internet2
+ *  Copyright 2001-2010 Internet2
  *
-* Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -37,6 +37,7 @@ using samlconstants::SAML20MD_NS;
 using samlconstants::SAML20MD_QUERY_EXT_NS;
 using samlconstants::SAML20MD_ALGSUPPORT_NS;
 using samlconstants::SAML20MD_ENTITY_ATTRIBUTE_NS;
+using samlconstants::SAML20MD_UI_NS;
 
 namespace opensaml {
     namespace saml2md {
@@ -48,7 +49,6 @@ namespace opensaml {
         XMLOBJECTVALIDATOR_SIMPLE(SAML_DLLLOCAL,EmailAddress);
         XMLOBJECTVALIDATOR_SIMPLE(SAML_DLLLOCAL,GivenName);
         XMLOBJECTVALIDATOR_SIMPLE(SAML_DLLLOCAL,NameIDFormat);
-        XMLOBJECTVALIDATOR_SIMPLE(SAML_DLLLOCAL,SourceID);
         XMLOBJECTVALIDATOR_SIMPLE(SAML_DLLLOCAL,SurName);
         XMLOBJECTVALIDATOR_SIMPLE(SAML_DLLLOCAL,TelephoneNumber);
 
@@ -252,6 +252,8 @@ namespace opensaml {
                 throw ValidationException("EntitiesDescriptor must contain at least one child descriptor.");
         END_XMLOBJECTVALIDATOR;
 
+        XMLOBJECTVALIDATOR_SIMPLE(SAML_DLLLOCAL,SourceID);
+
         BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,EntityAttributes);
             if (!ptr->hasChildren())
                 throw ValidationException("EntityAttributes must contain at least one child element.");
@@ -264,6 +266,32 @@ namespace opensaml {
         BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,SigningMethod);
             XMLOBJECTVALIDATOR_REQUIRE(SigningMethod,Algorithm);
         END_XMLOBJECTVALIDATOR;
+
+        BEGIN_XMLOBJECTVALIDATOR_SUB(SAML_DLLLOCAL,DisplayName,localizedNameType);
+            localizedNameTypeSchemaValidator::validate(xmlObject);
+        END_XMLOBJECTVALIDATOR;
+
+        BEGIN_XMLOBJECTVALIDATOR_SUB(SAML_DLLLOCAL,Description,localizedNameType);
+            localizedNameTypeSchemaValidator::validate(xmlObject);
+        END_XMLOBJECTVALIDATOR;
+
+        BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,Logo);
+            XMLOBJECTVALIDATOR_REQUIRE(Logo,TextContent);
+            XMLOBJECTVALIDATOR_REQUIRE_INTEGER(Logo,Height);
+            XMLOBJECTVALIDATOR_REQUIRE_INTEGER(Logo,Width);
+        END_XMLOBJECTVALIDATOR;
+
+        BEGIN_XMLOBJECTVALIDATOR_SUB(SAML_DLLLOCAL,InformationURL,localizedURIType);
+            localizedURITypeSchemaValidator::validate(xmlObject);
+        END_XMLOBJECTVALIDATOR;
+
+        BEGIN_XMLOBJECTVALIDATOR_SUB(SAML_DLLLOCAL,PrivacyStatementURL,localizedURIType);
+            localizedURITypeSchemaValidator::validate(xmlObject);
+        END_XMLOBJECTVALIDATOR;
+
+        XMLOBJECTVALIDATOR_SIMPLE(SAML_DLLLOCAL,IPHint);
+        XMLOBJECTVALIDATOR_SIMPLE(SAML_DLLLOCAL,DomainHint);
+        XMLOBJECTVALIDATOR_SIMPLE(SAML_DLLLOCAL,GeolocationHint);
     };
 };
 
@@ -277,12 +305,12 @@ namespace opensaml {
     XMLObjectBuilder::registerBuilder(q,new cname##Builder()); \
     SchemaValidators.registerValidator(q,new cname##SchemaValidator())
 
-#define REGISTER_ELEMENT_NOVAL(cname) \
-    q=xmltooling::QName(SAML20MD_NS,cname::LOCAL_NAME); \
+#define REGISTER_ELEMENT_UI(cname) \
+    q=xmltooling::QName(SAML20MD_UI_NS,cname::LOCAL_NAME); \
     XMLObjectBuilder::registerBuilder(q,new cname##Builder());
 
-#define REGISTER_TYPE_NOVAL(cname) \
-    q=xmltooling::QName(SAML20MD_NS,cname::TYPE_NAME); \
+#define REGISTER_TYPE_UI(cname) \
+    q=xmltooling::QName(SAML20MD_UI_NS,cname::TYPE_NAME); \
     XMLObjectBuilder::registerBuilder(q,new cname##Builder());
 
 void opensaml::saml2md::registerMetadataClasses() {
@@ -392,4 +420,18 @@ void opensaml::saml2md::registerMetadataClasses() {
     q=xmltooling::QName(SAML20MD_ALGSUPPORT_NS,SigningMethod::TYPE_NAME);
     XMLObjectBuilder::registerBuilder(q,new SigningMethodBuilder());
     SchemaValidators.registerValidator(q,new SigningMethodSchemaValidator());
+
+    REGISTER_ELEMENT_UI(DisplayName);
+    REGISTER_ELEMENT_UI(Description);
+    REGISTER_ELEMENT_UI(Logo);
+    REGISTER_ELEMENT_UI(InformationURL);
+    REGISTER_ELEMENT_UI(PrivacyStatementURL);
+    REGISTER_ELEMENT_UI(UIInfo);
+    REGISTER_ELEMENT_UI(IPHint);
+    REGISTER_ELEMENT_UI(DomainHint);
+    REGISTER_ELEMENT_UI(GeolocationHint);
+    REGISTER_ELEMENT_UI(DiscoHints);
+    REGISTER_TYPE_UI(Logo);
+    REGISTER_TYPE_UI(UIInfo);
+    REGISTER_TYPE_UI(DiscoHints);
 }

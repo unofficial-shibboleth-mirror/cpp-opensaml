@@ -14,5 +14,6 @@
     <system systemId="urn:oasis:names:tc:SAML:2.0:conditions:delegation" uri="@-PKGXMLDIR-@/sstc-saml-delegation.xsd"/>
 	<system systemId="urn:oasis:names:tc:SAML:metadata:ext:query" uri="@-PKGXMLDIR-@/sstc-saml-metadata-ext-query.xsd"/>
     <system systemId="urn:oasis:names:tc:SAML:metadata:algsupport" uri="@-PKGXMLDIR-@/sstc-saml-metadata-algsupport.xsd"/>
+    <system systemId="urn:oasis:names:tc:SAML:metadata:ui" uri="@-PKGXMLDIR-@/sstc-saml-metadata-ui.xsd"/>
 	<system systemId="urn:oasis:names:tc:SAML:protocol:ext:third-party" uri="@-PKGXMLDIR-@/sstc-saml-protocol-ext-thirdparty.xsd"/>
 </catalog>

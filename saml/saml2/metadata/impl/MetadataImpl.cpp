@@ -72,6 +72,9 @@ namespace opensaml {
 
         DECL_XMLOBJECTIMPL_SIMPLE(SAML_DLLLOCAL,ActionNamespace);
         DECL_XMLOBJECTIMPL_SIMPLE(SAML_DLLLOCAL,SourceID);
+        DECL_XMLOBJECTIMPL_SIMPLE(SAML_DLLLOCAL,IPHint);
+        DECL_XMLOBJECTIMPL_SIMPLE(SAML_DLLLOCAL,DomainHint);
+        DECL_XMLOBJECTIMPL_SIMPLE(SAML_DLLLOCAL,GeolocationHint);
 
         class SAML_DLLLOCAL localizedNameTypeImpl : public virtual localizedNameType,
             public AbstractSimpleElement,
@@ -2605,6 +2608,285 @@ namespace opensaml {
             }
         };
 
+        class SAML_DLLLOCAL DisplayNameImpl : public virtual DisplayName, public localizedNameTypeImpl
+        {
+        public:
+            virtual ~DisplayNameImpl() {}
+
+            DisplayNameImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {}
+
+            DisplayNameImpl(const DisplayNameImpl& src) : AbstractXMLObject(src), localizedNameTypeImpl(src) {}
+
+            IMPL_XMLOBJECT_CLONE(DisplayName);
+            localizedNameType* clonelocalizedNameType() const {
+                return new DisplayNameImpl(*this);
+            }
+        };
+
+        class SAML_DLLLOCAL DescriptionImpl : public virtual Description, public localizedNameTypeImpl
+        {
+        public:
+            virtual ~DescriptionImpl() {}
+
+            DescriptionImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {}
+
+            DescriptionImpl(const DescriptionImpl& src) : AbstractXMLObject(src), localizedNameTypeImpl(src) {}
+
+            IMPL_XMLOBJECT_CLONE(Description);
+            localizedNameType* clonelocalizedNameType() const {
+                return new DescriptionImpl(*this);
+            }
+        };
+
+        class SAML_DLLLOCAL InformationURLImpl : public virtual InformationURL, public localizedURITypeImpl
+        {
+        public:
+            virtual ~InformationURLImpl() {}
+
+            InformationURLImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {}
+
+            InformationURLImpl(const InformationURLImpl& src) : AbstractXMLObject(src), localizedURITypeImpl(src) {}
+
+            IMPL_XMLOBJECT_CLONE(InformationURL);
+            localizedURIType* clonelocalizedURIType() const {
+                return new InformationURLImpl(*this);
+            }
+        };
+
+        class SAML_DLLLOCAL PrivacyStatementURLImpl : public virtual PrivacyStatementURL, public localizedURITypeImpl
+        {
+        public:
+            virtual ~PrivacyStatementURLImpl() {}
+
+            PrivacyStatementURLImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {}
+
+            PrivacyStatementURLImpl(const PrivacyStatementURLImpl& src) : AbstractXMLObject(src), localizedURITypeImpl(src) {}
+
+            IMPL_XMLOBJECT_CLONE(PrivacyStatementURL);
+            localizedURIType* clonelocalizedURIType() const {
+                return new PrivacyStatementURLImpl(*this);
+            }
+        };
+
+        class SAML_DLLLOCAL LogoImpl : public virtual Logo,
+            public AbstractSimpleElement,
+            public AbstractDOMCachingXMLObject,
+            public AbstractXMLObjectMarshaller,
+            public AbstractXMLObjectUnmarshaller
+        {
+            void init() {
+                m_Lang=nullptr;
+                m_LangPrefix=nullptr;
+                m_Height=nullptr;
+                m_Width=nullptr;
+            }
+
+        protected:
+            LogoImpl() {
+                init();
+            }
+
+        public:
+            virtual ~LogoImpl() {
+                XMLString::release(&m_Lang);
+                XMLString::release(&m_LangPrefix);
+                XMLString::release(&m_Height);
+                XMLString::release(&m_Width);
+            }
+
+            LogoImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
+                    : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
+                init();
+            }
+
+            LogoImpl(const LogoImpl& src)
+                    : AbstractXMLObject(src), AbstractSimpleElement(src), AbstractDOMCachingXMLObject(src) {
+                init();
+                setLang(src.getLang());
+                if (src.m_LangPrefix)
+                    m_LangPrefix = XMLString::replicate(src.m_LangPrefix);
+                setHeight(src.m_Height);
+                setWidth(src.m_Width);
+            }
+
+            IMPL_XMLOBJECT_CLONE(Logo);
+            IMPL_XMLOBJECT_FOREIGN_ATTRIB(Lang,XMLCh);
+            IMPL_INTEGER_ATTRIB(Height);
+            IMPL_INTEGER_ATTRIB(Width);
+
+        protected:
+            void marshallAttributes(DOMElement* domElement) const {
+                if (m_Lang && *m_Lang) {
+                    DOMAttr* attr=domElement->getOwnerDocument()->createAttributeNS(xmlconstants::XML_NS,LANG_ATTRIB_NAME);
+                    if (m_LangPrefix && *m_LangPrefix)
+                        attr->setPrefix(m_LangPrefix);
+                    attr->setNodeValue(m_Lang);
+                    domElement->setAttributeNodeNS(attr);
+                }
+                MARSHALL_INTEGER_ATTRIB(Height,HEIGHT,nullptr);
+                MARSHALL_INTEGER_ATTRIB(Width,WIDTH,nullptr);
+            }
+
+            void processAttribute(const DOMAttr* attribute) {
+                if (XMLHelper::isNodeNamed(attribute, xmlconstants::XML_NS, LANG_ATTRIB_NAME)) {
+                    setLang(attribute->getValue());
+                    const XMLCh* temp = attribute->getPrefix();
+                    if (temp && *temp && !XMLString::equals(temp, xmlconstants::XML_NS))
+                        m_LangPrefix = XMLString::replicate(temp);
+                    return;
+                }
+                PROC_INTEGER_ATTRIB(Height,HEIGHT,nullptr);
+                PROC_INTEGER_ATTRIB(Width,WIDTH,nullptr);
+                AbstractXMLObjectUnmarshaller::processAttribute(attribute);
+            }
+        };
+
+        class SAML_DLLLOCAL UIInfoImpl : public virtual UIInfo,
+            public AbstractComplexElement,
+            public AbstractDOMCachingXMLObject,
+            public AbstractXMLObjectMarshaller,
+            public AbstractXMLObjectUnmarshaller
+        {
+        public:
+            virtual ~UIInfoImpl() {}
+
+            UIInfoImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
+            }
+
+            UIInfoImpl(const UIInfoImpl& src)
+                    : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
+                for (list<XMLObject*>::const_iterator i=src.m_children.begin(); i!=src.m_children.end(); i++) {
+                    if (*i) {
+                        DisplayName* dn=dynamic_cast<DisplayName*>(*i);
+                        if (dn) {
+                            getDisplayNames().push_back(dn->cloneDisplayName());
+                            continue;
+                        }
+
+                        Description* des=dynamic_cast<Description*>(*i);
+                        if (des) {
+                            getDescriptions().push_back(des->cloneDescription());
+                            continue;
+                        }
+
+                        Logo* logo=dynamic_cast<Logo*>(*i);
+                        if (logo) {
+                            getLogos().push_back(logo->cloneLogo());
+                            continue;
+                        }
+
+                        InformationURL* inf=dynamic_cast<InformationURL*>(*i);
+                        if (inf) {
+                            getInformationURLs().push_back(inf->cloneInformationURL());
+                            continue;
+                        }
+
+                        PrivacyStatementURL* priv=dynamic_cast<PrivacyStatementURL*>(*i);
+                        if (priv) {
+                            getPrivacyStatementURLs().push_back(priv->clonePrivacyStatementURL());
+                            continue;
+                        }
+
+                        getUnknownXMLObjects().push_back((*i)->clone());
+                    }
+                }
+            }
+
+            IMPL_XMLOBJECT_CLONE(UIInfo);
+            IMPL_TYPED_CHILDREN(DisplayName,m_children.end());
+            IMPL_TYPED_CHILDREN(Description,m_children.end());
+            IMPL_TYPED_CHILDREN(Logo,m_children.end());
+            IMPL_TYPED_CHILDREN(InformationURL,m_children.end());
+            IMPL_TYPED_CHILDREN(PrivacyStatementURL,m_children.end());
+            IMPL_XMLOBJECT_CHILDREN(UnknownXMLObject,m_children.end());
+
+        protected:
+            void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
+                PROC_TYPED_CHILDREN(DisplayName,SAML20MD_UI_NS,false);
+                PROC_TYPED_CHILDREN(Description,SAML20MD_UI_NS,false);
+                PROC_TYPED_CHILDREN(Logo,SAML20MD_UI_NS,false);
+                PROC_TYPED_CHILDREN(InformationURL,SAML20MD_UI_NS,false);
+                PROC_TYPED_CHILDREN(PrivacyStatementURL,SAML20MD_UI_NS,false);
+
+                // Unknown child.
+                const XMLCh* nsURI=root->getNamespaceURI();
+                if (!XMLString::equals(nsURI,SAML20MD_UI_NS) && nsURI && *nsURI) {
+                    getUnknownXMLObjects().push_back(childXMLObject);
+                    return;
+                }
+
+                AbstractXMLObjectUnmarshaller::processChildElement(childXMLObject,root);
+            }
+        };
+
+        class SAML_DLLLOCAL DiscoHintsImpl : public virtual DiscoHints,
+            public AbstractComplexElement,
+            public AbstractDOMCachingXMLObject,
+            public AbstractXMLObjectMarshaller,
+            public AbstractXMLObjectUnmarshaller
+        {
+        public:
+            virtual ~DiscoHintsImpl() {}
+
+            DiscoHintsImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
+            }
+
+            DiscoHintsImpl(const DiscoHintsImpl& src)
+                    : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
+                for (list<XMLObject*>::const_iterator i=src.m_children.begin(); i!=src.m_children.end(); i++) {
+                    if (*i) {
+                        IPHint* ip=dynamic_cast<IPHint*>(*i);
+                        if (ip) {
+                            getIPHints().push_back(ip->cloneIPHint());
+                            continue;
+                        }
+
+                        DomainHint* dom=dynamic_cast<DomainHint*>(*i);
+                        if (dom) {
+                            getDomainHints().push_back(dom->cloneDomainHint());
+                            continue;
+                        }
+
+                        GeolocationHint* geo=dynamic_cast<GeolocationHint*>(*i);
+                        if (geo) {
+                            getGeolocationHints().push_back(geo->cloneGeolocationHint());
+                            continue;
+                        }
+
+                        getUnknownXMLObjects().push_back((*i)->clone());
+                    }
+                }
+            }
+
+            IMPL_XMLOBJECT_CLONE(DiscoHints);
+            IMPL_TYPED_CHILDREN(IPHint,m_children.end());
+            IMPL_TYPED_CHILDREN(DomainHint,m_children.end());
+            IMPL_TYPED_CHILDREN(GeolocationHint,m_children.end());
+            IMPL_XMLOBJECT_CHILDREN(UnknownXMLObject,m_children.end());
+
+        protected:
+            void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
+                PROC_TYPED_CHILDREN(IPHint,SAML20MD_UI_NS,false);
+                PROC_TYPED_CHILDREN(DomainHint,SAML20MD_UI_NS,false);
+                PROC_TYPED_CHILDREN(GeolocationHint,SAML20MD_UI_NS,false);
+
+                // Unknown child.
+                const XMLCh* nsURI=root->getNamespaceURI();
+                if (!XMLString::equals(nsURI,SAML20MD_UI_NS) && nsURI && *nsURI) {
+                    getUnknownXMLObjects().push_back(childXMLObject);
+                    return;
+                }
+
+                AbstractXMLObjectUnmarshaller::processChildElement(childXMLObject,root);
+            }
+        };
+
     };
 };
 
@@ -2674,6 +2956,16 @@ IMPL_XMLOBJECTBUILDER(SourceID);
 IMPL_XMLOBJECTBUILDER(EntityAttributes);
 IMPL_XMLOBJECTBUILDER(DigestMethod);
 IMPL_XMLOBJECTBUILDER(SigningMethod);
+IMPL_XMLOBJECTBUILDER(DisplayName);
+IMPL_XMLOBJECTBUILDER(Description);
+IMPL_XMLOBJECTBUILDER(Logo);
+IMPL_XMLOBJECTBUILDER(InformationURL);
+IMPL_XMLOBJECTBUILDER(PrivacyStatementURL);
+IMPL_XMLOBJECTBUILDER(UIInfo);
+IMPL_XMLOBJECTBUILDER(IPHint);
+IMPL_XMLOBJECTBUILDER(DomainHint);
+IMPL_XMLOBJECTBUILDER(GeolocationHint);
+IMPL_XMLOBJECTBUILDER(DiscoHints);
 
 #ifdef HAVE_COVARIANT_RETURNS
 RoleDescriptor* RoleDescriptorBuilder::buildObject(
@@ -2821,9 +3113,14 @@ const XMLCh ContactPerson::CONTACT_SUPPORT[] =          UNICODE_LITERAL_7(s,u,p,
 const XMLCh ContactPerson::CONTACT_ADMINISTRATIVE[] =   UNICODE_LITERAL_14(a,d,m,i,n,i,s,t,r,a,t,i,v,e);
 const XMLCh ContactPerson::CONTACT_BILLING[] =          UNICODE_LITERAL_7(b,i,l,l,i,n,g);
 const XMLCh ContactPerson::CONTACT_OTHER[] =            UNICODE_LITERAL_5(o,t,h,e,r);
+const XMLCh Description::LOCAL_NAME[] =                 UNICODE_LITERAL_11(D,e,s,c,r,i,p,t,i,o,n);
 const XMLCh DigestMethod::LOCAL_NAME[] =                UNICODE_LITERAL_12(D,i,g,e,s,t,M,e,t,h,o,d);
 const XMLCh DigestMethod::TYPE_NAME[] =                 UNICODE_LITERAL_16(D,i,g,e,s,t,M,e,t,h,o,d,T,y,p,e);
 const XMLCh DigestMethod::ALGORITHM_ATTRIB_NAME[] =     UNICODE_LITERAL_9(A,l,g,o,r,i,t,h,m);
+const XMLCh DiscoHints::LOCAL_NAME[] =                  UNICODE_LITERAL_10(D,i,s,c,o,H,i,n,t,s);
+const XMLCh DiscoHints::TYPE_NAME[] =                   UNICODE_LITERAL_14(D,i,s,c,o,H,i,n,t,s,T,y,p,e);
+const XMLCh DisplayName::LOCAL_NAME[] =                 UNICODE_LITERAL_11(D,i,s,p,l,a,y,N,a,m,e);
+const XMLCh DomainHint::LOCAL_NAME[] =                  UNICODE_LITERAL_10(D,o,m,a,i,n,H,i,n,t);
 const XMLCh EmailAddress::LOCAL_NAME[] =                UNICODE_LITERAL_12(E,m,a,i,l,A,d,d,r,e,s,s);
 const XMLCh EndpointType::LOCAL_NAME[] =                {chNull};
 const XMLCh EndpointType::TYPE_NAME[] =                 UNICODE_LITERAL_12(E,n,d,p,o,i,n,t,T,y,p,e);
@@ -2842,6 +3139,7 @@ const XMLCh EntityAttributes::LOCAL_NAME[] =            UNICODE_LITERAL_16(E,n,t
 const XMLCh EntityAttributes::TYPE_NAME[] =             UNICODE_LITERAL_20(E,n,t,i,t,y,A,t,t,r,i,b,u,t,e,s,T,y,p,e);
 const XMLCh Extensions::LOCAL_NAME[] =                  UNICODE_LITERAL_10(E,x,t,e,n,s,i,o,n,s);
 const XMLCh Extensions::TYPE_NAME[] =                   UNICODE_LITERAL_14(E,x,t,e,n,s,i,o,n,s,T,y,p,e);
+const XMLCh GeolocationHint::LOCAL_NAME[] =             UNICODE_LITERAL_15(G,e,o,l,o,c,a,t,i,o,n,H,i,n,t);
 const XMLCh GivenName::LOCAL_NAME[] =                   UNICODE_LITERAL_9(G,i,v,e,n,N,a,m,e);
 const XMLCh IDPSSODescriptor::LOCAL_NAME[] =            UNICODE_LITERAL_16(I,D,P,S,S,O,D,e,s,c,r,i,p,t,o,r);
 const XMLCh IDPSSODescriptor::TYPE_NAME[] =             UNICODE_LITERAL_20(I,D,P,S,S,O,D,e,s,c,r,i,p,t,o,r,T,y,p,e);
@@ -2850,11 +3148,18 @@ const XMLCh IndexedEndpointType::LOCAL_NAME[] =         {chNull};
 const XMLCh IndexedEndpointType::TYPE_NAME[] =          UNICODE_LITERAL_19(I,n,d,e,x,e,d,E,n,d,p,o,i,n,t,T,y,p,e);
 const XMLCh IndexedEndpointType::INDEX_ATTRIB_NAME[] =  UNICODE_LITERAL_5(i,n,d,e,x);
 const XMLCh IndexedEndpointType::ISDEFAULT_ATTRIB_NAME[] =  UNICODE_LITERAL_9(i,s,D,e,f,a,u,l,t);
+const XMLCh InformationURL::LOCAL_NAME[] =              UNICODE_LITERAL_14(I,n,f,o,r,m,a,t,i,o,n,U,R,L);
+const XMLCh IPHint::LOCAL_NAME[] =                      UNICODE_LITERAL_6(I,P,H,i,n,t);
 const XMLCh KeyDescriptor::LOCAL_NAME[] =               UNICODE_LITERAL_13(K,e,y,D,e,s,c,r,i,p,t,o,r);
 const XMLCh KeyDescriptor::TYPE_NAME[] =                UNICODE_LITERAL_17(K,e,y,D,e,s,c,r,i,p,t,o,r,T,y,p,e);
 const XMLCh KeyDescriptor::USE_ATTRIB_NAME[] =          UNICODE_LITERAL_3(u,s,e);
 const XMLCh KeyDescriptor::KEYTYPE_ENCRYPTION[] =       UNICODE_LITERAL_10(e,n,c,r,y,p,t,i,o,n);
 const XMLCh KeyDescriptor::KEYTYPE_SIGNING[] =          UNICODE_LITERAL_7(s,i,g,n,i,n,g);
+const XMLCh Logo::LOCAL_NAME[] =                        UNICODE_LITERAL_4(L,o,g,o);
+const XMLCh Logo::TYPE_NAME[] =                         UNICODE_LITERAL_8(L,o,g,o,T,y,p,e);
+const XMLCh Logo::LANG_ATTRIB_NAME[] =                  UNICODE_LITERAL_4(l,a,n,g);
+const XMLCh Logo::HEIGHT_ATTRIB_NAME[] =                UNICODE_LITERAL_6(h,e,i,g,h,t);
+const XMLCh Logo::WIDTH_ATTRIB_NAME[] =                 UNICODE_LITERAL_5(w,i,d,t,h);
 const XMLCh localizedNameType::LOCAL_NAME[] =           {chNull};
 const XMLCh localizedNameType::TYPE_NAME[] =            UNICODE_LITERAL_17(l,o,c,a,l,i,z,e,d,N,a,m,e,T,y,p,e);
 const XMLCh localizedNameType::LANG_ATTRIB_NAME[] =     UNICODE_LITERAL_4(l,a,n,g);
@@ -2871,6 +3176,7 @@ const XMLCh OrganizationDisplayName::LOCAL_NAME[] =     UNICODE_LITERAL_23(O,r,g
 const XMLCh OrganizationURL::LOCAL_NAME[] =             UNICODE_LITERAL_15(O,r,g,a,n,i,z,a,t,i,o,n,U,R,L);
 const XMLCh PDPDescriptor::LOCAL_NAME[] =               UNICODE_LITERAL_13(P,D,P,D,e,s,c,r,i,p,t,o,r);
 const XMLCh PDPDescriptor::TYPE_NAME[] =                UNICODE_LITERAL_17(P,D,P,D,e,s,c,r,i,p,t,o,r,T,y,p,e);
+const XMLCh PrivacyStatementURL::LOCAL_NAME[] =         UNICODE_LITERAL_19(P,r,i,v,a,c,y,S,t,a,t,e,m,e,n,t,U,R,L);
 const XMLCh QueryDescriptorType::LOCAL_NAME[] =         {chNull};
 const XMLCh QueryDescriptorType::TYPE_NAME[] =          UNICODE_LITERAL_19(Q,u,e,r,y,D,e,s,c,r,i,p,t,o,r,T,y,p,e);
 const XMLCh QueryDescriptorType::WANTASSERTIONSSIGNED_ATTRIB_NAME[] =   UNICODE_LITERAL_20(W,a,n,t,A,s,s,e,r,t,i,o,n,s,S,i,g,n,e,d);
@@ -2900,3 +3206,5 @@ const XMLCh SSODescriptorType::TYPE_NAME[] =            UNICODE_LITERAL_17(S,S,O
 const XMLCh SurName::LOCAL_NAME[] =                     UNICODE_LITERAL_7(S,u,r,N,a,m,e);
 const XMLCh TelephoneNumber::LOCAL_NAME[] =             UNICODE_LITERAL_15(T,e,l,e,p,h,o,n,e,N,u,m,b,e,r);
 const XMLCh TimeBoundSAMLObject::VALIDUNTIL_ATTRIB_NAME[] =   UNICODE_LITERAL_10(v,a,l,i,d,U,n,t,i,l);
+const XMLCh UIInfo::LOCAL_NAME[] =                      UNICODE_LITERAL_6(U,I,I,n,f,o);
+const XMLCh UIInfo::TYPE_NAME[] =                       UNICODE_LITERAL_10(U,I,I,n,f,o,T,y,p,e);
