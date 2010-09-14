@@ -46,6 +46,7 @@ schemafiles = \
 	sstc-saml-attribute-ext.xsd \
 	sstc-saml-delegation.xsd \
 	sstc-saml-metadata-ext-query.xsd \
+	sstc-saml-metadata-algsupport.xsd \
 	sstc-saml-protocol-ext-thirdparty.xsd
 
 pkgxml_DATA = \
