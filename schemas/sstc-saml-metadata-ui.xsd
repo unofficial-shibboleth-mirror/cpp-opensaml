@@ -2,6 +2,7 @@
 <schema 
   targetNamespace="urn:oasis:names:tc:SAML:metadata:ui"
   xmlns="http://www.w3.org/2001/XMLSchema"
+  xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata"
   xmlns:mdui="urn:oasis:names:tc:SAML:metadata:ui"
   elementFormDefault="unqualified"
   attributeFormDefault="unqualified"
