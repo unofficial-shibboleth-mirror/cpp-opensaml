@@ -62,16 +62,19 @@ namespace opensaml {
             XMLOBJECTVALIDATOR_REQUIRE(localizedURIType,Lang);
         END_XMLOBJECTVALIDATOR;
 
-        BEGIN_XMLOBJECTVALIDATOR_SUB(SAML_DLLLOCAL,OrganizationName,localizedNameType);
-            localizedNameTypeSchemaValidator::validate(xmlObject);
+        BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,OrganizationName);
+            XMLOBJECTVALIDATOR_REQUIRE(OrganizationName,TextContent);
+            XMLOBJECTVALIDATOR_REQUIRE(OrganizationName,Lang);
         END_XMLOBJECTVALIDATOR;
 
-        BEGIN_XMLOBJECTVALIDATOR_SUB(SAML_DLLLOCAL,OrganizationDisplayName,localizedNameType);
-            localizedNameTypeSchemaValidator::validate(xmlObject);
+        BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,OrganizationDisplayName);
+            XMLOBJECTVALIDATOR_REQUIRE(OrganizationDisplayName,TextContent);
+            XMLOBJECTVALIDATOR_REQUIRE(OrganizationDisplayName,Lang);
         END_XMLOBJECTVALIDATOR;
 
-        BEGIN_XMLOBJECTVALIDATOR_SUB(SAML_DLLLOCAL,OrganizationURL,localizedURIType);
-            localizedURITypeSchemaValidator::validate(xmlObject);
+        BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,OrganizationURL);
+            XMLOBJECTVALIDATOR_REQUIRE(OrganizationURL,TextContent);
+            XMLOBJECTVALIDATOR_REQUIRE(OrganizationURL,Lang);
         END_XMLOBJECTVALIDATOR;
 
         class SAML_DLLLOCAL checkWildcardNS {
@@ -171,12 +174,14 @@ namespace opensaml {
             XMLOBJECTVALIDATOR_NONEMPTY(IDPSSODescriptor,SingleSignOnService);
         END_XMLOBJECTVALIDATOR;
 
-        BEGIN_XMLOBJECTVALIDATOR_SUB(SAML_DLLLOCAL,ServiceName,localizedNameType);
-            localizedNameTypeSchemaValidator::validate(xmlObject);
+        BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,ServiceName);
+            XMLOBJECTVALIDATOR_REQUIRE(ServiceName,TextContent);
+            XMLOBJECTVALIDATOR_REQUIRE(ServiceName,Lang);
         END_XMLOBJECTVALIDATOR;
 
-        BEGIN_XMLOBJECTVALIDATOR_SUB(SAML_DLLLOCAL,ServiceDescription,localizedNameType);
-            localizedNameTypeSchemaValidator::validate(xmlObject);
+        BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,ServiceDescription);
+            XMLOBJECTVALIDATOR_REQUIRE(ServiceDescription,TextContent);
+            XMLOBJECTVALIDATOR_REQUIRE(ServiceDescription,Lang);
         END_XMLOBJECTVALIDATOR;
 
         BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,RequestedAttribute);
@@ -267,12 +272,14 @@ namespace opensaml {
             XMLOBJECTVALIDATOR_REQUIRE(SigningMethod,Algorithm);
         END_XMLOBJECTVALIDATOR;
 
-        BEGIN_XMLOBJECTVALIDATOR_SUB(SAML_DLLLOCAL,DisplayName,localizedNameType);
-            localizedNameTypeSchemaValidator::validate(xmlObject);
+        BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,DisplayName);
+            XMLOBJECTVALIDATOR_REQUIRE(DisplayName,TextContent);
+            XMLOBJECTVALIDATOR_REQUIRE(DisplayName,Lang);
         END_XMLOBJECTVALIDATOR;
 
-        BEGIN_XMLOBJECTVALIDATOR_SUB(SAML_DLLLOCAL,Description,localizedNameType);
-            localizedNameTypeSchemaValidator::validate(xmlObject);
+        BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,Description);
+            XMLOBJECTVALIDATOR_REQUIRE(Description,TextContent);
+            XMLOBJECTVALIDATOR_REQUIRE(Description,Lang);
         END_XMLOBJECTVALIDATOR;
 
         BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,Logo);
@@ -281,12 +288,14 @@ namespace opensaml {
             XMLOBJECTVALIDATOR_REQUIRE_INTEGER(Logo,Width);
         END_XMLOBJECTVALIDATOR;
 
-        BEGIN_XMLOBJECTVALIDATOR_SUB(SAML_DLLLOCAL,InformationURL,localizedURIType);
-            localizedURITypeSchemaValidator::validate(xmlObject);
+        BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,InformationURL);
+            XMLOBJECTVALIDATOR_REQUIRE(InformationURL,TextContent);
+            XMLOBJECTVALIDATOR_REQUIRE(InformationURL,Lang);
         END_XMLOBJECTVALIDATOR;
 
-        BEGIN_XMLOBJECTVALIDATOR_SUB(SAML_DLLLOCAL,PrivacyStatementURL,localizedURIType);
-            localizedURITypeSchemaValidator::validate(xmlObject);
+        BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,PrivacyStatementURL);
+            XMLOBJECTVALIDATOR_REQUIRE(PrivacyStatementURL,TextContent);
+            XMLOBJECTVALIDATOR_REQUIRE(PrivacyStatementURL,Lang);
         END_XMLOBJECTVALIDATOR;
 
         XMLOBJECTVALIDATOR_SIMPLE(SAML_DLLLOCAL,IPHint);
@@ -307,9 +316,19 @@ namespace opensaml {
 
 #define REGISTER_ELEMENT_UI(cname) \
     q=xmltooling::QName(SAML20MD_UI_NS,cname::LOCAL_NAME); \
-    XMLObjectBuilder::registerBuilder(q,new cname##Builder());
+    XMLObjectBuilder::registerBuilder(q,new cname##Builder()); \
+    SchemaValidators.registerValidator(q,new cname##SchemaValidator())
 
 #define REGISTER_TYPE_UI(cname) \
+    q=xmltooling::QName(SAML20MD_UI_NS,cname::TYPE_NAME); \
+    XMLObjectBuilder::registerBuilder(q,new cname##Builder()); \
+    SchemaValidators.registerValidator(q,new cname##SchemaValidator())
+
+#define REGISTER_ELEMENT_UI_NOVAL(cname) \
+    q=xmltooling::QName(SAML20MD_UI_NS,cname::LOCAL_NAME); \
+    XMLObjectBuilder::registerBuilder(q,new cname##Builder());
+
+#define REGISTER_TYPE_UI_NOVAL(cname) \
     q=xmltooling::QName(SAML20MD_UI_NS,cname::TYPE_NAME); \
     XMLObjectBuilder::registerBuilder(q,new cname##Builder());
 
@@ -426,12 +445,12 @@ void opensaml::saml2md::registerMetadataClasses() {
     REGISTER_ELEMENT_UI(Logo);
     REGISTER_ELEMENT_UI(InformationURL);
     REGISTER_ELEMENT_UI(PrivacyStatementURL);
-    REGISTER_ELEMENT_UI(UIInfo);
     REGISTER_ELEMENT_UI(IPHint);
     REGISTER_ELEMENT_UI(DomainHint);
     REGISTER_ELEMENT_UI(GeolocationHint);
-    REGISTER_ELEMENT_UI(DiscoHints);
     REGISTER_TYPE_UI(Logo);
-    REGISTER_TYPE_UI(UIInfo);
-    REGISTER_TYPE_UI(DiscoHints);
+    REGISTER_ELEMENT_UI_NOVAL(UIInfo);
+    REGISTER_ELEMENT_UI_NOVAL(DiscoHints);
+    REGISTER_TYPE_UI_NOVAL(UIInfo);
+    REGISTER_TYPE_UI_NOVAL(DiscoHints);
 }
