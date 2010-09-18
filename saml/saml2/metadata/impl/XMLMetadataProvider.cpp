@@ -25,10 +25,13 @@
 #include "saml2/metadata/Metadata.h"
 #include "saml2/metadata/MetadataFilter.h"
 #include "saml2/metadata/AbstractMetadataProvider.h"
+#include "saml2/metadata/DiscoverableMetadataProvider.h"
 
 #include <fstream>
+#include <xmltooling/XMLToolingConfig.h>
 #include <xmltooling/io/HTTPResponse.h>
 #include <xmltooling/util/NDC.h>
+#include <xmltooling/util/PathResolver.h>
 #include <xmltooling/util/ReloadableXMLFile.h>
 #include <xmltooling/util/Threads.h>
 #include <xmltooling/validation/ValidatorSuite.h>
@@ -46,7 +49,8 @@ using namespace std;
 namespace opensaml {
     namespace saml2md {
 
-        class SAML_DLLLOCAL XMLMetadataProvider : public AbstractMetadataProvider, public ReloadableXMLFile
+        class SAML_DLLLOCAL XMLMetadataProvider
+            : public AbstractMetadataProvider, public DiscoverableMetadataProvider, public ReloadableXMLFile
         {
         public:
             XMLMetadataProvider(const DOMElement* e);
@@ -81,6 +85,7 @@ namespace opensaml {
             time_t computeNextRefresh();
 
             XMLObject* m_object;
+            bool m_discoveryFeed;
             double m_refreshDelayFactor;
             unsigned int m_backoffFactor;
             time_t m_minRefreshDelay,m_maxRefreshDelay,m_lastValidUntil;
@@ -91,6 +96,7 @@ namespace opensaml {
             return new XMLMetadataProvider(e);
         }
 
+        static const XMLCh discoveryFeed[] =        UNICODE_LITERAL_13(d,i,s,c,o,v,e,r,y,F,e,e,d);
         static const XMLCh minRefreshDelay[] =      UNICODE_LITERAL_15(m,i,n,R,e,f,r,e,s,h,D,e,l,a,y);
         static const XMLCh refreshDelayFactor[] =   UNICODE_LITERAL_18(r,e,f,r,e,s,h,D,e,l,a,y,F,a,c,t,o,r);
     };
@@ -102,7 +108,8 @@ namespace opensaml {
 
 XMLMetadataProvider::XMLMetadataProvider(const DOMElement* e)
     : AbstractMetadataProvider(e), ReloadableXMLFile(e, Category::getInstance(SAML_LOGCAT".MetadataProvider.XML"), false),
-        m_object(nullptr), m_refreshDelayFactor(0.75), m_backoffFactor(1),
+        m_object(nullptr), m_discoveryFeed(XMLHelper::getAttrBool(e, true, discoveryFeed)),
+        m_refreshDelayFactor(0.75), m_backoffFactor(1),
         m_minRefreshDelay(XMLHelper::getAttrInt(e, 600, minRefreshDelay)),
         m_maxRefreshDelay(m_reloadInterval), m_lastValidUntil(SAMLTIME_MAX)
 {
@@ -200,6 +207,8 @@ pair<bool,DOMElement*> XMLMetadataProvider::load(bool backup)
     m_object = xmlObject.release();
     m_lastValidUntil = SAMLTIME_MAX;
     index(m_lastValidUntil);
+    if (m_discoveryFeed)
+        generateFeed();
     if (changed)
         emitChangeEvent();
 
@@ -252,17 +261,6 @@ pair<bool,DOMElement*> XMLMetadataProvider::background_load()
     }
 }
 
-void XMLMetadataProvider::index(time_t& validUntil)
-{
-    clearDescriptorIndex();
-    EntitiesDescriptor* group=dynamic_cast<EntitiesDescriptor*>(m_object);
-    if (group) {
-        indexGroup(group, validUntil);
-        return;
-    }
-    indexEntity(dynamic_cast<EntityDescriptor*>(m_object), validUntil);
-}
-
 time_t XMLMetadataProvider::computeNextRefresh()
 {
     time_t now = time(nullptr);
@@ -289,4 +287,15 @@ time_t XMLMetadataProvider::computeNextRefresh()
 
         return ret;
     }
+}
+
+void XMLMetadataProvider::index(time_t& validUntil)
+{
+    clearDescriptorIndex();
+    EntitiesDescriptor* group=dynamic_cast<EntitiesDescriptor*>(m_object);
+    if (group) {
+        indexGroup(group, validUntil);
+        return;
+    }
+    indexEntity(dynamic_cast<EntityDescriptor*>(m_object), validUntil);
 }

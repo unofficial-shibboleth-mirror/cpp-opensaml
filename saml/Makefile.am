@@ -84,6 +84,7 @@ saml2bindinclude_HEADERS = \
 	
 saml2mdinclude_HEADERS = \
 	saml2/metadata/AbstractMetadataProvider.h \
+	saml2/metadata/DiscoverableMetadataProvider.h \
 	saml2/metadata/DynamicMetadataProvider.h \
 	saml2/metadata/EndpointManager.h \
 	saml2/metadata/Metadata.h \
@@ -142,6 +143,7 @@ libsaml_la_SOURCES = \
 	saml2/metadata/impl/AbstractMetadataProvider.cpp \
 	saml2/metadata/impl/BlacklistMetadataFilter.cpp \
 	saml2/metadata/impl/ChainingMetadataProvider.cpp \
+	saml2/metadata/impl/DiscoverableMetadataProvider.cpp \
 	saml2/metadata/impl/DynamicMetadataProvider.cpp \
 	saml2/metadata/impl/EntityRoleMetadataFilter.cpp \
 	saml2/metadata/impl/MetadataCredentialContext.cpp \

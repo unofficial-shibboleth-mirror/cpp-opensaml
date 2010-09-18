@@ -53,7 +53,7 @@ BEGIN
 #else
             VALUE "InternalName", "saml2_4\0"
 #endif
-            VALUE "LegalCopyright", "Copyright © 2009 Internet2\0"
+            VALUE "LegalCopyright", "Copyright © 2010 Internet2\0"
             VALUE "LegalTrademarks", "\0"
 #ifdef _DEBUG
             VALUE "OriginalFilename", "saml2_4D.dll\0"

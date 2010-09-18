@@ -24,6 +24,7 @@
 #include "exceptions.h"
 #include "saml/binding/SAMLArtifact.h"
 #include "saml2/metadata/Metadata.h"
+#include "saml2/metadata/DiscoverableMetadataProvider.h"
 #include "saml2/metadata/ObservableMetadataProvider.h"
 #include "saml2/metadata/MetadataCredentialCriteria.h"
 
@@ -48,7 +49,7 @@ namespace opensaml {
         struct SAML_DLLLOCAL tracker_t;
         
         class SAML_DLLLOCAL ChainingMetadataProvider
-            : public ObservableMetadataProvider, public ObservableMetadataProvider::Observer {
+            : public DiscoverableMetadataProvider, public ObservableMetadataProvider, public ObservableMetadataProvider::Observer {
         public:
             ChainingMetadataProvider(const xercesc::DOMElement* e=nullptr);
             virtual ~ChainingMetadataProvider();
@@ -62,10 +63,41 @@ namespace opensaml {
             const XMLObject* getMetadata() const;
             const EntitiesDescriptor* getEntitiesDescriptor(const char* name, bool requireValidMetadata=true) const;
             pair<const EntityDescriptor*,const RoleDescriptor*> getEntityDescriptor(const Criteria& criteria) const;
-            void onEvent(const ObservableMetadataProvider& provider) const;
     
             const Credential* resolve(const CredentialCriteria* criteria=nullptr) const;
             vector<const Credential*>::size_type resolve(vector<const Credential*>& results, const CredentialCriteria* criteria=nullptr) const;
+
+            string getCacheTag() const {
+                Lock lock(m_trackerLock);
+                return m_feedTag;
+            }
+
+            ostream& outputFeed(ostream& os) const {
+                os << "[\n";
+                // Lock each provider in turn and suck in its feed.
+                for (vector<MetadataProvider*>::const_iterator m = m_providers.begin(); m != m_providers.end(); ++m) {
+                    DiscoverableMetadataProvider* d = dynamic_cast<DiscoverableMetadataProvider*>(*m);
+                    if (d) {
+                        Locker locker(d);
+                        d->outputFeed(os);
+                    }
+                }
+                os << "]\n";
+                return os;
+            }
+
+            void onEvent(const ObservableMetadataProvider& provider) const {
+                // Reset the cache tag for the feed.
+                Lock lock(m_trackerLock);
+                SAMLConfig::getConfig().generateRandomBytes(m_feedTag, 4);
+                m_feedTag = SAMLArtifact::toHex(m_feedTag);
+                emitChangeEvent();
+            }
+
+        protected:
+            void generateFeed() {
+                // No-op.
+            }
 
         private:
             bool m_firstMatch;
@@ -171,11 +203,6 @@ ChainingMetadataProvider::~ChainingMetadataProvider()
     for_each(m_providers.begin(), m_providers.end(), xmltooling::cleanup<MetadataProvider>());
 }
 
-void ChainingMetadataProvider::onEvent(const ObservableMetadataProvider& provider) const
-{
-    emitChangeEvent();
-}
-
 void ChainingMetadataProvider::init()
 {
     for (vector<MetadataProvider*>::const_iterator i=m_providers.begin(); i!=m_providers.end(); ++i) {
@@ -186,6 +213,10 @@ void ChainingMetadataProvider::init()
             m_log.crit("failure initializing MetadataProvider: %s", ex.what());
         }
     }
+
+    // Set an initial cache tag for the state of the plugins.
+    SAMLConfig::getConfig().generateRandomBytes(m_feedTag, 4);
+    m_feedTag = SAMLArtifact::toHex(m_feedTag);
 }
 
 Lockable* ChainingMetadataProvider::lock()
