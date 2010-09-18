@@ -40,7 +40,7 @@ namespace opensaml {
         /**
          * A metadata provider that notifies interested parties of changes.
          */
-        class SAML_API ObservableMetadataProvider : public MetadataProvider
+        class SAML_API ObservableMetadataProvider : public virtual MetadataProvider
         {
         protected:
             /**
