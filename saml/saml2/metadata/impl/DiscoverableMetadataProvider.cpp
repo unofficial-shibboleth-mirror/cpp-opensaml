@@ -40,7 +40,7 @@ namespace {
             if (!idps.empty()) {
                 auto_ptr_char entityid(entity->getEntityID());
                 // Open a struct and output id: entityID.
-                s += "{\n \"id\": \"";
+                s += "{\n \"entityID\": \"";
                 s += entityid.get();
                 s += '\"';
                 for (vector<IDPSSODescriptor*>::const_iterator idp = idps.begin(); idp != idps.end(); ++idp) {
@@ -51,13 +51,13 @@ namespace {
                             if (info) {
                                 const vector<DisplayName*>& dispnames = info->getDisplayNames();
                                 if (!dispnames.empty()) {
-                                    s += ",\n \"names\": [";
+                                    s += ",\n \"DisplayNames\": [";
                                     for (vector<DisplayName*>::const_iterator dispname = dispnames.begin(); dispname != dispnames.end(); ++dispname) {
                                         if (dispname != dispnames.begin())
                                             s += ',';
                                         auto_ptr_char dn((*dispname)->getName());
                                         auto_ptr_char lang((*dispname)->getLang());
-                                        s += "\n  {\n  \"name\": \"";
+                                        s += "\n  {\n  \"value\": \"";
                                         s += dn.get();
                                         s += "\",\n  \"lang\": \"";
                                         s += lang.get();
@@ -68,13 +68,13 @@ namespace {
 
                                 const vector<Description*>& descs = info->getDescriptions();
                                 if (!descs.empty()) {
-                                    s += ",\n \"descs\": [";
+                                    s += ",\n \"Descriptions\": [";
                                     for (vector<Description*>::const_iterator desc = descs.begin(); desc != descs.end(); ++desc) {
                                         if (desc != descs.begin())
                                             s += ',';
                                         auto_ptr_char d((*desc)->getDescription());
                                         auto_ptr_char lang((*desc)->getLang());
-                                        s += "\n  {\n  \"desc\": \"";
+                                        s += "\n  {\n  \"value\": \"";
                                         s += d.get();
                                         s += "\",\n  \"lang\": \"";
                                         s += lang.get();
@@ -85,13 +85,13 @@ namespace {
 
                                 const vector<InformationURL*>& infurls = info->getInformationURLs();
                                 if (!infurls.empty()) {
-                                    s += ",\n \"infolinks\": [";
+                                    s += ",\n \"InformationURLs\": [";
                                     for (vector<InformationURL*>::const_iterator infurl = infurls.begin(); infurl != infurls.end(); ++infurl) {
                                         if (infurl != infurls.begin())
                                             s += ',';
                                         auto_ptr_char iu((*infurl)->getURL());
                                         auto_ptr_char lang((*infurl)->getLang());
-                                        s += "\n  {\n  \"url\": \"";
+                                        s += "\n  {\n  \"value\": \"";
                                         s += iu.get();
                                         s += "\",\n  \"lang\": \"";
                                         s += lang.get();
@@ -102,13 +102,13 @@ namespace {
 
                                 const vector<PrivacyStatementURL*>& privs = info->getPrivacyStatementURLs();
                                 if (!privs.empty()) {
-                                    s += ",\n \"privlinks\": [";
+                                    s += ",\n \"PrivacyStatementURLs\": [";
                                     for (vector<PrivacyStatementURL*>::const_iterator priv = privs.begin(); priv != privs.end(); ++priv) {
                                         if (priv != privs.begin())
                                             s += ',';
                                         auto_ptr_char pu((*priv)->getURL());
                                         auto_ptr_char lang((*priv)->getLang());
-                                        s += "\n  {\n  \"url\": \"";
+                                        s += "\n  {\n  \"value\": \"";
                                         s += pu.get();
                                         s += "\",\n  \"lang\": \"";
                                         s += lang.get();
@@ -119,13 +119,13 @@ namespace {
 
                                 const vector<Logo*>& logos = info->getLogos();
                                 if (!logos.empty()) {
-                                    s += ",\n \"logos\": [";
+                                    s += ",\n \"Logos\": [";
                                     for (vector<Logo*>::const_iterator logo = logos.begin(); logo != logos.end(); ++logo) {
                                         if (logo != logos.begin())
                                             s += ',';
                                         s += "\n  {\n";
                                         auto_ptr_char imgsrc((*logo)->getURL());
-                                        s += "  \"imgsrc\": \"";
+                                        s += "  \"value\": \"";
                                         s += imgsrc.get();
                                         s += "\",\n  \"height\": \"";
                                         s += (*logo)->getHeight().second;
