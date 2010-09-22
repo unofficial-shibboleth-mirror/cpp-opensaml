@@ -34,12 +34,16 @@ using namespace xmltooling;
 using namespace std;
 
 namespace {
-    void disco(string& s, const EntityDescriptor* entity) {
+    void disco(string& s, const EntityDescriptor* entity, bool first) {
         if (entity) {
             const vector<IDPSSODescriptor*>& idps = entity->getIDPSSODescriptors();
             if (!idps.empty()) {
                 auto_ptr_char entityid(entity->getEntityID());
                 // Open a struct and output id: entityID.
+                if (first)
+                    first = false;
+                else
+                    s += ",\n";
                 s += "{\n \"entityID\": \"";
                 s += entityid.get();
                 s += '\"';
@@ -147,20 +151,20 @@ namespace {
                     }
                 }
                 // Close the struct;
-                s += "\n},\n";
+                s += "\n}";
             }
         }
     }
 
-    void disco(string& s, const EntitiesDescriptor* group) {
+    void disco(string& s, const EntitiesDescriptor* group, bool first) {
         if (group) {
             const vector<EntitiesDescriptor*>& groups = group->getEntitiesDescriptors();
             for (vector<EntitiesDescriptor*>::const_iterator i = groups.begin(); i != groups.end(); ++i)
-                disco(s, *i);
+                disco(s, *i, first);
 
             const vector<EntityDescriptor*>& sites = group->getEntityDescriptors();
             for (vector<EntityDescriptor*>::const_iterator j = sites.begin(); j != sites.end(); ++j)
-                disco(s, *j);
+                disco(s, *j, first);
         }
     }
 }
@@ -175,11 +179,12 @@ DiscoverableMetadataProvider::~DiscoverableMetadataProvider()
 
 void DiscoverableMetadataProvider::generateFeed()
 {
+    bool first = true;
     m_feed = "[\n";
     const XMLObject* object = getMetadata();
-    disco(m_feed, dynamic_cast<const EntitiesDescriptor*>(object));
-    disco(m_feed, dynamic_cast<const EntityDescriptor*>(object));
-    m_feed += " { }\n]\n";
+    disco(m_feed, dynamic_cast<const EntitiesDescriptor*>(object), first);
+    disco(m_feed, dynamic_cast<const EntityDescriptor*>(object), first);
+    m_feed += "\n]\n";
 
     SAMLConfig::getConfig().generateRandomBytes(m_feedTag, 4);
     m_feedTag = SAMLArtifact::toHex(m_feedTag);
