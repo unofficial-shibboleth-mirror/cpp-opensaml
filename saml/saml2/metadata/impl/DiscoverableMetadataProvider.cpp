@@ -26,6 +26,7 @@
 #include "saml2/metadata/DiscoverableMetadataProvider.h"
 
 #include <fstream>
+#include <sstream>
 #include <xmltooling/logging.h>
 #include <xmltooling/XMLToolingConfig.h>
 
@@ -43,8 +44,8 @@ namespace {
                 if (first)
                     first = false;
                 else
-                    s += ",\n";
-                s += "{\n \"entityID\": \"";
+                    s += ',';
+                s += "\n{\n \"entityID\": \"";
                 s += entityid.get();
                 s += '\"';
                 for (vector<IDPSSODescriptor*>::const_iterator idp = idps.begin(); idp != idps.end(); ++idp) {
@@ -59,10 +60,10 @@ namespace {
                                     for (vector<DisplayName*>::const_iterator dispname = dispnames.begin(); dispname != dispnames.end(); ++dispname) {
                                         if (dispname != dispnames.begin())
                                             s += ',';
-                                        auto_ptr_char dn((*dispname)->getName());
+                                        auto_ptr_char val((*dispname)->getName());
                                         auto_ptr_char lang((*dispname)->getLang());
                                         s += "\n  {\n  \"value\": \"";
-                                        s += dn.get();
+                                        s += val.get();
                                         s += "\",\n  \"lang\": \"";
                                         s += lang.get();
                                         s += "\"\n  }";
@@ -76,10 +77,10 @@ namespace {
                                     for (vector<Description*>::const_iterator desc = descs.begin(); desc != descs.end(); ++desc) {
                                         if (desc != descs.begin())
                                             s += ',';
-                                        auto_ptr_char d((*desc)->getDescription());
+                                        auto_ptr_char val((*desc)->getDescription());
                                         auto_ptr_char lang((*desc)->getLang());
                                         s += "\n  {\n  \"value\": \"";
-                                        s += d.get();
+                                        s += val.get();
                                         s += "\",\n  \"lang\": \"";
                                         s += lang.get();
                                         s += "\"\n  }";
@@ -93,10 +94,10 @@ namespace {
                                     for (vector<InformationURL*>::const_iterator infurl = infurls.begin(); infurl != infurls.end(); ++infurl) {
                                         if (infurl != infurls.begin())
                                             s += ',';
-                                        auto_ptr_char iu((*infurl)->getURL());
+                                        auto_ptr_char val((*infurl)->getURL());
                                         auto_ptr_char lang((*infurl)->getLang());
                                         s += "\n  {\n  \"value\": \"";
-                                        s += iu.get();
+                                        s += val.get();
                                         s += "\",\n  \"lang\": \"";
                                         s += lang.get();
                                         s += "\"\n  }";
@@ -110,10 +111,10 @@ namespace {
                                     for (vector<PrivacyStatementURL*>::const_iterator priv = privs.begin(); priv != privs.end(); ++priv) {
                                         if (priv != privs.begin())
                                             s += ',';
-                                        auto_ptr_char pu((*priv)->getURL());
+                                        auto_ptr_char val((*priv)->getURL());
                                         auto_ptr_char lang((*priv)->getLang());
                                         s += "\n  {\n  \"value\": \"";
-                                        s += pu.get();
+                                        s += val.get();
                                         s += "\",\n  \"lang\": \"";
                                         s += lang.get();
                                         s += "\"\n  }";
@@ -128,13 +129,17 @@ namespace {
                                         if (logo != logos.begin())
                                             s += ',';
                                         s += "\n  {\n";
-                                        auto_ptr_char imgsrc((*logo)->getURL());
+                                        auto_ptr_char val((*logo)->getURL());
                                         s += "  \"value\": \"";
-                                        s += imgsrc.get();
+                                        s += val.get();
+                                        ostringstream ht;
+                                        ht << (*logo)->getHeight().second;
                                         s += "\",\n  \"height\": \"";
-                                        s += (*logo)->getHeight().second;
+                                        s += ht.str();
+                                        ht.clear();
+                                        ht << (*logo)->getWidth().second;
                                         s += "\",\n  \"width\": \"";
-                                        s += (*logo)->getWidth().second;
+                                        s += ht.str();
                                         s += '\"';
                                         if ((*logo)->getLang()) {
                                             auto_ptr_char lang((*logo)->getLang());
@@ -180,7 +185,7 @@ DiscoverableMetadataProvider::~DiscoverableMetadataProvider()
 void DiscoverableMetadataProvider::generateFeed()
 {
     bool first = true;
-    m_feed = "[\n";
+    m_feed = "[";
     const XMLObject* object = getMetadata();
     disco(m_feed, dynamic_cast<const EntitiesDescriptor*>(object), first);
     disco(m_feed, dynamic_cast<const EntityDescriptor*>(object), first);
