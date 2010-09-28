@@ -35,7 +35,7 @@ using namespace xmltooling;
 using namespace std;
 
 namespace {
-    void disco(string& s, const EntityDescriptor* entity, bool first) {
+    void disco(string& s, const EntityDescriptor* entity, bool& first) {
         if (entity) {
             const vector<IDPSSODescriptor*>& idps = entity->getIDPSSODescriptors();
             if (!idps.empty()) {
@@ -161,7 +161,7 @@ namespace {
         }
     }
 
-    void disco(string& s, const EntitiesDescriptor* group, bool first) {
+    void disco(string& s, const EntitiesDescriptor* group, bool& first) {
         if (group) {
             const vector<EntitiesDescriptor*>& groups = group->getEntitiesDescriptors();
             for (vector<EntitiesDescriptor*>::const_iterator i = groups.begin(); i != groups.end(); ++i)
@@ -189,7 +189,7 @@ void DiscoverableMetadataProvider::generateFeed()
     const XMLObject* object = getMetadata();
     disco(m_feed, dynamic_cast<const EntitiesDescriptor*>(object), first);
     disco(m_feed, dynamic_cast<const EntityDescriptor*>(object), first);
-    m_feed += "\n]\n";
+    m_feed += "\n]";
 
     SAMLConfig::getConfig().generateRandomBytes(m_feedTag, 4);
     m_feedTag = SAMLArtifact::toHex(m_feedTag);

@@ -76,13 +76,15 @@ namespace opensaml {
                 os << "[\n";
                 // Lock each provider in turn and suck in its feed.
                 for (vector<MetadataProvider*>::const_iterator m = m_providers.begin(); m != m_providers.end(); ++m) {
+                    if (m != m_providers.begin())
+                        os << ",\n";
                     DiscoverableMetadataProvider* d = dynamic_cast<DiscoverableMetadataProvider*>(*m);
                     if (d) {
                         Locker locker(d);
                         d->outputFeed(os);
                     }
                 }
-                os << "]\n";
+                os << ']';
                 return os;
             }
 
