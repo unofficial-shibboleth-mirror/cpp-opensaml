@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2009 Internet2
+ *  Copyright 2001-2010 Internet2
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@
 #include <xercesc/util/XercesDefs.hpp>
 
 /**
- * SAML related constants.
+ * SAML-related constants.
  */
 namespace samlconstants {
 
@@ -153,6 +153,18 @@ namespace samlconstants {
 
     /** SAML Condition for Delegation Restriction QName prefix ("del") */
     extern SAML_API const XMLCh SAML20_DELEGATION_CONDITION_PREFIX[];
+
+    /** Identity Provider Discovery Protocol and Profile XML Namespace ("urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol") */
+    extern SAML_API const XMLCh IDP_DISCOVERY_PROTOCOL_NS[];
+
+    /** Identity Provider Discovery Protocol and Profile QName prefix ("idpdisc") */
+    extern SAML_API const XMLCh IDP_DISCOVERY_PROTOCOL_PREFIX[];
+
+    /** Service Provider Request Initiation Protocol and Profile XML Namespace ("urn:oasis:names:tc:SAML:profiles:SSO:request-init") */
+    extern SAML_API const XMLCh SP_REQUEST_INIT_NS[];
+
+    /** Service Provider Request Initiation Protocol and Profile QName prefix ("init") */
+    extern SAML_API const XMLCh SP_REQUEST_INIT_PREFIX[];
 
     /** SAML 1.x SOAP binding ("urn:oasis:names:tc:SAML:1.0:bindings:SOAP-binding") */
     extern SAML_API const char SAML1_BINDING_SOAP[];

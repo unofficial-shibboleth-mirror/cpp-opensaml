@@ -48,6 +48,8 @@ schemafiles = \
 	sstc-saml-metadata-ext-query.xsd \
 	sstc-saml-metadata-algsupport.xsd \
 	sstc-saml-metadata-ui.xsd \
+	sstc-saml-idp-discovery.xsd \
+	sstc-request-initiation.xsd \
 	sstc-saml-protocol-ext-thirdparty.xsd
 
 pkgxml_DATA = \

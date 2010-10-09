@@ -2463,6 +2463,41 @@ namespace opensaml {
             }
         };
 
+        class SAML_DLLLOCAL DiscoveryResponseImpl : public virtual DiscoveryResponse, public IndexedEndpointTypeImpl
+        {
+        public:
+            virtual ~DiscoveryResponseImpl() {}
+
+            DiscoveryResponseImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {}
+
+            DiscoveryResponseImpl(const DiscoveryResponseImpl& src) : AbstractXMLObject(src), IndexedEndpointTypeImpl(src) {}
+
+            IMPL_XMLOBJECT_CLONE(DiscoveryResponse);
+            IndexedEndpointType* cloneIndexedEndpointType() const {
+                return new DiscoveryResponseImpl(*this);
+            }
+            EndpointType* cloneEndpointType() const {
+                return new DiscoveryResponseImpl(*this);
+            }
+        };
+
+        class SAML_DLLLOCAL RequestInitiatorImpl : public virtual RequestInitiator, public EndpointTypeImpl
+        {
+        public:
+            virtual ~RequestInitiatorImpl() {}
+
+            RequestInitiatorImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {}
+
+            RequestInitiatorImpl(const RequestInitiatorImpl& src) : AbstractXMLObject(src), EndpointTypeImpl(src) {}
+
+            IMPL_XMLOBJECT_CLONE(RequestInitiator);
+            EndpointType* cloneEndpointType() const {
+                return new RequestInitiatorImpl(*this);
+            }
+        };
+
         class SAML_DLLLOCAL EntityAttributesImpl : public virtual EntityAttributes,
             public AbstractComplexElement,
             public AbstractDOMCachingXMLObject,
@@ -2953,6 +2988,8 @@ IMPL_XMLOBJECTBUILDER(TelephoneNumber);
 
 IMPL_XMLOBJECTBUILDER(ActionNamespace);
 IMPL_XMLOBJECTBUILDER(SourceID);
+IMPL_XMLOBJECTBUILDER(DiscoveryResponse);
+IMPL_XMLOBJECTBUILDER(RequestInitiator);
 IMPL_XMLOBJECTBUILDER(EntityAttributes);
 IMPL_XMLOBJECTBUILDER(DigestMethod);
 IMPL_XMLOBJECTBUILDER(SigningMethod);
@@ -3119,6 +3156,7 @@ const XMLCh DigestMethod::TYPE_NAME[] =                 UNICODE_LITERAL_16(D,i,g
 const XMLCh DigestMethod::ALGORITHM_ATTRIB_NAME[] =     UNICODE_LITERAL_9(A,l,g,o,r,i,t,h,m);
 const XMLCh DiscoHints::LOCAL_NAME[] =                  UNICODE_LITERAL_10(D,i,s,c,o,H,i,n,t,s);
 const XMLCh DiscoHints::TYPE_NAME[] =                   UNICODE_LITERAL_14(D,i,s,c,o,H,i,n,t,s,T,y,p,e);
+const XMLCh DiscoveryResponse::LOCAL_NAME[] =           UNICODE_LITERAL_17(D,i,s,c,o,v,e,r,y,R,e,s,p,o,n,s,e);
 const XMLCh DisplayName::LOCAL_NAME[] =                 UNICODE_LITERAL_11(D,i,s,p,l,a,y,N,a,m,e);
 const XMLCh DomainHint::LOCAL_NAME[] =                  UNICODE_LITERAL_10(D,o,m,a,i,n,H,i,n,t);
 const XMLCh EmailAddress::LOCAL_NAME[] =                UNICODE_LITERAL_12(E,m,a,i,l,A,d,d,r,e,s,s);
@@ -3183,6 +3221,7 @@ const XMLCh QueryDescriptorType::WANTASSERTIONSSIGNED_ATTRIB_NAME[] =   UNICODE_
 const XMLCh RequestedAttribute::LOCAL_NAME[] =          UNICODE_LITERAL_18(R,e,q,u,e,s,t,e,d,A,t,t,r,i,b,u,t,e);
 const XMLCh RequestedAttribute::TYPE_NAME[] =           UNICODE_LITERAL_22(R,e,q,u,e,s,t,e,d,A,t,t,r,i,b,u,t,e,T,y,p,e);
 const XMLCh RequestedAttribute::ISREQUIRED_ATTRIB_NAME[] =  UNICODE_LITERAL_10(i,s,R,e,q,u,i,r,e,d);
+const XMLCh RequestInitiator::LOCAL_NAME[] =            UNICODE_LITERAL_16(R,e,q,u,e,s,t,I,n,i,t,i,a,t,o,r);
 const XMLCh RoleDescriptor::LOCAL_NAME[] =              UNICODE_LITERAL_14(R,o,l,e,D,e,s,c,r,i,p,t,o,r);
 const XMLCh RoleDescriptor::ID_ATTRIB_NAME[] =          UNICODE_LITERAL_2(I,D);
 const XMLCh RoleDescriptor::PROTOCOLSUPPORTENUMERATION_ATTRIB_NAME[] =  UNICODE_LITERAL_26(p,r,o,t,o,c,o,l,S,u,p,p,o,r,t,E,n,u,m,e,r,a,t,i,o,n);

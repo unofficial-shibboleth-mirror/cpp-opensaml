@@ -405,6 +405,12 @@ namespace opensaml {
 
         DECL_XMLOBJECT_SIMPLE(SAML_API,SourceID,ID,SAML 1.x Metadata Profile SourceID element);
 
+        BEGIN_XMLOBJECT(SAML_API,DiscoveryResponse,IndexedEndpointType,Identity Provider Discovery Protocol DiscoveryResponse element);
+        END_XMLOBJECT;
+
+        BEGIN_XMLOBJECT(SAML_API,RequestInitiator,EndpointType,Service Provider Request Initiation RequestInitiator element);
+        END_XMLOBJECT;
+
         BEGIN_XMLOBJECT(SAML_API,EntityAttributes,xmltooling::XMLObject,SAML Metadata Extension for Entity Attributes element);
             DECL_TYPED_FOREIGN_CHILDREN(Attribute,saml2);
             DECL_TYPED_FOREIGN_CHILDREN(Assertion,saml2);
@@ -570,6 +576,8 @@ namespace opensaml {
 
         DECL_XMLOBJECTBUILDER(SAML_API,ActionNamespace,samlconstants::SAML20MD_QUERY_EXT_NS,samlconstants::SAML20MD_QUERY_EXT_PREFIX);
         DECL_XMLOBJECTBUILDER(SAML_API,SourceID,samlconstants::SAML1MD_NS,samlconstants::SAML1MD_PREFIX);
+        DECL_XMLOBJECTBUILDER(SAML_API,DiscoveryResponse,samlconstants::SP_REQUEST_INIT_NS,samlconstants::SP_REQUEST_INIT_PREFIX);
+        DECL_XMLOBJECTBUILDER(SAML_API,RequestInitiator,samlconstants::IDP_DISCOVERY_PROTOCOL_NS,samlconstants::IDP_DISCOVERY_PROTOCOL_PREFIX);
         DECL_XMLOBJECTBUILDER(SAML_API,EntityAttributes,samlconstants::SAML20MD_ENTITY_ATTRIBUTE_NS,samlconstants::SAML20MD_ENTITY_ATTRIBUTE_PREFIX);
         DECL_XMLOBJECTBUILDER(SAML_API,DigestMethod,samlconstants::SAML20MD_ALGSUPPORT_NS,samlconstants::SAML20MD_ALGSUPPORT_PREFIX);
         DECL_XMLOBJECTBUILDER(SAML_API,SigningMethod,samlconstants::SAML20MD_ALGSUPPORT_NS,samlconstants::SAML20MD_ALGSUPPORT_PREFIX);
