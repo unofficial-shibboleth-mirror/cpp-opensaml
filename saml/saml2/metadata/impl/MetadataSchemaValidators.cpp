@@ -38,6 +38,9 @@ using samlconstants::SAML20MD_QUERY_EXT_NS;
 using samlconstants::SAML20MD_ALGSUPPORT_NS;
 using samlconstants::SAML20MD_ENTITY_ATTRIBUTE_NS;
 using samlconstants::SAML20MD_UI_NS;
+using samlconstants::SAML1MD_NS;
+using samlconstants::IDP_DISCOVERY_PROTOCOL_NS;
+using samlconstants::SP_REQUEST_INIT_NS;
 
 namespace opensaml {
     namespace saml2md {
@@ -259,6 +262,14 @@ namespace opensaml {
 
         XMLOBJECTVALIDATOR_SIMPLE(SAML_DLLLOCAL,SourceID);
 
+        BEGIN_XMLOBJECTVALIDATOR_SUB(SAML_DLLLOCAL,DiscoveryResponse,IndexedEndpointType);
+            IndexedEndpointTypeSchemaValidator::validate(xmlObject);
+        END_XMLOBJECTVALIDATOR;
+
+        BEGIN_XMLOBJECTVALIDATOR_SUB(SAML_DLLLOCAL,RequestInitiator,EndpointType);
+            EndpointTypeSchemaValidator::validate(xmlObject);
+        END_XMLOBJECTVALIDATOR;
+
         BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,EntityAttributes);
             if (!ptr->hasChildren())
                 throw ValidationException("EntityAttributes must contain at least one child element.");
@@ -396,9 +407,17 @@ void opensaml::saml2md::registerMetadataClasses() {
     q=xmltooling::QName(SAML20MD_NS,xmlencryption::EncryptionMethod::LOCAL_NAME);
     XMLObjectBuilder::registerBuilder(q,new xmlencryption::EncryptionMethodBuilder());
 
-    q=xmltooling::QName(samlconstants::SAML1MD_NS,SourceID::LOCAL_NAME);
+    q=xmltooling::QName(SAML1MD_NS,SourceID::LOCAL_NAME);
     XMLObjectBuilder::registerBuilder(q,new SourceIDBuilder());
     SchemaValidators.registerValidator(q,new SourceIDSchemaValidator());
+
+    q=xmltooling::QName(IDP_DISCOVERY_PROTOCOL_NS,DiscoveryResponse::LOCAL_NAME);
+    XMLObjectBuilder::registerBuilder(q,new DiscoveryResponseBuilder());
+    SchemaValidators.registerValidator(q,new DiscoveryResponseSchemaValidator());
+
+    q=xmltooling::QName(SP_REQUEST_INIT_NS,RequestInitiator::LOCAL_NAME);
+    XMLObjectBuilder::registerBuilder(q,new RequestInitiatorBuilder());
+    SchemaValidators.registerValidator(q,new RequestInitiatorSchemaValidator());
 
     q=xmltooling::QName(SAML20MD_QUERY_EXT_NS,ActionNamespace::LOCAL_NAME);
     XMLObjectBuilder::registerBuilder(q,new ActionNamespaceBuilder());
