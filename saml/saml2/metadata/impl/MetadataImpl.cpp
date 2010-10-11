@@ -117,9 +117,11 @@ namespace opensaml {
         protected:
             void marshallAttributes(DOMElement* domElement) const {
                 if (m_Lang && *m_Lang) {
-                    DOMAttr* attr=domElement->getOwnerDocument()->createAttributeNS(xmlconstants::XML_NS,LANG_ATTRIB_NAME);
+                    DOMAttr* attr=domElement->getOwnerDocument()->createAttributeNS(xmlconstants::XML_NS, LANG_ATTRIB_NAME);
                     if (m_LangPrefix && *m_LangPrefix)
                         attr->setPrefix(m_LangPrefix);
+                    else
+                        attr->setPrefix(xmlconstants::XML_PREFIX);
                     attr->setNodeValue(m_Lang);
                     domElement->setAttributeNodeNS(attr);
                 }
@@ -178,9 +180,11 @@ namespace opensaml {
         protected:
             void marshallAttributes(DOMElement* domElement) const {
                 if (m_Lang && *m_Lang) {
-                    DOMAttr* attr=domElement->getOwnerDocument()->createAttributeNS(xmlconstants::XML_NS,LANG_ATTRIB_NAME);
+                    DOMAttr* attr=domElement->getOwnerDocument()->createAttributeNS(xmlconstants::XML_NS, LANG_ATTRIB_NAME);
                     if (m_LangPrefix && *m_LangPrefix)
                         attr->setPrefix(m_LangPrefix);
+                    else
+                        attr->setPrefix(xmlconstants::XML_PREFIX);
                     attr->setNodeValue(m_Lang);
                     domElement->setAttributeNodeNS(attr);
                 }
@@ -2756,9 +2760,11 @@ namespace opensaml {
         protected:
             void marshallAttributes(DOMElement* domElement) const {
                 if (m_Lang && *m_Lang) {
-                    DOMAttr* attr=domElement->getOwnerDocument()->createAttributeNS(xmlconstants::XML_NS,LANG_ATTRIB_NAME);
+                    DOMAttr* attr=domElement->getOwnerDocument()->createAttributeNS(xmlconstants::XML_NS, LANG_ATTRIB_NAME);
                     if (m_LangPrefix && *m_LangPrefix)
                         attr->setPrefix(m_LangPrefix);
+                    else
+                        attr->setPrefix(xmlconstants::XML_PREFIX);
                     attr->setNodeValue(m_Lang);
                     domElement->setAttributeNodeNS(attr);
                 }
