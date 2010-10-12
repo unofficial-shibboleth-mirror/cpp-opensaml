@@ -19,7 +19,7 @@ DX_INIT_DOXYGEN(opensaml, doxygen.cfg, doc/api)
 DX_INCLUDE=
 
 AC_ARG_ENABLE(debug,
-    AC_HELP_STRING(--enable-debug, [Have GCC compile with symbols (Default = no)]),
+    AS_HELP_STRING([--enable-debug],[Have GCC compile with symbols (Default = no)]),
     enable_debug=$enableval, enable_debug=no)
 
 if test "$enable_debug" = "yes" ; then
