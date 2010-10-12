@@ -1,11 +1,10 @@
 AC_PREREQ([2.50])
-AC_INIT([opensaml], [2.4], [mace-opensaml-users@internet2.edu], [saml])
-AM_CONFIG_HEADER(config.h)
-AM_INIT_AUTOMAKE([opensaml], [2.4])
-
-sinclude(doxygen.m4)
-sinclude(acx_pthread.m4)
-sinclude(ax_create_pkgconfig_info.m4)
+AC_INIT([opensaml],[2.4],[https://bugs.internet2.edu/],[saml])
+AC_CONFIG_SRCDIR(saml)
+AC_CONFIG_AUX_DIR(build-aux)
+AC_CONFIG_MACRO_DIR(m4)
+AM_INIT_AUTOMAKE
+LT_INIT
 
 # Docygen features
 DX_HTML_FEATURE(ON)
@@ -31,8 +30,13 @@ else
     GCC_CXXFLAGS="$CXXFLAGS -Wall -O2 -DNDEBUG"
 fi
 
+AC_CONFIG_HEADERS([config.h])
+AC_CONFIG_FILES([opensaml.spec pkginfo Portfile])
+AC_CONFIG_FILES([Makefile saml/Makefile samltest/Makefile samlsign/Makefile schemas/Makefile doc/Makefile])
+
 AC_PROG_CC([gcc gcc3 cc])
 AC_PROG_CXX([g++ g++3 c++ CC])
+AC_DISABLE_STATIC
 AC_CANONICAL_HOST
 
 if test "$GCC" = "yes" ; then
@@ -56,9 +60,6 @@ else
 	esac
 fi
 
-AC_DISABLE_STATIC
-AC_PROG_LIBTOOL
-
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
 AC_TYPE_SIZE_T
@@ -80,20 +81,20 @@ fi
 
 # zlib settings
 AC_ARG_WITH(zlib,
-	AC_HELP_STRING([--with-zlib=PATH], [where zlib is installed]),
-	[
-		if test -d "$withval"; then
-			CPPFLAGS="${CPPFLAGS} -I$withval/include"
-			LDFLAGS="${LDFLAGS} -L$withval/lib"
-		fi
-	]
+    AS_HELP_STRING([--with-zlib=PATH],[where zlib is installed]),
+    [
+        if test -d "$withval" ; then
+            CPPFLAGS="${CPPFLAGS} -I$withval/include"
+            LDFLAGS="${LDFLAGS} -L$withval/lib"
+        fi
+    ]
 )
 AC_CHECK_HEADER([zlib.h],,AC_MSG_ERROR([unable to find zlib header files]))
 AC_CHECK_LIB([z],[deflateInit2_],,AC_MSG_ERROR([unable to link with zlib library]))
 
 # OpenSSL settings
 AC_ARG_WITH(openssl,
-    AC_HELP_STRING([--with-openssl=PATH], [where openssl is installed]),
+    AS_HELP_STRING([--with-openssl=PATH],[where openssl is installed]),
     [if test x_$with_openssl != x_/usr; then
         SSLFLAGS="-I${with_openssl}/include"
     fi])
@@ -113,72 +114,71 @@ AC_MSG_CHECKING(for OpenSSL cflags)
 AC_MSG_RESULT($SSLFLAGS)
 CPPFLAGS="$SSLFLAGS $CPPFLAGS"
 
-AC_CHECK_HEADER([openssl/x509.h],,
-                AC_MSG_ERROR([unable to find openssl header files]))
+AC_CHECK_HEADER([openssl/x509.h],,AC_MSG_ERROR([unable to find openssl header files]))
 
-AC_LANG(C++)
+AC_LANG([C++])
 
 # C++ requirements
-AC_CXX_REQUIRE_STL
 AC_CXX_NAMESPACES
+AC_CXX_REQUIRE_STL
 
 # log4shib settings (favor this version over the log4cpp code)
 AC_PATH_PROG(LOG4SHIB_CONFIG,log4shib-config)
 AC_ARG_WITH(log4shib,
-    AC_HELP_STRING([--with-log4shib=PATH], [where log4shib-config is installed]),
+    AS_HELP_STRING([--with-log4shib=PATH],[where log4shib-config is installed]),
     [
     LOG4SHIB_CONFIG="${with_log4shib}"
-    if ! test -f "${LOG4SHIB_CONFIG}" ; then
+    if ! test -f "${LOG4SHIB_CONFIG}"; then
     	LOG4SHIB_CONFIG="${with_log4shib}/bin/log4shib-config"
     fi
     ])
-if test -f "${LOG4SHIB_CONFIG}"; then
+if test -f "${LOG4SHIB_CONFIG}" ; then
     LIBS="`${LOG4SHIB_CONFIG} --libs` $LIBS"
     CPPFLAGS="`${LOG4SHIB_CONFIG} --cflags` $CPPFLAGS"
 	AC_CHECK_HEADER([log4shib/CategoryStream.hh],,AC_MSG_ERROR([unable to find log4shib header files]))
-	AC_TRY_LINK(
-		[#include <log4shib/Category.hh>
-#include <log4shib/CategoryStream.hh>],
-		[log4shib::Category::getInstance("foo").errorStream() << log4shib::eol],
-		[AC_DEFINE(OPENSAML_LOG4SHIB,1,[Define if log4shib library is used.])],
-		[AC_MSG_ERROR([unable to link with log4shib])])
+    AC_LINK_IFELSE(
+        [AC_LANG_PROGRAM([[#include <log4shib/Category.hh>
+#include <log4shib/CategoryStream.hh>]],
+            [[log4shib::Category::getInstance("foo").errorStream() << log4shib::eol]])],
+        [AC_DEFINE([OPENSAML_LOG4SHIB],[1],[Define to 1 if log4shib library is used.])],
+        [AC_MSG_ERROR([unable to link with log4shib])])
 else
     AC_MSG_WARN([log4shib-config not found, may need to use --with-log4shib option])
     AC_MSG_WARN([will look for original log4cpp library])
     
-	# log4cpp settings
-	AC_PATH_PROG(LOG4CPP_CONFIG,log4cpp-config)
-	AC_ARG_WITH(log4cpp,
-	    AC_HELP_STRING([--with-log4cpp=PATH], [where log4cpp-config is installed]),
-	    [
-	    LOG4CPP_CONFIG="${with_log4cpp}"
-	    if ! test -f "${LOG4CPP_CONFIG}" ; then
-	    	LOG4CPP_CONFIG="${with_log4cpp}/bin/log4cpp-config"
-	    fi
-	    ])
-	if test -f "${LOG4CPP_CONFIG}"; then
-		AC_MSG_WARN([will try to use log4cpp, note that most non-Internet2 supplied versions are not thread-safe])
-	    LIBS="`${LOG4CPP_CONFIG} --libs` $LIBS"
-	    CPPFLAGS="`${LOG4CPP_CONFIG} --cflags` $CPPFLAGS"
-		AC_CHECK_HEADER([log4cpp/CategoryStream.hh],,AC_MSG_ERROR([unable to find log4cpp header files]))
-		AC_TRY_LINK(
-			[#include <log4cpp/Category.hh>
-#include <log4cpp/CategoryStream.hh>],
-			[log4cpp::Category::getInstance("foo").errorStream() << log4cpp::eol],
-			[AC_DEFINE(OPENSAML_LOG4CPP,1,[Define if log4cpp library is used.])],
-			[AC_MSG_ERROR([unable to link with log4cpp, need version 1.0 or later])])
-	else
-	    AC_MSG_ERROR([log4cpp-config not found, may need to use --with-log4cpp option])
-	fi
+    # log4cpp settings
+    AC_PATH_PROG(LOG4CPP_CONFIG,log4cpp-config)
+    AC_ARG_WITH(log4cpp,
+        AS_HELP_STRING([--with-log4cpp=PATH],[where log4cpp-config is installed]),
+        [
+        LOG4CPP_CONFIG="${with_log4cpp}"
+        if ! test -f "${LOG4CPP_CONFIG}"; then
+        	LOG4CPP_CONFIG="${with_log4cpp}/bin/log4cpp-config"
+        fi
+        ])
+    if test -f "${LOG4CPP_CONFIG}"; then
+        AC_MSG_WARN([will try to use log4cpp, note that most non-Internet2 supplied versions are not thread-safe])
+        LIBS="`${LOG4CPP_CONFIG} --libs` $LIBS"
+        CPPFLAGS="`${LOG4CPP_CONFIG} --cflags` $CPPFLAGS"
+        AC_CHECK_HEADER([log4cpp/CategoryStream.hh],,AC_MSG_ERROR([unable to find log4cpp header files]))
+        AC_LINK_IFELSE(
+            [AC_LANG_PROGRAM([[#include <log4cpp/Category.hh>
+#include <log4cpp/CategoryStream.hh>]],
+                [[log4cpp::Category::getInstance("foo").errorStream() << log4cpp::eol]])],
+            [AC_DEFINE([OPENSAML_LOG4CPP],[1],[Define to 1 if log4cpp library is used.])],
+            [AC_MSG_ERROR([unable to link with log4cpp, need version 1.0 or later])])
+    else
+        AC_MSG_ERROR([log4cpp-config not found, may need to use --with-log4cpp option])
+    fi
 fi
 
 # Xerces settings
-AC_ARG_WITH(xerces, 
-            AC_HELP_STRING([--with-xerces=PATH], [where xerces-c is installed]),
-            [if test x_$with_xerces != x_/usr; then
-                LDFLAGS="-L${with_xerces}/lib $LDFLAGS"
-                CPPFLAGS="-I${with_xerces}/include $CPPFLAGS"
-            fi])
+AC_ARG_WITH(xerces,
+    AS_HELP_STRING([--with-xerces=PATH],[where xerces-c is installed]),
+    [if test x_$with_xerces != x_/usr; then
+        LDFLAGS="-L${with_xerces}/lib $LDFLAGS"
+        CPPFLAGS="-I${with_xerces}/include $CPPFLAGS"
+    fi])
 LIBS="-lxerces-c $LIBS"
 AC_CHECK_HEADER([xercesc/dom/DOM.hpp],,AC_MSG_ERROR([unable to find xerces header files]))
 AC_MSG_CHECKING([Xerces version])
@@ -190,26 +190,21 @@ int i = 0;
 #error cannot use version 2.6.0
 #endif])],
     [AC_MSG_RESULT(OK)],
-    [AC_MSG_FAILURE([Xerces-C v2.6.0 has bugs that inhibit use with signed XML, please use special 2.6.1 tarball provided by Shibboleth Project])])
-AC_TRY_LINK(
-    [#include <xercesc/util/PlatformUtils.hpp>],
-    [xercesc::XMLPlatformUtils::Initialize()],
-    [AC_DEFINE(HAVE_LIBXERCESC,1,[Define if Xerces-C library was found])],
-    [AC_MSG_ERROR([unable to link with Xerces])])
+    [AC_MSG_FAILURE([Xerces-C v2.6.0 has bugs that inhibit use with signed XML, please use a newer version])])
+AC_LINK_IFELSE(
+    [AC_LANG_PROGRAM([[#include <xercesc/util/PlatformUtils.hpp>]],[[xercesc::XMLPlatformUtils::Initialize()]])],
+    ,[AC_MSG_ERROR([unable to link with Xerces])])
 
 AC_MSG_CHECKING([whether Xerces XMLString::release(XMLByte**) exists])
-AC_TRY_COMPILE([#include <xercesc/util/XMLString.hpp>],
-    [using namespace XERCES_CPP_NAMESPACE;
-      XMLByte* buf=NULL;
-      XMLString::release(&buf);
-    ],
-    [AC_MSG_RESULT([yes])]
-    [AC_DEFINE([OPENSAML_XERCESC_HAS_XMLBYTE_RELEASE], [1], [Define to 1 if Xerces XMLString includes XMLByte release.])],
+AC_COMPILE_IFELSE(
+    [AC_LANG_PROGRAM([[#include <xercesc/util/XMLString.hpp>]],
+    [[using namespace XERCES_CPP_NAMESPACE; XMLByte* buf=NULL; XMLString::release(&buf);]])],
+    [AC_MSG_RESULT([yes])AC_DEFINE([OPENSAML_XERCESC_HAS_XMLBYTE_RELEASE],[1],[Define to 1 if Xerces XMLString includes XMLByte release.])],
     [AC_MSG_RESULT([no])])
 
 # XML-Security settings
 AC_ARG_WITH(xmlsec,
-    AC_HELP_STRING([--with-xmlsec=PATH], [where xmlsec is installed]),
+    AS_HELP_STRING([--with-xmlsec=PATH],[where xmlsec is installed]),
     [if test x_$with_xmlsec != x_/usr; then
         LDFLAGS="-L${with_xmlsec}/lib $LDFLAGS"
         CPPFLAGS="-I${with_xmlsec}/include $CPPFLAGS"
@@ -226,16 +221,14 @@ int i = 0;
 #endif])],
     [AC_MSG_RESULT(OK)],
     [AC_MSG_FAILURE([XML-Security version 1.4.0 or greater is required.])])
-AC_TRY_LINK(
-    [#include <xsec/utils/XSECPlatformUtils.hpp>],
-    [XSECPlatformUtils::Initialise()],
-    [AC_DEFINE(HAVE_LIBXSEC,1,[Define if XML-Security library was found])],
-    [AC_MSG_ERROR([unable to link with XML-Security library])]
-    )
+    AC_LINK_IFELSE(
+        [AC_LANG_PROGRAM([[#include <xsec/utils/XSECPlatformUtils.hpp>]],
+            [[XSECPlatformUtils::Initialise()]])],,
+        [AC_MSG_ERROR([unable to link with XML-Security])])
 
 # XML-Tooling settings
 AC_ARG_WITH(xmltooling,
-    AC_HELP_STRING([--with-xmltooling=PATH], [where xmltooling is installed]),
+    AS_HELP_STRING([--with-xmltooling=PATH],[where xmltooling is installed]),
     [if test x_$with_xmltooling != x_/usr; then
         LDFLAGS="-L${with_xmltooling}/lib $LDFLAGS"
         CPPFLAGS="-I${with_xmltooling}/include $CPPFLAGS"
@@ -256,18 +249,17 @@ xmltooling::XMLToolingConfig::getConfig();
 #error Need XMLTooling version 1.4 or higher
 #endif
 	],
-    [AC_DEFINE(HAVE_XMLTOOLING,1,[Define if xmltooling library was found])],
-    [AC_MSG_ERROR([unable to link with XMLTooling, or version was too old])])
+    ,[AC_MSG_ERROR([unable to link with XMLTooling, or version was too old])])
 
 # Check for unit test support
 CXXTEST="/usr/bin/cxxtestgen.pl"
 CXXTESTFLAGS=""
 AC_ARG_WITH(cxxtest,
-            AC_HELP_STRING([--with-cxxtest=PATH], [where cxxtest is installed]),
-            [if test x_$with_cxxtest != x_/usr; then
-                CXXTEST="${with_cxxtest}/cxxtestgen.pl"
-                CXXTESTFLAGS="-I${with_cxxtest}"
-            fi])
+    AS_HELP_STRING([--with-cxxtest=PATH], [where cxxtest is installed]),
+    [if test x_$with_cxxtest != x_/usr; then
+        CXXTEST="${with_cxxtest}/cxxtestgen.pl"
+        CXXTESTFLAGS="-I${with_cxxtest}"
+    fi])
 if ! test -f "${CXXTEST}"; then
     AC_MSG_WARN([cxxtestgen not found, won't build unit tests])
 fi
@@ -282,6 +274,4 @@ AC_SUBST(DX_INCLUDE)
 LIBTOOL="$LIBTOOL --silent"
 
 # output packaging and makefiles
-AC_CONFIG_FILES([opensaml.spec pkginfo Portfile])
-AC_CONFIG_FILES([Makefile saml/Makefile samltest/Makefile samlsign/Makefile schemas/Makefile doc/Makefile])
 AC_OUTPUT

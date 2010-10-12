@@ -15,9 +15,6 @@
 /* Define if log4cpp library is used. */
 /* #undef OPENSAML_LOG4CPP */
 
-/* Define if Xerces-C library was found */
-#define HAVE_LIBXERCESC 1
-
 #include <xercesc/util/XercesVersion.hpp>
 
 #if (XERCES_VERSION_MAJOR < 3)
@@ -64,7 +61,7 @@
 #define PACKAGE "opensaml"
 
 /* Define to the address where bug reports for this package should be sent. */
-#define PACKAGE_BUGREPORT "mace-opensaml-users@internet2.edu"
+#define PACKAGE_BUGREPORT "https://bugs.internet2.edu/"
 
 /* Define to the full name of this package. */
 #define PACKAGE_NAME "opensaml"
