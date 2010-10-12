@@ -6,4 +6,4 @@ samlsign_SOURCES = samlsign.cpp
 
 samlsign_LDADD = $(top_builddir)/saml/libsaml.la
 
-EXTRA_DIST = samlsign.vcproj
+EXTRA_DIST = samlsign.vcxproj
