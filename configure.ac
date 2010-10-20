@@ -1,4 +1,4 @@
-AC_PREREQ([2.67])
+AC_PREREQ([2.50])
 AC_INIT([opensaml],[2.4],[https://bugs.internet2.edu/],[opensaml])
 AC_CONFIG_SRCDIR(saml)
 AC_CONFIG_AUX_DIR(build-aux)
