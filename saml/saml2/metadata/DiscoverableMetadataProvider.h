@@ -39,7 +39,20 @@ namespace opensaml {
         class SAML_API DiscoverableMetadataProvider : public virtual MetadataProvider
         {
         protected:
-            DiscoverableMetadataProvider();
+            /**
+             * Constructor.
+             *
+             * If a DOM is supplied, the following XML content is supported:
+             *
+             * <dl>
+             *   <dt>legacyOrgNames</dt>
+             *   <dd>true iff IdPs without a UIInfo extension should
+             *      be identified using &lt;md:OrganizationDisplayName&gt;</dd>
+             * </dl>
+             *
+             * @param e DOM to supply configuration for provider
+             */
+            DiscoverableMetadataProvider(const xercesc::DOMElement* e=nullptr);
             
             /**
              * Generates a JSON feed of IdP discovery information for the current metadata.
@@ -73,6 +86,12 @@ namespace opensaml {
 
             /** ETag for feed. */
             mutable std::string m_feedTag;
+
+        private:
+            void disco(std::string& s, const EntityDescriptor* entity, bool& first) const;
+            void disco(std::string& s, const EntitiesDescriptor* group, bool& first) const;
+
+            bool m_legacyOrgNames;
         };
 
 #if defined (_MSC_VER)
