@@ -4,6 +4,7 @@ AC_CONFIG_SRCDIR(saml)
 AC_CONFIG_AUX_DIR(build-aux)
 AC_CONFIG_MACRO_DIR(m4)
 AM_INIT_AUTOMAKE
+AC_DISABLE_STATIC
 AC_PROG_LIBTOOL
 
 # Docygen features
@@ -36,7 +37,6 @@ AC_CONFIG_FILES([Makefile saml/Makefile samltest/Makefile samlsign/Makefile sche
 
 AC_PROG_CC([gcc gcc3 cc])
 AC_PROG_CXX([g++ g++3 c++ CC])
-AC_DISABLE_STATIC
 AC_CANONICAL_HOST
 
 if test "$GCC" = "yes" ; then
