@@ -34,7 +34,7 @@ using namespace opensaml::saml2md;
 using namespace xmltooling;
 using namespace std;
 
-DiscoverableMetadataProvider::DiscoverableMetadataProvider(const DOMElement* e) : m_legacyOrgNames(false)
+DiscoverableMetadataProvider::DiscoverableMetadataProvider(const DOMElement* e) : MetadataProvider(e), m_legacyOrgNames(false)
 {
     static const XMLCh legacyOrgNames[] = UNICODE_LITERAL_14(l,e,g,a,c,y,O,r,g,N,a,m,e,s);
     m_legacyOrgNames = XMLHelper::getAttrBool(e, false, legacyOrgNames);
