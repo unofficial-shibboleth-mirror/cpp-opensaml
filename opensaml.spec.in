@@ -17,7 +17,10 @@ BuildRequires:  libxml-security-c-devel >= 1.4.0
 BuildRequires:  libxmltooling-devel >= 1.4
 %{?_with_log4cpp:BuildRequires: liblog4cpp-devel >= 1.0}
 %{!?_with_log4cpp:BuildRequires: liblog4shib-devel}
-BuildRequires:  gcc-c++, pkg-config
+BuildRequires:  gcc-c++
+%if 0%{?suse_version} > 1000
+BuildRequires: pkg-config
+%endif
 %{!?_without_doxygen:BuildRequires: doxygen}
 %if "%{_vendor}" == "redhat"
 BuildRequires: redhat-rpm-config
