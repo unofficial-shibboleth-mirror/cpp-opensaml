@@ -2,13 +2,13 @@ Name:		@PACKAGE_NAME@
 Version:	@PACKAGE_VERSION@
 Release:	1
 Summary:    OpenSAML SAML library
-Group:		System Environment/Libraries
+Group:		Development/Libraries/C and C++
 Vendor:		Internet2
 License:	Apache 2.0
 URL:		http://www.opensaml.org/
 Source0:	%{name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-root
-%if 0%{?suse_version} > 1030
+%if 0%{?suse_version} > 1030 && 0%{?suse_version} < 1130
 BuildRequires:  libXerces-c-devel >= 2.8.0
 %else
 BuildRequires:  libxerces-c-devel >= 2.8.0
@@ -17,7 +17,7 @@ BuildRequires:  libxml-security-c-devel >= 1.4.0
 BuildRequires:  libxmltooling-devel >= 1.4
 %{?_with_log4cpp:BuildRequires: liblog4cpp-devel >= 1.0}
 %{!?_with_log4cpp:BuildRequires: liblog4shib-devel}
-BuildRequires:  gcc-c++
+BuildRequires:  gcc-c++, pkg-config
 %{!?_without_doxygen:BuildRequires: doxygen}
 %if "%{_vendor}" == "redhat"
 BuildRequires: redhat-rpm-config
@@ -36,7 +36,7 @@ that support the SAML 1.0, 1.1, and 2.0 specifications.
 
 %package -n @PACKAGE_NAME@-bin
 Summary:    Utilities for OpenSAML library
-Group:      Development/Libraries
+Group:      Development/Libraries/C and C++
 
 %description -n @PACKAGE_NAME@-bin
 OpenSAML is an open source implementation of the OASIS Security Assertion
@@ -47,7 +47,7 @@ This package contains the utility programs.
 
 %package -n libsaml7
 Summary:    OpenSAML SAML library
-Group:      Development/Libraries
+Group:      Development/Libraries/C and C++
 Provides:   @PACKAGE_NAME@ = %{version}-%{release}
 Obsoletes:  @PACKAGE_NAME@ < %{version}-%{release}
 
@@ -60,11 +60,11 @@ This package contains just the shared library.
 
 %package -n libsaml-devel
 Summary:	OpenSAML development Headers
-Group:		Development/Libraries
+Group:		Development/Libraries/C and C++
 Requires:	libsaml7 = %{version}-%{release}
 Provides:	@PACKAGE_NAME@-devel = %{version}-%{release}
 Obsoletes:	@PACKAGE_NAME@-devel < %{version}-%{release}
-%if 0%{?suse_version} > 1030
+%if 0%{?suse_version} > 1030 && 0%{?suse_version} < 1130
 BuildRequires:  libXerces-c-devel >= 2.8.0
 %else
 BuildRequires:  libxerces-c-devel >= 2.8.0
@@ -83,7 +83,7 @@ This package includes files needed for development with OpenSAML.
 
 %package -n @PACKAGE_NAME@-schemas
 Summary:	OpenSAML schemas and catalog
-Group:		Development/Libraries
+Group:		Development/Libraries/C and C++
 
 %description -n @PACKAGE_NAME@-schemas
 OpenSAML is an open source implementation of the OASIS Security Assertion
@@ -139,9 +139,12 @@ This package includes XML schemas and related files.
 %doc %{pkgdocdir}
 
 %changelog
-* Fri Dec 25 2009   Scott Cantor  <cantor.2@osu.edu>  - 2.4-1
+* Tue Oct 26 2010  Scott Cantor  <cantor.2@osu.edu>  - 2.4-1
+- Update version
 - Add pkg-config support.
 - Sync package names for side by side install.
+- Adjust Xerces dependency name and Group setting
+- Split out schemas into separate subpackage
 
 * Mon Aug 31 2009   Scott Cantor  <cantor.2@osu.edu>  - 2.3-1
 - Bump soname for SUSE packaging.
