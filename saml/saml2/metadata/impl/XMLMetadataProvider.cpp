@@ -126,7 +126,7 @@ XMLMetadataProvider::XMLMetadataProvider(const DOMElement* e)
         }
 
         if (m_minRefreshDelay > m_maxRefreshDelay) {
-            m_log.error("minRefreshDelay setting exceeds maxRefreshDelay/refreshInterval setting, lowering to match it");
+            m_log.warn("minRefreshDelay setting exceeds maxRefreshDelay/reloadInterval setting, lowering to match it");
             m_minRefreshDelay = m_maxRefreshDelay;
         }
     }
