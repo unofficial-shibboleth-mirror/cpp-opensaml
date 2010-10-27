@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2009 Internet2
+ *  Copyright 2001-2010 Internet2
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,9 +27,7 @@
 
 #include <set>
 #include <string>
-#ifdef HAVE_GOOD_STL
-# include <xmltooling/unicode.h>
-#endif
+#include <xmltooling/unicode.h>
 #include <xmltooling/signature/ContentReference.h>
 
 namespace xmltooling {
