@@ -72,20 +72,19 @@ namespace opensaml {
                 return m_feedTag;
             }
 
-            ostream& outputFeed(ostream& os) const {
-                os << "[\n";
+            void outputFeed(ostream& os, bool& first, bool wrapArray=true) const {
+                if (wrapArray)
+                    os << '[';
                 // Lock each provider in turn and suck in its feed.
                 for (vector<MetadataProvider*>::const_iterator m = m_providers.begin(); m != m_providers.end(); ++m) {
-                    if (m != m_providers.begin())
-                        os << ",\n";
                     DiscoverableMetadataProvider* d = dynamic_cast<DiscoverableMetadataProvider*>(*m);
                     if (d) {
                         Locker locker(d);
-                        d->outputFeed(os);
+                        d->outputFeed(os, first, false);
                     }
                 }
-                os << ']';
-                return os;
+                if (wrapArray)
+                    os << "\n]";
             }
 
             void onEvent(const ObservableMetadataProvider& provider) const {

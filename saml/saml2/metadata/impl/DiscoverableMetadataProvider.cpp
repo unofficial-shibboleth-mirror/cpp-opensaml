@@ -47,11 +47,9 @@ DiscoverableMetadataProvider::~DiscoverableMetadataProvider()
 void DiscoverableMetadataProvider::generateFeed()
 {
     bool first = true;
-    m_feed = "[";
     const XMLObject* object = getMetadata();
     disco(m_feed, dynamic_cast<const EntitiesDescriptor*>(object), first);
     disco(m_feed, dynamic_cast<const EntityDescriptor*>(object), first);
-    m_feed += "\n]";
 
     SAMLConfig::getConfig().generateRandomBytes(m_feedTag, 4);
     m_feedTag = SAMLArtifact::toHex(m_feedTag);
@@ -62,9 +60,50 @@ string DiscoverableMetadataProvider::getCacheTag() const
     return m_feedTag;
 }
 
-ostream& DiscoverableMetadataProvider::outputFeed(ostream& os) const
+void DiscoverableMetadataProvider::outputFeed(ostream& os, bool& first, bool wrapArray) const
 {
-    return os << m_feed;
+    if (wrapArray)
+        os << '[';
+    if (!m_feed.empty()) {
+        if (first)
+            first = false;
+        else
+            os << ",\n";
+        os << m_feed;
+    }
+    if (wrapArray)
+        os << "\n]";
+}
+
+static string& json_safe(string& s, const char* buf)
+{
+    for (; *buf; ++buf) {
+        switch (*buf) {
+            case '\\':
+            case '"':
+                s += '\\';
+                s += *buf;
+                break;
+            case '\b':
+                s += "\\b";
+                break;
+            case '\t':
+                s += "\\t";
+                break;
+            case '\n':
+                s += "\\n";
+                break;
+            case '\f':
+                s += "\\f";
+                break;
+            case '\r':
+                s += "\\r";
+                break;
+            default:
+                s += *buf;
+        }
+    }
+    return s;
 }
 
 void DiscoverableMetadataProvider::disco(string& s, const EntityDescriptor* entity, bool& first) const
@@ -80,7 +119,7 @@ void DiscoverableMetadataProvider::disco(string& s, const EntityDescriptor* enti
             else
                 s += ',';
             s += "\n{\n \"entityID\": \"";
-            s += entityid.get();
+            json_safe(s, entityid.get());
             s += '\"';
             bool extFound = false;
             for (vector<IDPSSODescriptor*>::const_iterator idp = idps.begin(); !extFound && idp != idps.end(); ++idp) {
@@ -99,7 +138,7 @@ void DiscoverableMetadataProvider::disco(string& s, const EntityDescriptor* enti
                                     auto_arrayptr<char> val(toUTF8((*dispname)->getName()));
                                     auto_ptr_char lang((*dispname)->getLang());
                                     s += "\n  {\n  \"value\": \"";
-                                    s += val.get();
+                                    json_safe(s, val.get());
                                     s += "\",\n  \"lang\": \"";
                                     s += lang.get();
                                     s += "\"\n  }";
@@ -116,7 +155,7 @@ void DiscoverableMetadataProvider::disco(string& s, const EntityDescriptor* enti
                                     auto_arrayptr<char> val(toUTF8((*desc)->getDescription()));
                                     auto_ptr_char lang((*desc)->getLang());
                                     s += "\n  {\n  \"value\": \"";
-                                    s += val.get();
+                                    json_safe(s, val.get());
                                     s += "\",\n  \"lang\": \"";
                                     s += lang.get();
                                     s += "\"\n  }";
@@ -133,7 +172,7 @@ void DiscoverableMetadataProvider::disco(string& s, const EntityDescriptor* enti
                                     auto_ptr_char val((*infurl)->getURL());
                                     auto_ptr_char lang((*infurl)->getLang());
                                     s += "\n  {\n  \"value\": \"";
-                                    s += val.get();
+                                    json_safe(s, val.get());
                                     s += "\",\n  \"lang\": \"";
                                     s += lang.get();
                                     s += "\"\n  }";
@@ -150,7 +189,7 @@ void DiscoverableMetadataProvider::disco(string& s, const EntityDescriptor* enti
                                     auto_ptr_char val((*priv)->getURL());
                                     auto_ptr_char lang((*priv)->getLang());
                                     s += "\n  {\n  \"value\": \"";
-                                    s += val.get();
+                                    json_safe(s, val.get());
                                     s += "\",\n  \"lang\": \"";
                                     s += lang.get();
                                     s += "\"\n  }";
@@ -167,7 +206,7 @@ void DiscoverableMetadataProvider::disco(string& s, const EntityDescriptor* enti
                                     s += "\n  {\n";
                                     auto_ptr_char val((*logo)->getURL());
                                     s += "  \"value\": \"";
-                                    s += val.get();
+                                    json_safe(s, val.get());
                                     ostringstream ht;
                                     ht << (*logo)->getHeight().second;
                                     s += "\",\n  \"height\": \"";
@@ -210,7 +249,7 @@ void DiscoverableMetadataProvider::disco(string& s, const EntityDescriptor* enti
                             auto_arrayptr<char> val(toUTF8((*dispname)->getName()));
                             auto_ptr_char lang((*dispname)->getLang());
                             s += "\n  {\n  \"value\": \"";
-                            s += val.get();
+                            json_safe(s, val.get());
                             s += "\",\n  \"lang\": \"";
                             s += lang.get();
                             s += "\"\n  }";

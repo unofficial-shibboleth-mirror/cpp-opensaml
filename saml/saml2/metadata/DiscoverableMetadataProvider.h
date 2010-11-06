@@ -75,10 +75,12 @@ namespace opensaml {
              * Outputs the cached feed.
              * <p>The provider <strong>MUST</strong> be locked.
              *
-             * @param os    stream to output feed into
-             * @return a reference to the output stream
+             * @param os        stream to output feed into
+             * @param first     on input, indicates if the feed is first in position,
+             *                  on output will be false if the feed was non-empty
+             * @param wrapArray true iff the feed array should be opened/closed by this provider
              */
-            virtual std::ostream& outputFeed(std::ostream& os) const;
+            virtual void outputFeed(std::ostream& os, bool& first, bool wrapArray=true) const;
 
         protected:
             /** Storage for feed. */
