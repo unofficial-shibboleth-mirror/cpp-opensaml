@@ -36,6 +36,12 @@
 #include <xmltooling/util/Threads.h>
 #include <xmltooling/validation/ValidatorSuite.h>
 
+#if defined(OPENSAML_LOG4SHIB)
+# include <log4shib/NDC.hh>
+#elif defined(OPENSAML_LOG4CPP)
+# include <log4cpp/NDC.hh>
+#endif
+
 using namespace opensaml::saml2md;
 using namespace xmltooling::logging;
 using namespace xmltooling;
@@ -62,12 +68,24 @@ namespace opensaml {
 
             void init() {
                 try {
+                    if (!m_id.empty()) {
+                        string threadid("[");
+                        threadid += m_id + ']';
+                        logging::NDC::push(threadid);
+                    }
                     background_load();
                     startup();
                 }
                 catch (...) {
                     startup();
+                    if (!m_id.empty()) {
+                        logging::NDC::pop();
+                    }
                     throw;
+                }
+
+                if (!m_id.empty()) {
+                    logging::NDC::pop();
                 }
             }
 
