@@ -211,10 +211,10 @@ void DiscoverableMetadataProvider::disco(string& s, const EntityDescriptor* enti
                                     ht << (*logo)->getHeight().second;
                                     s += "\",\n  \"height\": \"";
                                     s += ht.str();
-                                    ht.clear();
-                                    ht << (*logo)->getWidth().second;
+                                    ostringstream wt;
+                                    wt << (*logo)->getWidth().second;
                                     s += "\",\n  \"width\": \"";
-                                    s += ht.str();
+                                    s += wt.str();
                                     s += '\"';
                                     if ((*logo)->getLang()) {
                                         auto_ptr_char lang((*logo)->getLang());
