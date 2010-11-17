@@ -163,6 +163,23 @@ void DiscoverableMetadataProvider::disco(string& s, const EntityDescriptor* enti
                                 s += "\n ]";
                             }
 
+                            const vector<Keywords*>& keywords = info->getKeywordss();
+                            if (!keywords.empty()) {
+                                s += ",\n \"Keywords\": [";
+                                for (vector<Keywords*>::const_iterator words = keywords.begin(); words != keywords.end(); ++words) {
+                                    if (words != keywords.begin())
+                                        s += ',';
+                                    auto_arrayptr<char> val(toUTF8((*words)->getValues()));
+                                    auto_ptr_char lang((*words)->getLang());
+                                    s += "\n  {\n  \"value\": \"";
+                                    json_safe(s, val.get());
+                                    s += "\",\n  \"lang\": \"";
+                                    s += lang.get();
+                                    s += "\"\n  }";
+                                }
+                                s += "\n ]";
+                            }
+
                             const vector<InformationURL*>& infurls = info->getInformationURLs();
                             if (!infurls.empty()) {
                                 s += ",\n \"InformationURLs\": [";

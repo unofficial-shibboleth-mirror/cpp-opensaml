@@ -2711,6 +2711,69 @@ namespace opensaml {
             }
         };
 
+        class SAML_DLLLOCAL KeywordsImpl : public virtual Keywords,
+            public AbstractSimpleElement,
+            public AbstractDOMCachingXMLObject,
+            public AbstractXMLObjectMarshaller,
+            public AbstractXMLObjectUnmarshaller
+        {
+            void init() {
+                m_Lang=nullptr;
+                m_LangPrefix=nullptr;
+            }
+
+        protected:
+            KeywordsImpl() {
+                init();
+            }
+
+        public:
+            virtual ~KeywordsImpl() {
+                XMLString::release(&m_Lang);
+                XMLString::release(&m_LangPrefix);
+            }
+
+            KeywordsImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
+                    : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
+                init();
+            }
+
+            KeywordsImpl(const KeywordsImpl& src)
+                    : AbstractXMLObject(src), AbstractSimpleElement(src), AbstractDOMCachingXMLObject(src) {
+                init();
+                setLang(src.getLang());
+                if (src.m_LangPrefix)
+                    m_LangPrefix = XMLString::replicate(src.m_LangPrefix);
+            }
+
+            IMPL_XMLOBJECT_CLONE(Keywords);
+            IMPL_XMLOBJECT_FOREIGN_ATTRIB(Lang,XMLCh);
+
+        protected:
+            void marshallAttributes(DOMElement* domElement) const {
+                if (m_Lang && *m_Lang) {
+                    DOMAttr* attr=domElement->getOwnerDocument()->createAttributeNS(xmlconstants::XML_NS, LANG_ATTRIB_NAME);
+                    if (m_LangPrefix && *m_LangPrefix)
+                        attr->setPrefix(m_LangPrefix);
+                    else
+                        attr->setPrefix(xmlconstants::XML_PREFIX);
+                    attr->setNodeValue(m_Lang);
+                    domElement->setAttributeNodeNS(attr);
+                }
+            }
+
+            void processAttribute(const DOMAttr* attribute) {
+                if (XMLHelper::isNodeNamed(attribute, xmlconstants::XML_NS, LANG_ATTRIB_NAME)) {
+                    setLang(attribute->getValue());
+                    const XMLCh* temp = attribute->getPrefix();
+                    if (temp && *temp && !XMLString::equals(temp, xmlconstants::XML_NS))
+                        m_LangPrefix = XMLString::replicate(temp);
+                    return;
+                }
+                AbstractXMLObjectUnmarshaller::processAttribute(attribute);
+            }
+        };
+
         class SAML_DLLLOCAL LogoImpl : public virtual Logo,
             public AbstractSimpleElement,
             public AbstractDOMCachingXMLObject,
@@ -2815,7 +2878,13 @@ namespace opensaml {
                             continue;
                         }
 
-                        Logo* logo=dynamic_cast<Logo*>(*i);
+                        Keywords* key=dynamic_cast<Keywords*>(*i);
+                        if (key) {
+                            getKeywordss().push_back(key->cloneKeywords());
+                            continue;
+                        }
+
+						Logo* logo=dynamic_cast<Logo*>(*i);
                         if (logo) {
                             getLogos().push_back(logo->cloneLogo());
                             continue;
@@ -2841,6 +2910,7 @@ namespace opensaml {
             IMPL_XMLOBJECT_CLONE(UIInfo);
             IMPL_TYPED_CHILDREN(DisplayName,m_children.end());
             IMPL_TYPED_CHILDREN(Description,m_children.end());
+			IMPL_TYPED_CHILDREN(Keywords,m_children.end());
             IMPL_TYPED_CHILDREN(Logo,m_children.end());
             IMPL_TYPED_CHILDREN(InformationURL,m_children.end());
             IMPL_TYPED_CHILDREN(PrivacyStatementURL,m_children.end());
@@ -2850,6 +2920,7 @@ namespace opensaml {
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
                 PROC_TYPED_CHILDREN(DisplayName,SAML20MD_UI_NS,false);
                 PROC_TYPED_CHILDREN(Description,SAML20MD_UI_NS,false);
+				PROC_TYPED_CHILDREN(Keywords,SAML20MD_UI_NS,false);
                 PROC_TYPED_CHILDREN(Logo,SAML20MD_UI_NS,false);
                 PROC_TYPED_CHILDREN(InformationURL,SAML20MD_UI_NS,false);
                 PROC_TYPED_CHILDREN(PrivacyStatementURL,SAML20MD_UI_NS,false);
@@ -3001,6 +3072,7 @@ IMPL_XMLOBJECTBUILDER(DigestMethod);
 IMPL_XMLOBJECTBUILDER(SigningMethod);
 IMPL_XMLOBJECTBUILDER(DisplayName);
 IMPL_XMLOBJECTBUILDER(Description);
+IMPL_XMLOBJECTBUILDER(Keywords);
 IMPL_XMLOBJECTBUILDER(Logo);
 IMPL_XMLOBJECTBUILDER(InformationURL);
 IMPL_XMLOBJECTBUILDER(PrivacyStatementURL);
@@ -3199,6 +3271,9 @@ const XMLCh KeyDescriptor::TYPE_NAME[] =                UNICODE_LITERAL_17(K,e,y
 const XMLCh KeyDescriptor::USE_ATTRIB_NAME[] =          UNICODE_LITERAL_3(u,s,e);
 const XMLCh KeyDescriptor::KEYTYPE_ENCRYPTION[] =       UNICODE_LITERAL_10(e,n,c,r,y,p,t,i,o,n);
 const XMLCh KeyDescriptor::KEYTYPE_SIGNING[] =          UNICODE_LITERAL_7(s,i,g,n,i,n,g);
+const XMLCh Keywords::LOCAL_NAME[] =					UNICODE_LITERAL_8(K,e,y,w,o,r,d,s);
+const XMLCh Keywords::TYPE_NAME[] =						UNICODE_LITERAL_12(K,e,y,w,o,r,d,s,T,y,p,e);
+const XMLCh Keywords::LANG_ATTRIB_NAME[] =              UNICODE_LITERAL_4(l,a,n,g);
 const XMLCh Logo::LOCAL_NAME[] =                        UNICODE_LITERAL_4(L,o,g,o);
 const XMLCh Logo::TYPE_NAME[] =                         UNICODE_LITERAL_8(L,o,g,o,T,y,p,e);
 const XMLCh Logo::LANG_ATTRIB_NAME[] =                  UNICODE_LITERAL_4(l,a,n,g);

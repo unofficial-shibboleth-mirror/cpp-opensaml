@@ -440,6 +440,13 @@ namespace opensaml {
             DECL_SIMPLE_CONTENT(Description);
         END_XMLOBJECT;
 
+        BEGIN_XMLOBJECT(SAML_API,Keywords,xmltooling::XMLObject,SAML Metadata Extension for Login UI Keywords element);
+            DECL_STRING_ATTRIB(Lang,LANG);
+            DECL_SIMPLE_CONTENT(Values);
+            /** KeywordsType local name */
+            static const XMLCh TYPE_NAME[];
+        END_XMLOBJECT;
+
         BEGIN_XMLOBJECT(SAML_API,Logo,xmltooling::XMLObject,SAML Metadata Extension for Login UI Logo element);
             DECL_STRING_ATTRIB(Lang,LANG);
             DECL_INTEGER_ATTRIB(Height,HEIGHT);
@@ -460,6 +467,7 @@ namespace opensaml {
         BEGIN_XMLOBJECT(SAML_API,UIInfo,xmltooling::ElementExtensibleXMLObject,SAML Metadata Extension for Login UI UIInfo element);
             DECL_TYPED_CHILDREN(DisplayName);
             DECL_TYPED_CHILDREN(Description);
+			DECL_TYPED_CHILDREN(Keywords);
             DECL_TYPED_CHILDREN(Logo);
             DECL_TYPED_CHILDREN(InformationURL);
             DECL_TYPED_CHILDREN(PrivacyStatementURL);
@@ -585,6 +593,7 @@ namespace opensaml {
         DECL_XMLOBJECTBUILDER(SAML_API,UIInfo,samlconstants::SAML20MD_UI_NS,samlconstants::SAML20MD_UI_PREFIX);
         DECL_XMLOBJECTBUILDER(SAML_API,DisplayName,samlconstants::SAML20MD_UI_NS,samlconstants::SAML20MD_UI_PREFIX);
         DECL_XMLOBJECTBUILDER(SAML_API,Description,samlconstants::SAML20MD_UI_NS,samlconstants::SAML20MD_UI_PREFIX);
+		DECL_XMLOBJECTBUILDER(SAML_API,Keywords,samlconstants::SAML20MD_UI_NS,samlconstants::SAML20MD_UI_PREFIX);
         DECL_XMLOBJECTBUILDER(SAML_API,Logo,samlconstants::SAML20MD_UI_NS,samlconstants::SAML20MD_UI_PREFIX);
         DECL_XMLOBJECTBUILDER(SAML_API,InformationURL,samlconstants::SAML20MD_UI_NS,samlconstants::SAML20MD_UI_PREFIX);
         DECL_XMLOBJECTBUILDER(SAML_API,PrivacyStatementURL,samlconstants::SAML20MD_UI_NS,samlconstants::SAML20MD_UI_PREFIX);

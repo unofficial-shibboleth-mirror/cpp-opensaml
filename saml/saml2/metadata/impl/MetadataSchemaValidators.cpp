@@ -293,6 +293,11 @@ namespace opensaml {
             XMLOBJECTVALIDATOR_REQUIRE(Description,Lang);
         END_XMLOBJECTVALIDATOR;
 
+        BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,Keywords);
+            XMLOBJECTVALIDATOR_REQUIRE(Keywords,TextContent);
+            XMLOBJECTVALIDATOR_REQUIRE(Keywords,Lang);
+        END_XMLOBJECTVALIDATOR;
+
         BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,Logo);
             XMLOBJECTVALIDATOR_REQUIRE(Logo,TextContent);
             XMLOBJECTVALIDATOR_REQUIRE_INTEGER(Logo,Height);
@@ -461,12 +466,14 @@ void opensaml::saml2md::registerMetadataClasses() {
 
     REGISTER_ELEMENT_UI(DisplayName);
     REGISTER_ELEMENT_UI(Description);
+	REGISTER_ELEMENT_UI(Keywords);
     REGISTER_ELEMENT_UI(Logo);
     REGISTER_ELEMENT_UI(InformationURL);
     REGISTER_ELEMENT_UI(PrivacyStatementURL);
     REGISTER_ELEMENT_UI(IPHint);
     REGISTER_ELEMENT_UI(DomainHint);
     REGISTER_ELEMENT_UI(GeolocationHint);
+	REGISTER_TYPE_UI(Keywords);
     REGISTER_TYPE_UI(Logo);
     REGISTER_ELEMENT_UI_NOVAL(UIInfo);
     REGISTER_ELEMENT_UI_NOVAL(DiscoHints);

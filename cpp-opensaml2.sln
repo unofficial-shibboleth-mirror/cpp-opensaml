@@ -49,9 +49,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Schemas", "Schemas", "{5548
 		schemas\sstc-saml-attribute-ext.xsd = schemas\sstc-saml-attribute-ext.xsd
 		schemas\sstc-saml-delegation.xsd = schemas\sstc-saml-delegation.xsd
 		schemas\sstc-saml-idp-discovery.xsd = schemas\sstc-saml-idp-discovery.xsd
-		schemas\sstc-saml-metadata-algsupport.xsd = schemas\sstc-saml-metadata-algsupport.xsd
+		schemas\sstc-saml-metadata-algsupport-v1.0.xsd = schemas\sstc-saml-metadata-algsupport-v1.0.xsd
 		schemas\sstc-saml-metadata-ext-query.xsd = schemas\sstc-saml-metadata-ext-query.xsd
-		schemas\sstc-saml-metadata-ui.xsd = schemas\sstc-saml-metadata-ui.xsd
+		schemas\sstc-saml-metadata-ui-v1.0.xsd = schemas\sstc-saml-metadata-ui-v1.0.xsd
 		schemas\sstc-saml-protocol-ext-thirdparty.xsd = schemas\sstc-saml-protocol-ext-thirdparty.xsd
 		schemas\sstc-saml1x-metadata.xsd = schemas\sstc-saml1x-metadata.xsd
 	EndProjectSection
