@@ -46,6 +46,7 @@ DiscoverableMetadataProvider::~DiscoverableMetadataProvider()
 
 void DiscoverableMetadataProvider::generateFeed()
 {
+    m_feed.erase();
     bool first = true;
     const XMLObject* object = getMetadata();
     disco(m_feed, dynamic_cast<const EntitiesDescriptor*>(object), first);
