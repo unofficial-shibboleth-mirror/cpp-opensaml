@@ -1,8 +1,8 @@
-VERSION 2.3
+VERSION 2.4
 
-Issues addressed by this release:
+Release Notes:
 ---------------------------------
-https://bugs.internet2.edu/jira/browse/CPPOST/fixforversion/10260
+https://bugs.internet2.edu/jira/secure/ReleaseNote.jspa?projectId=10010&version=10278
 
 Documentation:
 --------------
