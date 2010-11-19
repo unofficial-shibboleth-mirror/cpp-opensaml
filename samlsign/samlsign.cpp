@@ -126,7 +126,7 @@ int main(int argc,char* argv[])
     char* issuer=nullptr;
     char* prot = nullptr;
     const XMLCh* protocol = nullptr;
-    char* rname = nullptr;
+    const char* rname = nullptr;
     char* rns = nullptr;
 
     for (int i=1; i<argc; i++) {
