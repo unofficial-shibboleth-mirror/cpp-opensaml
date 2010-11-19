@@ -59,11 +59,11 @@ namespace opensaml {
 
 DynamicMetadataProvider::DynamicMetadataProvider(const DOMElement* e)
     : AbstractMetadataProvider(e),
-        m_maxCacheDuration(XMLHelper::getAttrInt(e, 28800, maxCacheDuration)),
+      m_validate(XMLHelper::getAttrBool(e, false, validate)),
         m_lock(RWLock::create()),
         m_refreshDelayFactor(0.75),
-        m_minCacheDuration(XMLHelper::getAttrInt(e, 600, minCacheDuration)),
-        m_validate(XMLHelper::getAttrBool(e, false, validate))
+        m_maxCacheDuration(XMLHelper::getAttrInt(e, 28800, maxCacheDuration)),
+        m_minCacheDuration(XMLHelper::getAttrInt(e, 600, minCacheDuration))
 {
     if (m_minCacheDuration > m_maxCacheDuration) {
         Category::getInstance(SAML_LOGCAT".MetadataProvider.Dynamic").error(
