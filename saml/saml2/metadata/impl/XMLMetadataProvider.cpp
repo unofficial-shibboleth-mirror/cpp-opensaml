@@ -152,8 +152,10 @@ XMLMetadataProvider::XMLMetadataProvider(const DOMElement* e)
 
 pair<bool,DOMElement*> XMLMetadataProvider::load(bool backup)
 {
-    // Lower the refresh rate in case of an error.
-    m_reloadInterval = m_minRefreshDelay;
+    if (!backup) {
+        // Lower the refresh rate in case of an error.
+        m_reloadInterval = m_minRefreshDelay;
+    }
 
     // Call the base class to load/parse the appropriate XML resource.
     pair<bool,DOMElement*> raw = ReloadableXMLFile::load(backup);
@@ -234,8 +236,8 @@ pair<bool,DOMElement*> XMLMetadataProvider::load(bool backup)
     // Tracking cacheUntil through the tree is TBD, but
     // validUntil is the tightest interval amongst the children.
 
-    // If a remote resource, adjust the reload interval.
-    if (!backup && !m_local) {
+    // If a remote resource that's monitored, adjust the reload interval.
+    if (!backup && !m_local && m_lock) {
         m_backoffFactor = 1;
         m_reloadInterval = computeNextRefresh();
         m_log.info("adjusted reload interval to %d seconds", m_reloadInterval);
