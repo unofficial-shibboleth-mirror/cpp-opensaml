@@ -138,15 +138,18 @@ long SAML2RedirectEncoder::encode(
         throw BindingException("Base64 encoding of XML failed.");
     
     // Create beginnings of redirect query string.
-    const URLEncoder* escaper = XMLToolingConfig::getConfig().getURLEncoder();
     xmlbuf.erase();
-    xmlbuf.append(reinterpret_cast<char*>(encoded), xlen);
+    for (const XMLByte* xb = encoded; *xb; ++xb) {
+        if (!isspace(*xb))
+            xmlbuf += *xb;
+    }
 #ifdef OPENSAML_XERCESC_HAS_XMLBYTE_RELEASE
     XMLString::release(&encoded);
 #else
     XMLString::release((char**)&encoded);
 #endif
     
+    const URLEncoder* escaper = XMLToolingConfig::getConfig().getURLEncoder();
     xmlbuf = (request ? "SAMLRequest=" : "SAMLResponse=") + escaper->encode(xmlbuf.c_str()); 
     if (relayState && *relayState)
         xmlbuf = xmlbuf + "&RelayState=" + escaper->encode(relayState);
