@@ -1,8 +1,8 @@
-VERSION 2.4
+VERSION 2.4.1
 
 Release Notes:
 ---------------------------------
-https://bugs.internet2.edu/jira/secure/ReleaseNote.jspa?projectId=10010&version=10278
+https://bugs.internet2.edu/jira/secure/ReleaseNote.jspa?projectId=10010
 
 Documentation:
 --------------
