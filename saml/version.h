@@ -1,11 +1,12 @@
 /*
- *  Copyright 2001-2009 Internet2
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed to UCAID under one or more contributor license agreements.
+ * See the NOTICE file distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file to you under
+ * the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License.  You may obtain a copy of the
+ * License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *       http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,7 +18,7 @@
 /**
  * saml/version.h
  * 
- * Library version macros and constants 
+ * Library version macros and constants.
  */
 
 #ifndef __saml_version_h__
@@ -27,6 +28,7 @@
 // support this kind of stuff in the future. If they ever yank some
 // of this stuff, it can be copied into here.
 
+#include <saml/base.h>
 #include <xercesc/util/XercesVersion.hpp>
 
 // ---------------------------------------------------------------------------
@@ -38,8 +40,8 @@
  */
 
 #define OPENSAML_VERSION_MAJOR 2
-#define OPENSAML_VERSION_MINOR 4
-#define OPENSAML_VERSION_REVISION 1
+#define OPENSAML_VERSION_MINOR 5
+#define OPENSAML_VERSION_REVISION 0
 
 /** DO NOT MODIFY BELOW THIS LINE */
 
@@ -60,11 +62,12 @@
 #define OPENSAML_FULLVERSIONNUM INVK_CAT3_SEP_NIL(OPENSAML_VERSION_MAJOR,OPENSAML_VERSION_MINOR,OPENSAML_VERSION_REVISION)
 #define OPENSAML_VERSIONSTR     INVK_CAT2_SEP_UNDERSCORE(OPENSAML_VERSION_MAJOR,OPENSAML_VERSION_MINOR)
 
-const char* const    gOpenSAMLVersionStr = OPENSAML_VERSIONSTR;
-const char* const    gOpenSAMLFullVersionStr = OPENSAML_FULLVERSIONSTR;
-const unsigned int   gOpenSAMLMajVersion = OPENSAML_VERSION_MAJOR;
-const unsigned int   gOpenSAMLMinVersion = OPENSAML_VERSION_MINOR;
-const unsigned int   gOpenSAMLRevision   = OPENSAML_VERSION_REVISION;
+extern SAML_API const char* const    gOpenSAMLVersionStr;
+extern SAML_API const char* const    gOpenSAMLFullVersionStr;
+extern SAML_API const char* const    gOpenSAMLDotVersionStr;
+extern SAML_API const unsigned int   gOpenSAMLMajVersion;
+extern SAML_API const unsigned int   gOpenSAMLMinVersion;
+extern SAML_API const unsigned int   gOpenSAMLRevision;
 
 // OpenSAML version numeric constants that can be used for conditional
 // compilation purposes.

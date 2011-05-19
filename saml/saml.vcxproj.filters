@@ -360,6 +360,9 @@
     <ClCompile Include="saml2\metadata\impl\DiscoverableMetadataProvider.cpp">
       <Filter>Source Files\saml2\metadata\impl</Filter>
     </ClCompile>
+    <ClCompile Include="version.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Assertion.h">
