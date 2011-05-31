@@ -35,6 +35,7 @@
 #include <saml/saml2/metadata/Metadata.h>
 #include <saml/saml2/metadata/MetadataProvider.h>
 #include <saml/saml2/metadata/MetadataCredentialCriteria.h>
+#include <saml/signature/ContentReference.h>
 #include <saml/signature/SignatureProfileValidator.h>
 #include <saml/util/SAMLConstants.h>
 #include <xmltooling/logging.h>
@@ -120,6 +121,8 @@ int main(int argc,char* argv[])
     char* cr_param=nullptr;
     char* t_param=nullptr;
     char* id_param=nullptr;
+    char* alg_param=nullptr;
+    char* dig_param=nullptr;
 
     // metadata lookup options
     char* m_param=nullptr;
@@ -156,6 +159,10 @@ int main(int argc,char* argv[])
             rname=argv[++i];
         else if (!strcmp(argv[i],"-ns") && i+1<argc)
             rns=argv[++i];
+        else if (!strcmp(argv[i],"-alg") && i+1<argc)
+            alg_param=argv[++i];
+        else if (!strcmp(argv[i],"-dig") && i+1<argc)
+            dig_param=argv[++i];
         else if (!strcmp(argv[i],"-saml10"))
             protocol=samlconstants::SAML10_PROTOCOL_ENUM;
         else if (!strcmp(argv[i],"-saml11"))
@@ -339,6 +346,14 @@ int main(int argc,char* argv[])
 
             // Attach new signature.
             Signature* sig = SignatureBuilder::buildSignature();
+            if (alg_param) {
+                auto_ptr_XMLCh alg(alg_param);
+                sig->setSignatureAlgorithm(alg.get());
+            }
+            if (dig_param) {
+            	auto_ptr_XMLCh dig(dig_param);
+            	dynamic_cast<opensaml::ContentReference*>(sig->getContentReference())->setDigestAlgorithm(dig.get());
+            }
             signable->setSignature(sig);
 
             // Sign response while re-marshalling.

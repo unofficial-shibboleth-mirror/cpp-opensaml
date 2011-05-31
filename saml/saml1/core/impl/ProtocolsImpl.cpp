@@ -66,7 +66,7 @@ namespace opensaml {
             public AbstractXMLObjectMarshaller,
             public AbstractXMLObjectUnmarshaller
         {
-            xmltooling::QName* m_qname;
+            mutable xmltooling::QName* m_qname;
         public:
             virtual ~RespondWithImpl() {
                 delete m_qname;
@@ -82,6 +82,9 @@ namespace opensaml {
             }
 
             xmltooling::QName* getQName() const {
+                if (!m_qname && getDOM() && getDOM()->getTextContent()) {
+                    m_qname = XMLHelper::getNodeValueAsQName(getDOM());
+                }
                 return m_qname;
             }
 
@@ -91,8 +94,9 @@ namespace opensaml {
                     auto_ptr_XMLCh temp(m_qname->toString().c_str());
                     setTextContent(temp.get());
                 }
-                else
+                else {
                     setTextContent(nullptr);
+                }
             }
 
             IMPL_XMLOBJECT_CLONE(RespondWith);

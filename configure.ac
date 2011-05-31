@@ -1,5 +1,5 @@
 AC_PREREQ([2.50])
-AC_INIT([opensaml],[2.4.1],[https://bugs.internet2.edu/],[opensaml])
+AC_INIT([opensaml],[2.4.2],[https://issues.shibboleth.net/],[opensaml])
 AC_CONFIG_SRCDIR(saml)
 AC_CONFIG_AUX_DIR(build-aux)
 AC_CONFIG_MACRO_DIR(m4)
