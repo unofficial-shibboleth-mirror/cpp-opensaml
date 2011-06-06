@@ -80,13 +80,18 @@ using namespace xercesc;
 
 #define SAML_LOGCAT "OpenSAML"
 
+namespace xmltooling {
+    class XMLTOOL_API Mutex;
+};
+
 namespace opensaml {
     
     /// @cond OFF
-    class SAMLInternalConfig : public SAMLConfig
+    class SAML_DLLLOCAL SAMLInternalConfig : public SAMLConfig
     {
     public:
-        SAMLInternalConfig() {}
+        SAMLInternalConfig();
+        ~SAMLInternalConfig();
 
         static SAMLInternalConfig& getInternalConfig();
 
@@ -98,7 +103,10 @@ namespace opensaml {
         void generateRandomBytes(std::string& buf, unsigned int len);
         XMLCh* generateIdentifier();
         std::string hashSHA1(const char* data, bool toHex=false);
+
     private:
+        int m_initCount;
+        xmltooling::Mutex* m_lock;
     };
     /// @endcond
 
