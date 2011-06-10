@@ -35,6 +35,8 @@ public:
         XMLToolingConfig::getConfig().log_config();
         if (!SAMLConfig::getConfig().init())
             return false;
+        if (!SAMLConfig::getConfig().init())    // should be a no-op
+            return false;
         XMLToolingConfig::getConfig().setReplayCache(new ReplayCache());
         XMLToolingConfig::getConfig().setTemplateEngine(new TemplateEngine());
         SAMLConfig::getConfig().setArtifactMap(new ArtifactMap());
@@ -47,7 +49,9 @@ public:
         return true;
     }
     bool tearDownWorld() {
+        SAMLConfig::getConfig().term();     // should be a no-op
         SAMLConfig::getConfig().term();
+        SAMLConfig::getConfig().term();     // shouldn't cause a crash
 #if defined(_MSC_VER ) && defined(SAML_LEAKCHECK)
        _CrtSetReportMode( _CRT_WARN, _CRTDBG_MODE_FILE );
        _CrtSetReportFile( _CRT_WARN, _CRTDBG_FILE_STDOUT );

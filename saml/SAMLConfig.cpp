@@ -1,4 +1,3 @@
-
 /*
  *  Copyright 2001-2010 Internet2
  * 
@@ -56,6 +55,7 @@
 #include <xmltooling/signature/Signature.h>
 #include <xmltooling/util/NDC.h>
 #include <xmltooling/util/PathResolver.h>
+#include <xmltooling/util/Threads.h>
 
 #include <xsec/enc/XSECCryptoException.hpp>
 #include <xsec/enc/XSECCryptoProvider.hpp>
@@ -123,16 +123,40 @@ void SAMLConfig::setArtifactMap(ArtifactMap* artifactMap)
     m_artifactMap = artifactMap;
 }
 
+SAMLInternalConfig::SAMLInternalConfig() : m_initCount(0), m_lock(Mutex::create())
+{
+}
+
+SAMLInternalConfig::~SAMLInternalConfig()
+{
+    delete m_lock;
+}
+
 bool SAMLInternalConfig::init(bool initXMLTooling)
 {
 #ifdef _DEBUG
     xmltooling::NDC ndc("init");
 #endif
-    Category& log=Category::getInstance(SAML_LOGCAT".SAMLConfig");
+    Category& log=Category::getInstance(SAML_LOGCAT".Config");
+
+    Lock initLock(m_lock);
+
+    if (m_initCount == LONG_MAX) {
+        log.crit("library initialized too many times");
+        return false;
+    }
+
+    if (m_initCount >= 1) {
+        ++m_initCount;
+        return true;
+    }
+
     log.debug("library initialization started");
 
-    if (initXMLTooling)
-        XMLToolingConfig::getConfig().init();
+    if (initXMLTooling && !XMLToolingConfig::getConfig().init()) {
+        return false;
+    }
+
     XMLToolingConfig::getConfig().getPathResolver()->setDefaultPackageName("opensaml");
 
     REGISTER_XMLTOOLING_EXCEPTION_FACTORY(ArtifactException,opensaml);
@@ -157,6 +181,7 @@ bool SAMLInternalConfig::init(bool initXMLTooling)
     registerSecurityPolicyRules();
 
     log.info("%s library initialization complete", PACKAGE_STRING);
+    ++m_initCount;
     return true;
 }
 
@@ -165,7 +190,15 @@ void SAMLInternalConfig::term(bool termXMLTooling)
 #ifdef _DEBUG
     xmltooling::NDC ndc("term");
 #endif
-    Category& log=Category::getInstance(SAML_LOGCAT".SAMLConfig");
+
+    Lock initLock(m_lock);
+    if (m_initCount == 0) {
+        Category::getInstance(SAML_LOGCAT".Config").crit("term without corresponding init");
+        return;
+    }
+    else if (--m_initCount > 0) {
+        return;
+    }
 
     MessageDecoderManager.deregisterFactories();
     MessageEncoderManager.deregisterFactories();
@@ -180,7 +213,7 @@ void SAMLInternalConfig::term(bool termXMLTooling)
     if (termXMLTooling)
         XMLToolingConfig::getConfig().term();
     
-    log.info("%s library shutdown complete", PACKAGE_STRING);
+    Category::getInstance(SAML_LOGCAT".Config").info("%s library shutdown complete", PACKAGE_STRING);
 }
 
 void SAMLInternalConfig::generateRandomBytes(void* buf, unsigned int len)
