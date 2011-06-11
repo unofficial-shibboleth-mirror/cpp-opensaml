@@ -141,7 +141,7 @@ bool SAMLInternalConfig::init(bool initXMLTooling)
 
     Lock initLock(m_lock);
 
-    if (m_initCount == LONG_MAX) {
+    if (m_initCount == INT_MAX) {
         log.crit("library initialized too many times");
         return false;
     }
