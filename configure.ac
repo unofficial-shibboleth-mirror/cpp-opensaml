@@ -32,7 +32,7 @@ else
 fi
 
 AC_CONFIG_HEADERS([config.h])
-AC_CONFIG_FILES([opensaml.spec pkginfo Portfile])
+AC_CONFIG_FILES([opensaml.spec])
 AC_CONFIG_FILES([Makefile saml/Makefile samltest/Makefile samlsign/Makefile schemas/Makefile doc/Makefile])
 
 AC_PROG_CC([gcc gcc3 cc])
