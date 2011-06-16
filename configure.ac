@@ -1,5 +1,5 @@
 AC_PREREQ([2.50])
-AC_INIT([opensaml],[2.5],[https://bugs.internet2.edu/],[opensaml])
+AC_INIT([opensaml],[2.5],[https://issues.shibboleth.net/],[opensaml])
 AC_CONFIG_SRCDIR(saml)
 AC_CONFIG_AUX_DIR(build-aux)
 AC_CONFIG_MACRO_DIR(m4)
@@ -32,7 +32,7 @@ else
 fi
 
 AC_CONFIG_HEADERS([config.h])
-AC_CONFIG_FILES([opensaml.spec pkginfo Portfile])
+AC_CONFIG_FILES([opensaml.spec])
 AC_CONFIG_FILES([Makefile saml/Makefile samltest/Makefile samlsign/Makefile schemas/Makefile doc/Makefile])
 
 AC_PROG_CC([gcc gcc3 cc])
