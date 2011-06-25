@@ -38,6 +38,9 @@
 /pkginfo
 /stamp-h1
 /.settings
+/.autotools
+/.cproject
+/.project
 /doxyfile
 /release
 /x64
