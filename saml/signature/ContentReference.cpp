@@ -69,6 +69,7 @@ ContentReference::~ContentReference()
 void ContentReference::createReferences(DSIGSignature* sig)
 {
     DSIGReference* ref = nullptr;
+    sig->setIdByAttributeName(false);
     const XMLCh* id=m_signableObject.getXMLID();
     if (!id || !*id)
         ref=sig->createReference(&chNull, m_digest ? m_digest : DSIGConstants::s_unicodeStrURISHA1);  // whole doc reference

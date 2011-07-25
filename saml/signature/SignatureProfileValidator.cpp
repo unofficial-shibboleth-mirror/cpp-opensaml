@@ -29,6 +29,7 @@
 #include "signature/SignableObject.h"
 #include "signature/SignatureProfileValidator.h"
 
+#include <xmltooling/logging.h>
 #include <xmltooling/signature/Signature.h>
 
 #include <xercesc/util/XMLUniDefs.hpp>
@@ -38,6 +39,7 @@
 
 using namespace opensaml;
 using namespace xmlsignature;
+using namespace xmltooling::logging;
 using namespace xmltooling;
 using namespace std;
 
@@ -66,7 +68,14 @@ void SignatureProfileValidator::validateSignature(const Signature& sigObj) const
     const SignableObject* signableObj=dynamic_cast<const SignableObject*>(sigObj.getParent());
     if (!signableObj)
         throw ValidationException("Signature is not a child of a signable SAML object.");
-    
+
+    if (sig->getObjectLength() != 0) {
+        Category::getInstance(SAML_LOGCAT".SignatureProfileValidator").error("signature contained an embedded <Object> element");
+        throw ValidationException("Invalid signature profile for SAML object.");
+    }
+
+    sig->setIdByAttributeName(false);
+
     bool valid=false;
     DSIGReferenceList* refs=sig->getReferenceList();
     if (refs && refs->getSize()==1) {
@@ -83,12 +92,32 @@ void SignatureProfileValidator::validateSignature(const Signature& sigObj) const
                         else if (tlist->item(i)->getTransformType()!=TRANSFORM_EXC_C14N &&
                                  tlist->item(i)->getTransformType()!=TRANSFORM_C14N) {
                             valid=false;
+                            Category::getInstance(SAML_LOGCAT".SignatureProfileValidator").error("signature contained an invalid transform");
                             break;
                         }
                     }
                 }
+
+                if (valid && URI && *URI) {
+                    valid = false;
+                    if (sigObj.getDOM() && signableObj->getDOM()) {
+                        DOMElement* signedNode = sigObj.getDOM()->getOwnerDocument()->getElementById(ID);
+                        if (signedNode && signedNode->isSameNode(signableObj->getDOM())) {
+                            valid = true;
+                        }
+                        else {
+                            Category::getInstance(SAML_LOGCAT".SignatureProfileValidator").error("signature reference does not match parent object node");
+                        }
+                    }
+                }
+            }
+            else {
+                Category::getInstance(SAML_LOGCAT".SignatureProfileValidator").error("signature reference does not match parent object ID");
             }
         }
+    }
+    else {
+        Category::getInstance(SAML_LOGCAT".SignatureProfileValidator").error("signature contained multiple or zero references");
     }
     
     if (!valid)
