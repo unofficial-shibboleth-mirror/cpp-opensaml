@@ -68,9 +68,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{08D28DE8-0
 		m4\doxygen.m4 = m4\doxygen.m4
 		Makefile.am = Makefile.am
 		opensaml.spec.in = opensaml.spec.in
-		pkginfo.in = pkginfo.in
-		Portfile.in = Portfile.in
-		postinstall = postinstall
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Doc", "Doc", "{91D9712D-5D39-42BE-A320-4B55A90D9610}"
