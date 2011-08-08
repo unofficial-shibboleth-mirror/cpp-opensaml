@@ -48,13 +48,13 @@ that support the SAML 1.0, 1.1, and 2.0 specifications.
 
 This package contains the utility programs.
 
-%package -n libsaml7
+%package -n libsaml8
 Summary:    OpenSAML SAML library
 Group:      Development/Libraries/C and C++
 Provides:   @PACKAGE_NAME@ = %{version}-%{release}
 Obsoletes:  @PACKAGE_NAME@ < %{version}-%{release}
 
-%description -n libsaml7
+%description -n libsaml8
 OpenSAML is an open source implementation of the OASIS Security Assertion
 Markup Language Specification. It contains a set of open source C++ classes
 that support the SAML 1.0, 1.1, and 2.0 specifications.
@@ -64,7 +64,7 @@ This package contains just the shared library.
 %package -n libsaml-devel
 Summary:	OpenSAML development Headers
 Group:		Development/Libraries/C and C++
-Requires:	libsaml7 = %{version}-%{release}
+Requires:	libsaml8 = %{version}-%{release}
 Provides:	@PACKAGE_NAME@-devel = %{version}-%{release}
 Obsoletes:	@PACKAGE_NAME@-devel < %{version}-%{release}
 %if 0%{?suse_version} > 1030 && 0%{?suse_version} < 1130
@@ -114,18 +114,18 @@ This package includes XML schemas and related files.
 [ "$RPM_BUILD_ROOT" != "/" ] && %{__rm} -rf $RPM_BUILD_ROOT
 
 %ifnos solaris2.8 solaris2.9 solaris2.10
-%post -n libsaml7 -p /sbin/ldconfig
+%post -n libsaml8 -p /sbin/ldconfig
 %endif
 
 %ifnos solaris2.8 solaris2.9 solaris2.10
-%postun -n libsaml7 -p /sbin/ldconfig
+%postun -n libsaml8 -p /sbin/ldconfig
 %endif
 
 %files -n @PACKAGE_NAME@-bin
 %defattr(-,root,root,-)
 %{_bindir}/samlsign
 
-%files -n libsaml7
+%files -n libsaml8
 %defattr(-,root,root,-)
 %{_libdir}/libsaml.so.*
 
@@ -142,6 +142,9 @@ This package includes XML schemas and related files.
 %doc %{pkgdocdir}
 
 %changelog
+* Mon Aug 8 2011 Scott Cantor  <cantor.2@osu.edu>  - 2.5-1
+- Update lib package number.
+
 * Tue Oct 26 2010  Scott Cantor  <cantor.2@osu.edu>  - 2.4-1
 - Update version
 - Add pkg-config support.
