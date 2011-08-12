@@ -98,16 +98,19 @@ samltest_h = \
     saml2/profile/SAML2PolicyTest.h
 
 noinst_HEADERS = \
-	binding.h \
+    binding.h \
     internal.h \
-    signature/SAMLSignatureTestBase.h
+    signature/SAMLSignatureTestBase.h \
+    $(samltest_h)
 
 nodist_samltest_SOURCES = $(samltest_h:.h=.cpp)
+
+BUILT_SOURCES = $(nodist_samltest_SOURCES)
 
 CLEANFILES = $(nodist_samltest_SOURCES)
 
 do-cxxtestgen:
-	if test $(HFILE) = "samltest.h"; then \
+	if test "$(CPPFILE)" = "samltest.cpp"; then \
 		$(CXXTEST) --error-printer --have-eh --have-std --abort-on-fail -o $(CPPFILE) $(HFILE); \
 	else \
 		$(CXXTEST) --part --have-eh --have-std --abort-on-fail -o $(CPPFILE) $(HFILE); \
@@ -118,4 +121,4 @@ $(nodist_samltest_SOURCES): %.cpp: %.h
 
 samltest_LDADD = $(top_builddir)/saml/libsaml.la
 
-EXTRA_DIST = samltest.vcxproj samltest.vcxproj.filters $(samltest_h) data
+EXTRA_DIST = samltest.vcxproj samltest.vcxproj.filters data
