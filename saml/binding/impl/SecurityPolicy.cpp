@@ -106,6 +106,7 @@ SecurityPolicy::SecurityPolicy(
 
 SecurityPolicy::~SecurityPolicy()
 {
+    delete m_role;
     delete m_metadataCriteria;
     delete m_issuer;
 }

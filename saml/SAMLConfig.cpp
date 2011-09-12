@@ -234,8 +234,8 @@ void SAMLInternalConfig::generateRandomBytes(void* buf, unsigned int len)
 void SAMLInternalConfig::generateRandomBytes(std::string& buf, unsigned int len)
 {
     buf.erase();
-    auto_ptr<unsigned char> hold(new unsigned char[len]);
-    generateRandomBytes(hold.get(),len);
+    auto_arrayptr<unsigned char> hold(new unsigned char[len]);
+    generateRandomBytes(const_cast<unsigned char*>(hold.get()), len);
     for (unsigned int i=0; i<len; i++)
         buf+=(hold.get())[i];
 }
