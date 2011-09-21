@@ -30,6 +30,7 @@
 #include <saml/base.h>
 
 #include <vector>
+#include <iostream>
 #include <xmltooling/exceptions.h>
 #include <xmltooling/security/CredentialResolver.h>
 
@@ -119,6 +120,14 @@ namespace opensaml {
              * this method so as to report/log any errors that would affect later processing.
              */
             virtual void init()=0;
+
+            /**
+             * Generate an XML representation of the provider's status. The XML must be
+             * well-formed, but is otherwise arbitrary.
+             *
+             * @param os    stream to write status information to
+             */
+            virtual void outputStatus(std::ostream& os) const;
 
             /**
              * Gets the entire metadata tree, after the registered filter has been applied.

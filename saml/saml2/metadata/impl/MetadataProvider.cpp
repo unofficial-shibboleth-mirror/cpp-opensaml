@@ -165,6 +165,10 @@ void MetadataProvider::doFilters(XMLObject& xmlObject) const
     }
 }
 
+void MetadataProvider::outputStatus(ostream& os) const
+{
+}
+
 const EntitiesDescriptor* MetadataProvider::getEntitiesDescriptor(const XMLCh* name, bool strict) const
 {
     auto_ptr_char temp(name);

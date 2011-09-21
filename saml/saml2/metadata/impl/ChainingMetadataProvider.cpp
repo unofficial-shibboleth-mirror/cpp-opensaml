@@ -33,6 +33,7 @@
 #include "saml2/metadata/MetadataCredentialCriteria.h"
 
 #include <memory>
+#include <functional>
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xmltooling/logging.h>
 #include <xmltooling/util/Threads.h>
@@ -64,6 +65,7 @@ namespace opensaml {
             Lockable* lock();
             void unlock();
             void init();
+            void outputStatus(ostream& os) const;
             const XMLObject* getMetadata() const;
             const EntitiesDescriptor* getEntitiesDescriptor(const char* name, bool requireValidMetadata=true) const;
             pair<const EntityDescriptor*,const RoleDescriptor*> getEntityDescriptor(const Criteria& criteria) const;
@@ -222,6 +224,13 @@ void ChainingMetadataProvider::init()
     // Set an initial cache tag for the state of the plugins.
     SAMLConfig::getConfig().generateRandomBytes(m_feedTag, 4);
     m_feedTag = SAMLArtifact::toHex(m_feedTag);
+}
+
+void ChainingMetadataProvider::outputStatus(ostream& os) const
+{
+    for (vector<MetadataProvider*>::const_iterator i=m_providers.begin(); i!=m_providers.end(); ++i) {
+        (*i)->outputStatus(os);
+    }
 }
 
 Lockable* ChainingMetadataProvider::lock()
