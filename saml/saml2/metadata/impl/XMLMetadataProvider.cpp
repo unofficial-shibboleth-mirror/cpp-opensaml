@@ -34,6 +34,7 @@
 #include <fstream>
 #include <xmltooling/XMLToolingConfig.h>
 #include <xmltooling/io/HTTPResponse.h>
+#include <xmltooling/util/DateTime.h>
 #include <xmltooling/util/NDC.h>
 #include <xmltooling/util/PathResolver.h>
 #include <xmltooling/util/ReloadableXMLFile.h>
@@ -95,6 +96,31 @@ namespace opensaml {
 
             const char* getId() const {
                 return m_id.c_str();
+            }
+
+            void outputStatus(ostream& os) const {
+                os << "<MetadataProvider";
+
+                if (getId() && *getId()) {
+                    os << " id='" << getId() << "'";
+                }
+
+                if (!m_source.empty()) {
+                    os << " source='" << m_source << "'";
+                }
+
+                if (m_lastUpdate > 0) {
+                    DateTime ts(m_lastUpdate);
+                    ts.parseDateTime();
+                    auto_ptr_char timestamp(ts.getFormattedString());
+                    os << " lastUpdate='" << timestamp.get() << "'";
+                }
+
+                if (!m_local && m_reloadInterval > 0) {
+                    os << " reloadInterval='" << m_reloadInterval << "'";
+                }
+
+                os << "/>";
             }
 
             const XMLObject* getMetadata() const {
