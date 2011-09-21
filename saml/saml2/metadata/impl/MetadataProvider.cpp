@@ -137,6 +137,11 @@ MetadataProvider::~MetadataProvider()
     for_each(m_filters.begin(), m_filters.end(), xmltooling::cleanup<MetadataFilter>());
 }
 
+const char* MetadataProvider::getId() const
+{
+    return nullptr;
+}
+
 void MetadataProvider::addMetadataFilter(MetadataFilter* newFilter)
 {
     m_filters.push_back(newFilter);

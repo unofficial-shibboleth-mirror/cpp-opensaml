@@ -37,6 +37,7 @@
 #include <xmltooling/security/Credential.h>
 #include <xmltooling/security/KeyInfoResolver.h>
 #include <xmltooling/security/SecurityHelper.h>
+#include <xmltooling/util/DateTime.h>
 #include <xmltooling/util/Threads.h>
 #include <xmltooling/util/XMLHelper.h>
 
@@ -50,7 +51,7 @@ static const XMLCh _KeyInfoResolver[] = UNICODE_LITERAL_15(K,e,y,I,n,f,o,R,e,s,o
 static const XMLCh type[] =             UNICODE_LITERAL_4(t,y,p,e);
 
 AbstractMetadataProvider::AbstractMetadataProvider(const DOMElement* e)
-    : ObservableMetadataProvider(e), m_resolver(nullptr), m_credentialLock(nullptr)
+    : ObservableMetadataProvider(e), m_lastUpdate(0),  m_resolver(nullptr), m_credentialLock(nullptr)
 {
     e = XMLHelper::getFirstChildElement(e, _KeyInfoResolver);
     if (e) {
@@ -69,6 +70,24 @@ AbstractMetadataProvider::~AbstractMetadataProvider()
         for_each(c->second.begin(), c->second.end(), xmltooling::cleanup<Credential>());
     delete m_credentialLock;
     delete m_resolver;
+}
+
+void AbstractMetadataProvider::outputStatus(ostream& os) const
+{
+    os << "<MetadataProvider";
+
+    if (getId() && *getId()) {
+        os << " id='" << getId() << "'";
+    }
+
+    if (m_lastUpdate > 0) {
+        DateTime ts(m_lastUpdate);
+        ts.parseDateTime();
+        auto_ptr_char timestamp(ts.getFormattedString());
+        os << " lastUpdate='" << timestamp.get() << "'";
+    }
+
+    os << "/>";
 }
 
 void AbstractMetadataProvider::emitChangeEvent() const

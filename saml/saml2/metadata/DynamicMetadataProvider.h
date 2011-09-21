@@ -54,6 +54,7 @@ namespace opensaml {
             void init();
             xmltooling::Lockable* lock();
             void unlock();
+            const char* getId() const;
             const xmltooling::XMLObject* getMetadata() const;
             std::pair<const EntityDescriptor*,const RoleDescriptor*> getEntityDescriptor(const Criteria& criteria) const;
 
@@ -70,6 +71,7 @@ namespace opensaml {
             virtual EntityDescriptor* resolve(const Criteria& criteria) const;
 
         private:
+            std::string m_id;
             mutable xmltooling::RWLock* m_lock;
             double m_refreshDelayFactor;
             time_t m_minCacheDuration, m_maxCacheDuration;

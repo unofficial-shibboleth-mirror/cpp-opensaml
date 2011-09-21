@@ -47,6 +47,7 @@ using namespace std;
 #  define min(a,b)            (((a) < (b)) ? (a) : (b))
 # endif
 
+static const XMLCh id[] =                   UNICODE_LITERAL_2(i,d);
 static const XMLCh maxCacheDuration[] =     UNICODE_LITERAL_16(m,a,x,C,a,c,h,e,D,u,r,a,t,i,o,n);
 static const XMLCh minCacheDuration[] =     UNICODE_LITERAL_16(m,i,n,C,a,c,h,e,D,u,r,a,t,i,o,n);
 static const XMLCh refreshDelayFactor[] =   UNICODE_LITERAL_18(r,e,f,r,e,s,h,D,e,l,a,y,F,a,c,t,o,r);
@@ -64,6 +65,7 @@ namespace opensaml {
 DynamicMetadataProvider::DynamicMetadataProvider(const DOMElement* e)
     : AbstractMetadataProvider(e),
       m_validate(XMLHelper::getAttrBool(e, false, validate)),
+        m_id(XMLHelper::getAttrString(e, "Dynamic", id)),
         m_lock(RWLock::create()),
         m_refreshDelayFactor(0.75),
         m_minCacheDuration(XMLHelper::getAttrInt(e, 600, minCacheDuration)),
@@ -114,6 +116,11 @@ void DynamicMetadataProvider::unlock()
 
 void DynamicMetadataProvider::init()
 {
+}
+
+const char* DynamicMetadataProvider::getId() const
+{
+    return m_id.c_str();
 }
 
 pair<const EntityDescriptor*,const RoleDescriptor*> DynamicMetadataProvider::getEntityDescriptor(const Criteria& criteria) const
@@ -234,6 +241,8 @@ pair<const EntityDescriptor*,const RoleDescriptor*> DynamicMetadataProvider::get
         // Make sure we clear out any existing copies, including stale metadata or if somebody snuck in.
         cacheExp = SAMLTIME_MAX;
         indexEntity(entity2.release(), cacheExp, true);
+
+        m_lastUpdate = now;
 
         // Downgrade back to a read lock.
         m_lock->unlock();

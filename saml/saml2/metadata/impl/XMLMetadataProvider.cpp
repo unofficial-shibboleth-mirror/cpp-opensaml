@@ -93,6 +93,10 @@ namespace opensaml {
                 }
             }
 
+            const char* getId() const {
+                return m_id.c_str();
+            }
+
             const XMLObject* getMetadata() const {
                 return m_object;
             }
@@ -236,6 +240,7 @@ pair<bool,DOMElement*> XMLMetadataProvider::load(bool backup)
         generateFeed();
     if (changed)
         emitChangeEvent();
+    m_lastUpdate = time(nullptr);
 
     // Tracking cacheUntil through the tree is TBD, but
     // validUntil is the tightest interval amongst the children.

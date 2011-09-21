@@ -81,6 +81,7 @@ namespace opensaml {
             using MetadataProvider::getEntityDescriptor;
             using MetadataProvider::getEntitiesDescriptor;
 
+            void outputStatus(std::ostream& os) const;
             void emitChangeEvent() const;
             std::pair<const EntityDescriptor*,const RoleDescriptor*> getEntityDescriptor(const Criteria& criteria) const;
             const EntitiesDescriptor* getEntitiesDescriptor(const char* name, bool requireValidMetadata=true) const;
@@ -90,6 +91,9 @@ namespace opensaml {
                 ) const;
 
         protected:
+            /** Time of last update for reporting. */
+            mutable time_t m_lastUpdate;
+
             /** Embedded KeyInfoResolver instance. */
             xmltooling::KeyInfoResolver* m_resolver;
 

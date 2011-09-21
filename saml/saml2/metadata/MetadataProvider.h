@@ -97,6 +97,13 @@ namespace opensaml {
             virtual ~MetadataProvider();
 
             /**
+             * Returns an identifier for the provider for logging/status purposes.
+             *
+             * @return an identifier, or null
+             */
+            virtual const char* getId() const;
+
+            /**
              * Adds a metadata filter to apply to any resolved metadata. Will not be applied
              * to metadata that is already loaded.
              *
