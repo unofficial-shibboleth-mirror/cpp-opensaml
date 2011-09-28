@@ -271,6 +271,9 @@ namespace opensaml {
         /** MetadataProvider that wraps a sequence of metadata providers. */
         #define CHAINING_METADATA_PROVIDER  "Chaining"
 
+        /** MetadataProvider that loads a directory of files. */
+        #define FOLDER_METADATA_PROVIDER  "Folder"
+
         /** MetadataProvider that returns an empty "dummy" entity descriptor. */
         #define NULL_METADATA_PROVIDER  "Null"
 

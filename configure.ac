@@ -63,6 +63,7 @@ fi
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
 AC_TYPE_SIZE_T
+AC_HEADER_DIRENT
 
 # Checks for library functions.
 AC_CHECK_FUNCS([strchr strdup strstr])
