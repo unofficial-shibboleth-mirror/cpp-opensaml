@@ -177,6 +177,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="saml2\metadata\impl\DiscoverableMetadataProvider.cpp" />
+    <ClCompile Include="saml2\metadata\impl\FolderMetadataProvider.cpp" />
     <ClCompile Include="SAMLConfig.cpp" />
     <ClCompile Include="util\CommonDomainCookie.cpp" />
     <ClCompile Include="util\SAMLConstants.cpp" />

@@ -100,7 +100,8 @@ namespace opensaml {
             }
             do {
                 if (f.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
-                    log.warn("nested folders not supported, skipping (%s)", f.cFileName);
+                    if (strcmp(f.cFileName, ".") && strcmp(f.cFileName, ".."))
+                        log.warn("nested folders not supported, skipping (%s)", f.cFileName);
                     continue;
                 }
                 fullname = loc + '/' + f.cFileName;
