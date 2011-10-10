@@ -34,6 +34,7 @@
 #include <xmltooling/logging.h>
 #include <xmltooling/XMLObjectBuilder.h>
 #include <xmltooling/XMLToolingConfig.h>
+#include <xmltooling/security/SecurityHelper.h>
 #include <xmltooling/util/NDC.h>
 #include <xmltooling/util/ParserPool.h>
 #include <xmltooling/util/StorageService.h>
@@ -170,11 +171,16 @@ ArtifactMap::ArtifactMap(const DOMElement* e, xmltooling::StorageService* storag
 {
     if (e) {
         auto_ptr_char c(e->getAttributeNS(nullptr, context));
-        if (c.get() && *c.get())
+        if (c.get() && *c.get()) {
             m_context = c.get();
-        else
+            if (storage && m_context.length() > m_storage->getCapabilities().getContextSize()) {
+                throw IOException("ArtifactMap context length exceeds capacity of storage service.");
+            }
+        }
+        else {
             m_context = "opensaml::ArtifactMap";
-        
+        }
+
         const XMLCh* TTL = e->getAttributeNS(nullptr, artifactTTL);
         if (TTL) {
             m_artifactTTL = XMLString::parseInt(TTL);
@@ -213,9 +219,17 @@ void ArtifactMap::storeContent(XMLObject* content, const SAMLArtifact* artifact,
     // Serialize the root element, whatever it is, for storage.
     string xmlbuf;
     XMLHelper::serialize(root, xmlbuf);
+
+    // Use hex form of message handler as storage key unless it's too big.
+    string key = artifact->getMessageHandle();
+    if (key.length() > m_storage->getCapabilities().getKeySize())
+        key = SecurityHelper::doHash("SHA1", key.data(), key.length());
+    else
+        key = SAMLArtifact::toHex(key);
+
     if (!m_storage->createText(
         m_context.c_str(),
-        SAMLArtifact::toHex(artifact->getMessageHandle()).c_str(),
+        key.c_str(),
         xmlbuf.c_str(),
         time(nullptr) + m_artifactTTL
         )) {
@@ -235,10 +249,16 @@ XMLObject* ArtifactMap::retrieveContent(const SAMLArtifact* artifact, const char
 
     if (!m_storage)
         return m_mappings->retrieveContent(artifact, relyingParty);
-    
+
+    // Use hex form of message handler as storage key unless it's too big.
+    string key = artifact->getMessageHandle();
+    if (key.length() > m_storage->getCapabilities().getKeySize())
+        key = SecurityHelper::doHash("SHA1", key.data(), key.length());
+    else
+        key = SAMLArtifact::toHex(key);
+
     // Read the mapping and then delete it.
     string xmlbuf;
-    string key = SAMLArtifact::toHex(artifact->getMessageHandle());
     if (!m_storage->readText(m_context.c_str(), key.c_str(), &xmlbuf))
         throw BindingException("Artifact not found in mapping database.");
     m_storage->deleteText(m_context.c_str(), key.c_str());
@@ -271,9 +291,16 @@ string ArtifactMap::getRelyingParty(const SAMLArtifact* artifact)
 {
     if (!m_storage)
         return m_mappings->getRelyingParty(artifact);
-    
+
+    // Use hex form of message handler as storage key unless it's too big.
+    string key = artifact->getMessageHandle();
+    if (key.length() > m_storage->getCapabilities().getKeySize())
+        key = SecurityHelper::doHash("SHA1", key.data(), key.length());
+    else
+        key = SAMLArtifact::toHex(key);
+
     string xmlbuf;
-    if (!m_storage->readText(m_context.c_str(), SAMLArtifact::toHex(artifact->getMessageHandle()).c_str(), &xmlbuf))
+    if (!m_storage->readText(m_context.c_str(), key.c_str(), &xmlbuf))
         throw BindingException("Artifact not found in mapping database.");
     
     // Parse the data back into XML.
