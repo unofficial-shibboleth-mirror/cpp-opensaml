@@ -37,11 +37,12 @@
 #include <xmltooling/util/XMLHelper.h>
 
 #ifndef WIN32
-# ifdef HAVE_SYS_TYPES_H && HAVE_DIRENT_H
-#  include <sys/types.h>
+# if defined(HAVE_SYS_TYPES_H) && defined(HAVE_DIRENT_H)
 #  include <dirent.h>
+#  include <sys/types.h>
+#  include <sys/stat.h>
 # else
-#  #error Unsupported directory library headers.
+#  error Unsupported directory library headers.
 # endif
 #endif
 
@@ -112,14 +113,22 @@ namespace opensaml {
             if (!d) {
                 throw MetadataException("Folder MetadataProvider unable to open directory ($1)", params(1, loc.c_str()));
             }
-            struct dirent* ent;
-            while(readdir_r(d, ent, &ent) == 0 && ent) {
-                if (ent->d_type & DT_DIR) {
-                    if (strcmp(ent->d_name, ".") && strcmp(ent->d_name, ".."))
-                        log.warn("nested folders not supported, skipping (%s)", ent->d_name);
+            char dir_buf[sizeof(struct dirent) + PATH_MAX];
+            struct dirent* ent = (struct dirent*)dir_buf;
+            struct dirent* entptr = nullptr;
+            while(readdir_r(d, ent, &entptr) == 0 && entptr) {
+                if (!strcmp(entptr->d_name, ".") || !strcmp(entptr->d_name, ".."))
+                    continue;
+                fullname = loc + '/' + entptr->d_name;
+                struct stat stat_buf;
+                if (stat(fullname.c_str(), &stat_buf) != 0) {
+                    log.warn("unable to access (%s)", entptr->d_name);
                     continue;
                 }
-                fullname = loc + '/' + ent->d_name;
+                else if (S_ISDIR(stat_buf.st_mode)) {
+                    log.warn("nested folders not supported, skipping (%s)", entptr->d_name);
+                    continue;
+                }
                 log.info("will create metadata source from (%s)", fullname.c_str());
                 auto_ptr_XMLCh entry(fullname.c_str());
 #endif
