@@ -102,7 +102,11 @@ else
 fi
 
 AC_CHECK_HEADER([zlib.h],,AC_MSG_ERROR([unable to find zlib header files]))
-AC_CHECK_LIB([z],[deflateInit2_],[],AC_MSG_ERROR([unable to link with zlib library]))
+AC_LINK_IFELSE(
+    [AC_LANG_PROGRAM([[#include <zlib.h>]],
+        [[zlibVersion()]])],,
+    [AC_MSG_ERROR([unable to link with zlib])])
+
 
 # OpenSSL settings
 AC_ARG_WITH(openssl,
