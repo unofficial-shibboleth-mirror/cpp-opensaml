@@ -110,12 +110,15 @@ namespace opensaml {
             localizedNameTypeImpl(const localizedNameTypeImpl& src)
                     : AbstractXMLObject(src), AbstractSimpleElement(src), AbstractDOMCachingXMLObject(src) {
                 init();
+            }
+
+            void _clone(const localizedNameTypeImpl& src) {
                 setLang(src.getLang());
                 if (src.m_LangPrefix)
                     m_LangPrefix = XMLString::replicate(src.m_LangPrefix);
             }
 
-            IMPL_XMLOBJECT_CLONE(localizedNameType);
+            IMPL_XMLOBJECT_CLONE_EX(localizedNameType);
             IMPL_XMLOBJECT_FOREIGN_ATTRIB(Lang,XMLCh);
 
         protected:
@@ -173,12 +176,15 @@ namespace opensaml {
             localizedURITypeImpl(const localizedURITypeImpl& src)
                     : AbstractXMLObject(src), AbstractSimpleElement(src), AbstractDOMCachingXMLObject(src) {
                 init();
+            }
+
+            void _clone(const localizedURITypeImpl& src) {
                 setLang(src.getLang());
                 if (src.m_LangPrefix)
                     m_LangPrefix = XMLString::replicate(src.m_LangPrefix);
             }
 
-            IMPL_XMLOBJECT_CLONE(localizedURIType);
+            IMPL_XMLOBJECT_CLONE_EX(localizedURIType);
             IMPL_XMLOBJECT_FOREIGN_ATTRIB(Lang,XMLCh);
 
         protected:
@@ -216,10 +222,7 @@ namespace opensaml {
 
             OrganizationNameImpl(const OrganizationNameImpl& src) : AbstractXMLObject(src), localizedNameTypeImpl(src) {}
 
-            IMPL_XMLOBJECT_CLONE(OrganizationName);
-            localizedNameType* clonelocalizedNameType() const {
-                return new OrganizationNameImpl(*this);
-            }
+            IMPL_XMLOBJECT_CLONE_EX(OrganizationName);
         };
 
         class SAML_DLLLOCAL OrganizationDisplayNameImpl : public virtual OrganizationDisplayName, public localizedNameTypeImpl
@@ -232,10 +235,7 @@ namespace opensaml {
 
             OrganizationDisplayNameImpl(const OrganizationDisplayNameImpl& src) : AbstractXMLObject(src), localizedNameTypeImpl(src) {}
 
-            IMPL_XMLOBJECT_CLONE(OrganizationDisplayName);
-            localizedNameType* clonelocalizedNameType() const {
-                return new OrganizationDisplayNameImpl(*this);
-            }
+            IMPL_XMLOBJECT_CLONE_EX(OrganizationDisplayName);
         };
 
         class SAML_DLLLOCAL OrganizationURLImpl : public virtual OrganizationURL, public localizedURITypeImpl
@@ -248,10 +248,7 @@ namespace opensaml {
 
             OrganizationURLImpl(const OrganizationURLImpl& src) : AbstractXMLObject(src), localizedURITypeImpl(src) {}
 
-            IMPL_XMLOBJECT_CLONE(OrganizationURL);
-            localizedURIType* clonelocalizedURIType() const {
-                return new OrganizationURLImpl(*this);
-            }
+            IMPL_XMLOBJECT_CLONE_EX(OrganizationURL);
         };
 
         class SAML_DLLLOCAL ServiceNameImpl : public virtual ServiceName, public localizedNameTypeImpl
@@ -264,10 +261,7 @@ namespace opensaml {
 
             ServiceNameImpl(const ServiceNameImpl& src) : AbstractXMLObject(src), localizedNameTypeImpl(src) {}
 
-            IMPL_XMLOBJECT_CLONE(ServiceName);
-            localizedNameType* clonelocalizedNameType() const {
-                return new ServiceNameImpl(*this);
-            }
+            IMPL_XMLOBJECT_CLONE_EX(ServiceName);
         };
 
         class SAML_DLLLOCAL ServiceDescriptionImpl : public virtual ServiceDescription, public localizedNameTypeImpl
@@ -280,10 +274,7 @@ namespace opensaml {
 
             ServiceDescriptionImpl(const ServiceDescriptionImpl& src) : AbstractXMLObject(src), localizedNameTypeImpl(src) {}
 
-            IMPL_XMLOBJECT_CLONE(ServiceDescription);
-            localizedNameType* clonelocalizedNameType() const {
-                return new ServiceDescriptionImpl(*this);
-            }
+            IMPL_XMLOBJECT_CLONE_EX(ServiceDescription);
         };
 
         class SAML_DLLLOCAL ExtensionsImpl : public virtual Extensions,
@@ -629,7 +620,8 @@ namespace opensaml {
             }
 
             EndpointTypeImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
-                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
+                    : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
+                init();
             }
 
             EndpointTypeImpl(const EndpointTypeImpl& src)
@@ -637,6 +629,10 @@ namespace opensaml {
                         AbstractAttributeExtensibleXMLObject(src),
                         AbstractComplexElement(src),
                         AbstractDOMCachingXMLObject(src) {
+                init();
+            }
+
+            void _clone(const EndpointTypeImpl& src) {
                 setBinding(src.getBinding());
                 setLocation(src.getLocation());
                 setResponseLocation(src.getResponseLocation());
@@ -645,7 +641,7 @@ namespace opensaml {
                     v.push_back((*i)->clone());
             }
 
-            IMPL_XMLOBJECT_CLONE(EndpointType);
+            IMPL_XMLOBJECT_CLONE_EX(EndpointType);
             IMPL_STRING_ATTRIB(Binding);
             IMPL_STRING_ATTRIB(Location);
             IMPL_STRING_ATTRIB(ResponseLocation);
@@ -708,18 +704,21 @@ namespace opensaml {
             }
 
             IndexedEndpointTypeImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
-                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {}
+                    : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
+                init();
+            }
 
             IndexedEndpointTypeImpl(const IndexedEndpointTypeImpl& src) : AbstractXMLObject(src), EndpointTypeImpl(src) {
+                init();
+            }
+
+            void _clone(const IndexedEndpointTypeImpl& src) {
+                EndpointTypeImpl::_clone(src);
                 setIndex(src.m_Index);
                 isDefault(src.m_isDefault);
             }
 
-            IMPL_XMLOBJECT_CLONE(IndexedEndpointType);
-            EndpointType* cloneEndpointType() const {
-                return new IndexedEndpointTypeImpl(*this);
-            }
-
+            IMPL_XMLOBJECT_CLONE_EX(IndexedEndpointType);
             IMPL_INTEGER_ATTRIB(Index);
             IMPL_BOOLEAN_ATTRIB(isDefault);
 
@@ -755,13 +754,7 @@ namespace opensaml {
 
             ArtifactResolutionServiceImpl(const ArtifactResolutionServiceImpl& src) : AbstractXMLObject(src), IndexedEndpointTypeImpl(src) {}
 
-            IMPL_XMLOBJECT_CLONE(ArtifactResolutionService);
-            IndexedEndpointType* cloneIndexedEndpointType() const {
-                return new ArtifactResolutionServiceImpl(*this);
-            }
-            EndpointType* cloneEndpointType() const {
-                return new ArtifactResolutionServiceImpl(*this);
-            }
+            IMPL_XMLOBJECT_CLONE_EX(ArtifactResolutionService);
         };
 
         class SAML_DLLLOCAL SingleLogoutServiceImpl : public virtual SingleLogoutService, public EndpointTypeImpl
@@ -774,10 +767,7 @@ namespace opensaml {
 
             SingleLogoutServiceImpl(const SingleLogoutServiceImpl& src) : AbstractXMLObject(src), EndpointTypeImpl(src) {}
 
-            IMPL_XMLOBJECT_CLONE(SingleLogoutService);
-            EndpointType* cloneEndpointType() const {
-                return new SingleLogoutServiceImpl(*this);
-            }
+            IMPL_XMLOBJECT_CLONE_EX(SingleLogoutService);
         };
 
         class SAML_DLLLOCAL ManageNameIDServiceImpl : public virtual ManageNameIDService, public EndpointTypeImpl
@@ -790,10 +780,7 @@ namespace opensaml {
 
             ManageNameIDServiceImpl(const ManageNameIDServiceImpl& src) : AbstractXMLObject(src), EndpointTypeImpl(src) {}
 
-            IMPL_XMLOBJECT_CLONE(ManageNameIDService);
-            EndpointType* cloneEndpointType() const {
-                return new ManageNameIDServiceImpl(*this);
-            }
+            IMPL_XMLOBJECT_CLONE_EX(ManageNameIDService);
         };
 
         class SAML_DLLLOCAL SingleSignOnServiceImpl : public virtual SingleSignOnService, public EndpointTypeImpl
@@ -806,10 +793,7 @@ namespace opensaml {
 
             SingleSignOnServiceImpl(const SingleSignOnServiceImpl& src) : AbstractXMLObject(src), EndpointTypeImpl(src) {}
 
-            IMPL_XMLOBJECT_CLONE(SingleSignOnService);
-            EndpointType* cloneEndpointType() const {
-                return new SingleSignOnServiceImpl(*this);
-            }
+            IMPL_XMLOBJECT_CLONE_EX(SingleSignOnService);
         };
 
         class SAML_DLLLOCAL NameIDMappingServiceImpl : public virtual NameIDMappingService, public EndpointTypeImpl
@@ -822,10 +806,7 @@ namespace opensaml {
 
             NameIDMappingServiceImpl(const NameIDMappingServiceImpl& src) : AbstractXMLObject(src), EndpointTypeImpl(src) {}
 
-            IMPL_XMLOBJECT_CLONE(NameIDMappingService);
-            EndpointType* cloneEndpointType() const {
-                return new NameIDMappingServiceImpl(*this);
-            }
+            IMPL_XMLOBJECT_CLONE_EX(NameIDMappingService);
         };
 
         class SAML_DLLLOCAL AssertionIDRequestServiceImpl : public virtual AssertionIDRequestService, public EndpointTypeImpl
@@ -838,10 +819,7 @@ namespace opensaml {
 
             AssertionIDRequestServiceImpl(const AssertionIDRequestServiceImpl& src) : AbstractXMLObject(src), EndpointTypeImpl(src) {}
 
-            IMPL_XMLOBJECT_CLONE(AssertionIDRequestService);
-            EndpointType* cloneEndpointType() const {
-                return new AssertionIDRequestServiceImpl(*this);
-            }
+            IMPL_XMLOBJECT_CLONE_EX(AssertionIDRequestService);
         };
 
         class SAML_DLLLOCAL AssertionConsumerServiceImpl : public virtual AssertionConsumerService, public IndexedEndpointTypeImpl
@@ -854,13 +832,7 @@ namespace opensaml {
 
             AssertionConsumerServiceImpl(const AssertionConsumerServiceImpl& src) : AbstractXMLObject(src), IndexedEndpointTypeImpl(src) {}
 
-            IMPL_XMLOBJECT_CLONE(AssertionConsumerService);
-            EndpointType* cloneEndpointType() const {
-                return new AssertionConsumerServiceImpl(*this);
-            }
-            IndexedEndpointType* cloneIndexedEndpointType() const {
-                return new AssertionConsumerServiceImpl(*this);
-            }
+            IMPL_XMLOBJECT_CLONE_EX(AssertionConsumerService);
         };
 
         class SAML_DLLLOCAL AuthnQueryServiceImpl : public virtual AuthnQueryService, public EndpointTypeImpl
@@ -873,10 +845,7 @@ namespace opensaml {
 
             AuthnQueryServiceImpl(const AuthnQueryServiceImpl& src) : AbstractXMLObject(src), EndpointTypeImpl(src) {}
 
-            IMPL_XMLOBJECT_CLONE(AuthnQueryService);
-            EndpointType* cloneEndpointType() const {
-                return new AuthnQueryServiceImpl(*this);
-            }
+            IMPL_XMLOBJECT_CLONE_EX(AuthnQueryService);
         };
 
         class SAML_DLLLOCAL AuthzServiceImpl : public virtual AuthzService, public EndpointTypeImpl
@@ -889,10 +858,7 @@ namespace opensaml {
 
             AuthzServiceImpl(const AuthzServiceImpl& src) : AbstractXMLObject(src), EndpointTypeImpl(src) {}
 
-            IMPL_XMLOBJECT_CLONE(AuthzService);
-            EndpointType* cloneEndpointType() const {
-                return new AuthzServiceImpl(*this);
-            }
+            IMPL_XMLOBJECT_CLONE_EX(AuthzService);
         };
 
         class SAML_DLLLOCAL AttributeServiceImpl : public virtual AttributeService, public EndpointTypeImpl
@@ -905,10 +871,7 @@ namespace opensaml {
 
             AttributeServiceImpl(const AttributeServiceImpl& src) : AbstractXMLObject(src), EndpointTypeImpl(src) {}
 
-            IMPL_XMLOBJECT_CLONE(AttributeService);
-            EndpointType* cloneEndpointType() const {
-                return new AttributeServiceImpl(*this);
-            }
+            IMPL_XMLOBJECT_CLONE_EX(AttributeService);
         };
 
         class SAML_DLLLOCAL RoleDescriptorImpl : public virtual RoleDescriptor,
@@ -963,6 +926,9 @@ namespace opensaml {
                     : AbstractXMLObject(src), AbstractComplexElement(src),
                         AbstractAttributeExtensibleXMLObject(src), AbstractDOMCachingXMLObject(src) {
                 init();
+            }
+
+            void _clone(const RoleDescriptorImpl& src) {
                 setID(src.getID());
                 setProtocolSupportEnumeration(src.getProtocolSupportEnumeration());
                 setErrorURL(src.getErrorURL());
@@ -1005,6 +971,10 @@ namespace opensaml {
                 // Sync content reference back up.
                 if (m_Signature)
                     m_Signature->setContentReference(new opensaml::ContentReference(*this));
+            }
+
+            RoleDescriptor* cloneRoleDescriptor() const {
+                return dynamic_cast<RoleDescriptor*>(clone());
             }
 
             IMPL_ID_ATTRIB_EX(ID,ID,nullptr);
@@ -1139,16 +1109,16 @@ namespace opensaml {
             }
 
             RoleDescriptorTypeImpl(const RoleDescriptorTypeImpl& src) : AbstractXMLObject(src), RoleDescriptorImpl(src) {
+            }
+
+            void _clone(const RoleDescriptorTypeImpl& src) {
+                RoleDescriptorImpl::_clone(src);
                 VectorOf(XMLObject) v=getUnknownXMLObjects();
                 for (vector<XMLObject*>::const_iterator i=src.m_UnknownXMLObjects.begin(); i!=src.m_UnknownXMLObjects.end(); ++i)
                     v.push_back((*i)->clone());
             }
 
-            IMPL_XMLOBJECT_CLONE(RoleDescriptorType);
-            RoleDescriptor* cloneRoleDescriptor() const {
-                return new RoleDescriptorTypeImpl(*this);
-            }
-
+            IMPL_XMLOBJECT_CLONE_EX(RoleDescriptorType);
             IMPL_XMLOBJECT_CHILDREN(UnknownXMLObject,m_children.end());
 
         protected:
@@ -1194,6 +1164,10 @@ namespace opensaml {
 
             SSODescriptorTypeImpl(const SSODescriptorTypeImpl& src) : AbstractXMLObject(src), RoleDescriptorImpl(src) {
                 init();
+            }
+
+            void _clone(const SSODescriptorTypeImpl& src) {
+                RoleDescriptorImpl::_clone(src);
                 VectorOf(ArtifactResolutionService) v=getArtifactResolutionServices();
                 for (vector<ArtifactResolutionService*>::const_iterator i=src.m_ArtifactResolutionServices.begin(); i!=src.m_ArtifactResolutionServices.end(); i++) {
                     if (*i) {
@@ -1218,6 +1192,10 @@ namespace opensaml {
                         y.push_back((*m)->cloneNameIDFormat());
                     }
                 }
+            }
+
+            SSODescriptorType* cloneSSODescriptorType() const {
+                return dynamic_cast<SSODescriptorType*>(clone());
             }
 
             IMPL_TYPED_CHILDREN(ArtifactResolutionService,m_pos_ArtifactResolutionService);
@@ -1268,6 +1246,10 @@ namespace opensaml {
 
             IDPSSODescriptorImpl(const IDPSSODescriptorImpl& src) : AbstractXMLObject(src), SSODescriptorTypeImpl(src) {
                 init();
+            }
+
+            void _clone(const IDPSSODescriptorImpl& src) {
+                SSODescriptorTypeImpl::_clone(src);
                 WantAuthnRequestsSigned(src.m_WantAuthnRequestsSigned);
                 VectorOf(SingleSignOnService) v=getSingleSignOnServices();
                 for (vector<SingleSignOnService*>::const_iterator i=src.m_SingleSignOnServices.begin(); i!=src.m_SingleSignOnServices.end(); i++) {
@@ -1301,14 +1283,7 @@ namespace opensaml {
                 }
             }
 
-            IMPL_XMLOBJECT_CLONE(IDPSSODescriptor);
-            SSODescriptorType* cloneSSODescriptorType() const {
-                return new IDPSSODescriptorImpl(*this);
-            }
-            RoleDescriptor* cloneRoleDescriptor() const {
-                return new IDPSSODescriptorImpl(*this);
-            }
-
+            IMPL_XMLOBJECT_CLONE_EX(IDPSSODescriptor);
             IMPL_BOOLEAN_ATTRIB(WantAuthnRequestsSigned);
             IMPL_TYPED_CHILDREN(SingleSignOnService,m_pos_SingleSignOnService);
             IMPL_TYPED_CHILDREN(NameIDMappingService,m_pos_NameIDMappingService);
@@ -1381,11 +1356,7 @@ namespace opensaml {
                 }
             }
 
-            IMPL_XMLOBJECT_CLONE(RequestedAttribute);
-            Attribute* cloneAttribute() const {
-                return new RequestedAttributeImpl(*this);
-            }
-
+            IMPL_XMLOBJECT_CLONE2(RequestedAttribute,Attribute);
             IMPL_STRING_ATTRIB(Name);
             IMPL_STRING_ATTRIB(NameFormat);
             IMPL_STRING_ATTRIB(FriendlyName);
@@ -1535,6 +1506,10 @@ namespace opensaml {
 
             SPSSODescriptorImpl(const SPSSODescriptorImpl& src) : AbstractXMLObject(src), SSODescriptorTypeImpl(src) {
                 init();
+            }
+
+            void _clone(const SPSSODescriptorImpl& src) {
+                SSODescriptorTypeImpl::_clone(src);
                 AuthnRequestsSigned(src.m_AuthnRequestsSigned);
                 WantAssertionsSigned(src.m_WantAssertionsSigned);
                 VectorOf(AssertionConsumerService) v=getAssertionConsumerServices();
@@ -1551,14 +1526,7 @@ namespace opensaml {
                 }
             }
 
-            IMPL_XMLOBJECT_CLONE(SPSSODescriptor);
-            SSODescriptorType* cloneSSODescriptorType() const {
-                return cloneSPSSODescriptor();
-            }
-            RoleDescriptor* cloneRoleDescriptor() const {
-                return cloneSPSSODescriptor();
-            }
-
+            IMPL_XMLOBJECT_CLONE_EX(SPSSODescriptor);
             IMPL_BOOLEAN_ATTRIB(AuthnRequestsSigned);
             IMPL_BOOLEAN_ATTRIB(WantAssertionsSigned);
             IMPL_TYPED_CHILDREN(AssertionConsumerService,m_pos_AssertionConsumerService);
@@ -1610,12 +1578,16 @@ namespace opensaml {
             virtual ~AuthnAuthorityDescriptorImpl() {}
 
             AuthnAuthorityDescriptorImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
-                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
+                    : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
                 init();
             }
 
             AuthnAuthorityDescriptorImpl(const AuthnAuthorityDescriptorImpl& src) : AbstractXMLObject(src), RoleDescriptorImpl(src) {
                 init();
+            }
+
+            void _clone(const AuthnAuthorityDescriptorImpl& src) {
+                RoleDescriptorImpl::_clone(src);
                 VectorOf(AuthnQueryService) v=getAuthnQueryServices();
                 for (vector<AuthnQueryService*>::const_iterator i=src.m_AuthnQueryServices.begin(); i!=src.m_AuthnQueryServices.end(); i++) {
                     if (*i) {
@@ -1636,11 +1608,7 @@ namespace opensaml {
                 }
             }
 
-            IMPL_XMLOBJECT_CLONE(AuthnAuthorityDescriptor);
-            RoleDescriptor* cloneRoleDescriptor() const {
-                return cloneAuthnAuthorityDescriptor();
-            }
-
+            IMPL_XMLOBJECT_CLONE_EX(AuthnAuthorityDescriptor);
             IMPL_TYPED_CHILDREN(AuthnQueryService,m_pos_AuthnQueryService);
             IMPL_TYPED_CHILDREN(AssertionIDRequestService,m_pos_AssertionIDRequestService);
             IMPL_TYPED_CHILDREN(NameIDFormat,m_children.end());
@@ -1672,12 +1640,16 @@ namespace opensaml {
             virtual ~PDPDescriptorImpl() {}
 
             PDPDescriptorImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
-                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
+                    : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
                 init();
             }
 
             PDPDescriptorImpl(const PDPDescriptorImpl& src) : AbstractXMLObject(src), RoleDescriptorImpl(src) {
                 init();
+            }
+
+            void _clone(const PDPDescriptorImpl& src) {
+                RoleDescriptorImpl::_clone(src);
                 VectorOf(AuthzService) v=getAuthzServices();
                 for (vector<AuthzService*>::const_iterator i=src.m_AuthzServices.begin(); i!=src.m_AuthzServices.end(); i++) {
                     if (*i) {
@@ -1698,11 +1670,7 @@ namespace opensaml {
                 }
             }
 
-            IMPL_XMLOBJECT_CLONE(PDPDescriptor);
-            RoleDescriptor* cloneRoleDescriptor() const {
-                return clonePDPDescriptor();
-            }
-
+            IMPL_XMLOBJECT_CLONE_EX(PDPDescriptor);
             IMPL_TYPED_CHILDREN(AuthzService,m_pos_AuthzService);
             IMPL_TYPED_CHILDREN(AssertionIDRequestService,m_pos_AssertionIDRequestService);
             IMPL_TYPED_CHILDREN(NameIDFormat,m_children.end());
@@ -1742,12 +1710,16 @@ namespace opensaml {
             virtual ~AttributeAuthorityDescriptorImpl() {}
 
             AttributeAuthorityDescriptorImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
-                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
+                    : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
                 init();
             }
 
             AttributeAuthorityDescriptorImpl(const AttributeAuthorityDescriptorImpl& src) : AbstractXMLObject(src), RoleDescriptorImpl(src) {
                 init();
+            }
+
+            void _clone(const AttributeAuthorityDescriptorImpl& src) {
+                RoleDescriptorImpl::_clone(src);
                 VectorOf(AttributeService) v=getAttributeServices();
                 for (vector<AttributeService*>::const_iterator i=src.m_AttributeServices.begin(); i!=src.m_AttributeServices.end(); i++) {
                     if (*i) {
@@ -1780,11 +1752,7 @@ namespace opensaml {
                 }
             }
 
-            IMPL_XMLOBJECT_CLONE(AttributeAuthorityDescriptor);
-            RoleDescriptor* cloneRoleDescriptor() const {
-                return cloneAttributeAuthorityDescriptor();
-            }
-
+            IMPL_XMLOBJECT_CLONE_EX(AttributeAuthorityDescriptor);
             IMPL_TYPED_CHILDREN(AttributeService,m_pos_AttributeService);
             IMPL_TYPED_CHILDREN(AssertionIDRequestService,m_pos_AssertionIDRequestService);
             IMPL_TYPED_CHILDREN(NameIDFormat,m_pos_NameIDFormat);
@@ -1822,12 +1790,16 @@ namespace opensaml {
             virtual ~QueryDescriptorTypeImpl() {}
 
             QueryDescriptorTypeImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
-                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
+                    : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
                 init();
             }
 
             QueryDescriptorTypeImpl(const QueryDescriptorTypeImpl& src) : AbstractXMLObject(src), RoleDescriptorImpl(src) {
                 init();
+            }
+
+            void _clone(const QueryDescriptorTypeImpl& src) {
+                RoleDescriptorImpl::_clone(src);
                 WantAssertionsSigned(src.m_WantAssertionsSigned);
                 VectorOf(NameIDFormat) y=getNameIDFormats();
                 for (vector<NameIDFormat*>::const_iterator m=src.m_NameIDFormats.begin(); m!=src.m_NameIDFormats.end(); m++) {
@@ -1835,6 +1807,10 @@ namespace opensaml {
                         y.push_back((*m)->cloneNameIDFormat());
                     }
                 }
+            }
+
+            QueryDescriptorType* cloneQueryDescriptorType() const {
+                return dynamic_cast<QueryDescriptorType*>(clone());
             }
 
             IMPL_BOOLEAN_ATTRIB(WantAssertionsSigned);
@@ -1872,13 +1848,7 @@ namespace opensaml {
 
             AuthnQueryDescriptorTypeImpl(const AuthnQueryDescriptorTypeImpl& src) : AbstractXMLObject(src), QueryDescriptorTypeImpl(src) {}
 
-            IMPL_XMLOBJECT_CLONE(AuthnQueryDescriptorType);
-            QueryDescriptorType* cloneQueryDescriptorType() const {
-                return new AuthnQueryDescriptorTypeImpl(*this);
-            }
-            RoleDescriptor* cloneRoleDescriptor() const {
-                return new AuthnQueryDescriptorTypeImpl(*this);
-            }
+            IMPL_XMLOBJECT_CLONE_EX(AuthnQueryDescriptorType);
         };
 
         class SAML_DLLLOCAL AttributeQueryDescriptorTypeImpl : public virtual AttributeQueryDescriptorType, public QueryDescriptorTypeImpl
@@ -1889,8 +1859,11 @@ namespace opensaml {
             AttributeQueryDescriptorTypeImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
                 : AbstractXMLObject(nsURI, localName, prefix, schemaType) {}
 
-            AttributeQueryDescriptorTypeImpl(const AttributeQueryDescriptorTypeImpl& src)
-                    : AbstractXMLObject(src), QueryDescriptorTypeImpl(src) {
+            AttributeQueryDescriptorTypeImpl(const AttributeQueryDescriptorTypeImpl& src) : AbstractXMLObject(src), QueryDescriptorTypeImpl(src) {
+            }
+
+            void _clone(const AttributeQueryDescriptorTypeImpl& src) {
+                QueryDescriptorTypeImpl::_clone(src);
                 VectorOf(AttributeConsumingService) w=getAttributeConsumingServices();
                 for (vector<AttributeConsumingService*>::const_iterator j=src.m_AttributeConsumingServices.begin(); j!=src.m_AttributeConsumingServices.end(); j++) {
                     if (*j) {
@@ -1899,14 +1872,7 @@ namespace opensaml {
                 }
             }
 
-            IMPL_XMLOBJECT_CLONE(AttributeQueryDescriptorType);
-            QueryDescriptorType* cloneQueryDescriptorType() const {
-                return new AttributeQueryDescriptorTypeImpl(*this);
-            }
-            RoleDescriptor* cloneRoleDescriptor() const {
-                return new AttributeQueryDescriptorTypeImpl(*this);
-            }
-
+            IMPL_XMLOBJECT_CLONE_EX(AttributeQueryDescriptorType);
             IMPL_TYPED_CHILDREN(AttributeConsumingService,m_children.end());
 
         protected:
@@ -1924,8 +1890,11 @@ namespace opensaml {
             AuthzDecisionQueryDescriptorTypeImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
                 : AbstractXMLObject(nsURI, localName, prefix, schemaType) {}
 
-            AuthzDecisionQueryDescriptorTypeImpl(const AuthzDecisionQueryDescriptorTypeImpl& src)
-                    : AbstractXMLObject(src), QueryDescriptorTypeImpl(src) {
+            AuthzDecisionQueryDescriptorTypeImpl(const AuthzDecisionQueryDescriptorTypeImpl& src) : AbstractXMLObject(src), QueryDescriptorTypeImpl(src) {
+            }
+
+            void _clone(const AuthzDecisionQueryDescriptorTypeImpl& src) {
+                QueryDescriptorTypeImpl::_clone(src);
                 VectorOf(ActionNamespace) w=getActionNamespaces();
                 for (vector<ActionNamespace*>::const_iterator j=src.m_ActionNamespaces.begin(); j!=src.m_ActionNamespaces.end(); j++) {
                     if (*j) {
@@ -1934,14 +1903,7 @@ namespace opensaml {
                 }
             }
 
-            IMPL_XMLOBJECT_CLONE(AuthzDecisionQueryDescriptorType);
-            QueryDescriptorType* cloneQueryDescriptorType() const {
-                return new AuthzDecisionQueryDescriptorTypeImpl(*this);
-            }
-            RoleDescriptor* cloneRoleDescriptor() const {
-                return new AuthzDecisionQueryDescriptorTypeImpl(*this);
-            }
-
+            IMPL_XMLOBJECT_CLONE_EX(AuthzDecisionQueryDescriptorType);
             IMPL_TYPED_CHILDREN(ActionNamespace,m_children.end());
 
         protected:
@@ -2481,13 +2443,7 @@ namespace opensaml {
 
             DiscoveryResponseImpl(const DiscoveryResponseImpl& src) : AbstractXMLObject(src), IndexedEndpointTypeImpl(src) {}
 
-            IMPL_XMLOBJECT_CLONE(DiscoveryResponse);
-            IndexedEndpointType* cloneIndexedEndpointType() const {
-                return new DiscoveryResponseImpl(*this);
-            }
-            EndpointType* cloneEndpointType() const {
-                return new DiscoveryResponseImpl(*this);
-            }
+            IMPL_XMLOBJECT_CLONE_EX(DiscoveryResponse);
         };
 
         class SAML_DLLLOCAL RequestInitiatorImpl : public virtual RequestInitiator, public EndpointTypeImpl
@@ -2500,10 +2456,7 @@ namespace opensaml {
 
             RequestInitiatorImpl(const RequestInitiatorImpl& src) : AbstractXMLObject(src), EndpointTypeImpl(src) {}
 
-            IMPL_XMLOBJECT_CLONE(RequestInitiator);
-            EndpointType* cloneEndpointType() const {
-                return new RequestInitiatorImpl(*this);
-            }
+            IMPL_XMLOBJECT_CLONE_EX(RequestInitiator);
         };
 
         class SAML_DLLLOCAL EntityAttributesImpl : public virtual EntityAttributes,
@@ -2539,7 +2492,6 @@ namespace opensaml {
             }
 
             IMPL_XMLOBJECT_CLONE(EntityAttributes);
-
             IMPL_TYPED_FOREIGN_CHILDREN(Attribute,saml2,m_children.end());
             IMPL_TYPED_FOREIGN_CHILDREN(Assertion,saml2,m_children.end());
 
@@ -2575,9 +2527,8 @@ namespace opensaml {
                     v.push_back((*i)->clone());
             }
 
-            IMPL_STRING_ATTRIB(Algorithm);
-
             IMPL_XMLOBJECT_CLONE(DigestMethod);
+            IMPL_STRING_ATTRIB(Algorithm);
             IMPL_XMLOBJECT_CHILDREN(UnknownXMLObject,m_children.end());
 
         protected:
@@ -2626,11 +2577,10 @@ namespace opensaml {
             }
 
             IMPL_XMLOBJECT_CLONE(SigningMethod);
-            IMPL_XMLOBJECT_CHILDREN(UnknownXMLObject,m_children.end());
-
             IMPL_STRING_ATTRIB(Algorithm);
             IMPL_INTEGER_ATTRIB(MinKeySize);
             IMPL_INTEGER_ATTRIB(MaxKeySize);
+            IMPL_XMLOBJECT_CHILDREN(UnknownXMLObject,m_children.end());
 
         protected:
             void marshallAttributes(DOMElement* domElement) const {
@@ -2661,10 +2611,7 @@ namespace opensaml {
 
             DisplayNameImpl(const DisplayNameImpl& src) : AbstractXMLObject(src), localizedNameTypeImpl(src) {}
 
-            IMPL_XMLOBJECT_CLONE(DisplayName);
-            localizedNameType* clonelocalizedNameType() const {
-                return new DisplayNameImpl(*this);
-            }
+            IMPL_XMLOBJECT_CLONE_EX(DisplayName);
         };
 
         class SAML_DLLLOCAL DescriptionImpl : public virtual Description, public localizedNameTypeImpl
@@ -2677,10 +2624,7 @@ namespace opensaml {
 
             DescriptionImpl(const DescriptionImpl& src) : AbstractXMLObject(src), localizedNameTypeImpl(src) {}
 
-            IMPL_XMLOBJECT_CLONE(Description);
-            localizedNameType* clonelocalizedNameType() const {
-                return new DescriptionImpl(*this);
-            }
+            IMPL_XMLOBJECT_CLONE_EX(Description);
         };
 
         class SAML_DLLLOCAL InformationURLImpl : public virtual InformationURL, public localizedURITypeImpl
@@ -2693,10 +2637,7 @@ namespace opensaml {
 
             InformationURLImpl(const InformationURLImpl& src) : AbstractXMLObject(src), localizedURITypeImpl(src) {}
 
-            IMPL_XMLOBJECT_CLONE(InformationURL);
-            localizedURIType* clonelocalizedURIType() const {
-                return new InformationURLImpl(*this);
-            }
+            IMPL_XMLOBJECT_CLONE_EX(InformationURL);
         };
 
         class SAML_DLLLOCAL PrivacyStatementURLImpl : public virtual PrivacyStatementURL, public localizedURITypeImpl
@@ -2709,10 +2650,7 @@ namespace opensaml {
 
             PrivacyStatementURLImpl(const PrivacyStatementURLImpl& src) : AbstractXMLObject(src), localizedURITypeImpl(src) {}
 
-            IMPL_XMLOBJECT_CLONE(PrivacyStatementURL);
-            localizedURIType* clonelocalizedURIType() const {
-                return new PrivacyStatementURLImpl(*this);
-            }
+            IMPL_XMLOBJECT_CLONE_EX(PrivacyStatementURL);
         };
 
         class SAML_DLLLOCAL KeywordsImpl : public virtual Keywords,

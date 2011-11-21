@@ -106,6 +106,9 @@ protected:
 
     void assertEquals(DOMDocument* expectedDOM, XMLObject* xmlObject, bool canMarshall=true) {
         assertEquals("Marshalled DOM was not the same as the expected DOM", expectedDOM, xmlObject, canMarshall);
+        // Test a clone operation before destroying the original.
+        xmlObject->releaseThisAndChildrenDOM();
+        delete xmlObject->clone();
         delete xmlObject;
     }
 

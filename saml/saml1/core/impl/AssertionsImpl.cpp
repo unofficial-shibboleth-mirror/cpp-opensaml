@@ -74,7 +74,7 @@ namespace opensaml {
 
             ConditionImpl(const ConditionImpl& src) : AbstractXMLObject(src), AnyElementImpl(src) {}
 
-            IMPL_XMLOBJECT_CLONE(Condition);
+            IMPL_XMLOBJECT_CLONE_EX(Condition);
         };
 
         class SAML_DLLLOCAL AudienceRestrictionConditionImpl : public virtual AudienceRestrictionCondition,
@@ -100,10 +100,7 @@ namespace opensaml {
                 }
             }
 
-            IMPL_XMLOBJECT_CLONE(AudienceRestrictionCondition);
-            Condition* cloneCondition() const {
-                return cloneAudienceRestrictionCondition();
-            }
+            IMPL_XMLOBJECT_CLONE2(AudienceRestrictionCondition,Condition);
             IMPL_TYPED_CHILDREN(Audience,m_children.end());
 
         protected:
@@ -130,10 +127,7 @@ namespace opensaml {
                 : AbstractXMLObject(src), AbstractSimpleElement(src), AbstractDOMCachingXMLObject(src) {
             }
 
-            IMPL_XMLOBJECT_CLONE(DoNotCacheCondition);
-            Condition* cloneCondition() const {
-                return cloneDoNotCacheCondition();
-            }
+            IMPL_XMLOBJECT_CLONE2(DoNotCacheCondition,Condition);
         };
 
         class SAML_DLLLOCAL ConditionsImpl : public virtual Conditions,
@@ -268,7 +262,7 @@ namespace opensaml {
             SubjectConfirmationDataImpl(const SubjectConfirmationDataImpl& src) : AbstractXMLObject(src), AnyElementImpl(src) {
             }
 
-            IMPL_XMLOBJECT_CLONE(SubjectConfirmationData);
+            IMPL_XMLOBJECT_CLONE_EX(SubjectConfirmationData);
         };
 
         class SAML_DLLLOCAL SubjectConfirmationImpl : public virtual SubjectConfirmation,
@@ -383,7 +377,7 @@ namespace opensaml {
 
             StatementImpl(const StatementImpl& src) : AbstractXMLObject(src), AnyElementImpl(src) {}
 
-            IMPL_XMLOBJECT_CLONE(Statement);
+            IMPL_XMLOBJECT_CLONE_EX(Statement);
         };
 
         class SAML_DLLLOCAL SubjectStatementImpl : public virtual SubjectStatement,
@@ -412,8 +406,19 @@ namespace opensaml {
             SubjectStatementImpl(const SubjectStatementImpl& src)
                     : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
                 init();
+            }
+
+            void _clone(const SubjectStatementImpl& src) {
                 if (src.getSubject())
                     setSubject(src.getSubject()->cloneSubject());
+            }
+
+            Statement* cloneStatement() const {
+                return dynamic_cast<Statement*>(clone());
+            }
+
+            SubjectStatement* cloneSubjectStatement() const {
+                return dynamic_cast<SubjectStatement*>(clone());
             }
 
             IMPL_TYPED_CHILD(Subject);
@@ -521,6 +526,15 @@ namespace opensaml {
 
         class SAML_DLLLOCAL AuthenticationStatementImpl : public virtual AuthenticationStatement, public SubjectStatementImpl
         {
+            void init() {
+                m_AuthenticationMethod=nullptr;
+                m_AuthenticationInstant=nullptr;
+                m_SubjectLocality=nullptr;
+                m_children.push_back(nullptr);
+                m_pos_SubjectLocality=m_pos_Subject;
+                ++m_pos_SubjectLocality;
+            }
+
         public:
             virtual ~AuthenticationStatementImpl() {
                 XMLString::release(&m_AuthenticationMethod);
@@ -534,6 +548,10 @@ namespace opensaml {
 
             AuthenticationStatementImpl(const AuthenticationStatementImpl& src) : AbstractXMLObject(src), SubjectStatementImpl(src) {
                 init();
+            }
+
+            void _clone(const AuthenticationStatementImpl& src) {
+                SubjectStatementImpl::_clone(src);
                 setAuthenticationMethod(src.getAuthenticationMethod());
                 setAuthenticationInstant(src.getAuthenticationInstant());
                 if (src.getSubjectLocality())
@@ -546,22 +564,7 @@ namespace opensaml {
                 }
             }
 
-            void init() {
-                m_AuthenticationMethod=nullptr;
-                m_AuthenticationInstant=nullptr;
-                m_SubjectLocality=nullptr;
-                m_children.push_back(nullptr);
-                m_pos_SubjectLocality=m_pos_Subject;
-                ++m_pos_SubjectLocality;
-            }
-
-            IMPL_XMLOBJECT_CLONE(AuthenticationStatement);
-            SubjectStatement* cloneSubjectStatement() const {
-                return cloneAuthenticationStatement();
-            }
-            Statement* cloneStatement() const {
-                return cloneAuthenticationStatement();
-            }
+            IMPL_XMLOBJECT_CLONE_EX(AuthenticationStatement);
             IMPL_STRING_ATTRIB(AuthenticationMethod);
             IMPL_DATETIME_ATTRIB(AuthenticationInstant,0);
             IMPL_TYPED_CHILD(SubjectLocality);
@@ -666,6 +669,15 @@ namespace opensaml {
         class SAML_DLLLOCAL AuthorizationDecisionStatementImpl
             : public virtual AuthorizationDecisionStatement, public SubjectStatementImpl
         {
+            void init() {
+                m_Resource=nullptr;
+                m_Decision=nullptr;
+                m_Evidence=nullptr;
+                m_children.push_back(nullptr);
+                m_pos_Evidence=m_pos_Subject;
+                ++m_pos_Evidence;
+            }
+
         public:
             virtual ~AuthorizationDecisionStatementImpl() {
                 XMLString::release(&m_Resource);
@@ -680,6 +692,10 @@ namespace opensaml {
             AuthorizationDecisionStatementImpl(const AuthorizationDecisionStatementImpl& src)
                     : AbstractXMLObject(src), SubjectStatementImpl(src) {
                 init();
+            }
+
+            void _clone(const AuthorizationDecisionStatementImpl& src) {
+                SubjectStatementImpl::_clone(src);
                 setResource(src.getResource());
                 setDecision(src.getDecision());
                 if (src.getEvidence())
@@ -692,22 +708,7 @@ namespace opensaml {
                 }
             }
 
-            void init() {
-                m_Resource=nullptr;
-                m_Decision=nullptr;
-                m_Evidence=nullptr;
-                m_children.push_back(nullptr);
-                m_pos_Evidence=m_pos_Subject;
-                ++m_pos_Evidence;
-            }
-
-            IMPL_XMLOBJECT_CLONE(AuthorizationDecisionStatement);
-            SubjectStatement* cloneSubjectStatement() const {
-                return cloneAuthorizationDecisionStatement();
-            }
-            Statement* cloneStatement() const {
-                return cloneAuthorizationDecisionStatement();
-            }
+            IMPL_XMLOBJECT_CLONE_EX(AuthorizationDecisionStatement);
             IMPL_STRING_ATTRIB(Resource);
             IMPL_STRING_ATTRIB(Decision);
             IMPL_TYPED_CHILD(Evidence);
@@ -739,6 +740,10 @@ namespace opensaml {
             public AbstractXMLObjectMarshaller,
             public AbstractXMLObjectUnmarshaller
         {
+            void init() {
+                m_AttributeName=m_AttributeNamespace=nullptr;
+            }
+
         public:
             virtual ~AttributeDesignatorImpl() {
                 XMLString::release(&m_AttributeName);
@@ -755,10 +760,6 @@ namespace opensaml {
                 init();
                 setAttributeName(src.getAttributeName());
                 setAttributeNamespace(src.getAttributeNamespace());
-            }
-
-            void init() {
-                m_AttributeName=m_AttributeNamespace=nullptr;
             }
 
             IMPL_XMLOBJECT_CLONE(AttributeDesignator);
@@ -783,6 +784,9 @@ namespace opensaml {
             public AbstractXMLObjectMarshaller,
             public AbstractXMLObjectUnmarshaller
         {
+            void init() {
+                m_AttributeName=m_AttributeNamespace=nullptr;
+            }
         public:
             virtual ~AttributeImpl() {
                 XMLString::release(&m_AttributeName);
@@ -807,14 +811,7 @@ namespace opensaml {
                 }
             }
 
-            void init() {
-                m_AttributeName=m_AttributeNamespace=nullptr;
-            }
-
-            IMPL_XMLOBJECT_CLONE(Attribute);
-            AttributeDesignator* cloneAttributeDesignator() const {
-                return cloneAttribute();
-            }
+            IMPL_XMLOBJECT_CLONE2(Attribute,AttributeDesignator);
             IMPL_STRING_ATTRIB(AttributeName);
             IMPL_STRING_ATTRIB(AttributeNamespace);
             IMPL_XMLOBJECT_CHILDREN(AttributeValue,m_children.end());
@@ -846,7 +843,7 @@ namespace opensaml {
 
             AttributeValueImpl(const AttributeValueImpl& src) : AbstractXMLObject(src), AnyElementImpl(src) {}
 
-            IMPL_XMLOBJECT_CLONE(AttributeValue);
+            IMPL_XMLOBJECT_CLONE_EX(AttributeValue);
         };
 
         class SAML_DLLLOCAL AttributeStatementImpl : public virtual AttributeStatement, public SubjectStatementImpl
@@ -858,8 +855,11 @@ namespace opensaml {
                 : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
             }
 
-            AttributeStatementImpl(const AttributeStatementImpl& src)
-                    : AbstractXMLObject(src), SubjectStatementImpl(src) {
+            AttributeStatementImpl(const AttributeStatementImpl& src) : AbstractXMLObject(src), SubjectStatementImpl(src) {
+            }
+
+            void _clone(const AttributeStatementImpl& src) {
+                SubjectStatementImpl::_clone(src);
                 VectorOf(Attribute) v=getAttributes();
                 for (vector<Attribute*>::const_iterator i=src.m_Attributes.begin(); i!=src.m_Attributes.end(); i++) {
                     if (*i) {
@@ -868,13 +868,7 @@ namespace opensaml {
                 }
             }
 
-            IMPL_XMLOBJECT_CLONE(AttributeStatement);
-            SubjectStatement* cloneSubjectStatement() const {
-                return cloneAttributeStatement();
-            }
-            Statement* cloneStatement() const {
-                return cloneAttributeStatement();
-            }
+            IMPL_XMLOBJECT_CLONE_EX(AttributeStatement);
             IMPL_TYPED_CHILDREN(Attribute, m_children.end());
 
         protected:
