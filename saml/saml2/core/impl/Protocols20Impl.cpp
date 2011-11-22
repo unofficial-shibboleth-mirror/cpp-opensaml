@@ -87,9 +87,11 @@ namespace opensaml {
                 
             ExtensionsImpl(const ExtensionsImpl& src)
                     : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
-                VectorOf(XMLObject) v=getUnknownXMLObjects();
-                for (vector<XMLObject*>::const_iterator i=src.m_UnknownXMLObjects.begin(); i!=src.m_UnknownXMLObjects.end(); ++i)
-                    v.push_back((*i)->clone());
+                for (vector<XMLObject*>::const_iterator i=src.m_UnknownXMLObjects.begin(); i!=src.m_UnknownXMLObjects.end(); ++i) {
+                    if (*i) {
+                        getUnknownXMLObjects().push_back((*i)->clone());
+                    }
+                }
             }
             
             IMPL_XMLOBJECT_CLONE(Extensions);
@@ -120,14 +122,15 @@ namespace opensaml {
                 m_children.push_back(nullptr);
                 m_pos_StatusCode=m_children.begin();
             }
+
             public:
                 virtual ~StatusCodeImpl() {
                     XMLString::release(&m_Value);
                 }
 
                 StatusCodeImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
-                    : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
-                        init();
+                        : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
+                    init();
                 }
 
                 StatusCodeImpl(const StatusCodeImpl& src)
@@ -174,9 +177,11 @@ namespace opensaml {
 
                 StatusDetailImpl(const StatusDetailImpl& src)
                         : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
-                    VectorOf(XMLObject) v=getUnknownXMLObjects();
-                    for (vector<XMLObject*>::const_iterator i=src.m_UnknownXMLObjects.begin(); i!=src.m_UnknownXMLObjects.end(); ++i)
-                        v.push_back((*i)->clone());
+                    for (vector<XMLObject*>::const_iterator i=src.m_UnknownXMLObjects.begin(); i!=src.m_UnknownXMLObjects.end(); ++i) {
+                        if (*i) {
+                            getUnknownXMLObjects().push_back((*i)->clone());
+                        }
+                    }
                 }
 
                 IMPL_XMLOBJECT_CLONE(StatusDetail);
@@ -208,6 +213,7 @@ namespace opensaml {
                 m_pos_StatusDetail=m_pos_StatusMessage;
                 ++m_pos_StatusDetail;
             }
+
         public:
             virtual ~StatusImpl() { }
     
@@ -216,8 +222,7 @@ namespace opensaml {
                 init();
             }
                 
-            StatusImpl(const StatusImpl& src)
-                    : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
+            StatusImpl(const StatusImpl& src) : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
                 init();
                 if (src.getStatusCode())
                     setStatusCode(src.getStatusCode()->cloneStatusCode());
@@ -266,10 +271,12 @@ namespace opensaml {
                 m_pos_Extensions=m_pos_Signature;
                 ++m_pos_Extensions;
             }
+
         protected:
             RequestAbstractTypeImpl() {
                 init();
             }
+
         public:
             virtual ~RequestAbstractTypeImpl() {
                 XMLString::release(&m_ID);
@@ -386,10 +393,9 @@ namespace opensaml {
 
             void _clone(const AssertionIDRequestImpl& src) {
                 RequestAbstractTypeImpl::_clone(src);
-                VectorOf(AssertionIDRef) v=getAssertionIDRefs();
                 for (vector<AssertionIDRef*>::const_iterator i=src.m_AssertionIDRefs.begin(); i!=src.m_AssertionIDRefs.end(); i++) {
                     if (*i) {                               
-                        v.push_back((*i)->cloneAssertionIDRef());
+                        getAssertionIDRefs().push_back((*i)->cloneAssertionIDRef());
                     }
                 }
             }
@@ -412,10 +418,12 @@ namespace opensaml {
                 m_pos_Subject = m_pos_Extensions;
                 ++m_pos_Subject;
             }
+
         protected:
             SubjectQueryImpl() {
                 init();
             }
+
         public:
             virtual ~SubjectQueryImpl() { }
     
@@ -456,6 +464,7 @@ namespace opensaml {
             void init() {
                 m_Comparison=nullptr;
             }
+
         public:
             virtual ~RequestedAuthnContextImpl() {
                 XMLString::release(&m_Comparison);
@@ -519,6 +528,7 @@ namespace opensaml {
                 ++m_pos_RequestedAuthnContext;
                 
             }
+
         public:
             virtual ~AuthnQueryImpl() {
                 XMLString::release(&m_SessionIndex);
@@ -601,9 +611,9 @@ namespace opensaml {
                 m_Evidence=nullptr;
                 m_children.push_back(nullptr);
                 m_pos_Evidence=m_pos_Subject;
-                ++m_pos_Evidence;
-                
+                ++m_pos_Evidence;   
             }
+
         public:
             virtual ~AuthzDecisionQueryImpl() {
                 XMLString::release(&m_Resource);
@@ -667,17 +677,16 @@ namespace opensaml {
                 m_SPNameQualifier=nullptr;
                 m_AllowCreate=XML_BOOL_NULL;
             }
+
             public:
-                virtual ~NameIDPolicyImpl()
-                {
+                virtual ~NameIDPolicyImpl() {
                     XMLString::release(&m_Format);
                     XMLString::release(&m_SPNameQualifier);
                 }
 
                 NameIDPolicyImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
-                    : AbstractXMLObject(nsURI, localName, prefix, schemaType)
-                {
-                        init();
+                        : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
+                    init();
                 }
 
                 NameIDPolicyImpl(const NameIDPolicyImpl& src)
@@ -685,7 +694,7 @@ namespace opensaml {
                     init();
                     setFormat(src.getFormat());
                     setSPNameQualifier(src.getSPNameQualifier());
-                    AllowCreate(m_AllowCreate);
+                    AllowCreate(src.m_AllowCreate);
                 }
 
                 IMPL_XMLOBJECT_CLONE(NameIDPolicy);
@@ -719,22 +728,20 @@ namespace opensaml {
                 m_Name=nullptr;
                 m_Loc=nullptr;
             }
+
             public:
-                virtual ~IDPEntryImpl()
-                {
+                virtual ~IDPEntryImpl() {
                     XMLString::release(&m_ProviderID);
                     XMLString::release(&m_Name);
                     XMLString::release(&m_Loc);
                 }
 
                 IDPEntryImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
-                    : AbstractXMLObject(nsURI, localName, prefix, schemaType)
-                {
-                        init();
+                        : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
+                    init();
                 }
 
-                IDPEntryImpl(const IDPEntryImpl& src)
-                        : AbstractXMLObject(src), AbstractSimpleElement(src), AbstractDOMCachingXMLObject(src) {
+                IDPEntryImpl(const IDPEntryImpl& src) : AbstractXMLObject(src), AbstractSimpleElement(src), AbstractDOMCachingXMLObject(src) {
                     init();
                     setProviderID(src.getProviderID());
                     setName(src.getName());
@@ -771,14 +778,13 @@ namespace opensaml {
                 m_GetComplete=nullptr;
                 m_children.push_back(nullptr);
                 m_pos_GetComplete=m_children.begin();
-                
             }
+
         public:
             virtual ~IDPListImpl() { }
     
             IDPListImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
-                : AbstractXMLObject(nsURI, localName, prefix, schemaType)
-            {
+                    : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
                 init();
             }
                 
@@ -787,13 +793,9 @@ namespace opensaml {
                 init();
                 if (src.getGetComplete())
                     setGetComplete(src.getGetComplete()->cloneGetComplete());
-                for (list<XMLObject*>::const_iterator i=src.m_children.begin(); i!=src.m_children.end(); i++) {
+                for (vector<IDPEntry*>::const_iterator i=src.m_IDPEntrys.begin(); i!=src.m_IDPEntrys.end(); ++i) {
                     if (*i) {
-                        IDPEntry* entry=dynamic_cast<IDPEntry*>(*i);
-                        if (entry) {
-                            getIDPEntrys().push_back(entry->cloneIDPEntry());
-                            continue;
-                        }
+                        getIDPEntrys().push_back((*i)->cloneIDPEntry());
                     }
                 }
             }
@@ -822,32 +824,27 @@ namespace opensaml {
                 m_IDPList=nullptr;
                 m_children.push_back(nullptr);
                 m_pos_IDPList=m_children.begin();
-                
             }
+
         public:
             virtual ~ScopingImpl() {
                 XMLString::release(&m_ProxyCount); 
             }
     
             ScopingImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
-                : AbstractXMLObject(nsURI, localName, prefix, schemaType)
-            {
+                    : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
                 init();
             }
                 
             ScopingImpl(const ScopingImpl& src)
                     : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
                 init();
-                setProxyCount(m_ProxyCount);
+                setProxyCount(src.m_ProxyCount);
                 if (src.getIDPList())
                     setIDPList(src.getIDPList()->cloneIDPList());
-                for (list<XMLObject*>::const_iterator i=src.m_children.begin(); i!=src.m_children.end(); i++) {
+                for (vector<RequesterID*>::const_iterator i=src.m_RequesterIDs.begin(); i!=src.m_RequesterIDs.end(); ++i) {
                     if (*i) {
-                        RequesterID* reqid =dynamic_cast<RequesterID*>(*i);
-                        if (reqid) {
-                            getRequesterIDs().push_back(reqid->cloneRequesterID());
-                            continue;
-                        }
+                        getRequesterIDs().push_back((*i)->cloneRequesterID());
                     }
                 }
             }
@@ -859,7 +856,7 @@ namespace opensaml {
     
         protected:
             void marshallAttributes(DOMElement* domElement) const {
-                    MARSHALL_INTEGER_ATTRIB(ProxyCount,PROXYCOUNT,nullptr);
+                MARSHALL_INTEGER_ATTRIB(ProxyCount,PROXYCOUNT,nullptr);
             }
     
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
@@ -905,8 +902,8 @@ namespace opensaml {
                 ++m_pos_RequestedAuthnContext;
                 m_pos_Scoping=m_pos_RequestedAuthnContext;
                 ++m_pos_Scoping;
-                
             }
+
         public:
             virtual ~AuthnRequestImpl() {
                 XMLString::release(&m_ProtocolBinding);
@@ -927,12 +924,12 @@ namespace opensaml {
 
             void _clone(const AuthnRequestImpl& src) {
                 RequestAbstractTypeImpl::_clone(src);
-                ForceAuthn(m_ForceAuthn);
-                IsPassive(m_IsPassive);
+                ForceAuthn(src.m_ForceAuthn);
+                IsPassive(src.m_IsPassive);
                 setProtocolBinding(src.getProtocolBinding());
-                setAssertionConsumerServiceIndex(m_AssertionConsumerServiceIndex);
+                setAssertionConsumerServiceIndex(src.m_AssertionConsumerServiceIndex);
                 setAssertionConsumerServiceURL(src.getAssertionConsumerServiceURL());
-                setAttributeConsumingServiceIndex(m_AttributeConsumingServiceIndex);
+                setAttributeConsumingServiceIndex(src.m_AttributeConsumingServiceIndex);
                 setProviderName(src.getProviderName());
                 if (src.getSubject())
                     setSubject(src.getSubject()->cloneSubject());
@@ -1023,10 +1020,12 @@ namespace opensaml {
                 m_pos_Status=m_pos_Extensions;
                 ++m_pos_Status;
             }
+
         protected:
             StatusResponseTypeImpl() {
                 init();
             }
+
         public:
             virtual ~StatusResponseTypeImpl() {
                 XMLString::release(&m_ID);
@@ -1038,7 +1037,7 @@ namespace opensaml {
             }
     
             StatusResponseTypeImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
-                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
+                    : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
                 init();
             }
                 
@@ -1168,7 +1167,6 @@ namespace opensaml {
             }
             
             IMPL_XMLOBJECT_CLONE_EX(Response);
-
             IMPL_TYPED_FOREIGN_CHILDREN(Assertion,saml2,m_children.end());
             IMPL_TYPED_FOREIGN_CHILDREN(EncryptedAssertion,saml2,m_children.end());
     
@@ -1188,6 +1186,7 @@ namespace opensaml {
                 m_pos_Artifact=m_pos_Extensions;
                 ++m_pos_Artifact;
             }
+
         public:
             virtual ~ArtifactResolveImpl() { }
     
@@ -1224,6 +1223,7 @@ namespace opensaml {
                 m_pos_Payload=m_pos_Status;
                 ++m_pos_Payload;
             }
+
         public:
             virtual ~ArtifactResponseImpl() { }
     
@@ -1239,7 +1239,7 @@ namespace opensaml {
             void _clone(const ArtifactResponseImpl& src) {
                 StatusResponseTypeImpl::_clone(src);
                 if (src.getPayload())
-                    setPayload(getPayload()->clone());
+                    setPayload(src.getPayload()->clone());
             }
             
             IMPL_XMLOBJECT_CLONE_EX(ArtifactResponse);
@@ -1291,19 +1291,14 @@ namespace opensaml {
                 init();
                 if (src.getEncryptedData())
                     setEncryptedData(src.getEncryptedData()->cloneEncryptedData());
-                VectorOf(xmlencryption::EncryptedKey) v=getEncryptedKeys();
                 for (vector<xmlencryption::EncryptedKey*>::const_iterator i=src.m_EncryptedKeys.begin(); i!=src.m_EncryptedKeys.end(); i++) {
                     if (*i) {
-                        v.push_back((*i)->cloneEncryptedKey());
+                        getEncryptedKeys().push_back((*i)->cloneEncryptedKey());
                     }
                 }
             }
     
-            IMPL_XMLOBJECT_CLONE(NewEncryptedID);
-            EncryptedElementType* cloneEncryptedElementType() const {
-                return cloneNewEncryptedID();
-            }
-
+            IMPL_XMLOBJECT_CLONE2(NewEncryptedID,EncryptedElementType);
             IMPL_TYPED_FOREIGN_CHILD(EncryptedData,xmlencryption);
             IMPL_TYPED_FOREIGN_CHILDREN(EncryptedKey,xmlencryption,m_children.end());
     
@@ -1360,8 +1355,8 @@ namespace opensaml {
                 ++m_pos_NewEncryptedID;
                 m_pos_Terminate=m_pos_NewEncryptedID;
                 ++m_pos_Terminate;
-                
             }
+
         public:
             virtual ~ManageNameIDRequestImpl() { }
     
@@ -1437,8 +1432,8 @@ namespace opensaml {
                 ++m_pos_NameID;
                 m_pos_EncryptedID=m_pos_NameID;
                 ++m_pos_EncryptedID;
-                
             }
+
         public:
             virtual ~LogoutRequestImpl() {
                 XMLString::release(&m_Reason);
@@ -1465,13 +1460,9 @@ namespace opensaml {
                 if (src.getEncryptedID())
                     setEncryptedID(src.getEncryptedID()->cloneEncryptedID());
 
-                for (list<XMLObject*>::const_iterator i=src.m_children.begin(); i!=src.m_children.end(); i++) {
+                for (vector<SessionIndex*>::const_iterator i=src.m_SessionIndexs.begin(); i!=src.m_SessionIndexs.end(); ++i) {
                     if (*i) {
-                        SessionIndex* si = dynamic_cast<SessionIndex*>(*i);
-                        if (si) {
-                            getSessionIndexs().push_back(si->cloneSessionIndex());
-                            continue;
-                        }
+                        getSessionIndexs().push_back((*i)->cloneSessionIndex());
                     }
                 }
             }
@@ -1539,8 +1530,8 @@ namespace opensaml {
                 ++m_pos_EncryptedID;
                 m_pos_NameIDPolicy=m_pos_EncryptedID;
                 ++m_pos_NameIDPolicy;
-                
             }
+
         public:
             virtual ~NameIDMappingRequestImpl() { }
     
@@ -1593,6 +1584,7 @@ namespace opensaml {
                 m_pos_EncryptedID=m_pos_NameID;
                 ++m_pos_EncryptedID;
             }
+
         public:
             virtual ~NameIDMappingResponseImpl() { }
     
@@ -1608,9 +1600,9 @@ namespace opensaml {
             void _clone(const NameIDMappingResponseImpl& src) {
                 StatusResponseTypeImpl::_clone(src);
                 if (src.getNameID())
-                    setNameID(getNameID()->cloneNameID());
+                    setNameID(src.getNameID()->cloneNameID());
                 if (src.getEncryptedID())
-                    setEncryptedID(getEncryptedID()->cloneEncryptedID());
+                    setEncryptedID(src.getEncryptedID()->cloneEncryptedID());
             }
             
             IMPL_XMLOBJECT_CLONE_EX(NameIDMappingResponse);

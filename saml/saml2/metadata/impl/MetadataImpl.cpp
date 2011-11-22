@@ -292,9 +292,11 @@ namespace opensaml {
 
             ExtensionsImpl(const ExtensionsImpl& src)
                     : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
-                VectorOf(XMLObject) v=getUnknownXMLObjects();
-                for (vector<XMLObject*>::const_iterator i=src.m_UnknownXMLObjects.begin(); i!=src.m_UnknownXMLObjects.end(); ++i)
-                    v.push_back((*i)->clone());
+                for (vector<XMLObject*>::const_iterator i=src.m_UnknownXMLObjects.begin(); i!=src.m_UnknownXMLObjects.end(); ++i) {
+                    if (*i) {
+                        getUnknownXMLObjects().push_back((*i)->clone());
+                    }
+                }
             }
 
             IMPL_XMLOBJECT_CLONE(Extensions);
@@ -334,6 +336,7 @@ namespace opensaml {
                 m_pos_OrganizationURL=m_pos_OrganizationDisplayName;
                 ++m_pos_OrganizationURL;
             }
+
         public:
             virtual ~OrganizationImpl() {}
 
@@ -348,22 +351,19 @@ namespace opensaml {
                 init();
                 if (src.getExtensions())
                     setExtensions(src.getExtensions()->cloneExtensions());
-                VectorOf(OrganizationName) v=getOrganizationNames();
                 for (vector<OrganizationName*>::const_iterator i=src.m_OrganizationNames.begin(); i!=src.m_OrganizationNames.end(); i++) {
                     if (*i) {
-                        v.push_back((*i)->cloneOrganizationName());
+                        getOrganizationNames().push_back((*i)->cloneOrganizationName());
                     }
                 }
-                VectorOf(OrganizationDisplayName) w=getOrganizationDisplayNames();
                 for (vector<OrganizationDisplayName*>::const_iterator j=src.m_OrganizationDisplayNames.begin(); j!=src.m_OrganizationDisplayNames.end(); j++) {
                     if (*j) {
-                        w.push_back((*j)->cloneOrganizationDisplayName());
+                        getOrganizationDisplayNames().push_back((*j)->cloneOrganizationDisplayName());
                     }
                 }
-                VectorOf(OrganizationURL) x=getOrganizationURLs();
                 for (vector<OrganizationURL*>::const_iterator k=src.m_OrganizationURLs.begin(); k!=src.m_OrganizationURLs.end(); k++) {
                     if (*k) {
-                        x.push_back((*k)->cloneOrganizationURL());
+                        getOrganizationURLs().push_back((*k)->cloneOrganizationURL());
                     }
                 }
             }
@@ -422,6 +422,7 @@ namespace opensaml {
                 m_pos_TelephoneNumber=m_pos_SurName;
                 ++m_pos_TelephoneNumber;
             }
+
         public:
             virtual ~ContactPersonImpl() {
                 XMLString::release(&m_ContactType);
@@ -445,16 +446,14 @@ namespace opensaml {
                 if (src.getSurName())
                     setSurName(src.getSurName()->cloneSurName());
 
-                VectorOf(EmailAddress) v=getEmailAddresss();
                 for (vector<EmailAddress*>::const_iterator i=src.m_EmailAddresss.begin(); i!=src.m_EmailAddresss.end(); i++) {
                     if (*i) {
-                        v.push_back((*i)->cloneEmailAddress());
+                        getEmailAddresss().push_back((*i)->cloneEmailAddress());
                     }
                 }
-                VectorOf(TelephoneNumber) w=getTelephoneNumbers();
                 for (vector<TelephoneNumber*>::const_iterator j=src.m_TelephoneNumbers.begin(); j!=src.m_TelephoneNumbers.end(); j++) {
                     if (*j) {
-                        w.push_back((*j)->cloneTelephoneNumber());
+                        getTelephoneNumbers().push_back((*j)->cloneTelephoneNumber());
                     }
                 }
             }
@@ -522,6 +521,7 @@ namespace opensaml {
             AdditionalMetadataLocationImpl(const AdditionalMetadataLocationImpl& src)
                     : AbstractXMLObject(src), AbstractSimpleElement(src), AbstractDOMCachingXMLObject(src) {
                 init();
+                setNamespace(src.getNamespace());
             }
 
             IMPL_XMLOBJECT_CLONE(AdditionalMetadataLocation);
@@ -550,6 +550,7 @@ namespace opensaml {
                 m_children.push_back(nullptr);
                 m_pos_KeyInfo=m_children.begin();
     	    }
+
         public:
             virtual ~KeyDescriptorImpl() {
                 XMLString::release(&m_Use);
@@ -566,10 +567,9 @@ namespace opensaml {
                 setUse(src.getUse());
                 if (src.getKeyInfo())
                     setKeyInfo(src.getKeyInfo()->cloneKeyInfo());
-                VectorOf(EncryptionMethod) v=getEncryptionMethods();
                 for (vector<EncryptionMethod*>::const_iterator i=src.m_EncryptionMethods.begin(); i!=src.m_EncryptionMethods.end(); i++) {
                     if (*i) {
-                        v.push_back((*i)->cloneEncryptionMethod());
+                        getEncryptionMethods().push_back((*i)->cloneEncryptionMethod());
                     }
                 }
             }
@@ -636,9 +636,11 @@ namespace opensaml {
                 setBinding(src.getBinding());
                 setLocation(src.getLocation());
                 setResponseLocation(src.getResponseLocation());
-                VectorOf(XMLObject) v=getUnknownXMLObjects();
-                for (vector<XMLObject*>::const_iterator i=src.m_UnknownXMLObjects.begin(); i!=src.m_UnknownXMLObjects.end(); ++i)
-                    v.push_back((*i)->clone());
+                for (vector<XMLObject*>::const_iterator i=src.m_UnknownXMLObjects.begin(); i!=src.m_UnknownXMLObjects.end(); ++i) {
+                    if (*i) {
+                        getUnknownXMLObjects().push_back((*i)->clone());
+                    }
+                }
             }
 
             IMPL_XMLOBJECT_CLONE_EX(EndpointType);
@@ -941,16 +943,14 @@ namespace opensaml {
                 if (src.getOrganization())
                     setOrganization(src.getOrganization()->cloneOrganization());
 
-                VectorOf(KeyDescriptor) v=getKeyDescriptors();
                 for (vector<KeyDescriptor*>::const_iterator i=src.m_KeyDescriptors.begin(); i!=src.m_KeyDescriptors.end(); i++) {
                     if (*i) {
-                        v.push_back((*i)->cloneKeyDescriptor());
+                        getKeyDescriptors().push_back((*i)->cloneKeyDescriptor());
                     }
                 }
-                VectorOf(ContactPerson) w=getContactPersons();
                 for (vector<ContactPerson*>::const_iterator j=src.m_ContactPersons.begin(); j!=src.m_ContactPersons.end(); j++) {
                     if (*j) {
-                        w.push_back((*j)->cloneContactPerson());
+                        getContactPersons().push_back((*j)->cloneContactPerson());
                     }
                 }
             }
@@ -1113,9 +1113,11 @@ namespace opensaml {
 
             void _clone(const RoleDescriptorTypeImpl& src) {
                 RoleDescriptorImpl::_clone(src);
-                VectorOf(XMLObject) v=getUnknownXMLObjects();
-                for (vector<XMLObject*>::const_iterator i=src.m_UnknownXMLObjects.begin(); i!=src.m_UnknownXMLObjects.end(); ++i)
-                    v.push_back((*i)->clone());
+                for (vector<XMLObject*>::const_iterator i=src.m_UnknownXMLObjects.begin(); i!=src.m_UnknownXMLObjects.end(); ++i) {
+                    if (*i) {
+                        getUnknownXMLObjects().push_back((*i)->clone());
+                    }
+                }
             }
 
             IMPL_XMLOBJECT_CLONE_EX(RoleDescriptorType);
@@ -1168,28 +1170,24 @@ namespace opensaml {
 
             void _clone(const SSODescriptorTypeImpl& src) {
                 RoleDescriptorImpl::_clone(src);
-                VectorOf(ArtifactResolutionService) v=getArtifactResolutionServices();
                 for (vector<ArtifactResolutionService*>::const_iterator i=src.m_ArtifactResolutionServices.begin(); i!=src.m_ArtifactResolutionServices.end(); i++) {
                     if (*i) {
-                        v.push_back((*i)->cloneArtifactResolutionService());
+                        getArtifactResolutionServices().push_back((*i)->cloneArtifactResolutionService());
                     }
                 }
-                VectorOf(SingleLogoutService) w=getSingleLogoutServices();
                 for (vector<SingleLogoutService*>::const_iterator j=src.m_SingleLogoutServices.begin(); j!=src.m_SingleLogoutServices.end(); j++) {
                     if (*j) {
-                        w.push_back((*j)->cloneSingleLogoutService());
+                        getSingleLogoutServices().push_back((*j)->cloneSingleLogoutService());
                     }
                 }
-                VectorOf(ManageNameIDService) x=getManageNameIDServices();
                 for (vector<ManageNameIDService*>::const_iterator k=src.m_ManageNameIDServices.begin(); k!=src.m_ManageNameIDServices.end(); k++) {
                     if (*k) {
-                        x.push_back((*k)->cloneManageNameIDService());
+                        getManageNameIDServices().push_back((*k)->cloneManageNameIDService());
                     }
                 }
-                VectorOf(NameIDFormat) y=getNameIDFormats();
                 for (vector<NameIDFormat*>::const_iterator m=src.m_NameIDFormats.begin(); m!=src.m_NameIDFormats.end(); m++) {
                     if (*m) {
-                        y.push_back((*m)->cloneNameIDFormat());
+                        getNameIDFormats().push_back((*m)->cloneNameIDFormat());
                     }
                 }
             }
@@ -1251,34 +1249,29 @@ namespace opensaml {
             void _clone(const IDPSSODescriptorImpl& src) {
                 SSODescriptorTypeImpl::_clone(src);
                 WantAuthnRequestsSigned(src.m_WantAuthnRequestsSigned);
-                VectorOf(SingleSignOnService) v=getSingleSignOnServices();
                 for (vector<SingleSignOnService*>::const_iterator i=src.m_SingleSignOnServices.begin(); i!=src.m_SingleSignOnServices.end(); i++) {
                     if (*i) {
-                        v.push_back((*i)->cloneSingleSignOnService());
+                        getSingleSignOnServices().push_back((*i)->cloneSingleSignOnService());
                     }
                 }
-                VectorOf(NameIDMappingService) w=getNameIDMappingServices();
                 for (vector<NameIDMappingService*>::const_iterator j=src.m_NameIDMappingServices.begin(); j!=src.m_NameIDMappingServices.end(); j++) {
                     if (*j) {
-                        w.push_back((*j)->cloneNameIDMappingService());
+                        getNameIDMappingServices().push_back((*j)->cloneNameIDMappingService());
                     }
                 }
-                VectorOf(AssertionIDRequestService) x=getAssertionIDRequestServices();
                 for (vector<AssertionIDRequestService*>::const_iterator k=src.m_AssertionIDRequestServices.begin(); k!=src.m_AssertionIDRequestServices.end(); k++) {
                     if (*k) {
-                        x.push_back((*k)->cloneAssertionIDRequestService());
+                        getAssertionIDRequestServices().push_back((*k)->cloneAssertionIDRequestService());
                     }
                 }
-                VectorOf(AttributeProfile) y=getAttributeProfiles();
                 for (vector<AttributeProfile*>::const_iterator m=src.m_AttributeProfiles.begin(); m!=src.m_AttributeProfiles.end(); m++) {
                     if (*m) {
-                        y.push_back((*m)->cloneAttributeProfile());
+                        getAttributeProfiles().push_back((*m)->cloneAttributeProfile());
                     }
                 }
-                VectorOf(Attribute) z=getAttributes();
                 for (vector<Attribute*>::const_iterator n=src.m_Attributes.begin(); n!=src.m_Attributes.end(); n++) {
                     if (*n) {
-                        z.push_back((*n)->cloneAttribute());
+                        getAttributes().push_back((*n)->cloneAttribute());
                     }
                 }
             }
@@ -1328,6 +1321,7 @@ namespace opensaml {
                 m_Name=m_NameFormat=m_FriendlyName=nullptr;
                 m_isRequired=XML_BOOL_NULL;
             }
+
         public:
             virtual ~RequestedAttributeImpl() {
                 XMLString::release(&m_Name);
@@ -1348,10 +1342,9 @@ namespace opensaml {
                 setNameFormat(src.getNameFormat());
                 setFriendlyName(src.getFriendlyName());
                 isRequired(src.m_isRequired);
-                VectorOf(XMLObject) v=getAttributeValues();
                 for (vector<XMLObject*>::const_iterator i=src.m_AttributeValues.begin(); i!=src.m_AttributeValues.end(); i++) {
                     if (*i) {
-                        v.push_back((*i)->clone());
+                        getAttributeValues().push_back((*i)->clone());
                     }
                 }
             }
@@ -1437,22 +1430,19 @@ namespace opensaml {
                 init();
                 setIndex(src.m_Index);
                 isDefault(src.m_isDefault);
-                VectorOf(ServiceName) v=getServiceNames();
                 for (vector<ServiceName*>::const_iterator i=src.m_ServiceNames.begin(); i!=src.m_ServiceNames.end(); i++) {
                     if (*i) {
-                        v.push_back((*i)->cloneServiceName());
+                        getServiceNames().push_back((*i)->cloneServiceName());
                     }
                 }
-                VectorOf(ServiceDescription) w=getServiceDescriptions();
                 for (vector<ServiceDescription*>::const_iterator j=src.m_ServiceDescriptions.begin(); j!=src.m_ServiceDescriptions.end(); j++) {
                     if (*j) {
-                        w.push_back((*j)->cloneServiceDescription());
+                        getServiceDescriptions().push_back((*j)->cloneServiceDescription());
                     }
                 }
-                VectorOf(RequestedAttribute) x=getRequestedAttributes();
                 for (vector<RequestedAttribute*>::const_iterator k=src.m_RequestedAttributes.begin(); k!=src.m_RequestedAttributes.end(); k++) {
                     if (*k) {
-                        x.push_back((*k)->cloneRequestedAttribute());
+                        getRequestedAttributes().push_back((*k)->cloneRequestedAttribute());
                     }
                 }
             }
@@ -1512,16 +1502,14 @@ namespace opensaml {
                 SSODescriptorTypeImpl::_clone(src);
                 AuthnRequestsSigned(src.m_AuthnRequestsSigned);
                 WantAssertionsSigned(src.m_WantAssertionsSigned);
-                VectorOf(AssertionConsumerService) v=getAssertionConsumerServices();
                 for (vector<AssertionConsumerService*>::const_iterator i=src.m_AssertionConsumerServices.begin(); i!=src.m_AssertionConsumerServices.end(); i++) {
                     if (*i) {
-                        v.push_back((*i)->cloneAssertionConsumerService());
+                        getAssertionConsumerServices().push_back((*i)->cloneAssertionConsumerService());
                     }
                 }
-                VectorOf(AttributeConsumingService) w=getAttributeConsumingServices();
                 for (vector<AttributeConsumingService*>::const_iterator j=src.m_AttributeConsumingServices.begin(); j!=src.m_AttributeConsumingServices.end(); j++) {
                     if (*j) {
-                        w.push_back((*j)->cloneAttributeConsumingService());
+                        getAttributeConsumingServices().push_back((*j)->cloneAttributeConsumingService());
                     }
                 }
             }
@@ -1588,22 +1576,19 @@ namespace opensaml {
 
             void _clone(const AuthnAuthorityDescriptorImpl& src) {
                 RoleDescriptorImpl::_clone(src);
-                VectorOf(AuthnQueryService) v=getAuthnQueryServices();
                 for (vector<AuthnQueryService*>::const_iterator i=src.m_AuthnQueryServices.begin(); i!=src.m_AuthnQueryServices.end(); i++) {
                     if (*i) {
-                        v.push_back((*i)->cloneAuthnQueryService());
+                        getAuthnQueryServices().push_back((*i)->cloneAuthnQueryService());
                     }
                 }
-                VectorOf(AssertionIDRequestService) w=getAssertionIDRequestServices();
                 for (vector<AssertionIDRequestService*>::const_iterator j=src.m_AssertionIDRequestServices.begin(); j!=src.m_AssertionIDRequestServices.end(); j++) {
                     if (*j) {
-                        w.push_back((*j)->cloneAssertionIDRequestService());
+                        getAssertionIDRequestServices().push_back((*j)->cloneAssertionIDRequestService());
                     }
                 }
-                VectorOf(NameIDFormat) x=getNameIDFormats();
                 for (vector<NameIDFormat*>::const_iterator k=src.m_NameIDFormats.begin(); k!=src.m_NameIDFormats.end(); k++) {
                     if (*k) {
-                        x.push_back((*k)->cloneNameIDFormat());
+                        getNameIDFormats().push_back((*k)->cloneNameIDFormat());
                     }
                 }
             }
@@ -1650,22 +1635,19 @@ namespace opensaml {
 
             void _clone(const PDPDescriptorImpl& src) {
                 RoleDescriptorImpl::_clone(src);
-                VectorOf(AuthzService) v=getAuthzServices();
                 for (vector<AuthzService*>::const_iterator i=src.m_AuthzServices.begin(); i!=src.m_AuthzServices.end(); i++) {
                     if (*i) {
-                        v.push_back((*i)->cloneAuthzService());
+                        getAuthzServices().push_back((*i)->cloneAuthzService());
                     }
                 }
-                VectorOf(AssertionIDRequestService) w=getAssertionIDRequestServices();
                 for (vector<AssertionIDRequestService*>::const_iterator j=src.m_AssertionIDRequestServices.begin(); j!=src.m_AssertionIDRequestServices.end(); j++) {
                     if (*j) {
-                        w.push_back((*j)->cloneAssertionIDRequestService());
+                        getAssertionIDRequestServices().push_back((*j)->cloneAssertionIDRequestService());
                     }
                 }
-                VectorOf(NameIDFormat) x=getNameIDFormats();
                 for (vector<NameIDFormat*>::const_iterator k=src.m_NameIDFormats.begin(); k!=src.m_NameIDFormats.end(); k++) {
                     if (*k) {
-                        x.push_back((*k)->cloneNameIDFormat());
+                        getNameIDFormats().push_back((*k)->cloneNameIDFormat());
                     }
                 }
             }
@@ -1720,34 +1702,29 @@ namespace opensaml {
 
             void _clone(const AttributeAuthorityDescriptorImpl& src) {
                 RoleDescriptorImpl::_clone(src);
-                VectorOf(AttributeService) v=getAttributeServices();
                 for (vector<AttributeService*>::const_iterator i=src.m_AttributeServices.begin(); i!=src.m_AttributeServices.end(); i++) {
                     if (*i) {
-                        v.push_back((*i)->cloneAttributeService());
+                        getAttributeServices().push_back((*i)->cloneAttributeService());
                     }
                 }
-                VectorOf(AssertionIDRequestService) w=getAssertionIDRequestServices();
                 for (vector<AssertionIDRequestService*>::const_iterator j=src.m_AssertionIDRequestServices.begin(); j!=src.m_AssertionIDRequestServices.end(); j++) {
                     if (*j) {
-                        w.push_back((*j)->cloneAssertionIDRequestService());
+                        getAssertionIDRequestServices().push_back((*j)->cloneAssertionIDRequestService());
                     }
                 }
-                VectorOf(NameIDFormat) x=getNameIDFormats();
                 for (vector<NameIDFormat*>::const_iterator k=src.m_NameIDFormats.begin(); k!=src.m_NameIDFormats.end(); k++) {
                     if (*k) {
-                        x.push_back((*k)->cloneNameIDFormat());
+                        getNameIDFormats().push_back((*k)->cloneNameIDFormat());
                     }
                 }
-                VectorOf(AttributeProfile) y=getAttributeProfiles();
                 for (vector<AttributeProfile*>::const_iterator m=src.m_AttributeProfiles.begin(); m!=src.m_AttributeProfiles.end(); m++) {
                     if (*m) {
-                        y.push_back((*m)->cloneAttributeProfile());
+                        getAttributeProfiles().push_back((*m)->cloneAttributeProfile());
                     }
                 }
-                VectorOf(Attribute) z=getAttributes();
                 for (vector<Attribute*>::const_iterator n=src.m_Attributes.begin(); n!=src.m_Attributes.end(); n++) {
                     if (*n) {
-                        z.push_back((*n)->cloneAttribute());
+                        getAttributes().push_back((*n)->cloneAttribute());
                     }
                 }
             }
@@ -1801,10 +1778,9 @@ namespace opensaml {
             void _clone(const QueryDescriptorTypeImpl& src) {
                 RoleDescriptorImpl::_clone(src);
                 WantAssertionsSigned(src.m_WantAssertionsSigned);
-                VectorOf(NameIDFormat) y=getNameIDFormats();
                 for (vector<NameIDFormat*>::const_iterator m=src.m_NameIDFormats.begin(); m!=src.m_NameIDFormats.end(); m++) {
                     if (*m) {
-                        y.push_back((*m)->cloneNameIDFormat());
+                        getNameIDFormats().push_back((*m)->cloneNameIDFormat());
                     }
                 }
             }
@@ -1864,10 +1840,9 @@ namespace opensaml {
 
             void _clone(const AttributeQueryDescriptorTypeImpl& src) {
                 QueryDescriptorTypeImpl::_clone(src);
-                VectorOf(AttributeConsumingService) w=getAttributeConsumingServices();
                 for (vector<AttributeConsumingService*>::const_iterator j=src.m_AttributeConsumingServices.begin(); j!=src.m_AttributeConsumingServices.end(); j++) {
                     if (*j) {
-                        w.push_back((*j)->cloneAttributeConsumingService());
+                        getAttributeConsumingServices().push_back((*j)->cloneAttributeConsumingService());
                     }
                 }
             }
@@ -1895,10 +1870,9 @@ namespace opensaml {
 
             void _clone(const AuthzDecisionQueryDescriptorTypeImpl& src) {
                 QueryDescriptorTypeImpl::_clone(src);
-                VectorOf(ActionNamespace) w=getActionNamespaces();
                 for (vector<ActionNamespace*>::const_iterator j=src.m_ActionNamespaces.begin(); j!=src.m_ActionNamespaces.end(); j++) {
                     if (*j) {
-                        w.push_back((*j)->cloneActionNamespace());
+                        getActionNamespaces().push_back((*j)->cloneActionNamespace());
                     }
                 }
             }
@@ -1964,16 +1938,14 @@ namespace opensaml {
                 if (src.getExtensions())
                     setExtensions(src.getExtensions()->cloneExtensions());
 
-                VectorOf(KeyDescriptor) v=getKeyDescriptors();
                 for (vector<KeyDescriptor*>::const_iterator i=src.m_KeyDescriptors.begin(); i!=src.m_KeyDescriptors.end(); i++) {
                     if (*i) {
-                        v.push_back((*i)->cloneKeyDescriptor());
+                        getKeyDescriptors().push_back((*i)->cloneKeyDescriptor());
                     }
                 }
-                VectorOf(AffiliateMember) w=getAffiliateMembers();
                 for (vector<AffiliateMember*>::const_iterator j=src.m_AffiliateMembers.begin(); j!=src.m_AffiliateMembers.end(); j++) {
                     if (*j) {
-                        w.push_back((*j)->cloneAffiliateMember());
+                        getAffiliateMembers().push_back((*j)->cloneAffiliateMember());
                     }
                 }
             }
@@ -2177,16 +2149,14 @@ namespace opensaml {
                     }
                 }
 
-                VectorOf(ContactPerson) v=getContactPersons();
                 for (vector<ContactPerson*>::const_iterator j=src.m_ContactPersons.begin(); j!=src.m_ContactPersons.end(); j++) {
                     if (*j) {
-                        v.push_back((*j)->cloneContactPerson());
+                        getContactPersons().push_back((*j)->cloneContactPerson());
                     }
                 }
-                VectorOf(AdditionalMetadataLocation) w=getAdditionalMetadataLocations();
                 for (vector<AdditionalMetadataLocation*>::const_iterator k=src.m_AdditionalMetadataLocations.begin(); k!=src.m_AdditionalMetadataLocations.end(); k++) {
                     if (*k) {
-                        w.push_back((*k)->cloneAdditionalMetadataLocation());
+                        getAdditionalMetadataLocations().push_back((*k)->cloneAdditionalMetadataLocation());
                     }
                 }
             }
@@ -2515,16 +2485,17 @@ namespace opensaml {
             }
 
             DigestMethodImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
-                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
-                m_Algorithm = nullptr;
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType), m_Algorithm(nullptr) {
             }
 
             DigestMethodImpl(const DigestMethodImpl& src)
-                    : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
+                    : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src), m_Algorithm(nullptr) {
                 setAlgorithm(src.getAlgorithm());
-                VectorOf(XMLObject) v=getUnknownXMLObjects();
-                for (vector<XMLObject*>::const_iterator i=src.m_UnknownXMLObjects.begin(); i!=src.m_UnknownXMLObjects.end(); ++i)
-                    v.push_back((*i)->clone());
+                for (vector<XMLObject*>::const_iterator i=src.m_UnknownXMLObjects.begin(); i!=src.m_UnknownXMLObjects.end(); ++i) {
+                    if (*i) {
+                        getUnknownXMLObjects().push_back((*i)->clone());
+                    }
+                }
             }
 
             IMPL_XMLOBJECT_CLONE(DigestMethod);
@@ -2552,6 +2523,10 @@ namespace opensaml {
             public AbstractXMLObjectMarshaller,
             public AbstractXMLObjectUnmarshaller
         {
+            void init() {
+                m_Algorithm = m_MinKeySize = m_MaxKeySize = nullptr;
+            }
+
         public:
             virtual ~SigningMethodImpl() {
                 XMLString::release(&m_Algorithm);
@@ -2560,20 +2535,21 @@ namespace opensaml {
             }
 
             SigningMethodImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
-                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
-                m_Algorithm = nullptr;
-                m_MinKeySize = nullptr;
-                m_MaxKeySize = nullptr;
+                    : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
+                init();
             }
 
             SigningMethodImpl(const SigningMethodImpl& src)
                     : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
+                init();
                 setAlgorithm(src.getAlgorithm());
                 setMinKeySize(src.m_MinKeySize);
                 setMaxKeySize(src.m_MaxKeySize);
-                VectorOf(XMLObject) v=getUnknownXMLObjects();
-                for (vector<XMLObject*>::const_iterator i=src.m_UnknownXMLObjects.begin(); i!=src.m_UnknownXMLObjects.end(); ++i)
-                    v.push_back((*i)->clone());
+                for (vector<XMLObject*>::const_iterator i=src.m_UnknownXMLObjects.begin(); i!=src.m_UnknownXMLObjects.end(); ++i) {
+                    if (*i) {
+                        getUnknownXMLObjects().push_back((*i)->clone());
+                    }
+                }
             }
 
             IMPL_XMLOBJECT_CLONE(SigningMethod);
@@ -2747,8 +2723,7 @@ namespace opensaml {
                 init();
             }
 
-            LogoImpl(const LogoImpl& src)
-                    : AbstractXMLObject(src), AbstractSimpleElement(src), AbstractDOMCachingXMLObject(src) {
+            LogoImpl(const LogoImpl& src) : AbstractXMLObject(src), AbstractSimpleElement(src), AbstractDOMCachingXMLObject(src) {
                 init();
                 setLang(src.getLang());
                 if (src.m_LangPrefix)
@@ -2844,7 +2819,9 @@ namespace opensaml {
                             continue;
                         }
 
-                        getUnknownXMLObjects().push_back((*i)->clone());
+                        if (*i) {
+                            getUnknownXMLObjects().push_back((*i)->clone());
+                        }
                     }
                 }
             }
@@ -2913,7 +2890,9 @@ namespace opensaml {
                             continue;
                         }
 
-                        getUnknownXMLObjects().push_back((*i)->clone());
+                        if (*i) {
+                            getUnknownXMLObjects().push_back((*i)->clone());
+                        }
                     }
                 }
             }

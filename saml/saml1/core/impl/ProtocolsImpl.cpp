@@ -235,10 +235,9 @@ namespace opensaml {
             void _clone(const AttributeQueryImpl& src) {
                 SubjectQueryImpl::_clone(src);
                 setResource(src.getResource());
-                VectorOf(AttributeDesignator) v=getAttributeDesignators();
                 for (vector<AttributeDesignator*>::const_iterator i=src.m_AttributeDesignators.begin(); i!=src.m_AttributeDesignators.end(); i++) {
                     if (*i) {
-                        v.push_back((*i)->cloneAttributeDesignator());
+                        getAttributeDesignators().push_back((*i)->cloneAttributeDesignator());
                     }
                 }
             }
@@ -293,10 +292,9 @@ namespace opensaml {
                 setResource(src.getResource());
                 if (src.getEvidence())
                     setEvidence(src.getEvidence()->cloneEvidence());
-                VectorOf(Action) v=getActions();
                 for (vector<Action*>::const_iterator i=src.m_Actions.begin(); i!=src.m_Actions.end(); i++) {
                     if (*i) {
-                        v.push_back((*i)->cloneAction());
+                        getActions().push_back((*i)->cloneAction());
                     }
                 }
             }
@@ -370,10 +368,9 @@ namespace opensaml {
                 setIssueInstant(src.getIssueInstant());
                 if (src.getSignature())
                     setSignature(src.getSignature()->cloneSignature());
-                VectorOf(RespondWith) v=getRespondWiths();
                 for (vector<RespondWith*>::const_iterator i=src.m_RespondWiths.begin(); i!=src.m_RespondWiths.end(); i++) {
                     if (*i) {
-                        v.push_back((*i)->cloneRespondWith());
+                        getRespondWiths().push_back((*i)->cloneRespondWith());
                     }
                 }
             }
@@ -499,16 +496,14 @@ namespace opensaml {
                 RequestAbstractTypeImpl::_clone(src);
                 if (src.getQuery())
                     setQuery(src.getQuery()->cloneQuery());
-                VectorOf(AssertionIDReference) v=getAssertionIDReferences();
                 for (vector<AssertionIDReference*>::const_iterator i=src.m_AssertionIDReferences.begin(); i!=src.m_AssertionIDReferences.end(); i++) {
                     if (*i) {
-                        v.push_back((*i)->cloneAssertionIDReference());
+                        getAssertionIDReferences().push_back((*i)->cloneAssertionIDReference());
                     }
                 }
-                VectorOf(AssertionArtifact) v2=getAssertionArtifacts();
                 for (vector<AssertionArtifact*>::const_iterator i=src.m_AssertionArtifacts.begin(); i!=src.m_AssertionArtifacts.end(); i++) {
                     if (*i) {
-                        v2.push_back((*i)->cloneAssertionArtifact());
+                        getAssertionArtifacts().push_back((*i)->cloneAssertionArtifact());
                     }
                 }
             }
@@ -566,6 +561,7 @@ namespace opensaml {
                 m_StatusCode=nullptr;
                 m_pos_StatusCode=m_children.begin();
             }
+
         public:
             virtual ~StatusCodeImpl() {
                 delete m_Value;
@@ -618,9 +614,11 @@ namespace opensaml {
 
             StatusDetailImpl(const StatusDetailImpl& src)
                     : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
-                VectorOf(XMLObject) v=getUnknownXMLObjects();
-                for (vector<XMLObject*>::const_iterator i=src.m_UnknownXMLObjects.begin(); i!=src.m_UnknownXMLObjects.end(); ++i)
-                    v.push_back((*i)->clone());
+                for (vector<XMLObject*>::const_iterator i=src.m_UnknownXMLObjects.begin(); i!=src.m_UnknownXMLObjects.end(); ++i) {
+                    if (*i) {
+                        getUnknownXMLObjects().push_back((*i)->clone());
+                    }
+                }
             }
 
             IMPL_XMLOBJECT_CLONE(StatusDetail);
@@ -651,6 +649,7 @@ namespace opensaml {
                 m_pos_StatusDetail=m_pos_StatusMessage;
                 ++m_pos_StatusDetail;
             }
+
         public:
             virtual ~StatusImpl() {}
 
@@ -862,10 +861,9 @@ namespace opensaml {
                 ResponseAbstractTypeImpl::_clone(src);
                 if (src.getStatus())
                     setStatus(src.getStatus()->cloneStatus());
-                VectorOf(saml1::Assertion) v=getAssertions();
                 for (vector<saml1::Assertion*>::const_iterator i=src.m_Assertions.begin(); i!=src.m_Assertions.end(); i++) {
                     if (*i) {
-                        v.push_back((*i)->cloneAssertion());
+                        getAssertions().push_back((*i)->cloneAssertion());
                     }
                 }
             }

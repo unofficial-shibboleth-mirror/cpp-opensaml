@@ -136,6 +136,10 @@ namespace opensaml {
             public AbstractXMLObjectMarshaller,
             public AbstractXMLObjectUnmarshaller
         {
+            void init() {
+                m_NotBefore=m_NotOnOrAfter=nullptr;
+            }
+
         public:
             virtual ~ConditionsImpl() {
                 delete m_NotBefore;
@@ -176,10 +180,6 @@ namespace opensaml {
                 }
             }
 
-            void init() {
-                m_NotBefore=m_NotOnOrAfter=nullptr;
-            }
-
             IMPL_XMLOBJECT_CLONE(Conditions);
             IMPL_DATETIME_ATTRIB(NotBefore,0);
             IMPL_DATETIME_ATTRIB(NotOnOrAfter,SAMLTIME_MAX);
@@ -212,6 +212,10 @@ namespace opensaml {
             public AbstractXMLObjectMarshaller,
             public AbstractXMLObjectUnmarshaller
         {
+            void init() {
+                m_Format=m_NameQualifier=nullptr;
+            }
+
         public:
             virtual ~NameIdentifierImpl() {
                 XMLString::release(&m_Format);
@@ -228,10 +232,6 @@ namespace opensaml {
                 init();
                 setFormat(src.getFormat());
                 setNameQualifier(src.getNameQualifier());
-            }
-
-            void init() {
-                m_Format=m_NameQualifier=nullptr;
             }
 
             IMPL_XMLOBJECT_CLONE(NameIdentifier);
@@ -271,6 +271,16 @@ namespace opensaml {
             public AbstractXMLObjectMarshaller,
             public AbstractXMLObjectUnmarshaller
         {
+            void init() {
+                m_SubjectConfirmationData=nullptr;
+                m_KeyInfo=nullptr;
+                m_children.push_back(nullptr);
+                m_children.push_back(nullptr);
+                m_pos_SubjectConfirmationData=m_children.begin();
+                m_pos_KeyInfo=m_pos_SubjectConfirmationData;
+                ++m_pos_KeyInfo;
+            }
+
         public:
             virtual ~SubjectConfirmationImpl() {}
 
@@ -286,22 +296,11 @@ namespace opensaml {
                     setSubjectConfirmationData(src.getSubjectConfirmationData()->clone());
                 if (src.getKeyInfo())
                     setKeyInfo(src.getKeyInfo()->cloneKeyInfo());
-                VectorOf(ConfirmationMethod) v=getConfirmationMethods();
                 for (vector<ConfirmationMethod*>::const_iterator i=src.m_ConfirmationMethods.begin(); i!=src.m_ConfirmationMethods.end(); i++) {
                     if (*i) {
-                        v.push_back((*i)->cloneConfirmationMethod());
+                        getConfirmationMethods().push_back((*i)->cloneConfirmationMethod());
                     }
                 }
-            }
-
-            void init() {
-                m_SubjectConfirmationData=nullptr;
-                m_KeyInfo=nullptr;
-                m_children.push_back(nullptr);
-                m_children.push_back(nullptr);
-                m_pos_SubjectConfirmationData=m_children.begin();
-                m_pos_KeyInfo=m_pos_SubjectConfirmationData;
-                ++m_pos_KeyInfo;
             }
 
             IMPL_XMLOBJECT_CLONE(SubjectConfirmation);
@@ -327,6 +326,16 @@ namespace opensaml {
             public AbstractXMLObjectMarshaller,
             public AbstractXMLObjectUnmarshaller
         {
+            void init() {
+                m_NameIdentifier=nullptr;
+                m_SubjectConfirmation=nullptr;
+                m_children.push_back(nullptr);
+                m_children.push_back(nullptr);
+                m_pos_NameIdentifier=m_children.begin();
+                m_pos_SubjectConfirmation=m_pos_NameIdentifier;
+                ++m_pos_SubjectConfirmation;
+            }
+
         public:
             virtual ~SubjectImpl() {}
 
@@ -342,16 +351,6 @@ namespace opensaml {
                     setNameIdentifier(src.getNameIdentifier()->cloneNameIdentifier());
                 if (src.getSubjectConfirmation())
                     setSubjectConfirmation(src.getSubjectConfirmation()->cloneSubjectConfirmation());
-            }
-
-            void init() {
-                m_NameIdentifier=nullptr;
-                m_SubjectConfirmation=nullptr;
-                m_children.push_back(nullptr);
-                m_children.push_back(nullptr);
-                m_pos_NameIdentifier=m_children.begin();
-                m_pos_SubjectConfirmation=m_pos_NameIdentifier;
-                ++m_pos_SubjectConfirmation;
             }
 
             IMPL_XMLOBJECT_CLONE(Subject);
@@ -391,6 +390,7 @@ namespace opensaml {
                 m_children.push_back(nullptr);
                 m_pos_Subject=m_children.begin();
             }
+
         protected:
             SubjectStatementImpl() {
                 init();
@@ -436,6 +436,10 @@ namespace opensaml {
             public AbstractXMLObjectMarshaller,
             public AbstractXMLObjectUnmarshaller
         {
+            void init() {
+                m_IPAddress=m_DNSAddress=nullptr;
+            }
+
         public:
             virtual ~SubjectLocalityImpl() {
                 XMLString::release(&m_IPAddress);
@@ -452,10 +456,6 @@ namespace opensaml {
                 init();
                 setIPAddress(src.getIPAddress());
                 setDNSAddress(src.getDNSAddress());
-            }
-
-            void init() {
-                m_IPAddress=m_DNSAddress=nullptr;
             }
 
             IMPL_XMLOBJECT_CLONE(SubjectLocality);
@@ -480,6 +480,11 @@ namespace opensaml {
             public AbstractXMLObjectMarshaller,
             public AbstractXMLObjectUnmarshaller
         {
+            void init() {
+                m_AuthorityKind=nullptr;
+                m_Location=m_Binding=nullptr;
+            }
+
         public:
             virtual ~AuthorityBindingImpl() {
                 delete m_AuthorityKind;
@@ -498,11 +503,6 @@ namespace opensaml {
                 setAuthorityKind(src.getAuthorityKind());
                 setLocation(src.getLocation());
                 setBinding(src.getBinding());
-            }
-
-            void init() {
-                m_AuthorityKind=nullptr;
-                m_Location=m_Binding=nullptr;
             }
 
             IMPL_XMLOBJECT_CLONE(AuthorityBinding);
@@ -556,10 +556,9 @@ namespace opensaml {
                 setAuthenticationInstant(src.getAuthenticationInstant());
                 if (src.getSubjectLocality())
                     setSubjectLocality(src.getSubjectLocality()->cloneSubjectLocality());
-                VectorOf(AuthorityBinding) v=getAuthorityBindings();
                 for (vector<AuthorityBinding*>::const_iterator i=src.m_AuthorityBindings.begin(); i!=src.m_AuthorityBindings.end(); i++) {
                     if (*i) {
-                        v.push_back((*i)->cloneAuthorityBinding());
+                        getAuthorityBindings().push_back((*i)->cloneAuthorityBinding());
                     }
                 }
             }
@@ -605,7 +604,8 @@ namespace opensaml {
                     : AbstractXMLObject(nsURI, localName, prefix, schemaType), m_Namespace(nullptr) {
             }
 
-            ActionImpl(const ActionImpl& src) : AbstractXMLObject(src), AbstractSimpleElement(src), AbstractDOMCachingXMLObject(src) {
+            ActionImpl(const ActionImpl& src)
+                    : AbstractXMLObject(src), AbstractSimpleElement(src), AbstractDOMCachingXMLObject(src), m_Namespace(nullptr) {
                 setNamespace(src.getNamespace());
             }
 
@@ -700,10 +700,9 @@ namespace opensaml {
                 setDecision(src.getDecision());
                 if (src.getEvidence())
                     setEvidence(src.getEvidence()->cloneEvidence());
-                VectorOf(Action) v=getActions();
                 for (vector<Action*>::const_iterator i=src.m_Actions.begin(); i!=src.m_Actions.end(); i++) {
                     if (*i) {
-                        v.push_back((*i)->cloneAction());
+                        getActions().push_back((*i)->cloneAction());
                     }
                 }
             }
@@ -803,10 +802,9 @@ namespace opensaml {
                 init();
                 setAttributeName(src.getAttributeName());
                 setAttributeNamespace(src.getAttributeNamespace());
-                VectorOf(XMLObject) v=getAttributeValues();
                 for (vector<XMLObject*>::const_iterator i=src.m_AttributeValues.begin(); i!=src.m_AttributeValues.end(); i++) {
                     if (*i) {
-                        v.push_back((*i)->clone());
+                        getAttributeValues().push_back((*i)->clone());
                     }
                 }
             }
@@ -860,10 +858,9 @@ namespace opensaml {
 
             void _clone(const AttributeStatementImpl& src) {
                 SubjectStatementImpl::_clone(src);
-                VectorOf(Attribute) v=getAttributes();
                 for (vector<Attribute*>::const_iterator i=src.m_Attributes.begin(); i!=src.m_Attributes.end(); i++) {
                     if (*i) {
-                        v.push_back((*i)->cloneAttribute());
+                        getAttributes().push_back((*i)->cloneAttribute());
                     }
                 }
             }
@@ -907,7 +904,9 @@ namespace opensaml {
                             continue;
                         }
 
-                        getUnknownXMLObjects().push_back((*i)->clone());
+                        if (*i) {
+                            getUnknownXMLObjects().push_back((*i)->clone());
+                        }
                     }
                 }
             }
@@ -956,6 +955,7 @@ namespace opensaml {
                 m_pos_Signature=m_pos_Advice;
                 ++m_pos_Signature;
             }
+
         public:
             virtual ~AssertionImpl() {
                 XMLString::release(&m_MinorVersion);
