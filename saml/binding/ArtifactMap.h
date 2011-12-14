@@ -110,7 +110,7 @@ namespace opensaml {
     private:
         xmltooling::StorageService* m_storage;
         std::string m_context;
-        ArtifactMappings* m_mappings;
+        std::auto_ptr<ArtifactMappings> m_mappings;
         unsigned int m_artifactTTL;
     };
 

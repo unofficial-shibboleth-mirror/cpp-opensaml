@@ -61,6 +61,10 @@
 #include <xmltooling/util/PathResolver.h>
 #include <xmltooling/util/Threads.h>
 
+#include <boost/lambda/bind.hpp>
+#include <boost/lambda/casts.hpp>
+#include <boost/lambda/lambda.hpp>
+
 #include <xsec/enc/XSECCryptoException.hpp>
 #include <xsec/enc/XSECCryptoProvider.hpp>
 #include <xsec/utils/XSECPlatformUtils.hpp>
@@ -69,6 +73,8 @@ using namespace opensaml;
 using namespace xmlsignature;
 using namespace xmltooling::logging;
 using namespace xmltooling;
+using namespace boost::lambda;
+using namespace boost;
 using namespace std;
 
 // Expose entry points when used as an extension library
@@ -114,6 +120,7 @@ SAMLConfig::SAMLConfig() : m_artifactMap(nullptr)
 
 SAMLConfig::~SAMLConfig()
 {
+    delete m_artifactMap;
 }
 
 ArtifactMap* SAMLConfig::getArtifactMap() const
@@ -287,15 +294,19 @@ using namespace saml2md;
 
 void opensaml::annotateException(XMLToolingException* e, const EntityDescriptor* entity, const Status* status, bool rethrow)
 {
+    time_t now = time(nullptr);
     const RoleDescriptor* role = nullptr;
+    static bool (TimeBoundSAMLObject::* isValid)(time_t) const = &TimeBoundSAMLObject::isValid;
+
     if (entity) {
-        const list<XMLObject*>& roles=entity->getOrderedChildren();
-        for (list<XMLObject*>::const_iterator child=roles.begin(); !role && child!=roles.end(); ++child) {
-            role=dynamic_cast<RoleDescriptor*>(*child);
-            if (role && !role->isValid())
-                role = nullptr;
-        }
+        const XMLObject* r = find_if(
+            entity->getOrderedChildren(),
+            (ll_dynamic_cast<const RoleDescriptor*>(_1) != nullptr && lambda::bind(isValid, ll_dynamic_cast<const TimeBoundSAMLObject*>(_1), now))
+            );
+        if (r)
+            role = dynamic_cast<const RoleDescriptor*>(r);
     }
+
     annotateException(e, role, status, rethrow);
 }
 

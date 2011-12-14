@@ -30,12 +30,14 @@
 #include "binding/SecurityPolicyRule.h"
 #include "saml2/core/Assertions.h"
 
+#include <boost/bind.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 
 using namespace opensaml::saml2md;
 using namespace opensaml::saml2;
 using namespace opensaml;
 using namespace xmltooling;
+using namespace boost;
 using namespace std;
 
 namespace opensaml {
@@ -89,26 +91,20 @@ SecurityPolicy::SecurityPolicy(
     bool validate
     ) : m_metadataCriteria(nullptr),
         m_issueInstant(0),
-        m_issuer(nullptr),
         m_issuerRole(nullptr),
         m_authenticated(false),
-        m_matchingPolicy(nullptr),
         m_metadata(metadataProvider),
-        m_role(nullptr),
+        m_role(role ? new xmltooling::QName(*role) : nullptr),
         m_trust(trustEngine),
         m_validate(validate),
         m_entityOnly(true),
         m_ts(0)
 {
-    if (role)
-        m_role = new xmltooling::QName(*role);
 }
 
 SecurityPolicy::~SecurityPolicy()
 {
-    delete m_role;
     delete m_metadataCriteria;
-    delete m_issuer;
 }
 
 const MetadataProvider* SecurityPolicy::getMetadataProvider() const
@@ -127,7 +123,7 @@ MetadataProvider::Criteria& SecurityPolicy::getMetadataProviderCriteria() const
 
 const xmltooling::QName* SecurityPolicy::getRole() const
 {
-    return m_role;
+    return m_role.get();
 }
 
 const TrustEngine* SecurityPolicy::getTrustEngine() const
@@ -186,8 +182,7 @@ void SecurityPolicy::setMetadataProviderCriteria(MetadataProvider::Criteria* cri
 
 void SecurityPolicy::setRole(const xmltooling::QName* role)
 {
-    delete m_role;
-    m_role = role ? new xmltooling::QName(*role) : nullptr;
+    m_role.reset(role ? new xmltooling::QName(*role) : nullptr);
 }
 
 void SecurityPolicy::setTrustEngine(const TrustEngine* trust)
@@ -219,8 +214,10 @@ void SecurityPolicy::setCorrelationID(const XMLCh* correlationID)
 
 void SecurityPolicy::evaluate(const XMLObject& message, const GenericRequest* request)
 {
-    for (vector<const SecurityPolicyRule*>::const_iterator i=m_rules.begin(); i!=m_rules.end(); ++i)
-        (*i)->evaluate(message,request,*this);
+    for_each(
+        m_rules.begin(), m_rules.end(),
+        boost::bind(&SecurityPolicyRule::evaluate, _1, boost::ref(message), request, boost::ref(*this))
+        );
 }
 
 void SecurityPolicy::reset(bool messageOnly)
@@ -233,8 +230,7 @@ void SecurityPolicy::_reset(bool messageOnly)
     m_messageID.erase();
     m_issueInstant=0;
     if (!messageOnly) {
-        delete m_issuer;
-        m_issuer=nullptr;
+        m_issuer.reset();
         m_issuerRole=nullptr;
         m_authenticated=false;
     }
@@ -252,7 +248,7 @@ time_t SecurityPolicy::getIssueInstant() const
 
 const Issuer* SecurityPolicy::getIssuer() const
 {
-    return m_issuer;
+    return m_issuer.get();
 }
 
 const RoleDescriptor* SecurityPolicy::getIssuerMetadata() const
@@ -279,25 +275,25 @@ void SecurityPolicy::setIssueInstant(time_t issueInstant)
 
 void SecurityPolicy::setIssuer(const Issuer* issuer)
 {
-    if (!getIssuerMatchingPolicy().issuerMatches(m_issuer, issuer))
+    if (!getIssuerMatchingPolicy().issuerMatches(m_issuer.get(), issuer))
         throw SecurityPolicyException("An Issuer was supplied that conflicts with previous results.");
 
-    if (!m_issuer) {
+    if (!m_issuer.get()) {
         if (m_entityOnly && issuer->getFormat() && !XMLString::equals(issuer->getFormat(), NameIDType::ENTITY))
             throw SecurityPolicyException("A non-entity Issuer was supplied, violating policy.");
         m_issuerRole = nullptr;
-        m_issuer=issuer->cloneIssuer();
+        m_issuer.reset(issuer->cloneIssuer());
     }
 }
 
 void SecurityPolicy::setIssuer(const XMLCh* issuer)
 {
-    if (!getIssuerMatchingPolicy().issuerMatches(m_issuer, issuer))
+    if (!getIssuerMatchingPolicy().issuerMatches(m_issuer.get(), issuer))
         throw SecurityPolicyException("An Issuer was supplied that conflicts with previous results.");
 
-    if (!m_issuer && issuer && *issuer) {
+    if (!m_issuer.get() && issuer && *issuer) {
         m_issuerRole = nullptr;
-        m_issuer = IssuerBuilder::buildIssuer();
+        m_issuer.reset(IssuerBuilder::buildIssuer());
         m_issuer->setName(issuer);
     }
 }
@@ -306,7 +302,7 @@ void SecurityPolicy::setIssuerMetadata(const RoleDescriptor* issuerRole)
 {
     if (issuerRole && m_issuerRole && issuerRole!=m_issuerRole)
         throw SecurityPolicyException("A rule supplied a RoleDescriptor that conflicts with previous results.");
-    m_issuerRole=issuerRole;
+    m_issuerRole = issuerRole;
 }
 
 void SecurityPolicy::setAuthenticated(bool auth)
@@ -380,11 +376,10 @@ SecurityPolicy::IssuerMatchingPolicy SecurityPolicy::m_defaultMatching;
 
 const SecurityPolicy::IssuerMatchingPolicy& SecurityPolicy::getIssuerMatchingPolicy() const
 {
-    return m_matchingPolicy ? *m_matchingPolicy : m_defaultMatching;
+    return m_matchingPolicy.get() ? *m_matchingPolicy.get() : m_defaultMatching;
 }
 
 void SecurityPolicy::setIssuerMatchingPolicy(IssuerMatchingPolicy* matchingPolicy)
 {
-    delete m_matchingPolicy;
-    m_matchingPolicy = matchingPolicy;
+    m_matchingPolicy.reset(matchingPolicy);
 }

@@ -75,17 +75,11 @@ void ContentReference::createReferences(DSIGSignature* sig)
         ref=sig->createReference(&chNull, m_digest ? m_digest : DSIGConstants::s_unicodeStrURISHA1);  // whole doc reference
     else {
         XMLCh* buf=new XMLCh[XMLString::stringLen(id) + 2];
+        auto_arrayptr<XMLCh> bufjanitor(buf);
         buf[0]=chPound;
         buf[1]=chNull;
         XMLString::catString(buf,id);
-        try {
-            ref=sig->createReference(buf, m_digest ? m_digest : DSIGConstants::s_unicodeStrURISHA1);
-            delete[] buf;
-        }
-        catch(...) {
-            delete[] buf;
-            throw;
-        }
+        ref=sig->createReference(buf, m_digest ? m_digest : DSIGConstants::s_unicodeStrURISHA1);
     }
     
     ref->appendEnvelopedSignatureTransform();
@@ -101,7 +95,7 @@ void ContentReference::createReferences(DSIGSignature* sig)
         }
         if (!prefixes.empty()) {
             prefixes.erase(prefixes.begin() + prefixes.size() - 1);
-            c14n->setInclusiveNamespaces(const_cast<XMLCh*>(prefixes.c_str()));
+            c14n->setInclusiveNamespaces(const_cast<XMLCh*>(prefixes.c_str())); // the cast is for compatibility with old xmlsec
         }
     }
 }

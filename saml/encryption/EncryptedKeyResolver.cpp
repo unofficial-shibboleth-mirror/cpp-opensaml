@@ -28,8 +28,13 @@
 #include "encryption/EncryptedKeyResolver.h"
 #include "saml2/core/Assertions.h"
 
+#include <boost/lambda/bind.hpp>
+#include <boost/lambda/lambda.hpp>
+
 using namespace xmlencryption;
 using opensaml::saml2::EncryptedElementType;
+using namespace boost::lambda;
+using namespace boost;
 using namespace std;
 
 opensaml::EncryptedKeyResolver::EncryptedKeyResolver(const EncryptedElementType& ref) : m_ref(ref)
@@ -46,13 +51,14 @@ const EncryptedKey* opensaml::EncryptedKeyResolver::resolveKey(const EncryptedDa
     if (base)
         return base;
 
-    const vector<EncryptedKey*>& keys=m_ref.getEncryptedKeys();
-    for (vector<EncryptedKey*>::const_iterator i=keys.begin(); i!=keys.end(); i++) {
-        if ((*i)->getRecipient() == nullptr)
-            return (*i);
-        else if (XMLString::equals(recipient,(*i)->getRecipient()))
-            return (*i);
-    }
+    static bool (*equal_fn)(const XMLCh*, const XMLCh*) = &XMLString::equals;
 
-    return nullptr;
+    // Look for first match that has no Recipient attribute, or matches the input recipient.
+    // Using XMLString::equals allows for both to be NULL and still match.
+    vector<EncryptedKey*>::const_iterator k = find_if(
+        m_ref.getEncryptedKeys().begin(), m_ref.getEncryptedKeys().end(),
+        (lambda::bind(&EncryptedKey::getRecipient, _1) == nullptr ||
+            lambda::bind(equal_fn, recipient, lambda::bind(&EncryptedKey::getRecipient, _1)))
+        );
+    return (k != m_ref.getEncryptedKeys().end()) ? (*k) : nullptr;
 }

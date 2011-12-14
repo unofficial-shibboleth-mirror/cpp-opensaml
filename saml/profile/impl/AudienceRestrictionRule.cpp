@@ -31,11 +31,13 @@
 #include "saml1/core/Assertions.h"
 #include "saml2/core/Assertions.h"
 
+#include <boost/bind.hpp>
 #include <xmltooling/logging.h>
 
 using namespace opensaml;
 using namespace xmltooling::logging;
 using namespace xmltooling;
+using namespace boost;
 using namespace std;
 
 namespace opensaml {
@@ -73,18 +75,27 @@ AudienceRestrictionRule::AudienceRestrictionRule(const DOMElement* e)
 
 bool AudienceRestrictionRule::evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const
 {
+    static bool (*equals_fn)(const XMLCh*, const XMLCh*) = &XMLString::equals;
+
     const saml2::AudienceRestriction* ac2=dynamic_cast<const saml2::AudienceRestriction*>(&message);
     if (ac2) {
         const vector<saml2::Audience*>& auds2 = ac2->getAudiences();
-        for (vector<saml2::Audience*>::const_iterator a1 = auds2.begin(); a1!=auds2.end(); ++a1) {
-            for (vector<xstring>::const_iterator a2 = policy.getAudiences().begin(); a2!=policy.getAudiences().end(); ++a2) {
-                if (XMLString::equals((*a1)->getAudienceURI(), a2->c_str()))
-                    return true;
-            }
-            for (vector<const XMLCh*>::const_iterator a2 = m_audiences.begin(); a2!=m_audiences.end(); ++a2) {
-                if (XMLString::equals((*a1)->getAudienceURI(), *a2))
-                    return true;
-            }
+        for (vector<saml2::Audience*>::const_iterator a1 = auds2.begin(); a1 != auds2.end(); ++a1) {
+            const XMLCh* a1val = (*a1)->getAudienceURI();
+
+            vector<xstring>::const_iterator policyMatch = find_if(
+                policy.getAudiences().begin(), policy.getAudiences().end(),
+                boost::bind(equals_fn, a1val, boost::bind(&xstring::c_str, _1))
+                );
+            if (policyMatch != policy.getAudiences().end())
+                return true;
+
+            vector<const XMLCh*>::const_iterator ruleMatch = find_if(
+                m_audiences.begin(), m_audiences.end(),
+                boost::bind(equals_fn, a1val, _1)
+                );
+            if (ruleMatch != m_audiences.end())
+                return true;
         }
 
         ostringstream os;
@@ -98,15 +109,22 @@ bool AudienceRestrictionRule::evaluate(const XMLObject& message, const GenericRe
     const saml1::AudienceRestrictionCondition* ac1=dynamic_cast<const saml1::AudienceRestrictionCondition*>(&message);
     if (ac1) {
         const vector<saml1::Audience*>& auds1 = ac1->getAudiences();
-        for (vector<saml1::Audience*>::const_iterator a1 = auds1.begin(); a1!=auds1.end(); ++a1) {
-            for (vector<xstring>::const_iterator a2 = policy.getAudiences().begin(); a2!=policy.getAudiences().end(); ++a2) {
-                if (XMLString::equals((*a1)->getAudienceURI(), a2->c_str()))
-                    return true;
-            }
-            for (vector<const XMLCh*>::const_iterator a2 = m_audiences.begin(); a2!=m_audiences.end(); ++a2) {
-                if (XMLString::equals((*a1)->getAudienceURI(), *a2))
-                    return true;
-            }
+        for (vector<saml1::Audience*>::const_iterator a1 = auds1.begin(); a1 != auds1.end(); ++a1) {
+            const XMLCh* a1val = (*a1)->getAudienceURI();
+
+            vector<xstring>::const_iterator policyMatch = find_if(
+                policy.getAudiences().begin(), policy.getAudiences().end(),
+                boost::bind(equals_fn, a1val, boost::bind(&xstring::c_str, _1))
+                );
+            if (policyMatch != policy.getAudiences().end())
+                return true;
+
+            vector<const XMLCh*>::const_iterator ruleMatch = find_if(
+                m_audiences.begin(), m_audiences.end(),
+                boost::bind(equals_fn, a1val, _1)
+                );
+            if (ruleMatch != m_audiences.end())
+                return true;
         }
 
         ostringstream os;

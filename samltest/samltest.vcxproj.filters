@@ -359,6 +359,9 @@
     <ClCompile Include="encryption\EncryptedAssertionTest.cpp">
       <Filter>Generated Files\encryption</Filter>
     </ClCompile>
+    <ClCompile Include="CookieTest.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="signature\SAMLSignatureTestBase.h">
@@ -638,6 +641,9 @@
     </CustomBuild>
     <CustomBuild Include="encryption\EncryptedAssertionTest.h">
       <Filter>Unit Tests\encryption</Filter>
+    </CustomBuild>
+    <CustomBuild Include="CookieTest.h">
+      <Filter>Unit Tests</Filter>
     </CustomBuild>
   </ItemGroup>
 </Project>

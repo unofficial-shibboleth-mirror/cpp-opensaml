@@ -30,6 +30,8 @@
 #include "binding/SAMLArtifact.h"
 
 #include <ctime>
+#include <boost/lambda/bind.hpp>
+#include <boost/lambda/lambda.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xmltooling/logging.h>
 #include <xmltooling/XMLObjectBuilder.h>
@@ -44,6 +46,8 @@
 using namespace opensaml;
 using namespace xmltooling::logging;
 using namespace xmltooling;
+using namespace boost::lambda;
+using namespace boost;
 using namespace std;
 
 namespace opensaml {
@@ -52,26 +56,23 @@ namespace opensaml {
     {
     public:
         ArtifactMappings() : m_lock(Mutex::create()) {}
-        ~ArtifactMappings() {
-            delete m_lock;
-            for (map<string,Mapping>::iterator i=m_artMap.begin(); i!=m_artMap.end(); ++i)
-                delete i->second.m_xml;
-        }
+        ~ArtifactMappings() {}
+
         void storeContent(XMLObject* content, const SAMLArtifact* artifact, const char* relyingParty, int TTL);
         XMLObject* retrieveContent(const SAMLArtifact* artifact, const char* relyingParty);
         string getRelyingParty(const SAMLArtifact* artifact);
     
     private:
         struct SAML_DLLLOCAL Mapping {
-            Mapping() : m_xml(nullptr), m_expires(0) {}
-            XMLObject* m_xml;
+            Mapping() : m_expires(0) {}
+            auto_ptr<XMLObject> m_xml;
             string m_relying;
             time_t m_expires;
         };
 
         void removeMapping(const map<string,Mapping>::iterator& i);
         
-        Mutex* m_lock;
+        auto_ptr<Mutex> m_lock;
         map<string,Mapping> m_artMap;
         multimap<time_t,string> m_expMap;
     };
@@ -84,35 +85,37 @@ namespace opensaml {
 
 void ArtifactMappings::removeMapping(const map<string,Mapping>::iterator& i)
 {
-    // Update secondary map.
+    // All elements in the secondary map whose key matches the expiration of the removed mapping.
     pair<multimap<time_t,string>::iterator,multimap<time_t,string>::iterator> range =
         m_expMap.equal_range(i->second.m_expires);
-    for (; range.first != range.second; ++range.first) {
-        if (range.first->second == i->first) {
-            m_expMap.erase(range.first);
-            break;
-        }
+
+    // Find an element in the matching range whose value matches the input key.
+    multimap<time_t,string>::iterator el = find_if(
+        range.first, range.second,
+        (lambda::bind(&multimap<time_t,string>::value_type::second, _1) == boost::ref(i->first))
+        );
+    if (el != range.second) {
+        m_expMap.erase(el);
     }
-    delete i->second.m_xml;
+
     m_artMap.erase(i);
 }
 
 void ArtifactMappings::storeContent(XMLObject* content, const SAMLArtifact* artifact, const char* relyingParty, int TTL)
 {
-    Lock wrapper(m_lock);
+    Lock wrapper(m_lock.get());
 
     // Garbage collect any expired artifacts.
-    time_t now=time(nullptr);
-    multimap<time_t,string>::iterator stop=m_expMap.upper_bound(now);
-    for (multimap<time_t,string>::iterator i=m_expMap.begin(); i!=stop; m_expMap.erase(i++)) {
-        delete m_artMap[i->second].m_xml;
+    time_t now = time(nullptr);
+    multimap<time_t,string>::iterator stop = m_expMap.upper_bound(now);
+    for (multimap<time_t,string>::iterator i = m_expMap.begin(); i != stop; m_expMap.erase(i++)) {
         m_artMap.erase(i->second);
     }
     
     // Key is the hexed handle.
     string hexed = SAMLArtifact::toHex(artifact->getMessageHandle());
     Mapping& m = m_artMap[hexed];
-    m.m_xml = content;
+    m.m_xml.reset(content);
     if (relyingParty)
         m.m_relying = relyingParty;
     m.m_expires = now + TTL;
@@ -122,10 +125,10 @@ void ArtifactMappings::storeContent(XMLObject* content, const SAMLArtifact* arti
 XMLObject* ArtifactMappings::retrieveContent(const SAMLArtifact* artifact, const char* relyingParty)
 {
     Category& log=Category::getInstance(SAML_LOGCAT".ArtifactMap");
-    Lock wrapper(m_lock);
+    Lock wrapper(m_lock.get());
 
-    map<string,Mapping>::iterator i=m_artMap.find(SAMLArtifact::toHex(artifact->getMessageHandle()));
-    if (i==m_artMap.end())
+    map<string,Mapping>::iterator i = m_artMap.find(SAMLArtifact::toHex(artifact->getMessageHandle()));
+    if (i == m_artMap.end())
         throw BindingException("Requested artifact not in map or may have expired.");
     
     if (!(i->second.m_relying.empty())) {
@@ -145,29 +148,28 @@ XMLObject* ArtifactMappings::retrieveContent(const SAMLArtifact* artifact, const
     }
     
     log.debug("resolved artifact for (%s)", relyingParty ? relyingParty : "unknown");
-    XMLObject* ret = i->second.m_xml;
-    i->second.m_xml = nullptr; // clear member so it doesn't get deleted
+    XMLObject* ret = i->second.m_xml.release();
     removeMapping(i);
     return ret;
 }
 
 string ArtifactMappings::getRelyingParty(const SAMLArtifact* artifact)
 {
-    map<string,Mapping>::iterator i=m_artMap.find(SAMLArtifact::toHex(artifact->getMessageHandle()));
-    if (i==m_artMap.end())
+    map<string,Mapping>::iterator i = m_artMap.find(SAMLArtifact::toHex(artifact->getMessageHandle()));
+    if (i == m_artMap.end())
         throw BindingException("Requested artifact not in map or may have expired.");
     return i->second.m_relying;
 }
 
 ArtifactMap::ArtifactMap(xmltooling::StorageService* storage, const char* context, unsigned int artifactTTL)
-    : m_storage(storage), m_context((context && *context) ? context : "opensaml::ArtifactMap"), m_mappings(nullptr), m_artifactTTL(artifactTTL)
+    : m_storage(storage), m_context((context && *context) ? context : "opensaml::ArtifactMap"), m_artifactTTL(artifactTTL)
 {
     if (!m_storage)
-        m_mappings = new ArtifactMappings();
+        m_mappings.reset(new ArtifactMappings());
 }
 
 ArtifactMap::ArtifactMap(const DOMElement* e, xmltooling::StorageService* storage)
-    : m_storage(storage), m_mappings(nullptr), m_artifactTTL(180)
+    : m_storage(storage), m_artifactTTL(180)
 {
     if (e) {
         auto_ptr_char c(e->getAttributeNS(nullptr, context));
@@ -190,12 +192,11 @@ ArtifactMap::ArtifactMap(const DOMElement* e, xmltooling::StorageService* storag
     }
     
     if (!m_storage)
-        m_mappings = new ArtifactMappings();
+        m_mappings.reset(new ArtifactMappings());
 }
 
 ArtifactMap::~ArtifactMap()
 {
-    delete m_mappings;
 }
 
 void ArtifactMap::storeContent(XMLObject* content, const SAMLArtifact* artifact, const char* relyingParty)

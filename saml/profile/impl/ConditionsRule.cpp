@@ -31,6 +31,7 @@
 #include "saml1/core/Assertions.h"
 #include "saml2/core/Assertions.h"
 
+#include <boost/ptr_container/ptr_vector.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xmltooling/logging.h>
 #include <xmltooling/XMLToolingConfig.h>
@@ -39,6 +40,7 @@
 using namespace opensaml;
 using namespace xmltooling::logging;
 using namespace xmltooling;
+using namespace boost;
 using namespace std;
 
 namespace opensaml {
@@ -48,7 +50,6 @@ namespace opensaml {
         ConditionsRule(const DOMElement* e);
 
         virtual ~ConditionsRule() {
-            for_each(m_rules.begin(), m_rules.end(), xmltooling::cleanup<SecurityPolicyRule>());
             if (m_doc)
                 m_doc->release();
         }
@@ -59,7 +60,7 @@ namespace opensaml {
 
     private:
         DOMDocument* m_doc;
-        vector<SecurityPolicyRule*> m_rules;
+        ptr_vector<SecurityPolicyRule> m_rules;
     };
 
     SecurityPolicyRule* SAML_DLLLOCAL ConditionsRuleFactory(const DOMElement* const & e)
@@ -131,8 +132,8 @@ bool ConditionsRule::evaluate(const XMLObject& message, const GenericRequest* re
         const vector<saml2::AudienceRestriction*>& acvec = conds->getAudienceRestrictions();
         for (vector<saml2::AudienceRestriction*>::const_iterator ac = acvec.begin(); ac != acvec.end(); ++ac) {
             valid = false;
-            for (vector<SecurityPolicyRule*>::const_iterator r = m_rules.begin(); !valid && r != m_rules.end(); ++r)
-                valid = (*r)->evaluate(*(*ac), request, policy);
+            for (ptr_vector<SecurityPolicyRule>::const_iterator r = m_rules.begin(); !valid && r != m_rules.end(); ++r)
+                valid = r->evaluate(*(*ac), request, policy);
             if (!valid)
                 throw SecurityPolicyException("AudienceRestriction condition not successfully validated by policy.");
         }
@@ -140,8 +141,8 @@ bool ConditionsRule::evaluate(const XMLObject& message, const GenericRequest* re
         const vector<saml2::OneTimeUse*>& otvec = conds->getOneTimeUses();
         for (vector<saml2::OneTimeUse*>::const_iterator ot = otvec.begin(); ot!=otvec.end(); ++ot) {
             valid = false;
-            for (vector<SecurityPolicyRule*>::const_iterator r = m_rules.begin(); !valid && r != m_rules.end(); ++r)
-                valid = (*r)->evaluate(*(*ot), request, policy);
+            for (ptr_vector<SecurityPolicyRule>::const_iterator r = m_rules.begin(); !valid && r != m_rules.end(); ++r)
+                valid = r->evaluate(*(*ot), request, policy);
             if (!valid)
                 throw SecurityPolicyException("OneTimeUse condition not successfully validated by policy.");
         }
@@ -149,8 +150,8 @@ bool ConditionsRule::evaluate(const XMLObject& message, const GenericRequest* re
         const vector<saml2::ProxyRestriction*> pvec = conds->getProxyRestrictions();
         for (vector<saml2::ProxyRestriction*>::const_iterator p = pvec.begin(); p != pvec.end(); ++p) {
             valid = false;
-            for (vector<SecurityPolicyRule*>::const_iterator r = m_rules.begin(); !valid && r != m_rules.end(); ++r)
-                valid = (*r)->evaluate(*(*p), request, policy);
+            for (ptr_vector<SecurityPolicyRule>::const_iterator r = m_rules.begin(); !valid && r != m_rules.end(); ++r)
+                valid = r->evaluate(*(*p), request, policy);
             if (!valid)
                 throw SecurityPolicyException("ProxyRestriction condition not successfully validated by policy.");
         }
@@ -158,8 +159,8 @@ bool ConditionsRule::evaluate(const XMLObject& message, const GenericRequest* re
         const vector<saml2::Condition*>& convec = conds->getConditions();
         for (vector<saml2::Condition*>::const_iterator c = convec.begin(); c != convec.end(); ++c) {
             valid = false;
-            for (vector<SecurityPolicyRule*>::const_iterator r = m_rules.begin(); !valid && r != m_rules.end(); ++r)
-                valid = (*r)->evaluate(*(*c), request, policy);
+            for (ptr_vector<SecurityPolicyRule>::const_iterator r = m_rules.begin(); !valid && r != m_rules.end(); ++r)
+                valid = r->evaluate(*(*c), request, policy);
             if (!valid) {
                 throw SecurityPolicyException(
                     "Extension condition ($1) not successfully validated by policy.",
@@ -194,8 +195,8 @@ bool ConditionsRule::evaluate(const XMLObject& message, const GenericRequest* re
         const vector<saml1::AudienceRestrictionCondition*>& acvec = conds->getAudienceRestrictionConditions();
         for (vector<saml1::AudienceRestrictionCondition*>::const_iterator ac = acvec.begin(); ac != acvec.end(); ++ac) {
             valid = false;
-            for (vector<SecurityPolicyRule*>::const_iterator r = m_rules.begin(); !valid && r != m_rules.end(); ++r)
-                valid = (*r)->evaluate(*(*ac), request, policy);
+            for (ptr_vector<SecurityPolicyRule>::const_iterator r = m_rules.begin(); !valid && r != m_rules.end(); ++r)
+                valid = r->evaluate(*(*ac), request, policy);
             if (!valid)
                 throw SecurityPolicyException("AudienceRestrictionCondition not successfully validated by policy.");
         }
@@ -203,8 +204,8 @@ bool ConditionsRule::evaluate(const XMLObject& message, const GenericRequest* re
         const vector<saml1::DoNotCacheCondition*>& dncvec = conds->getDoNotCacheConditions();
         for (vector<saml1::DoNotCacheCondition*>::const_iterator dnc = dncvec.begin(); dnc != dncvec.end(); ++dnc) {
             valid = false;
-            for (vector<SecurityPolicyRule*>::const_iterator r = m_rules.begin(); !valid && r != m_rules.end(); ++r)
-                valid = (*r)->evaluate(*(*dnc), request, policy);
+            for (ptr_vector<SecurityPolicyRule>::const_iterator r = m_rules.begin(); !valid && r != m_rules.end(); ++r)
+                valid = r->evaluate(*(*dnc), request, policy);
             if (!valid)
                 throw SecurityPolicyException("DoNotCacheCondition not successfully validated by policy.");
         }
@@ -212,8 +213,8 @@ bool ConditionsRule::evaluate(const XMLObject& message, const GenericRequest* re
         const vector<saml1::Condition*>& convec = conds->getConditions();
         for (vector<saml1::Condition*>::const_iterator c = convec.begin(); c != convec.end(); ++c) {
             valid = false;
-            for (vector<SecurityPolicyRule*>::const_iterator r = m_rules.begin(); !valid && r != m_rules.end(); ++r)
-                valid = (*r)->evaluate(*(*c), request, policy);
+            for (ptr_vector<SecurityPolicyRule>::const_iterator r = m_rules.begin(); !valid && r != m_rules.end(); ++r)
+                valid = r->evaluate(*(*c), request, policy);
             if (!valid) {
                 throw SecurityPolicyException(
                     "Extension condition ($1) not successfully validated by policy.",

@@ -402,15 +402,15 @@ namespace opensaml {
         // information extracted from message
         xmltooling::xstring m_messageID;
         time_t m_issueInstant;
-        saml2::Issuer* m_issuer;
+        std::auto_ptr<saml2::Issuer> m_issuer;
         const saml2md::RoleDescriptor* m_issuerRole;
         bool m_authenticated;
 
         // components governing policy rules
-        IssuerMatchingPolicy* m_matchingPolicy;
+        std::auto_ptr<IssuerMatchingPolicy> m_matchingPolicy;
         std::vector<const SecurityPolicyRule*> m_rules;
         const saml2md::MetadataProvider* m_metadata;
-        xmltooling::QName* m_role;
+        std::auto_ptr<xmltooling::QName> m_role;
         const xmltooling::TrustEngine* m_trust;
         bool m_validate;
         bool m_entityOnly;
