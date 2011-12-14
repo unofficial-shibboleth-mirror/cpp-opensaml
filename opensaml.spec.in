@@ -17,7 +17,7 @@ BuildRequires:  libxml-security-c-devel >= 1.4.0
 BuildRequires:  libxmltooling-devel >= 1.4
 %{?_with_log4cpp:BuildRequires: liblog4cpp-devel >= 1.0}
 %{!?_with_log4cpp:BuildRequires: liblog4shib-devel}
-BuildRequires:  gcc-c++
+BuildRequires:  gcc-c++, boost-devel >= 1.32.0
 %if 0%{?suse_version} > 1000
 BuildRequires: pkg-config
 %endif
@@ -142,8 +142,9 @@ This package includes XML schemas and related files.
 %doc %{pkgdocdir}
 
 %changelog
-* Mon Aug 8 2011 Scott Cantor  <cantor.2@osu.edu>  - 2.5-1
+* Wed Dec 14 2011 Scott Cantor  <cantor.2@osu.edu>  - 2.5-1
 - Update lib package number.
+- Add boost-devel dependency.
 
 * Tue Oct 26 2010  Scott Cantor  <cantor.2@osu.edu>  - 2.4-1
 - Update version
