@@ -64,8 +64,11 @@ namespace opensaml {
     
     private:
         struct SAML_DLLLOCAL Mapping {
-            Mapping() : m_expires(0) {}
-            auto_ptr<XMLObject> m_xml;
+            Mapping() : m_xml(nullptr), m_expires(0) {}
+            ~Mapping() {
+                delete m_xml;
+            }
+            XMLObject* m_xml;
             string m_relying;
             time_t m_expires;
         };
@@ -109,17 +112,18 @@ void ArtifactMappings::storeContent(XMLObject* content, const SAMLArtifact* arti
     time_t now = time(nullptr);
     multimap<time_t,string>::iterator stop = m_expMap.upper_bound(now);
     for (multimap<time_t,string>::iterator i = m_expMap.begin(); i != stop; m_expMap.erase(i++)) {
+        delete m_artMap[i->second].m_xml;
         m_artMap.erase(i->second);
     }
     
     // Key is the hexed handle.
     string hexed = SAMLArtifact::toHex(artifact->getMessageHandle());
     Mapping& m = m_artMap[hexed];
-    m.m_xml.reset(content);
+    m.m_xml = content;
     if (relyingParty)
         m.m_relying = relyingParty;
     m.m_expires = now + TTL;
-    m_expMap.insert(pair<const time_t,string>(m.m_expires,hexed));
+    m_expMap.insert(pair<const time_t, string>(m.m_expires, hexed));
 }
 
 XMLObject* ArtifactMappings::retrieveContent(const SAMLArtifact* artifact, const char* relyingParty)
@@ -148,7 +152,8 @@ XMLObject* ArtifactMappings::retrieveContent(const SAMLArtifact* artifact, const
     }
     
     log.debug("resolved artifact for (%s)", relyingParty ? relyingParty : "unknown");
-    XMLObject* ret = i->second.m_xml.release();
+    XMLObject* ret = i->second.m_xml;
+    i->second.m_xml = nullptr;  // clear member so it doesn't get deleted
     removeMapping(i);
     return ret;
 }

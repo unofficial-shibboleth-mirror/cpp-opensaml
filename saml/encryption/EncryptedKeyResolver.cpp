@@ -57,7 +57,7 @@ const EncryptedKey* opensaml::EncryptedKeyResolver::resolveKey(const EncryptedDa
     // Using XMLString::equals allows for both to be NULL and still match.
     vector<EncryptedKey*>::const_iterator k = find_if(
         m_ref.getEncryptedKeys().begin(), m_ref.getEncryptedKeys().end(),
-        (lambda::bind(&EncryptedKey::getRecipient, _1) == nullptr ||
+        (lambda::bind(&EncryptedKey::getRecipient, _1) == ((const XMLCh*)nullptr) ||
             lambda::bind(equal_fn, recipient, lambda::bind(&EncryptedKey::getRecipient, _1)))
         );
     return (k != m_ref.getEncryptedKeys().end()) ? (*k) : nullptr;

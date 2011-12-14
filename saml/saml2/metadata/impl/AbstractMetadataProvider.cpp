@@ -120,7 +120,7 @@ void AbstractMetadataProvider::indexEntity(EntityDescriptor* site, time_t& valid
             // search for those sites in the entire set of sites tracked by the sources map and
             // remove them from both places.
             set<const EntityDescriptor*> existingSites;
-            pair<sitemap_t::const_iterator,sitemap_t::const_iterator> existingRange = m_sites.equal_range(id.get());
+            pair<sitemap_t::iterator,sitemap_t::iterator> existingRange = m_sites.equal_range(id.get());
             static pair<set<const EntityDescriptor*>::iterator,bool> (set<const EntityDescriptor*>::* ins)(const EntityDescriptor* const &) =
                 &set<const EntityDescriptor*>::insert;
             for_each(

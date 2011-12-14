@@ -301,7 +301,8 @@ void opensaml::annotateException(XMLToolingException* e, const EntityDescriptor*
     if (entity) {
         const XMLObject* r = find_if(
             entity->getOrderedChildren(),
-            (ll_dynamic_cast<const RoleDescriptor*>(_1) != nullptr && lambda::bind(isValid, ll_dynamic_cast<const TimeBoundSAMLObject*>(_1), now))
+            (ll_dynamic_cast<const RoleDescriptor*>(_1) != ((const RoleDescriptor*)nullptr) &&
+                    lambda::bind(isValid, ll_dynamic_cast<const TimeBoundSAMLObject*>(_1), now))
             );
         if (r)
             role = dynamic_cast<const RoleDescriptor*>(r);
