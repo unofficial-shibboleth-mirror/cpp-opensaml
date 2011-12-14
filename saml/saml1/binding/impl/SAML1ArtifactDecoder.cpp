@@ -33,6 +33,7 @@
 #include "saml2/metadata/Metadata.h"
 #include "saml2/metadata/MetadataProvider.h"
 
+#include <boost/ptr_container/ptr_vector.hpp>
 #include <xmltooling/logging.h>
 #include <xmltooling/XMLToolingConfig.h>
 #include <xmltooling/io/HTTPRequest.h>
@@ -45,6 +46,7 @@ using namespace opensaml;
 using namespace xmltooling::logging;
 using namespace xmltooling;
 using namespace std;
+using boost::ptr_vector;
 
 namespace opensaml {
     namespace saml1p {
@@ -93,7 +95,8 @@ XMLObject* SAML1ArtifactDecoder::decode(
         throw BindingException("Artifact profile requires ArtifactResolver and MetadataProvider implementations be supplied.");
 
     // Import the artifacts.
-    vector<SAMLArtifact*> artifacts;
+    vector<SAMLArtifact*> artifactptrs; // needed for compatibility with non-Boost API in ArtifactResolver
+    ptr_vector<SAMLArtifact> artifacts;
     for (vector<const char*>::const_iterator raw=SAMLart.begin(); raw!=SAMLart.end(); ++raw) {
         try {
             log.debug("processing encoded artifact (%s)", *raw);
@@ -110,21 +113,17 @@ XMLObject* SAML1ArtifactDecoder::decode(
                 log.warn("replay cache was not provided, this is a serious security risk!");
 
             artifacts.push_back(SAMLArtifact::parse(*raw));
+            artifactptrs.push_back(&(artifacts.back()));
         }
         catch (ArtifactException&) {
             log.error("error parsing artifact (%s)", *raw);
-            for_each(artifacts.begin(), artifacts.end(), xmltooling::cleanup<SAMLArtifact>());
-            throw;
-        }
-        catch (XMLToolingException&) {
-            for_each(artifacts.begin(), artifacts.end(), xmltooling::cleanup<SAMLArtifact>());
             throw;
         }
     }
 
     log.debug("attempting to determine source of artifact(s)...");
     MetadataProvider::Criteria& mc = policy.getMetadataProviderCriteria();
-    mc.artifact = artifacts.front();
+    mc.artifact = &(artifacts.front());
     mc.role = policy.getRole();
     mc.protocol = samlconstants::SAML11_PROTOCOL_ENUM;
     mc.protocol2 = samlconstants::SAML10_PROTOCOL_ENUM;
@@ -132,9 +131,8 @@ XMLObject* SAML1ArtifactDecoder::decode(
     if (!provider.first) {
         log.error(
             "metadata lookup failed, unable to determine issuer of artifact (0x%s)",
-            SAMLArtifact::toHex(artifacts.front()->getBytes()).c_str()
+            SAMLArtifact::toHex(artifacts.front().getBytes()).c_str()
             );
-        for_each(artifacts.begin(), artifacts.end(), xmltooling::cleanup<SAMLArtifact>());
         throw BindingException("Metadata lookup failed, unable to determine artifact issuer");
     }
 
@@ -145,26 +143,18 @@ XMLObject* SAML1ArtifactDecoder::decode(
 
     if (!provider.second || !dynamic_cast<const IDPSSODescriptor*>(provider.second)) {
         log.error("unable to find compatible SAML 1.x role (%s) in metadata", policy.getRole()->toString().c_str());
-        for_each(artifacts.begin(), artifacts.end(), xmltooling::cleanup<SAMLArtifact>());
         throw BindingException("Unable to find compatible metadata role for artifact issuer.");
     }
     // Set Issuer for the policy.
     policy.setIssuer(provider.first->getEntityID());
     policy.setIssuerMetadata(provider.second);
 
-    try {
-        log.debug("calling ArtifactResolver...");
-        auto_ptr<Response> response(
-            m_artifactResolver->resolve(artifacts, dynamic_cast<const IDPSSODescriptor&>(*provider.second), policy)
-            );
+    log.debug("calling ArtifactResolver...");
+    auto_ptr<Response> response(
+        m_artifactResolver->resolve(artifactptrs, dynamic_cast<const IDPSSODescriptor&>(*provider.second), policy)
+        );
 
-        // The policy should be enforced against the Response by the resolve step.
+    // The policy should be enforced against the Response by the resolve step.
 
-        for_each(artifacts.begin(), artifacts.end(), xmltooling::cleanup<SAMLArtifact>());
-        return response.release();
-    }
-    catch (XMLToolingException&) {
-        for_each(artifacts.begin(), artifacts.end(), xmltooling::cleanup<SAMLArtifact>());
-        throw;
-    }
+    return response.release();
 }

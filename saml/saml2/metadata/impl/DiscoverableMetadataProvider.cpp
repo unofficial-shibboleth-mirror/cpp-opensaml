@@ -31,11 +31,14 @@
 
 #include <fstream>
 #include <sstream>
+#include <boost/bind.hpp>
+#include <boost/iterator/indirect_iterator.hpp>
 #include <xmltooling/logging.h>
 #include <xmltooling/XMLToolingConfig.h>
 
 using namespace opensaml::saml2md;
 using namespace xmltooling;
+using namespace boost;
 using namespace std;
 
 DiscoverableMetadataProvider::DiscoverableMetadataProvider(const DOMElement* e) : MetadataProvider(e), m_legacyOrgNames(false)
@@ -53,8 +56,8 @@ void DiscoverableMetadataProvider::generateFeed()
     m_feed.erase();
     bool first = true;
     const XMLObject* object = getMetadata();
-    disco(m_feed, dynamic_cast<const EntitiesDescriptor*>(object), first);
-    disco(m_feed, dynamic_cast<const EntityDescriptor*>(object), first);
+    discoGroup(m_feed, dynamic_cast<const EntitiesDescriptor*>(object), first);
+    discoEntity(m_feed, dynamic_cast<const EntityDescriptor*>(object), first);
 
     SAMLConfig::getConfig().generateRandomBytes(m_feedTag, 4);
     m_feedTag = SAMLArtifact::toHex(m_feedTag);
@@ -111,7 +114,7 @@ static string& json_safe(string& s, const char* buf)
     return s;
 }
 
-void DiscoverableMetadataProvider::disco(string& s, const EntityDescriptor* entity, bool& first) const
+void DiscoverableMetadataProvider::discoEntity(string& s, const EntityDescriptor* entity, bool& first) const
 {
     time_t now = time(nullptr);
     if (entity && entity->isValid(now)) {
@@ -127,9 +130,10 @@ void DiscoverableMetadataProvider::disco(string& s, const EntityDescriptor* enti
             json_safe(s, entityid.get());
             s += '\"';
             bool extFound = false;
-            for (vector<IDPSSODescriptor*>::const_iterator idp = idps.begin(); !extFound && idp != idps.end(); ++idp) {
-                if ((*idp)->isValid(now) && (*idp)->getExtensions()) {
-                    const vector<XMLObject*>& exts =  const_cast<const Extensions*>((*idp)->getExtensions())->getUnknownXMLObjects();
+            for (indirect_iterator<vector<IDPSSODescriptor*>::const_iterator> idp = make_indirect_iterator(idps.begin());
+                    !extFound && idp != make_indirect_iterator(idps.end()); ++idp) {
+                if (idp->isValid(now) && idp->getExtensions()) {
+                    const vector<XMLObject*>& exts =  const_cast<const Extensions*>(idp->getExtensions())->getUnknownXMLObjects();
                     for (vector<XMLObject*>::const_iterator ext = exts.begin(); !extFound && ext != exts.end(); ++ext) {
                         const UIInfo* info = dynamic_cast<UIInfo*>(*ext);
                         if (info) {
@@ -137,11 +141,12 @@ void DiscoverableMetadataProvider::disco(string& s, const EntityDescriptor* enti
                             const vector<DisplayName*>& dispnames = info->getDisplayNames();
                             if (!dispnames.empty()) {
                                 s += ",\n \"DisplayNames\": [";
-                                for (vector<DisplayName*>::const_iterator dispname = dispnames.begin(); dispname != dispnames.end(); ++dispname) {
-                                    if (dispname != dispnames.begin())
+                                for (indirect_iterator<vector<DisplayName*>::const_iterator> dispname = make_indirect_iterator(dispnames.begin());
+                                        dispname != make_indirect_iterator(dispnames.end()); ++dispname) {
+                                    if (dispname.base() != dispnames.begin())
                                         s += ',';
-                                    auto_arrayptr<char> val(toUTF8((*dispname)->getName()));
-                                    auto_ptr_char lang((*dispname)->getLang());
+                                    auto_arrayptr<char> val(toUTF8(dispname->getName()));
+                                    auto_ptr_char lang(dispname->getLang());
                                     s += "\n  {\n  \"value\": \"";
                                     json_safe(s, val.get());
                                     s += "\",\n  \"lang\": \"";
@@ -154,11 +159,12 @@ void DiscoverableMetadataProvider::disco(string& s, const EntityDescriptor* enti
                             const vector<Description*>& descs = info->getDescriptions();
                             if (!descs.empty()) {
                                 s += ",\n \"Descriptions\": [";
-                                for (vector<Description*>::const_iterator desc = descs.begin(); desc != descs.end(); ++desc) {
-                                    if (desc != descs.begin())
+                                for (indirect_iterator<vector<Description*>::const_iterator> desc = make_indirect_iterator(descs.begin());
+                                        desc != make_indirect_iterator(descs.end()); ++desc) {
+                                    if (desc.base() != descs.begin())
                                         s += ',';
-                                    auto_arrayptr<char> val(toUTF8((*desc)->getDescription()));
-                                    auto_ptr_char lang((*desc)->getLang());
+                                    auto_arrayptr<char> val(toUTF8(desc->getDescription()));
+                                    auto_ptr_char lang(desc->getLang());
                                     s += "\n  {\n  \"value\": \"";
                                     json_safe(s, val.get());
                                     s += "\",\n  \"lang\": \"";
@@ -171,11 +177,12 @@ void DiscoverableMetadataProvider::disco(string& s, const EntityDescriptor* enti
                             const vector<Keywords*>& keywords = info->getKeywordss();
                             if (!keywords.empty()) {
                                 s += ",\n \"Keywords\": [";
-                                for (vector<Keywords*>::const_iterator words = keywords.begin(); words != keywords.end(); ++words) {
-                                    if (words != keywords.begin())
+                                for (indirect_iterator<vector<Keywords*>::const_iterator> words = make_indirect_iterator(keywords.begin());
+                                        words != make_indirect_iterator(keywords.end()); ++words) {
+                                    if (words.base() != keywords.begin())
                                         s += ',';
-                                    auto_arrayptr<char> val(toUTF8((*words)->getValues()));
-                                    auto_ptr_char lang((*words)->getLang());
+                                    auto_arrayptr<char> val(toUTF8(words->getValues()));
+                                    auto_ptr_char lang(words->getLang());
                                     s += "\n  {\n  \"value\": \"";
                                     json_safe(s, val.get());
                                     s += "\",\n  \"lang\": \"";
@@ -188,11 +195,12 @@ void DiscoverableMetadataProvider::disco(string& s, const EntityDescriptor* enti
                             const vector<InformationURL*>& infurls = info->getInformationURLs();
                             if (!infurls.empty()) {
                                 s += ",\n \"InformationURLs\": [";
-                                for (vector<InformationURL*>::const_iterator infurl = infurls.begin(); infurl != infurls.end(); ++infurl) {
-                                    if (infurl != infurls.begin())
+                                for (indirect_iterator<vector<InformationURL*>::const_iterator> infurl = make_indirect_iterator(infurls.begin());
+                                        infurl != make_indirect_iterator(infurls.end()); ++infurl) {
+                                    if (infurl.base() != infurls.begin())
                                         s += ',';
-                                    auto_ptr_char val((*infurl)->getURL());
-                                    auto_ptr_char lang((*infurl)->getLang());
+                                    auto_ptr_char val(infurl->getURL());
+                                    auto_ptr_char lang(infurl->getLang());
                                     s += "\n  {\n  \"value\": \"";
                                     json_safe(s, val.get());
                                     s += "\",\n  \"lang\": \"";
@@ -205,11 +213,12 @@ void DiscoverableMetadataProvider::disco(string& s, const EntityDescriptor* enti
                             const vector<PrivacyStatementURL*>& privs = info->getPrivacyStatementURLs();
                             if (!privs.empty()) {
                                 s += ",\n \"PrivacyStatementURLs\": [";
-                                for (vector<PrivacyStatementURL*>::const_iterator priv = privs.begin(); priv != privs.end(); ++priv) {
-                                    if (priv != privs.begin())
+                                for (indirect_iterator<vector<PrivacyStatementURL*>::const_iterator> priv = make_indirect_iterator(privs.begin());
+                                        priv != make_indirect_iterator(privs.end()); ++priv) {
+                                    if (priv.base() != privs.begin())
                                         s += ',';
-                                    auto_ptr_char val((*priv)->getURL());
-                                    auto_ptr_char lang((*priv)->getLang());
+                                    auto_ptr_char val(priv->getURL());
+                                    auto_ptr_char lang(priv->getLang());
                                     s += "\n  {\n  \"value\": \"";
                                     json_safe(s, val.get());
                                     s += "\",\n  \"lang\": \"";
@@ -222,24 +231,25 @@ void DiscoverableMetadataProvider::disco(string& s, const EntityDescriptor* enti
                             const vector<Logo*>& logos = info->getLogos();
                             if (!logos.empty()) {
                                 s += ",\n \"Logos\": [";
-                                for (vector<Logo*>::const_iterator logo = logos.begin(); logo != logos.end(); ++logo) {
-                                    if (logo != logos.begin())
+                                for (indirect_iterator<vector<Logo*>::const_iterator> logo = make_indirect_iterator(logos.begin());
+                                        logo != make_indirect_iterator(logos.end()); ++logo) {
+                                    if (logo.base() != logos.begin())
                                         s += ',';
                                     s += "\n  {\n";
-                                    auto_ptr_char val((*logo)->getURL());
+                                    auto_ptr_char val(logo->getURL());
                                     s += "  \"value\": \"";
                                     json_safe(s, val.get());
                                     ostringstream ht;
-                                    ht << (*logo)->getHeight().second;
+                                    ht << logo->getHeight().second;
                                     s += "\",\n  \"height\": \"";
                                     s += ht.str();
                                     ostringstream wt;
-                                    wt << (*logo)->getWidth().second;
+                                    wt << logo->getWidth().second;
                                     s += "\",\n  \"width\": \"";
                                     s += wt.str();
                                     s += '\"';
-                                    if ((*logo)->getLang()) {
-                                        auto_ptr_char lang((*logo)->getLang());
+                                    if (logo->getLang()) {
+                                        auto_ptr_char lang(logo->getLang());
                                         s += ",\n  \"lang\": \"";
                                         s += lang.get();
                                         s += '\"';
@@ -255,9 +265,10 @@ void DiscoverableMetadataProvider::disco(string& s, const EntityDescriptor* enti
 
             if (m_legacyOrgNames && !extFound) {
                 const Organization* org = nullptr;
-                for (vector<IDPSSODescriptor*>::const_iterator idp = idps.begin(); !org && idp != idps.end(); ++idp) {
-                    if ((*idp)->isValid(now))
-                        org = (*idp)->getOrganization();
+                for (indirect_iterator<vector<IDPSSODescriptor*>::const_iterator> idp = make_indirect_iterator(idps.begin());
+                        !org && idp != make_indirect_iterator(idps.end()); ++idp) {
+                    if (idp->isValid(now))
+                        org = idp->getOrganization();
                 }
                 if (!org)
                     org = entity->getOrganization();
@@ -265,11 +276,12 @@ void DiscoverableMetadataProvider::disco(string& s, const EntityDescriptor* enti
                     const vector<OrganizationDisplayName*>& odns = org->getOrganizationDisplayNames();
                     if (!odns.empty()) {
                         s += ",\n \"DisplayNames\": [";
-                        for (vector<OrganizationDisplayName*>::const_iterator dispname = odns.begin(); dispname != odns.end(); ++dispname) {
-                            if (dispname != odns.begin())
+                        for (indirect_iterator<vector<OrganizationDisplayName*>::const_iterator> dispname = make_indirect_iterator(odns.begin());
+                                dispname != make_indirect_iterator(odns.end()); ++dispname) {
+                            if (dispname.base() != odns.begin())
                                 s += ',';
-                            auto_arrayptr<char> val(toUTF8((*dispname)->getName()));
-                            auto_ptr_char lang((*dispname)->getLang());
+                            auto_arrayptr<char> val(toUTF8(dispname->getName()));
+                            auto_ptr_char lang(dispname->getLang());
                             s += "\n  {\n  \"value\": \"";
                             json_safe(s, val.get());
                             s += "\",\n  \"lang\": \"";
@@ -287,15 +299,16 @@ void DiscoverableMetadataProvider::disco(string& s, const EntityDescriptor* enti
     }
 }
 
-void DiscoverableMetadataProvider::disco(string& s, const EntitiesDescriptor* group, bool& first) const
+void DiscoverableMetadataProvider::discoGroup(string& s, const EntitiesDescriptor* group, bool& first) const
 {
     if (group) {
-        const vector<EntitiesDescriptor*>& groups = group->getEntitiesDescriptors();
-        for (vector<EntitiesDescriptor*>::const_iterator i = groups.begin(); i != groups.end(); ++i)
-            disco(s, *i, first);
-
-        const vector<EntityDescriptor*>& sites = group->getEntityDescriptors();
-        for (vector<EntityDescriptor*>::const_iterator j = sites.begin(); j != sites.end(); ++j)
-            disco(s, *j, first);
+        for_each(
+            group->getEntitiesDescriptors().begin(), group->getEntitiesDescriptors().end(),
+            boost::bind(&DiscoverableMetadataProvider::discoGroup, boost::ref(this), boost::ref(s), _1, boost::ref(first))
+            );
+        for_each(
+            group->getEntityDescriptors().begin(), group->getEntityDescriptors().end(),
+            boost::bind(&DiscoverableMetadataProvider::discoEntity, boost::ref(this), boost::ref(s), _1, boost::ref(first))
+            );
     }
 }

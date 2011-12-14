@@ -34,7 +34,7 @@ using namespace xmltooling;
 
 SAML2AssertionPolicy::SAML2AssertionPolicy(
     const MetadataProvider* metadataProvider, const xmltooling::QName* role, const TrustEngine* trustEngine, bool validate
-    ) : SecurityPolicy(metadataProvider, role, trustEngine, validate)
+    ) : SecurityPolicy(metadataProvider, role, trustEngine, validate), m_confirmation(nullptr)
 {
 }
 
@@ -50,7 +50,7 @@ void SAML2AssertionPolicy::reset(bool messageOnly)
 
 void SAML2AssertionPolicy::_reset(bool messageOnly)
 {
-    m_confirmation = false;
+    m_confirmation = nullptr;
 }
 
 const SubjectConfirmation* SAML2AssertionPolicy::getSubjectConfirmation() const

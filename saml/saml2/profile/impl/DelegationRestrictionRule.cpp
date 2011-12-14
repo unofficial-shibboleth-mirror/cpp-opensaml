@@ -31,6 +31,7 @@
 #include "util/SAMLConstants.h"
 
 #include <ctime>
+#include <boost/ptr_container/ptr_vector.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xmltooling/logging.h>
 #include <xmltooling/XMLToolingConfig.h>
@@ -39,6 +40,7 @@ using namespace opensaml::saml2;
 using namespace opensaml;
 using namespace xmltooling::logging;
 using namespace xmltooling;
+using namespace boost;
 using namespace std;
 
 namespace opensaml {
@@ -49,7 +51,6 @@ namespace opensaml {
             DelegationRestrictionRule(const DOMElement* e);
 
             virtual ~DelegationRestrictionRule() {
-                for_each(m_delegates.begin(), m_delegates.end(), xmltooling::cleanup<Delegate>());
             }
             const char* getType() const {
                 return DELEGATION_POLICY_RULE;
@@ -57,7 +58,7 @@ namespace opensaml {
             bool evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const;
 
         private:
-            vector<Delegate*> m_delegates;
+            ptr_vector<Delegate> m_delegates;
             enum {
                 MATCH_ANY,
                 MATCH_NEWEST,
@@ -93,21 +94,21 @@ namespace opensaml {
             _isSameDelegate(const Delegate* d) : m_operand(d) {}
 
             // d1 is the input from the message, d2 is from the policy
-            bool operator()(const Delegate* d1, const Delegate* d2) const {
+            bool operator()(const Delegate* d1, const Delegate& d2) const {
                 if (!d1->getNameID()) {
                     Category::getInstance(SAML_LOGCAT".SecurityPolicyRule.DelegationRestriction").error(
                         "rule doesn't support evaluation of BaseID or EncryptedID in a Delegate"
                         );
                     return false;
                 }
-                if (!d2->getConfirmationMethod() || XMLString::equals(d1->getConfirmationMethod(), d2->getConfirmationMethod())) {
-                    return matches(d1->getNameID(), d2->getNameID());
+                if (!d2.getConfirmationMethod() || XMLString::equals(d1->getConfirmationMethod(), d2.getConfirmationMethod())) {
+                    return matches(d1->getNameID(), d2.getNameID());
                 }
                 return false;
             }
 
             // d is from the policy
-            bool operator()(const Delegate* d) const {
+            bool operator()(const Delegate& d) const {
                 return this->operator()(m_operand, d);
             }
         };
@@ -132,21 +133,15 @@ DelegationRestrictionRule::DelegationRestrictionRule(const DOMElement* e)
         else if (m && *m && !XMLString::equals(m, any))
             throw SecurityPolicyException("Invalid value for \"match\" attribute in Delegation rule.");
 
-        try {
-            DOMElement* d = XMLHelper::getFirstChildElement(e, samlconstants::SAML20_DELEGATION_CONDITION_NS, Delegate::LOCAL_NAME);
-            while (d) {
-                auto_ptr<XMLObject> wrapper(XMLObjectBuilder::buildOneFromElement(d));
-                Delegate* down = dynamic_cast<Delegate*>(wrapper.get());
-                if (down) {
-                    m_delegates.push_back(down);
-                    wrapper.release();
-                }
-                d = XMLHelper::getNextSiblingElement(d, samlconstants::SAML20_DELEGATION_CONDITION_NS, Delegate::LOCAL_NAME);
+        DOMElement* d = XMLHelper::getFirstChildElement(e, samlconstants::SAML20_DELEGATION_CONDITION_NS, Delegate::LOCAL_NAME);
+        while (d) {
+            auto_ptr<XMLObject> wrapper(XMLObjectBuilder::buildOneFromElement(d));
+            Delegate* down = dynamic_cast<Delegate*>(wrapper.get());
+            if (down) {
+                m_delegates.push_back(down);
+                wrapper.release();
             }
-        }
-        catch (exception&) {
-            for_each(m_delegates.begin(), m_delegates.end(), xmltooling::cleanup<Delegate>());
-            throw;
+            d = XMLHelper::getNextSiblingElement(d, samlconstants::SAML20_DELEGATION_CONDITION_NS, Delegate::LOCAL_NAME);
         }
     }
 }

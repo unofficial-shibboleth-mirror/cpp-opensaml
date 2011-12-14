@@ -75,7 +75,7 @@ BlacklistMetadataFilter::BlacklistMetadataFilter(const DOMElement* e)
     e = XMLHelper::getFirstChildElement(e);
     while (e) {
         if (XMLString::equals(e->getLocalName(), Exclude) && e->hasChildNodes()) {
-            m_set.insert(e->getFirstChild()->getNodeValue());
+            m_set.insert(e->getFirstChild()->getTextContent());
         }
         e = XMLHelper::getNextSiblingElement(e);
     }
@@ -94,7 +94,7 @@ void BlacklistMetadataFilter::doFilter(XMLObject& xmlObject) const
         doFilter(entities);
         return;
     }
-    catch (bad_cast) {
+    catch (bad_cast&) {
     }
 
     try {
@@ -103,7 +103,7 @@ void BlacklistMetadataFilter::doFilter(XMLObject& xmlObject) const
             throw MetadataFilterException("BlacklistMetadataFilter instructed to filter the root/only entity in the metadata.");
         return;
     }
-    catch (bad_cast) {
+    catch (bad_cast&) {
     }
      
     throw MetadataFilterException("BlacklistMetadataFilter was given an improper metadata instance to filter.");

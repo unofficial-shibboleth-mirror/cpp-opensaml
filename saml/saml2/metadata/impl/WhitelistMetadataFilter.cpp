@@ -28,12 +28,15 @@
 #include "saml2/metadata/Metadata.h"
 #include "saml2/metadata/MetadataFilter.h"
 
+#include <boost/bind.hpp>
+#include <boost/iterator/indirect_iterator.hpp>
 #include <xmltooling/logging.h>
 #include <xmltooling/util/NDC.h>
 
 using namespace opensaml::saml2md;
 using namespace xmltooling::logging;
 using namespace xmltooling;
+using namespace boost;
 using namespace std;
 
 namespace opensaml {
@@ -75,7 +78,7 @@ WhitelistMetadataFilter::WhitelistMetadataFilter(const DOMElement* e)
     e = XMLHelper::getFirstChildElement(e);
     while (e) {
         if (XMLString::equals(e->getLocalName(), Include) && e->hasChildNodes()) {
-            m_set.insert(e->getFirstChild()->getNodeValue());
+            m_set.insert(e->getFirstChild()->getTextContent());
         }
         e = XMLHelper::getNextSiblingElement(e);
     }
@@ -91,7 +94,7 @@ void WhitelistMetadataFilter::doFilter(XMLObject& xmlObject) const
         doFilter(dynamic_cast<EntitiesDescriptor&>(xmlObject));
         return;
     }
-    catch (bad_cast) {
+    catch (bad_cast&) {
     }
 
     try {
@@ -100,7 +103,7 @@ void WhitelistMetadataFilter::doFilter(XMLObject& xmlObject) const
             throw MetadataFilterException("WhitelistMetadataFilter instructed to filter the root/only entity in the metadata.");
         return;
     }
-    catch (bad_cast) {
+    catch (bad_cast&) {
     }
 
     throw MetadataFilterException("WhitelistMetadataFilter was given an improper metadata instance to filter.");
@@ -124,6 +127,10 @@ void WhitelistMetadataFilter::doFilter(EntitiesDescriptor& entities) const
     }
 
     const vector<EntitiesDescriptor*>& groups=const_cast<const EntitiesDescriptor&>(entities).getEntitiesDescriptors();
-    for (vector<EntitiesDescriptor*>::const_iterator j=groups.begin(); j!=groups.end(); j++)
-        doFilter(*(*j));
+    for_each(
+        make_indirect_iterator(groups.begin()), make_indirect_iterator(groups.end()),
+        boost::bind(
+            static_cast<void (WhitelistMetadataFilter::*)(EntitiesDescriptor&) const>(&WhitelistMetadataFilter::doFilter), boost::ref(this), _1
+            )
+        );
 }

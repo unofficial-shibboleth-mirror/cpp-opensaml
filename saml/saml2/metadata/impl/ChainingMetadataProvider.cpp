@@ -34,6 +34,8 @@
 
 #include <memory>
 #include <functional>
+#include <boost/bind.hpp>
+#include <boost/ptr_container/ptr_vector.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xmltooling/logging.h>
 #include <xmltooling/util/Threads.h>
@@ -45,6 +47,7 @@ using namespace opensaml;
 using namespace xmlsignature;
 using namespace xmltooling::logging;
 using namespace xmltooling;
+using namespace boost;
 using namespace std;
 
 namespace opensaml {
@@ -74,7 +77,7 @@ namespace opensaml {
             vector<const Credential*>::size_type resolve(vector<const Credential*>& results, const CredentialCriteria* criteria=nullptr) const;
 
             string getCacheTag() const {
-                Lock lock(m_trackerLock);
+                Lock lock(m_trackerLock.get());
                 return m_feedTag;
             }
 
@@ -82,8 +85,8 @@ namespace opensaml {
                 if (wrapArray)
                     os << '[';
                 // Lock each provider in turn and suck in its feed.
-                for (vector<MetadataProvider*>::const_iterator m = m_providers.begin(); m != m_providers.end(); ++m) {
-                    DiscoverableMetadataProvider* d = dynamic_cast<DiscoverableMetadataProvider*>(*m);
+                for (ptr_vector<MetadataProvider>::iterator m = m_providers.begin(); m != m_providers.end(); ++m) {
+                    DiscoverableMetadataProvider* d = dynamic_cast<DiscoverableMetadataProvider*>(&(*m));
                     if (d) {
                         Locker locker(d);
                         d->outputFeed(os, first, false);
@@ -95,7 +98,7 @@ namespace opensaml {
 
             void onEvent(const ObservableMetadataProvider& provider) const {
                 // Reset the cache tag for the feed.
-                Lock lock(m_trackerLock);
+                Lock lock(m_trackerLock.get());
                 SAMLConfig::getConfig().generateRandomBytes(m_feedTag, 4);
                 m_feedTag = SAMLArtifact::toHex(m_feedTag);
                 emitChangeEvent();
@@ -108,9 +111,9 @@ namespace opensaml {
 
         private:
             bool m_firstMatch;
-            mutable Mutex* m_trackerLock;
-            ThreadKey* m_tlsKey;
-            vector<MetadataProvider*> m_providers;
+            auto_ptr<Mutex> m_trackerLock;
+            auto_ptr<ThreadKey> m_tlsKey;
+            mutable ptr_vector<MetadataProvider> m_providers;
             mutable set<tracker_t*> m_trackers;
             static void tracker_cleanup(void*);
             Category& m_log;
@@ -119,7 +122,7 @@ namespace opensaml {
 
         struct SAML_DLLLOCAL tracker_t {
             tracker_t(const ChainingMetadataProvider* m) : m_metadata(m) {
-                Lock lock(m_metadata->m_trackerLock);
+                Lock lock(m_metadata->m_trackerLock.get());
                 m_metadata->m_trackers.insert(this);
             }
 
@@ -166,14 +169,14 @@ void ChainingMetadataProvider::tracker_cleanup(void* ptr)
     if (ptr) {
         // free the tracker after removing it from the parent plugin's tracker set
         tracker_t* t = reinterpret_cast<tracker_t*>(ptr);
-        Lock lock(t->m_metadata->m_trackerLock);
+        Lock lock(t->m_metadata->m_trackerLock.get());
         t->m_metadata->m_trackers.erase(t);
         delete t;
     }
 }
 
 ChainingMetadataProvider::ChainingMetadataProvider(const DOMElement* e)
-    : ObservableMetadataProvider(e), m_firstMatch(true), m_trackerLock(nullptr), m_tlsKey(nullptr),
+    : ObservableMetadataProvider(e), m_firstMatch(true), m_trackerLock(Mutex::create()), m_tlsKey(ThreadKey::create(tracker_cleanup)),
         m_log(Category::getInstance(SAML_LOGCAT".Metadata.Chaining"))
 {
     if (XMLString::equals(e ? e->getAttributeNS(nullptr, precedence) : nullptr, last))
@@ -198,23 +201,18 @@ ChainingMetadataProvider::ChainingMetadataProvider(const DOMElement* e)
         }
         e = XMLHelper::getNextSiblingElement(e, _MetadataProvider);
     }
-    m_trackerLock = Mutex::create();
-    m_tlsKey = ThreadKey::create(tracker_cleanup);
 }
 
 ChainingMetadataProvider::~ChainingMetadataProvider()
 {
-    delete m_tlsKey;
-    delete m_trackerLock;
     for_each(m_trackers.begin(), m_trackers.end(), xmltooling::cleanup<tracker_t>());
-    for_each(m_providers.begin(), m_providers.end(), xmltooling::cleanup<MetadataProvider>());
 }
 
 void ChainingMetadataProvider::init()
 {
-    for (vector<MetadataProvider*>::const_iterator i=m_providers.begin(); i!=m_providers.end(); ++i) {
+    for (ptr_vector<MetadataProvider>::iterator i = m_providers.begin(); i != m_providers.end(); ++i) {
         try {
-            (*i)->init();
+            i->init();
         }
         catch (exception& ex) {
             m_log.crit("failure initializing MetadataProvider: %s", ex.what());
@@ -228,9 +226,7 @@ void ChainingMetadataProvider::init()
 
 void ChainingMetadataProvider::outputStatus(ostream& os) const
 {
-    for (vector<MetadataProvider*>::const_iterator i=m_providers.begin(); i!=m_providers.end(); ++i) {
-        (*i)->outputStatus(os);
-    }
+    for_each(m_providers.begin(), m_providers.end(), boost::bind(&MetadataProvider::outputStatus, _1, boost::ref(os)));
 }
 
 Lockable* ChainingMetadataProvider::lock()
@@ -244,7 +240,7 @@ void ChainingMetadataProvider::unlock()
     void* ptr=m_tlsKey->getData();
     if (ptr) {
         tracker_t* t = reinterpret_cast<tracker_t*>(ptr);
-        for_each(t->m_locked.begin(), t->m_locked.end(), mem_fun<void,Lockable>(&Lockable::unlock));
+        for_each(t->m_locked.begin(), t->m_locked.end(), mem_fun(&Lockable::unlock));
         t->m_locked.clear();
         t->m_objectMap.clear();
     }
@@ -271,13 +267,13 @@ const EntitiesDescriptor* ChainingMetadataProvider::getEntitiesDescriptor(const 
     MetadataProvider* held = nullptr;
     const EntitiesDescriptor* ret = nullptr;
     const EntitiesDescriptor* cur = nullptr;
-    for (vector<MetadataProvider*>::const_iterator i=m_providers.begin(); i!=m_providers.end(); ++i) {
-        tracker->lock_if(*i);
-        if (cur=(*i)->getEntitiesDescriptor(name,requireValidMetadata)) {
+    for (ptr_vector<MetadataProvider>::iterator i = m_providers.begin(); i != m_providers.end(); ++i) {
+        tracker->lock_if(&(*i));
+        if (cur=i->getEntitiesDescriptor(name,requireValidMetadata)) {
             // Are we using a first match policy?
             if (m_firstMatch) {
                 // Save locked provider.
-                tracker->remember(*i);
+                tracker->remember(&(*i));
                 return cur;
             }
 
@@ -288,12 +284,12 @@ const EntitiesDescriptor* ChainingMetadataProvider::getEntitiesDescriptor(const 
             }
 
             // Save off the latest match.
-            held = *i;
+            held = &(*i);
             ret = cur;
         }
         else {
             // No match, so just unlock this one and move on.
-            tracker->unlock_if(*i);
+            tracker->unlock_if(&(*i));
         }
     }
 
@@ -320,9 +316,9 @@ pair<const EntityDescriptor*,const RoleDescriptor*> ChainingMetadataProvider::ge
     MetadataProvider* held = nullptr;
     pair<const EntityDescriptor*,const RoleDescriptor*> ret = pair<const EntityDescriptor*,const RoleDescriptor*>(nullptr,nullptr);
     pair<const EntityDescriptor*,const RoleDescriptor*> cur = ret;
-    for (vector<MetadataProvider*>::const_iterator i=m_providers.begin(); i!=m_providers.end(); ++i) {
-        tracker->lock_if(*i);
-        cur = (*i)->getEntityDescriptor(criteria);
+    for (ptr_vector<MetadataProvider>::iterator i = m_providers.begin(); i != m_providers.end(); ++i) {
+        tracker->lock_if(&(*i));
+        cur = i->getEntityDescriptor(criteria);
         if (cur.first) {
             if (criteria.role) {
                 // We want a role also. Did we find one?
@@ -333,7 +329,7 @@ pair<const EntityDescriptor*,const RoleDescriptor*> ChainingMetadataProvider::ge
                         if (held)
                             tracker->unlock_if(held);
                         // Save locked provider and role mapping.
-                        tracker->remember(*i, cur.first);
+                        tracker->remember(&(*i), cur.first);
                         return cur;
                     }
 
@@ -359,7 +355,7 @@ pair<const EntityDescriptor*,const RoleDescriptor*> ChainingMetadataProvider::ge
                     }
 
                     // Save off the latest match.
-                    held = *i;
+                    held = &(*i);
                     ret = cur;
                 }
                 else {
@@ -367,13 +363,13 @@ pair<const EntityDescriptor*,const RoleDescriptor*> ChainingMetadataProvider::ge
                     // but save this one if we didn't have the role yet.
                     if (ret.second) {
                         // We already had a role, so let's stick with that.
-                        tracker->unlock_if(*i);
+                        tracker->unlock_if(&(*i));
                     }
                     else {
                         // This is at least as good, so toss anything we had and keep it.
                         if (held)
                             tracker->unlock_if(held);
-                        held = *i;
+                        held = &(*i);
                         ret = cur;
                     }
                 }
@@ -386,7 +382,7 @@ pair<const EntityDescriptor*,const RoleDescriptor*> ChainingMetadataProvider::ge
                         tracker->unlock_if(held);
                     
                     // Save locked provider.
-                    tracker->remember(*i, cur.first);
+                    tracker->remember(&(*i), cur.first);
                     return cur;
                 }
 
@@ -407,13 +403,13 @@ pair<const EntityDescriptor*,const RoleDescriptor*> ChainingMetadataProvider::ge
                 }
 
                 // Save off the latest match.
-                held = *i;
+                held = &(*i);
                 ret = cur;
             }
         }
         else {
             // No match, so just unlock this one and move on.
-            tracker->unlock_if(*i);
+            tracker->unlock_if(&(*i));
         }
     }
 

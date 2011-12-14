@@ -151,7 +151,8 @@ namespace opensaml {
             mutable sitemap_t m_sources;
             mutable groupmap_t m_groups;
 
-            mutable xmltooling::Mutex* m_credentialLock;
+            std::auto_ptr<xmltooling::KeyInfoResolver> m_resolverWrapper;
+            std::auto_ptr<xmltooling::Mutex> m_credentialLock;
             typedef std::map< const RoleDescriptor*, std::vector<xmltooling::Credential*> > credmap_t;
             mutable credmap_t m_credentialMap;
             const credmap_t::mapped_type& resolveCredentials(const RoleDescriptor& role) const;

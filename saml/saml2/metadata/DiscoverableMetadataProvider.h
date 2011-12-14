@@ -94,8 +94,8 @@ namespace opensaml {
             mutable std::string m_feedTag;
 
         private:
-            void disco(std::string& s, const EntityDescriptor* entity, bool& first) const;
-            void disco(std::string& s, const EntitiesDescriptor* group, bool& first) const;
+            void discoEntity(std::string& s, const EntityDescriptor* entity, bool& first) const;
+            void discoGroup(std::string& s, const EntitiesDescriptor* group, bool& first) const;
 
             bool m_legacyOrgNames;
         };

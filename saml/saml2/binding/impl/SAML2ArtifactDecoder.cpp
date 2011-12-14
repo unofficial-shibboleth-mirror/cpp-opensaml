@@ -95,7 +95,7 @@ XMLObject* SAML2ArtifactDecoder::decode(
         throw BindingException("Artifact binding requires ArtifactResolver and MetadataProvider implementations be supplied.");
 
     // Import the artifact.
-    SAMLArtifact* artifact=nullptr;
+    auto_ptr<SAMLArtifact> artifact;
     try {
         log.debug("processing encoded artifact (%s)", SAMLart);
 
@@ -110,7 +110,7 @@ XMLObject* SAML2ArtifactDecoder::decode(
         else
             log.warn("replay cache was not provided, this is a serious security risk!");
 
-        artifact = SAMLArtifact::parse(SAMLart);
+        artifact.reset(SAMLArtifact::parse(SAMLart));
     }
     catch (ArtifactException&) {
         log.error("error parsing artifact (%s)", SAMLart);
@@ -118,16 +118,15 @@ XMLObject* SAML2ArtifactDecoder::decode(
     }
 
     // Check the type.
-    auto_ptr<SAML2Artifact> artifact2(dynamic_cast<SAML2Artifact*>(artifact));
-    if (!artifact2.get()) {
-        delete artifact;
+    SAML2Artifact* artifact2 = dynamic_cast<SAML2Artifact*>(artifact.get());
+    if (!artifact2) {
         log.error("wrong artifact type");
         throw BindingException("Artifact binding requires SAML 2.0 artifact.");
     }
 
     log.debug("attempting to determine source of artifact...");
     MetadataProvider::Criteria& mc = policy.getMetadataProviderCriteria();
-    mc.artifact = artifact;
+    mc.artifact = artifact.get();
     mc.role = policy.getRole();
     mc.protocol = samlconstants::SAML20P_NS;
     pair<const EntityDescriptor*,const RoleDescriptor*> provider=policy.getMetadataProvider()->getEntityDescriptor(mc);
@@ -154,7 +153,7 @@ XMLObject* SAML2ArtifactDecoder::decode(
 
     log.debug("calling ArtifactResolver...");
     auto_ptr<ArtifactResponse> response(
-        m_artifactResolver->resolve(*(artifact2.get()), dynamic_cast<const SSODescriptorType&>(*provider.second), policy)
+        m_artifactResolver->resolve(*artifact2, dynamic_cast<const SSODescriptorType&>(*provider.second), policy)
         );
 
     // The policy should be enforced against the ArtifactResponse by the resolve step.

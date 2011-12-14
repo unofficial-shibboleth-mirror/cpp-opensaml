@@ -31,6 +31,10 @@
 #include "saml2/metadata/MetadataCredentialContext.h"
 #include "saml2/metadata/MetadataCredentialCriteria.h"
 
+#include <boost/iterator/indirect_iterator.hpp>
+#include <boost/lambda/bind.hpp>
+#include <boost/lambda/if.hpp>
+#include <boost/lambda/lambda.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xmltooling/logging.h>
 #include <xmltooling/XMLToolingConfig.h>
@@ -44,32 +48,34 @@
 using namespace opensaml::saml2md;
 using namespace xmltooling::logging;
 using namespace xmltooling;
+using namespace boost::lambda;
+using namespace boost;
 using namespace std;
 using opensaml::SAMLArtifact;
 
 static const XMLCh _KeyInfoResolver[] = UNICODE_LITERAL_15(K,e,y,I,n,f,o,R,e,s,o,l,v,e,r);
-static const XMLCh type[] =             UNICODE_LITERAL_4(t,y,p,e);
+static const XMLCh _type[] =            UNICODE_LITERAL_4(t,y,p,e);
 
 AbstractMetadataProvider::AbstractMetadataProvider(const DOMElement* e)
-    : ObservableMetadataProvider(e), m_lastUpdate(0),  m_resolver(nullptr), m_credentialLock(nullptr)
+    : ObservableMetadataProvider(e), m_lastUpdate(0),  m_resolver(nullptr), m_credentialLock(Mutex::create())
 {
     e = XMLHelper::getFirstChildElement(e, _KeyInfoResolver);
     if (e) {
-        string t = XMLHelper::getAttrString(e, nullptr, type);
-        if (!t.empty())
-            m_resolver = XMLToolingConfig::getConfig().KeyInfoResolverManager.newPlugin(t.c_str(), e);
-        else
+        string t = XMLHelper::getAttrString(e, nullptr, _type);
+        if (!t.empty()) {
+            m_resolverWrapper.reset(XMLToolingConfig::getConfig().KeyInfoResolverManager.newPlugin(t.c_str(), e));
+            m_resolver = m_resolverWrapper.get();
+        }
+        else {
             throw UnknownExtensionException("<KeyInfoResolver> element found with no type attribute");
+        }
     }
-    m_credentialLock = Mutex::create();
 }
 
 AbstractMetadataProvider::~AbstractMetadataProvider()
 {
     for (credmap_t::iterator c = m_credentialMap.begin(); c!=m_credentialMap.end(); ++c)
         for_each(c->second.begin(), c->second.end(), xmltooling::cleanup<Credential>());
-    delete m_credentialLock;
-    delete m_resolver;
 }
 
 void AbstractMetadataProvider::outputStatus(ostream& os) const
@@ -109,9 +115,21 @@ void AbstractMetadataProvider::indexEntity(EntityDescriptor* site, time_t& valid
     auto_ptr_char id(site->getEntityID());
     if (id.get()) {
         if (replace) {
-            m_sites.erase(id.get());
+            // The data structure here needs work.
+            // We have to find all the sites stored against the replaced ID. Then we have to
+            // search for those sites in the entire set of sites tracked by the sources map and
+            // remove them from both places.
+            set<const EntityDescriptor*> existingSites;
+            pair<sitemap_t::const_iterator,sitemap_t::const_iterator> existingRange = m_sites.equal_range(id.get());
+            static pair<set<const EntityDescriptor*>::iterator,bool> (set<const EntityDescriptor*>::* ins)(const EntityDescriptor* const &) =
+                &set<const EntityDescriptor*>::insert;
+            for_each(
+                existingRange.first, existingRange.second,
+                lambda::bind(ins, boost::ref(existingSites), lambda::bind(&sitemap_t::value_type::second, _1))
+                );
+            m_sites.erase(existingRange.first, existingRange.second);
             for (sitemap_t::iterator s = m_sources.begin(); s != m_sources.end();) {
-                if (s->second == site) {
+                if (existingSites.count(s->second) > 0) {
                     sitemap_t::iterator temp = s;
                     ++s;
                     m_sources.erase(temp);
@@ -298,12 +316,15 @@ const Credential* AbstractMetadataProvider::resolve(const CredentialCriteria* cr
     if (!metacrit)
         throw MetadataException("Cannot resolve credentials without a MetadataCredentialCriteria object.");
 
-    Lock lock(m_credentialLock);
+    Lock lock(m_credentialLock.get());
     const credmap_t::mapped_type& creds = resolveCredentials(metacrit->getRole());
 
-    for (credmap_t::mapped_type::const_iterator c = creds.begin(); c!=creds.end(); ++c)
-        if (metacrit->matches(*(*c)))
-            return *c;
+    // Indirect iterator derefs the pointers in the vector to pass to the matches() method by reference.
+    credmap_t::mapped_type::const_iterator c = find_if(
+        creds.begin(), creds.end(), lambda::bind(&CredentialCriteria::matches, metacrit, boost::ref(*_1))
+        );
+    if (c != creds.end())
+        return *c;
     return nullptr;
 }
 
@@ -315,27 +336,32 @@ vector<const Credential*>::size_type AbstractMetadataProvider::resolve(
     if (!metacrit)
         throw MetadataException("Cannot resolve credentials without a MetadataCredentialCriteria object.");
 
-    Lock lock(m_credentialLock);
+    Lock lock(m_credentialLock.get());
     const credmap_t::mapped_type& creds = resolveCredentials(metacrit->getRole());
 
-    for (credmap_t::mapped_type::const_iterator c = creds.begin(); c!=creds.end(); ++c)
-        if (metacrit->matches(*(*c)))
-            results.push_back(*c);
+    // Add matching creds to results array.
+    static void (vector<const Credential*>::* push_back)(const Credential* const &) = &vector<const Credential*>::push_back;
+    for_each(
+        creds.begin(), creds.end(),
+        if_(lambda::bind(&CredentialCriteria::matches, metacrit, boost::ref(*_1)))[lambda::bind(push_back, boost::ref(results), _1)]
+        );
+    
     return results.size();
 }
 
 const AbstractMetadataProvider::credmap_t::mapped_type& AbstractMetadataProvider::resolveCredentials(const RoleDescriptor& role) const
 {
     credmap_t::const_iterator i = m_credentialMap.find(&role);
-    if (i!=m_credentialMap.end())
+    if (i != m_credentialMap.end())
         return i->second;
 
     const KeyInfoResolver* resolver = m_resolver ? m_resolver : XMLToolingConfig::getConfig().getKeyInfoResolver();
     const vector<KeyDescriptor*>& keys = role.getKeyDescriptors();
     AbstractMetadataProvider::credmap_t::mapped_type& resolved = m_credentialMap[&role];
-    for (vector<KeyDescriptor*>::const_iterator k = keys.begin(); k!=keys.end(); ++k) {
-        if ((*k)->getKeyInfo()) {
-            auto_ptr<MetadataCredentialContext> mcc(new MetadataCredentialContext(*(*k)));
+    for (indirect_iterator<vector<KeyDescriptor*>::const_iterator> k = make_indirect_iterator(keys.begin());
+            k != make_indirect_iterator(keys.end()); ++k) {
+        if (k->getKeyInfo()) {
+            auto_ptr<MetadataCredentialContext> mcc(new MetadataCredentialContext(*k));
             Credential* c = resolver->resolve(mcc.get());
             mcc.release();
             resolved.push_back(c);

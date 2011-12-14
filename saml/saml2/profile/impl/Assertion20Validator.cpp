@@ -28,6 +28,7 @@
 #include "saml2/core/Assertions.h"
 #include "saml2/profile/AssertionValidator.h"
 
+#include <boost/bind.hpp>
 #include <xmltooling/logging.h>
 #include <xmltooling/XMLToolingConfig.h>
 #include <xmltooling/util/NDC.h>
@@ -35,6 +36,7 @@
 using namespace opensaml::saml2;
 using namespace xmltooling::logging;
 using namespace xmltooling;
+using namespace boost;
 using namespace std;
 
 AssertionValidator::AssertionValidator(const XMLCh* recipient, const vector<const XMLCh*>* audiences, time_t ts)
@@ -77,16 +79,13 @@ void AssertionValidator::validateAssertion(const Assertion& assertion) const
 
     // Now we process conditions, starting with the known types and then extensions.
     const vector<AudienceRestriction*>& acvec = conds->getAudienceRestrictions();
-    for (vector<AudienceRestriction*>::const_iterator ac = acvec.begin(); ac!=acvec.end(); ++ac)
-        validateCondition(*ac);
+    for_each(acvec.begin(), acvec.end(), boost::bind(&AssertionValidator::validateCondition, this, _1));
 
     const vector<OneTimeUse*>& dncvec = conds->getOneTimeUses();
-    for (vector<OneTimeUse*>::const_iterator dnc = dncvec.begin(); dnc!=dncvec.end(); ++dnc)
-        validateCondition(*dnc);
+    for_each(dncvec.begin(), dncvec.end(), boost::bind(&AssertionValidator::validateCondition, this, _1));
 
     const vector<Condition*>& convec = conds->getConditions();
-    for (vector<Condition*>::const_iterator c = convec.begin(); c!=convec.end(); ++c)
-        validateCondition(*c);
+    for_each(convec.begin(), convec.end(), boost::bind(&AssertionValidator::validateCondition, this, _1));
 }
 
 void AssertionValidator::validateCondition(const Condition* c) const

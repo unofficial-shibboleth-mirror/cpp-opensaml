@@ -59,13 +59,12 @@ namespace opensaml {
         {
         public:
             SAML2ECPEncoder(const DOMElement* e, const XMLCh* ns) : m_actor("http://schemas.xmlsoap.org/soap/actor/next"),
-                    m_providerName(e ? e->getAttributeNS(ns, ProviderName) : nullptr), m_idpList(nullptr) {
+                    m_providerName(e ? e->getAttributeNS(ns, ProviderName) : nullptr) {
                 DOMElement* child = e ? XMLHelper::getFirstChildElement(e, SAML20P_NS, IDPList::LOCAL_NAME) : nullptr;
                 if (child)
-                    m_idpList = dynamic_cast<IDPList*>(XMLObjectBuilder::buildOneFromElement(child));
+                    m_idpList.reset(dynamic_cast<IDPList*>(XMLObjectBuilder::buildOneFromElement(child)));
             }
             virtual ~SAML2ECPEncoder() {
-                delete m_idpList;
             }
 
             const XMLCh* getProtocolFamily() const {
@@ -87,7 +86,7 @@ namespace opensaml {
         private:
             auto_ptr_XMLCh m_actor;
             const XMLCh* m_providerName;
-            IDPList* m_idpList;
+            auto_ptr<IDPList> m_idpList;
             AnyElementBuilder m_anyBuilder;
         };
 
@@ -176,7 +175,7 @@ long SAML2ECPEncoder::encode(
         hdrblock->getUnknownXMLObjects().push_back(request->getIssuer()->clone());
         if (request->getScoping() && request->getScoping()->getIDPList())
             hdrblock->getUnknownXMLObjects().push_back(request->getScoping()->getIDPList()->clone());
-        else if (m_idpList)
+        else if (m_idpList.get())
             hdrblock->getUnknownXMLObjects().push_back(m_idpList->clone());
         header->getUnknownXMLObjects().push_back(hdrblock);
     }
