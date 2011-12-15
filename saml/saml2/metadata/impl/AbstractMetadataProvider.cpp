@@ -319,13 +319,10 @@ const Credential* AbstractMetadataProvider::resolve(const CredentialCriteria* cr
     Lock lock(m_credentialLock.get());
     const credmap_t::mapped_type& creds = resolveCredentials(metacrit->getRole());
 
-    // Indirect iterator derefs the pointers in the vector to pass to the matches() method by reference.
-    credmap_t::mapped_type::const_iterator c = find_if(
-        creds.begin(), creds.end(), lambda::bind(&CredentialCriteria::matches, metacrit, boost::ref(*_1))
-        );
-    if (c != creds.end())
-        return *c;
-    return nullptr;
+    for (credmap_t::mapped_type::const_iterator c = creds.begin(); c!=creds.end(); ++c)
+	if (metacrit->matches(*(*c)))
+	return *c;
+return nullptr;
 }
 
 vector<const Credential*>::size_type AbstractMetadataProvider::resolve(
@@ -339,13 +336,9 @@ vector<const Credential*>::size_type AbstractMetadataProvider::resolve(
     Lock lock(m_credentialLock.get());
     const credmap_t::mapped_type& creds = resolveCredentials(metacrit->getRole());
 
-    // Add matching creds to results array.
-    static void (vector<const Credential*>::* push_back)(const Credential* const &) = &vector<const Credential*>::push_back;
-    for_each(
-        creds.begin(), creds.end(),
-        if_(lambda::bind(&CredentialCriteria::matches, metacrit, boost::ref(*_1)))[lambda::bind(push_back, boost::ref(results), _1)]
-        );
-    
+   for (credmap_t::mapped_type::const_iterator c = creds.begin(); c!=creds.end(); ++c)
+	if (metacrit->matches(*(*c)))
+	    results.push_back(*c); 
     return results.size();
 }
 

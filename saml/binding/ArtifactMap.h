@@ -30,6 +30,7 @@
 #include <saml/base.h>
 
 #include <string>
+#include <memory>
 #include <xercesc/dom/DOM.hpp>
 
 namespace xmltooling {

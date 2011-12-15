@@ -31,6 +31,7 @@
 
 #include <ctime>
 #include <vector>
+#include <memory>
 #include <xmltooling/unicode.h>
 
 #if defined (_MSC_VER)

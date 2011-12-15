@@ -28,6 +28,7 @@
 #include "exceptions.h"
 #include "binding/SecurityPolicyRule.h"
 
+#include <memory>
 #include <xmltooling/logging.h>
 #include <xmltooling/QName.h>
 #include <xmltooling/XMLObject.h>
