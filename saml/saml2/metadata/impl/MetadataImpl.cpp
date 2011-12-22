@@ -44,6 +44,9 @@
 #include <xmltooling/util/XMLHelper.h>
 
 #include <ctime>
+#include <boost/lambda/bind.hpp>
+#include <boost/lambda/if.hpp>
+#include <boost/lambda/lambda.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xsec/framework/XSECDefs.hpp>
 
@@ -113,9 +116,7 @@ namespace opensaml {
             }
 
             void _clone(const localizedNameTypeImpl& src) {
-                setLang(src.getLang());
-                if (src.m_LangPrefix)
-                    m_LangPrefix = XMLString::replicate(src.m_LangPrefix);
+                IMPL_CLONE_FOREIGN_ATTRIB(Lang);
             }
 
             IMPL_XMLOBJECT_CLONE_EX(localizedNameType);
@@ -179,9 +180,7 @@ namespace opensaml {
             }
 
             void _clone(const localizedURITypeImpl& src) {
-                setLang(src.getLang());
-                if (src.m_LangPrefix)
-                    m_LangPrefix = XMLString::replicate(src.m_LangPrefix);
+                IMPL_CLONE_FOREIGN_ATTRIB(Lang);
             }
 
             IMPL_XMLOBJECT_CLONE_EX(localizedURIType);
@@ -292,11 +291,7 @@ namespace opensaml {
 
             ExtensionsImpl(const ExtensionsImpl& src)
                     : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
-                for (vector<XMLObject*>::const_iterator i=src.m_UnknownXMLObjects.begin(); i!=src.m_UnknownXMLObjects.end(); ++i) {
-                    if (*i) {
-                        getUnknownXMLObjects().push_back((*i)->clone());
-                    }
-                }
+                IMPL_CLONE_XMLOBJECT_CHILDREN(UnknownXMLObject);
             }
 
             IMPL_XMLOBJECT_CLONE(Extensions);
@@ -349,23 +344,10 @@ namespace opensaml {
                     : AbstractXMLObject(src), AbstractComplexElement(src),
                         AbstractAttributeExtensibleXMLObject(src), AbstractDOMCachingXMLObject(src) {
                 init();
-                if (src.getExtensions())
-                    setExtensions(src.getExtensions()->cloneExtensions());
-                for (vector<OrganizationName*>::const_iterator i=src.m_OrganizationNames.begin(); i!=src.m_OrganizationNames.end(); i++) {
-                    if (*i) {
-                        getOrganizationNames().push_back((*i)->cloneOrganizationName());
-                    }
-                }
-                for (vector<OrganizationDisplayName*>::const_iterator j=src.m_OrganizationDisplayNames.begin(); j!=src.m_OrganizationDisplayNames.end(); j++) {
-                    if (*j) {
-                        getOrganizationDisplayNames().push_back((*j)->cloneOrganizationDisplayName());
-                    }
-                }
-                for (vector<OrganizationURL*>::const_iterator k=src.m_OrganizationURLs.begin(); k!=src.m_OrganizationURLs.end(); k++) {
-                    if (*k) {
-                        getOrganizationURLs().push_back((*k)->cloneOrganizationURL());
-                    }
-                }
+                IMPL_CLONE_TYPED_CHILD(Extensions);
+                IMPL_CLONE_TYPED_CHILDREN(OrganizationName);
+                IMPL_CLONE_TYPED_CHILDREN(OrganizationDisplayName);
+                IMPL_CLONE_TYPED_CHILDREN(OrganizationURL);
             }
 
             IMPL_XMLOBJECT_CLONE(Organization);
@@ -437,25 +419,13 @@ namespace opensaml {
                     : AbstractXMLObject(src), AbstractComplexElement(src),
                         AbstractAttributeExtensibleXMLObject(src), AbstractDOMCachingXMLObject(src) {
                 init();
-                if (src.getExtensions())
-                    setExtensions(src.getExtensions()->cloneExtensions());
-                if (src.getCompany())
-                    setCompany(src.getCompany()->cloneCompany());
-                if (src.getGivenName())
-                    setGivenName(src.getGivenName()->cloneGivenName());
-                if (src.getSurName())
-                    setSurName(src.getSurName()->cloneSurName());
-
-                for (vector<EmailAddress*>::const_iterator i=src.m_EmailAddresss.begin(); i!=src.m_EmailAddresss.end(); i++) {
-                    if (*i) {
-                        getEmailAddresss().push_back((*i)->cloneEmailAddress());
-                    }
-                }
-                for (vector<TelephoneNumber*>::const_iterator j=src.m_TelephoneNumbers.begin(); j!=src.m_TelephoneNumbers.end(); j++) {
-                    if (*j) {
-                        getTelephoneNumbers().push_back((*j)->cloneTelephoneNumber());
-                    }
-                }
+                IMPL_CLONE_ATTRIB(ContactType);
+                IMPL_CLONE_TYPED_CHILD(Extensions);
+                IMPL_CLONE_TYPED_CHILD(Company);
+                IMPL_CLONE_TYPED_CHILD(GivenName);
+                IMPL_CLONE_TYPED_CHILD(SurName);
+                IMPL_CLONE_TYPED_CHILDREN(EmailAddress);
+                IMPL_CLONE_TYPED_CHILDREN(TelephoneNumber);
             }
 
             IMPL_XMLOBJECT_CLONE(ContactPerson);
@@ -521,7 +491,7 @@ namespace opensaml {
             AdditionalMetadataLocationImpl(const AdditionalMetadataLocationImpl& src)
                     : AbstractXMLObject(src), AbstractSimpleElement(src), AbstractDOMCachingXMLObject(src) {
                 init();
-                setNamespace(src.getNamespace());
+                IMPL_CLONE_ATTRIB(Namespace);
             }
 
             IMPL_XMLOBJECT_CLONE(AdditionalMetadataLocation);
@@ -564,14 +534,9 @@ namespace opensaml {
             KeyDescriptorImpl(const KeyDescriptorImpl& src)
                     : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
                 init();
-                setUse(src.getUse());
-                if (src.getKeyInfo())
-                    setKeyInfo(src.getKeyInfo()->cloneKeyInfo());
-                for (vector<EncryptionMethod*>::const_iterator i=src.m_EncryptionMethods.begin(); i!=src.m_EncryptionMethods.end(); i++) {
-                    if (*i) {
-                        getEncryptionMethods().push_back((*i)->cloneEncryptionMethod());
-                    }
-                }
+                IMPL_CLONE_ATTRIB(Use);
+                IMPL_CLONE_TYPED_CHILD(KeyInfo);
+                IMPL_CLONE_TYPED_FOREIGN_CHILDREN(EncryptionMethod,xmlencryption);
             }
 
             IMPL_XMLOBJECT_CLONE(KeyDescriptor);
@@ -633,14 +598,10 @@ namespace opensaml {
             }
 
             void _clone(const EndpointTypeImpl& src) {
-                setBinding(src.getBinding());
-                setLocation(src.getLocation());
-                setResponseLocation(src.getResponseLocation());
-                for (vector<XMLObject*>::const_iterator i=src.m_UnknownXMLObjects.begin(); i!=src.m_UnknownXMLObjects.end(); ++i) {
-                    if (*i) {
-                        getUnknownXMLObjects().push_back((*i)->clone());
-                    }
-                }
+                IMPL_CLONE_ATTRIB(Binding);
+                IMPL_CLONE_ATTRIB(Location);
+                IMPL_CLONE_ATTRIB(ResponseLocation);
+                IMPL_CLONE_XMLOBJECT_CHILDREN(UnknownXMLObject);
             }
 
             IMPL_XMLOBJECT_CLONE_EX(EndpointType);
@@ -716,8 +677,8 @@ namespace opensaml {
 
             void _clone(const IndexedEndpointTypeImpl& src) {
                 EndpointTypeImpl::_clone(src);
-                setIndex(src.m_Index);
-                isDefault(src.m_isDefault);
+                IMPL_CLONE_INTEGER_ATTRIB(Index);
+                IMPL_CLONE_BOOLEAN_ATTRIB(isDefault);
             }
 
             IMPL_XMLOBJECT_CLONE_EX(IndexedEndpointType);
@@ -931,28 +892,16 @@ namespace opensaml {
             }
 
             void _clone(const RoleDescriptorImpl& src) {
-                setID(src.getID());
-                setProtocolSupportEnumeration(src.getProtocolSupportEnumeration());
-                setErrorURL(src.getErrorURL());
-                setValidUntil(src.getValidUntil());
-                setCacheDuration(src.getCacheDuration());
-                if (src.getSignature())
-                    setSignature(src.getSignature()->cloneSignature());
-                if (src.getExtensions())
-                    setExtensions(src.getExtensions()->cloneExtensions());
-                if (src.getOrganization())
-                    setOrganization(src.getOrganization()->cloneOrganization());
-
-                for (vector<KeyDescriptor*>::const_iterator i=src.m_KeyDescriptors.begin(); i!=src.m_KeyDescriptors.end(); i++) {
-                    if (*i) {
-                        getKeyDescriptors().push_back((*i)->cloneKeyDescriptor());
-                    }
-                }
-                for (vector<ContactPerson*>::const_iterator j=src.m_ContactPersons.begin(); j!=src.m_ContactPersons.end(); j++) {
-                    if (*j) {
-                        getContactPersons().push_back((*j)->cloneContactPerson());
-                    }
-                }
+                IMPL_CLONE_ATTRIB(ID);
+                IMPL_CLONE_ATTRIB(ProtocolSupportEnumeration);
+                IMPL_CLONE_ATTRIB(ErrorURL);
+                IMPL_CLONE_ATTRIB(ValidUntil);
+                IMPL_CLONE_ATTRIB(CacheDuration);
+                IMPL_CLONE_TYPED_CHILD(Signature);
+                IMPL_CLONE_TYPED_CHILD(Extensions);
+                IMPL_CLONE_TYPED_CHILD(Organization);
+                IMPL_CLONE_TYPED_CHILDREN(KeyDescriptor);
+                IMPL_CLONE_TYPED_CHILDREN(ContactPerson);
             }
 
             //IMPL_TYPED_CHILD(Signature);
@@ -1113,11 +1062,7 @@ namespace opensaml {
 
             void _clone(const RoleDescriptorTypeImpl& src) {
                 RoleDescriptorImpl::_clone(src);
-                for (vector<XMLObject*>::const_iterator i=src.m_UnknownXMLObjects.begin(); i!=src.m_UnknownXMLObjects.end(); ++i) {
-                    if (*i) {
-                        getUnknownXMLObjects().push_back((*i)->clone());
-                    }
-                }
+                IMPL_CLONE_XMLOBJECT_CHILDREN(UnknownXMLObject);
             }
 
             IMPL_XMLOBJECT_CLONE_EX(RoleDescriptorType);
@@ -1170,26 +1115,10 @@ namespace opensaml {
 
             void _clone(const SSODescriptorTypeImpl& src) {
                 RoleDescriptorImpl::_clone(src);
-                for (vector<ArtifactResolutionService*>::const_iterator i=src.m_ArtifactResolutionServices.begin(); i!=src.m_ArtifactResolutionServices.end(); i++) {
-                    if (*i) {
-                        getArtifactResolutionServices().push_back((*i)->cloneArtifactResolutionService());
-                    }
-                }
-                for (vector<SingleLogoutService*>::const_iterator j=src.m_SingleLogoutServices.begin(); j!=src.m_SingleLogoutServices.end(); j++) {
-                    if (*j) {
-                        getSingleLogoutServices().push_back((*j)->cloneSingleLogoutService());
-                    }
-                }
-                for (vector<ManageNameIDService*>::const_iterator k=src.m_ManageNameIDServices.begin(); k!=src.m_ManageNameIDServices.end(); k++) {
-                    if (*k) {
-                        getManageNameIDServices().push_back((*k)->cloneManageNameIDService());
-                    }
-                }
-                for (vector<NameIDFormat*>::const_iterator m=src.m_NameIDFormats.begin(); m!=src.m_NameIDFormats.end(); m++) {
-                    if (*m) {
-                        getNameIDFormats().push_back((*m)->cloneNameIDFormat());
-                    }
-                }
+                IMPL_CLONE_TYPED_CHILDREN(ArtifactResolutionService);
+                IMPL_CLONE_TYPED_CHILDREN(SingleLogoutService);
+                IMPL_CLONE_TYPED_CHILDREN(ManageNameIDService);
+                IMPL_CLONE_TYPED_CHILDREN(NameIDFormat);
             }
 
             SSODescriptorType* cloneSSODescriptorType() const {
@@ -1248,32 +1177,12 @@ namespace opensaml {
 
             void _clone(const IDPSSODescriptorImpl& src) {
                 SSODescriptorTypeImpl::_clone(src);
-                WantAuthnRequestsSigned(src.m_WantAuthnRequestsSigned);
-                for (vector<SingleSignOnService*>::const_iterator i=src.m_SingleSignOnServices.begin(); i!=src.m_SingleSignOnServices.end(); i++) {
-                    if (*i) {
-                        getSingleSignOnServices().push_back((*i)->cloneSingleSignOnService());
-                    }
-                }
-                for (vector<NameIDMappingService*>::const_iterator j=src.m_NameIDMappingServices.begin(); j!=src.m_NameIDMappingServices.end(); j++) {
-                    if (*j) {
-                        getNameIDMappingServices().push_back((*j)->cloneNameIDMappingService());
-                    }
-                }
-                for (vector<AssertionIDRequestService*>::const_iterator k=src.m_AssertionIDRequestServices.begin(); k!=src.m_AssertionIDRequestServices.end(); k++) {
-                    if (*k) {
-                        getAssertionIDRequestServices().push_back((*k)->cloneAssertionIDRequestService());
-                    }
-                }
-                for (vector<AttributeProfile*>::const_iterator m=src.m_AttributeProfiles.begin(); m!=src.m_AttributeProfiles.end(); m++) {
-                    if (*m) {
-                        getAttributeProfiles().push_back((*m)->cloneAttributeProfile());
-                    }
-                }
-                for (vector<Attribute*>::const_iterator n=src.m_Attributes.begin(); n!=src.m_Attributes.end(); n++) {
-                    if (*n) {
-                        getAttributes().push_back((*n)->cloneAttribute());
-                    }
-                }
+                IMPL_CLONE_BOOLEAN_ATTRIB(WantAuthnRequestsSigned);
+                IMPL_CLONE_TYPED_CHILDREN(SingleSignOnService);
+                IMPL_CLONE_TYPED_CHILDREN(NameIDMappingService);
+                IMPL_CLONE_TYPED_CHILDREN(AssertionIDRequestService);
+                IMPL_CLONE_TYPED_CHILDREN(AttributeProfile);
+                IMPL_CLONE_TYPED_FOREIGN_CHILDREN(Attribute,saml2);
             }
 
             IMPL_XMLOBJECT_CLONE_EX(IDPSSODescriptor);
@@ -1338,15 +1247,11 @@ namespace opensaml {
                     : AbstractXMLObject(src), AbstractComplexElement(src),
                         AbstractAttributeExtensibleXMLObject(src), AbstractDOMCachingXMLObject(src) {
                 init();
-                setName(src.getName());
-                setNameFormat(src.getNameFormat());
-                setFriendlyName(src.getFriendlyName());
-                isRequired(src.m_isRequired);
-                for (vector<XMLObject*>::const_iterator i=src.m_AttributeValues.begin(); i!=src.m_AttributeValues.end(); i++) {
-                    if (*i) {
-                        getAttributeValues().push_back((*i)->clone());
-                    }
-                }
+                IMPL_CLONE_ATTRIB(Name);
+                IMPL_CLONE_ATTRIB(NameFormat);
+                IMPL_CLONE_ATTRIB(FriendlyName);
+                IMPL_CLONE_BOOLEAN_ATTRIB(isRequired);
+                IMPL_CLONE_XMLOBJECT_CHILDREN(AttributeValue);
             }
 
             IMPL_XMLOBJECT_CLONE2(RequestedAttribute,Attribute);
@@ -1428,23 +1333,11 @@ namespace opensaml {
             AttributeConsumingServiceImpl(const AttributeConsumingServiceImpl& src)
                     : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
                 init();
-                setIndex(src.m_Index);
-                isDefault(src.m_isDefault);
-                for (vector<ServiceName*>::const_iterator i=src.m_ServiceNames.begin(); i!=src.m_ServiceNames.end(); i++) {
-                    if (*i) {
-                        getServiceNames().push_back((*i)->cloneServiceName());
-                    }
-                }
-                for (vector<ServiceDescription*>::const_iterator j=src.m_ServiceDescriptions.begin(); j!=src.m_ServiceDescriptions.end(); j++) {
-                    if (*j) {
-                        getServiceDescriptions().push_back((*j)->cloneServiceDescription());
-                    }
-                }
-                for (vector<RequestedAttribute*>::const_iterator k=src.m_RequestedAttributes.begin(); k!=src.m_RequestedAttributes.end(); k++) {
-                    if (*k) {
-                        getRequestedAttributes().push_back((*k)->cloneRequestedAttribute());
-                    }
-                }
+                IMPL_CLONE_INTEGER_ATTRIB(Index);
+                IMPL_CLONE_BOOLEAN_ATTRIB(isDefault);
+                IMPL_CLONE_TYPED_CHILDREN(ServiceName);
+                IMPL_CLONE_TYPED_CHILDREN(ServiceDescription);
+                IMPL_CLONE_TYPED_CHILDREN(RequestedAttribute);
             }
 
             IMPL_XMLOBJECT_CLONE(AttributeConsumingService);
@@ -1500,18 +1393,10 @@ namespace opensaml {
 
             void _clone(const SPSSODescriptorImpl& src) {
                 SSODescriptorTypeImpl::_clone(src);
-                AuthnRequestsSigned(src.m_AuthnRequestsSigned);
-                WantAssertionsSigned(src.m_WantAssertionsSigned);
-                for (vector<AssertionConsumerService*>::const_iterator i=src.m_AssertionConsumerServices.begin(); i!=src.m_AssertionConsumerServices.end(); i++) {
-                    if (*i) {
-                        getAssertionConsumerServices().push_back((*i)->cloneAssertionConsumerService());
-                    }
-                }
-                for (vector<AttributeConsumingService*>::const_iterator j=src.m_AttributeConsumingServices.begin(); j!=src.m_AttributeConsumingServices.end(); j++) {
-                    if (*j) {
-                        getAttributeConsumingServices().push_back((*j)->cloneAttributeConsumingService());
-                    }
-                }
+                IMPL_CLONE_BOOLEAN_ATTRIB(AuthnRequestsSigned);
+                IMPL_CLONE_BOOLEAN_ATTRIB(WantAssertionsSigned);
+                IMPL_CLONE_TYPED_CHILDREN(AssertionConsumerService);
+                IMPL_CLONE_TYPED_CHILDREN(AttributeConsumingService);
             }
 
             IMPL_XMLOBJECT_CLONE_EX(SPSSODescriptor);
@@ -1576,21 +1461,9 @@ namespace opensaml {
 
             void _clone(const AuthnAuthorityDescriptorImpl& src) {
                 RoleDescriptorImpl::_clone(src);
-                for (vector<AuthnQueryService*>::const_iterator i=src.m_AuthnQueryServices.begin(); i!=src.m_AuthnQueryServices.end(); i++) {
-                    if (*i) {
-                        getAuthnQueryServices().push_back((*i)->cloneAuthnQueryService());
-                    }
-                }
-                for (vector<AssertionIDRequestService*>::const_iterator j=src.m_AssertionIDRequestServices.begin(); j!=src.m_AssertionIDRequestServices.end(); j++) {
-                    if (*j) {
-                        getAssertionIDRequestServices().push_back((*j)->cloneAssertionIDRequestService());
-                    }
-                }
-                for (vector<NameIDFormat*>::const_iterator k=src.m_NameIDFormats.begin(); k!=src.m_NameIDFormats.end(); k++) {
-                    if (*k) {
-                        getNameIDFormats().push_back((*k)->cloneNameIDFormat());
-                    }
-                }
+                IMPL_CLONE_TYPED_CHILDREN(AuthnQueryService);
+                IMPL_CLONE_TYPED_CHILDREN(AssertionIDRequestService);
+                IMPL_CLONE_TYPED_CHILDREN(NameIDFormat);
             }
 
             IMPL_XMLOBJECT_CLONE_EX(AuthnAuthorityDescriptor);
@@ -1635,21 +1508,9 @@ namespace opensaml {
 
             void _clone(const PDPDescriptorImpl& src) {
                 RoleDescriptorImpl::_clone(src);
-                for (vector<AuthzService*>::const_iterator i=src.m_AuthzServices.begin(); i!=src.m_AuthzServices.end(); i++) {
-                    if (*i) {
-                        getAuthzServices().push_back((*i)->cloneAuthzService());
-                    }
-                }
-                for (vector<AssertionIDRequestService*>::const_iterator j=src.m_AssertionIDRequestServices.begin(); j!=src.m_AssertionIDRequestServices.end(); j++) {
-                    if (*j) {
-                        getAssertionIDRequestServices().push_back((*j)->cloneAssertionIDRequestService());
-                    }
-                }
-                for (vector<NameIDFormat*>::const_iterator k=src.m_NameIDFormats.begin(); k!=src.m_NameIDFormats.end(); k++) {
-                    if (*k) {
-                        getNameIDFormats().push_back((*k)->cloneNameIDFormat());
-                    }
-                }
+                IMPL_CLONE_TYPED_CHILDREN(AuthzService);
+                IMPL_CLONE_TYPED_CHILDREN(AssertionIDRequestService);
+                IMPL_CLONE_TYPED_CHILDREN(NameIDFormat);
             }
 
             IMPL_XMLOBJECT_CLONE_EX(PDPDescriptor);
@@ -1702,31 +1563,11 @@ namespace opensaml {
 
             void _clone(const AttributeAuthorityDescriptorImpl& src) {
                 RoleDescriptorImpl::_clone(src);
-                for (vector<AttributeService*>::const_iterator i=src.m_AttributeServices.begin(); i!=src.m_AttributeServices.end(); i++) {
-                    if (*i) {
-                        getAttributeServices().push_back((*i)->cloneAttributeService());
-                    }
-                }
-                for (vector<AssertionIDRequestService*>::const_iterator j=src.m_AssertionIDRequestServices.begin(); j!=src.m_AssertionIDRequestServices.end(); j++) {
-                    if (*j) {
-                        getAssertionIDRequestServices().push_back((*j)->cloneAssertionIDRequestService());
-                    }
-                }
-                for (vector<NameIDFormat*>::const_iterator k=src.m_NameIDFormats.begin(); k!=src.m_NameIDFormats.end(); k++) {
-                    if (*k) {
-                        getNameIDFormats().push_back((*k)->cloneNameIDFormat());
-                    }
-                }
-                for (vector<AttributeProfile*>::const_iterator m=src.m_AttributeProfiles.begin(); m!=src.m_AttributeProfiles.end(); m++) {
-                    if (*m) {
-                        getAttributeProfiles().push_back((*m)->cloneAttributeProfile());
-                    }
-                }
-                for (vector<Attribute*>::const_iterator n=src.m_Attributes.begin(); n!=src.m_Attributes.end(); n++) {
-                    if (*n) {
-                        getAttributes().push_back((*n)->cloneAttribute());
-                    }
-                }
+                IMPL_CLONE_TYPED_CHILDREN(AttributeService);
+                IMPL_CLONE_TYPED_CHILDREN(AssertionIDRequestService);
+                IMPL_CLONE_TYPED_CHILDREN(NameIDFormat);
+                IMPL_CLONE_TYPED_CHILDREN(AttributeProfile);
+                IMPL_CLONE_TYPED_CHILDREN(Attribute);
             }
 
             IMPL_XMLOBJECT_CLONE_EX(AttributeAuthorityDescriptor);
@@ -1777,12 +1618,8 @@ namespace opensaml {
 
             void _clone(const QueryDescriptorTypeImpl& src) {
                 RoleDescriptorImpl::_clone(src);
-                WantAssertionsSigned(src.m_WantAssertionsSigned);
-                for (vector<NameIDFormat*>::const_iterator m=src.m_NameIDFormats.begin(); m!=src.m_NameIDFormats.end(); m++) {
-                    if (*m) {
-                        getNameIDFormats().push_back((*m)->cloneNameIDFormat());
-                    }
-                }
+                IMPL_CLONE_BOOLEAN_ATTRIB(WantAssertionsSigned);
+                IMPL_CLONE_TYPED_CHILDREN(NameIDFormat);
             }
 
             QueryDescriptorType* cloneQueryDescriptorType() const {
@@ -1840,11 +1677,7 @@ namespace opensaml {
 
             void _clone(const AttributeQueryDescriptorTypeImpl& src) {
                 QueryDescriptorTypeImpl::_clone(src);
-                for (vector<AttributeConsumingService*>::const_iterator j=src.m_AttributeConsumingServices.begin(); j!=src.m_AttributeConsumingServices.end(); j++) {
-                    if (*j) {
-                        getAttributeConsumingServices().push_back((*j)->cloneAttributeConsumingService());
-                    }
-                }
+                IMPL_CLONE_TYPED_CHILDREN(AttributeConsumingService);
             }
 
             IMPL_XMLOBJECT_CLONE_EX(AttributeQueryDescriptorType);
@@ -1870,11 +1703,7 @@ namespace opensaml {
 
             void _clone(const AuthzDecisionQueryDescriptorTypeImpl& src) {
                 QueryDescriptorTypeImpl::_clone(src);
-                for (vector<ActionNamespace*>::const_iterator j=src.m_ActionNamespaces.begin(); j!=src.m_ActionNamespaces.end(); j++) {
-                    if (*j) {
-                        getActionNamespaces().push_back((*j)->cloneActionNamespace());
-                    }
-                }
+                IMPL_CLONE_TYPED_CHILDREN(ActionNamespace);
             }
 
             IMPL_XMLOBJECT_CLONE_EX(AuthzDecisionQueryDescriptorType);
@@ -1929,25 +1758,14 @@ namespace opensaml {
                     : AbstractXMLObject(src), AbstractComplexElement(src),
                         AbstractAttributeExtensibleXMLObject(src), AbstractDOMCachingXMLObject(src) {
                 init();
-                setID(src.getID());
-                setAffiliationOwnerID(src.getAffiliationOwnerID());
-                setValidUntil(src.getValidUntil());
-                setCacheDuration(src.getCacheDuration());
-                if (src.getSignature())
-                    setSignature(src.getSignature()->cloneSignature());
-                if (src.getExtensions())
-                    setExtensions(src.getExtensions()->cloneExtensions());
-
-                for (vector<KeyDescriptor*>::const_iterator i=src.m_KeyDescriptors.begin(); i!=src.m_KeyDescriptors.end(); i++) {
-                    if (*i) {
-                        getKeyDescriptors().push_back((*i)->cloneKeyDescriptor());
-                    }
-                }
-                for (vector<AffiliateMember*>::const_iterator j=src.m_AffiliateMembers.begin(); j!=src.m_AffiliateMembers.end(); j++) {
-                    if (*j) {
-                        getAffiliateMembers().push_back((*j)->cloneAffiliateMember());
-                    }
-                }
+                IMPL_CLONE_ATTRIB(ID);
+                IMPL_CLONE_ATTRIB(AffiliationOwnerID);
+                IMPL_CLONE_ATTRIB(ValidUntil);
+                IMPL_CLONE_ATTRIB(CacheDuration);
+                IMPL_CLONE_TYPED_CHILD(Signature);
+                IMPL_CLONE_TYPED_CHILD(Extensions);
+                IMPL_CLONE_TYPED_CHILDREN(KeyDescriptor);
+                IMPL_CLONE_TYPED_CHILDREN(AffiliateMember);
             }
 
             IMPL_XMLOBJECT_CLONE(AffiliationDescriptor);
@@ -2078,87 +1896,29 @@ namespace opensaml {
                     : AbstractXMLObject(src), AbstractComplexElement(src),
                         AbstractAttributeExtensibleXMLObject(src), AbstractDOMCachingXMLObject(src) {
                 init();
-                setID(src.getID());
-                setEntityID(src.getEntityID());
-                setValidUntil(src.getValidUntil());
-                setCacheDuration(src.getCacheDuration());
-                if (src.getSignature())
-                    setSignature(src.getSignature()->cloneSignature());
-                if (src.getExtensions())
-                    setExtensions(src.getExtensions()->cloneExtensions());
-                if (src.getAffiliationDescriptor())
-                    setAffiliationDescriptor(src.getAffiliationDescriptor()->cloneAffiliationDescriptor());
-                if (src.getOrganization())
-                    setOrganization(src.getOrganization()->cloneOrganization());
+                IMPL_CLONE_ATTRIB(ID);
+                IMPL_CLONE_ATTRIB(EntityID);
+                IMPL_CLONE_ATTRIB(ValidUntil);
+                IMPL_CLONE_ATTRIB(CacheDuration);
+                IMPL_CLONE_TYPED_CHILD(Signature);
+                IMPL_CLONE_TYPED_CHILD(Extensions);
+                IMPL_CLONE_TYPED_CHILD(AffiliationDescriptor);
+                IMPL_CLONE_TYPED_CHILD(Organization);
 
-                for (list<XMLObject*>::const_iterator i=src.m_children.begin(); i!=src.m_children.end(); i++) {
-                    if (*i) {
-                        IDPSSODescriptor* idp=dynamic_cast<IDPSSODescriptor*>(*i);
-                        if (idp) {
-                            getIDPSSODescriptors().push_back(idp->cloneIDPSSODescriptor());
-                            continue;
-                        }
+                IMPL_CLONE_CHILDBAG_BEGIN;
+                    IMPL_CLONE_TYPED_CHILD_IN_BAG(IDPSSODescriptor);
+                    IMPL_CLONE_TYPED_CHILD_IN_BAG(SPSSODescriptor);
+                    IMPL_CLONE_TYPED_CHILD_IN_BAG(AuthnAuthorityDescriptor);
+                    IMPL_CLONE_TYPED_CHILD_IN_BAG(AttributeAuthorityDescriptor);
+                    IMPL_CLONE_TYPED_CHILD_IN_BAG(PDPDescriptor);
+                    IMPL_CLONE_TYPED_CHILD_IN_BAG(AuthnQueryDescriptorType);
+                    IMPL_CLONE_TYPED_CHILD_IN_BAG(AttributeQueryDescriptorType);
+                    IMPL_CLONE_TYPED_CHILD_IN_BAG(AuthzDecisionQueryDescriptorType);
+                    IMPL_CLONE_TYPED_CHILD_IN_BAG(RoleDescriptor);
+                IMPL_CLONE_CHILDBAG_END;
 
-                        SPSSODescriptor* sp=dynamic_cast<SPSSODescriptor*>(*i);
-                        if (sp) {
-                            getSPSSODescriptors().push_back(sp->cloneSPSSODescriptor());
-                            continue;
-                        }
-
-                        AuthnAuthorityDescriptor* authn=dynamic_cast<AuthnAuthorityDescriptor*>(*i);
-                        if (authn) {
-                            getAuthnAuthorityDescriptors().push_back(authn->cloneAuthnAuthorityDescriptor());
-                            continue;
-                        }
-
-                        AttributeAuthorityDescriptor* attr=dynamic_cast<AttributeAuthorityDescriptor*>(*i);
-                        if (attr) {
-                            getAttributeAuthorityDescriptors().push_back(attr->cloneAttributeAuthorityDescriptor());
-                            continue;
-                        }
-
-                        PDPDescriptor* pdp=dynamic_cast<PDPDescriptor*>(*i);
-                        if (pdp) {
-                            getPDPDescriptors().push_back(pdp->clonePDPDescriptor());
-                            continue;
-                        }
-
-                        AuthnQueryDescriptorType* authnq=dynamic_cast<AuthnQueryDescriptorType*>(*i);
-                        if (authnq) {
-                            getAuthnQueryDescriptorTypes().push_back(authnq->cloneAuthnQueryDescriptorType());
-                            continue;
-                        }
-
-                        AttributeQueryDescriptorType* attrq=dynamic_cast<AttributeQueryDescriptorType*>(*i);
-                        if (attrq) {
-                            getAttributeQueryDescriptorTypes().push_back(attrq->cloneAttributeQueryDescriptorType());
-                            continue;
-                        }
-
-                        AuthzDecisionQueryDescriptorType* authzq=dynamic_cast<AuthzDecisionQueryDescriptorType*>(*i);
-                        if (authzq) {
-                            getAuthzDecisionQueryDescriptorTypes().push_back(authzq->cloneAuthzDecisionQueryDescriptorType());
-                            continue;
-                        }
-
-                        RoleDescriptor* role=dynamic_cast<RoleDescriptor*>(*i);
-                        if (role) {
-                            getRoleDescriptors().push_back(role->cloneRoleDescriptor());
-                            continue;
-                        }
-                    }
-                }
-
-                for (vector<ContactPerson*>::const_iterator j=src.m_ContactPersons.begin(); j!=src.m_ContactPersons.end(); j++) {
-                    if (*j) {
-                        getContactPersons().push_back((*j)->cloneContactPerson());
-                    }
-                }
-                for (vector<AdditionalMetadataLocation*>::const_iterator k=src.m_AdditionalMetadataLocations.begin(); k!=src.m_AdditionalMetadataLocations.end(); k++) {
-                    if (*k) {
-                        getAdditionalMetadataLocations().push_back((*k)->cloneAdditionalMetadataLocation());
-                    }
-                }
+                IMPL_CLONE_TYPED_CHILDREN(ContactPerson);
+                IMPL_CLONE_TYPED_CHILDREN(AdditionalMetadataLocation);
             }
 
             IMPL_XMLOBJECT_CLONE(EntityDescriptor);
@@ -2320,30 +2080,17 @@ namespace opensaml {
             EntitiesDescriptorImpl(const EntitiesDescriptorImpl& src)
                     : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
                 init();
-                setID(src.getID());
-                setName(src.getName());
-                setValidUntil(src.getValidUntil());
-                setCacheDuration(src.getCacheDuration());
-                if (src.getSignature())
-                    setSignature(src.getSignature()->cloneSignature());
-                if (src.getExtensions())
-                    setExtensions(src.getExtensions()->cloneExtensions());
+                IMPL_CLONE_ATTRIB(ID);
+                IMPL_CLONE_ATTRIB(Name);
+                IMPL_CLONE_ATTRIB(ValidUntil);
+                IMPL_CLONE_ATTRIB(CacheDuration);
+                IMPL_CLONE_TYPED_CHILD(Signature);
+                IMPL_CLONE_TYPED_CHILD(Extensions);
 
-                for (list<XMLObject*>::const_iterator i=src.m_children.begin(); i!=src.m_children.end(); i++) {
-                    if (*i) {
-                        EntityDescriptor* e=dynamic_cast<EntityDescriptor*>(*i);
-                        if (e) {
-                            getEntityDescriptors().push_back(e->cloneEntityDescriptor());
-                            continue;
-                        }
-
-                        EntitiesDescriptor* es=dynamic_cast<EntitiesDescriptor*>(*i);
-                        if (es) {
-                            getEntitiesDescriptors().push_back(es->cloneEntitiesDescriptor());
-                            continue;
-                        }
-                    }
-                }
+                IMPL_CLONE_CHILDBAG_BEGIN;
+                    IMPL_CLONE_TYPED_CHILD_IN_BAG(EntityDescriptor);
+                    IMPL_CLONE_TYPED_CHILD_IN_BAG(EntitiesDescriptor);
+                IMPL_CLONE_CHILDBAG_END;
             }
 
             IMPL_XMLOBJECT_CLONE(EntitiesDescriptor);
@@ -2444,21 +2191,10 @@ namespace opensaml {
 
             EntityAttributesImpl(const EntityAttributesImpl& src)
                     : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
-                for (list<XMLObject*>::const_iterator i=src.m_children.begin(); i!=src.m_children.end(); i++) {
-                    if (*i) {
-                        Attribute* a=dynamic_cast<Attribute*>(*i);
-                        if (a) {
-                            getAttributes().push_back(a->cloneAttribute());
-                            continue;
-                        }
-
-                        saml2::Assertion* as=dynamic_cast<saml2::Assertion*>(*i);
-                        if (as) {
-                            getAssertions().push_back(as->cloneAssertion());
-                            continue;
-                        }
-                    }
-                }
+                IMPL_CLONE_CHILDBAG_BEGIN;
+                    IMPL_CLONE_TYPED_CHILD_IN_BAG(Attribute);
+                    IMPL_CLONE_TYPED_FOREIGN_CHILD_IN_BAG(Assertion,saml2);
+                IMPL_CLONE_CHILDBAG_END;
             }
 
             IMPL_XMLOBJECT_CLONE(EntityAttributes);
@@ -2490,12 +2226,8 @@ namespace opensaml {
 
             DigestMethodImpl(const DigestMethodImpl& src)
                     : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src), m_Algorithm(nullptr) {
-                setAlgorithm(src.getAlgorithm());
-                for (vector<XMLObject*>::const_iterator i=src.m_UnknownXMLObjects.begin(); i!=src.m_UnknownXMLObjects.end(); ++i) {
-                    if (*i) {
-                        getUnknownXMLObjects().push_back((*i)->clone());
-                    }
-                }
+                IMPL_CLONE_ATTRIB(Algorithm);
+                IMPL_CLONE_XMLOBJECT_CHILDREN(UnknownXMLObject);
             }
 
             IMPL_XMLOBJECT_CLONE(DigestMethod);
@@ -2542,14 +2274,10 @@ namespace opensaml {
             SigningMethodImpl(const SigningMethodImpl& src)
                     : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
                 init();
-                setAlgorithm(src.getAlgorithm());
-                setMinKeySize(src.m_MinKeySize);
-                setMaxKeySize(src.m_MaxKeySize);
-                for (vector<XMLObject*>::const_iterator i=src.m_UnknownXMLObjects.begin(); i!=src.m_UnknownXMLObjects.end(); ++i) {
-                    if (*i) {
-                        getUnknownXMLObjects().push_back((*i)->clone());
-                    }
-                }
+                IMPL_CLONE_ATTRIB(Algorithm);
+                IMPL_CLONE_INTEGER_ATTRIB(MinKeySize);
+                IMPL_CLONE_INTEGER_ATTRIB(MaxKeySize);
+                IMPL_CLONE_XMLOBJECT_CHILDREN(UnknownXMLObject);
             }
 
             IMPL_XMLOBJECT_CLONE(SigningMethod);
@@ -2659,9 +2387,7 @@ namespace opensaml {
             KeywordsImpl(const KeywordsImpl& src)
                     : AbstractXMLObject(src), AbstractSimpleElement(src), AbstractDOMCachingXMLObject(src) {
                 init();
-                setLang(src.getLang());
-                if (src.m_LangPrefix)
-                    m_LangPrefix = XMLString::replicate(src.m_LangPrefix);
+                IMPL_CLONE_FOREIGN_ATTRIB(Lang);
             }
 
             IMPL_XMLOBJECT_CLONE(Keywords);
@@ -2725,11 +2451,9 @@ namespace opensaml {
 
             LogoImpl(const LogoImpl& src) : AbstractXMLObject(src), AbstractSimpleElement(src), AbstractDOMCachingXMLObject(src) {
                 init();
-                setLang(src.getLang());
-                if (src.m_LangPrefix)
-                    m_LangPrefix = XMLString::replicate(src.m_LangPrefix);
-                setHeight(src.m_Height);
-                setWidth(src.m_Width);
+                IMPL_CLONE_FOREIGN_ATTRIB(Lang);
+                IMPL_CLONE_INTEGER_ATTRIB(Height);
+                IMPL_CLONE_INTEGER_ATTRIB(Width);
             }
 
             IMPL_XMLOBJECT_CLONE(Logo);
@@ -2781,49 +2505,15 @@ namespace opensaml {
 
             UIInfoImpl(const UIInfoImpl& src)
                     : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
-                for (list<XMLObject*>::const_iterator i=src.m_children.begin(); i!=src.m_children.end(); i++) {
-                    if (*i) {
-                        DisplayName* dn=dynamic_cast<DisplayName*>(*i);
-                        if (dn) {
-                            getDisplayNames().push_back(dn->cloneDisplayName());
-                            continue;
-                        }
-
-                        Description* des=dynamic_cast<Description*>(*i);
-                        if (des) {
-                            getDescriptions().push_back(des->cloneDescription());
-                            continue;
-                        }
-
-                        Keywords* key=dynamic_cast<Keywords*>(*i);
-                        if (key) {
-                            getKeywordss().push_back(key->cloneKeywords());
-                            continue;
-                        }
-
-						Logo* logo=dynamic_cast<Logo*>(*i);
-                        if (logo) {
-                            getLogos().push_back(logo->cloneLogo());
-                            continue;
-                        }
-
-                        InformationURL* inf=dynamic_cast<InformationURL*>(*i);
-                        if (inf) {
-                            getInformationURLs().push_back(inf->cloneInformationURL());
-                            continue;
-                        }
-
-                        PrivacyStatementURL* priv=dynamic_cast<PrivacyStatementURL*>(*i);
-                        if (priv) {
-                            getPrivacyStatementURLs().push_back(priv->clonePrivacyStatementURL());
-                            continue;
-                        }
-
-                        if (*i) {
-                            getUnknownXMLObjects().push_back((*i)->clone());
-                        }
-                    }
-                }
+                IMPL_CLONE_CHILDBAG_BEGIN;
+                    IMPL_CLONE_TYPED_CHILD_IN_BAG(DisplayName);
+                    IMPL_CLONE_TYPED_CHILD_IN_BAG(Description);
+                    IMPL_CLONE_TYPED_CHILD_IN_BAG(Keywords);
+                    IMPL_CLONE_TYPED_CHILD_IN_BAG(Logo);
+                    IMPL_CLONE_TYPED_CHILD_IN_BAG(InformationURL);
+                    IMPL_CLONE_TYPED_CHILD_IN_BAG(PrivacyStatementURL);
+                    IMPL_CLONE_XMLOBJECT_CHILD_IN_BAG(UnknownXMLObject);
+                IMPL_CLONE_CHILDBAG_END;
             }
 
             IMPL_XMLOBJECT_CLONE(UIInfo);
@@ -2870,31 +2560,12 @@ namespace opensaml {
 
             DiscoHintsImpl(const DiscoHintsImpl& src)
                     : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
-                for (list<XMLObject*>::const_iterator i=src.m_children.begin(); i!=src.m_children.end(); i++) {
-                    if (*i) {
-                        IPHint* ip=dynamic_cast<IPHint*>(*i);
-                        if (ip) {
-                            getIPHints().push_back(ip->cloneIPHint());
-                            continue;
-                        }
-
-                        DomainHint* dom=dynamic_cast<DomainHint*>(*i);
-                        if (dom) {
-                            getDomainHints().push_back(dom->cloneDomainHint());
-                            continue;
-                        }
-
-                        GeolocationHint* geo=dynamic_cast<GeolocationHint*>(*i);
-                        if (geo) {
-                            getGeolocationHints().push_back(geo->cloneGeolocationHint());
-                            continue;
-                        }
-
-                        if (*i) {
-                            getUnknownXMLObjects().push_back((*i)->clone());
-                        }
-                    }
-                }
+                IMPL_CLONE_CHILDBAG_BEGIN;
+                    IMPL_CLONE_TYPED_CHILD_IN_BAG(IPHint);
+                    IMPL_CLONE_TYPED_CHILD_IN_BAG(DomainHint);
+                    IMPL_CLONE_TYPED_CHILD_IN_BAG(GeolocationHint);
+                    IMPL_CLONE_XMLOBJECT_CHILD_IN_BAG(UnknownXMLObject);
+                IMPL_CLONE_CHILDBAG_END;
             }
 
             IMPL_XMLOBJECT_CLONE(DiscoHints);
