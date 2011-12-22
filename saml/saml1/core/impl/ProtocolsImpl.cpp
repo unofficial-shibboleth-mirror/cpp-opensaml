@@ -40,6 +40,7 @@
 #include <xmltooling/util/XMLHelper.h>
 
 #include <ctime>
+#include <boost/lexical_cast.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 
 using namespace opensaml::saml1p;

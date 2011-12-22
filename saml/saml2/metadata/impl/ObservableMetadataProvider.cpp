@@ -27,10 +27,12 @@
 #include "internal.h"
 #include "saml2/metadata/ObservableMetadataProvider.h"
 
+#include <boost/bind.hpp>
 #include <xmltooling/util/Threads.h>
 
 using namespace opensaml::saml2md;
 using namespace xmltooling;
+using namespace boost;
 using namespace std;
 
 ObservableMetadataProvider::ObservableMetadataProvider(const xercesc::DOMElement* e)
@@ -40,31 +42,27 @@ ObservableMetadataProvider::ObservableMetadataProvider(const xercesc::DOMElement
 
 ObservableMetadataProvider::~ObservableMetadataProvider()
 {
-    delete m_observerLock;
 }
 
 void ObservableMetadataProvider::emitChangeEvent() const
 {
-    Lock lock(m_observerLock);
-    for (vector<const Observer*>::const_iterator i=m_observers.begin(); i!=m_observers.end(); i++) {
-        (*i)->onEvent(*this);
-    }
+    Lock lock(m_observerLock.get());
+    for_each(m_observers.begin(), m_observers.end(), boost::bind(&Observer::onEvent, _1, boost::ref(*this)));
 }
 
 void ObservableMetadataProvider::addObserver(const Observer* newObserver) const
 {
-    Lock lock(m_observerLock);
+    Lock lock(m_observerLock.get());
     m_observers.push_back(newObserver);
 }
 
 const ObservableMetadataProvider::Observer* ObservableMetadataProvider::removeObserver(const Observer* oldObserver) const
 {
-    Lock lock(m_observerLock);
-    for (vector<const Observer*>::iterator i=m_observers.begin(); i!=m_observers.end(); i++) {
-        if (oldObserver==(*i)) {
-            m_observers.erase(i);
-            return oldObserver;
-        }
+    Lock lock(m_observerLock.get());
+    vector<const Observer*>::iterator i = find(m_observers.begin(), m_observers.end(), oldObserver);
+    if (i != m_observers.end()) {
+        m_observers.erase(i);
+        return oldObserver;
     }
     return nullptr;
 }

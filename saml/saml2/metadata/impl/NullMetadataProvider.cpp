@@ -39,21 +39,19 @@ namespace opensaml {
         class SAML_DLLLOCAL NullMetadataProvider : public DynamicMetadataProvider
         {
         public:
-            NullMetadataProvider(const DOMElement* e) : DynamicMetadataProvider(e), m_template(nullptr) {
+            NullMetadataProvider(const DOMElement* e) : DynamicMetadataProvider(e) {
                 e = XMLHelper::getFirstChildElement(e, samlconstants::SAML20MD_NS, EntityDescriptor::LOCAL_NAME);
                 if (e)
-                    m_template = dynamic_cast<EntityDescriptor*>(XMLObjectBuilder::buildOneFromElement(const_cast<DOMElement*>(e)));
+                    m_template.reset(dynamic_cast<EntityDescriptor*>(XMLObjectBuilder::buildOneFromElement(const_cast<DOMElement*>(e))));
             }
 
-            virtual ~NullMetadataProvider() {
-                delete m_template;
-            }
+            virtual ~NullMetadataProvider() {}
 
         protected:
             EntityDescriptor* resolve(const char* entityID) const;
 
         private:
-            EntityDescriptor* m_template;
+            auto_ptr<EntityDescriptor> m_template;
         }; 
 
         MetadataProvider* SAML_DLLLOCAL NullMetadataProviderFactory(const DOMElement* const & e)
@@ -66,7 +64,7 @@ namespace opensaml {
 EntityDescriptor* NullMetadataProvider::resolve(const char* entityID) const
 {
     // Resolving for us just means fabricating a new dummy element.
-    EntityDescriptor* entity = m_template ? m_template->cloneEntityDescriptor() : EntityDescriptorBuilder::buildEntityDescriptor();
+    EntityDescriptor* entity = m_template.get() ? m_template->cloneEntityDescriptor() : EntityDescriptorBuilder::buildEntityDescriptor();
     auto_ptr_XMLCh temp(entityID);
     entity->setEntityID(temp.get());
     return entity;

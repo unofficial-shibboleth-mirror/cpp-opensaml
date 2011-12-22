@@ -49,29 +49,11 @@ using namespace std;
 namespace opensaml {
     namespace saml2md {
 
-        class SAML_DLLLOCAL DummyCredentialResolver : public CredentialResolver
-        {
-        public:
-            DummyCredentialResolver() {}
-            ~DummyCredentialResolver() {}
-
-            Lockable* lock() {return this;}
-            void unlock() {}
-
-            const Credential* resolve(const CredentialCriteria* criteria=nullptr) const {return nullptr;}
-            vector<const Credential*>::size_type resolve(
-                vector<const Credential*>& results, const CredentialCriteria* criteria=nullptr
-                ) const {return 0;}
-        };
-
         class SAML_DLLLOCAL SignatureMetadataFilter : public MetadataFilter
         {
         public:
             SignatureMetadataFilter(const DOMElement* e);
-            ~SignatureMetadataFilter() {
-                delete m_credResolver;
-                delete m_trust;
-            }
+            ~SignatureMetadataFilter() {}
 
             const char* getId() const { return SIGNATURE_METADATA_FILTER; }
             void doFilter(XMLObject& xmlObject) const;
@@ -82,8 +64,8 @@ namespace opensaml {
             void verifySignature(Signature* sig, const XMLCh* peerName) const;
 
             bool m_verifyRoles,m_verifyName;
-            CredentialResolver* m_credResolver;
-            SignatureTrustEngine* m_trust;
+            auto_ptr<CredentialResolver> m_credResolver,m_dummyResolver;
+            auto_ptr<SignatureTrustEngine> m_trust;
             SignatureProfileValidator m_profileValidator;
             Category& m_log;
         };
@@ -108,12 +90,11 @@ static const XMLCh verifyName[] =           UNICODE_LITERAL_10(v,e,r,i,f,y,N,a,m
 SignatureMetadataFilter::SignatureMetadataFilter(const DOMElement* e)
     : m_verifyRoles(XMLHelper::getAttrBool(e, false, verifyRoles)),
         m_verifyName(XMLHelper::getAttrBool(e, true, verifyName)),
-        m_credResolver(nullptr), m_trust(nullptr),
         m_log(Category::getInstance(SAML_LOGCAT".MetadataFilter.Signature"))
 {
     if (e && e->hasAttributeNS(nullptr,certificate)) {
         // Use a file-based credential resolver rooted here.
-        m_credResolver = XMLToolingConfig::getConfig().CredentialResolverManager.newPlugin(FILESYSTEM_CREDENTIAL_RESOLVER, e);
+        m_credResolver.reset(XMLToolingConfig::getConfig().CredentialResolverManager.newPlugin(FILESYSTEM_CREDENTIAL_RESOLVER, e));
         return;
     }
 
@@ -121,7 +102,7 @@ SignatureMetadataFilter::SignatureMetadataFilter(const DOMElement* e)
     if (sub) {
         string t = XMLHelper::getAttrString(sub, nullptr, type);
         if (!t.empty()) {
-            m_credResolver = XMLToolingConfig::getConfig().CredentialResolverManager.newPlugin(t.c_str(), sub);
+            m_credResolver.reset(XMLToolingConfig::getConfig().CredentialResolverManager.newPlugin(t.c_str(), sub));
             return;
         }
     }
@@ -131,10 +112,15 @@ SignatureMetadataFilter::SignatureMetadataFilter(const DOMElement* e)
         string t = XMLHelper::getAttrString(sub, nullptr, type);
         if (!t.empty()) {
             TrustEngine* trust = XMLToolingConfig::getConfig().TrustEngineManager.newPlugin(t.c_str(), sub);
-            if (!(m_trust = dynamic_cast<SignatureTrustEngine*>(trust))) {
+            SignatureTrustEngine* sigTrust = dynamic_cast<SignatureTrustEngine*>(trust);
+            if (!sigTrust) {
                 delete trust;
                 throw MetadataFilterException("TrustEngine-based SignatureMetadataFilter requires a SignatureTrustEngine plugin.");
             }
+            m_trust.reset(sigTrust);
+            m_dummyResolver.reset(XMLToolingConfig::getConfig().CredentialResolverManager.newPlugin(DUMMY_CREDENTIAL_RESOLVER, nullptr));
+            if (!m_dummyResolver.get())
+                throw MetadataFilterException("Error creating dummy CredentialResolver.");
             return;
         }
     }
@@ -153,7 +139,7 @@ void SignatureMetadataFilter::doFilter(XMLObject& xmlObject) const
         doFilter(entities, true);
         return;
     }
-    catch (bad_cast) {
+    catch (bad_cast&) {
     }
     catch (exception& ex) {
         m_log.warn("filtering out group at root of instance after failed signature check: %s", ex.what());
@@ -165,7 +151,7 @@ void SignatureMetadataFilter::doFilter(XMLObject& xmlObject) const
         doFilter(entity, true);
         return;
     }
-    catch (bad_cast) {
+    catch (bad_cast&) {
     }
     catch (exception& ex) {
         m_log.warn("filtering out entity at root of instance after failed signature check: %s", ex.what());
@@ -182,8 +168,8 @@ void SignatureMetadataFilter::doFilter(EntitiesDescriptor& entities, bool rootOb
         throw MetadataFilterException("Root metadata element was unsigned.");
     verifySignature(sig, entities.getName());
 
-    VectorOf(EntityDescriptor) v=entities.getEntityDescriptors();
-    for (VectorOf(EntityDescriptor)::size_type i=0; i<v.size(); ) {
+    VectorOf(EntityDescriptor) v = entities.getEntityDescriptors();
+    for (VectorOf(EntityDescriptor)::size_type i = 0; i < v.size(); ) {
         try {
             doFilter(*(v[i]));
             i++;
@@ -195,8 +181,8 @@ void SignatureMetadataFilter::doFilter(EntitiesDescriptor& entities, bool rootOb
         }
     }
 
-    VectorOf(EntitiesDescriptor) w=entities.getEntitiesDescriptors();
-    for (VectorOf(EntitiesDescriptor)::size_type j=0; j<w.size(); ) {
+    VectorOf(EntitiesDescriptor) w = entities.getEntitiesDescriptors();
+    for (VectorOf(EntitiesDescriptor)::size_type j = 0; j < w.size(); ) {
         try {
             doFilter(*w[j], false);
             j++;
@@ -219,8 +205,8 @@ void SignatureMetadataFilter::doFilter(EntityDescriptor& entity, bool rootObject
     if (!m_verifyRoles)
         return;
 
-    VectorOf(IDPSSODescriptor) idp=entity.getIDPSSODescriptors();
-    for (VectorOf(IDPSSODescriptor)::size_type i=0; i<idp.size(); ) {
+    VectorOf(IDPSSODescriptor) idp = entity.getIDPSSODescriptors();
+    for (VectorOf(IDPSSODescriptor)::size_type i = 0; i < idp.size(); ) {
         try {
             verifySignature(idp[i]->getSignature(), entity.getEntityID());
             i++;
@@ -234,8 +220,8 @@ void SignatureMetadataFilter::doFilter(EntityDescriptor& entity, bool rootObject
         }
     }
 
-    VectorOf(SPSSODescriptor) sp=entity.getSPSSODescriptors();
-    for (VectorOf(SPSSODescriptor)::size_type i=0; i<sp.size(); ) {
+    VectorOf(SPSSODescriptor) sp = entity.getSPSSODescriptors();
+    for (VectorOf(SPSSODescriptor)::size_type i = 0; i < sp.size(); ) {
         try {
             verifySignature(sp[i]->getSignature(), entity.getEntityID());
             i++;
@@ -249,8 +235,8 @@ void SignatureMetadataFilter::doFilter(EntityDescriptor& entity, bool rootObject
         }
     }
 
-    VectorOf(AuthnAuthorityDescriptor) authn=entity.getAuthnAuthorityDescriptors();
-    for (VectorOf(AuthnAuthorityDescriptor)::size_type i=0; i<authn.size(); ) {
+    VectorOf(AuthnAuthorityDescriptor) authn = entity.getAuthnAuthorityDescriptors();
+    for (VectorOf(AuthnAuthorityDescriptor)::size_type i = 0; i < authn.size(); ) {
         try {
             verifySignature(authn[i]->getSignature(), entity.getEntityID());
             i++;
@@ -264,8 +250,8 @@ void SignatureMetadataFilter::doFilter(EntityDescriptor& entity, bool rootObject
         }
     }
 
-    VectorOf(AttributeAuthorityDescriptor) aa=entity.getAttributeAuthorityDescriptors();
-    for (VectorOf(AttributeAuthorityDescriptor)::size_type i=0; i<aa.size(); ) {
+    VectorOf(AttributeAuthorityDescriptor) aa = entity.getAttributeAuthorityDescriptors();
+    for (VectorOf(AttributeAuthorityDescriptor)::size_type i = 0; i < aa.size(); ) {
         try {
             verifySignature(aa[i]->getSignature(), entity.getEntityID());
             i++;
@@ -279,8 +265,8 @@ void SignatureMetadataFilter::doFilter(EntityDescriptor& entity, bool rootObject
         }
     }
 
-    VectorOf(PDPDescriptor) pdp=entity.getPDPDescriptors();
-    for (VectorOf(AuthnAuthorityDescriptor)::size_type i=0; i<pdp.size(); ) {
+    VectorOf(PDPDescriptor) pdp = entity.getPDPDescriptors();
+    for (VectorOf(AuthnAuthorityDescriptor)::size_type i = 0; i < pdp.size(); ) {
         try {
             verifySignature(pdp[i]->getSignature(), entity.getEntityID());
             i++;
@@ -294,8 +280,8 @@ void SignatureMetadataFilter::doFilter(EntityDescriptor& entity, bool rootObject
         }
     }
 
-    VectorOf(AuthnQueryDescriptorType) authnq=entity.getAuthnQueryDescriptorTypes();
-    for (VectorOf(AuthnQueryDescriptorType)::size_type i=0; i<authnq.size(); ) {
+    VectorOf(AuthnQueryDescriptorType) authnq = entity.getAuthnQueryDescriptorTypes();
+    for (VectorOf(AuthnQueryDescriptorType)::size_type i = 0; i < authnq.size(); ) {
         try {
             verifySignature(authnq[i]->getSignature(), entity.getEntityID());
             i++;
@@ -309,8 +295,8 @@ void SignatureMetadataFilter::doFilter(EntityDescriptor& entity, bool rootObject
         }
     }
 
-    VectorOf(AttributeQueryDescriptorType) attrq=entity.getAttributeQueryDescriptorTypes();
-    for (VectorOf(AttributeQueryDescriptorType)::size_type i=0; i<attrq.size(); ) {
+    VectorOf(AttributeQueryDescriptorType) attrq = entity.getAttributeQueryDescriptorTypes();
+    for (VectorOf(AttributeQueryDescriptorType)::size_type i = 0; i < attrq.size(); ) {
         try {
             verifySignature(attrq[i]->getSignature(), entity.getEntityID());
             i++;
@@ -324,8 +310,8 @@ void SignatureMetadataFilter::doFilter(EntityDescriptor& entity, bool rootObject
         }
     }
 
-    VectorOf(AuthzDecisionQueryDescriptorType) authzq=entity.getAuthzDecisionQueryDescriptorTypes();
-    for (VectorOf(AuthzDecisionQueryDescriptorType)::size_type i=0; i<authzq.size(); ) {
+    VectorOf(AuthzDecisionQueryDescriptorType) authzq = entity.getAuthzDecisionQueryDescriptorTypes();
+    for (VectorOf(AuthzDecisionQueryDescriptorType)::size_type i = 0; i < authzq.size(); ) {
         try {
             verifySignature(authzq[i]->getSignature(), entity.getEntityID());
             i++;
@@ -339,8 +325,8 @@ void SignatureMetadataFilter::doFilter(EntityDescriptor& entity, bool rootObject
         }
     }
 
-    VectorOf(RoleDescriptor) v=entity.getRoleDescriptors();
-    for (VectorOf(RoleDescriptor)::size_type i=0; i<v.size(); ) {
+    VectorOf(RoleDescriptor) v = entity.getRoleDescriptors();
+    for (VectorOf(RoleDescriptor)::size_type i = 0; i < v.size(); ) {
         try {
             verifySignature(v[i]->getSignature(), entity.getEntityID());
             i++;
@@ -379,12 +365,12 @@ void SignatureMetadataFilter::verifySignature(Signature* sig, const XMLCh* peerN
     cc.setUsage(Credential::SIGNING_CREDENTIAL);
     cc.setSignature(*sig, CredentialCriteria::KEYINFO_EXTRACTION_KEY);
 
-    if (m_credResolver) {
+    if (m_credResolver.get()) {
         if (peerName) {
             auto_ptr_char pname(peerName);
             cc.setPeerName(pname.get());
         }
-        Locker locker(m_credResolver);
+        Locker locker(m_credResolver.get());
         vector<const Credential*> creds;
         if (m_credResolver->resolve(creds,&cc)) {
             SignatureValidator sigValidator;
@@ -403,13 +389,12 @@ void SignatureMetadataFilter::verifySignature(Signature* sig, const XMLCh* peerN
             throw MetadataFilterException("CredentialResolver did not supply any candidate keys.");
         }
     }
-    else if (m_trust) {
+    else if (m_trust.get()) {
         if (m_verifyName && peerName) {
             auto_ptr_char pname(peerName);
             cc.setPeerName(pname.get());
         }
-        DummyCredentialResolver dummy;
-        if (m_trust->validate(*sig, dummy, &cc))
+        if (m_trust->validate(*sig, *m_dummyResolver, &cc))
             return;
         throw MetadataFilterException("TrustEngine unable to verify signature.");
     }

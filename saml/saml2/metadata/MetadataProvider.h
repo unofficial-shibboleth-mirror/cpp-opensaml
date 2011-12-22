@@ -31,6 +31,7 @@
 
 #include <vector>
 #include <iostream>
+#include <boost/ptr_container/ptr_vector.hpp>
 #include <xmltooling/exceptions.h>
 #include <xmltooling/security/CredentialResolver.h>
 
@@ -250,7 +251,7 @@ namespace opensaml {
             void doFilters(xmltooling::XMLObject& xmlObject) const;
 
         private:
-            std::vector<MetadataFilter*> m_filters;
+            boost::ptr_vector<MetadataFilter> m_filters;
         };
 
 #if defined (_MSC_VER)

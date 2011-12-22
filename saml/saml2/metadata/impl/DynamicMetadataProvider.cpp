@@ -95,7 +95,6 @@ DynamicMetadataProvider::~DynamicMetadataProvider()
 {
     // Each entity in the map is unique (no multimap semantics), so this is safe.
     clearDescriptorIndex(true);
-    delete m_lock;
 }
 
 const XMLObject* DynamicMetadataProvider::getMetadata() const

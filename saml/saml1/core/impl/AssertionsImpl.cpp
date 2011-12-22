@@ -41,6 +41,7 @@
 
 #include <ctime>
 #include <limits.h>
+#include <boost/lexical_cast.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 
 using namespace opensaml::saml1;

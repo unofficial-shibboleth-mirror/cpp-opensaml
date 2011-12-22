@@ -72,7 +72,7 @@ namespace opensaml {
 
         private:
             std::string m_id;
-            mutable xmltooling::RWLock* m_lock;
+            std::auto_ptr<xmltooling::RWLock> m_lock;
             double m_refreshDelayFactor;
             time_t m_minCacheDuration, m_maxCacheDuration;
             typedef std::map<xmltooling::xstring,time_t> cachemap_t;

@@ -29,6 +29,7 @@
 #include "saml2/metadata/MetadataProvider.h"
 
 #include <algorithm>
+#include <boost/lambda/lambda.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xmltooling/logging.h>
 #include <xmltooling/unicode.h>
@@ -39,6 +40,8 @@ using namespace opensaml::saml2md;
 using namespace opensaml;
 using namespace xmltooling::logging;
 using namespace xmltooling;
+using namespace boost::lambda;
+using namespace boost;
 using namespace std;
 
 namespace opensaml {
@@ -129,14 +132,12 @@ MetadataProvider::MetadataProvider(const DOMElement* e)
     }
     catch (XMLToolingException& ex) {
         log.error("caught exception while installing filters: %s", ex.what());
-        for_each(m_filters.begin(),m_filters.end(),xmltooling::cleanup<MetadataFilter>());
         throw;
     }
 }
 
 MetadataProvider::~MetadataProvider()
 {
-    for_each(m_filters.begin(), m_filters.end(), xmltooling::cleanup<MetadataFilter>());
 }
 
 const char* MetadataProvider::getId() const
@@ -151,11 +152,9 @@ void MetadataProvider::addMetadataFilter(MetadataFilter* newFilter)
 
 MetadataFilter* MetadataProvider::removeMetadataFilter(MetadataFilter* oldFilter)
 {
-    for (vector<MetadataFilter*>::iterator i=m_filters.begin(); i!=m_filters.end(); i++) {
-        if (oldFilter==(*i)) {
-            m_filters.erase(i);
-            return oldFilter;
-        }
+    ptr_vector<MetadataFilter>::iterator i = find_if(m_filters.begin(), m_filters.end(), (&_1 == oldFilter));
+    if (i != m_filters.end()) {
+        return m_filters.release(i).release();
     }
     return nullptr;
 }
@@ -166,9 +165,9 @@ void MetadataProvider::doFilters(XMLObject& xmlObject) const
     NDC ndc("doFilters");
 #endif
     Category& log=Category::getInstance(SAML_LOGCAT".Metadata");
-    for (std::vector<MetadataFilter*>::const_iterator i=m_filters.begin(); i!=m_filters.end(); i++) {
-        log.info("applying metadata filter (%s)", (*i)->getId());
-        (*i)->doFilter(xmlObject);
+    for (ptr_vector<MetadataFilter>::const_iterator i = m_filters.begin(); i != m_filters.end(); i++) {
+        log.info("applying metadata filter (%s)", i->getId());
+        i->doFilter(xmlObject);
     }
 }
 
