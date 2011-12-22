@@ -86,7 +86,7 @@ static const XMLCh Whitelist[] =        UNICODE_LITERAL_23(W,h,i,t,e,l,i,s,t,M,e
 static const XMLCh SigFilter[] =        UNICODE_LITERAL_23(S,i,g,n,a,t,u,r,e,M,e,t,a,d,a,t,a,F,i,l,t,e,r);
 static const XMLCh Exclude[] =          UNICODE_LITERAL_7(E,x,c,l,u,d,e);
 static const XMLCh Include[] =          UNICODE_LITERAL_7(I,n,c,l,u,d,e);
-static const XMLCh type[] =             UNICODE_LITERAL_4(t,y,p,e);
+static const XMLCh _type[] =            UNICODE_LITERAL_4(t,y,p,e);
 
 MetadataProvider::MetadataProvider(const DOMElement* e)
 {
@@ -101,7 +101,7 @@ MetadataProvider::MetadataProvider(const DOMElement* e)
         DOMElement* child = XMLHelper::getFirstChildElement(e);
         while (child) {
             if (XMLString::equals(child->getLocalName(), _MetadataFilter)) {
-                string t = XMLHelper::getAttrString(child, nullptr, type);
+                string t = XMLHelper::getAttrString(child, nullptr, _type);
                 if (!t.empty()) {
                     log.info("building MetadataFilter of type %s", t.c_str());
                     m_filters.push_back(conf.MetadataFilterManager.newPlugin(t.c_str(), child));
