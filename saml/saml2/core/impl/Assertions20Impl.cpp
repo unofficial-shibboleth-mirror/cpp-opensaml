@@ -41,6 +41,9 @@
 #include <xmltooling/util/XMLHelper.h>
 
 #include <ctime>
+#include <boost/lambda/bind.hpp>
+#include <boost/lambda/if.hpp>
+#include <boost/lambda/lambda.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 
 using namespace opensaml::saml2;
@@ -105,10 +108,10 @@ namespace opensaml {
             }
 
             void _clone(const NameIDTypeImpl& src) {
-                setNameQualifier(src.getNameQualifier());
-                setSPNameQualifier(src.getSPNameQualifier());
-                setFormat(src.getFormat());
-                setSPProvidedID(src.getSPProvidedID());
+                IMPL_CLONE_ATTRIB(NameQualifier);
+                IMPL_CLONE_ATTRIB(SPNameQualifier);
+                IMPL_CLONE_ATTRIB(Format);
+                IMPL_CLONE_ATTRIB(SPProvidedID);
             }
 
             IMPL_XMLOBJECT_CLONE_EX(NameIDType);
@@ -142,8 +145,7 @@ namespace opensaml {
             NameIDImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
                 : AbstractXMLObject(nsURI, localName, prefix, schemaType) {}
 
-            NameIDImpl(const NameIDImpl& src) : AbstractXMLObject(src), NameIDTypeImpl(src) {
-            }
+            NameIDImpl(const NameIDImpl& src) : AbstractXMLObject(src), NameIDTypeImpl(src) {}
 
             IMPL_XMLOBJECT_CLONE_EX(NameID);
         };
@@ -156,14 +158,11 @@ namespace opensaml {
             IssuerImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
                 : AbstractXMLObject(nsURI, localName, prefix, schemaType) {}
 
-            IssuerImpl(const IssuerImpl& src) : AbstractXMLObject(src), NameIDTypeImpl(src) {
-            }
+            IssuerImpl(const IssuerImpl& src) : AbstractXMLObject(src), NameIDTypeImpl(src) {}
 
             IMPL_XMLOBJECT_CLONE_EX(Issuer);
         };
 
-        //TODO unit test for this
-        //  - need to test encryption/decryption too, or already done in xmltooling ?
         class SAML_DLLLOCAL EncryptedElementTypeImpl : public virtual EncryptedElementType,
             public AbstractComplexElement,
             public AbstractDOMCachingXMLObject,
@@ -195,13 +194,8 @@ namespace opensaml {
             }
 
             void _clone(const EncryptedElementTypeImpl& src) {
-                if (src.getEncryptedData())
-                    setEncryptedData(src.getEncryptedData()->cloneEncryptedData());
-                for (vector<EncryptedKey*>::const_iterator i=src.m_EncryptedKeys.begin(); i!=src.m_EncryptedKeys.end(); i++) {
-                    if (*i) {
-                        getEncryptedKeys().push_back((*i)->cloneEncryptedKey());
-                    }
-                }
+                IMPL_CLONE_TYPED_CHILD(EncryptedData);
+                IMPL_CLONE_TYPED_FOREIGN_CHILDREN(EncryptedKey,xmlencryption);
             }
 
             IMPL_XMLOBJECT_CLONE_EX(EncryptedElementType);
@@ -224,8 +218,7 @@ namespace opensaml {
             EncryptedIDImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
                 : AbstractXMLObject(nsURI, localName, prefix, schemaType) {}
 
-            EncryptedIDImpl(const EncryptedIDImpl& src) : AbstractXMLObject(src), EncryptedElementTypeImpl(src) {
-            }
+            EncryptedIDImpl(const EncryptedIDImpl& src) : AbstractXMLObject(src), EncryptedElementTypeImpl(src) {}
 
             IMPL_XMLOBJECT_CLONE_EX(EncryptedID);
         };
@@ -236,8 +229,7 @@ namespace opensaml {
             virtual ~ConditionImpl() {}
 
             ConditionImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
-                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
-            }
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {}
 
             ConditionImpl(const ConditionImpl& src) : AbstractXMLObject(src), AnyElementImpl(src) {}
 
@@ -254,16 +246,11 @@ namespace opensaml {
             virtual ~AudienceRestrictionImpl() {}
 
             AudienceRestrictionImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
-                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
-            }
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {}
 
             AudienceRestrictionImpl(const AudienceRestrictionImpl& src)
                     : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
-                for (vector<Audience*>::const_iterator i=src.m_Audiences.begin(); i!=src.m_Audiences.end(); i++) {
-                    if (*i) {
-                        getAudiences().push_back((*i)->cloneAudience());
-                    }
-                }
+                IMPL_CLONE_TYPED_CHILDREN(Audience);
             }
 
             IMPL_XMLOBJECT_CLONE2(AudienceRestriction,Condition);
@@ -286,12 +273,10 @@ namespace opensaml {
             virtual ~OneTimeUseImpl() {}
 
             OneTimeUseImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
-                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
-            }
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {}
 
             OneTimeUseImpl(const OneTimeUseImpl& src)
-                : AbstractXMLObject(src), AbstractSimpleElement(src), AbstractDOMCachingXMLObject(src) {
-            }
+                : AbstractXMLObject(src), AbstractSimpleElement(src), AbstractDOMCachingXMLObject(src) {}
 
             IMPL_XMLOBJECT_CLONE2(OneTimeUse,Condition);
         };
@@ -308,17 +293,12 @@ namespace opensaml {
             }
 
             ProxyRestrictionImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
-                : AbstractXMLObject(nsURI, localName, prefix, schemaType), m_Count(nullptr) {
-            }
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType), m_Count(nullptr) {}
 
             ProxyRestrictionImpl(const ProxyRestrictionImpl& src)
                     : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src), m_Count(nullptr) {
-                setCount(src.m_Count);
-                for (vector<Audience*>::const_iterator i=src.m_Audiences.begin(); i!=src.m_Audiences.end(); i++) {
-                    if (*i) {
-                        getAudiences().push_back((*i)->cloneAudience());
-                    }
-                }
+                IMPL_CLONE_INTEGER_ATTRIB(Count);
+                IMPL_CLONE_TYPED_CHILDREN(Audience);
             }
 
             IMPL_XMLOBJECT_CLONE2(ProxyRestriction,Condition);
@@ -377,14 +357,11 @@ namespace opensaml {
             DelegateImpl(const DelegateImpl& src)
                     : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
                 init();
-                setConfirmationMethod(src.getConfirmationMethod());
-                setDelegationInstant(src.getDelegationInstant());
-                if (src.getBaseID())
-                    setBaseID(src.getBaseID()->cloneBaseID());
-                if (src.getNameID())
-                    setNameID(src.getNameID()->cloneNameID());
-                if (src.getEncryptedID())
-                    setEncryptedID(src.getEncryptedID()->cloneEncryptedID());
+                IMPL_CLONE_ATTRIB(ConfirmationMethod);
+                IMPL_CLONE_ATTRIB(DelegationInstant);
+                IMPL_CLONE_TYPED_CHILD(BaseID);
+                IMPL_CLONE_TYPED_CHILD(NameID);
+                IMPL_CLONE_TYPED_CHILD(EncryptedID);
             }
 
             IMPL_XMLOBJECT_CLONE(Delegate);
@@ -424,16 +401,11 @@ namespace opensaml {
             virtual ~DelegationRestrictionTypeImpl() {}
 
             DelegationRestrictionTypeImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
-                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
-            }
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {}
 
             DelegationRestrictionTypeImpl(const DelegationRestrictionTypeImpl& src)
                     : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
-                for (vector<Delegate*>::const_iterator i=src.m_Delegates.begin(); i!=src.m_Delegates.end(); i++) {
-                    if (*i) {
-                        getDelegates().push_back((*i)->cloneDelegate());
-                    }
-                }
+                IMPL_CLONE_TYPED_CHILDREN(Delegate);
             }
 
             IMPL_XMLOBJECT_CLONE2(DelegationRestrictionType,Condition);
@@ -470,36 +442,15 @@ namespace opensaml {
             ConditionsImpl(const ConditionsImpl& src)
                     : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
                 init();
-                setNotBefore(src.getNotBefore());
-                setNotOnOrAfter(src.getNotOnOrAfter());
+                IMPL_CLONE_ATTRIB(NotBefore);
+                IMPL_CLONE_ATTRIB(NotOnOrAfter);
 
-                for (list<XMLObject*>::const_iterator i=src.m_children.begin(); i!=src.m_children.end(); i++) {
-                    if (*i) {
-                        AudienceRestriction* arc=dynamic_cast<AudienceRestriction*>(*i);
-                        if (arc) {
-                            getAudienceRestrictions().push_back(arc->cloneAudienceRestriction());
-                            continue;
-                        }
-
-                        OneTimeUse* dncc=dynamic_cast<OneTimeUse*>(*i);
-                        if (dncc) {
-                            getOneTimeUses().push_back(dncc->cloneOneTimeUse());
-                            continue;
-                        }
-
-                        ProxyRestriction* prc=dynamic_cast<ProxyRestriction*>(*i);
-                        if (prc) {
-                            getProxyRestrictions().push_back(prc->cloneProxyRestriction());
-                            continue;
-                        }
-
-                        Condition* c=dynamic_cast<Condition*>(*i);
-                        if (c) {
-                            getConditions().push_back(c->cloneCondition());
-                            continue;
-                        }
-                    }
-                }
+                IMPL_CLONE_CHILDBAG_BEGIN;
+                    IMPL_CLONE_TYPED_CHILD_IN_BAG(AudienceRestriction);
+                    IMPL_CLONE_TYPED_CHILD_IN_BAG(OneTimeUse);
+                    IMPL_CLONE_TYPED_CHILD_IN_BAG(ProxyRestriction);
+                    IMPL_CLONE_TYPED_CHILD_IN_BAG(Condition);
+                IMPL_CLONE_CHILDBAG_END;
             }
 
             IMPL_XMLOBJECT_CLONE(Conditions);
@@ -562,11 +513,11 @@ namespace opensaml {
             }
 
             void _clone(const SubjectConfirmationDataTypeImpl& src) {
-                setNotBefore(src.getNotBefore());
-                setNotOnOrAfter(src.getNotOnOrAfter());
-                setRecipient(src.getRecipient());
-                setInResponseTo(src.getInResponseTo());
-                setAddress(src.getAddress());
+                IMPL_CLONE_ATTRIB(NotBefore);
+                IMPL_CLONE_ATTRIB(NotOnOrAfter);
+                IMPL_CLONE_ATTRIB(Recipient);
+                IMPL_CLONE_ATTRIB(InResponseTo);
+                IMPL_CLONE_ATTRIB(Address);
             }
 
             SubjectConfirmationDataType* cloneSubjectConfirmationDataType() const {
@@ -604,12 +555,10 @@ namespace opensaml {
             virtual ~SubjectConfirmationDataImpl() {}
 
             SubjectConfirmationDataImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
-                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
-            }
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {}
 
             SubjectConfirmationDataImpl(const SubjectConfirmationDataImpl& src)
-                : AbstractXMLObject(src), SubjectConfirmationDataTypeImpl(src), AnyElementImpl(src) {
-            }
+                : AbstractXMLObject(src), SubjectConfirmationDataTypeImpl(src), AnyElementImpl(src) {}
 
             void _clone(const SubjectConfirmationDataImpl& src) {
                 SubjectConfirmationDataTypeImpl::_clone(src);
@@ -672,21 +621,15 @@ namespace opensaml {
             virtual ~KeyInfoConfirmationDataTypeImpl() {}
 
             KeyInfoConfirmationDataTypeImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
-                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
-            }
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {}
 
             KeyInfoConfirmationDataTypeImpl(const KeyInfoConfirmationDataTypeImpl& src)
                 : AbstractXMLObject(src), SubjectConfirmationDataTypeImpl(src), AbstractComplexElement(src),
-                    AbstractAttributeExtensibleXMLObject(src), AbstractDOMCachingXMLObject(src) {
-            }
+                    AbstractAttributeExtensibleXMLObject(src), AbstractDOMCachingXMLObject(src) {}
 
             void _clone(const KeyInfoConfirmationDataTypeImpl& src) {
                 SubjectConfirmationDataTypeImpl::_clone(src);
-                for (vector<KeyInfo*>::const_iterator i=src.m_KeyInfos.begin(); i!=src.m_KeyInfos.end(); ++i) {
-                    if (*i) {
-                        getKeyInfos().push_back((*i)->cloneKeyInfo());
-                    }
-                }
+                IMPL_CLONE_TYPED_FOREIGN_CHILDREN(KeyInfo,xmlsignature);
             }
 
             IMPL_XMLOBJECT_CLONE_EX(KeyInfoConfirmationDataType);
@@ -773,15 +716,11 @@ namespace opensaml {
             SubjectConfirmationImpl(const SubjectConfirmationImpl& src)
                     : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
                 init();
-                setMethod(src.getMethod());
-                if (src.getBaseID())
-                    setBaseID(src.getBaseID()->cloneBaseID());
-                if (src.getNameID())
-                    setNameID(src.getNameID()->cloneNameID());
-                if (src.getEncryptedID())
-                    setEncryptedID(src.getEncryptedID()->cloneEncryptedID());
-                if (src.getSubjectConfirmationData())
-                    setSubjectConfirmationData(src.getSubjectConfirmationData()->clone());
+                IMPL_CLONE_ATTRIB(Method);
+                IMPL_CLONE_TYPED_CHILD(BaseID);
+                IMPL_CLONE_TYPED_CHILD(NameID);
+                IMPL_CLONE_TYPED_CHILD(EncryptedID);
+                IMPL_CLONE_XMLOBJECT_CHILD(SubjectConfirmationData);
             }
 
             IMPL_XMLOBJECT_CLONE(SubjectConfirmation);
@@ -841,17 +780,10 @@ namespace opensaml {
             SubjectImpl(const SubjectImpl& src)
                     : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
                 init();
-                if (src.getBaseID())
-                    setBaseID(src.getBaseID()->cloneBaseID());
-                if (src.getNameID())
-                    setNameID(src.getNameID()->cloneNameID());
-                if (src.getEncryptedID())
-                    setEncryptedID(src.getEncryptedID()->cloneEncryptedID());
-                for (vector<SubjectConfirmation*>::const_iterator i=src.m_SubjectConfirmations.begin(); i!=src.m_SubjectConfirmations.end(); i++) {
-                    if (*i) {
-                        getSubjectConfirmations().push_back((*i)->cloneSubjectConfirmation());
-                    }
-                }
+                IMPL_CLONE_TYPED_CHILD(BaseID);
+                IMPL_CLONE_TYPED_CHILD(NameID);
+                IMPL_CLONE_TYPED_CHILD(EncryptedID);
+                IMPL_CLONE_TYPED_CHILDREN(SubjectConfirmation);
             }
 
             IMPL_XMLOBJECT_CLONE(Subject);
@@ -894,8 +826,8 @@ namespace opensaml {
             SubjectLocalityImpl(const SubjectLocalityImpl& src)
                     : AbstractXMLObject(src), AbstractSimpleElement(src), AbstractDOMCachingXMLObject(src) {
                 init();
-                setAddress(src.getAddress());
-                setDNSName(src.getDNSName());
+                IMPL_CLONE_ATTRIB(Address);
+                IMPL_CLONE_ATTRIB(DNSName);
             }
 
             IMPL_XMLOBJECT_CLONE(SubjectLocality);
@@ -921,8 +853,7 @@ namespace opensaml {
             virtual ~StatementImpl() {}
 
             StatementImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
-                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
-            }
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {}
 
             StatementImpl(const StatementImpl& src) : AbstractXMLObject(src), AnyElementImpl(src) {}
 
@@ -936,11 +867,9 @@ namespace opensaml {
             virtual ~AuthnContextDeclImpl() {}
 
             AuthnContextDeclImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
-                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
-            }
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {}
 
-            AuthnContextDeclImpl(const AuthnContextDeclImpl& src) : AbstractXMLObject(src), AnyElementImpl(src) {
-            }
+            AuthnContextDeclImpl(const AuthnContextDeclImpl& src) : AbstractXMLObject(src), AnyElementImpl(src) {}
 
             IMPL_XMLOBJECT_CLONE_EX(AuthnContextDecl);
         };
@@ -976,17 +905,10 @@ namespace opensaml {
             AuthnContextImpl(const AuthnContextImpl& src)
                     : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
                 init();
-                if (src.getAuthnContextClassRef())
-                    setAuthnContextClassRef(src.getAuthnContextClassRef()->cloneAuthnContextClassRef());
-                if (src.getAuthnContextDecl())
-                    setAuthnContextDecl(src.getAuthnContextDecl()->clone());
-                if (src.getAuthnContextDeclRef())
-                    setAuthnContextDeclRef(src.getAuthnContextDeclRef()->cloneAuthnContextDeclRef());
-                for (vector<AuthenticatingAuthority*>::const_iterator i=src.m_AuthenticatingAuthoritys.begin(); i!=src.m_AuthenticatingAuthoritys.end(); i++) {
-                    if (*i) {
-                        getAuthenticatingAuthoritys().push_back((*i)->cloneAuthenticatingAuthority());
-                    }
-                }
+                IMPL_CLONE_TYPED_CHILD(AuthnContextClassRef);
+                IMPL_CLONE_XMLOBJECT_CHILD(AuthnContextDecl);
+                IMPL_CLONE_TYPED_CHILD(AuthnContextDeclRef);
+                IMPL_CLONE_TYPED_CHILDREN(AuthenticatingAuthority);
             }
 
             IMPL_XMLOBJECT_CLONE(AuthnContext);
@@ -1039,13 +961,11 @@ namespace opensaml {
             AuthnStatementImpl(const AuthnStatementImpl& src)
                     : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
                 init();
-                setAuthnInstant(src.getAuthnInstant());
-                setSessionIndex(src.getSessionIndex());
-                setSessionNotOnOrAfter(src.getSessionNotOnOrAfter());
-                if (src.getSubjectLocality())
-                    setSubjectLocality(src.getSubjectLocality()->cloneSubjectLocality());
-                if (src.getAuthnContext())
-                    setAuthnContext(src.getAuthnContext()->cloneAuthnContext());
+                IMPL_CLONE_ATTRIB(AuthnInstant);
+                IMPL_CLONE_ATTRIB(SessionIndex);
+                IMPL_CLONE_ATTRIB(SessionNotOnOrAfter);
+                IMPL_CLONE_TYPED_CHILD(SubjectLocality);
+                IMPL_CLONE_TYPED_CHILD(AuthnContext);
             }
 
             IMPL_XMLOBJECT_CLONE2(AuthnStatement,Statement);
@@ -1088,12 +1008,11 @@ namespace opensaml {
             }
 
             ActionImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
-                    : AbstractXMLObject(nsURI, localName, prefix, schemaType), m_Namespace(nullptr) {
-            }
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType), m_Namespace(nullptr) {}
 
             ActionImpl(const ActionImpl& src)
                     : AbstractXMLObject(src), AbstractSimpleElement(src), AbstractDOMCachingXMLObject(src), m_Namespace(nullptr) {
-                setNamespace(src.getNamespace());
+                IMPL_CLONE_ATTRIB(Namespace);
             }
 
             IMPL_XMLOBJECT_CLONE(Action);
@@ -1120,38 +1039,16 @@ namespace opensaml {
             virtual ~EvidenceImpl() {}
 
             EvidenceImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
-                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
-            }
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {}
 
             EvidenceImpl(const EvidenceImpl& src)
                     : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
-                for (list<XMLObject*>::const_iterator i=src.m_children.begin(); i!=src.m_children.end(); i++) {
-                    if (*i) {
-                        AssertionIDRef* ref=dynamic_cast<AssertionIDRef*>(*i);
-                        if (ref) {
-                            getAssertionIDRefs().push_back(ref->cloneAssertionIDRef());
-                            continue;
-                        }
-
-                        AssertionURIRef* uri=dynamic_cast<AssertionURIRef*>(*i);
-                        if (uri) {
-                            getAssertionURIRefs().push_back(uri->cloneAssertionURIRef());
-                            continue;
-                        }
-
-                        Assertion* assertion=dynamic_cast<Assertion*>(*i);
-                        if (assertion) {
-                            getAssertions().push_back(assertion->cloneAssertion());
-                            continue;
-                        }
-
-                        EncryptedAssertion* enc=dynamic_cast<EncryptedAssertion*>(*i);
-                        if (enc) {
-                            getEncryptedAssertions().push_back(enc->cloneEncryptedAssertion());
-                            continue;
-                        }
-                    }
-                }
+                IMPL_CLONE_CHILDBAG_BEGIN;
+                    IMPL_CLONE_TYPED_CHILD_IN_BAG(AssertionIDRef);
+                    IMPL_CLONE_TYPED_CHILD_IN_BAG(AssertionURIRef);
+                    IMPL_CLONE_TYPED_CHILD_IN_BAG(Assertion);
+                    IMPL_CLONE_TYPED_CHILD_IN_BAG(EncryptedAssertion);
+                IMPL_CLONE_CHILDBAG_END;
             }
 
             IMPL_XMLOBJECT_CLONE(Evidence);
@@ -1198,15 +1095,10 @@ namespace opensaml {
             AuthzDecisionStatementImpl(const AuthzDecisionStatementImpl& src)
                     : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
                 init();
-                setResource(src.getResource());
-                setDecision(src.getDecision());
-                if (src.getEvidence())
-                    setEvidence(src.getEvidence()->cloneEvidence());
-                for (vector<Action*>::const_iterator i=src.m_Actions.begin(); i!=src.m_Actions.end(); i++) {
-                    if (*i) {
-                        getActions().push_back((*i)->cloneAction());
-                    }
-                }
+                IMPL_CLONE_ATTRIB(Resource);
+                IMPL_CLONE_ATTRIB(Decision);
+                IMPL_CLONE_TYPED_CHILD(Evidence);
+                IMPL_CLONE_TYPED_CHILDREN(Action);
             }
 
             IMPL_XMLOBJECT_CLONE2(AuthzDecisionStatement,Statement);
@@ -1240,11 +1132,9 @@ namespace opensaml {
             virtual ~AttributeValueImpl() {}
 
             AttributeValueImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
-                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
-            }
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {}
 
-            AttributeValueImpl(const AttributeValueImpl& src) : AbstractXMLObject(src), AnyElementImpl(src) {
-            }
+            AttributeValueImpl(const AttributeValueImpl& src) : AbstractXMLObject(src), AnyElementImpl(src) {}
 
             IMPL_XMLOBJECT_CLONE_EX(AttributeValue);
         };
@@ -1277,14 +1167,10 @@ namespace opensaml {
                     : AbstractXMLObject(src), AbstractComplexElement(src),
                         AbstractAttributeExtensibleXMLObject(src), AbstractDOMCachingXMLObject(src) {
                 init();
-                setName(src.getName());
-                setNameFormat(src.getNameFormat());
-                setFriendlyName(src.getFriendlyName());
-                for (vector<XMLObject*>::const_iterator i=src.m_AttributeValues.begin(); i!=src.m_AttributeValues.end(); i++) {
-                    if (*i) {
-                        getAttributeValues().push_back((*i)->clone());
-                    }
-                }
+                IMPL_CLONE_ATTRIB(Name);
+                IMPL_CLONE_ATTRIB(NameFormat);
+                IMPL_CLONE_ATTRIB(FriendlyName);
+                IMPL_CLONE_XMLOBJECT_CHILDREN(AttributeValue);
             }
 
             IMPL_XMLOBJECT_CLONE(Attribute);
@@ -1328,7 +1214,6 @@ namespace opensaml {
             }
         };
 
-        //TODO unit test for this
         class SAML_DLLLOCAL EncryptedAttributeImpl : public virtual EncryptedAttribute, public EncryptedElementTypeImpl
         {
         public:
@@ -1352,26 +1237,14 @@ namespace opensaml {
             virtual ~AttributeStatementImpl() {}
 
             AttributeStatementImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
-                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
-            }
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {}
 
             AttributeStatementImpl(const AttributeStatementImpl& src)
                     : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
-                for (list<XMLObject*>::const_iterator i=src.m_children.begin(); i!=src.m_children.end(); i++) {
-                    if (*i) {
-                        Attribute* attribute=dynamic_cast<Attribute*>(*i);
-                        if (attribute) {
-                            getAttributes().push_back(attribute->cloneAttribute());
-                            continue;
-                        }
-
-                        EncryptedAttribute* enc=dynamic_cast<EncryptedAttribute*>(*i);
-                        if (enc) {
-                            getEncryptedAttributes().push_back(enc->cloneEncryptedAttribute());
-                            continue;
-                        }
-                    }
-                }
+                IMPL_CLONE_CHILDBAG_BEGIN;
+                    IMPL_CLONE_TYPED_CHILD_IN_BAG(Attribute);
+                    IMPL_CLONE_TYPED_CHILD_IN_BAG(EncryptedAttribute);
+                IMPL_CLONE_CHILDBAG_END;
             }
 
             IMPL_XMLOBJECT_CLONE2(AttributeStatement,Statement);
@@ -1396,42 +1269,17 @@ namespace opensaml {
             virtual ~AdviceImpl() {}
 
             AdviceImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
-                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
-            }
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {}
 
             AdviceImpl(const AdviceImpl& src)
                     : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
-                for (list<XMLObject*>::const_iterator i=src.m_children.begin(); i!=src.m_children.end(); i++) {
-                    if (*i) {
-                        AssertionIDRef* ref=dynamic_cast<AssertionIDRef*>(*i);
-                        if (ref) {
-                            getAssertionIDRefs().push_back(ref->cloneAssertionIDRef());
-                            continue;
-                        }
-
-                        AssertionURIRef* uri=dynamic_cast<AssertionURIRef*>(*i);
-                        if (uri) {
-                            getAssertionURIRefs().push_back(uri->cloneAssertionURIRef());
-                            continue;
-                        }
-
-                        Assertion* assertion=dynamic_cast<Assertion*>(*i);
-                        if (assertion) {
-                            getAssertions().push_back(assertion->cloneAssertion());
-                            continue;
-                        }
-
-                        EncryptedAssertion* enc=dynamic_cast<EncryptedAssertion*>(*i);
-                        if (enc) {
-                            getEncryptedAssertions().push_back(enc->cloneEncryptedAssertion());
-                            continue;
-                        }
-
-                        if (*i) {
-                            getUnknownXMLObjects().push_back((*i)->clone());
-                        }
-                    }
-                }
+                IMPL_CLONE_CHILDBAG_BEGIN;
+                    IMPL_CLONE_TYPED_CHILD_IN_BAG(AssertionIDRef);
+                    IMPL_CLONE_TYPED_CHILD_IN_BAG(AssertionURIRef);
+                    IMPL_CLONE_TYPED_CHILD_IN_BAG(Assertion);
+                    IMPL_CLONE_TYPED_CHILD_IN_BAG(EncryptedAssertion);
+                    IMPL_CLONE_XMLOBJECT_CHILD_IN_BAG(UnknownXMLObject);
+                IMPL_CLONE_CHILDBAG_END;
             }
 
             IMPL_XMLOBJECT_CLONE(Advice);
@@ -1459,7 +1307,6 @@ namespace opensaml {
             }
         };
 
-        //TODO unit test for this
         class SAML_DLLLOCAL EncryptedAssertionImpl : public virtual EncryptedAssertion, public EncryptedElementTypeImpl
         {
         public:
@@ -1519,46 +1366,20 @@ namespace opensaml {
             AssertionImpl(const AssertionImpl& src)
                     : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
                 init();
-                setVersion(src.getVersion());
-                setID(src.getID());
-                setIssueInstant(src.getIssueInstant());
-                if (src.getIssuer())
-                    setIssuer(src.getIssuer()->cloneIssuer());
-                if (src.getSignature())
-                    setSignature(src.getSignature()->cloneSignature());
-                if (src.getSubject())
-                    setSubject(src.getSubject()->cloneSubject());
-                if (src.getConditions())
-                    setConditions(src.getConditions()->cloneConditions());
-                if (src.getAdvice())
-                    setAdvice(src.getAdvice()->cloneAdvice());
-                for (list<XMLObject*>::const_iterator i=src.m_children.begin(); i!=src.m_children.end(); i++) {
-                    if (*i) {
-                        AuthnStatement* authst=dynamic_cast<AuthnStatement*>(*i);
-                        if (authst) {
-                            getAuthnStatements().push_back(authst->cloneAuthnStatement());
-                            continue;
-                        }
-
-                        AttributeStatement* attst=dynamic_cast<AttributeStatement*>(*i);
-                        if (attst) {
-                            getAttributeStatements().push_back(attst->cloneAttributeStatement());
-                            continue;
-                        }
-
-                        AuthzDecisionStatement* authzst=dynamic_cast<AuthzDecisionStatement*>(*i);
-                        if (authzst) {
-                            getAuthzDecisionStatements().push_back(authzst->cloneAuthzDecisionStatement());
-                            continue;
-                        }
-
-                        Statement* st=dynamic_cast<Statement*>(*i);
-                        if (st) {
-                            getStatements().push_back(st->cloneStatement());
-                            continue;
-                        }
-                    }
-                }
+                IMPL_CLONE_ATTRIB(Version);
+                IMPL_CLONE_ATTRIB(ID);
+                IMPL_CLONE_ATTRIB(IssueInstant);
+                IMPL_CLONE_TYPED_CHILD(Issuer);
+                IMPL_CLONE_TYPED_CHILD(Signature);
+                IMPL_CLONE_TYPED_CHILD(Subject);
+                IMPL_CLONE_TYPED_CHILD(Conditions);
+                IMPL_CLONE_TYPED_CHILD(Advice);
+                IMPL_CLONE_CHILDBAG_BEGIN;
+                    IMPL_CLONE_TYPED_CHILD_IN_BAG(AuthnStatement);
+                    IMPL_CLONE_TYPED_CHILD_IN_BAG(AttributeStatement);
+                    IMPL_CLONE_TYPED_CHILD_IN_BAG(AuthzDecisionStatement);
+                    IMPL_CLONE_TYPED_CHILD_IN_BAG(Statement);
+                IMPL_CLONE_CHILDBAG_END;
             }
 
             //IMPL_TYPED_CHILD(Signature);
