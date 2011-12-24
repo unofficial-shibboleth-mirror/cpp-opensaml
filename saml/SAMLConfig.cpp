@@ -140,7 +140,6 @@ SAMLInternalConfig::SAMLInternalConfig() : m_initCount(0), m_lock(Mutex::create(
 
 SAMLInternalConfig::~SAMLInternalConfig()
 {
-    delete m_lock;
 }
 
 bool SAMLInternalConfig::init(bool initXMLTooling)

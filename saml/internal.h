@@ -111,7 +111,7 @@ namespace opensaml {
 
     private:
         int m_initCount;
-        xmltooling::Mutex* m_lock;
+        std::auto_ptr<xmltooling::Mutex> m_lock;
     };
     /// @endcond
 

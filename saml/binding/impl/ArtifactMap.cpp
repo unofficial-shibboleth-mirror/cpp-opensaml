@@ -106,7 +106,7 @@ void ArtifactMappings::removeMapping(const map<string,Mapping>::iterator& i)
 
 void ArtifactMappings::storeContent(XMLObject* content, const SAMLArtifact* artifact, const char* relyingParty, int TTL)
 {
-    Lock wrapper(m_lock.get());
+    Lock wrapper(m_lock);
 
     // Garbage collect any expired artifacts.
     time_t now = time(nullptr);
@@ -129,7 +129,7 @@ void ArtifactMappings::storeContent(XMLObject* content, const SAMLArtifact* arti
 XMLObject* ArtifactMappings::retrieveContent(const SAMLArtifact* artifact, const char* relyingParty)
 {
     Category& log=Category::getInstance(SAML_LOGCAT".ArtifactMap");
-    Lock wrapper(m_lock.get());
+    Lock wrapper(m_lock);
 
     map<string,Mapping>::iterator i = m_artMap.find(SAMLArtifact::toHex(artifact->getMessageHandle()));
     if (i == m_artMap.end())

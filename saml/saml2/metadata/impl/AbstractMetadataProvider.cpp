@@ -316,7 +316,7 @@ const Credential* AbstractMetadataProvider::resolve(const CredentialCriteria* cr
     if (!metacrit)
         throw MetadataException("Cannot resolve credentials without a MetadataCredentialCriteria object.");
 
-    Lock lock(m_credentialLock.get());
+    Lock lock(m_credentialLock);
     const credmap_t::mapped_type& creds = resolveCredentials(metacrit->getRole());
 
     for (credmap_t::mapped_type::const_iterator c = creds.begin(); c!=creds.end(); ++c)
@@ -333,7 +333,7 @@ vector<const Credential*>::size_type AbstractMetadataProvider::resolve(
     if (!metacrit)
         throw MetadataException("Cannot resolve credentials without a MetadataCredentialCriteria object.");
 
-    Lock lock(m_credentialLock.get());
+    Lock lock(m_credentialLock);
     const credmap_t::mapped_type& creds = resolveCredentials(metacrit->getRole());
 
    for (credmap_t::mapped_type::const_iterator c = creds.begin(); c!=creds.end(); ++c)

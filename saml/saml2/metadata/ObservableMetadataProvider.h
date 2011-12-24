@@ -97,7 +97,7 @@ namespace opensaml {
             virtual const Observer* removeObserver(const Observer* oldObserver) const;
 
         private:
-            std::auto_ptr<xmltooling::Mutex> m_observerLock;
+            mutable std::auto_ptr<xmltooling::Mutex> m_observerLock;
             mutable std::vector<const Observer*> m_observers;
         };
 

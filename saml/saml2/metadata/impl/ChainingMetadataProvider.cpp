@@ -77,7 +77,7 @@ namespace opensaml {
             vector<const Credential*>::size_type resolve(vector<const Credential*>& results, const CredentialCriteria* criteria=nullptr) const;
 
             string getCacheTag() const {
-                Lock lock(m_trackerLock.get());
+                Lock lock(m_trackerLock);
                 return m_feedTag;
             }
 
@@ -98,7 +98,7 @@ namespace opensaml {
 
             void onEvent(const ObservableMetadataProvider& provider) const {
                 // Reset the cache tag for the feed.
-                Lock lock(m_trackerLock.get());
+                Lock lock(m_trackerLock);
                 SAMLConfig::getConfig().generateRandomBytes(m_feedTag, 4);
                 m_feedTag = SAMLArtifact::toHex(m_feedTag);
                 emitChangeEvent();
@@ -111,7 +111,7 @@ namespace opensaml {
 
         private:
             bool m_firstMatch;
-            auto_ptr<Mutex> m_trackerLock;
+            mutable auto_ptr<Mutex> m_trackerLock;
             auto_ptr<ThreadKey> m_tlsKey;
             mutable ptr_vector<MetadataProvider> m_providers;
             mutable set<tracker_t*> m_trackers;
@@ -122,7 +122,7 @@ namespace opensaml {
 
         struct SAML_DLLLOCAL tracker_t {
             tracker_t(const ChainingMetadataProvider* m) : m_metadata(m) {
-                Lock lock(m_metadata->m_trackerLock.get());
+                Lock lock(m_metadata->m_trackerLock);
                 m_metadata->m_trackers.insert(this);
             }
 
@@ -169,7 +169,7 @@ void ChainingMetadataProvider::tracker_cleanup(void* ptr)
     if (ptr) {
         // free the tracker after removing it from the parent plugin's tracker set
         tracker_t* t = reinterpret_cast<tracker_t*>(ptr);
-        Lock lock(t->m_metadata->m_trackerLock.get());
+        Lock lock(t->m_metadata->m_trackerLock);
         t->m_metadata->m_trackers.erase(t);
         delete t;
     }

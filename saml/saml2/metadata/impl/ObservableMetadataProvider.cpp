@@ -46,19 +46,19 @@ ObservableMetadataProvider::~ObservableMetadataProvider()
 
 void ObservableMetadataProvider::emitChangeEvent() const
 {
-    Lock lock(m_observerLock.get());
+    Lock lock(m_observerLock);
     for_each(m_observers.begin(), m_observers.end(), boost::bind(&Observer::onEvent, _1, boost::ref(*this)));
 }
 
 void ObservableMetadataProvider::addObserver(const Observer* newObserver) const
 {
-    Lock lock(m_observerLock.get());
+    Lock lock(m_observerLock);
     m_observers.push_back(newObserver);
 }
 
 const ObservableMetadataProvider::Observer* ObservableMetadataProvider::removeObserver(const Observer* oldObserver) const
 {
-    Lock lock(m_observerLock.get());
+    Lock lock(m_observerLock);
     vector<const Observer*>::iterator i = find(m_observers.begin(), m_observers.end(), oldObserver);
     if (i != m_observers.end()) {
         m_observers.erase(i);
