@@ -42,10 +42,12 @@
 #include <ctime>
 #include <limits.h>
 #include <boost/lexical_cast.hpp>
+#include <boost/lambda/bind.hpp>
+#include <boost/lambda/if.hpp>
+#include <boost/lambda/lambda.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 
 using namespace opensaml::saml1;
-using namespace xmlsignature;
 using namespace xmltooling;
 using namespace std;
 using xmlconstants::XMLSIG_NS;
@@ -70,8 +72,7 @@ namespace opensaml {
             virtual ~ConditionImpl() {}
 
             ConditionImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
-                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
-            }
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {}
 
             ConditionImpl(const ConditionImpl& src) : AbstractXMLObject(src), AnyElementImpl(src) {}
 
@@ -88,17 +89,11 @@ namespace opensaml {
             virtual ~AudienceRestrictionConditionImpl() {}
 
             AudienceRestrictionConditionImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
-                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
-            }
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {}
 
             AudienceRestrictionConditionImpl(const AudienceRestrictionConditionImpl& src)
                     : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
-                VectorOf(Audience) v=getAudiences();
-                for (vector<Audience*>::const_iterator i=src.m_Audiences.begin(); i!=src.m_Audiences.end(); i++) {
-                    if (*i) {
-                        v.push_back((*i)->cloneAudience());
-                    }
-                }
+                IMPL_CLONE_TYPED_CHILDREN(Audience);
             }
 
             IMPL_XMLOBJECT_CLONE2(AudienceRestrictionCondition,Condition);
@@ -121,12 +116,10 @@ namespace opensaml {
             virtual ~DoNotCacheConditionImpl() {}
 
             DoNotCacheConditionImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
-                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
-            }
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {}
 
             DoNotCacheConditionImpl(const DoNotCacheConditionImpl& src)
-                : AbstractXMLObject(src), AbstractSimpleElement(src), AbstractDOMCachingXMLObject(src) {
-            }
+                : AbstractXMLObject(src), AbstractSimpleElement(src), AbstractDOMCachingXMLObject(src) {}
 
             IMPL_XMLOBJECT_CLONE2(DoNotCacheCondition,Condition);
         };
@@ -155,30 +148,13 @@ namespace opensaml {
             ConditionsImpl(const ConditionsImpl& src)
                     : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
                 init();
-                setNotBefore(src.getNotBefore());
-                setNotOnOrAfter(src.getNotOnOrAfter());
-
-                for (list<XMLObject*>::const_iterator i=src.m_children.begin(); i!=src.m_children.end(); i++) {
-                    if (*i) {
-                        AudienceRestrictionCondition* arc=dynamic_cast<AudienceRestrictionCondition*>(*i);
-                        if (arc) {
-                            getAudienceRestrictionConditions().push_back(arc->cloneAudienceRestrictionCondition());
-                            continue;
-                        }
-
-                        DoNotCacheCondition* dncc=dynamic_cast<DoNotCacheCondition*>(*i);
-                        if (dncc) {
-                            getDoNotCacheConditions().push_back(dncc->cloneDoNotCacheCondition());
-                            continue;
-                        }
-
-                        Condition* c=dynamic_cast<Condition*>(*i);
-                        if (c) {
-                            getConditions().push_back(c->cloneCondition());
-                            continue;
-                        }
-                    }
-                }
+                IMPL_CLONE_ATTRIB(NotBefore);
+                IMPL_CLONE_ATTRIB(NotOnOrAfter);
+                IMPL_CLONE_CHILDBAG_BEGIN;
+                    IMPL_CLONE_TYPED_CHILD_IN_BAG(AudienceRestrictionCondition);
+                    IMPL_CLONE_TYPED_CHILD_IN_BAG(DoNotCacheCondition);
+                    IMPL_CLONE_TYPED_CHILD_IN_BAG(Condition);
+                IMPL_CLONE_CHILDBAG_END;
             }
 
             IMPL_XMLOBJECT_CLONE(Conditions);
@@ -231,8 +207,8 @@ namespace opensaml {
             NameIdentifierImpl(const NameIdentifierImpl& src)
                     : AbstractXMLObject(src), AbstractSimpleElement(src), AbstractDOMCachingXMLObject(src) {
                 init();
-                setFormat(src.getFormat());
-                setNameQualifier(src.getNameQualifier());
+                IMPL_CLONE_ATTRIB(Format);
+                IMPL_CLONE_ATTRIB(NameQualifier);
             }
 
             IMPL_XMLOBJECT_CLONE(NameIdentifier);
@@ -257,11 +233,9 @@ namespace opensaml {
             virtual ~SubjectConfirmationDataImpl() {}
 
             SubjectConfirmationDataImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
-                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
-            }
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {}
 
-            SubjectConfirmationDataImpl(const SubjectConfirmationDataImpl& src) : AbstractXMLObject(src), AnyElementImpl(src) {
-            }
+            SubjectConfirmationDataImpl(const SubjectConfirmationDataImpl& src) : AbstractXMLObject(src), AnyElementImpl(src) {}
 
             IMPL_XMLOBJECT_CLONE_EX(SubjectConfirmationData);
         };
@@ -293,26 +267,20 @@ namespace opensaml {
             SubjectConfirmationImpl(const SubjectConfirmationImpl& src)
                     : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
                 init();
-                if (src.getSubjectConfirmationData())
-                    setSubjectConfirmationData(src.getSubjectConfirmationData()->clone());
-                if (src.getKeyInfo())
-                    setKeyInfo(src.getKeyInfo()->cloneKeyInfo());
-                for (vector<ConfirmationMethod*>::const_iterator i=src.m_ConfirmationMethods.begin(); i!=src.m_ConfirmationMethods.end(); i++) {
-                    if (*i) {
-                        getConfirmationMethods().push_back((*i)->cloneConfirmationMethod());
-                    }
-                }
+                IMPL_CLONE_TYPED_CHILDREN(ConfirmationMethod);
+                IMPL_CLONE_XMLOBJECT_CHILD(SubjectConfirmationData);
+                IMPL_CLONE_TYPED_CHILD(KeyInfo);
             }
 
             IMPL_XMLOBJECT_CLONE(SubjectConfirmation);
             IMPL_TYPED_CHILDREN(ConfirmationMethod,m_pos_SubjectConfirmationData);
             IMPL_XMLOBJECT_CHILD(SubjectConfirmationData);
-            IMPL_TYPED_CHILD(KeyInfo);
+            IMPL_TYPED_FOREIGN_CHILD(KeyInfo,xmlsignature);
 
         protected:
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
                 PROC_TYPED_CHILDREN(ConfirmationMethod,SAML1_NS,false);
-                PROC_TYPED_CHILD(KeyInfo,XMLSIG_NS,false);
+                PROC_TYPED_FOREIGN_CHILD(KeyInfo,xmlsignature,XMLSIG_NS,false);
 
                 // Anything else we'll assume is the data.
                 if (getSubjectConfirmationData())
@@ -348,10 +316,8 @@ namespace opensaml {
             SubjectImpl(const SubjectImpl& src)
                     : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
                 init();
-                if (src.getNameIdentifier())
-                    setNameIdentifier(src.getNameIdentifier()->cloneNameIdentifier());
-                if (src.getSubjectConfirmation())
-                    setSubjectConfirmation(src.getSubjectConfirmation()->cloneSubjectConfirmation());
+                IMPL_CLONE_TYPED_CHILD(NameIdentifier);
+                IMPL_CLONE_TYPED_CHILD(SubjectConfirmation);
             }
 
             IMPL_XMLOBJECT_CLONE(Subject);
@@ -372,8 +338,7 @@ namespace opensaml {
             virtual ~StatementImpl() {}
 
             StatementImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
-                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
-            }
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {}
 
             StatementImpl(const StatementImpl& src) : AbstractXMLObject(src), AnyElementImpl(src) {}
 
@@ -410,8 +375,7 @@ namespace opensaml {
             }
 
             void _clone(const SubjectStatementImpl& src) {
-                if (src.getSubject())
-                    setSubject(src.getSubject()->cloneSubject());
+                IMPL_CLONE_TYPED_CHILD(Subject);
             }
 
             Statement* cloneStatement() const {
@@ -455,8 +419,8 @@ namespace opensaml {
             SubjectLocalityImpl(const SubjectLocalityImpl& src)
                     : AbstractXMLObject(src), AbstractSimpleElement(src), AbstractDOMCachingXMLObject(src) {
                 init();
-                setIPAddress(src.getIPAddress());
-                setDNSAddress(src.getDNSAddress());
+                IMPL_CLONE_ATTRIB(IPAddress);
+                IMPL_CLONE_ATTRIB(DNSAddress);
             }
 
             IMPL_XMLOBJECT_CLONE(SubjectLocality);
@@ -501,9 +465,9 @@ namespace opensaml {
             AuthorityBindingImpl(const AuthorityBindingImpl& src)
                     : AbstractXMLObject(src), AbstractSimpleElement(src), AbstractDOMCachingXMLObject(src) {
                 init();
-                setAuthorityKind(src.getAuthorityKind());
-                setLocation(src.getLocation());
-                setBinding(src.getBinding());
+                IMPL_CLONE_ATTRIB(AuthorityKind);
+                IMPL_CLONE_ATTRIB(Location);
+                IMPL_CLONE_ATTRIB(Binding);
             }
 
             IMPL_XMLOBJECT_CLONE(AuthorityBinding);
@@ -553,15 +517,10 @@ namespace opensaml {
 
             void _clone(const AuthenticationStatementImpl& src) {
                 SubjectStatementImpl::_clone(src);
-                setAuthenticationMethod(src.getAuthenticationMethod());
-                setAuthenticationInstant(src.getAuthenticationInstant());
-                if (src.getSubjectLocality())
-                    setSubjectLocality(src.getSubjectLocality()->cloneSubjectLocality());
-                for (vector<AuthorityBinding*>::const_iterator i=src.m_AuthorityBindings.begin(); i!=src.m_AuthorityBindings.end(); i++) {
-                    if (*i) {
-                        getAuthorityBindings().push_back((*i)->cloneAuthorityBinding());
-                    }
-                }
+                IMPL_CLONE_ATTRIB(AuthenticationMethod);
+                IMPL_CLONE_ATTRIB(AuthenticationInstant);
+                IMPL_CLONE_TYPED_CHILD(SubjectLocality);
+                IMPL_CLONE_TYPED_CHILDREN(AuthorityBinding);
             }
 
             IMPL_XMLOBJECT_CLONE_EX(AuthenticationStatement);
@@ -602,12 +561,11 @@ namespace opensaml {
             }
 
             ActionImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
-                    : AbstractXMLObject(nsURI, localName, prefix, schemaType), m_Namespace(nullptr) {
-            }
+                    : AbstractXMLObject(nsURI, localName, prefix, schemaType), m_Namespace(nullptr) {}
 
             ActionImpl(const ActionImpl& src)
                     : AbstractXMLObject(src), AbstractSimpleElement(src), AbstractDOMCachingXMLObject(src), m_Namespace(nullptr) {
-                setNamespace(src.getNamespace());
+                IMPL_CLONE_ATTRIB(Namespace);
             }
 
             IMPL_XMLOBJECT_CLONE(Action);
@@ -633,26 +591,14 @@ namespace opensaml {
             virtual ~EvidenceImpl() {}
 
             EvidenceImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
-                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
-            }
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {}
 
             EvidenceImpl(const EvidenceImpl& src)
                     : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
-                for (list<XMLObject*>::const_iterator i=src.m_children.begin(); i!=src.m_children.end(); i++) {
-                    if (*i) {
-                        AssertionIDReference* ref=dynamic_cast<AssertionIDReference*>(*i);
-                        if (ref) {
-                            getAssertionIDReferences().push_back(ref->cloneAssertionIDReference());
-                            continue;
-                        }
-
-                        Assertion* assertion=dynamic_cast<Assertion*>(*i);
-                        if (assertion) {
-                            getAssertions().push_back(assertion->cloneAssertion());
-                            continue;
-                        }
-                    }
-                }
+                IMPL_CLONE_CHILDBAG_BEGIN;
+                    IMPL_CLONE_TYPED_CHILD_IN_BAG(AssertionIDReference);
+                    IMPL_CLONE_TYPED_CHILD_IN_BAG(Assertion);
+                IMPL_CLONE_CHILDBAG_END;
             }
 
             IMPL_XMLOBJECT_CLONE(Evidence);
@@ -697,22 +643,17 @@ namespace opensaml {
 
             void _clone(const AuthorizationDecisionStatementImpl& src) {
                 SubjectStatementImpl::_clone(src);
-                setResource(src.getResource());
-                setDecision(src.getDecision());
-                if (src.getEvidence())
-                    setEvidence(src.getEvidence()->cloneEvidence());
-                for (vector<Action*>::const_iterator i=src.m_Actions.begin(); i!=src.m_Actions.end(); i++) {
-                    if (*i) {
-                        getActions().push_back((*i)->cloneAction());
-                    }
-                }
+                IMPL_CLONE_ATTRIB(Resource);
+                IMPL_CLONE_ATTRIB(Decision);
+                IMPL_CLONE_TYPED_CHILDREN(Action);
+                IMPL_CLONE_TYPED_CHILD(Evidence);
             }
 
             IMPL_XMLOBJECT_CLONE_EX(AuthorizationDecisionStatement);
             IMPL_STRING_ATTRIB(Resource);
             IMPL_STRING_ATTRIB(Decision);
-            IMPL_TYPED_CHILD(Evidence);
             IMPL_TYPED_CHILDREN(Action, m_pos_Evidence);
+            IMPL_TYPED_CHILD(Evidence);
 
         protected:
             void marshallAttributes(DOMElement* domElement) const {
@@ -758,8 +699,8 @@ namespace opensaml {
             AttributeDesignatorImpl(const AttributeDesignatorImpl& src)
                     : AbstractXMLObject(src), AbstractSimpleElement(src), AbstractDOMCachingXMLObject(src) {
                 init();
-                setAttributeName(src.getAttributeName());
-                setAttributeNamespace(src.getAttributeNamespace());
+                IMPL_CLONE_ATTRIB(AttributeName);
+                IMPL_CLONE_ATTRIB(AttributeNamespace);
             }
 
             IMPL_XMLOBJECT_CLONE(AttributeDesignator);
@@ -801,13 +742,9 @@ namespace opensaml {
             AttributeImpl(const AttributeImpl& src)
                     : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
                 init();
-                setAttributeName(src.getAttributeName());
-                setAttributeNamespace(src.getAttributeNamespace());
-                for (vector<XMLObject*>::const_iterator i=src.m_AttributeValues.begin(); i!=src.m_AttributeValues.end(); i++) {
-                    if (*i) {
-                        getAttributeValues().push_back((*i)->clone());
-                    }
-                }
+                IMPL_CLONE_ATTRIB(AttributeName);
+                IMPL_CLONE_ATTRIB(AttributeNamespace);
+                IMPL_CLONE_XMLOBJECT_CHILDREN(AttributeValue);
             }
 
             IMPL_XMLOBJECT_CLONE2(Attribute,AttributeDesignator);
@@ -837,8 +774,7 @@ namespace opensaml {
             virtual ~AttributeValueImpl() {}
 
             AttributeValueImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
-                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
-            }
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {}
 
             AttributeValueImpl(const AttributeValueImpl& src) : AbstractXMLObject(src), AnyElementImpl(src) {}
 
@@ -851,19 +787,13 @@ namespace opensaml {
             virtual ~AttributeStatementImpl() {}
 
             AttributeStatementImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
-                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
-            }
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {}
 
-            AttributeStatementImpl(const AttributeStatementImpl& src) : AbstractXMLObject(src), SubjectStatementImpl(src) {
-            }
+            AttributeStatementImpl(const AttributeStatementImpl& src) : AbstractXMLObject(src), SubjectStatementImpl(src) {}
 
             void _clone(const AttributeStatementImpl& src) {
                 SubjectStatementImpl::_clone(src);
-                for (vector<Attribute*>::const_iterator i=src.m_Attributes.begin(); i!=src.m_Attributes.end(); i++) {
-                    if (*i) {
-                        getAttributes().push_back((*i)->cloneAttribute());
-                    }
-                }
+                IMPL_CLONE_TYPED_CHILDREN(Attribute);
             }
 
             IMPL_XMLOBJECT_CLONE_EX(AttributeStatement);
@@ -886,30 +816,15 @@ namespace opensaml {
             virtual ~AdviceImpl() {}
 
             AdviceImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
-                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
-            }
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {}
 
             AdviceImpl(const AdviceImpl& src)
                     : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
-                for (list<XMLObject*>::const_iterator i=src.m_children.begin(); i!=src.m_children.end(); i++) {
-                    if (*i) {
-                        AssertionIDReference* ref=dynamic_cast<AssertionIDReference*>(*i);
-                        if (ref) {
-                            getAssertionIDReferences().push_back(ref->cloneAssertionIDReference());
-                            continue;
-                        }
-
-                        Assertion* assertion=dynamic_cast<Assertion*>(*i);
-                        if (assertion) {
-                            getAssertions().push_back(assertion->cloneAssertion());
-                            continue;
-                        }
-
-                        if (*i) {
-                            getUnknownXMLObjects().push_back((*i)->clone());
-                        }
-                    }
-                }
+                IMPL_CLONE_CHILDBAG_BEGIN;
+                    IMPL_CLONE_TYPED_CHILD_IN_BAG(AssertionIDReference);
+                    IMPL_CLONE_TYPED_CHILD_IN_BAG(Assertion);
+                    IMPL_CLONE_XMLOBJECT_CHILD_IN_BAG(UnknownXMLObject);
+                IMPL_CLONE_CHILDBAG_END;
             }
 
             IMPL_XMLOBJECT_CLONE(Advice);
@@ -973,62 +888,33 @@ namespace opensaml {
             AssertionImpl(const AssertionImpl& src)
                     : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
                 init();
-                setMinorVersion(src.m_MinorVersion);
-                setAssertionID(src.getAssertionID());
-                setIssuer(src.getIssuer());
-                setIssueInstant(src.getIssueInstant());
-                if (src.getConditions())
-                    setConditions(src.getConditions()->cloneConditions());
-                if (src.getAdvice())
-                    setAdvice(src.getAdvice()->cloneAdvice());
-                if (src.getSignature())
-                    setSignature(src.getSignature()->cloneSignature());
-                for (list<XMLObject*>::const_iterator i=src.m_children.begin(); i!=src.m_children.end(); i++) {
-                    if (*i) {
-                        AuthenticationStatement* authst=dynamic_cast<AuthenticationStatement*>(*i);
-                        if (authst) {
-                            getAuthenticationStatements().push_back(authst->cloneAuthenticationStatement());
-                            continue;
-                        }
-
-                        AttributeStatement* attst=dynamic_cast<AttributeStatement*>(*i);
-                        if (attst) {
-                            getAttributeStatements().push_back(attst->cloneAttributeStatement());
-                            continue;
-                        }
-
-                        AuthorizationDecisionStatement* authzst=dynamic_cast<AuthorizationDecisionStatement*>(*i);
-                        if (authzst) {
-                            getAuthorizationDecisionStatements().push_back(authzst->cloneAuthorizationDecisionStatement());
-                            continue;
-                        }
-
-                        SubjectStatement* subst=dynamic_cast<SubjectStatement*>(*i);
-                        if (subst) {
-                            getSubjectStatements().push_back(subst->cloneSubjectStatement());
-                            continue;
-                        }
-
-                        Statement* st=dynamic_cast<Statement*>(*i);
-                        if (st) {
-                            getStatements().push_back(st->cloneStatement());
-                            continue;
-                        }
-                    }
-                }
+                IMPL_CLONE_INTEGER_ATTRIB(MinorVersion);
+                IMPL_CLONE_ATTRIB(AssertionID);
+                IMPL_CLONE_ATTRIB(Issuer);
+                IMPL_CLONE_ATTRIB(IssueInstant);
+                IMPL_CLONE_TYPED_CHILD(Conditions);
+                IMPL_CLONE_TYPED_CHILD(Advice);
+                IMPL_CLONE_TYPED_CHILD(Signature);
+                IMPL_CLONE_CHILDBAG_BEGIN;
+                    IMPL_CLONE_TYPED_CHILD_IN_BAG(AuthenticationStatement);
+                    IMPL_CLONE_TYPED_CHILD_IN_BAG(AttributeStatement);
+                    IMPL_CLONE_TYPED_CHILD_IN_BAG(AuthorizationDecisionStatement);
+                    IMPL_CLONE_TYPED_CHILD_IN_BAG(SubjectStatement);
+                    IMPL_CLONE_TYPED_CHILD_IN_BAG(Statement);
+                IMPL_CLONE_CHILDBAG_END;
             }
 
             //IMPL_TYPED_CHILD(Signature);
             // Need customized setter.
         protected:
-            Signature* m_Signature;
+            xmlsignature::Signature* m_Signature;
             list<XMLObject*>::iterator m_pos_Signature;
         public:
-            Signature* getSignature() const {
+            xmlsignature::Signature* getSignature() const {
                 return m_Signature;
             }
 
-            void setSignature(Signature* sig) {
+            void setSignature(xmlsignature::Signature* sig) {
                 prepareForAssignment(m_Signature,sig);
                 *m_pos_Signature=m_Signature=sig;
                 // Sync content reference back up.
@@ -1094,7 +980,7 @@ namespace opensaml {
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
                 PROC_TYPED_CHILD(Conditions,SAML1_NS,false);
                 PROC_TYPED_CHILD(Advice,SAML1_NS,false);
-                PROC_TYPED_CHILD(Signature,XMLSIG_NS,false);
+                PROC_TYPED_FOREIGN_CHILD(Signature,xmlsignature,XMLSIG_NS,false);
                 PROC_TYPED_CHILDREN(AuthenticationStatement,SAML1_NS,false);
                 PROC_TYPED_CHILDREN(AttributeStatement,SAML1_NS,false);
                 PROC_TYPED_CHILDREN(AuthorizationDecisionStatement,SAML1_NS,false);

@@ -47,8 +47,6 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 
 using namespace opensaml::saml2;
-using namespace xmlencryption;
-using namespace xmlsignature;
 using namespace xmltooling;
 using namespace std;
 using xmlconstants::XSI_NS;
@@ -633,7 +631,7 @@ namespace opensaml {
             }
 
             IMPL_XMLOBJECT_CLONE_EX(KeyInfoConfirmationDataType);
-            IMPL_TYPED_CHILDREN(KeyInfo,m_children.end());
+            IMPL_TYPED_FOREIGN_CHILDREN(KeyInfo,xmlsignature,m_children.end());
 
         public:
             void setAttribute(const xmltooling::QName& qualifiedName, const XMLCh* value, bool ID=false) {
@@ -669,7 +667,7 @@ namespace opensaml {
             }
 
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
-                PROC_TYPED_CHILDREN(KeyInfo,XMLSIG_NS,false);
+                PROC_TYPED_FOREIGN_CHILDREN(KeyInfo,xmlsignature,XMLSIG_NS,false);
                 AbstractXMLObjectUnmarshaller::processChildElement(childXMLObject,root);
             }
 
@@ -1385,14 +1383,14 @@ namespace opensaml {
             //IMPL_TYPED_CHILD(Signature);
             // Need customized setter.
         protected:
-            Signature* m_Signature;
+            xmlsignature::Signature* m_Signature;
             list<XMLObject*>::iterator m_pos_Signature;
         public:
-            Signature* getSignature() const {
+            xmlsignature::Signature* getSignature() const {
                 return m_Signature;
             }
 
-            void setSignature(Signature* sig) {
+            void setSignature(xmlsignature::Signature* sig) {
                 prepareForAssignment(m_Signature,sig);
                 *m_pos_Signature=m_Signature=sig;
                 // Sync content reference back up.
@@ -1435,7 +1433,7 @@ namespace opensaml {
 
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
                 PROC_TYPED_CHILD(Issuer,SAML20_NS,false);
-                PROC_TYPED_CHILD(Signature,XMLSIG_NS,false);
+                PROC_TYPED_FOREIGN_CHILD(Signature,xmlsignature,XMLSIG_NS,false);
                 PROC_TYPED_CHILD(Subject,SAML20_NS,false);
                 PROC_TYPED_CHILD(Conditions,SAML20_NS,false);
                 PROC_TYPED_CHILD(Advice,SAML20_NS,false);

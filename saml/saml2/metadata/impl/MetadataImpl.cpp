@@ -52,9 +52,6 @@
 
 using namespace samlconstants;
 using namespace opensaml::saml2md;
-using namespace opensaml::saml2;
-using namespace xmlencryption;
-using namespace xmlsignature;
 using namespace xmltooling;
 using namespace std;
 using xmlconstants::XMLSIG_NS;
@@ -907,14 +904,14 @@ namespace opensaml {
             //IMPL_TYPED_CHILD(Signature);
             // Need customized setter.
         protected:
-            Signature* m_Signature;
+            xmlsignature::Signature* m_Signature;
             list<XMLObject*>::iterator m_pos_Signature;
         public:
-            Signature* getSignature() const {
+            xmlsignature::Signature* getSignature() const {
                 return m_Signature;
             }
 
-            void setSignature(Signature* sig) {
+            void setSignature(xmlsignature::Signature* sig) {
                 prepareForAssignment(m_Signature,sig);
                 *m_pos_Signature=m_Signature=sig;
                 // Sync content reference back up.
@@ -1567,7 +1564,7 @@ namespace opensaml {
                 IMPL_CLONE_TYPED_CHILDREN(AssertionIDRequestService);
                 IMPL_CLONE_TYPED_CHILDREN(NameIDFormat);
                 IMPL_CLONE_TYPED_CHILDREN(AttributeProfile);
-                IMPL_CLONE_TYPED_CHILDREN(Attribute);
+                IMPL_CLONE_TYPED_FOREIGN_CHILDREN(Attribute,saml2);
             }
 
             IMPL_XMLOBJECT_CLONE_EX(AttributeAuthorityDescriptor);
@@ -1773,14 +1770,14 @@ namespace opensaml {
             //IMPL_TYPED_CHILD(Signature);
             // Need customized setter.
         protected:
-            Signature* m_Signature;
+            xmlsignature::Signature* m_Signature;
             list<XMLObject*>::iterator m_pos_Signature;
         public:
-            Signature* getSignature() const {
+            xmlsignature::Signature* getSignature() const {
                 return m_Signature;
             }
 
-            void setSignature(Signature* sig) {
+            void setSignature(xmlsignature::Signature* sig) {
                 prepareForAssignment(m_Signature,sig);
                 *m_pos_Signature=m_Signature=sig;
                 // Sync content reference back up.
@@ -1926,14 +1923,14 @@ namespace opensaml {
             //IMPL_TYPED_CHILD(Signature);
             // Need customized setter.
         protected:
-            Signature* m_Signature;
+            xmlsignature::Signature* m_Signature;
             list<XMLObject*>::iterator m_pos_Signature;
         public:
-            Signature* getSignature() const {
+            xmlsignature::Signature* getSignature() const {
                 return m_Signature;
             }
 
-            void setSignature(Signature* sig) {
+            void setSignature(xmlsignature::Signature* sig) {
                 prepareForAssignment(m_Signature,sig);
                 *m_pos_Signature=m_Signature=sig;
                 // Sync content reference back up.
@@ -2098,14 +2095,14 @@ namespace opensaml {
             //IMPL_TYPED_CHILD(Signature);
             // Need customized setter.
         protected:
-            Signature* m_Signature;
+            xmlsignature::Signature* m_Signature;
             list<XMLObject*>::iterator m_pos_Signature;
         public:
-            Signature* getSignature() const {
+            xmlsignature::Signature* getSignature() const {
                 return m_Signature;
             }
 
-            void setSignature(Signature* sig) {
+            void setSignature(xmlsignature::Signature* sig) {
                 prepareForAssignment(m_Signature,sig);
                 *m_pos_Signature=m_Signature=sig;
                 // Sync content reference back up.
@@ -2192,7 +2189,7 @@ namespace opensaml {
             EntityAttributesImpl(const EntityAttributesImpl& src)
                     : AbstractXMLObject(src), AbstractComplexElement(src), AbstractDOMCachingXMLObject(src) {
                 IMPL_CLONE_CHILDBAG_BEGIN;
-                    IMPL_CLONE_TYPED_CHILD_IN_BAG(Attribute);
+                    IMPL_CLONE_TYPED_FOREIGN_CHILD_IN_BAG(Attribute,saml2);
                     IMPL_CLONE_TYPED_FOREIGN_CHILD_IN_BAG(Assertion,saml2);
                 IMPL_CLONE_CHILDBAG_END;
             }
