@@ -304,11 +304,11 @@ void DiscoverableMetadataProvider::discoGroup(string& s, const EntitiesDescripto
     if (group) {
         for_each(
             group->getEntitiesDescriptors().begin(), group->getEntitiesDescriptors().end(),
-            boost::bind(&DiscoverableMetadataProvider::discoGroup, boost::ref(this), boost::ref(s), _1, boost::ref(first))
+            boost::bind(&DiscoverableMetadataProvider::discoGroup, this, boost::ref(s), _1, boost::ref(first))
             );
         for_each(
             group->getEntityDescriptors().begin(), group->getEntityDescriptors().end(),
-            boost::bind(&DiscoverableMetadataProvider::discoEntity, boost::ref(this), boost::ref(s), _1, boost::ref(first))
+            boost::bind(&DiscoverableMetadataProvider::discoEntity, this, boost::ref(s), _1, boost::ref(first))
             );
     }
 }

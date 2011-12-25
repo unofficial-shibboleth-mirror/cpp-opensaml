@@ -130,7 +130,7 @@ void WhitelistMetadataFilter::doFilter(EntitiesDescriptor& entities) const
     for_each(
         make_indirect_iterator(groups.begin()), make_indirect_iterator(groups.end()),
         boost::bind(
-            static_cast<void (WhitelistMetadataFilter::*)(EntitiesDescriptor&) const>(&WhitelistMetadataFilter::doFilter), boost::ref(this), _1
+            static_cast<void (WhitelistMetadataFilter::*)(EntitiesDescriptor&) const>(&WhitelistMetadataFilter::doFilter), this, _1
             )
         );
 }

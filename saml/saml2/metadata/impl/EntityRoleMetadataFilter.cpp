@@ -28,7 +28,6 @@
 #include "saml2/metadata/Metadata.h"
 #include "saml2/metadata/MetadataFilter.h"
 
-#include <boost/ptr_container/ptr_set.hpp>
 #include <xmltooling/logging.h>
 #include <xmltooling/util/NDC.h>
 
@@ -55,7 +54,7 @@ namespace opensaml {
             void doFilter(EntitiesDescriptor& entities) const;
 
             bool m_removeRolelessEntityDescriptors, m_removeEmptyEntitiesDescriptors;
-            ptr_set<xmltooling::QName> m_roles;
+            set<xmltooling::QName> m_roles;
             bool m_idp, m_sp, m_authn, m_attr, m_pdp, m_authnq, m_attrq, m_authzq;
         };
 
@@ -97,7 +96,7 @@ EntityRoleMetadataFilter::EntityRoleMetadataFilter(const DOMElement* e)
             else if (*q == AuthzDecisionQueryDescriptorType::TYPE_QNAME)
                 m_authzq = true;
             else
-                m_roles.insert(q);
+                m_roles.insert(*q);
         }
         e = XMLHelper::getNextSiblingElement(e, RetainedRole);
     }
