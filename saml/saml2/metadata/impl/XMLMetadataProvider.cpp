@@ -32,6 +32,7 @@
 #include "saml2/metadata/DiscoverableMetadataProvider.h"
 
 #include <fstream>
+#include <boost/scoped_ptr.hpp>
 #include <xmltooling/XMLToolingConfig.h>
 #include <xmltooling/io/HTTPResponse.h>
 #include <xmltooling/util/DateTime.h>
@@ -50,6 +51,7 @@
 using namespace opensaml::saml2md;
 using namespace xmltooling::logging;
 using namespace xmltooling;
+using namespace boost;
 using namespace std;
 
 #if defined (_MSC_VER)
@@ -68,7 +70,6 @@ namespace opensaml {
 
             virtual ~XMLMetadataProvider() {
                 shutdown();
-                delete m_object;
             }
 
             void init() {
@@ -124,7 +125,7 @@ namespace opensaml {
             }
 
             const XMLObject* getMetadata() const {
-                return m_object;
+                return m_object.get();
             }
 
         protected:
@@ -136,7 +137,7 @@ namespace opensaml {
             void index(time_t& validUntil);
             time_t computeNextRefresh();
 
-            XMLObject* m_object;
+            scoped_ptr<XMLObject> m_object;
             bool m_discoveryFeed;
             double m_refreshDelayFactor;
             unsigned int m_backoffFactor;
@@ -161,7 +162,7 @@ namespace opensaml {
 XMLMetadataProvider::XMLMetadataProvider(const DOMElement* e)
     : MetadataProvider(e), AbstractMetadataProvider(e), DiscoverableMetadataProvider(e),
         ReloadableXMLFile(e, Category::getInstance(SAML_LOGCAT".MetadataProvider.XML"), false),
-        m_object(nullptr), m_discoveryFeed(XMLHelper::getAttrBool(e, true, discoveryFeed)),
+        m_discoveryFeed(XMLHelper::getAttrBool(e, true, discoveryFeed)),
         m_refreshDelayFactor(0.75), m_backoffFactor(1),
         m_minRefreshDelay(XMLHelper::getAttrInt(e, 600, minRefreshDelay)),
         m_maxRefreshDelay(m_reloadInterval), m_lastValidUntil(SAMLTIME_MAX)
@@ -198,7 +199,7 @@ pair<bool,DOMElement*> XMLMetadataProvider::load(bool backup)
     XercesJanitor<DOMDocument> docjanitor(raw.first ? raw.second->getOwnerDocument() : nullptr);
 
     // Unmarshall objects, binding the document.
-    auto_ptr<XMLObject> xmlObject(XMLObjectBuilder::buildOneFromElement(raw.second, true));
+    scoped_ptr<XMLObject> xmlObject(XMLObjectBuilder::buildOneFromElement(raw.second, true));
     docjanitor.release();
 
     if (!dynamic_cast<const EntitiesDescriptor*>(xmlObject.get()) && !dynamic_cast<const EntityDescriptor*>(xmlObject.get()))
@@ -233,7 +234,7 @@ pair<bool,DOMElement*> XMLMetadataProvider::load(bool backup)
     }
 
     try {
-        doFilters(*xmlObject.get());
+        doFilters(*xmlObject);
     }
     catch (exception&) {
         if (!backupKey.empty())
@@ -258,8 +259,7 @@ pair<bool,DOMElement*> XMLMetadataProvider::load(bool backup)
         m_lock->wrlock();
     SharedLock locker(m_lock, false);
     bool changed = m_object!=nullptr;
-    delete m_object;
-    m_object = xmlObject.release();
+    m_object.swap(xmlObject);
     m_lastValidUntil = SAMLTIME_MAX;
     index(m_lastValidUntil);
     if (m_discoveryFeed)
@@ -328,7 +328,7 @@ time_t XMLMetadataProvider::computeNextRefresh()
     else {
         // Compute the smaller of the validUntil / cacheDuration constraints.
         time_t ret = m_lastValidUntil - now;
-        const CacheableSAMLObject* cacheable = dynamic_cast<const CacheableSAMLObject*>(m_object);
+        const CacheableSAMLObject* cacheable = dynamic_cast<const CacheableSAMLObject*>(m_object.get());
         if (cacheable && cacheable->getCacheDuration())
             ret = min(ret, cacheable->getCacheDurationEpoch());
             
@@ -348,10 +348,10 @@ time_t XMLMetadataProvider::computeNextRefresh()
 void XMLMetadataProvider::index(time_t& validUntil)
 {
     clearDescriptorIndex();
-    EntitiesDescriptor* group=dynamic_cast<EntitiesDescriptor*>(m_object);
+    EntitiesDescriptor* group = dynamic_cast<EntitiesDescriptor*>(m_object.get());
     if (group) {
         indexGroup(group, validUntil);
         return;
     }
-    indexEntity(dynamic_cast<EntityDescriptor*>(m_object), validUntil);
+    indexEntity(dynamic_cast<EntityDescriptor*>(m_object.get()), validUntil);
 }
