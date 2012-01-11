@@ -32,7 +32,6 @@
 #include "saml2/metadata/DiscoverableMetadataProvider.h"
 
 #include <fstream>
-#include <boost/scoped_ptr.hpp>
 #include <xmltooling/XMLToolingConfig.h>
 #include <xmltooling/io/HTTPResponse.h>
 #include <xmltooling/util/DateTime.h>

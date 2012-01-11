@@ -45,6 +45,7 @@
 #include "SAMLConfig.h"
 
 #include <limits.h>
+#include <boost/scoped_ptr.hpp>
 
 using namespace xercesc;
 
@@ -111,7 +112,7 @@ namespace opensaml {
 
     private:
         int m_initCount;
-        std::auto_ptr<xmltooling::Mutex> m_lock;
+        boost::scoped_ptr<xmltooling::Mutex> m_lock;
     };
     /// @endcond
 
