@@ -137,7 +137,7 @@ namespace opensaml {
             time_t computeNextRefresh();
 
             scoped_ptr<XMLObject> m_object;
-            bool m_discoveryFeed;
+            bool m_discoveryFeed,m_dropDOM;
             double m_refreshDelayFactor;
             unsigned int m_backoffFactor;
             time_t m_minRefreshDelay,m_maxRefreshDelay,m_lastValidUntil;
@@ -149,6 +149,7 @@ namespace opensaml {
         }
 
         static const XMLCh discoveryFeed[] =        UNICODE_LITERAL_13(d,i,s,c,o,v,e,r,y,F,e,e,d);
+        static const XMLCh dropDOM[] =              UNICODE_LITERAL_7(d,r,o,p,D,O,M);
         static const XMLCh minRefreshDelay[] =      UNICODE_LITERAL_15(m,i,n,R,e,f,r,e,s,h,D,e,l,a,y);
         static const XMLCh refreshDelayFactor[] =   UNICODE_LITERAL_18(r,e,f,r,e,s,h,D,e,l,a,y,F,a,c,t,o,r);
     };
@@ -162,6 +163,7 @@ XMLMetadataProvider::XMLMetadataProvider(const DOMElement* e)
     : MetadataProvider(e), AbstractMetadataProvider(e), DiscoverableMetadataProvider(e),
         ReloadableXMLFile(e, Category::getInstance(SAML_LOGCAT".MetadataProvider.XML"), false),
         m_discoveryFeed(XMLHelper::getAttrBool(e, true, discoveryFeed)),
+        m_dropDOM(XMLHelper::getAttrBool(e, true, dropDOM)),
         m_refreshDelayFactor(0.75), m_backoffFactor(1),
         m_minRefreshDelay(XMLHelper::getAttrInt(e, 600, minRefreshDelay)),
         m_maxRefreshDelay(m_reloadInterval), m_lastValidUntil(SAMLTIME_MAX)
@@ -250,8 +252,10 @@ pair<bool,DOMElement*> XMLMetadataProvider::load(bool backup)
         preserveCacheTag();
     }
 
-    xmlObject->releaseThisAndChildrenDOM();
-    xmlObject->setDocument(nullptr);
+    if (m_dropDOM) {
+        xmlObject->releaseThisAndChildrenDOM();
+        xmlObject->setDocument(nullptr);
+    }
 
     // Swap it in after acquiring write lock if necessary.
     if (m_lock)

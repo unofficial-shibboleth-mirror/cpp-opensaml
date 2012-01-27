@@ -203,7 +203,7 @@ pair<const EntityDescriptor*,const RoleDescriptor*> DynamicMetadataProvider::get
         }
 
         // Filter it, which may throw.
-        doFilters(*entity2.get());
+        doFilters(*entity2);
 
         time_t now = time(nullptr);
         if (entity2->getValidUntil() && entity2->getValidUntilEpoch() < now + 60)
@@ -239,7 +239,8 @@ pair<const EntityDescriptor*,const RoleDescriptor*> DynamicMetadataProvider::get
 
         // Make sure we clear out any existing copies, including stale metadata or if somebody snuck in.
         cacheExp = SAMLTIME_MAX;
-        indexEntity(entity2.release(), cacheExp, true);
+        indexEntity(entity2.get(), cacheExp, true);
+        entity2.release();
 
         m_lastUpdate = now;
 
