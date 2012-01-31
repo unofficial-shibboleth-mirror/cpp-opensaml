@@ -32,9 +32,8 @@
 
 namespace opensaml {
     
-    namespace saml2p {
-        class SAML_API Status;
-    };
+    class SAML_API Status;
+
     namespace saml2md {
         class SAML_API EntityDescriptor;
         class SAML_API RoleDescriptor;
@@ -68,7 +67,7 @@ namespace opensaml {
     void SAML_API annotateException(
         xmltooling::XMLToolingException* e,
         const saml2md::EntityDescriptor* entity,
-        const saml2p::Status* status=nullptr,
+        const Status* status=nullptr,
         bool rethrow=true
         );
     
@@ -93,9 +92,10 @@ namespace opensaml {
     void SAML_API annotateException(
         xmltooling::XMLToolingException* e,
         const saml2md::RoleDescriptor* role,
-        const saml2p::Status* status=nullptr,
+        const Status* status=nullptr,
         bool rethrow=true
         );
+
 };
 
 #endif /* __saml_exceptions_h__ */

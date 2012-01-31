@@ -288,6 +288,14 @@ Assertion::~Assertion()
 {
 }
 
+Status::Status()
+{
+}
+
+Status::~Status()
+{
+}
+
 using namespace saml2p;
 using namespace saml2md;
 
@@ -348,18 +356,18 @@ void opensaml::annotateException(XMLToolingException* e, const RoleDescriptor* r
             e->addProperty("errorURL",eurl.get());
         }
     }
-    
+
     if (status) {
-        auto_ptr_char sc(status->getStatusCode() ? status->getStatusCode()->getValue() : nullptr);
+        auto_ptr_char sc(status->getTopStatus());
         if (sc.get() && *sc.get())
             e->addProperty("statusCode", sc.get());
-        if (status->getStatusCode()->getStatusCode()) {
-            auto_ptr_char sc2(status->getStatusCode()->getStatusCode()->getValue());
+        if (status->getSubStatus()) {
+            auto_ptr_char sc2(status->getSubStatus());
             if (sc2.get() && *sc.get())
                 e->addProperty("statusCode2", sc2.get());
         }
-        if (status->getStatusMessage()) {
-            auto_ptr_char msg(status->getStatusMessage()->getMessage());
+        if (status->getMessage()) {
+            auto_ptr_char msg(status->getMessage());
             if (msg.get() && *msg.get())
                 e->addProperty("statusMessage", msg.get());
         }

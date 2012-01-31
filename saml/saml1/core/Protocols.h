@@ -141,7 +141,7 @@ namespace opensaml {
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
 
-        BEGIN_XMLOBJECT(SAML_API,Status,xmltooling::XMLObject,SAML 1.x Status element);
+        BEGIN_XMLOBJECT(SAML_API,Status,opensaml::Status,SAML 1.x Status element);
             DECL_TYPED_CHILD(StatusCode);
             DECL_TYPED_CHILD(StatusMessage);
             DECL_TYPED_CHILD(StatusDetail);

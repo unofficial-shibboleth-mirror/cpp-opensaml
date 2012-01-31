@@ -222,6 +222,21 @@ namespace opensaml {
             IMPL_TYPED_CHILD(StatusMessage);
             IMPL_TYPED_CHILD(StatusDetail);
     
+            // Base class methods.
+            const XMLCh* getTopStatus() const {
+                return getStatusCode() ? getStatusCode()->getValue() : nullptr;
+            }
+            const XMLCh* getSubStatus() const {
+                const StatusCode* sc = getStatusCode() ? getStatusCode()->getStatusCode() : nullptr;
+                return sc ? sc->getValue() : nullptr;
+            }
+            bool hasAdditionalStatus() const {
+                return (getStatusCode() && getStatusCode()->getStatusCode() && getStatusCode()->getStatusCode()->getStatusCode());
+            }
+            const XMLCh* getMessage() const {
+                return getStatusMessage() ? getStatusMessage()->getMessage() : nullptr;
+            }
+
         protected:
             void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
                 PROC_TYPED_CHILD(StatusCode,SAML20P_NS,false);

@@ -29,20 +29,6 @@
 
 #include <saml/RootObject.h>
 
-namespace opensaml {
-
-    /**
-     * Base class for SAML assertions.
-     * Currently just a marker interface.
-     */
-    class SAML_API Assertion : public virtual RootObject
-    {
-    public:
-        virtual ~Assertion();
-    protected:
-        Assertion();
-    };
-
-};
+// Moved declaration into RootObject.h header.
 
 #endif /* __saml_assertion_h__ */

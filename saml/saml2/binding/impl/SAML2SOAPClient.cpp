@@ -119,7 +119,7 @@ StatusResponseType* SAML2SOAPClient::receiveSAML()
     return nullptr;
 }
 
-bool SAML2SOAPClient::handleError(const Status& status)
+bool SAML2SOAPClient::handleError(const saml2p::Status& status)
 {
     auto_ptr_char code((status.getStatusCode() ? status.getStatusCode()->getValue() : nullptr));
     auto_ptr_char str((status.getStatusMessage() ? status.getStatusMessage()->getMessage() : nullptr));

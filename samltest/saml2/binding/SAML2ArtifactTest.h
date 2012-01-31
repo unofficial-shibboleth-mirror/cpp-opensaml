@@ -142,7 +142,7 @@ public:
 
         auto_ptr<ArtifactResponse> response(ArtifactResponseBuilder::buildArtifactResponse());
         response->setPayload(payload);
-        Status* status = StatusBuilder::buildStatus();
+        saml2p::Status* status = StatusBuilder::buildStatus();
         response->setStatus(status);
         StatusCode* sc = StatusCodeBuilder::buildStatusCode();
         status->setStatusCode(sc);

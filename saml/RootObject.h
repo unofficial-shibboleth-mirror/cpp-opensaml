@@ -69,6 +69,58 @@ namespace opensaml {
         RootObject();
     };
 
+    /**
+     * Base class for SAML assertions.
+     * Currently just a marker interface.
+     */
+    class SAML_API Assertion : public virtual RootObject
+    {
+    public:
+        virtual ~Assertion();
+    protected:
+        Assertion();
+    };
+
+    /**
+     * Base class for SAML status codes.
+     */
+    class SAML_API Status : public virtual xmltooling::XMLObject
+    {
+    public:
+        virtual ~Status();
+
+        /**
+         * Returns a string representation of the top-level status code.
+         *
+         * @return string representation of top-level status code
+         */
+        virtual const XMLCh* getTopStatus() const=0;
+
+        /**
+         * Returns a string representation of the second-level status code, if any.
+         *
+         * @return string representation of second-level status code, or nullptr
+         */
+        virtual const XMLCh* getSubStatus() const=0;
+
+        /**
+         * Returns true iff status information beyond the second level exists.
+         *
+         * @return indicator of three or more status codes
+         */
+        virtual bool hasAdditionalStatus() const=0;
+
+        /**
+         * Returns the message contained in the status, if any.
+         *
+         * @return status message, or nullptr
+         */
+        virtual const XMLCh* getMessage() const=0;
+
+    protected:
+        Status();
+    };
+
 };
 
 #endif /* __saml_root_h__ */

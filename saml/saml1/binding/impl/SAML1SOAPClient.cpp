@@ -92,7 +92,7 @@ Response* SAML1SOAPClient::receiveSAML()
                     if (code && *code != StatusCode::SUCCESS && handleError(*status)) {
                         BindingException ex("SAML Response contained an error.");
                         if (m_soaper.getPolicy().getIssuerMetadata())
-                            annotateException(&ex, m_soaper.getPolicy().getIssuerMetadata());   // throws it
+                            annotateException(&ex, m_soaper.getPolicy().getIssuerMetadata(), status);   // throws it
                         else
                             ex.raise();
                     }
@@ -114,7 +114,7 @@ Response* SAML1SOAPClient::receiveSAML()
     return nullptr;
 }
 
-bool SAML1SOAPClient::handleError(const Status& status)
+bool SAML1SOAPClient::handleError(const saml1p::Status& status)
 {
     const xmltooling::QName* code = status.getStatusCode() ? status.getStatusCode()->getValue() : nullptr;
     auto_ptr_char str((status.getStatusMessage() ? status.getStatusMessage()->getMessage() : nullptr));
