@@ -133,7 +133,7 @@ public:
         TSM_ASSERT("Not an assertion.", assertion!=nullptr);
         auto_ptr<Response> response(ResponseBuilder::buildResponse());
         response->getAssertions().push_back(assertion);
-        Status* status = StatusBuilder::buildStatus();
+        saml1p::Status* status = StatusBuilder::buildStatus();
         response->setStatus(status);
         StatusCode* sc = StatusCodeBuilder::buildStatusCode();
         status->setStatusCode(sc);
