@@ -45,7 +45,9 @@
 #include "SAMLConfig.h"
 
 #include <limits.h>
+#include <vector>
 #include <boost/scoped_ptr.hpp>
+#include <xmltooling/unicode.h>
 
 using namespace xercesc;
 
@@ -109,10 +111,14 @@ namespace opensaml {
         void generateRandomBytes(std::string& buf, unsigned int len);
         XMLCh* generateIdentifier();
         std::string hashSHA1(const char* data, bool toHex=false);
+        void setContactPriority(const XMLCh*);
+        const saml2md::ContactPerson* getContactPerson(const saml2md::EntityDescriptor&) const;
+        const saml2md::ContactPerson* getContactPerson(const saml2md::RoleDescriptor&) const;
 
     private:
         int m_initCount;
         boost::scoped_ptr<xmltooling::Mutex> m_lock;
+        std::vector<xmltooling::xstring> m_contactPriority;
     };
     /// @endcond
 

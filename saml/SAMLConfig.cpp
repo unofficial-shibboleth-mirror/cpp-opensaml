@@ -68,6 +68,7 @@
 #include <xsec/enc/XSECCryptoException.hpp>
 #include <xsec/enc/XSECCryptoProvider.hpp>
 #include <xsec/utils/XSECPlatformUtils.hpp>
+#include <xercesc/util/XMLStringTokenizer.hpp>
 
 using namespace opensaml;
 using namespace xmlsignature;
@@ -190,6 +191,9 @@ bool SAMLInternalConfig::init(bool initXMLTooling)
     registerMessageDecoders();
     registerSecurityPolicyRules();
 
+    m_contactPriority.push_back(saml2md::ContactPerson::CONTACT_SUPPORT);
+    m_contactPriority.push_back(saml2md::ContactPerson::CONTACT_TECHNICAL);
+
     log.info("%s library initialization complete", PACKAGE_STRING);
     ++m_initCount;
     return true;
@@ -264,6 +268,40 @@ string SAMLInternalConfig::hashSHA1(const char* s, bool toHex)
     return SecurityHelper::doHash("SHA1", s, strlen(s), toHex);
 }
 
+void SAMLInternalConfig::setContactPriority(const XMLCh* contactTypes)
+{
+    const XMLCh* ctype;
+    m_contactPriority.clear();
+    XMLStringTokenizer tokens(contactTypes);
+    while (tokens.hasMoreTokens()) {
+        ctype = tokens.nextToken();
+        if (ctype && *ctype)
+            m_contactPriority.push_back(ctype);
+    }
+}
+
+using namespace saml2md;
+
+const ContactPerson* SAMLInternalConfig::getContactPerson(const EntityDescriptor& entity) const
+{
+    for (vector<xstring>::const_iterator ctype = m_contactPriority.begin(); ctype != m_contactPriority.end(); ++ctype) {
+        const ContactPerson* cp = find_if(entity.getContactPersons(), *ctype == lambda::bind(&ContactPerson::getContactType, _1));
+        if (cp)
+            return cp;
+    }
+    return nullptr;
+}
+
+const ContactPerson* SAMLInternalConfig::getContactPerson(const RoleDescriptor& role) const
+{
+    for (vector<xstring>::const_iterator ctype = m_contactPriority.begin(); ctype != m_contactPriority.end(); ++ctype) {
+        const ContactPerson* cp = find_if(role.getContactPersons(), *ctype == lambda::bind(&ContactPerson::getContactType, _1));
+        if (cp)
+            return cp;
+    }
+    return getContactPerson(*(dynamic_cast<const EntityDescriptor*>(role.getParent())));
+}
+
 SignableObject::SignableObject()
 {
 }
@@ -296,9 +334,6 @@ Status::~Status()
 {
 }
 
-using namespace saml2p;
-using namespace saml2md;
-
 void opensaml::annotateException(XMLToolingException* e, const EntityDescriptor* entity, const Status* status, bool rethrow)
 {
     time_t now = time(nullptr);
@@ -324,30 +359,32 @@ void opensaml::annotateException(XMLToolingException* e, const RoleDescriptor* r
         auto_ptr_char id(dynamic_cast<EntityDescriptor*>(role->getParent())->getEntityID());
         e->addProperty("entityID",id.get());
 
-        const vector<ContactPerson*>& contacts=role->getContactPersons();
-        for (vector<ContactPerson*>::const_iterator c=contacts.begin(); c!=contacts.end(); ++c) {
-            const XMLCh* ctype=(*c)->getContactType();
-            if (ctype && (XMLString::equals(ctype,ContactPerson::CONTACT_SUPPORT)
-                    || XMLString::equals(ctype,ContactPerson::CONTACT_TECHNICAL))) {
-                GivenName* fname=(*c)->getGivenName();
-                SurName* lname=(*c)->getSurName();
-                auto_ptr_char first(fname ? fname->getName() : nullptr);
-                auto_ptr_char last(lname ? lname->getName() : nullptr);
-                if (first.get() && last.get()) {
-                    string contact=string(first.get()) + ' ' + last.get();
-                    e->addProperty("contactName",contact.c_str());
+        const ContactPerson* cp = SAMLConfig::getConfig().getContactPerson(*role);
+        if (cp) {
+            GivenName* fname = cp->getGivenName();
+            SurName* lname = cp->getSurName();
+            auto_ptr_char first(fname ? fname->getName() : nullptr);
+            auto_ptr_char last(lname ? lname->getName() : nullptr);
+            if (first.get() && last.get()) {
+                string contact=string(first.get()) + ' ' + last.get();
+                e->addProperty("contactName", contact.c_str());
+            }
+            else if (first.get())
+                e->addProperty("contactName", first.get());
+            else if (last.get())
+                e->addProperty("contactName", last.get());
+            const vector<EmailAddress*>& emails=cp->getEmailAddresss();
+            if (!emails.empty()) {
+                auto_ptr_char email(emails.front()->getAddress());
+                if (email.get()) {
+                    if (strstr(email.get(), "mailto:") == email.get()) {
+                        e->addProperty("contactEmail", email.get());
+                    }
+                    else {
+                        string addr = string("mailto:") + email.get();
+                        e->addProperty("contactEmail", addr.c_str());
+                    }
                 }
-                else if (first.get())
-                    e->addProperty("contactName",first.get());
-                else if (last.get())
-                    e->addProperty("contactName",last.get());
-                const vector<EmailAddress*>& emails=const_cast<const ContactPerson*>(*c)->getEmailAddresss();
-                if (!emails.empty()) {
-                    auto_ptr_char email(emails.front()->getAddress());
-                    if (email.get())
-                        e->addProperty("contactEmail",email.get());
-                }
-                break;
             }
         }
 
