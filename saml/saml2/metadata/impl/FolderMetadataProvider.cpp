@@ -59,6 +59,7 @@ namespace opensaml {
         static const XMLCh Chaining[] =             UNICODE_LITERAL_8(C,h,a,i,n,i,n,g);
         static const XMLCh _MetadataProvider[] =    UNICODE_LITERAL_16(M,e,t,a,d,a,t,a,P,r,o,v,i,d,e,r);
         static const XMLCh discoveryFeed[] =        UNICODE_LITERAL_13(d,i,s,c,o,v,e,r,y,F,e,e,d);
+        static const XMLCh dropDOM[] =              UNICODE_LITERAL_7(d,r,o,p,D,O,M);
         static const XMLCh legacyOrgNames[] =       UNICODE_LITERAL_14(l,e,g,a,c,y,O,r,g,N,a,m,e,s);
         static const XMLCh path[] =                 UNICODE_LITERAL_4(p,a,t,h);
         static const XMLCh precedence[] =           UNICODE_LITERAL_10(p,r,e,c,e,d,e,n,c,e);
@@ -143,6 +144,8 @@ namespace opensaml {
                     child->setAttributeNS(nullptr, discoveryFeed, e->getAttributeNS(nullptr, discoveryFeed));
                 if (e->hasAttributeNS(nullptr, legacyOrgNames))
                     child->setAttributeNS(nullptr, legacyOrgNames, e->getAttributeNS(nullptr, legacyOrgNames));
+                if (e->hasAttributeNS(nullptr, dropDOM))
+                    child->setAttributeNS(nullptr, dropDOM, e->getAttributeNS(nullptr, dropDOM));
 
                 DOMElement* filter = XMLHelper::getFirstChildElement(e);
                 while (filter) {
