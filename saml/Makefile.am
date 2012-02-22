@@ -146,6 +146,7 @@ libsaml_la_SOURCES = \
 	saml2/metadata/impl/ChainingMetadataProvider.cpp \
 	saml2/metadata/impl/DiscoverableMetadataProvider.cpp \
 	saml2/metadata/impl/DynamicMetadataProvider.cpp \
+    saml2/metadata/impl/EntityAttributesMetadataFilter.cpp \
 	saml2/metadata/impl/EntityRoleMetadataFilter.cpp \
 	saml2/metadata/impl/FolderMetadataProvider.cpp \
 	saml2/metadata/impl/MetadataCredentialContext.cpp \
