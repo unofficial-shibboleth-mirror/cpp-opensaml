@@ -29,12 +29,10 @@
 #include "saml2/metadata/MetadataFilter.h"
 
 #include <xmltooling/logging.h>
-#include <xmltooling/util/NDC.h>
 
 using namespace opensaml::saml2md;
 using namespace xmltooling::logging;
 using namespace xmltooling;
-using namespace boost;
 using namespace std;
 
 namespace opensaml {
@@ -104,30 +102,24 @@ EntityRoleMetadataFilter::EntityRoleMetadataFilter(const DOMElement* e)
 
 void EntityRoleMetadataFilter::doFilter(XMLObject& xmlObject) const
 {
-#ifdef _DEBUG
-    NDC ndc("doFilter");
-#endif
-
-    try {
-        doFilter(dynamic_cast<EntitiesDescriptor&>(xmlObject));
-        return;
+    EntitiesDescriptor* group = dynamic_cast<EntitiesDescriptor*>(&xmlObject);
+    if (group) {
+        doFilter(*group);
     }
-    catch (bad_cast&) {
+    else {
+        EntityDescriptor* entity = dynamic_cast<EntityDescriptor*>(&xmlObject);
+        if (entity) {
+            doFilter(*entity);
+        }
+        else {
+            throw MetadataFilterException(ENTITYROLE_METADATA_FILTER" MetadataFilter was given an improper metadata instance to filter.");
+        }
     }
-
-    try {
-        doFilter(dynamic_cast<EntityDescriptor&>(xmlObject));
-        return;
-    }
-    catch (bad_cast&) {
-    }
-
-    throw MetadataFilterException("EntityRoleWhiteList MetadataFilter was given an improper metadata instance to filter.");
 }
 
 void EntityRoleMetadataFilter::doFilter(EntitiesDescriptor& entities) const
 {
-    Category& log=Category::getInstance(SAML_LOGCAT".MetadataFilter.EntityRoleWhiteList");
+    Category& log=Category::getInstance(SAML_LOGCAT".MetadataFilter."ENTITYROLE_METADATA_FILTER);
 
     VectorOf(EntityDescriptor) v = entities.getEntityDescriptors();
     for (VectorOf(EntityDescriptor)::size_type i = 0; i < v.size(); ) {
