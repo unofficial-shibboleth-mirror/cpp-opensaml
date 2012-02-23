@@ -55,7 +55,7 @@ namespace opensaml {
             void doFilter(XMLObject& xmlObject) const;
 
         private:
-            void filterGroup(EntitiesDescriptor&) const;
+            void filterGroup(EntitiesDescriptor*) const;
             bool included(const EntityDescriptor&) const;
             bool matches(const EntityAttributes*, const Attribute*) const;
 
@@ -95,7 +95,7 @@ void WhitelistMetadataFilter::doFilter(XMLObject& xmlObject) const
 {
     EntitiesDescriptor* group = dynamic_cast<EntitiesDescriptor*>(&xmlObject);
     if (group) {
-        filterGroup(*group);
+        filterGroup(group);
     }
     else {
         EntityDescriptor* entity = dynamic_cast<EntityDescriptor*>(&xmlObject);
@@ -109,11 +109,11 @@ void WhitelistMetadataFilter::doFilter(XMLObject& xmlObject) const
     }
 }
 
-void WhitelistMetadataFilter::filterGroup(EntitiesDescriptor& entities) const
+void WhitelistMetadataFilter::filterGroup(EntitiesDescriptor* entities) const
 {
     Category& log=Category::getInstance(SAML_LOGCAT".MetadataFilter."WHITELIST_METADATA_FILTER);
 
-    VectorOf(EntityDescriptor) v = entities.getEntityDescriptors();
+    VectorOf(EntityDescriptor) v = entities->getEntityDescriptors();
     for (VectorOf(EntityDescriptor)::size_type i = 0; i < v.size(); ) {
         if (!included(*v[i])) {
             auto_ptr_char id(v[i]->getEntityID());
@@ -125,11 +125,8 @@ void WhitelistMetadataFilter::filterGroup(EntitiesDescriptor& entities) const
         }
     }
 
-    const vector<EntitiesDescriptor*>& groups = const_cast<const EntitiesDescriptor&>(entities).getEntitiesDescriptors();
-    for_each(
-        make_indirect_iterator(groups.begin()), make_indirect_iterator(groups.end()),
-        lambda::bind(&WhitelistMetadataFilter::filterGroup, this, _1)
-        );
+    const vector<EntitiesDescriptor*>& groups = const_cast<const EntitiesDescriptor*>(entities)->getEntitiesDescriptors();
+    for_each(groups.begin(), groups.end(), lambda::bind(&WhitelistMetadataFilter::filterGroup, this, _1));
 }
 
 bool WhitelistMetadataFilter::included(const EntityDescriptor& entity) const

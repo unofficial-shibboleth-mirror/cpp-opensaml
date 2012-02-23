@@ -56,8 +56,8 @@ namespace opensaml {
             void doFilter(XMLObject& xmlObject) const;
 
         private:
-            void filterEntity(EntityDescriptor& entity) const;
-            void filterGroup(EntitiesDescriptor& entities) const;
+            void filterEntity(EntityDescriptor* entity) const;
+            void filterGroup(EntitiesDescriptor* entities) const;
 
             vector< boost::shared_ptr<Attribute> > m_attributes;
             typedef multimap<xstring,const Attribute*> applymap_t;
@@ -101,12 +101,12 @@ void EntityAttributesMetadataFilter::doFilter(XMLObject& xmlObject) const
 {
     EntitiesDescriptor* group = dynamic_cast<EntitiesDescriptor*>(&xmlObject);
     if (group) {
-        filterGroup(*group);
+        filterGroup(group);
     }
     else {
         EntityDescriptor* entity = dynamic_cast<EntityDescriptor*>(&xmlObject);
         if (entity) {
-            filterEntity(*entity);
+            filterEntity(entity);
         }
         else {
             throw MetadataFilterException(ENTITYATTR_METADATA_FILTER" MetadataFilter was given an improper metadata instance to filter.");
@@ -114,30 +114,24 @@ void EntityAttributesMetadataFilter::doFilter(XMLObject& xmlObject) const
     }
 }
 
-void EntityAttributesMetadataFilter::filterGroup(EntitiesDescriptor& entities) const
+void EntityAttributesMetadataFilter::filterGroup(EntitiesDescriptor* entities) const
 {
-    const vector<EntityDescriptor*>& v = const_cast<const EntitiesDescriptor&>(entities).getEntityDescriptors();
-    for_each(
-        make_indirect_iterator(v.begin()), make_indirect_iterator(v.end()),
-        lambda::bind(&EntityAttributesMetadataFilter::filterEntity, this, _1)
-        );
+    const vector<EntityDescriptor*>& v = const_cast<const EntitiesDescriptor*>(entities)->getEntityDescriptors();
+    for_each(v.begin(), v.end(), lambda::bind(&EntityAttributesMetadataFilter::filterEntity, this, _1));
 
-    const vector<EntitiesDescriptor*>& v2 = const_cast<const EntitiesDescriptor&>(entities).getEntitiesDescriptors();
-    for_each(
-        make_indirect_iterator(v2.begin()), make_indirect_iterator(v2.end()),
-        lambda::bind(&EntityAttributesMetadataFilter::filterGroup, this, _1)
-        );
+    const vector<EntitiesDescriptor*>& v2 = const_cast<const EntitiesDescriptor*>(entities)->getEntitiesDescriptors();
+    for_each(v2.begin(), v2.end(), lambda::bind(&EntityAttributesMetadataFilter::filterGroup, this, _1));
 }
 
-void EntityAttributesMetadataFilter::filterEntity(EntityDescriptor& entity) const
+void EntityAttributesMetadataFilter::filterEntity(EntityDescriptor* entity) const
 {
-    if (entity.getEntityID()) {
-        pair<applymap_t::const_iterator,applymap_t::const_iterator> tags = m_applyMap.equal_range(entity.getEntityID());
+    if (entity->getEntityID()) {
+        pair<applymap_t::const_iterator,applymap_t::const_iterator> tags = m_applyMap.equal_range(entity->getEntityID());
         if (tags.first != tags.second) {
-            Extensions* exts = entity.getExtensions();
+            Extensions* exts = entity->getExtensions();
             if (!exts) {
-                entity.setExtensions(ExtensionsBuilder::buildExtensions());
-                exts = entity.getExtensions();
+                entity->setExtensions(ExtensionsBuilder::buildExtensions());
+                exts = entity->getExtensions();
             }
             EntityAttributes* wrapper = nullptr;
             const vector<XMLObject*>& children = const_cast<const Extensions*>(exts)->getUnknownXMLObjects();
