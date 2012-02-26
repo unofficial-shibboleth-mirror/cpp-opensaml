@@ -83,6 +83,9 @@ namespace opensaml {
         /** MetadataFilter that removes non-retained roles. */
         #define ENTITYROLE_METADATA_FILTER  "EntityRoleWhiteList"
 
+        /** MetadataFilter that adds EntityAttributes extension. */
+        #define ENTITYATTR_METADATA_FILTER "EntityAttributes"
+
         DECL_XMLTOOLING_EXCEPTION(MetadataFilterException,SAML_EXCEPTIONAPI(SAML_API),opensaml::saml2md,MetadataException,Exceptions related to metadata filtering);
     };
 };
