@@ -48,6 +48,7 @@
 #include "saml1/core/Assertions.h"
 #include "saml1/core/Protocols.h"
 #include "saml2/core/Protocols.h"
+#include "saml2/metadata/EntityMatcher.h"
 #include "saml2/metadata/Metadata.h"
 #include "saml2/metadata/MetadataFilter.h"
 #include "saml2/metadata/MetadataProvider.h"
@@ -186,6 +187,7 @@ bool SAMLInternalConfig::init(bool initXMLTooling)
     saml2md::registerMetadataClasses();
     saml2md::registerMetadataProviders();
     saml2md::registerMetadataFilters();
+    saml2md::registerEntityMatchers();
     registerSAMLArtifacts();
     registerMessageEncoders();
     registerMessageDecoders();
@@ -218,6 +220,7 @@ void SAMLInternalConfig::term(bool termXMLTooling)
     MessageEncoderManager.deregisterFactories();
     SecurityPolicyRuleManager.deregisterFactories();
     SAMLArtifactManager.deregisterFactories();
+    EntityMatcherManager.deregisterFactories();
     MetadataFilterManager.deregisterFactories();
     MetadataProviderManager.deregisterFactories();
 

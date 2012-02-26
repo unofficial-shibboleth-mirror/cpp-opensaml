@@ -25,20 +25,22 @@
  */
 
 #include "internal.h"
+#include "saml2/metadata/EntityMatcher.h"
 #include "saml2/metadata/Metadata.h"
 #include "saml2/metadata/MetadataFilter.h"
 
+#include <boost/scoped_ptr.hpp>
 #include <xmltooling/logging.h>
-#include <xmltooling/util/NDC.h>
 
 using namespace opensaml::saml2md;
+using namespace opensaml::saml2;
 using namespace xmltooling::logging;
 using namespace xmltooling;
+using namespace boost;
 using namespace std;
 
 namespace opensaml {
     namespace saml2md {
-                
         class SAML_DLLLOCAL BlacklistMetadataFilter : public MetadataFilter
         {
         public:
@@ -49,15 +51,11 @@ namespace opensaml {
             void doFilter(XMLObject& xmlObject) const;
 
         private:
-            void doFilter(EntitiesDescriptor& entities) const;
-            
-            bool found(const XMLCh* id) const {
-                if (!id)
-                    return false;
-                return m_set.count(id)==1;
-            }
+            void filterGroup(EntitiesDescriptor*) const;
+            bool included(const EntityDescriptor&) const;
 
-            set<xstring> m_set;
+            set<xstring> m_entities;
+            scoped_ptr<EntityMatcher> m_matcher;
         }; 
 
         MetadataFilter* SAML_DLLLOCAL BlacklistMetadataFilterFactory(const DOMElement* const & e)
@@ -65,78 +63,88 @@ namespace opensaml {
             return new BlacklistMetadataFilter(e);
         }
 
+        static const XMLCh Exclude[] = UNICODE_LITERAL_7(E,x,c,l,u,d,e);
+        static const XMLCh matcher[] = UNICODE_LITERAL_7(m,a,t,c,h,e,r);
     };
 };
 
-static const XMLCh Exclude[] =  UNICODE_LITERAL_7(E,x,c,l,u,d,e);
 
 BlacklistMetadataFilter::BlacklistMetadataFilter(const DOMElement* e)
 {
-    e = XMLHelper::getFirstChildElement(e);
+    string matcher(XMLHelper::getAttrString(e, nullptr, matcher));
+    if (!matcher.empty())
+        m_matcher.reset(SAMLConfig::getConfig().EntityMatcherManager.newPlugin(matcher.c_str(), e));
+
+    e = XMLHelper::getFirstChildElement(e, Exclude);
     while (e) {
-        if (XMLString::equals(e->getLocalName(), Exclude) && e->hasChildNodes()) {
-            m_set.insert(e->getFirstChild()->getTextContent());
+        if (e->hasChildNodes()) {
+            const XMLCh* excl = e->getTextContent();
+            if (excl && *excl)
+                m_entities.insert(excl);
         }
-        e = XMLHelper::getNextSiblingElement(e);
+        e = XMLHelper::getNextSiblingElement(e, Exclude);
     }
 }
 
 void BlacklistMetadataFilter::doFilter(XMLObject& xmlObject) const
 {
-#ifdef _DEBUG
-    NDC ndc("doFilter");
-#endif
-    
-    try {
-        EntitiesDescriptor& entities = dynamic_cast<EntitiesDescriptor&>(xmlObject);
-        if (found(entities.getName()))
-            throw MetadataFilterException(BLACKLIST_METADATA_FILTER" MetadataFilter instructed to filter the root/only group in the metadata.");
-        doFilter(entities);
-        return;
+    EntitiesDescriptor* group = dynamic_cast<EntitiesDescriptor*>(&xmlObject);
+    if (group) {
+        if (group->getName() && !m_entities.empty() && m_entities.count(group->getName()) > 0)
+            throw MetadataFilterException(BLACKLIST_METADATA_FILTER" MetadataFilter instructed to filter the root group in the metadata.");
+        filterGroup(group);
     }
-    catch (bad_cast&) {
+    else {
+        EntityDescriptor* entity = dynamic_cast<EntityDescriptor*>(&xmlObject);
+        if (entity) {
+            if (included(*entity))
+                throw MetadataFilterException(BLACKLIST_METADATA_FILTER" MetadataFilter instructed to filter the root/only entity in the metadata.");
+        }
+        else {
+            throw MetadataFilterException(BLACKLIST_METADATA_FILTER" MetadataFilter was given an improper metadata instance to filter.");
+        }
     }
-
-    try {
-        EntityDescriptor& entity = dynamic_cast<EntityDescriptor&>(xmlObject);
-        if (found(entity.getEntityID()))
-            throw MetadataFilterException(BLACKLIST_METADATA_FILTER" MetadataFilter instructed to filter the root/only entity in the metadata.");
-        return;
-    }
-    catch (bad_cast&) {
-    }
-     
-    throw MetadataFilterException(BLACKLIST_METADATA_FILTER" MetadataFilter was given an improper metadata instance to filter.");
 }
 
-void BlacklistMetadataFilter::doFilter(EntitiesDescriptor& entities) const
+void BlacklistMetadataFilter::filterGroup(EntitiesDescriptor* entities) const
 {
-    Category& log=Category::getInstance(SAML_LOGCAT".MetadataFilter."BLACKLIST_METADATA_FILTER);
-    
-    VectorOf(EntityDescriptor) v=entities.getEntityDescriptors();
-    for (VectorOf(EntityDescriptor)::size_type i=0; i<v.size(); ) {
-        const XMLCh* id=v[i]->getEntityID();
-        if (found(id)) {
-            auto_ptr_char id2(id);
-            log.info("filtering out blacklisted entity (%s)", id2.get());
+    Category& log = Category::getInstance(SAML_LOGCAT".MetadataFilter."WHITELIST_METADATA_FILTER);
+
+    VectorOf(EntityDescriptor) v = entities->getEntityDescriptors();
+    for (VectorOf(EntityDescriptor)::size_type i = 0; i < v.size(); ) {
+        if (included(*v[i])) {
+            auto_ptr_char id(v[i]->getEntityID());
+            log.info("filtering out blacklisted entity (%s)", id.get());
             v.erase(v.begin() + i);
         }
         else {
             i++;
         }
     }
-    
-    VectorOf(EntitiesDescriptor) w=entities.getEntitiesDescriptors();
-    for (VectorOf(EntitiesDescriptor)::size_type j=0; j<w.size(); ) {
-        const XMLCh* name=w[j]->getName();
-        if (found(name)) {
+
+    VectorOf(EntitiesDescriptor) w = entities->getEntitiesDescriptors();
+    for (VectorOf(EntitiesDescriptor)::size_type j = 0; j < w.size(); ) {
+        const XMLCh* name = w[j]->getName();
+        if (name && !m_entities.empty() && m_entities.count(name) > 0) {
             auto_ptr_char name2(name);
             log.info("filtering out blacklisted group (%s)", name2.get());
             w.erase(w.begin() + j);
         }
         else {
-            doFilter(*(w[j]));
+            filterGroup(w[j]);
             j++;
         }
     }
+}
+
+bool BlacklistMetadataFilter::included(const EntityDescriptor& entity) const
+{
+    // Check for entityID.
+    if (entity.getEntityID() && !m_entities.empty() && m_entities.count(entity.getEntityID()) > 0)
+        return true;
+
+    if (m_matcher && m_matcher->matches(entity))
+        return true;
+
+    return false;
 }

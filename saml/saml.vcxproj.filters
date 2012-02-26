@@ -369,6 +369,12 @@
     <ClCompile Include="saml2\metadata\impl\EntityAttributesMetadataFilter.cpp">
       <Filter>Source Files\saml2\metadata\impl</Filter>
     </ClCompile>
+    <ClCompile Include="saml2\metadata\impl\NameEntityMatcher.cpp">
+      <Filter>Source Files\saml2\metadata\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\metadata\impl\EntityAttributesEntityMatcher.cpp">
+      <Filter>Source Files\saml2\metadata\impl</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Assertion.h">
@@ -513,6 +519,9 @@
       <Filter>Header Files\binding</Filter>
     </ClInclude>
     <ClInclude Include="saml2\metadata\DiscoverableMetadataProvider.h">
+      <Filter>Header Files\saml2\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="saml2\metadata\EntityMatcher.h">
       <Filter>Header Files\saml2\metadata</Filter>
     </ClInclude>
   </ItemGroup>

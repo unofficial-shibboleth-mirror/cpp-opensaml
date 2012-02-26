@@ -87,6 +87,7 @@ saml2mdinclude_HEADERS = \
 	saml2/metadata/DiscoverableMetadataProvider.h \
 	saml2/metadata/DynamicMetadataProvider.h \
 	saml2/metadata/EndpointManager.h \
+    saml2/metadata/EntityMatcher.h \
 	saml2/metadata/Metadata.h \
 	saml2/metadata/MetadataCredentialContext.h \
 	saml2/metadata/MetadataCredentialCriteria.h \
@@ -146,6 +147,7 @@ libsaml_la_SOURCES = \
 	saml2/metadata/impl/ChainingMetadataProvider.cpp \
 	saml2/metadata/impl/DiscoverableMetadataProvider.cpp \
 	saml2/metadata/impl/DynamicMetadataProvider.cpp \
+    saml2/metadata/impl/EntityAttributesEntityMatcher.cpp \
     saml2/metadata/impl/EntityAttributesMetadataFilter.cpp \
 	saml2/metadata/impl/EntityRoleMetadataFilter.cpp \
 	saml2/metadata/impl/FolderMetadataProvider.cpp \
@@ -154,6 +156,7 @@ libsaml_la_SOURCES = \
 	saml2/metadata/impl/MetadataImpl.cpp \
 	saml2/metadata/impl/MetadataProvider.cpp \
 	saml2/metadata/impl/MetadataSchemaValidators.cpp \
+    saml2/metadata/impl/NameEntityMatcher.cpp \
 	saml2/metadata/impl/NullMetadataProvider.cpp \
 	saml2/metadata/impl/ObservableMetadataProvider.cpp \
 	saml2/metadata/impl/SignatureMetadataFilter.cpp \

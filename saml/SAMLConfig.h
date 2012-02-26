@@ -48,6 +48,7 @@ namespace opensaml {
     namespace saml2md {
         class SAML_API ContactPerson;
         class SAML_API EntityDescriptor;
+        class SAML_API EntityMatcher;
         class SAML_API MetadataProvider;
         class SAML_API MetadataFilter;
         class SAML_API RoleDescriptor;
@@ -190,6 +191,9 @@ namespace opensaml {
         
         /** Manages factories for MetadataFilter plugins. */
         xmltooling::PluginManager<saml2md::MetadataFilter,std::string,const xercesc::DOMElement*> MetadataFilterManager;
+
+        /** Manages factories for EntityMatcher plugins. */
+        xmltooling::PluginManager<saml2md::EntityMatcher,std::string,const xercesc::DOMElement*> EntityMatcherManager;
 
     protected:
         SAMLConfig();

@@ -177,8 +177,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="saml2\metadata\impl\DiscoverableMetadataProvider.cpp" />
+    <ClCompile Include="saml2\metadata\impl\EntityAttributesEntityMatcher.cpp" />
     <ClCompile Include="saml2\metadata\impl\EntityAttributesMetadataFilter.cpp" />
     <ClCompile Include="saml2\metadata\impl\FolderMetadataProvider.cpp" />
+    <ClCompile Include="saml2\metadata\impl\NameEntityMatcher.cpp" />
     <ClCompile Include="SAMLConfig.cpp" />
     <ClCompile Include="util\CommonDomainCookie.cpp" />
     <ClCompile Include="util\SAMLConstants.cpp" />
@@ -284,6 +286,7 @@
     <ClInclude Include="internal.h" />
     <ClInclude Include="RootObject.h" />
     <ClInclude Include="saml2\metadata\DiscoverableMetadataProvider.h" />
+    <ClInclude Include="saml2\metadata\EntityMatcher.h" />
     <ClInclude Include="SAMLConfig.h" />
     <ClInclude Include="version.h" />
     <ClInclude Include="util\CommonDomainCookie.h" />
