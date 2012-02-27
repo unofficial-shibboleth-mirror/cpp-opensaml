@@ -65,14 +65,14 @@ namespace opensaml {
         }
 
         static const XMLCh Include[] = UNICODE_LITERAL_7(I,n,c,l,u,d,e);
-        static const XMLCh matcher[] = UNICODE_LITERAL_7(m,a,t,c,h,e,r);
+        static const XMLCh _matcher[] = UNICODE_LITERAL_7(m,a,t,c,h,e,r);
     };
 };
 
 
 WhitelistMetadataFilter::WhitelistMetadataFilter(const DOMElement* e)
 {
-    string matcher(XMLHelper::getAttrString(e, nullptr, matcher));
+    string matcher(XMLHelper::getAttrString(e, nullptr, _matcher));
     if (!matcher.empty())
         m_matcher.reset(SAMLConfig::getConfig().EntityMatcherManager.newPlugin(matcher.c_str(), e));
 
