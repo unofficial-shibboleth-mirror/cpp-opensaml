@@ -241,12 +241,14 @@ void EncryptedElementType::encrypt(
     }
 }
 
-XMLObject* EncryptedElementType::decrypt(const CredentialResolver& credResolver, const XMLCh* recipient, CredentialCriteria* criteria) const
+XMLObject* EncryptedElementType::decrypt(
+    const CredentialResolver& credResolver, const XMLCh* recipient, CredentialCriteria* criteria, bool requireAuthenticatedCipher
+    ) const
 {
     if (!getEncryptedData())
         throw DecryptionException("No encrypted data present.");
     opensaml::EncryptedKeyResolver ekr(*this);
-    Decrypter decrypter(&credResolver, criteria, &ekr);
+    Decrypter decrypter(&credResolver, criteria, &ekr, requireAuthenticatedCipher);
     DOMDocumentFragment* frag = decrypter.decryptData(*getEncryptedData(), recipient);
     if (frag->hasChildNodes() && frag->getFirstChild()==frag->getLastChild()) {
         DOMNode* plaintext=frag->getFirstChild();

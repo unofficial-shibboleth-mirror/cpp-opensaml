@@ -133,13 +133,23 @@ namespace opensaml {
              * <p>The object returned will be unmarshalled around the decrypted DOM element in a
              * new Document owned by the object.
              *
+             * <p>The final boolean parameter is used to enforce a requirement for an authenticated cipher
+             * suite such as AES-GCM or similar. These ciphers include an HMAC or equivalent step that
+             * prevents tampering. Newer applications should set this parameter to true unless the ciphertext
+             * has been independently authenticated, and even in such a case, it is rarely possible to prevent
+             * chosen ciphertext attacks by trusted signers.
+             *
              * @param credResolver  locked resolver supplying decryption keys
              * @param recipient     identifier naming the recipient (the entity performing the decryption)
              * @param criteria      optional external criteria to use with resolver
+             * @param requireAuthenticatedCipher    true iff the bulk data encryption algorithm must be an authenticated cipher
              * @return  the decrypted and unmarshalled object
              */
             virtual xmltooling::XMLObject* decrypt(
-                const xmltooling::CredentialResolver& credResolver, const XMLCh* recipient, xmltooling::CredentialCriteria* criteria=nullptr
+                const xmltooling::CredentialResolver& credResolver,
+                const XMLCh* recipient,
+                xmltooling::CredentialCriteria* criteria=nullptr,
+                bool requireAuthenticatedCipher=false
                 ) const;
         END_XMLOBJECT;
 
