@@ -217,6 +217,12 @@ pair<bool,DOMElement*> XMLMetadataProvider::load(bool backup)
         throw MetadataException("Metadata instance failed manual validation checking.");
     }
 
+    const TimeBoundSAMLObject* validityCheck = dynamic_cast<TimeBoundSAMLObject*>(xmlObject.get());
+    if (!validityCheck || !validityCheck->isValid()) {
+        m_log.error("metadata instance was invalid at time of acquisition");
+        throw MetadataException("Metadata instance was invalid at time of acquisition.");
+    }
+
     // This is the best place to take a backup, since it's superficially "correct" metadata.
     string backupKey;
     if (!backup && !m_backing.empty()) {
