@@ -80,13 +80,13 @@ XMLObject* SAML2ECPDecoder::decode(
     Category& log = Category::getInstance(SAML_LOGCAT".MessageDecoder.SAML2ECP");
 
     log.debug("validating input");
-    const HTTPRequest* httpRequest=dynamic_cast<const HTTPRequest*>(&genericRequest);
-    if (!httpRequest)
-        throw BindingException("Unable to cast request object to HTTPRequest type.");
-    string s = genericRequest.getContentType();
-    if (s.find("application/vnd.paos+xml") == string::npos) {
-        log.warn("ignoring incorrect content type (%s)", s.c_str() ? s.c_str() : "none");
-        throw BindingException("Invalid content type for PAOS message.");
+    const HTTPRequest* httpRequest = dynamic_cast<const HTTPRequest*>(&genericRequest);
+    if (httpRequest) {
+        string s = httpRequest->getContentType();
+        if (s.find("application/vnd.paos+xml") == string::npos) {
+            log.warn("ignoring incorrect content type (%s)", s.c_str() ? s.c_str() : "none");
+            throw BindingException("Invalid content type for PAOS message.");
+        }
     }
 
     const char* data = genericRequest.getRequestBody();
@@ -119,17 +119,19 @@ XMLObject* SAML2ECPDecoder::decode(
             extractMessageDetails(*response, genericRequest, samlconstants::SAML20P_NS, policy);
             policy.evaluate(*response, &genericRequest);
 
-            // Check destination URL.
-            auto_ptr_char dest(response->getDestination());
-            const char* dest2 = httpRequest->getRequestURL();
-            const char* delim = strchr(dest2, '?');
-            if (response->getSignature() && (!dest.get() || !*(dest.get()))) {
-                log.error("signed SAML message missing Destination attribute");
-                throw BindingException("Signed SAML message missing Destination attribute identifying intended destination.");
-            }
-            else if (dest.get() && *dest.get() && ((delim && strncmp(dest.get(), dest2, delim - dest2)) || (!delim && strcmp(dest.get(),dest2)))) {
-                log.error("PAOS response targeted at (%s), but delivered to (%s)", dest.get(), dest2);
-                throw BindingException("SAML message delivered with PAOS to incorrect server URL.");
+            // Check destination URL if this is HTTP.
+            if (httpRequest) {
+                auto_ptr_char dest(response->getDestination());
+                const char* dest2 = httpRequest->getRequestURL();
+                const char* delim = strchr(dest2, '?');
+                if (response->getSignature() && (!dest.get() || !*(dest.get()))) {
+                    log.error("signed SAML message missing Destination attribute");
+                    throw BindingException("Signed SAML message missing Destination attribute identifying intended destination.");
+                }
+                else if (dest.get() && *dest.get() && ((delim && strncmp(dest.get(), dest2, delim - dest2)) || (!delim && strcmp(dest.get(), dest2)))) {
+                    log.error("PAOS response targeted at (%s), but delivered to (%s)", dest.get(), dest2);
+                    throw BindingException("SAML message delivered with PAOS to incorrect server URL.");
+                }
             }
 
             // Check for RelayState header.
