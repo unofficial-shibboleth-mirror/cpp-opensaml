@@ -232,7 +232,7 @@ pair<const EntityDescriptor*,const RoleDescriptor*> DynamicMetadataProvider::get
         m_lock->wrlock();
 
         // Notify observers.
-        emitChangeEvent();
+        emitChangeEvent(*entity2);
 
         // Record the proper refresh time.
         m_cacheMap[entity2->getEntityID()] = now + cacheExp;

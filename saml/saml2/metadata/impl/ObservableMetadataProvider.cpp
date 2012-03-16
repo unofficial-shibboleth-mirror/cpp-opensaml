@@ -47,7 +47,13 @@ ObservableMetadataProvider::~ObservableMetadataProvider()
 void ObservableMetadataProvider::emitChangeEvent() const
 {
     Lock lock(m_observerLock);
-    for_each(m_observers.begin(), m_observers.end(), boost::bind(&Observer::onEvent, _1, boost::ref(*this)));
+    for_each(m_observers.begin(), m_observers.end(), boost::bind(&Observer::onEvent, _1, boost::cref(*this)));
+}
+
+void ObservableMetadataProvider::emitChangeEvent(const EntityDescriptor& entity) const
+{
+    Lock lock(m_observerLock);
+    for_each(m_observers.begin(), m_observers.end(), boost::bind(&Observer::onEvent, _1, boost::cref(*this), boost::cref(entity)));
 }
 
 void ObservableMetadataProvider::addObserver(const Observer* newObserver) const
@@ -73,4 +79,9 @@ ObservableMetadataProvider::Observer::Observer()
 
 ObservableMetadataProvider::Observer::~Observer()
 {
+}
+
+void ObservableMetadataProvider::Observer::onEvent(const ObservableMetadataProvider& provider, const EntityDescriptor&) const
+{ 
+    onEvent(provider);
 }

@@ -104,6 +104,14 @@ void AbstractMetadataProvider::emitChangeEvent() const
     ObservableMetadataProvider::emitChangeEvent();
 }
 
+void AbstractMetadataProvider::emitChangeEvent(const EntityDescriptor& entity) const
+{
+    for (credmap_t::iterator c = m_credentialMap.begin(); c!=m_credentialMap.end(); ++c)
+        for_each(c->second.begin(), c->second.end(), xmltooling::cleanup<Credential>());
+    m_credentialMap.clear();
+    ObservableMetadataProvider::emitChangeEvent(entity);
+}
+
 void AbstractMetadataProvider::indexEntity(EntityDescriptor* site, time_t& validUntil, bool replace) const
 {
     // If child expires later than input, reset child, otherwise lower input to match.

@@ -59,6 +59,11 @@ namespace opensaml {
              */
             virtual void emitChangeEvent() const;
 
+            /**
+             * Convenience method for notifying every registered Observer of an event.
+             */
+            virtual void emitChangeEvent(const EntityDescriptor& entity) const;
+
         public:
             virtual ~ObservableMetadataProvider();
             
@@ -79,6 +84,15 @@ namespace opensaml {
                  * @param provider the provider being observed
                  */
                 virtual void onEvent(const ObservableMetadataProvider& provider) const=0;
+
+                /**
+                 * Called when a provider signals an event has occured.
+                 * The provider is already locked. 
+                 * 
+                 * @param provider the provider being observed
+                 * @param entity the entity that underwent modification
+                 */
+                virtual void onEvent(const ObservableMetadataProvider& provider, const EntityDescriptor& entity) const;
             };
             
             /**

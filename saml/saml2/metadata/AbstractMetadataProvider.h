@@ -83,6 +83,7 @@ namespace opensaml {
 
             void outputStatus(std::ostream& os) const;
             void emitChangeEvent() const;
+            void emitChangeEvent(const EntityDescriptor&) const;
             std::pair<const EntityDescriptor*,const RoleDescriptor*> getEntityDescriptor(const Criteria& criteria) const;
             const EntitiesDescriptor* getEntitiesDescriptor(const char* name, bool requireValidMetadata=true) const;
             const xmltooling::Credential* resolve(const xmltooling::CredentialCriteria* criteria=nullptr) const;
