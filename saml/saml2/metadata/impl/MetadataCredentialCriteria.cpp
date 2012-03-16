@@ -43,16 +43,6 @@ MetadataCredentialCriteria::MetadataCredentialCriteria(const RoleDescriptor& rol
     }
 }
 
-void MetadataCredentialCriteria::reset()
-{
-    CredentialCriteria::reset();
-    const EntityDescriptor* entity = dynamic_cast<const EntityDescriptor*>(m_role.getParent());
-    if (entity) {
-        auto_ptr_char name(entity->getEntityID());
-        setPeerName(name.get());
-    }
-}
-
 bool MetadataCredentialCriteria::matches(const Credential& credential) const
 {
     const MetadataCredentialContext* context = dynamic_cast<const MetadataCredentialContext*>(credential.getCredentalContext());
