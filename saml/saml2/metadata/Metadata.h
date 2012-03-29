@@ -83,7 +83,11 @@ namespace opensaml {
             bool isValid() const {
                 return time(nullptr) <= getValidUntilEpoch();
             }
-            /** Returns true iff the object is valid at the supplied time. */
+            /**
+             * Returns true iff the object is valid at the supplied time.
+             *
+             * @param t the time to check against
+             */
             bool isValid(time_t t) const {
                 return t <= getValidUntilEpoch();
             }
@@ -101,13 +105,31 @@ namespace opensaml {
         DECL_XMLOBJECT_SIMPLE(SAML_API,ActionNamespace,Namespace,SAML 2.0 Metadata Extension ActionNamespace element);
 
         BEGIN_XMLOBJECT(SAML_API,localizedNameType,xmltooling::XMLObject,SAML 2.0 localizedNameType type);
-            DECL_STRING_ATTRIB(Lang,LANG);
+            /** xml:lang attribute name. */
+            static const XMLCh LANG_ATTRIB_NAME[];
+
+            /**
+             * Sets the xml:lang attribute.
+             *
+             * @param Lang  the value to set
+             */
+            virtual void setLang(const XMLCh* Lang)=0;
+
             /** localizedNameType local name */
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
 
         BEGIN_XMLOBJECT(SAML_API,localizedURIType,xmltooling::XMLObject,SAML 2.0 localizedURIType type);
-            DECL_STRING_ATTRIB(Lang,LANG);
+            /** xml:lang attribute name. */
+            static const XMLCh LANG_ATTRIB_NAME[];
+
+            /**
+             * Sets the xml:lang attribute.
+             *
+             * @param Lang  the value to set
+             */
+            virtual void setLang(const XMLCh* Lang)=0;
+
             /** localizedURIType local name */
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
@@ -445,14 +467,32 @@ namespace opensaml {
         END_XMLOBJECT;
 
         BEGIN_XMLOBJECT(SAML_API,Keywords,xmltooling::XMLObject,SAML Metadata Extension for Login UI Keywords element);
-            DECL_STRING_ATTRIB(Lang,LANG);
+            /** xml:lang attribute name. */
+            static const XMLCh LANG_ATTRIB_NAME[];
+
+            /**
+             * Sets the xml:lang attribute.
+             *
+             * @param Lang  the value to set
+             */
+            virtual void setLang(const XMLCh* Lang)=0;
+
             DECL_SIMPLE_CONTENT(Values);
             /** KeywordsType local name */
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
 
         BEGIN_XMLOBJECT(SAML_API,Logo,xmltooling::XMLObject,SAML Metadata Extension for Login UI Logo element);
-            DECL_STRING_ATTRIB(Lang,LANG);
+            /** xml:lang attribute name. */
+            static const XMLCh LANG_ATTRIB_NAME[];
+
+            /**
+             * Sets the xml:lang attribute.
+             *
+             * @param Lang  the value to set
+             */
+            virtual void setLang(const XMLCh* Lang)=0;
+
             DECL_INTEGER_ATTRIB(Height,HEIGHT);
             DECL_INTEGER_ATTRIB(Width,WIDTH);
             DECL_SIMPLE_CONTENT(URL);
