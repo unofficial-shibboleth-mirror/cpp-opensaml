@@ -33,6 +33,7 @@
 #include "saml2/metadata/Metadata.h"
 #include "saml2/metadata/MetadataProvider.h"
 
+#include <boost/scoped_ptr.hpp>
 #include <xmltooling/logging.h>
 #include <xmltooling/XMLToolingConfig.h>
 #include <xmltooling/io/HTTPRequest.h>
@@ -45,6 +46,7 @@ using namespace opensaml::saml2;
 using namespace opensaml;
 using namespace xmltooling::logging;
 using namespace xmltooling;
+using namespace boost;
 using namespace std;
 
 namespace opensaml {
@@ -95,7 +97,7 @@ XMLObject* SAML2ArtifactDecoder::decode(
         throw BindingException("Artifact binding requires ArtifactResolver and MetadataProvider implementations be supplied.");
 
     // Import the artifact.
-    auto_ptr<SAMLArtifact> artifact;
+    scoped_ptr<SAMLArtifact> artifact;
     try {
         log.debug("processing encoded artifact (%s)", SAMLart);
 
