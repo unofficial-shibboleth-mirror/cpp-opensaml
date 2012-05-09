@@ -212,7 +212,7 @@ pair<bool,DOMElement*> XMLMetadataProvider::load(bool backup)
     try {
         SchemaValidators.validate(xmlObject.get());
     }
-    catch (exception& ex) {
+    catch (std::exception& ex) {
         m_log.error("metadata intance failed manual validation checking: %s", ex.what());
         throw MetadataException("Metadata instance failed manual validation checking.");
     }
@@ -234,7 +234,7 @@ pair<bool,DOMElement*> XMLMetadataProvider::load(bool backup)
             ofstream backer(backupKey.c_str());
             backer << *(raw.second->getOwnerDocument());
         }
-        catch (exception& ex) {
+        catch (std::exception& ex) {
             m_log.crit("exception while backing up metadata: %s", ex.what());
             backupKey.erase();
         }
@@ -243,7 +243,7 @@ pair<bool,DOMElement*> XMLMetadataProvider::load(bool backup)
     try {
         doFilters(*xmlObject);
     }
-    catch (exception&) {
+    catch (std::exception&) {
         if (!backupKey.empty())
             remove(backupKey.c_str());
         throw;
@@ -313,7 +313,7 @@ pair<bool,DOMElement*> XMLMetadataProvider::background_load()
             return load(true);
         throw;
     }
-    catch (exception&) {
+    catch (std::exception&) {
         if (!m_local) {
             m_reloadInterval = m_minRefreshDelay * m_backoffFactor++;
             if (m_reloadInterval > m_maxRefreshDelay)

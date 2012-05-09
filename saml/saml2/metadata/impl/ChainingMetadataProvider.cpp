@@ -195,7 +195,7 @@ ChainingMetadataProvider::ChainingMetadataProvider(const DOMElement* e)
                 m_providers.push_back(provider.get());
                 provider.release();
             }
-            catch (exception& ex) {
+            catch (std::exception& ex) {
                 m_log.error("error building MetadataProvider: %s", ex.what());
             }
         }
@@ -214,7 +214,7 @@ void ChainingMetadataProvider::init()
         try {
             i->init();
         }
-        catch (exception& ex) {
+        catch (std::exception& ex) {
             m_log.crit("failure initializing MetadataProvider: %s", ex.what());
         }
     }

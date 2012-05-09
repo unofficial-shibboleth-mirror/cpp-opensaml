@@ -29,9 +29,18 @@
 
 #include <saml/saml2/metadata/MetadataProvider.h>
 
+#include <boost/shared_ptr.hpp>
+
 namespace opensaml {
     
+    namespace saml2 {
+        class SAML_API Attribute;
+    };
+
     namespace saml2md {
+
+        class SAML_API EntityAttributes;
+        class SAML_API EntityMatcher;
         
 #if defined (_MSC_VER)
         #pragma warning( push )
@@ -52,6 +61,15 @@ namespace opensaml {
              *   <dt>legacyOrgNames</dt>
              *   <dd>true iff IdPs without a UIInfo extension should
              *      be identified using &lt;md:OrganizationDisplayName&gt;</dd>
+             *   <dt>entityAttributes</dt>
+             *   <dd>true iff tags found in &lt;mdattr:EntityAttributes&gt;
+             *      extensions should be included in the feed</dd>
+             *   <dt>&lt;DiscoveryFilter type="..." matcher="..." &gt;</dt>
+             *   <dd>Zero or more filters of type "Whitelist" or "Blacklist" that
+             *      affect which entities get exposed by the feed. The actual matching
+             *      is driven by an EntityMatcher plugin identified by the matcher
+             *      attribute. Other element content will be present to configure
+             *      that plugin.</dd>
              * </dl>
              *
              * @param e DOM to supply configuration for provider
@@ -96,8 +114,11 @@ namespace opensaml {
         private:
             void discoEntity(std::string& s, const EntityDescriptor* entity, bool& first) const;
             void discoGroup(std::string& s, const EntitiesDescriptor* group, bool& first) const;
+            void discoEntityAttributes(std::string& s, const EntityAttributes& ea, bool& first) const;
+            void discoAttributes(std::string& s, const std::vector<saml2::Attribute*>& attrs, bool& first) const;
 
-            bool m_legacyOrgNames;
+            bool m_legacyOrgNames, m_entityAttributes;
+            std::vector< std::pair< bool, boost::shared_ptr<EntityMatcher> > > m_discoFilters;
         };
 
 #if defined (_MSC_VER)
