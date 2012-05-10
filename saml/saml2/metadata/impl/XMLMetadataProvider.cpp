@@ -313,14 +313,16 @@ pair<bool,DOMElement*> XMLMetadataProvider::background_load()
             return load(true);
         throw;
     }
-    catch (std::exception&) {
+    catch (std::exception& ex) {
         if (!m_local) {
             m_reloadInterval = m_minRefreshDelay * m_backoffFactor++;
             if (m_reloadInterval > m_maxRefreshDelay)
                 m_reloadInterval = m_maxRefreshDelay;
             m_log.warn("adjusted reload interval to %u seconds", m_reloadInterval);
-            if (!m_loaded && !m_backing.empty())
+            if (!m_loaded && !m_backing.empty()) {
+                m_log.warn("trying backup file, exception loading remote resource: %s", ex.what());
                 return load(true);
+            }
         }
         throw;
     }
