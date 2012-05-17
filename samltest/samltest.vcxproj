@@ -22,7 +22,7 @@
     <ProjectGuid>{8BBB3B12-DBA1-4533-9C36-2CA95F1F1659}</ProjectGuid>
     <RootNamespace>samltest</RootNamespace>
     <Keyword>Win32Proj</Keyword>
-    <CxxTestRoot>..\..\..\..\cxxtest\</CxxTestRoot>
+    <CxxTestRoot>..\..\..\cxxtest\</CxxTestRoot>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
