@@ -33,6 +33,18 @@ namespace opensaml {
     namespace saml2md {
 
         /**
+         * Marker interface for supplying environmental context to filters.
+         */
+        class SAML_API MetadataFilterContext
+        {
+            MAKE_NONCOPYABLE(MetadataFilterContext);
+        protected:
+            MetadataFilterContext();
+        public:
+            virtual ~MetadataFilterContext();
+        };
+
+        /**
          * A metadata filter is used to process metadata after resolution and unmarshalling.
          *
          * Some filters might remove everything but identity provider roles, decreasing the data a service provider
@@ -55,12 +67,22 @@ namespace opensaml {
             virtual const char* getId() const=0;
 
             /**
+             * @deprecated
              * Filters the given metadata. Exceptions should generally not be thrown to
              * signal the removal of information, only for systemic processing failure.
              *
-             * @param xmlObject the metadata to be filtered.
+             * @param xmlObject the metadata to be filtered
              */
-            virtual void doFilter(xmltooling::XMLObject& xmlObject) const=0;
+            virtual void doFilter(xmltooling::XMLObject& xmlObject) const;
+
+            /**
+             * Filters the given metadata. Exceptions should generally not be thrown to
+             * signal the removal of information, only for systemic processing failure.
+             *
+             * @param ctx       context interface, or nullptr
+             * @param xmlObject the metadata to be filtered
+             */
+            virtual void doFilter(MetadataFilterContext* ctx, xmltooling::XMLObject& xmlObject) const;
         };
 
         /**
@@ -69,22 +91,22 @@ namespace opensaml {
         void SAML_API registerMetadataFilters();
 
         /** MetadataFilter that deletes blacklisted entities. */
-        #define BLACKLIST_METADATA_FILTER  "Blacklist"
+        #define BLACKLIST_METADATA_FILTER           "Blacklist"
 
         /** MetadataFilter that deletes all but whitelisted entities. */
-        #define WHITELIST_METADATA_FILTER  "Whitelist"
+        #define WHITELIST_METADATA_FILTER           "Whitelist"
 
         /** MetadataFilter that verifies signatures and filters out any that don't pass. */
-        #define SIGNATURE_METADATA_FILTER  "Signature"
+        #define SIGNATURE_METADATA_FILTER           "Signature"
 
         /** MetadataFilter that enforces expiration requirements. */
-        #define REQUIREVALIDUNTIL_METADATA_FILTER  "RequireValidUntil"
+        #define REQUIREVALIDUNTIL_METADATA_FILTER   "RequireValidUntil"
 
         /** MetadataFilter that removes non-retained roles. */
-        #define ENTITYROLE_METADATA_FILTER  "EntityRoleWhiteList"
+        #define ENTITYROLE_METADATA_FILTER          "EntityRoleWhiteList"
 
         /** MetadataFilter that adds EntityAttributes extension. */
-        #define ENTITYATTR_METADATA_FILTER "EntityAttributes"
+        #define ENTITYATTR_METADATA_FILTER          "EntityAttributes"
 
         DECL_XMLTOOLING_EXCEPTION(MetadataFilterException,SAML_EXCEPTIONAPI(SAML_API),opensaml::saml2md,MetadataException,Exceptions related to metadata filtering);
     };

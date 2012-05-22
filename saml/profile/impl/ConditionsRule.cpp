@@ -99,7 +99,7 @@ ConditionsRule::ConditionsRule(const DOMElement* e) : m_doc(nullptr)
                 log.info("building SecurityPolicyRule of type %s", t.c_str());
                 m_rules.push_back(SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(t.c_str(), e));
             }
-            catch (exception& ex) {
+            catch (std::exception& ex) {
                 log.crit("error building SecurityPolicyRule: %s", ex.what());
             }
         }

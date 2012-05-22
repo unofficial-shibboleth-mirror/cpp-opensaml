@@ -107,7 +107,12 @@ MetadataProvider::MetadataProvider(const DOMElement* e)
                 string t = XMLHelper::getAttrString(child, nullptr, _type);
                 if (!t.empty()) {
                     log.info("building MetadataFilter of type %s", t.c_str());
-                    m_filters.push_back(conf.MetadataFilterManager.newPlugin(t.c_str(), child));
+                    auto_ptr<MetadataFilter> np(conf.MetadataFilterManager.newPlugin(t.c_str(), child));
+                    m_filters.push_back(np.get());
+                    np.release();
+                }
+                else {
+                    log.error("MetadataFilter element missing type attribute.");
                 }
             }
             else if (XMLString::equals(child->getLocalName(), SigFilter)) {
@@ -162,15 +167,17 @@ MetadataFilter* MetadataProvider::removeMetadataFilter(MetadataFilter* oldFilter
     return nullptr;
 }
 
+void MetadataProvider::setContext(MetadataFilterContext* ctx)
+{
+    m_filterContext.reset(ctx);
+}
+
 void MetadataProvider::doFilters(XMLObject& xmlObject) const
 {
-#ifdef _DEBUG
-    NDC ndc("doFilters");
-#endif
-    Category& log=Category::getInstance(SAML_LOGCAT".Metadata");
+    Category& log = Category::getInstance(SAML_LOGCAT".Metadata");
     for (ptr_vector<MetadataFilter>::const_iterator i = m_filters.begin(); i != m_filters.end(); i++) {
         log.info("applying metadata filter (%s)", i->getId());
-        i->doFilter(xmlObject);
+        i->doFilter(m_filterContext.get(), xmlObject);
     }
 }
 
@@ -224,5 +231,24 @@ MetadataFilter::MetadataFilter()
 }
 
 MetadataFilter::~MetadataFilter()
+{
+}
+
+void MetadataFilter::doFilter(MetadataFilterContext* ctx, xmltooling::XMLObject& xmlObject) const
+{
+    // Default call into deprecated method.
+    doFilter(xmlObject);
+}
+
+void MetadataFilter::doFilter(xmltooling::XMLObject& xmlObject) const
+{
+    // Empty default for deprecated method.
+}
+
+MetadataFilterContext::MetadataFilterContext()
+{
+}
+
+MetadataFilterContext::~MetadataFilterContext()
 {
 }
