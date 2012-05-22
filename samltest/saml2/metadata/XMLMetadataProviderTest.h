@@ -38,7 +38,7 @@ class XMLMetadataProviderTest : public CxxTest::TestSuite, public SAMLObjectBase
 public:
     void setUp() {
         entityID=XMLString::transcode("urn:mace:incommon:washington.edu");
-        entityID2=XMLString::transcode("urn:mace:incommon:rochester.edu");
+        entityID2=XMLString::transcode("urn:mace:incommon:psu.edu");
         supportedProtocol=XMLString::transcode("urn:oasis:names:tc:SAML:1.1:protocol");
         supportedProtocol2=XMLString::transcode("urn:mace:shibboleth:1.0");
         SAMLObjectBaseTestCase::setUp();
