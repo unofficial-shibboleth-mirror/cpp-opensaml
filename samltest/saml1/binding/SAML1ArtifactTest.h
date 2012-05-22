@@ -45,7 +45,7 @@ public:
     void testSAML1Artifact() {
         try {
             xmltooling::QName idprole(samlconstants::SAML20MD_NS, IDPSSODescriptor::LOCAL_NAME);
-            SecurityPolicy policy(m_metadata, &idprole, m_trust, false);
+            SecurityPolicy policy(m_metadata.get(), &idprole, m_trust.get(), false);
             policy.getRules().assign(m_rules.begin(), m_rules.end());
 
             // Read message to use from file.
@@ -60,17 +60,17 @@ public:
 
             CredentialCriteria cc;
             cc.setUsage(Credential::SIGNING_CREDENTIAL);
-            Locker clocker(m_creds);
+            Locker clocker(m_creds.get());
             const Credential* cred = m_creds->resolve(&cc);
             TSM_ASSERT("Retrieved credential was null", cred!=nullptr);
 
             // Encode message.
-            auto_ptr<MessageEncoder> encoder(
+            boost::scoped_ptr<MessageEncoder> encoder(
                 SAMLConfig::getConfig().MessageEncoderManager.newPlugin(
                     samlconstants::SAML1_PROFILE_BROWSER_ARTIFACT, pair<const DOMElement*,const XMLCh*>(nullptr,nullptr)
                     )
                 );
-            Locker locker(m_metadata);
+            Locker locker(m_metadata.get());
             encoder->encode(
                 *this,
                 toSend.get(),
@@ -84,13 +84,13 @@ public:
             
             // Decode message.
             string relayState;
-            auto_ptr<MessageDecoder> decoder(
+            boost::scoped_ptr<MessageDecoder> decoder(
                 SAMLConfig::getConfig().MessageDecoderManager.newPlugin(
                     samlconstants::SAML1_PROFILE_BROWSER_ARTIFACT, pair<const DOMElement*,const XMLCh*>(nullptr,nullptr)
                     )
                 );
             decoder->setArtifactResolver(this);
-            auto_ptr<Response> response(dynamic_cast<Response*>(decoder->decode(relayState,*this,policy)));
+            boost::scoped_ptr<Response> response(dynamic_cast<Response*>(decoder->decode(relayState,*this,policy)));
             
             // Test the results.
             TSM_ASSERT_EQUALS("TARGET was not the expected result.", relayState, "state");
@@ -142,7 +142,7 @@ public:
         vector<Signature*> sigs(1,response->getSignature());
         CredentialCriteria cc;
         cc.setUsage(Credential::SIGNING_CREDENTIAL);
-        Locker clocker(m_creds);
+        Locker clocker(m_creds.get());
         const Credential* cred = m_creds->resolve(&cc);
         TSM_ASSERT("Retrieved credential was null", cred!=nullptr);
         response->marshall((DOMDocument*)nullptr,&sigs,cred);

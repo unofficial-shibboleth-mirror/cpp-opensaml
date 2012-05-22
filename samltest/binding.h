@@ -27,6 +27,8 @@
 #include <saml/binding/SecurityPolicyRule.h>
 #include <saml/saml2/metadata/Metadata.h>
 #include <saml/saml2/metadata/MetadataProvider.h>
+
+#include <boost/scoped_ptr.hpp>
 #include <xmltooling/io/HTTPRequest.h>
 #include <xmltooling/io/HTTPResponse.h>
 #include <xmltooling/security/Credential.h>
@@ -41,9 +43,9 @@ using namespace xmlsignature;
 class SAMLBindingBaseTestCase : public HTTPRequest, public HTTPResponse
 {
 protected:
-    CredentialResolver* m_creds; 
-    MetadataProvider* m_metadata;
-    TrustEngine* m_trust;
+    boost::scoped_ptr<CredentialResolver> m_creds;
+    boost::scoped_ptr<MetadataProvider> m_metadata;
+    boost::scoped_ptr<TrustEngine> m_trust;
     map<string,string> m_fields;
     map<string,string> m_headers;
     string m_method,m_url,m_query;
@@ -52,9 +54,6 @@ protected:
 
 public:
     void setUp() {
-        m_creds=nullptr;
-        m_metadata=nullptr;
-        m_trust=nullptr;
         m_fields.clear();
         m_headers.clear();
         m_method.erase();
@@ -72,8 +71,8 @@ public:
             auto_ptr_XMLCh file(s.c_str());
             doc->getDocumentElement()->setAttributeNS(nullptr,path.get(),file.get());
     
-            m_metadata = SAMLConfig::getConfig().MetadataProviderManager.newPlugin(
-                XML_METADATA_PROVIDER,doc->getDocumentElement()
+            m_metadata.reset(
+                SAMLConfig::getConfig().MetadataProviderManager.newPlugin(XML_METADATA_PROVIDER, doc->getDocumentElement())
                 );
             m_metadata->init();
 
@@ -81,11 +80,11 @@ public:
             ifstream in2(config.c_str());
             DOMDocument* doc2=XMLToolingConfig::getConfig().getParser().parse(in2);
             XercesJanitor<DOMDocument> janitor2(doc2);
-            m_creds = XMLToolingConfig::getConfig().CredentialResolverManager.newPlugin(
-                FILESYSTEM_CREDENTIAL_RESOLVER,doc2->getDocumentElement()
+            m_creds.reset(
+                XMLToolingConfig::getConfig().CredentialResolverManager.newPlugin(FILESYSTEM_CREDENTIAL_RESOLVER, doc2->getDocumentElement())
                 );
                 
-            m_trust = XMLToolingConfig::getConfig().TrustEngineManager.newPlugin(EXPLICIT_KEY_TRUSTENGINE, nullptr);
+            m_trust.reset(XMLToolingConfig::getConfig().TrustEngineManager.newPlugin(EXPLICIT_KEY_TRUSTENGINE, nullptr));
 
             m_rules.push_back(SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(MESSAGEFLOW_POLICY_RULE,nullptr));
             m_rules.push_back(SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(SIMPLESIGNING_POLICY_RULE,nullptr));
@@ -101,13 +100,10 @@ public:
     
     void tearDown() {
         for_each(m_rules.begin(), m_rules.end(), xmltooling::cleanup<SecurityPolicyRule>());
+        m_trust.reset();
+        m_metadata.reset();
+        m_creds.reset();
         m_rules.clear();
-        delete m_creds;
-        delete m_metadata;
-        delete m_trust;
-        m_creds=nullptr;
-        m_metadata=nullptr;
-        m_trust=nullptr;
         m_fields.clear();
         m_headers.clear();
         m_method.erase();
@@ -259,7 +255,7 @@ public:
         pch+=strlen("action=\"");
         m_url = html_decode(page.substr(pch-page.c_str(),strchr(pch,'"')-pch));
 
-        while (pch=strstr(pch,"<input type=\"hidden\" name=\"")) {
+        while ((pch = strstr(pch,"<input type=\"hidden\" name=\""))) {
             pch+=strlen("<input type=\"hidden\" name=\"");
             string name = page.substr(pch-page.c_str(),strchr(pch,'"')-pch);
             pch=strstr(pch,"value=\"");

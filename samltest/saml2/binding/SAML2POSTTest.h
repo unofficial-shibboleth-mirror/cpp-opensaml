@@ -38,7 +38,7 @@ public:
     void testSAML2POST() {
         try {
             xmltooling::QName idprole(samlconstants::SAML20MD_NS, IDPSSODescriptor::LOCAL_NAME);
-            SecurityPolicy policy(m_metadata, &idprole, m_trust, false);
+            SecurityPolicy policy(m_metadata.get(), &idprole, m_trust.get(), false);
             policy.getRules().assign(m_rules.begin(), m_rules.end());
 
             // Read message to use from file.
@@ -53,7 +53,7 @@ public:
 
             CredentialCriteria cc;
             cc.setUsage(Credential::SIGNING_CREDENTIAL);
-            Locker clocker(m_creds);
+            Locker clocker(m_creds.get());
             const Credential* cred = m_creds->resolve(&cc);
             TSM_ASSERT("Retrieved credential was null", cred!=nullptr);
 
@@ -70,12 +70,12 @@ public:
             XercesJanitor<DOMDocument> janitor2(encoder_config);
             encoder_config->appendChild(encoder_config->createElementNS(nullptr,lit1.get()));
             encoder_config->getDocumentElement()->setAttributeNS(nullptr,lit2.get(),lit3.get());
-            auto_ptr<MessageEncoder> encoder(
+            boost::scoped_ptr<MessageEncoder> encoder(
                 SAMLConfig::getConfig().MessageEncoderManager.newPlugin(
                     samlconstants::SAML20_BINDING_HTTP_POST, pair<const DOMElement*,const XMLCh*>(encoder_config->getDocumentElement(), nullptr)
                     )
                 );
-            Locker locker(m_metadata);
+            Locker locker(m_metadata.get());
             encoder->encode(
                 *this,
                 toSend.get(),
@@ -89,12 +89,12 @@ public:
             
             // Decode message.
             string relayState;
-            auto_ptr<MessageDecoder> decoder(
+            boost::scoped_ptr<MessageDecoder> decoder(
                 SAMLConfig::getConfig().MessageDecoderManager.newPlugin(
                     samlconstants::SAML20_BINDING_HTTP_POST, pair<const DOMElement*,const XMLCh*>(nullptr,nullptr)
                     )
                 );
-            auto_ptr<Response> response(dynamic_cast<Response*>(decoder->decode(relayState,*this,policy)));
+            boost::scoped_ptr<Response> response(dynamic_cast<Response*>(decoder->decode(relayState,*this,policy)));
             
             // Test the results.
             TSM_ASSERT_EQUALS("RelayState was not the expected result.", relayState, "state");
@@ -117,7 +117,7 @@ public:
     void testSAML2POSTSimpleSign() {
         try {
             xmltooling::QName idprole(samlconstants::SAML20MD_NS, IDPSSODescriptor::LOCAL_NAME);
-            SecurityPolicy policy(m_metadata, &idprole, m_trust, false);
+            SecurityPolicy policy(m_metadata.get(), &idprole, m_trust.get(), false);
             policy.getRules().assign(m_rules.begin(), m_rules.end());
 
             // Read message to use from file.
@@ -132,7 +132,7 @@ public:
 
             CredentialCriteria cc;
             cc.setUsage(Credential::SIGNING_CREDENTIAL);
-            Locker clocker(m_creds);
+            Locker clocker(m_creds.get());
             const Credential* cred = m_creds->resolve(&cc);
             TSM_ASSERT("Retrieved credential was null", cred!=nullptr);
 
@@ -149,12 +149,12 @@ public:
             XercesJanitor<DOMDocument> janitor2(encoder_config);
             encoder_config->appendChild(encoder_config->createElementNS(nullptr,lit1.get()));
             encoder_config->getDocumentElement()->setAttributeNS(nullptr,lit2.get(),lit3.get());
-            auto_ptr<MessageEncoder> encoder(
+            boost::scoped_ptr<MessageEncoder> encoder(
                 SAMLConfig::getConfig().MessageEncoderManager.newPlugin(
                     samlconstants::SAML20_BINDING_HTTP_POST_SIMPLESIGN, pair<const DOMElement*,const XMLCh*>(encoder_config->getDocumentElement(),nullptr)
                     )
                 );
-            Locker locker(m_metadata);
+            Locker locker(m_metadata.get());
             encoder->encode(
                 *this,
                 toSend.get(),
@@ -168,12 +168,12 @@ public:
             
             // Decode message.
             string relayState;
-            auto_ptr<MessageDecoder> decoder(
+            boost::scoped_ptr<MessageDecoder> decoder(
                 SAMLConfig::getConfig().MessageDecoderManager.newPlugin(
                     samlconstants::SAML20_BINDING_HTTP_POST_SIMPLESIGN, pair<const DOMElement*,const XMLCh*>(nullptr,nullptr)
                     )
                 );
-            auto_ptr<Response> response(dynamic_cast<Response*>(decoder->decode(relayState,*this,policy)));
+            boost::scoped_ptr<Response> response(dynamic_cast<Response*>(decoder->decode(relayState,*this,policy)));
             
             // Test the results.
             TSM_ASSERT_EQUALS("RelayState was not the expected result.", relayState, "state");
