@@ -31,7 +31,7 @@
 
 #include <vector>
 #include <iostream>
-#include <boost/shared_ptr.hpp>
+#include <boost/scoped_ptr.hpp>
 #include <boost/ptr_container/ptr_vector.hpp>
 #include <xmltooling/exceptions.h>
 #include <xmltooling/security/CredentialResolver.h>
@@ -262,7 +262,7 @@ namespace opensaml {
             void doFilters(xmltooling::XMLObject& xmlObject) const;
 
         private:
-            boost::shared_ptr<MetadataFilterContext> m_filterContext;
+            boost::scoped_ptr<MetadataFilterContext> m_filterContext;
             boost::ptr_vector<MetadataFilter> m_filters;
         };
 
