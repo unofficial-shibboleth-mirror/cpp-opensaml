@@ -31,7 +31,6 @@
 
 #include <vector>
 #include <iostream>
-#include <boost/scoped_ptr.hpp>
 #include <boost/ptr_container/ptr_vector.hpp>
 #include <xmltooling/exceptions.h>
 #include <xmltooling/security/CredentialResolver.h>
@@ -124,12 +123,12 @@ namespace opensaml {
 
             /**
              * Sets a filtering context object for use by the filtering process.
-             * <p>The MetadataProvider takes ownership of the object. Any existing
-             * object is cleared.
+             * <p>The object's lifetime must last for the duration of the lifetime
+             * of the MetadataProvider.
              *
              * @param ctx   a context object
              */
-            void setContext(MetadataFilterContext* ctx);
+            void setContext(const MetadataFilterContext* ctx);
 
             /**
              * Should be called after instantiating provider and adding filters, but before
@@ -262,7 +261,7 @@ namespace opensaml {
             void doFilters(xmltooling::XMLObject& xmlObject) const;
 
         private:
-            boost::scoped_ptr<MetadataFilterContext> m_filterContext;
+            const MetadataFilterContext* m_filterContext;
             boost::ptr_vector<MetadataFilter> m_filters;
         };
 

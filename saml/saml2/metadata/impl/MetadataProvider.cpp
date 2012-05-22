@@ -91,7 +91,7 @@ static const XMLCh Exclude[] =          UNICODE_LITERAL_7(E,x,c,l,u,d,e);
 static const XMLCh Include[] =          UNICODE_LITERAL_7(I,n,c,l,u,d,e);
 static const XMLCh _type[] =            UNICODE_LITERAL_4(t,y,p,e);
 
-MetadataProvider::MetadataProvider(const DOMElement* e)
+MetadataProvider::MetadataProvider(const DOMElement* e) : m_filterContext(nullptr)
 {
 #ifdef _DEBUG
     NDC ndc("MetadataProvider");
@@ -112,7 +112,7 @@ MetadataProvider::MetadataProvider(const DOMElement* e)
                     np.release();
                 }
                 else {
-                    log.error("MetadataFilter element missing type attribute.");
+                    log.error("MetadataFilter element missing type attribute");
                 }
             }
             else if (XMLString::equals(child->getLocalName(), SigFilter)) {
@@ -167,9 +167,9 @@ MetadataFilter* MetadataProvider::removeMetadataFilter(MetadataFilter* oldFilter
     return nullptr;
 }
 
-void MetadataProvider::setContext(MetadataFilterContext* ctx)
+void MetadataProvider::setContext(const MetadataFilterContext* ctx)
 {
-    m_filterContext.reset(ctx);
+    m_filterContext = ctx;
 }
 
 void MetadataProvider::doFilters(XMLObject& xmlObject) const
@@ -177,7 +177,7 @@ void MetadataProvider::doFilters(XMLObject& xmlObject) const
     Category& log = Category::getInstance(SAML_LOGCAT".Metadata");
     for (ptr_vector<MetadataFilter>::const_iterator i = m_filters.begin(); i != m_filters.end(); i++) {
         log.info("applying metadata filter (%s)", i->getId());
-        i->doFilter(m_filterContext.get(), xmlObject);
+        i->doFilter(m_filterContext, xmlObject);
     }
 }
 
@@ -217,13 +217,13 @@ MetadataProvider::Criteria::~Criteria()
 
 void MetadataProvider::Criteria::reset()
 {
-    entityID_unicode=nullptr;
-    entityID_ascii=nullptr;
-    artifact=nullptr;
-    role=nullptr;
-    protocol=nullptr;
-    protocol2=nullptr;
-    validOnly=true;
+    entityID_unicode = nullptr;
+    entityID_ascii = nullptr;
+    artifact = nullptr;
+    role = nullptr;
+    protocol = nullptr;
+    protocol2 = nullptr;
+    validOnly = true;
 }
 
 MetadataFilter::MetadataFilter()
@@ -234,7 +234,7 @@ MetadataFilter::~MetadataFilter()
 {
 }
 
-void MetadataFilter::doFilter(MetadataFilterContext* ctx, xmltooling::XMLObject& xmlObject) const
+void MetadataFilter::doFilter(const MetadataFilterContext* ctx, xmltooling::XMLObject& xmlObject) const
 {
     // Default call into deprecated method.
     doFilter(xmlObject);

@@ -82,7 +82,7 @@ namespace opensaml {
              * @param ctx       context interface, or nullptr
              * @param xmlObject the metadata to be filtered
              */
-            virtual void doFilter(MetadataFilterContext* ctx, xmltooling::XMLObject& xmlObject) const;
+            virtual void doFilter(const MetadataFilterContext* ctx, xmltooling::XMLObject& xmlObject) const;
         };
 
         /**
