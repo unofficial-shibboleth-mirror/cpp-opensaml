@@ -29,6 +29,7 @@
 #include <saml/saml2/metadata/MetadataCredentialContext.h>
 #include <saml/saml2/metadata/MetadataCredentialCriteria.h>
 #include <xmltooling/security/Credential.h>
+#include <xsec/dsig/DSIGConstants.hpp>
 
 using namespace opensaml::saml2md;
 using namespace opensaml::saml2;
@@ -125,8 +126,12 @@ public:
         vector< pair<const MetadataProvider*,MetadataCredentialCriteria*> > recipients(
             1, pair<const MetadataProvider*,MetadataCredentialCriteria*>(m_metadata, &mcc)
             );
+#ifdef XSEC_OPENSSL_HAVE_GCM
+        encrypted->encrypt(*assertion.get(), recipients, false, DSIGConstants::s_unicodeStrURIAES256_GCM);
+#else
         encrypted->encrypt(*assertion.get(), recipients);
-        
+#endif
+
         // Roundtrip it.
         string buf;
         XMLHelper::serialize(encrypted->marshall(), buf);
