@@ -306,4 +306,9 @@ void opensaml::saml2p::registerProtocolClasses() {
     q=xmltooling::QName(samlconstants::SAML20P_THIRDPARTY_EXT_NS,RespondTo::LOCAL_NAME);
     XMLObjectBuilder::registerBuilder(q,new RespondToBuilder());
     SchemaValidators.registerValidator(q,new RespondToSchemaValidator());
+
+    q=xmltooling::QName(samlconstants::SAML20P_ASYNCSLO_EXT_NS,Asynchronous::LOCAL_NAME);
+    XMLObjectBuilder::registerBuilder(q,new AsynchronousBuilder());
+    q=xmltooling::QName(samlconstants::SAML20P_ASYNCSLO_EXT_NS,Asynchronous::TYPE_NAME);
+    XMLObjectBuilder::registerBuilder(q,new AsynchronousBuilder());
 }
