@@ -191,7 +191,7 @@ const XMLCh samlconstants::SAML20P_THIRDPARTY_EXT_PREFIX[] = UNICODE_LITERAL_6(t
 const XMLCh samlconstants::SAML20P_ASYNCSLO_EXT_NS[] = // urn:oasis:names:tc:SAML:2.0:protocol:ext:async-slo
 { chLatin_u, chLatin_r, chLatin_n, chColon, chLatin_o, chLatin_a, chLatin_s, chLatin_i, chLatin_s, chColon,
   chLatin_n, chLatin_a, chLatin_m, chLatin_e, chLatin_s, chColon, chLatin_t, chLatin_c, chColon,
-  chLatin_S, chLatin_A, chLatin_M, chLatin_L, chColon, chDigit_2, chDigit_0, chColon,
+  chLatin_S, chLatin_A, chLatin_M, chLatin_L, chColon, chDigit_2, chPeriod, chDigit_0, chColon,
   chLatin_p, chLatin_r, chLatin_o, chLatin_t, chLatin_o, chLatin_c, chLatin_o, chLatin_l, chColon,
   chLatin_e, chLatin_x, chLatin_t, chColon,
   chLatin_a, chLatin_s, chLatin_y, chLatin_n, chLatin_c, chDash, chLatin_s, chLatin_l, chLatin_o, chNull
