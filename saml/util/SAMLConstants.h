@@ -128,6 +128,12 @@ namespace samlconstants {
     /** SAML Third-Party Request Protocol Extension QName prefix ("thrpty") */
     extern SAML_API const XMLCh SAML20P_THIRDPARTY_EXT_PREFIX[];
 
+    /** SAML Asynchronous Logout Protocol Extension XML Namespace ("urn:oasis:names:tc:SAML:2.0:protocol:ext:async-slo") */
+    extern SAML_API const XMLCh SAML20P_ASYNCSLO_EXT_NS[];
+
+    /** SAML Asynchronous Logout Protocol Extension QName prefix ("aslo") */
+    extern SAML_API const XMLCh SAML20P_ASYNCSLO_EXT_PREFIX[];
+
     /** SAML Attribute Extension XML Namespace ("urn:oasis:names:tc:SAML:attribute:ext") */
     extern SAML_API const XMLCh SAML20_ATTRIBUTE_EXT_NS[];
 

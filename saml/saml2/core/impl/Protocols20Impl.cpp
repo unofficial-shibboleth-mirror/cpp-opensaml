@@ -71,7 +71,27 @@ namespace opensaml {
 
         DECL_XMLOBJECTIMPL_SIMPLE(SAML_DLLLOCAL,RespondTo);
 
-        //TODO need unit test for this, using objects from another namespace
+        class SAML_DLLLOCAL AsynchronousImpl : public virtual Asynchronous,
+            public AbstractSimpleElement,
+            public AbstractDOMCachingXMLObject,
+            public AbstractXMLObjectMarshaller,
+            public AbstractXMLObjectUnmarshaller
+        {
+        public:
+            virtual ~AsynchronousImpl() {}
+
+            AsynchronousImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {}
+
+            AsynchronousImpl(const AsynchronousImpl& src)
+                : AbstractXMLObject(src), AbstractSimpleElement(src), AbstractDOMCachingXMLObject(src) {}
+
+            IMPL_XMLOBJECT_CLONE(Asynchronous);
+
+        protected:
+            // has no attributes or children
+        };
+
         class SAML_DLLLOCAL ExtensionsImpl : public virtual Extensions,
              public AbstractComplexElement,
              public AbstractDOMCachingXMLObject,
@@ -1559,6 +1579,7 @@ IMPL_XMLOBJECTBUILDER(StatusMessage);
 IMPL_XMLOBJECTBUILDER(Terminate);
 
 IMPL_XMLOBJECTBUILDER(RespondTo);
+IMPL_XMLOBJECTBUILDER(Asynchronous);
 
 // Unicode literals
 const XMLCh Artifact::LOCAL_NAME[] = UNICODE_LITERAL_8(A,r,t,i,f,a,c,t);
@@ -1568,6 +1589,8 @@ const XMLCh ArtifactResponse::LOCAL_NAME[] = UNICODE_LITERAL_16(A,r,t,i,f,a,c,t,
 const XMLCh ArtifactResponse::TYPE_NAME[] = UNICODE_LITERAL_20(A,r,t,i,f,a,c,t,R,e,s,p,o,n,s,e,T,y,p,e);
 const XMLCh AssertionIDRequest::LOCAL_NAME[] = UNICODE_LITERAL_18(A,s,s,e,r,t,i,o,n,I,D,R,e,q,u,e,s,t);
 const XMLCh AssertionIDRequest::TYPE_NAME[] = UNICODE_LITERAL_22(A,s,s,e,r,t,i,o,n,I,D,R,e,q,u,e,s,t,T,y,p,e);
+const XMLCh Asynchronous::LOCAL_NAME[] = UNICODE_LITERAL_12(A,s,y,n,c,h,r,o,n,o,u,s);
+const XMLCh Asynchronous::TYPE_NAME[] = UNICODE_LITERAL_16(A,s,y,n,c,h,r,o,n,o,u,s,T,y,p,e);
 const XMLCh AttributeQuery::LOCAL_NAME[] = UNICODE_LITERAL_14(A,t,t,r,i,b,u,t,e,Q,u,e,r,y);
 const XMLCh AttributeQuery::TYPE_NAME[] = UNICODE_LITERAL_18(A,t,t,r,i,b,u,t,e,Q,u,e,r,y,T,y,p,e);
 const XMLCh AuthnQuery::LOCAL_NAME[] = UNICODE_LITERAL_10(A,u,t,h,n,Q,u,e,r,y);

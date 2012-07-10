@@ -50,6 +50,11 @@ namespace opensaml {
 
         DECL_XMLOBJECT_SIMPLE(SAML_API,RespondTo,Name,SAML 2.0 third-party request RespondTo extension element);
 
+        BEGIN_XMLOBJECT(SAML_API,Asynchronous,xmltooling::XMLObject,SAML 2.0 Asynchronous logout extension element);
+            /** AsynchronousType local name */
+            static const XMLCh TYPE_NAME[];
+        END_XMLOBJECT;
+
         BEGIN_XMLOBJECT(SAML_API,Extensions,xmltooling::ElementExtensibleXMLObject,SAML 2.0 protocol Extensions element);
             /** ExtensionsType local name */
             static const XMLCh TYPE_NAME[];
@@ -392,6 +397,8 @@ namespace opensaml {
         DECL_SAML2POBJECTBUILDER(Terminate);
         
         DECL_XMLOBJECTBUILDER(SAML_API,RespondTo,samlconstants::SAML20P_THIRDPARTY_EXT_NS,samlconstants::SAML20P_THIRDPARTY_EXT_PREFIX);
+
+        DECL_XMLOBJECTBUILDER(SAML_API,Asynchronous,samlconstants::SAML20P_ASYNCSLO_EXT_NS,samlconstants::SAML20P_ASYNCSLO_EXT_PREFIX);
 
         /**
          * Registers builders and validators for SAML 2.0 Protocol classes into the runtime.
