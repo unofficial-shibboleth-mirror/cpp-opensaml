@@ -209,6 +209,7 @@ ChainingMetadataProvider::ChainingMetadataProvider(const DOMElement* e)
 
 ChainingMetadataProvider::~ChainingMetadataProvider()
 {
+    m_tlsKey.reset();   // need to free this ahead of trackers in a command line case
     for_each(m_trackers.begin(), m_trackers.end(), xmltooling::cleanup<tracker_t>());
 }
 
