@@ -50,7 +50,8 @@ schemafiles = \
 	sstc-saml-metadata-ui-v1.0.xsd \
 	sstc-saml-idp-discovery.xsd \
 	sstc-request-initiation.xsd \
-	sstc-saml-protocol-ext-thirdparty.xsd
+	sstc-saml-protocol-ext-thirdparty.xsd \
+	saml-async-slo-v1.0.xsd
 
 pkgxml_DATA = \
 	saml20-catalog.xml \

@@ -8,6 +8,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Schemas", "Schemas", "{5548
 		schemas\cs-sstc-schema-protocol-01.xsd = schemas\cs-sstc-schema-protocol-01.xsd
 		schemas\cs-sstc-schema-protocol-1.1.xsd = schemas\cs-sstc-schema-protocol-1.1.xsd
 		schemas\Makefile.am = schemas\Makefile.am
+		schemas\saml-async-slo-v1.0.xsd = schemas\saml-async-slo-v1.0.xsd
 		schemas\saml-schema-assertion-2.0.xsd = schemas\saml-schema-assertion-2.0.xsd
 		schemas\saml-schema-authn-context-2.0.xsd = schemas\saml-schema-authn-context-2.0.xsd
 		schemas\saml-schema-authn-context-auth-telephony-2.0.xsd = schemas\saml-schema-authn-context-auth-telephony-2.0.xsd
