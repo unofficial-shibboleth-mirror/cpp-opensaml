@@ -363,9 +363,12 @@ const AbstractMetadataProvider::credmap_t::mapped_type& AbstractMetadataProvider
             k != make_indirect_iterator(keys.end()); ++k) {
         if (k->getKeyInfo()) {
             auto_ptr<MetadataCredentialContext> mcc(new MetadataCredentialContext(*k));
-            Credential* c = resolver->resolve(mcc.get());
-            mcc.release();
-            resolved.push_back(c);
+            auto_ptr<Credential> c(resolver->resolve(mcc.get()));
+            if (c.get()) {
+                mcc.release();  // this API sucks, the object is now owned by the Credential
+                resolved.push_back(c.get());
+                c.release();
+            }
         }
     }
     return resolved;
