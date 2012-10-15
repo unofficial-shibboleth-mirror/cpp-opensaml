@@ -32,5 +32,6 @@ GENFILES = @PACKAGE_NAME@.spec
 EXTRA_DIST = $(DX_CONFIG) \
 	cpp-opensaml2.sln \
 	config_win32.h \
+	msbuild \
 	$(GENFILES) \
 	$(GENFILES:%=%.in)
