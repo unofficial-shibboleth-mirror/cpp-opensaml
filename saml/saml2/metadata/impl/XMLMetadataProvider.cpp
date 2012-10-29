@@ -213,7 +213,7 @@ pair<bool,DOMElement*> XMLMetadataProvider::load(bool backup)
         SchemaValidators.validate(xmlObject.get());
     }
     catch (std::exception& ex) {
-        m_log.error("metadata intance failed manual validation checking: %s", ex.what());
+        m_log.error("metadata instance failed manual validation checking: %s", ex.what());
         throw MetadataException("Metadata instance failed manual validation checking.");
     }
 
