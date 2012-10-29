@@ -15,6 +15,7 @@
     <system systemId="urn:oasis:names:tc:SAML:metadata:ext:query" uri="@-PKGXMLDIR-@/sstc-saml-metadata-ext-query.xsd"/>
     <system systemId="urn:oasis:names:tc:SAML:metadata:algsupport" uri="@-PKGXMLDIR-@/sstc-saml-metadata-algsupport-v1.0.xsd"/>
     <system systemId="urn:oasis:names:tc:SAML:metadata:ui" uri="@-PKGXMLDIR-@/sstc-saml-metadata-ui-v1.0.xsd"/>
+    <system systemId="urn:oasis:names:tc:SAML:metadata:rpi" uri="@-PKGXMLDIR-@/saml-metadata-rpi-v1.0.xsd"/>
     <system systemId="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol" uri="@-PKGXMLDIR-@/sstc-saml-idp-discovery.xsd"/>
     <system systemId="urn:oasis:names:tc:SAML:profiles:SSO:request-init" uri="@-PKGXMLDIR-@/sstc-request-initiation.xsd"/>
     <system systemId="urn:oasis:names:tc:SAML:protocol:ext:third-party" uri="@-PKGXMLDIR-@/sstc-saml-protocol-ext-thirdparty.xsd"/>
