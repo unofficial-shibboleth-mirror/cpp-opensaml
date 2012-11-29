@@ -63,6 +63,7 @@ namespace opensaml {
 
             bool m_trimTags;
             vector< boost::shared_ptr<Attribute> > m_tags;
+            Category& m_log;
         };
 
         EntityMatcher* SAML_DLLLOCAL EntityAttributesEntityMatcherFactory(const DOMElement* const & e)
@@ -81,7 +82,8 @@ namespace opensaml {
 
 
 EntityAttributesEntityMatcher::EntityAttributesEntityMatcher(const DOMElement* e)
-    : m_trimTags(XMLHelper::getAttrBool(e, false, trimTags))
+    : m_trimTags(XMLHelper::getAttrBool(e, false, trimTags)),
+        m_log(Category::getInstance(SAML_LOGCAT".EntityMatcher.EntityAttributes"))
 {
     // Check for shorthand syntax.
     if (e && e->hasAttributeNS(nullptr, attributeName) && (e->hasAttributeNS(nullptr, attributeValue) || e->hasAttributeNS(nullptr, attributeValueRegex))) {
@@ -115,12 +117,15 @@ EntityAttributesEntityMatcher::EntityAttributesEntityMatcher(const DOMElement* e
 
 bool EntityAttributesEntityMatcher::matches(const EntityDescriptor& entity) const
 {
+    bool extFound = false;
+
     // Check for a tag match in the EntityAttributes extension of the entity and its parent(s).
     const Extensions* exts = entity.getExtensions();
     if (exts) {
         const vector<XMLObject*>& children = exts->getUnknownXMLObjects();
         const XMLObject* xo = find_if(children, ll_dynamic_cast<EntityAttributes*>(_1) != ((EntityAttributes*)nullptr));
         if (xo) {
+            extFound = true;
             // If we find a matching tag, we win. Each tag is treated in OR fashion.
             if (find_if(m_tags.begin(), m_tags.end(),
                 lambda::bind(&EntityAttributesEntityMatcher::_matches, this, dynamic_cast<const EntityAttributes*>(xo),
@@ -137,6 +142,7 @@ bool EntityAttributesEntityMatcher::matches(const EntityDescriptor& entity) cons
             const vector<XMLObject*>& children = exts->getUnknownXMLObjects();
             const XMLObject* xo = find_if(children, ll_dynamic_cast<EntityAttributes*>(_1) != ((EntityAttributes*)nullptr));
             if (xo) {
+                extFound = true;
                 // If we find a matching tag, we win. Each tag is treated in OR fashion.
                 if (find_if(m_tags.begin(), m_tags.end(),
                     lambda::bind(&EntityAttributesEntityMatcher::_matches, this, dynamic_cast<const EntityAttributes*>(xo),
@@ -146,6 +152,11 @@ bool EntityAttributesEntityMatcher::matches(const EntityDescriptor& entity) cons
             }
         }
         group = dynamic_cast<EntitiesDescriptor*>(group->getParent());
+    }
+
+    if (!extFound && m_log.isDebugEnabled()) {
+        auto_ptr_char id (entity.getEntityID());
+        m_log.debug("no EntityAttributes extension found for (%s)", id.get());
     }
 
     return false;
@@ -186,7 +197,7 @@ bool EntityAttributesEntityMatcher::_matches(const EntityAttributes* ea, const A
                             }
                             catch (XMLException& ex) {
                                 auto_ptr_char msg(ex.getMessage());
-                                Category::getInstance(SAML_LOGCAT".EntityMatcher.EntityAttributes").error(msg.get());
+                                m_log.error(msg.get());
                             }
                         }
                     }
@@ -205,7 +216,7 @@ bool EntityAttributesEntityMatcher::_matches(const EntityAttributes* ea, const A
                                 }
                                 catch (XMLException& ex) {
                                     auto_ptr_char msg(ex.getMessage());
-                                    Category::getInstance(SAML_LOGCAT".EntityMatcher.EntityAttributes").error(msg.get());
+                                    m_log.error(msg.get());
                                 }
                             }
                             else if (XMLString::equals(tagvalstr, cvalstr)) {
