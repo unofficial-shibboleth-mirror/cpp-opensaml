@@ -11,11 +11,6 @@ DISTCLEANFILES = \
 	@PACKAGE_NAME@-uninstalled.pc \
 	@PACKAGE_NAME@-uninstalled.sh
 
-dist-hook:
-	rm -rf `find $(distdir)/samltest/data -name .svn`
-	rm -rf `find $(distdir)/doc/api -name .svn`
-
-
 SUBDIRS = doc schemas saml samltest samlsign
 
 if DX_COND_doc
