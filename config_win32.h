@@ -113,7 +113,3 @@
 
 /* Define to `unsigned' if <sys/types.h> does not define. */
 /* #undef size_t */
-
-/* The size of a `time_t', as computed by sizeof. */
-#define SIZEOF_TIME_T 8
-

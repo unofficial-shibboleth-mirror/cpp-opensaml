@@ -70,7 +70,6 @@ AC_HEADER_DIRENT
 
 # Checks for library functions.
 AC_CHECK_FUNCS([strchr strdup strstr])
-AC_CHECK_SIZEOF(time_t)
 
 # checks for pthreads
 ACX_PTHREAD([enable_threads="pthread"],[enable_threads="no"])

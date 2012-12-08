@@ -80,11 +80,7 @@ using namespace xercesc;
 #endif
 #endif
 
-#if SIZEOF_TIME_T == 8
-# define SAMLTIME_MAX LLONG_MAX
-#elif SIZEOF_TIME_T == 4
-# define SAMLTIME_MAX INT_MAX
-#endif
+#define SAMLTIME_MAX (sizeof(time_t) == 8 ? LLONG_MAX : INT_MAX)
 
 #define SAML_LOGCAT "OpenSAML"
 
