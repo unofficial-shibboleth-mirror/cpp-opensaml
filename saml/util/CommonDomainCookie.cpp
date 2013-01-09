@@ -53,6 +53,9 @@ CommonDomainCookie::CommonDomainCookie(const char* cookie)
     split(m_list, b64, is_space(), algorithm::token_compress_on);
     free(b64);
 
+    // Remove empty elements.
+    m_list.erase(remove(m_list.begin(), m_list.end(), ""), m_list.end());
+
     // Now Base64 decode the list elements, overwriting them.
     xsecsize_t len;
     for (vector<string>::iterator i = m_list.begin(); i != m_list.end(); ++i) {
@@ -90,22 +93,24 @@ const char* CommonDomainCookie::set(const char* entityID)
     xsecsize_t len;
     string delimited;
     for (vector<string>::const_iterator j = m_list.begin(); j != m_list.end(); ++j) {
-        if (!delimited.empty())
-            delimited += ' ';
         
         XMLByte* b64 = Base64::encode(reinterpret_cast<const XMLByte*>(j->c_str()), j->length(), &len);
-        XMLByte *pos, *pos2;
-        for (pos = b64, pos2 = b64; *pos2; ++pos2)
-            if (isgraph(*pos2))
-                *pos++ = *pos2;
-        *pos = 0;
+        if (b64) {
+            XMLByte *pos, *pos2;
+            for (pos = b64, pos2 = b64; *pos2; ++pos2)
+                if (isgraph(*pos2))
+                    *pos++ = *pos2;
+            *pos = 0;
         
-        delimited += reinterpret_cast<char*>(b64);
+            if (!delimited.empty())
+                delimited += ' ';
+            delimited += reinterpret_cast<char*>(b64);
 #ifdef OPENSAML_XERCESC_HAS_XMLBYTE_RELEASE
-        XMLString::release(&b64);
+            XMLString::release(&b64);
 #else
-        XMLString::release((char**)&b64);
+            XMLString::release((char**)&b64);
 #endif
+        }
     }
     
     m_encoded = XMLToolingConfig::getConfig().getURLEncoder()->encode(delimited.c_str());
