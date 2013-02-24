@@ -107,7 +107,7 @@ EntityAttributesEntityMatcher::EntityAttributesEntityMatcher(const DOMElement* e
     DOMElement* child = XMLHelper::getFirstChildElement(e, samlconstants::SAML20_NS, Attribute::LOCAL_NAME);
     while (child) {
         boost::shared_ptr<XMLObject> obj(AttributeBuilder::buildOneFromElement(child));
-        m_tags.push_back(boost::shared_dynamic_cast<Attribute>(obj));
+        m_tags.push_back(boost::dynamic_pointer_cast<Attribute>(obj));
         child = XMLHelper::getNextSiblingElement(child, samlconstants::SAML20_NS, Attribute::LOCAL_NAME);
     }
 

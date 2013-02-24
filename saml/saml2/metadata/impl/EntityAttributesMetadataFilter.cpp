@@ -84,7 +84,7 @@ EntityAttributesMetadataFilter::EntityAttributesMetadataFilter(const DOMElement*
     while (child) {
         if (XMLHelper::isNodeNamed(child, samlconstants::SAML20_NS, Attribute::LOCAL_NAME)) {
             boost::shared_ptr<XMLObject> obj(AttributeBuilder::buildOneFromElement(child));
-            m_attributes.push_back(boost::shared_dynamic_cast<Attribute>(obj));
+            m_attributes.push_back(boost::dynamic_pointer_cast<Attribute>(obj));
         }
         else if (XMLString::equals(child->getLocalName(), Entity)) {
             const XMLCh* eid = child->getTextContent();
