@@ -363,15 +363,15 @@ int main(int argc,char* argv[])
 
             // Attach new signature.
             Signature* sig = SignatureBuilder::buildSignature();
-            if (alg_param) {
-                auto_ptr_XMLCh alg(alg_param);
+            signable->setSignature(sig);
+            auto_ptr_XMLCh alg(alg_param);
+            if (alg.get()) {
                 sig->setSignatureAlgorithm(alg.get());
             }
-            if (dig_param) {
-            	auto_ptr_XMLCh dig(dig_param);
+            auto_ptr_XMLCh dig(dig_param);
+            if (dig.get()) {
             	dynamic_cast<opensaml::ContentReference*>(sig->getContentReference())->setDigestAlgorithm(dig.get());
             }
-            signable->setSignature(sig);
 
             // Sign response while re-marshalling.
             vector<Signature*> sigs(1,sig);
