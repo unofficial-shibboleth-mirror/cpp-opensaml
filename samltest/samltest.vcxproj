@@ -22,7 +22,7 @@
     <ProjectGuid>{8BBB3B12-DBA1-4533-9C36-2CA95F1F1659}</ProjectGuid>
     <RootNamespace>samltest</RootNamespace>
     <Keyword>Win32Proj</Keyword>
-    <CxxTestRoot>..\..\..\cxxtest\</CxxTestRoot>
+    <CxxTestRoot>$(BuildRoot)\cxxtest</CxxTestRoot>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -60,8 +60,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <Import Project="..\..\BuildPath.props" />
-  <Import Project="..\MsBuild\Versions.props" />
-  <Import Project="..\MsBuild\Includes.props" />
+  <Import Project="$(ParentRoot)\Versions.props" />
+  <Import Project="$(ParentRoot)\Includes.props" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
