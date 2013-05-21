@@ -11,9 +11,6 @@ DISTCLEANFILES = \
 	@PACKAGE_NAME@-uninstalled.pc \
 	@PACKAGE_NAME@-uninstalled.sh
 
-dist-hook:
-	rm -rf `find $(distdir)/msbuild -name .svn`
-
 SUBDIRS = doc schemas saml samltest samlsign
 
 if DX_COND_doc
@@ -30,6 +27,5 @@ GENFILES = @PACKAGE_NAME@.spec
 EXTRA_DIST = $(DX_CONFIG) \
 	cpp-opensaml2.sln \
 	config_win32.h \
-	msbuild \
 	$(GENFILES) \
 	$(GENFILES:%=%.in)
