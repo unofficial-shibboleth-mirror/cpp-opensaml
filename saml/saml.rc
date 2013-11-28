@@ -28,7 +28,7 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2,5,3,0
+ FILEVERSION 2,5,3,1
  PRODUCTVERSION 2,5,3,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
@@ -47,7 +47,7 @@ BEGIN
             VALUE "Comments", "\0"
             VALUE "CompanyName", "Shibboleth Consortium\0"
             VALUE "FileDescription", "OpenSAML Library\0"
-            VALUE "FileVersion", "2, 5, 3, 0\0"
+            VALUE "FileVersion", "2, 5, 3, 1\0"
 #ifdef _DEBUG
             VALUE "InternalName", "saml2_5D\0"
 #else
