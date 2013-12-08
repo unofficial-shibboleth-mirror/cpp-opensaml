@@ -279,7 +279,6 @@ AM_CONDITIONAL(BUILD_UNITTEST,test -f ${CXXTEST})
 AX_CREATE_PKGCONFIG_INFO(,,[$LIBS -lsaml],[OpenSAML library])
 
 AC_SUBST(DX_INCLUDE)
-LIBTOOL="$LIBTOOL --silent"
 
 # output packaging and makefiles
 AC_OUTPUT
