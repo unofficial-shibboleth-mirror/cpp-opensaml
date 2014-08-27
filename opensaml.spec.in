@@ -11,7 +11,11 @@ BuildRoot:	%{_tmppath}/%{name}-%{version}-root
 %if 0%{?suse_version} > 1030 && 0%{?suse_version} < 1130
 BuildRequires:  libXerces-c-devel >= 2.8.0
 %else
+%if 0%{?rhel} >= 7 || 0%{?centos_version} >= 700
+BuildRequires:  xerces-c-devel >= 2.8
+%else
 BuildRequires:  libxerces-c-devel >= 2.8.0
+%endif
 %endif
 BuildRequires:  libxml-security-c-devel >= 1.4.0
 BuildRequires:  libxmltooling-devel >= 1.4
@@ -68,9 +72,13 @@ Requires:	libsaml8 = %{version}-%{release}
 Provides:	@PACKAGE_NAME@-devel = %{version}-%{release}
 Obsoletes:	@PACKAGE_NAME@-devel < %{version}-%{release}
 %if 0%{?suse_version} > 1030 && 0%{?suse_version} < 1130
-BuildRequires:  libXerces-c-devel >= 2.8.0
+Requires:  libXerces-c-devel >= 2.8.0
 %else
-BuildRequires:  libxerces-c-devel >= 2.8.0
+%if 0%{?rhel} >= 7 || 0%{?centos_version} >= 700
+Requires:  xerces-c-devel >= 2.8
+%else
+Requires:  libxerces-c-devel >= 2.8.0
+%endif
 %endif
 Requires: libxml-security-c-devel >= 1.4.0
 Requires: libxmltooling-devel >= 1.4
@@ -142,6 +150,10 @@ This package includes XML schemas and related files.
 %doc %{pkgdocdir}
 
 %changelog
+* Tue May 13 2014 Ian Young <ian@iay.org.uk> - 2.5.3-1.2
+- Update package dependencies for RHEL/CentOS 7
+- Fixed bogus dates in changelog
+
 * Wed Dec 14 2011 Scott Cantor  <cantor.2@osu.edu>  - 2.5-1
 - Update lib package number.
 - Add boost-devel dependency.
@@ -182,5 +194,5 @@ This package includes XML schemas and related files.
 * Fri Jul 13 2007  Scott Cantor  <cantor.2@osu.edu>  - 2.0-2
 - Second alpha.
 
-* Sun Apr 16 2007  Scott Cantor  <cantor.2@osu.edu>  - 2.0-1
+* Mon Apr 16 2007  Scott Cantor  <cantor.2@osu.edu>  - 2.0-1
 - First SPEC file for 2.0.
