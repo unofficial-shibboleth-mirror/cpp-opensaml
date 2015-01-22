@@ -71,57 +71,13 @@ namespace opensaml {
                 shutdown();
             }
 
-            void init() {
-                try {
-                    if (!m_id.empty()) {
-                        string threadid("[");
-                        threadid += m_id + ']';
-                        logging::NDC::push(threadid);
-                    }
-                    background_load();
-                    startup();
-                }
-                catch (...) {
-                    startup();
-                    if (!m_id.empty()) {
-                        logging::NDC::pop();
-                    }
-                    throw;
-                }
-
-                if (!m_id.empty()) {
-                    logging::NDC::pop();
-                }
-            }
+            void init();
 
             const char* getId() const {
                 return m_id.c_str();
             }
 
-            void outputStatus(ostream& os) const {
-                os << "<MetadataProvider";
-
-                if (getId() && *getId()) {
-                    os << " id='" << getId() << "'";
-                }
-
-                if (!m_source.empty()) {
-                    os << " source='" << m_source << "'";
-                }
-
-                if (m_lastUpdate > 0) {
-                    DateTime ts(m_lastUpdate);
-                    ts.parseDateTime();
-                    auto_ptr_char timestamp(ts.getFormattedString());
-                    os << " lastUpdate='" << timestamp.get() << "'";
-                }
-
-                if (!m_local && m_reloadInterval > 0) {
-                    os << " reloadInterval='" << m_reloadInterval << "'";
-                }
-
-                os << "/>";
-            }
+            void outputStatus(ostream& os) const;
 
             const XMLObject* getMetadata() const {
                 return m_object.get();
@@ -152,6 +108,29 @@ namespace opensaml {
         static const XMLCh dropDOM[] =              UNICODE_LITERAL_7(d,r,o,p,D,O,M);
         static const XMLCh minRefreshDelay[] =      UNICODE_LITERAL_15(m,i,n,R,e,f,r,e,s,h,D,e,l,a,y);
         static const XMLCh refreshDelayFactor[] =   UNICODE_LITERAL_18(r,e,f,r,e,s,h,D,e,l,a,y,F,a,c,t,o,r);
+
+        // TODO: need to move this into xmltooling as a utility function
+        static void xml_encode(ostream& os, const char* start)
+        {
+            size_t pos;
+            while (start && *start) {
+                pos = strcspn(start, "\"<>&");
+                if (pos > 0) {
+                    os.write(start,pos);
+                    start += pos;
+                }
+                else {
+                    switch (*start) {
+                        case '"':   os << "&quot;";     break;
+                        case '<':   os << "&lt;";       break;
+                        case '>':   os << "&gt;";       break;
+                        case '&':   os << "&amp;";      break;
+                        default:    os << *start;
+                    }
+                    start++;
+                }
+            }
+        }
     };
 };
 
@@ -183,6 +162,30 @@ XMLMetadataProvider::XMLMetadataProvider(const DOMElement* e)
             m_log.warn("minRefreshDelay setting exceeds maxRefreshDelay/reloadInterval setting, lowering to match it");
             m_minRefreshDelay = m_maxRefreshDelay;
         }
+    }
+}
+
+void XMLMetadataProvider::init()
+{
+    try {
+        if (!m_id.empty()) {
+            string threadid("[");
+            threadid += m_id + ']';
+            logging::NDC::push(threadid);
+        }
+        background_load();
+        startup();
+    }
+    catch (...) {
+        startup();
+        if (!m_id.empty()) {
+            logging::NDC::pop();
+        }
+        throw;
+    }
+
+    if (!m_id.empty()) {
+        logging::NDC::pop();
     }
 }
 
@@ -365,4 +368,30 @@ void XMLMetadataProvider::index(time_t& validUntil)
         return;
     }
     indexEntity(dynamic_cast<EntityDescriptor*>(m_object.get()), validUntil);
+}
+
+void XMLMetadataProvider::outputStatus(ostream& os) const
+{
+    os << "<MetadataProvider";
+
+    if (getId() && *getId()) {
+        os << " id='"; xml_encode(os, getId()); os << "'";
+    }
+
+    if (!m_source.empty()) {
+        os << " source='"; xml_encode(os, m_source.c_str()); os << "'";
+    }
+
+    if (m_lastUpdate > 0) {
+        DateTime ts(m_lastUpdate);
+        ts.parseDateTime();
+        auto_ptr_char timestamp(ts.getFormattedString());
+        os << " lastUpdate='" << timestamp.get() << "'";
+    }
+
+    if (!m_local && m_reloadInterval > 0) {
+        os << " reloadInterval='" << m_reloadInterval << "'";
+    }
+
+    os << "/>";
 }
