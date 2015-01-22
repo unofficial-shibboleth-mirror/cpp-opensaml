@@ -181,6 +181,7 @@ void DiscoverableMetadataProvider::discoEntity(string& s, const EntityDescriptor
             json_safe(s, entityid.get());
             s += '\"';
             bool extFound = false;
+            bool displayNameFound = false;
             for (indirect_iterator<vector<IDPSSODescriptor*>::const_iterator> idp = make_indirect_iterator(idps.begin());
                     !extFound && idp != make_indirect_iterator(idps.end()); ++idp) {
                 if (idp->isValid(now) && idp->getExtensions()) {
@@ -191,6 +192,7 @@ void DiscoverableMetadataProvider::discoEntity(string& s, const EntityDescriptor
                             extFound = true;
                             const vector<DisplayName*>& dispnames = info->getDisplayNames();
                             if (!dispnames.empty()) {
+                                displayNameFound = true;
                                 s += ",\n \"DisplayNames\": [";
                                 for (indirect_iterator<vector<DisplayName*>::const_iterator> dispname = make_indirect_iterator(dispnames.begin());
                                         dispname != make_indirect_iterator(dispnames.end()); ++dispname) {
@@ -314,7 +316,7 @@ void DiscoverableMetadataProvider::discoEntity(string& s, const EntityDescriptor
                 }
             }
 
-            if (m_legacyOrgNames && !extFound) {
+            if (m_legacyOrgNames && !displayNameFound) {
                 const Organization* org = nullptr;
                 for (indirect_iterator<vector<IDPSSODescriptor*>::const_iterator> idp = make_indirect_iterator(idps.begin());
                         !org && idp != make_indirect_iterator(idps.end()); ++idp) {
