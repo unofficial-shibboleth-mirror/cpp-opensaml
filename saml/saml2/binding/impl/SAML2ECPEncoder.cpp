@@ -112,7 +112,7 @@ long SAML2ECPEncoder::encode(
 #ifdef _DEBUG
     xmltooling::NDC ndc("encode");
 #endif
-    Category& log = Category::getInstance(SAML_LOGCAT".MessageEncoder.SAML2ECP");
+    Category& log = Category::getInstance(SAML_LOGCAT ".MessageEncoder.SAML2ECP");
 
     log.debug("validating input");
     if (xmlObject->getParent())

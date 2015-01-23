@@ -99,7 +99,7 @@ SimpleSigningRule::SimpleSigningRule(const DOMElement* e) : m_errorFatal(XMLHelp
 
 bool SimpleSigningRule::evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const
 {
-    Category& log=Category::getInstance(SAML_LOGCAT".SecurityPolicyRule.SimpleSigning");
+    Category& log=Category::getInstance(SAML_LOGCAT ".SecurityPolicyRule.SimpleSigning");
     
     if (!policy.getIssuerMetadata()) {
         log.debug("ignoring message, no issuer metadata supplied");

@@ -70,7 +70,7 @@ void SignatureProfileValidator::validateSignature(const Signature& sigObj) const
         throw ValidationException("Signature is not a child of a signable SAML object.");
 
     if (sig->getObjectLength() != 0) {
-        Category::getInstance(SAML_LOGCAT".SignatureProfileValidator").error("signature contained an embedded <Object> element");
+        Category::getInstance(SAML_LOGCAT ".SignatureProfileValidator").error("signature contained an embedded <Object> element");
         throw ValidationException("Invalid signature profile for SAML object.");
     }
 
@@ -92,7 +92,7 @@ void SignatureProfileValidator::validateSignature(const Signature& sigObj) const
                         else if (tlist->item(i)->getTransformType()!=TRANSFORM_EXC_C14N &&
                                  tlist->item(i)->getTransformType()!=TRANSFORM_C14N) {
                             valid=false;
-                            Category::getInstance(SAML_LOGCAT".SignatureProfileValidator").error("signature contained an invalid transform");
+                            Category::getInstance(SAML_LOGCAT ".SignatureProfileValidator").error("signature contained an invalid transform");
                             break;
                         }
                     }
@@ -106,18 +106,18 @@ void SignatureProfileValidator::validateSignature(const Signature& sigObj) const
                             valid = true;
                         }
                         else {
-                            Category::getInstance(SAML_LOGCAT".SignatureProfileValidator").error("signature reference does not match parent object node");
+                            Category::getInstance(SAML_LOGCAT ".SignatureProfileValidator").error("signature reference does not match parent object node");
                         }
                     }
                 }
             }
             else {
-                Category::getInstance(SAML_LOGCAT".SignatureProfileValidator").error("signature reference does not match parent object ID");
+                Category::getInstance(SAML_LOGCAT ".SignatureProfileValidator").error("signature reference does not match parent object ID");
             }
         }
     }
     else {
-        Category::getInstance(SAML_LOGCAT".SignatureProfileValidator").error("signature contained multiple or zero references");
+        Category::getInstance(SAML_LOGCAT ".SignatureProfileValidator").error("signature contained multiple or zero references");
     }
     
     if (!valid)

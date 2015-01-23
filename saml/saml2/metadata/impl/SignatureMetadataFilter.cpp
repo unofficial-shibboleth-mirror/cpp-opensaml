@@ -90,7 +90,7 @@ static const XMLCh verifyName[] =           UNICODE_LITERAL_10(v,e,r,i,f,y,N,a,m
 SignatureMetadataFilter::SignatureMetadataFilter(const DOMElement* e)
     : m_verifyRoles(XMLHelper::getAttrBool(e, false, verifyRoles)),
         m_verifyName(XMLHelper::getAttrBool(e, true, verifyName)),
-        m_log(Category::getInstance(SAML_LOGCAT".MetadataFilter.Signature"))
+        m_log(Category::getInstance(SAML_LOGCAT ".MetadataFilter.Signature"))
 {
     if (e && e->hasAttributeNS(nullptr,certificate)) {
         // Use a file-based credential resolver rooted here.

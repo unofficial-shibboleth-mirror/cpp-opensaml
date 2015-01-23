@@ -76,7 +76,7 @@ XMLSigningRule::XMLSigningRule(const DOMElement* e) : m_errorFatal(XMLHelper::ge
 
 bool XMLSigningRule::evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const
 {
-    Category& log=Category::getInstance(SAML_LOGCAT".SecurityPolicyRule.XMLSigning");
+    Category& log=Category::getInstance(SAML_LOGCAT ".SecurityPolicyRule.XMLSigning");
     
     if (!policy.getIssuerMetadata()) {
         log.debug("ignoring message, no issuer metadata supplied");

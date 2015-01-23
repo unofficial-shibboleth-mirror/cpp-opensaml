@@ -72,7 +72,7 @@ DynamicMetadataProvider::DynamicMetadataProvider(const DOMElement* e)
         m_maxCacheDuration(XMLHelper::getAttrInt(e, 28800, maxCacheDuration))
 {
     if (m_minCacheDuration > m_maxCacheDuration) {
-        Category::getInstance(SAML_LOGCAT".MetadataProvider.Dynamic").error(
+        Category::getInstance(SAML_LOGCAT ".MetadataProvider.Dynamic").error(
             "minCacheDuration setting exceeds maxCacheDuration setting, lowering to match it"
             );
         m_minCacheDuration = m_maxCacheDuration;
@@ -83,7 +83,7 @@ DynamicMetadataProvider::DynamicMetadataProvider(const DOMElement* e)
         auto_ptr_char temp(delay);
         m_refreshDelayFactor = atof(temp.get());
         if (m_refreshDelayFactor <= 0.0 || m_refreshDelayFactor >= 1.0) {
-            Category::getInstance(SAML_LOGCAT".MetadataProvider.Dynamic").error(
+            Category::getInstance(SAML_LOGCAT ".MetadataProvider.Dynamic").error(
                 "invalid refreshDelayFactor setting, using default"
                 );
             m_refreshDelayFactor = 0.75;
@@ -124,7 +124,7 @@ const char* DynamicMetadataProvider::getId() const
 
 pair<const EntityDescriptor*,const RoleDescriptor*> DynamicMetadataProvider::getEntityDescriptor(const Criteria& criteria) const
 {
-    Category& log = Category::getInstance(SAML_LOGCAT".MetadataProvider.Dynamic");
+    Category& log = Category::getInstance(SAML_LOGCAT ".MetadataProvider.Dynamic");
 
     // First we check the underlying cache.
     pair<const EntityDescriptor*,const RoleDescriptor*> entity = AbstractMetadataProvider::getEntityDescriptor(criteria);
@@ -312,7 +312,7 @@ EntityDescriptor* DynamicMetadataProvider::resolve(const Criteria& criteria) con
     }
     catch (XMLException& e) {
         auto_ptr_char msg(e.getMessage());
-        Category::getInstance(SAML_LOGCAT".MetadataProvider.Dynamic").error(
+        Category::getInstance(SAML_LOGCAT ".MetadataProvider.Dynamic").error(
             "Xerces error while resolving entityID (%s): %s", name.c_str(), msg.get()
             );
         throw MetadataException(msg.get());

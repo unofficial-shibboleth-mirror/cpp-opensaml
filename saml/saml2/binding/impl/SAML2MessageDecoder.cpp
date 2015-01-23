@@ -64,7 +64,7 @@ void SAML2MessageDecoder::extractMessageDetails(
     if (!XMLString::equals(q.getNamespaceURI(), samlconstants::SAML20P_NS))
         return;
 
-    Category& log = Category::getInstance(SAML_LOGCAT".MessageDecoder.SAML2");
+    Category& log = Category::getInstance(SAML_LOGCAT ".MessageDecoder.SAML2");
 
     try {
         const saml2::RootObject& samlRoot = dynamic_cast<const saml2::RootObject&>(message);

@@ -82,7 +82,7 @@ namespace opensaml {
 
 ConditionsRule::ConditionsRule(const DOMElement* e) : m_doc(nullptr)
 {
-    Category& log=Category::getInstance(SAML_LOGCAT".SecurityPolicyRule.Conditions");
+    Category& log=Category::getInstance(SAML_LOGCAT ".SecurityPolicyRule.Conditions");
 
     if (!e || !e->hasChildNodes()) {
         // Default the configuration.

@@ -100,7 +100,7 @@ bool AudienceRestrictionRule::evaluate(const XMLObject& message, const GenericRe
 
         ostringstream os;
         os << *ac2;
-        Category::getInstance(SAML_LOGCAT".SecurityPolicyRule.AudienceRestriction").error(
+        Category::getInstance(SAML_LOGCAT ".SecurityPolicyRule.AudienceRestriction").error(
             "unacceptable AudienceRestriction in assertion (%s)", os.str().c_str()
             );
         throw SecurityPolicyException("Assertion contains an unacceptable AudienceRestriction.");
@@ -129,7 +129,7 @@ bool AudienceRestrictionRule::evaluate(const XMLObject& message, const GenericRe
 
         ostringstream os;
         os << *ac1;
-        Category::getInstance(SAML_LOGCAT".SecurityPolicyRule.AudienceRestriction").error(
+        Category::getInstance(SAML_LOGCAT ".SecurityPolicyRule.AudienceRestriction").error(
             "unacceptable AudienceRestrictionCondition in assertion (%s)", os.str().c_str()
             );
         throw SecurityPolicyException("Assertion contains an unacceptable AudienceRestrictionCondition.");

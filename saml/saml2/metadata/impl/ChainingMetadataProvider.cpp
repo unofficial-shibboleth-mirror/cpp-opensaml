@@ -161,7 +161,7 @@ namespace opensaml {
         static const XMLCh _MetadataProvider[] =    UNICODE_LITERAL_16(M,e,t,a,d,a,t,a,P,r,o,v,i,d,e,r);
         static const XMLCh precedence[] =           UNICODE_LITERAL_10(p,r,e,c,e,d,e,n,c,e);
         static const XMLCh last[] =                 UNICODE_LITERAL_4(l,a,s,t);
-        static const XMLCh _type[] =                 UNICODE_LITERAL_4(t,y,p,e);
+        static const XMLCh _type[] =                UNICODE_LITERAL_4(t,y,p,e);
     };
 };
 
@@ -178,7 +178,7 @@ void ChainingMetadataProvider::tracker_cleanup(void* ptr)
 
 ChainingMetadataProvider::ChainingMetadataProvider(const DOMElement* e)
     : ObservableMetadataProvider(e), m_firstMatch(true), m_trackerLock(Mutex::create()), m_tlsKey(ThreadKey::create(tracker_cleanup)),
-        m_log(Category::getInstance(SAML_LOGCAT".Metadata.Chaining"))
+        m_log(Category::getInstance(SAML_LOGCAT ".Metadata.Chaining"))
 {
     if (XMLString::equals(e ? e->getAttributeNS(nullptr, precedence) : nullptr, last))
         m_firstMatch = false;

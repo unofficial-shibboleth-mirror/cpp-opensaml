@@ -118,7 +118,7 @@ bool SAML1SOAPClient::handleError(const saml1p::Status& status)
 {
     const xmltooling::QName* code = status.getStatusCode() ? status.getStatusCode()->getValue() : nullptr;
     auto_ptr_char str((status.getStatusMessage() ? status.getStatusMessage()->getMessage() : nullptr));
-    Category::getInstance(SAML_LOGCAT".SOAPClient").error(
+    Category::getInstance(SAML_LOGCAT ".SOAPClient").error(
         "SOAP client detected a SAML error: (%s) (%s)",
         (code ? code->toString().c_str() : "no code"),
         (str.get() ? str.get() : "no message")

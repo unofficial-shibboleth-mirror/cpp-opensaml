@@ -87,7 +87,7 @@ namespace opensaml {
             if (e->hasAttributeNS(nullptr, precedence))
                 root->setAttributeNS(nullptr, precedence, e->getAttributeNS(nullptr, precedence));
 
-            Category& log = Category::getInstance(SAML_LOGCAT".Metadata.Folder");
+            Category& log = Category::getInstance(SAML_LOGCAT ".Metadata.Folder");
             log.info("loading metadata files from folder (%s)", loc.c_str());
 
 #ifdef WIN32

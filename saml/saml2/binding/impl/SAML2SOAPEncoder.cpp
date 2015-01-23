@@ -97,7 +97,7 @@ long SAML2SOAPEncoder::encode(
 #ifdef _DEBUG
     xmltooling::NDC ndc("encode");
 #endif
-    Category& log = Category::getInstance(SAML_LOGCAT".MessageEncoder.SAML2SOAP");
+    Category& log = Category::getInstance(SAML_LOGCAT ".MessageEncoder.SAML2SOAP");
 
     log.debug("validating input");
     if (xmlObject->getParent())

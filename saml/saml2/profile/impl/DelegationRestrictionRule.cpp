@@ -96,7 +96,7 @@ namespace opensaml {
             // d1 is the input from the message, d2 is from the policy
             bool operator()(const Delegate* d1, const Delegate& d2) const {
                 if (!d1->getNameID()) {
-                    Category::getInstance(SAML_LOGCAT".SecurityPolicyRule.DelegationRestriction").error(
+                    Category::getInstance(SAML_LOGCAT ".SecurityPolicyRule.DelegationRestriction").error(
                         "rule doesn't support evaluation of BaseID or EncryptedID in a Delegate"
                         );
                     return false;

@@ -80,7 +80,7 @@ XMLObject* SAML2ArtifactDecoder::decode(
 #ifdef _DEBUG
     xmltooling::NDC ndc("decode");
 #endif
-    Category& log = Category::getInstance(SAML_LOGCAT".MessageDecoder.SAML2Artifact");
+    Category& log = Category::getInstance(SAML_LOGCAT ".MessageDecoder.SAML2Artifact");
 
     log.debug("validating input");
     const HTTPRequest* httpRequest=dynamic_cast<const HTTPRequest*>(&genericRequest);

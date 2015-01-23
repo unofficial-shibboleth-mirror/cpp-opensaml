@@ -118,7 +118,7 @@ long SAML2POSTEncoder::encode(
 #ifdef _DEBUG
     xmltooling::NDC ndc("encode");
 #endif
-    Category& log = Category::getInstance(SAML_LOGCAT".MessageEncoder.SAML2POST");
+    Category& log = Category::getInstance(SAML_LOGCAT ".MessageEncoder.SAML2POST");
     log.debug("validating input");
 
     TemplateEngine* engine = XMLToolingConfig::getConfig().getTemplateEngine();

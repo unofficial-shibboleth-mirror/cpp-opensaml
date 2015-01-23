@@ -74,7 +74,7 @@ MessageFlowRule::MessageFlowRule(const DOMElement* e)
 
 bool MessageFlowRule::evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const
 {
-    Category& log=Category::getInstance(SAML_LOGCAT".SecurityPolicyRule.MessageFlow");
+    Category& log=Category::getInstance(SAML_LOGCAT ".SecurityPolicyRule.MessageFlow");
     log.debug("evaluating message flow policy (replay checking %s, expiration %lu)", m_checkReplay ? "on" : "off", m_expires);
 
     time_t now = policy.getTime();

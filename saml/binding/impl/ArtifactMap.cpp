@@ -128,7 +128,7 @@ void ArtifactMappings::storeContent(XMLObject* content, const SAMLArtifact* arti
 
 XMLObject* ArtifactMappings::retrieveContent(const SAMLArtifact* artifact, const char* relyingParty)
 {
-    Category& log=Category::getInstance(SAML_LOGCAT".ArtifactMap");
+    Category& log=Category::getInstance(SAML_LOGCAT ".ArtifactMap");
     Lock wrapper(m_lock);
 
     map<string,Mapping>::iterator i = m_artMap.find(SAMLArtifact::toHex(artifact->getMessageHandle()));
@@ -251,7 +251,7 @@ XMLObject* ArtifactMap::retrieveContent(const SAMLArtifact* artifact, const char
 #ifdef _DEBUG
     xmltooling::NDC ndc("retrieveContent");
 #endif
-    Category& log=Category::getInstance(SAML_LOGCAT".ArtifactMap");
+    Category& log=Category::getInstance(SAML_LOGCAT ".ArtifactMap");
 
     if (!m_storage)
         return m_mappings->retrieveContent(artifact, relyingParty);

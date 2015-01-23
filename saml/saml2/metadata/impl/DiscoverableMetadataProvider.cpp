@@ -69,17 +69,17 @@ DiscoverableMetadataProvider::DiscoverableMetadataProvider(const DOMElement* e) 
                     m_discoFilters.push_back(make_pair(t == "Whitelist", temp));
                 }
                 catch (std::exception& ex) {
-                    Category::getInstance(SAML_LOGCAT".MetadataProvider.Discoverable").error(
+                    Category::getInstance(SAML_LOGCAT ".MetadataProvider.Discoverable").error(
                         "exception creating <DiscoveryFilter> EntityMatcher: %s", ex.what()
                         );
                 }
             }
             else {
-                Category::getInstance(SAML_LOGCAT".MetadataProvider.Discoverable").error("<DiscoveryFilter> requires matcher attribute");
+                Category::getInstance(SAML_LOGCAT ".MetadataProvider.Discoverable").error("<DiscoveryFilter> requires matcher attribute");
             }
         }
         else {
-            Category::getInstance(SAML_LOGCAT".MetadataProvider.Discoverable").error(
+            Category::getInstance(SAML_LOGCAT ".MetadataProvider.Discoverable").error(
                 "unknown <DiscoveryFilter> type (%s)", t.empty() ? "none" : t.c_str()
                 );
         }

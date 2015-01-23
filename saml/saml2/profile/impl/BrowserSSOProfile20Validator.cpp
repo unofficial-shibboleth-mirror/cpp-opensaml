@@ -56,7 +56,7 @@ void BrowserSSOProfileValidator::validateAssertion(const Assertion& assertion) c
 #ifdef _DEBUG
     xmltooling::NDC ndc("validate");
 #endif
-    Category& log = Category::getInstance(SAML_LOGCAT".AssertionValidator");
+    Category& log = Category::getInstance(SAML_LOGCAT ".AssertionValidator");
 
     // The assertion MUST have proper confirmation requirements.
     const char* msg="assertion is missing bearer SubjectConfirmation";

@@ -96,7 +96,7 @@ MetadataProvider::MetadataProvider(const DOMElement* e) : m_filterContext(nullpt
 #ifdef _DEBUG
     NDC ndc("MetadataProvider");
 #endif
-    Category& log = Category::getInstance(SAML_LOGCAT".Metadata");
+    Category& log = Category::getInstance(SAML_LOGCAT ".Metadata");
     SAMLConfig& conf = SAMLConfig::getConfig();
 
     // Locate any default recognized filters and plugins.
@@ -174,7 +174,7 @@ void MetadataProvider::setContext(const MetadataFilterContext* ctx)
 
 void MetadataProvider::doFilters(XMLObject& xmlObject) const
 {
-    Category& log = Category::getInstance(SAML_LOGCAT".Metadata");
+    Category& log = Category::getInstance(SAML_LOGCAT ".Metadata");
     for (ptr_vector<MetadataFilter>::const_iterator i = m_filters.begin(); i != m_filters.end(); i++) {
         log.info("applying metadata filter (%s)", i->getId());
         i->doFilter(m_filterContext, xmlObject);

@@ -81,7 +81,7 @@ XMLObject* SAML2RedirectDecoder::decode(
 #ifdef _DEBUG
     xmltooling::NDC ndc("decode");
 #endif
-    Category& log = Category::getInstance(SAML_LOGCAT".MessageDecoder.SAML2Redirect");
+    Category& log = Category::getInstance(SAML_LOGCAT ".MessageDecoder.SAML2Redirect");
 
     log.debug("validating input");
     const HTTPRequest* httpRequest=dynamic_cast<const HTTPRequest*>(&genericRequest);

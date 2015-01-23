@@ -114,7 +114,7 @@ long SAML2ArtifactEncoder::encode(
 #ifdef _DEBUG
     xmltooling::NDC ndc("encode");
 #endif
-    Category& log = Category::getInstance(SAML_LOGCAT".MessageEncoder.SAML2Artifact");
+    Category& log = Category::getInstance(SAML_LOGCAT ".MessageEncoder.SAML2Artifact");
     log.debug("validating input");
     if (!destination)
         throw BindingException("Encoding response requires a destination.");

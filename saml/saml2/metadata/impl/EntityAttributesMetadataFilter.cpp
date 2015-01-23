@@ -109,7 +109,7 @@ void EntityAttributesMetadataFilter::doFilter(XMLObject& xmlObject) const
             filterEntity(entity);
         }
         else {
-            throw MetadataFilterException(ENTITYATTR_METADATA_FILTER" MetadataFilter was given an improper metadata instance to filter.");
+            throw MetadataFilterException(ENTITYATTR_METADATA_FILTER " MetadataFilter was given an improper metadata instance to filter.");
         }
     }
 }

@@ -112,14 +112,14 @@ void EntityRoleMetadataFilter::doFilter(XMLObject& xmlObject) const
             doFilter(*entity);
         }
         else {
-            throw MetadataFilterException(ENTITYROLE_METADATA_FILTER" MetadataFilter was given an improper metadata instance to filter.");
+            throw MetadataFilterException(ENTITYROLE_METADATA_FILTER " MetadataFilter was given an improper metadata instance to filter.");
         }
     }
 }
 
 void EntityRoleMetadataFilter::doFilter(EntitiesDescriptor& entities) const
 {
-    Category& log=Category::getInstance(SAML_LOGCAT".MetadataFilter."ENTITYROLE_METADATA_FILTER);
+    Category& log=Category::getInstance(SAML_LOGCAT ".MetadataFilter." ENTITYROLE_METADATA_FILTER);
 
     VectorOf(EntityDescriptor) v = entities.getEntityDescriptors();
     for (VectorOf(EntityDescriptor)::size_type i = 0; i < v.size(); ) {

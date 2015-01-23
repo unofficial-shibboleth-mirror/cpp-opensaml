@@ -80,7 +80,7 @@ XMLObject* SAML1SOAPDecoder::decode(
 #ifdef _DEBUG
     xmltooling::NDC ndc("decode");
 #endif
-    Category& log = Category::getInstance(SAML_LOGCAT".MessageDecoder.SAML1SOAP");
+    Category& log = Category::getInstance(SAML_LOGCAT ".MessageDecoder.SAML1SOAP");
 
     log.debug("validating input");
     string s = genericRequest.getContentType();

@@ -64,7 +64,7 @@ void SAML1MessageDecoder::extractMessageDetails(
     if (!XMLString::equals(q.getNamespaceURI(), samlconstants::SAML1P_NS))
         return;
 
-    Category& log = Category::getInstance(SAML_LOGCAT".MessageDecoder.SAML1");
+    Category& log = Category::getInstance(SAML_LOGCAT ".MessageDecoder.SAML1");
 
     const Request* request=nullptr;
     const Response* response=nullptr;

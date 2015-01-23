@@ -53,7 +53,7 @@ char* opensaml::saml2p::deflate(char* in, unsigned int in_len, unsigned int* out
 #ifdef _DEBUG
     xmltooling::NDC ndc("deflate");
 #endif
-    Category& log = Category::getInstance(SAML_LOGCAT".MessageDecoder.SAML2Redirect.zlib");
+    Category& log = Category::getInstance(SAML_LOGCAT ".MessageDecoder.SAML2Redirect.zlib");
 
     z_stream z;
     memset(&z, 0, sizeof(z_stream));
@@ -93,7 +93,7 @@ unsigned int opensaml::saml2p::inflate(char* in, unsigned int in_len, ostream& o
 #ifdef _DEBUG
     xmltooling::NDC ndc("inflate");
 #endif
-    Category& log = Category::getInstance(SAML_LOGCAT".MessageDecoder.SAML2Redirect.zlib");
+    Category& log = Category::getInstance(SAML_LOGCAT ".MessageDecoder.SAML2Redirect.zlib");
 
     z_stream z;
     memset(&z, 0, sizeof(z_stream));

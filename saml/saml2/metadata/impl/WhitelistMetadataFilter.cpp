@@ -97,17 +97,17 @@ void WhitelistMetadataFilter::doFilter(XMLObject& xmlObject) const
         EntityDescriptor* entity = dynamic_cast<EntityDescriptor*>(&xmlObject);
         if (entity) {
             if (!included(*entity))
-                throw MetadataFilterException(WHITELIST_METADATA_FILTER" MetadataFilter instructed to filter the root/only entity in the metadata.");
+                throw MetadataFilterException(WHITELIST_METADATA_FILTER " MetadataFilter instructed to filter the root/only entity in the metadata.");
         }
         else {
-            throw MetadataFilterException(WHITELIST_METADATA_FILTER" MetadataFilter was given an improper metadata instance to filter.");
+            throw MetadataFilterException(WHITELIST_METADATA_FILTER " MetadataFilter was given an improper metadata instance to filter.");
         }
     }
 }
 
 void WhitelistMetadataFilter::filterGroup(EntitiesDescriptor* entities) const
 {
-    Category& log = Category::getInstance(SAML_LOGCAT".MetadataFilter."WHITELIST_METADATA_FILTER);
+    Category& log = Category::getInstance(SAML_LOGCAT ".MetadataFilter." WHITELIST_METADATA_FILTER);
 
     VectorOf(EntityDescriptor) v = entities->getEntityDescriptors();
     for (VectorOf(EntityDescriptor)::size_type i = 0; i < v.size(); ) {

@@ -39,7 +39,7 @@ namespace opensaml {
     class SAML_DLLLOCAL NullSecurityRule : public SecurityPolicyRule
     {
     public:
-        NullSecurityRule(const DOMElement* e) : m_log(Category::getInstance(SAML_LOGCAT".SecurityPolicyRule.NullSecurity")) {}
+        NullSecurityRule(const DOMElement* e) : m_log(Category::getInstance(SAML_LOGCAT ".SecurityPolicyRule.NullSecurity")) {}
         virtual ~NullSecurityRule() {}
         
         const char* getType() const {

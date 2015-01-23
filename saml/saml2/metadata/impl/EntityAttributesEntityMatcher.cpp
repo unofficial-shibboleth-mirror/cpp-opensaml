@@ -83,7 +83,7 @@ namespace opensaml {
 
 EntityAttributesEntityMatcher::EntityAttributesEntityMatcher(const DOMElement* e)
     : m_trimTags(XMLHelper::getAttrBool(e, false, trimTags)),
-        m_log(Category::getInstance(SAML_LOGCAT".EntityMatcher.EntityAttributes"))
+        m_log(Category::getInstance(SAML_LOGCAT ".EntityMatcher.EntityAttributes"))
 {
     // Check for shorthand syntax.
     if (e && e->hasAttributeNS(nullptr, attributeName) && (e->hasAttributeNS(nullptr, attributeValue) || e->hasAttributeNS(nullptr, attributeValueRegex))) {

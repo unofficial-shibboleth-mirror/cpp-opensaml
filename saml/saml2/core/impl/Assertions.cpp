@@ -169,7 +169,7 @@ void EncryptedElementType::encrypt(
         vector<const Credential*> creds;
         if (r->first->resolve(creds, r->second) == 0) {
             auto_ptr_char name(dynamic_cast<const EntityDescriptor*>(r->second->getRole().getParent())->getEntityID());
-            logging::Category::getInstance(SAML_LOGCAT".Encryption").warn("No key encryption credentials found for (%s).", name.get());
+            logging::Category::getInstance(SAML_LOGCAT ".Encryption").warn("No key encryption credentials found for (%s).", name.get());
             continue;
         }
 
@@ -205,7 +205,7 @@ void EncryptedElementType::encrypt(
 
         if (!KEK) {
             auto_ptr_char name(dynamic_cast<const EntityDescriptor*>(r->second->getRole().getParent())->getEntityID());
-            logging::Category::getInstance(SAML_LOGCAT".Encryption").warn("no supported key encryption credential found for (%s).", name.get());
+            logging::Category::getInstance(SAML_LOGCAT ".Encryption").warn("no supported key encryption credential found for (%s).", name.get());
             continue;
         }
 

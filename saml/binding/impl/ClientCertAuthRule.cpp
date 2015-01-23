@@ -74,7 +74,7 @@ ClientCertAuthRule::ClientCertAuthRule(const DOMElement* e) : m_errorFatal(XMLHe
 
 bool ClientCertAuthRule::evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const
 {
-    Category& log=Category::getInstance(SAML_LOGCAT".SecurityPolicyRule.ClientCertAuth");
+    Category& log=Category::getInstance(SAML_LOGCAT ".SecurityPolicyRule.ClientCertAuth");
     
     if (!request)
         return false;

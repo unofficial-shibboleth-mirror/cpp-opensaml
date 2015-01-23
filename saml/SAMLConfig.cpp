@@ -149,7 +149,7 @@ bool SAMLInternalConfig::init(bool initXMLTooling)
 #ifdef _DEBUG
     xmltooling::NDC ndc("init");
 #endif
-    Category& log=Category::getInstance(SAML_LOGCAT".Config");
+    Category& log=Category::getInstance(SAML_LOGCAT ".Config");
 
     Lock initLock(m_lock);
 
@@ -209,7 +209,7 @@ void SAMLInternalConfig::term(bool termXMLTooling)
 
     Lock initLock(m_lock);
     if (m_initCount == 0) {
-        Category::getInstance(SAML_LOGCAT".Config").crit("term without corresponding init");
+        Category::getInstance(SAML_LOGCAT ".Config").crit("term without corresponding init");
         return;
     }
     else if (--m_initCount > 0) {
@@ -230,7 +230,7 @@ void SAMLInternalConfig::term(bool termXMLTooling)
     if (termXMLTooling)
         XMLToolingConfig::getConfig().term();
     
-    Category::getInstance(SAML_LOGCAT".Config").info("%s library shutdown complete", PACKAGE_STRING);
+    Category::getInstance(SAML_LOGCAT ".Config").info("%s library shutdown complete", PACKAGE_STRING);
 }
 
 void SAMLInternalConfig::generateRandomBytes(void* buf, unsigned int len)

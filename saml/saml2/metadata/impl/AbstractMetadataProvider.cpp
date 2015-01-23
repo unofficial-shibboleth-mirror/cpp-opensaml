@@ -259,7 +259,7 @@ const EntitiesDescriptor* AbstractMetadataProvider::getEntitiesDescriptor(const 
             return i->second;
     
     if (range.first != range.second) {
-        Category& log = Category::getInstance(SAML_LOGCAT".MetadataProvider");
+        Category& log = Category::getInstance(SAML_LOGCAT ".MetadataProvider");
         if (strict) {
             log.warn("ignored expired metadata group (%s)", range.first->first.c_str());
         }
@@ -299,7 +299,7 @@ pair<const EntityDescriptor*,const RoleDescriptor*> AbstractMetadataProvider::ge
     }
     
     if (!result.first && range.first!=range.second) {
-        Category& log = Category::getInstance(SAML_LOGCAT".MetadataProvider");
+        Category& log = Category::getInstance(SAML_LOGCAT ".MetadataProvider");
         if (criteria.validOnly) {
             log.warn("ignored expired metadata instance for (%s)", range.first->first.c_str());
         }

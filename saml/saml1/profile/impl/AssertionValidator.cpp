@@ -93,7 +93,7 @@ void AssertionValidator::validateCondition(const Condition* c) const
 {
     const AudienceRestrictionCondition* ac=dynamic_cast<const AudienceRestrictionCondition*>(c);
     if (!ac) {
-        Category::getInstance(SAML_LOGCAT".AssertionValidator").error("unrecognized Condition in assertion (%s)",
+        Category::getInstance(SAML_LOGCAT ".AssertionValidator").error("unrecognized Condition in assertion (%s)",
             c->getSchemaType() ? c->getSchemaType()->toString().c_str() : c->getElementQName().toString().c_str());
         throw ValidationException("Assertion contains an unrecognized condition.");
     }
@@ -114,7 +114,7 @@ void AssertionValidator::validateCondition(const Condition* c) const
     if (!found) {
         ostringstream os;
         os << *ac;
-        Category::getInstance(SAML_LOGCAT".AssertionValidator").error(
+        Category::getInstance(SAML_LOGCAT ".AssertionValidator").error(
             "unacceptable AudienceRestrictionCondition in assertion (%s)", os.str().c_str()
             );
         throw ValidationException("Assertion contains an unacceptable AudienceRestrictionCondition.");

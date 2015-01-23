@@ -84,7 +84,7 @@ bool BearerConfirmationRule::evaluate(const XMLObject& message, const GenericReq
     if (!a)
         return false;
 
-    logging::Category& log = logging::Category::getInstance(SAML_LOGCAT".SecurityPolicyRule.BearerConfirmation");
+    logging::Category& log = logging::Category::getInstance(SAML_LOGCAT ".SecurityPolicyRule.BearerConfirmation");
 
     const char* msg="assertion is missing bearer SubjectConfirmation";
     const Subject* subject = a->getSubject();

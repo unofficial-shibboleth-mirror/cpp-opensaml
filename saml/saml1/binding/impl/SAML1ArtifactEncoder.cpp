@@ -95,7 +95,7 @@ long SAML1ArtifactEncoder::encode(
 #ifdef _DEBUG
     xmltooling::NDC ndc("encode");
 #endif
-    Category& log = Category::getInstance(SAML_LOGCAT".MessageEncoder.SAML1Artifact");
+    Category& log = Category::getInstance(SAML_LOGCAT ".MessageEncoder.SAML1Artifact");
 
     log.debug("validating input");
     HTTPResponse* httpResponse=dynamic_cast<HTTPResponse*>(&genericResponse);
