@@ -190,7 +190,12 @@ ArtifactMap::ArtifactMap(const DOMElement* e, xmltooling::StorageService* storag
 
         const XMLCh* TTL = e->getAttributeNS(nullptr, artifactTTL);
         if (TTL) {
-            m_artifactTTL = XMLString::parseInt(TTL);
+            try {
+                m_artifactTTL = XMLString::parseInt(TTL);
+            }
+            catch (XMLException&) {
+                m_artifactTTL = 0;
+            }
             if (!m_artifactTTL)
                 m_artifactTTL = 180;
         }
