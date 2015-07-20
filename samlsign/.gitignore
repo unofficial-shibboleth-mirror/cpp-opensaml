@@ -2,6 +2,7 @@
 /Release
 /*.lo
 /*.la
+/*.o
 /*.user
 /Makefile.in
 /Makefile
