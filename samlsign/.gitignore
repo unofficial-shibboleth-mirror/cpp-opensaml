@@ -1,5 +1,7 @@
 /Debug
 /Release
+/*.lo
+/*.la
 /*.user
 /Makefile.in
 /Makefile
