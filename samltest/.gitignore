@@ -1,4 +1,6 @@
 /Debug
+/*.la
+/*.lo
 /*.user
 /*.cpp
 /.deps
