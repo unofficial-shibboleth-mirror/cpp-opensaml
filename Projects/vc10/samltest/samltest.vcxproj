@@ -59,21 +59,21 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <Import Project="..\..\BuildPath.props" />
+  <Import Project="..\..\..\..\BuildPath.props" />
   <Import Project="$(ParentRoot)\Versions.props" />
   <Import Project="$(ParentRoot)\Includes.props" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)..\..\Build\vc10\$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)..\..\Build\vc10\$(Platform)\$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(Platform)\$(Configuration)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)..\..\Build\vc10\$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)..\..\Build\vc10\$(Platform)\$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Platform)\$(Configuration)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
@@ -92,7 +92,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(ProjectDir);..\..\cpp-xmltooling;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\;$(ProjectDir)..\..\..\samltest\;..\..\..\..\cpp-xmltooling;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <BrowseInformation>true</BrowseInformation>
@@ -100,7 +100,7 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>..\..\cpp-xmltooling\Build\VC10\$(Configuration)\xmltooling1D.lib;xerces-c_3D.lib;xsec_1D.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\..\..\..\cpp-xmltooling\Build\VC10\$(Configuration)\xmltooling1D.lib;xerces-c_3D.lib;xsec_1D.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <DataExecutionPrevention>
@@ -113,7 +113,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(ProjectDir);..\..\cpp-xmltooling;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\;$(ProjectDir)..\..\..\samltest\;..\..\..\..\cpp-xmltooling;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <BrowseInformation>true</BrowseInformation>
@@ -121,7 +121,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>..\..\cpp-xmltooling\Build\VC10\$(Platform)\$(Configuration)\xmltooling1D.lib;xerces-c_3D.lib;xsec_1D.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\..\..\..\cpp-xmltooling\Build\VC10\$(Platform)\$(Configuration)\xmltooling1D.lib;xerces-c_3D.lib;xsec_1D.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <DataExecutionPrevention>
@@ -130,12 +130,12 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(ProjectDir);..\..\cpp-xmltooling;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\;$(ProjectDir)..\..\..\samltest\;..\..\..\..\cpp-xmltooling;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WarningLevel>Level3</WarningLevel>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>..\..\cpp-xmltooling\Build\VC10\$(Configuration)\xmltooling1.lib;xerces-c_3.lib;xsec_1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\..\..\..\cpp-xmltooling\Build\VC10\$(Configuration)\xmltooling1.lib;xerces-c_3.lib;xsec_1.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
@@ -149,12 +149,12 @@
       <TargetEnvironment>X64</TargetEnvironment>
     </Midl>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(ProjectDir);..\..\cpp-xmltooling;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\;$(ProjectDir)..\..\..\samltest\;..\..\..\..\cpp-xmltooling;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WarningLevel>Level3</WarningLevel>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>..\..\cpp-xmltooling\Build\VC10\$(Platform)\$(Configuration)\xmltooling1.lib;xerces-c_3.lib;xsec_1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\..\..\..\cpp-xmltooling\Build\VC10\$(Platform)\$(Configuration)\xmltooling1.lib;xerces-c_3.lib;xsec_1.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
@@ -164,98 +164,98 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ArtifactMapTest.cpp" />
-    <ClCompile Include="CookieTest.cpp" />
-    <ClCompile Include="SAMLArtifactCreationTest.cpp" />
-    <ClCompile Include="SAMLArtifactType0001Test.cpp" />
-    <ClCompile Include="SAMLArtifactType0002Test.cpp" />
-    <ClCompile Include="SAMLArtifactType0004Test.cpp" />
-    <ClCompile Include="samltest.cpp" />
-    <ClCompile Include="saml1\core\impl\ActionTest.cpp" />
-    <ClCompile Include="saml1\core\impl\AdviceTest.cpp" />
-    <ClCompile Include="saml1\core\impl\AssertionIDReferenceTest.cpp" />
-    <ClCompile Include="saml1\core\impl\AssertionTest.cpp" />
-    <ClCompile Include="saml1\core\impl\AttributeDesignatorTest.cpp" />
-    <ClCompile Include="saml1\core\impl\AttributeStatementTest.cpp" />
-    <ClCompile Include="saml1\core\impl\AttributeTest.cpp" />
-    <ClCompile Include="saml1\core\impl\AudienceRestrictionConditionTest.cpp" />
-    <ClCompile Include="saml1\core\impl\AudienceTest.cpp" />
-    <ClCompile Include="saml1\core\impl\AuthenticationStatementTest.cpp" />
-    <ClCompile Include="saml1\binding\SAML1ArtifactTest.cpp" />
-    <ClCompile Include="saml1\binding\SAML1POSTTest.cpp" />
-    <ClCompile Include="saml1\profile\SAML1PolicyTest.cpp" />
-    <ClCompile Include="signature\SAML1AssertionTest.cpp" />
-    <ClCompile Include="signature\SAML1RequestTest.cpp" />
-    <ClCompile Include="signature\SAML1ResponseTest.cpp" />
-    <ClCompile Include="signature\SAML2AssertionTest.cpp" />
-    <ClCompile Include="saml2\core\impl\Action20Test.cpp" />
-    <ClCompile Include="saml2\core\impl\Advice20Test.cpp" />
-    <ClCompile Include="saml2\core\impl\Artifact20Test.cpp" />
-    <ClCompile Include="saml2\core\impl\ArtifactResolve20Test.cpp" />
-    <ClCompile Include="saml2\core\impl\ArtifactResponse20Test.cpp" />
-    <ClCompile Include="saml2\core\impl\Assertion20Test.cpp" />
-    <ClCompile Include="saml2\core\impl\AssertionIDRef20Test.cpp" />
-    <ClCompile Include="saml2\core\impl\AssertionIDRequest20Test.cpp" />
-    <ClCompile Include="saml2\core\impl\AssertionURIRef20Test.cpp" />
-    <ClCompile Include="saml2\core\impl\Attribute20Test.cpp" />
-    <ClCompile Include="saml2\core\impl\AttributeQuery20Test.cpp" />
-    <ClCompile Include="saml2\core\impl\AttributeStatement20Test.cpp" />
-    <ClCompile Include="saml2\core\impl\Audience20Test.cpp" />
-    <ClCompile Include="saml2\core\impl\AudienceRestriction20Test.cpp" />
-    <ClCompile Include="saml2\core\impl\AuthenticatingAuthority20Test.cpp" />
-    <ClCompile Include="saml2\core\impl\AuthnContext20Test.cpp" />
-    <ClCompile Include="saml2\core\impl\AuthnContextClassRef20Test.cpp" />
-    <ClCompile Include="saml2\core\impl\AuthnContextDeclRef20Test.cpp" />
-    <ClCompile Include="saml2\core\impl\AuthnQuery20Test.cpp" />
-    <ClCompile Include="saml2\core\impl\AuthnRequest20Test.cpp" />
-    <ClCompile Include="saml2\core\impl\AuthnStatement20Test.cpp" />
-    <ClCompile Include="saml2\core\impl\AuthzDecisionQuery20Test.cpp" />
-    <ClCompile Include="saml2\core\impl\AuthzDecisionStatement20Test.cpp" />
-    <ClCompile Include="saml2\core\impl\Conditions20Test.cpp" />
-    <ClCompile Include="saml2\core\impl\Evidence20Test.cpp" />
-    <ClCompile Include="saml2\core\impl\GetComplete20Test.cpp" />
-    <ClCompile Include="saml2\core\impl\IDPEntry20Test.cpp" />
-    <ClCompile Include="saml2\core\impl\IDPList20Test.cpp" />
-    <ClCompile Include="saml2\core\impl\Issuer20Test.cpp" />
-    <ClCompile Include="saml2\core\impl\KeyInfoConfirmationDataType20Test.cpp" />
-    <ClCompile Include="saml2\core\impl\LogoutRequest20Test.cpp" />
-    <ClCompile Include="saml2\core\impl\LogoutResponse20Test.cpp" />
-    <ClCompile Include="saml2\core\impl\ManageNameIDRequest20Test.cpp" />
-    <ClCompile Include="saml2\core\impl\ManageNameIDResponse20Test.cpp" />
-    <ClCompile Include="saml2\core\impl\NameID20Test.cpp" />
-    <ClCompile Include="saml2\core\impl\NameIDMappingRequest20Test.cpp" />
-    <ClCompile Include="saml2\core\impl\NameIDMappingResponse20Test.cpp" />
-    <ClCompile Include="saml2\core\impl\NameIDPolicy20Test.cpp" />
-    <ClCompile Include="saml2\core\impl\NameIDType20Test.cpp" />
-    <ClCompile Include="saml2\core\impl\NewEncryptedID20Test.cpp" />
-    <ClCompile Include="saml2\core\impl\NewID20Test.cpp" />
-    <ClCompile Include="saml2\core\impl\OneTimeUse20Test.cpp" />
-    <ClCompile Include="saml2\core\impl\ProxyRestriction20Test.cpp" />
-    <ClCompile Include="saml2\core\impl\RequestedAuthnContext20Test.cpp" />
-    <ClCompile Include="saml2\core\impl\RequesterID20Test.cpp" />
-    <ClCompile Include="saml2\core\impl\Response20Test.cpp" />
-    <ClCompile Include="saml2\core\impl\Scoping20Test.cpp" />
-    <ClCompile Include="saml2\core\impl\SessionIndex20Test.cpp" />
-    <ClCompile Include="saml2\core\impl\Status20Test.cpp" />
-    <ClCompile Include="saml2\core\impl\StatusCode20Test.cpp" />
-    <ClCompile Include="saml2\core\impl\StatusDetail20Test.cpp" />
-    <ClCompile Include="saml2\core\impl\StatusMessage20Test.cpp" />
-    <ClCompile Include="saml2\core\impl\Subject20Test.cpp" />
-    <ClCompile Include="saml2\core\impl\SubjectConfirmation20Test.cpp" />
-    <ClCompile Include="saml2\core\impl\SubjectConfirmationData20Test.cpp" />
-    <ClCompile Include="saml2\core\impl\SubjectLocality20Test.cpp" />
-    <ClCompile Include="saml2\core\impl\Terminate20Test.cpp" />
-    <ClCompile Include="saml2\metadata\XMLMetadataProviderTest.cpp" />
-    <ClCompile Include="saml2\binding\SAML2ArtifactTest.cpp" />
-    <ClCompile Include="saml2\binding\SAML2POSTTest.cpp" />
-    <ClCompile Include="saml2\binding\SAML2RedirectTest.cpp" />
-    <ClCompile Include="saml2\profile\SAML2PolicyTest.cpp" />
-    <ClCompile Include="security\ExplicitKeyTrustEngineTest.cpp" />
-    <ClCompile Include="security\StaticPKIXTrustEngineTest.cpp" />
-    <ClCompile Include="encryption\EncryptedAssertionTest.cpp" />
+    <ClCompile Include="..\..\..\samltest\ArtifactMapTest.cpp" />
+    <ClCompile Include="..\..\..\samltest\CookieTest.cpp" />
+    <ClCompile Include="..\..\..\samltest\SAMLArtifactCreationTest.cpp" />
+    <ClCompile Include="..\..\..\samltest\SAMLArtifactType0001Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\SAMLArtifactType0002Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\SAMLArtifactType0004Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\samltest.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml1\core\impl\ActionTest.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml1\core\impl\AdviceTest.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml1\core\impl\AssertionIDReferenceTest.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml1\core\impl\AssertionTest.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml1\core\impl\AttributeDesignatorTest.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml1\core\impl\AttributeStatementTest.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml1\core\impl\AttributeTest.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml1\core\impl\AudienceRestrictionConditionTest.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml1\core\impl\AudienceTest.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml1\core\impl\AuthenticationStatementTest.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml1\binding\SAML1ArtifactTest.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml1\binding\SAML1POSTTest.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml1\profile\SAML1PolicyTest.cpp" />
+    <ClCompile Include="..\..\..\samltest\signature\SAML1AssertionTest.cpp" />
+    <ClCompile Include="..\..\..\samltest\signature\SAML1RequestTest.cpp" />
+    <ClCompile Include="..\..\..\samltest\signature\SAML1ResponseTest.cpp" />
+    <ClCompile Include="..\..\..\samltest\signature\SAML2AssertionTest.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\Action20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\Advice20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\Artifact20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\ArtifactResolve20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\ArtifactResponse20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\Assertion20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\AssertionIDRef20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\AssertionIDRequest20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\AssertionURIRef20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\Attribute20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\AttributeQuery20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\AttributeStatement20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\Audience20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\AudienceRestriction20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\AuthenticatingAuthority20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\AuthnContext20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\AuthnContextClassRef20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\AuthnContextDeclRef20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\AuthnQuery20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\AuthnRequest20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\AuthnStatement20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\AuthzDecisionQuery20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\AuthzDecisionStatement20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\Conditions20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\Evidence20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\GetComplete20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\IDPEntry20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\IDPList20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\Issuer20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\KeyInfoConfirmationDataType20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\LogoutRequest20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\LogoutResponse20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\ManageNameIDRequest20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\ManageNameIDResponse20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\NameID20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\NameIDMappingRequest20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\NameIDMappingResponse20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\NameIDPolicy20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\NameIDType20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\NewEncryptedID20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\NewID20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\OneTimeUse20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\ProxyRestriction20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\RequestedAuthnContext20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\RequesterID20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\Response20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\Scoping20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\SessionIndex20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\Status20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\StatusCode20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\StatusDetail20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\StatusMessage20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\Subject20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\SubjectConfirmation20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\SubjectConfirmationData20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\SubjectLocality20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\Terminate20Test.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\metadata\XMLMetadataProviderTest.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\binding\SAML2ArtifactTest.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\binding\SAML2POSTTest.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\binding\SAML2RedirectTest.cpp" />
+    <ClCompile Include="..\..\..\samltest\saml2\profile\SAML2PolicyTest.cpp" />
+    <ClCompile Include="..\..\..\samltest\security\ExplicitKeyTrustEngineTest.cpp" />
+    <ClCompile Include="..\..\..\samltest\security\StaticPKIXTrustEngineTest.cpp" />
+    <ClCompile Include="..\..\..\samltest\encryption\EncryptedAssertionTest.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="ArtifactMapTest.h">
+    <CustomBuild Include="..\..\..\samltest\ArtifactMapTest.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -269,7 +269,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="SAMLArtifactCreationTest.h">
+    <CustomBuild Include="..\..\..\samltest\SAMLArtifactCreationTest.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -283,7 +283,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="SAMLArtifactType0001Test.h">
+    <CustomBuild Include="..\..\..\samltest\SAMLArtifactType0001Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -297,7 +297,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="SAMLArtifactType0002Test.h">
+    <CustomBuild Include="..\..\..\samltest\SAMLArtifactType0002Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -311,7 +311,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="SAMLArtifactType0004Test.h">
+    <CustomBuild Include="..\..\..\samltest\SAMLArtifactType0004Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -325,7 +325,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="samltest.h">
+    <CustomBuild Include="..\..\..\samltest\samltest.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --error-printer --have-eh --have-std --abort-on-fail -o "%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(Filename).cpp;%(Outputs)</Outputs>
@@ -339,7 +339,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml1\core\impl\ActionTest.h">
+    <CustomBuild Include="..\..\..\samltest\saml1\core\impl\ActionTest.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -353,7 +353,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml1\core\impl\AdviceTest.h">
+    <CustomBuild Include="..\..\..\samltest\saml1\core\impl\AdviceTest.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -367,7 +367,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml1\core\impl\AssertionIDReferenceTest.h">
+    <CustomBuild Include="..\..\..\samltest\saml1\core\impl\AssertionIDReferenceTest.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -381,7 +381,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml1\core\impl\AssertionTest.h">
+    <CustomBuild Include="..\..\..\samltest\saml1\core\impl\AssertionTest.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -395,7 +395,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml1\core\impl\AttributeDesignatorTest.h">
+    <CustomBuild Include="..\..\..\samltest\saml1\core\impl\AttributeDesignatorTest.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -409,7 +409,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml1\core\impl\AttributeStatementTest.h">
+    <CustomBuild Include="..\..\..\samltest\saml1\core\impl\AttributeStatementTest.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -423,7 +423,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml1\core\impl\AttributeTest.h">
+    <CustomBuild Include="..\..\..\samltest\saml1\core\impl\AttributeTest.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -437,7 +437,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml1\core\impl\AudienceRestrictionConditionTest.h">
+    <CustomBuild Include="..\..\..\samltest\saml1\core\impl\AudienceRestrictionConditionTest.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -451,7 +451,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml1\core\impl\AudienceTest.h">
+    <CustomBuild Include="..\..\..\samltest\saml1\core\impl\AudienceTest.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -465,7 +465,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml1\core\impl\AuthenticationStatementTest.h">
+    <CustomBuild Include="..\..\..\samltest\saml1\core\impl\AuthenticationStatementTest.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -479,7 +479,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml1\binding\SAML1ArtifactTest.h">
+    <CustomBuild Include="..\..\..\samltest\saml1\binding\SAML1ArtifactTest.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -493,7 +493,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml1\binding\SAML1POSTTest.h">
+    <CustomBuild Include="..\..\..\samltest\saml1\binding\SAML1POSTTest.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -507,7 +507,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml1\profile\SAML1PolicyTest.h">
+    <CustomBuild Include="..\..\..\samltest\saml1\profile\SAML1PolicyTest.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -521,7 +521,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="signature\SAML1AssertionTest.h">
+    <CustomBuild Include="..\..\..\samltest\signature\SAML1AssertionTest.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -535,7 +535,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="signature\SAML1RequestTest.h">
+    <CustomBuild Include="..\..\..\samltest\signature\SAML1RequestTest.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -549,7 +549,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="signature\SAML1ResponseTest.h">
+    <CustomBuild Include="..\..\..\samltest\signature\SAML1ResponseTest.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -563,7 +563,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="signature\SAML2AssertionTest.h">
+    <CustomBuild Include="..\..\..\samltest\signature\SAML2AssertionTest.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -577,7 +577,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="CookieTest.h">
+    <CustomBuild Include="..\..\..\samltest\CookieTest.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"</Command>
@@ -587,8 +587,8 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <ClInclude Include="signature\SAMLSignatureTestBase.h" />
-    <CustomBuild Include="saml2\core\impl\Action20Test.h">
+    <ClInclude Include="..\..\..\samltest\signature\SAMLSignatureTestBase.h" />
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\Action20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -602,7 +602,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\core\impl\Advice20Test.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\Advice20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -616,7 +616,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\core\impl\Artifact20Test.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\Artifact20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -630,7 +630,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\core\impl\ArtifactResolve20Test.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\ArtifactResolve20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -644,7 +644,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\core\impl\ArtifactResponse20Test.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\ArtifactResponse20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -658,7 +658,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\core\impl\Assertion20Test.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\Assertion20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -672,7 +672,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\core\impl\AssertionIDRef20Test.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\AssertionIDRef20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -686,7 +686,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\core\impl\AssertionIDRequest20Test.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\AssertionIDRequest20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -700,7 +700,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\core\impl\AssertionURIRef20Test.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\AssertionURIRef20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -714,7 +714,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\core\impl\Attribute20Test.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\Attribute20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -728,7 +728,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\core\impl\AttributeQuery20Test.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\AttributeQuery20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -742,7 +742,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\core\impl\AttributeStatement20Test.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\AttributeStatement20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -756,7 +756,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\core\impl\Audience20Test.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\Audience20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -770,7 +770,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\core\impl\AudienceRestriction20Test.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\AudienceRestriction20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -784,7 +784,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\core\impl\AuthenticatingAuthority20Test.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\AuthenticatingAuthority20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -798,7 +798,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\core\impl\AuthnContext20Test.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\AuthnContext20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -812,7 +812,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\core\impl\AuthnContextClassRef20Test.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\AuthnContextClassRef20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -826,7 +826,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\core\impl\AuthnContextDeclRef20Test.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\AuthnContextDeclRef20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -840,7 +840,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\core\impl\AuthnQuery20Test.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\AuthnQuery20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -854,7 +854,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\core\impl\AuthnRequest20Test.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\AuthnRequest20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -868,7 +868,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\core\impl\AuthnStatement20Test.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\AuthnStatement20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -882,7 +882,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\core\impl\AuthzDecisionQuery20Test.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\AuthzDecisionQuery20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -896,7 +896,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\core\impl\AuthzDecisionStatement20Test.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\AuthzDecisionStatement20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -910,7 +910,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\core\impl\Conditions20Test.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\Conditions20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -924,7 +924,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\core\impl\Evidence20Test.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\Evidence20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -938,7 +938,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\core\impl\GetComplete20Test.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\GetComplete20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -952,7 +952,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\core\impl\IDPEntry20Test.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\IDPEntry20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -966,7 +966,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\core\impl\IDPList20Test.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\IDPList20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -980,7 +980,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\core\impl\Issuer20Test.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\Issuer20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -994,7 +994,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\core\impl\KeyInfoConfirmationDataType20Test.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\KeyInfoConfirmationDataType20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -1008,7 +1008,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\core\impl\LogoutRequest20Test.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\LogoutRequest20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -1022,7 +1022,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\core\impl\LogoutResponse20Test.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\LogoutResponse20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -1036,7 +1036,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\core\impl\ManageNameIDRequest20Test.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\ManageNameIDRequest20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -1050,7 +1050,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\core\impl\ManageNameIDResponse20Test.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\ManageNameIDResponse20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -1064,7 +1064,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\core\impl\NameID20Test.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\NameID20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -1078,7 +1078,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\core\impl\NameIDMappingRequest20Test.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\NameIDMappingRequest20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -1092,7 +1092,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\core\impl\NameIDMappingResponse20Test.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\NameIDMappingResponse20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -1106,7 +1106,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\core\impl\NameIDPolicy20Test.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\NameIDPolicy20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -1120,7 +1120,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\core\impl\NameIDType20Test.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\NameIDType20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -1134,7 +1134,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\core\impl\NewEncryptedID20Test.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\NewEncryptedID20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -1148,7 +1148,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\core\impl\NewID20Test.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\NewID20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -1162,7 +1162,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\core\impl\OneTimeUse20Test.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\OneTimeUse20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -1176,7 +1176,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\core\impl\ProxyRestriction20Test.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\ProxyRestriction20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -1190,7 +1190,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\core\impl\RequestedAuthnContext20Test.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\RequestedAuthnContext20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -1204,7 +1204,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\core\impl\RequesterID20Test.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\RequesterID20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -1218,7 +1218,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\core\impl\Response20Test.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\Response20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -1232,7 +1232,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\core\impl\Scoping20Test.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\Scoping20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -1246,7 +1246,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\core\impl\SessionIndex20Test.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\SessionIndex20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -1260,7 +1260,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\core\impl\Status20Test.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\Status20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -1274,7 +1274,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\core\impl\StatusCode20Test.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\StatusCode20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -1288,7 +1288,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\core\impl\StatusDetail20Test.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\StatusDetail20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -1302,7 +1302,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\core\impl\StatusMessage20Test.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\StatusMessage20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -1316,7 +1316,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\core\impl\Subject20Test.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\Subject20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -1330,7 +1330,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\core\impl\SubjectConfirmation20Test.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\SubjectConfirmation20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -1344,7 +1344,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\core\impl\SubjectConfirmationData20Test.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\SubjectConfirmationData20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -1358,7 +1358,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\core\impl\SubjectLocality20Test.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\SubjectLocality20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -1372,7 +1372,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\core\impl\Terminate20Test.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\Terminate20Test.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -1386,7 +1386,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\metadata\XMLMetadataProviderTest.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\metadata\XMLMetadataProviderTest.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -1400,7 +1400,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\binding\SAML2ArtifactTest.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\binding\SAML2ArtifactTest.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -1414,7 +1414,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\binding\SAML2POSTTest.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\binding\SAML2POSTTest.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -1428,7 +1428,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\binding\SAML2RedirectTest.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\binding\SAML2RedirectTest.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -1442,7 +1442,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="saml2\profile\SAML2PolicyTest.h">
+    <CustomBuild Include="..\..\..\samltest\saml2\profile\SAML2PolicyTest.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -1456,7 +1456,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="security\ExplicitKeyTrustEngineTest.h">
+    <CustomBuild Include="..\..\..\samltest\security\ExplicitKeyTrustEngineTest.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -1470,7 +1470,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="security\StaticPKIXTrustEngineTest.h">
+    <CustomBuild Include="..\..\..\samltest\security\StaticPKIXTrustEngineTest.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -1484,7 +1484,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="encryption\EncryptedAssertionTest.h">
+    <CustomBuild Include="..\..\..\samltest\encryption\EncryptedAssertionTest.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
@@ -1498,11 +1498,11 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <ClInclude Include="binding.h" />
-    <ClInclude Include="internal.h" />
+    <ClInclude Include="..\..\..\samltest\binding.h" />
+    <ClInclude Include="..\..\..\samltest\internal.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Makefile.am" />
+    <None Include="..\..\..\samltest\Makefile.am" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\saml\saml.vcxproj">

@@ -12,6 +12,15 @@
 *.pyc
 *.pyo
 *.rej
+*.sdf
+Projects/*/*.opensdf
+Projects/*/*.suo
+Projects/*/*/Debug/*
+Projects/*/*/Release/*
+Projects/*/*/x64/*
+Projects/*/ipch
+*.vcxproj.user
+Projects/*/samltest/samltest.cpp
 *~
 *.#*
 .*.swp
