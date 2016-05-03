@@ -1,0 +1,649 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Generated Files\saml1">
+      <UniqueIdentifier>{78d2227d-72e0-4267-93d2-66dd023f00f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Generated Files\saml1\core">
+      <UniqueIdentifier>{bdbf1b58-c3a4-4542-b1c7-c4574bd2b1e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Generated Files\saml1\core\impl">
+      <UniqueIdentifier>{dad2450f-177e-4412-83ae-ef697d83da7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Generated Files\saml1\binding">
+      <UniqueIdentifier>{360a7dd7-fabd-430d-9ef1-e70625ed88c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Generated Files\saml1\profile">
+      <UniqueIdentifier>{606e5934-5fc5-4e7d-b666-4444a2be2902}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Generated Files\signature">
+      <UniqueIdentifier>{a3218753-1118-45a7-81ba-f10466ec1ac0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Generated Files\saml2">
+      <UniqueIdentifier>{d2b1fa1b-608e-4afb-9356-74d8511322c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Generated Files\saml2\core">
+      <UniqueIdentifier>{7b5701f2-07b3-4aa1-a92c-e6f40be245d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Generated Files\saml2\core\impl">
+      <UniqueIdentifier>{5195fe38-b059-4999-a4b2-29e907b261cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Generated Files\saml2\metadata">
+      <UniqueIdentifier>{6fca0239-f3cd-4323-b8bd-99ffc29553b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Generated Files\saml2\binding">
+      <UniqueIdentifier>{e67620bf-08ec-4173-9dd1-c7f7ae3d3fd8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Generated Files\saml2\profile">
+      <UniqueIdentifier>{01650602-6a7b-4809-bf77-827cb5094b1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Generated Files\security">
+      <UniqueIdentifier>{64bf3639-536e-4d9f-ab87-cf4e7caeb608}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Generated Files\encryption">
+      <UniqueIdentifier>{d34b19e9-155f-48a5-a314-a1c5273bb51c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Unit Tests">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Unit Tests\saml1">
+      <UniqueIdentifier>{af02dba8-9398-4e05-98e5-6b1b5df36097}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Unit Tests\saml1\core">
+      <UniqueIdentifier>{5efab1d8-d084-40b1-b9b4-7434c9bce97c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Unit Tests\saml1\core\impl">
+      <UniqueIdentifier>{476d6534-957d-4aea-8fe2-d6ea4a3bf04e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Unit Tests\saml1\bnding">
+      <UniqueIdentifier>{1567b10c-b6e4-4f97-889c-3d4bbf23d6b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Unit Tests\saml1\profile">
+      <UniqueIdentifier>{18de52c8-70c0-4784-9ae4-c2fb391f4a52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Unit Tests\signature">
+      <UniqueIdentifier>{46974db6-f062-439e-953a-9325f3c3477f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Unit Tests\saml2">
+      <UniqueIdentifier>{0aea343e-b4bc-41a4-a177-ec2517c7c309}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Unit Tests\saml2\core">
+      <UniqueIdentifier>{fae01585-d02d-4768-a6cb-2961a5ff88b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Unit Tests\saml2\core\impl">
+      <UniqueIdentifier>{b1f44c32-1b1b-4e27-bf4f-84352a009bad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Unit Tests\saml2\metadata">
+      <UniqueIdentifier>{15a6325f-1537-4206-90c6-fc6d4dd5c448}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Unit Tests\saml2\binding">
+      <UniqueIdentifier>{661cb78b-d5fb-45ca-9773-8a3f56ecf750}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Unit Tests\saml2\profile">
+      <UniqueIdentifier>{8b2f0bf1-673b-4676-9ceb-84e848d748ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Unit Tests\security">
+      <UniqueIdentifier>{b08241ba-8fdf-49ea-8304-e955192f5496}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Unit Tests\encryption">
+      <UniqueIdentifier>{90698ef2-0472-446b-9de1-94bfd6da7dfb}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ArtifactMapTest.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SAMLArtifactCreationTest.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SAMLArtifactType0001Test.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SAMLArtifactType0002Test.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SAMLArtifactType0004Test.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="samltest.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="saml1\core\impl\ActionTest.cpp">
+      <Filter>Generated Files\saml1\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml1\core\impl\AdviceTest.cpp">
+      <Filter>Generated Files\saml1\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml1\core\impl\AssertionIDReferenceTest.cpp">
+      <Filter>Generated Files\saml1\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml1\core\impl\AssertionTest.cpp">
+      <Filter>Generated Files\saml1\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml1\core\impl\AttributeDesignatorTest.cpp">
+      <Filter>Generated Files\saml1\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml1\core\impl\AttributeStatementTest.cpp">
+      <Filter>Generated Files\saml1\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml1\core\impl\AttributeTest.cpp">
+      <Filter>Generated Files\saml1\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml1\core\impl\AudienceRestrictionConditionTest.cpp">
+      <Filter>Generated Files\saml1\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml1\core\impl\AudienceTest.cpp">
+      <Filter>Generated Files\saml1\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml1\core\impl\AuthenticationStatementTest.cpp">
+      <Filter>Generated Files\saml1\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml1\binding\SAML1ArtifactTest.cpp">
+      <Filter>Generated Files\saml1\binding</Filter>
+    </ClCompile>
+    <ClCompile Include="saml1\binding\SAML1POSTTest.cpp">
+      <Filter>Generated Files\saml1\binding</Filter>
+    </ClCompile>
+    <ClCompile Include="saml1\profile\SAML1PolicyTest.cpp">
+      <Filter>Generated Files\saml1\profile</Filter>
+    </ClCompile>
+    <ClCompile Include="signature\SAML1AssertionTest.cpp">
+      <Filter>Generated Files\signature</Filter>
+    </ClCompile>
+    <ClCompile Include="signature\SAML1RequestTest.cpp">
+      <Filter>Generated Files\signature</Filter>
+    </ClCompile>
+    <ClCompile Include="signature\SAML1ResponseTest.cpp">
+      <Filter>Generated Files\signature</Filter>
+    </ClCompile>
+    <ClCompile Include="signature\SAML2AssertionTest.cpp">
+      <Filter>Generated Files\signature</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\Action20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\Advice20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\Artifact20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\ArtifactResolve20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\ArtifactResponse20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\Assertion20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\AssertionIDRef20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\AssertionIDRequest20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\AssertionURIRef20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\Attribute20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\AttributeQuery20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\AttributeStatement20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\Audience20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\AudienceRestriction20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\AuthenticatingAuthority20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\AuthnContext20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\AuthnContextClassRef20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\AuthnContextDeclRef20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\AuthnQuery20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\AuthnRequest20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\AuthnStatement20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\AuthzDecisionQuery20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\AuthzDecisionStatement20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\Conditions20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\Evidence20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\GetComplete20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\IDPEntry20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\IDPList20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\Issuer20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\KeyInfoConfirmationDataType20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\LogoutRequest20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\LogoutResponse20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\ManageNameIDRequest20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\ManageNameIDResponse20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\NameID20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\NameIDMappingRequest20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\NameIDMappingResponse20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\NameIDPolicy20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\NameIDType20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\NewEncryptedID20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\NewID20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\OneTimeUse20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\ProxyRestriction20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\RequestedAuthnContext20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\RequesterID20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\Response20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\Scoping20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\SessionIndex20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\Status20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\StatusCode20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\StatusDetail20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\StatusMessage20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\Subject20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\SubjectConfirmation20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\SubjectConfirmationData20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\SubjectLocality20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\core\impl\Terminate20Test.cpp">
+      <Filter>Generated Files\saml2\core\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\metadata\XMLMetadataProviderTest.cpp">
+      <Filter>Generated Files\saml2\metadata</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\binding\SAML2ArtifactTest.cpp">
+      <Filter>Generated Files\saml2\binding</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\binding\SAML2POSTTest.cpp">
+      <Filter>Generated Files\saml2\binding</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\binding\SAML2RedirectTest.cpp">
+      <Filter>Generated Files\saml2\binding</Filter>
+    </ClCompile>
+    <ClCompile Include="saml2\profile\SAML2PolicyTest.cpp">
+      <Filter>Generated Files\saml2\profile</Filter>
+    </ClCompile>
+    <ClCompile Include="security\ExplicitKeyTrustEngineTest.cpp">
+      <Filter>Generated Files\security</Filter>
+    </ClCompile>
+    <ClCompile Include="security\StaticPKIXTrustEngineTest.cpp">
+      <Filter>Generated Files\security</Filter>
+    </ClCompile>
+    <ClCompile Include="encryption\EncryptedAssertionTest.cpp">
+      <Filter>Generated Files\encryption</Filter>
+    </ClCompile>
+    <ClCompile Include="CookieTest.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\samltest\signature\SAMLSignatureTestBase.h">
+      <Filter>Unit Tests\signature</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\samltest\binding.h">
+      <Filter>Unit Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\samltest\internal.h">
+      <Filter>Unit Tests</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\samltest\Makefile.am" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\..\..\samltest\ArtifactMapTest.h">
+      <Filter>Unit Tests</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\SAMLArtifactCreationTest.h">
+      <Filter>Unit Tests</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\SAMLArtifactType0001Test.h">
+      <Filter>Unit Tests</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\SAMLArtifactType0002Test.h">
+      <Filter>Unit Tests</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\SAMLArtifactType0004Test.h">
+      <Filter>Unit Tests</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\samltest.h">
+      <Filter>Unit Tests</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml1\core\impl\ActionTest.h">
+      <Filter>Unit Tests\saml1\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml1\core\impl\AdviceTest.h">
+      <Filter>Unit Tests\saml1\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml1\core\impl\AssertionIDReferenceTest.h">
+      <Filter>Unit Tests\saml1\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml1\core\impl\AssertionTest.h">
+      <Filter>Unit Tests\saml1\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml1\core\impl\AttributeDesignatorTest.h">
+      <Filter>Unit Tests\saml1\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml1\core\impl\AttributeStatementTest.h">
+      <Filter>Unit Tests\saml1\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml1\core\impl\AttributeTest.h">
+      <Filter>Unit Tests\saml1\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml1\core\impl\AudienceRestrictionConditionTest.h">
+      <Filter>Unit Tests\saml1\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml1\core\impl\AudienceTest.h">
+      <Filter>Unit Tests\saml1\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml1\core\impl\AuthenticationStatementTest.h">
+      <Filter>Unit Tests\saml1\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml1\binding\SAML1ArtifactTest.h">
+      <Filter>Unit Tests\saml1\bnding</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml1\binding\SAML1POSTTest.h">
+      <Filter>Unit Tests\saml1\bnding</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml1\profile\SAML1PolicyTest.h">
+      <Filter>Unit Tests\saml1\profile</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\signature\SAML1AssertionTest.h">
+      <Filter>Unit Tests\signature</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\signature\SAML1RequestTest.h">
+      <Filter>Unit Tests\signature</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\signature\SAML1ResponseTest.h">
+      <Filter>Unit Tests\signature</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\signature\SAML2AssertionTest.h">
+      <Filter>Unit Tests\signature</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\Action20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\Advice20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\Artifact20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\ArtifactResolve20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\ArtifactResponse20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\Assertion20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\AssertionIDRef20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\AssertionIDRequest20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\AssertionURIRef20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\Attribute20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\AttributeQuery20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\AttributeStatement20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\Audience20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\AudienceRestriction20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\AuthenticatingAuthority20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\AuthnContext20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\AuthnContextClassRef20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\AuthnContextDeclRef20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\AuthnQuery20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\AuthnRequest20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\AuthnStatement20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\AuthzDecisionQuery20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\AuthzDecisionStatement20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\Conditions20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\Evidence20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\GetComplete20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\IDPEntry20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\IDPList20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\Issuer20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\KeyInfoConfirmationDataType20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\LogoutRequest20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\LogoutResponse20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\ManageNameIDRequest20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\ManageNameIDResponse20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\NameID20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\NameIDMappingRequest20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\NameIDMappingResponse20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\NameIDPolicy20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\NameIDType20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\NewEncryptedID20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\NewID20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\OneTimeUse20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\ProxyRestriction20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\RequestedAuthnContext20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\RequesterID20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\Response20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\Scoping20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\SessionIndex20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\Status20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\StatusCode20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\StatusDetail20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\StatusMessage20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\Subject20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\SubjectConfirmation20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\SubjectConfirmationData20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\SubjectLocality20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\core\impl\Terminate20Test.h">
+      <Filter>Unit Tests\saml2\core\impl</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\metadata\XMLMetadataProviderTest.h">
+      <Filter>Unit Tests\saml2\metadata</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\binding\SAML2ArtifactTest.h">
+      <Filter>Unit Tests\saml2\binding</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\binding\SAML2POSTTest.h">
+      <Filter>Unit Tests\saml2\binding</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\binding\SAML2RedirectTest.h">
+      <Filter>Unit Tests\saml2\binding</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\saml2\profile\SAML2PolicyTest.h">
+      <Filter>Unit Tests\saml2\profile</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\security\ExplicitKeyTrustEngineTest.h">
+      <Filter>Unit Tests\security</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\security\StaticPKIXTrustEngineTest.h">
+      <Filter>Unit Tests\security</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\encryption\EncryptedAssertionTest.h">
+      <Filter>Unit Tests\encryption</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\samltest\CookieTest.h">
+      <Filter>Unit Tests</Filter>
+    </CustomBuild>
+  </ItemGroup>
+</Project>
