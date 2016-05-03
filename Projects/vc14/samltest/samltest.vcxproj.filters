@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Generated Files">
@@ -95,271 +95,271 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ArtifactMapTest.cpp">
+    <ClCompile Include="..\..\..\samltest\ArtifactMapTest.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="SAMLArtifactCreationTest.cpp">
+    <ClCompile Include="..\..\..\samltest\CookieTest.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="SAMLArtifactType0001Test.cpp">
+    <ClCompile Include="..\..\..\samltest\SAMLArtifactCreationTest.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="SAMLArtifactType0002Test.cpp">
+    <ClCompile Include="..\..\..\samltest\SAMLArtifactType0001Test.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="SAMLArtifactType0004Test.cpp">
+    <ClCompile Include="..\..\..\samltest\SAMLArtifactType0002Test.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="samltest.cpp">
+    <ClCompile Include="..\..\..\samltest\SAMLArtifactType0004Test.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml1\core\impl\ActionTest.cpp">
-      <Filter>Generated Files\saml1\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\samltest.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml1\core\impl\AdviceTest.cpp">
-      <Filter>Generated Files\saml1\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml1\core\impl\ActionTest.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml1\core\impl\AssertionIDReferenceTest.cpp">
-      <Filter>Generated Files\saml1\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml1\core\impl\AdviceTest.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml1\core\impl\AssertionTest.cpp">
-      <Filter>Generated Files\saml1\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml1\core\impl\AssertionIDReferenceTest.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml1\core\impl\AttributeDesignatorTest.cpp">
-      <Filter>Generated Files\saml1\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml1\core\impl\AssertionTest.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml1\core\impl\AttributeStatementTest.cpp">
-      <Filter>Generated Files\saml1\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml1\core\impl\AttributeDesignatorTest.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml1\core\impl\AttributeTest.cpp">
-      <Filter>Generated Files\saml1\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml1\core\impl\AttributeStatementTest.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml1\core\impl\AudienceRestrictionConditionTest.cpp">
-      <Filter>Generated Files\saml1\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml1\core\impl\AttributeTest.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml1\core\impl\AudienceTest.cpp">
-      <Filter>Generated Files\saml1\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml1\core\impl\AudienceRestrictionConditionTest.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml1\core\impl\AuthenticationStatementTest.cpp">
-      <Filter>Generated Files\saml1\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml1\core\impl\AudienceTest.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml1\binding\SAML1ArtifactTest.cpp">
-      <Filter>Generated Files\saml1\binding</Filter>
+    <ClCompile Include="..\..\..\samltest\saml1\core\impl\AuthenticationStatementTest.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml1\binding\SAML1POSTTest.cpp">
-      <Filter>Generated Files\saml1\binding</Filter>
+    <ClCompile Include="..\..\..\samltest\saml1\binding\SAML1ArtifactTest.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml1\profile\SAML1PolicyTest.cpp">
-      <Filter>Generated Files\saml1\profile</Filter>
+    <ClCompile Include="..\..\..\samltest\saml1\binding\SAML1POSTTest.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="signature\SAML1AssertionTest.cpp">
-      <Filter>Generated Files\signature</Filter>
+    <ClCompile Include="..\..\..\samltest\saml1\profile\SAML1PolicyTest.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="signature\SAML1RequestTest.cpp">
-      <Filter>Generated Files\signature</Filter>
+    <ClCompile Include="..\..\..\samltest\signature\SAML1AssertionTest.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="signature\SAML1ResponseTest.cpp">
-      <Filter>Generated Files\signature</Filter>
+    <ClCompile Include="..\..\..\samltest\signature\SAML1RequestTest.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="signature\SAML2AssertionTest.cpp">
-      <Filter>Generated Files\signature</Filter>
+    <ClCompile Include="..\..\..\samltest\signature\SAML1ResponseTest.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\Action20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\signature\SAML2AssertionTest.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\Advice20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\Action20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\Artifact20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\Advice20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\ArtifactResolve20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\Artifact20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\ArtifactResponse20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\ArtifactResolve20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\Assertion20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\ArtifactResponse20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\AssertionIDRef20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\Assertion20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\AssertionIDRequest20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\AssertionIDRef20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\AssertionURIRef20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\AssertionIDRequest20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\Attribute20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\AssertionURIRef20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\AttributeQuery20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\Attribute20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\AttributeStatement20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\AttributeQuery20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\Audience20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\AttributeStatement20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\AudienceRestriction20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\Audience20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\AuthenticatingAuthority20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\AudienceRestriction20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\AuthnContext20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\AuthenticatingAuthority20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\AuthnContextClassRef20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\AuthnContext20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\AuthnContextDeclRef20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\AuthnContextClassRef20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\AuthnQuery20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\AuthnContextDeclRef20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\AuthnRequest20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\AuthnQuery20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\AuthnStatement20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\AuthnRequest20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\AuthzDecisionQuery20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\AuthnStatement20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\AuthzDecisionStatement20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\AuthzDecisionQuery20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\Conditions20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\AuthzDecisionStatement20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\Evidence20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\Conditions20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\GetComplete20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\Evidence20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\IDPEntry20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\GetComplete20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\IDPList20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\IDPEntry20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\Issuer20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\IDPList20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\KeyInfoConfirmationDataType20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\Issuer20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\LogoutRequest20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\KeyInfoConfirmationDataType20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\LogoutResponse20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\LogoutRequest20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\ManageNameIDRequest20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\LogoutResponse20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\ManageNameIDResponse20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\ManageNameIDRequest20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\NameID20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\ManageNameIDResponse20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\NameIDMappingRequest20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\NameID20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\NameIDMappingResponse20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\NameIDMappingRequest20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\NameIDPolicy20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\NameIDMappingResponse20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\NameIDType20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\NameIDPolicy20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\NewEncryptedID20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\NameIDType20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\NewID20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\NewEncryptedID20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\OneTimeUse20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\NewID20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\ProxyRestriction20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\OneTimeUse20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\RequestedAuthnContext20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\ProxyRestriction20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\RequesterID20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\RequestedAuthnContext20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\Response20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\RequesterID20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\Scoping20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\Response20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\SessionIndex20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\Scoping20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\Status20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\SessionIndex20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\StatusCode20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\Status20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\StatusDetail20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\StatusCode20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\StatusMessage20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\StatusDetail20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\Subject20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\StatusMessage20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\SubjectConfirmation20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\Subject20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\SubjectConfirmationData20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\SubjectConfirmation20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\SubjectLocality20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\SubjectConfirmationData20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\core\impl\Terminate20Test.cpp">
-      <Filter>Generated Files\saml2\core\impl</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\SubjectLocality20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\metadata\XMLMetadataProviderTest.cpp">
-      <Filter>Generated Files\saml2\metadata</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\core\impl\Terminate20Test.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\binding\SAML2ArtifactTest.cpp">
-      <Filter>Generated Files\saml2\binding</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\metadata\XMLMetadataProviderTest.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\binding\SAML2POSTTest.cpp">
-      <Filter>Generated Files\saml2\binding</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\binding\SAML2ArtifactTest.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\binding\SAML2RedirectTest.cpp">
-      <Filter>Generated Files\saml2\binding</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\binding\SAML2POSTTest.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="saml2\profile\SAML2PolicyTest.cpp">
-      <Filter>Generated Files\saml2\profile</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\binding\SAML2RedirectTest.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="security\ExplicitKeyTrustEngineTest.cpp">
-      <Filter>Generated Files\security</Filter>
+    <ClCompile Include="..\..\..\samltest\saml2\profile\SAML2PolicyTest.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="security\StaticPKIXTrustEngineTest.cpp">
-      <Filter>Generated Files\security</Filter>
+    <ClCompile Include="..\..\..\samltest\security\ExplicitKeyTrustEngineTest.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="encryption\EncryptedAssertionTest.cpp">
-      <Filter>Generated Files\encryption</Filter>
+    <ClCompile Include="..\..\..\samltest\security\StaticPKIXTrustEngineTest.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="CookieTest.cpp">
+    <ClCompile Include="..\..\..\samltest\encryption\EncryptedAssertionTest.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
   </ItemGroup>
