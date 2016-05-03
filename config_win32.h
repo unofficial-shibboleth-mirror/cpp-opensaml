@@ -87,13 +87,13 @@
 #define PACKAGE_NAME "opensaml"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "opensaml 2.5.5"
+#define PACKAGE_STRING "opensaml 2.6.0"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "opensaml"
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "2.5.5"
+#define PACKAGE_VERSION "2.6.0"
 
 /* Define to the necessary symbol if this constant uses a non-standard name on
    your system. */
@@ -106,7 +106,7 @@
 /* #undef TM_IN_SYS_TIME */
 
 /* Version number of package */
-#define VERSION "2.5.5"
+#define VERSION "2.6.0"
 
 /* Define to empty if `const' does not conform to ANSI C. */
 /* #undef const */
