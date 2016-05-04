@@ -60,6 +60,7 @@ x64
 /build-aux
 /build
 /Build
+/doc/api
 /m4/lt~obsolete.m4
 /m4/ltsugar.m4
 /m4/ltoptions.m4
