@@ -158,6 +158,12 @@ namespace samlconstants {
     /** SAML Metadata Extension for Discovery and Login UI QName prefix ("mdui") */
     extern SAML_API const XMLCh SAML20MD_UI_PREFIX[];
 
+    /** SAML Metadata Extension for Registration and Publication Information XML Namespace ("urn:oasis:names:tc:SAML:metadata:rpi") */
+    extern SAML_API const XMLCh SAML20MD_RPI_NS[];
+
+    /** SAML Metadata Extension for Registration and Publication Information QName prefix ("mdrpi") */
+    extern SAML_API const XMLCh SAML20MD_RPI_PREFIX[];
+
     /** SAML Condition for Delegation Restriction XML Namespace ("urn:oasis:names:tc:SAML:2.0:conditions:delegation") */
     extern SAML_API const XMLCh SAML20_DELEGATION_CONDITION_NS[];
 

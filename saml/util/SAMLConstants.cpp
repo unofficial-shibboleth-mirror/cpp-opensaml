@@ -239,6 +239,16 @@ const XMLCh samlconstants::SAML20MD_UI_NS[] = // urn:oasis:names:tc:SAML:metadat
 
 const XMLCh samlconstants::SAML20MD_UI_PREFIX[] = UNICODE_LITERAL_4(m,d,u,i);
 
+const XMLCh samlconstants::SAML20MD_RPI_NS[] = // urn:oasis:names:tc:SAML:metadata:rpi
+{ chLatin_u, chLatin_r, chLatin_n, chColon, chLatin_o, chLatin_a, chLatin_s, chLatin_i, chLatin_s, chColon,
+  chLatin_n, chLatin_a, chLatin_m, chLatin_e, chLatin_s, chColon, chLatin_t, chLatin_c, chColon,
+  chLatin_S, chLatin_A, chLatin_M, chLatin_L, chColon,
+  chLatin_m, chLatin_e, chLatin_t, chLatin_a, chLatin_d, chLatin_a, chLatin_t, chLatin_a, chColon,
+  chLatin_r, chLatin_p, chLatin_i, chNull
+};
+
+const XMLCh samlconstants::SAML20MD_RPI_PREFIX[] = UNICODE_LITERAL_5(m,d,r,p,i);
+
 const XMLCh samlconstants::SAML20_DELEGATION_CONDITION_NS[] = // urn:oasis:names:tc:SAML:2.0:conditions:delegation
 { chLatin_u, chLatin_r, chLatin_n, chColon, chLatin_o, chLatin_a, chLatin_s, chLatin_i, chLatin_s, chColon,
   chLatin_n, chLatin_a, chLatin_m, chLatin_e, chLatin_s, chColon, chLatin_t, chLatin_c, chColon,
