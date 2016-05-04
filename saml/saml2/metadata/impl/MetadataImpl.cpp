@@ -2588,6 +2588,120 @@ namespace opensaml {
             }
         };
 
+        class SAML_DLLLOCAL RegistrationInfoImpl : public virtual RegistrationInfo,
+            public AbstractAttributeExtensibleXMLObject,
+            public AbstractComplexElement,
+            public AbstractDOMCachingXMLObject,
+            public AbstractXMLObjectMarshaller,
+            public AbstractXMLObjectUnmarshaller
+        {
+            list<XMLObject*>::iterator m_pos_RegistrationPolicy;
+
+            void init() {
+                m_RegistrationAuthority = nullptr;
+                m_RegistrationInstant = nullptr;
+                m_pos_RegistrationPolicy = m_children.begin();
+            }
+
+        protected:
+            RegistrationInfoImpl() {
+                init();
+            }
+
+        public:
+            virtual ~RegistrationInfoImpl() {
+                XMLString::release(&m_RegistrationAuthority);
+                delete m_RegistrationInstant;
+            }
+
+            RegistrationInfoImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
+                init();
+            }
+
+            RegistrationInfoImpl(const RegistrationInfoImpl& src)
+                : AbstractXMLObject(src),
+                AbstractAttributeExtensibleXMLObject(src),
+                AbstractComplexElement(src),
+                AbstractDOMCachingXMLObject(src) {
+                init();
+            }
+
+            void _clone(const RegistrationInfoImpl& src) {
+                IMPL_CLONE_ATTRIB(RegistrationAuthority);
+                IMPL_CLONE_ATTRIB(RegistrationInstant);
+                IMPL_CLONE_TYPED_CHILDREN(RegistrationPolicy);
+                IMPL_CLONE_XMLOBJECT_CHILDREN(UnknownXMLObject);
+            }
+
+            IMPL_XMLOBJECT_CLONE_EX(RegistrationInfo);
+            IMPL_STRING_ATTRIB(RegistrationAuthority);
+            IMPL_DATETIME_ATTRIB(RegistrationInstant,0);
+            IMPL_TYPED_CHILDREN(RegistrationPolicy,m_pos_RegistrationPolicy);
+            IMPL_XMLOBJECT_CHILDREN(UnknownXMLObject,m_children.end());
+
+            void setAttribute(const xmltooling::QName& qualifiedName, const XMLCh* value, bool ID=false) {
+                if (!qualifiedName.hasNamespaceURI()) {
+                    if (XMLString::equals(qualifiedName.getLocalPart(),REGAUTHORITY_ATTRIB_NAME)) {
+                        setRegistrationAuthority(value);
+                        return;
+                    }
+                    else if (XMLString::equals(qualifiedName.getLocalPart(),REGINSTANT_ATTRIB_NAME)) {
+                        setRegistrationInstant(value);
+                        return;
+                    }
+                }
+                AbstractAttributeExtensibleXMLObject::setAttribute(qualifiedName, value, ID);
+            }
+        protected:
+            void marshallAttributes(DOMElement* domElement) const {
+                MARSHALL_STRING_ATTRIB(RegistrationAuthority,REGAUTHORITY,nullptr);
+                MARSHALL_DATETIME_ATTRIB(RegistrationInstant,REGINSTANT,nullptr);
+                marshallExtensionAttributes(domElement);
+            }
+
+            void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
+                PROC_TYPED_CHILDREN(RegistrationPolicy,SAML20MD_RPI_NS,false);
+                // Unknown child.
+                const XMLCh* nsURI=root->getNamespaceURI();
+                if (!XMLString::equals(nsURI,SAML20MD_RPI_NS) && nsURI && *nsURI) {
+                    getUnknownXMLObjects().push_back(childXMLObject);
+                    return;
+                }
+                AbstractXMLObjectUnmarshaller::processChildElement(childXMLObject,root);
+            }
+
+            void processAttribute(const DOMAttr* attribute) {
+                unmarshallExtensionAttribute(attribute);
+            }
+        };
+
+        class SAML_DLLLOCAL RegistrationPolicyImpl : public virtual RegistrationPolicy, public localizedURITypeImpl
+        {
+        public:
+            virtual ~RegistrationPolicyImpl() {}
+
+            RegistrationPolicyImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {}
+
+            RegistrationPolicyImpl(const RegistrationPolicyImpl& src) : AbstractXMLObject(src), localizedURITypeImpl(src) {}
+
+            IMPL_XMLOBJECT_CLONE_EX(RegistrationPolicy);
+        };
+
+        class SAML_DLLLOCAL UsagePolicyImpl : public virtual UsagePolicy, public localizedURITypeImpl
+        {
+        public:
+            virtual ~UsagePolicyImpl() {}
+
+            UsagePolicyImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {}
+
+            UsagePolicyImpl(const UsagePolicyImpl& src) : AbstractXMLObject(src), localizedURITypeImpl(src) {}
+
+            IMPL_XMLOBJECT_CLONE_EX(UsagePolicy);
+        };
+
     };
 };
 
@@ -2670,6 +2784,9 @@ IMPL_XMLOBJECTBUILDER(IPHint);
 IMPL_XMLOBJECTBUILDER(DomainHint);
 IMPL_XMLOBJECTBUILDER(GeolocationHint);
 IMPL_XMLOBJECTBUILDER(DiscoHints);
+IMPL_XMLOBJECTBUILDER(RegistrationInfo);
+IMPL_XMLOBJECTBUILDER(RegistrationPolicy);
+IMPL_XMLOBJECTBUILDER(UsagePolicy);
 
 #ifdef HAVE_COVARIANT_RETURNS
 RoleDescriptor* RoleDescriptorBuilder::buildObject(
@@ -2885,9 +3002,28 @@ const XMLCh OrganizationURL::LOCAL_NAME[] =             UNICODE_LITERAL_15(O,r,g
 const XMLCh PDPDescriptor::LOCAL_NAME[] =               UNICODE_LITERAL_13(P,D,P,D,e,s,c,r,i,p,t,o,r);
 const XMLCh PDPDescriptor::TYPE_NAME[] =                UNICODE_LITERAL_17(P,D,P,D,e,s,c,r,i,p,t,o,r,T,y,p,e);
 const XMLCh PrivacyStatementURL::LOCAL_NAME[] =         UNICODE_LITERAL_19(P,r,i,v,a,c,y,S,t,a,t,e,m,e,n,t,U,R,L);
+/*
+const XMLCh Publication::LOCAL_NAME[] =                 UNICODE_LITERAL_11(P,u,b,l,i,c,a,t,i,o,n);
+const XMLCh Publication::TYPE_NAME[] =                  UNICODE_LITERAL_15(P,u,b,l,i,c,a,t,i,o,n,T,y,p,e);
+const XMLCh Publication::PUBLISHER_ATTRIB_NAME[] =      UNICODE_LITERAL_9(p,u,b,l,i,s,h,e,r);
+const XMLCh Publication::CREATIONINSTANT_ATTRIB_NAME[] = UNICODE_LITERAL_15(c,r,e,a,t,i,o,n,I,n,s,t,a,n,t);
+const XMLCh Publication::PUBLICATIONID_ATTRIB_NAME[] =  UNICODE_LITERAL_13(p,u,b,l,i,c,a,t,i,o,n,I,d);
+const XMLCh PublicationInfo::LOCAL_NAME[] =             UNICODE_LITERAL_15(P,u,b,l,i,c,a,t,i,o,n,I,n,f,o);
+const XMLCh PublicationInfo::TYPE_NAME[] =              UNICODE_LITERAL_19(P,u,b,l,i,c,a,t,i,o,n,I,n,f,o,T,y,p,e);
+const XMLCh PublicationInfo::PUBLISHER_ATTRIB_NAME[] =  UNICODE_LITERAL_9(p,u,b,l,i,s,h,e,r);
+const XMLCh PublicationInfo::CREATIONINSTANT_ATTRIB_NAME[] = UNICODE_LITERAL_15(c,r,e,a,t,i,o,n,I,n,s,t,a,n,t);
+const XMLCh PublicationInfo::PUBLICATIONID_ATTRIB_NAME[] = UNICODE_LITERAL_13(p,u,b,l,i,c,a,t,i,o,n,I,d);
+const XMLCh PublicationPath::LOCAL_NAME[] =             UNICODE_LITERAL_15(P,u,b,l,i,c,a,t,i,o,n,P,a,t,h);
+const XMLCh PublicationPath::TYPE_NAME[] =              UNICODE_LITERAL_19(P,u,b,l,i,c,a,t,i,o,n,P,a,t,h,T,y,p,e);
+*/
 const XMLCh QueryDescriptorType::LOCAL_NAME[] =         {chNull};
 const XMLCh QueryDescriptorType::TYPE_NAME[] =          UNICODE_LITERAL_19(Q,u,e,r,y,D,e,s,c,r,i,p,t,o,r,T,y,p,e);
-const XMLCh QueryDescriptorType::WANTASSERTIONSSIGNED_ATTRIB_NAME[] =   UNICODE_LITERAL_20(W,a,n,t,A,s,s,e,r,t,i,o,n,s,S,i,g,n,e,d);
+const XMLCh QueryDescriptorType::WANTASSERTIONSSIGNED_ATTRIB_NAME[] = UNICODE_LITERAL_20(W,a,n,t,A,s,s,e,r,t,i,o,n,s,S,i,g,n,e,d);
+const XMLCh RegistrationInfo::LOCAL_NAME[] =            UNICODE_LITERAL_16(R,e,g,i,s,t,r,a,t,i,o,n,I,n,f,o);
+const XMLCh RegistrationInfo::TYPE_NAME[] =             UNICODE_LITERAL_20(R,e,g,i,s,t,r,a,t,i,o,n,I,n,f,o,T,y,p,e);
+const XMLCh RegistrationInfo::REGAUTHORITY_ATTRIB_NAME[] = UNICODE_LITERAL_21(r,e,g,i,s,t,r,a,t,i,o,n,A,u,t,h,o,r,i,t,y);
+const XMLCh RegistrationInfo::REGINSTANT_ATTRIB_NAME[] = UNICODE_LITERAL_19(r,e,g,i,s,t,r,a,t,i,o,n,I,n,s,t,a,n,t);
+const XMLCh RegistrationPolicy::LOCAL_NAME[] =          UNICODE_LITERAL_18(R,e,g,i,s,t,r,a,t,i,o,n,P,o,l,i,c,y);
 const XMLCh RequestedAttribute::LOCAL_NAME[] =          UNICODE_LITERAL_18(R,e,q,u,e,s,t,e,d,A,t,t,r,i,b,u,t,e);
 const XMLCh RequestedAttribute::TYPE_NAME[] =           UNICODE_LITERAL_22(R,e,q,u,e,s,t,e,d,A,t,t,r,i,b,u,t,e,T,y,p,e);
 const XMLCh RequestedAttribute::ISREQUIRED_ATTRIB_NAME[] =  UNICODE_LITERAL_10(i,s,R,e,q,u,i,r,e,d);
@@ -2917,3 +3053,4 @@ const XMLCh TelephoneNumber::LOCAL_NAME[] =             UNICODE_LITERAL_15(T,e,l
 const XMLCh TimeBoundSAMLObject::VALIDUNTIL_ATTRIB_NAME[] =   UNICODE_LITERAL_10(v,a,l,i,d,U,n,t,i,l);
 const XMLCh UIInfo::LOCAL_NAME[] =                      UNICODE_LITERAL_6(U,I,I,n,f,o);
 const XMLCh UIInfo::TYPE_NAME[] =                       UNICODE_LITERAL_10(U,I,I,n,f,o,T,y,p,e);
+const XMLCh UsagePolicy::LOCAL_NAME[] =                 UNICODE_LITERAL_11(U,s,a,g,e,P,o,l,i,c,y);

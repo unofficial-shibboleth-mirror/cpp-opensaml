@@ -531,6 +531,22 @@ namespace opensaml {
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
 
+        BEGIN_XMLOBJECT(SAML_API, RegistrationPolicy, localizedURIType, SAML Metadata Extension for RPI RegistrationPolicy element);
+            DECL_SIMPLE_CONTENT(URL);
+        END_XMLOBJECT;
+
+        BEGIN_XMLOBJECT(SAML_API,RegistrationInfo,xmltooling::ElementProxy,SAML Metadata Extension for RPI RegistrationInfo element);
+            DECL_STRING_ATTRIB(RegistrationAuthority,REGAUTHORITY);
+            DECL_DATETIME_ATTRIB(RegistrationInstant,REGINSTANT);
+            DECL_TYPED_CHILDREN(RegistrationPolicy);
+            /** RegistrationInfoType local name */
+            static const XMLCh TYPE_NAME[];
+        END_XMLOBJECT;
+
+        BEGIN_XMLOBJECT(SAML_API, UsagePolicy, localizedURIType, SAML Metadata Extension for RPI UsagePolicy element);
+            DECL_SIMPLE_CONTENT(URL);
+        END_XMLOBJECT;
+
         /**
          * Predicate to test a role for validity and protocol support.
          */
@@ -645,6 +661,10 @@ namespace opensaml {
         DECL_XMLOBJECTBUILDER(SAML_API,IPHint,samlconstants::SAML20MD_UI_NS,samlconstants::SAML20MD_UI_PREFIX);
         DECL_XMLOBJECTBUILDER(SAML_API,DomainHint,samlconstants::SAML20MD_UI_NS,samlconstants::SAML20MD_UI_PREFIX);
         DECL_XMLOBJECTBUILDER(SAML_API,GeolocationHint,samlconstants::SAML20MD_UI_NS,samlconstants::SAML20MD_UI_PREFIX);
+
+        DECL_XMLOBJECTBUILDER(SAML_API, RegistrationInfo, samlconstants::SAML20MD_RPI_NS, samlconstants::SAML20MD_RPI_PREFIX);
+        DECL_XMLOBJECTBUILDER(SAML_API, RegistrationPolicy, samlconstants::SAML20MD_RPI_NS, samlconstants::SAML20MD_RPI_PREFIX);
+        DECL_XMLOBJECTBUILDER(SAML_API, UsagePolicy, samlconstants::SAML20MD_RPI_NS, samlconstants::SAML20MD_RPI_PREFIX);
 
         /**
          * Builder for localizedNameType objects.
