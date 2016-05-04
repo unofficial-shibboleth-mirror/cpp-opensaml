@@ -2595,12 +2595,15 @@ namespace opensaml {
             public AbstractXMLObjectMarshaller,
             public AbstractXMLObjectUnmarshaller
         {
-            list<XMLObject*>::iterator m_pos_RegistrationPolicy;
+            list<XMLObject*>::iterator m_pos_UnknownChildren;
 
             void init() {
                 m_RegistrationAuthority = nullptr;
                 m_RegistrationInstant = nullptr;
-                m_pos_RegistrationPolicy = m_children.begin();
+
+                m_children.push_back(nullptr);
+                m_pos_UnknownChildren = m_children.begin();
+                ++m_pos_UnknownChildren;
             }
 
         protected:
@@ -2637,7 +2640,7 @@ namespace opensaml {
             IMPL_XMLOBJECT_CLONE_EX(RegistrationInfo);
             IMPL_STRING_ATTRIB(RegistrationAuthority);
             IMPL_DATETIME_ATTRIB(RegistrationInstant,0);
-            IMPL_TYPED_CHILDREN(RegistrationPolicy,m_pos_RegistrationPolicy);
+            IMPL_TYPED_CHILDREN(RegistrationPolicy,m_pos_UnknownChildren);
             IMPL_XMLOBJECT_CHILDREN(UnknownXMLObject,m_children.end());
 
             void setAttribute(const xmltooling::QName& qualifiedName, const XMLCh* value, bool ID=false) {
