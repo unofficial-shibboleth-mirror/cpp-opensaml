@@ -25,6 +25,8 @@ Makefile
 Makefile.in
 stamp-h1
 stamp-h2
+.deps
+.dirstamp
 Debug
 Release
 x64
@@ -65,11 +67,8 @@ x64
 /m4/ltversion.m4
 /schemas/*-catalog.xml
 /saml/config_pub.h
-/saml/.deps
 /samlsign/samlsign
-/samlsign/.deps
 /samltest/samltest
-/samltest/.deps
 /samltest/*.cpp
 /samltest/*/*.cpp
 /samltest/**/*.cpp
