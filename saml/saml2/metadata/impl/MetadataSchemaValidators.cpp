@@ -42,6 +42,7 @@ using samlconstants::SAML20MD_QUERY_EXT_NS;
 using samlconstants::SAML20MD_ALGSUPPORT_NS;
 using samlconstants::SAML20MD_ENTITY_ATTRIBUTE_NS;
 using samlconstants::SAML20MD_UI_NS;
+using samlconstants::SAML20MD_RPI_NS;
 using samlconstants::SAML1MD_NS;
 using samlconstants::IDP_DISCOVERY_PROTOCOL_NS;
 using samlconstants::SP_REQUEST_INIT_NS;
@@ -321,6 +322,21 @@ namespace opensaml {
         XMLOBJECTVALIDATOR_SIMPLE(SAML_DLLLOCAL,IPHint);
         XMLOBJECTVALIDATOR_SIMPLE(SAML_DLLLOCAL,DomainHint);
         XMLOBJECTVALIDATOR_SIMPLE(SAML_DLLLOCAL,GeolocationHint);
+
+        BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,RegistrationInfo);
+            XMLOBJECTVALIDATOR_REQUIRE(RegistrationInfo,RegistrationAuthority);
+        END_XMLOBJECTVALIDATOR;
+
+        BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,PublicationInfo);
+            XMLOBJECTVALIDATOR_REQUIRE(PublicationInfo,Publisher);
+        END_XMLOBJECTVALIDATOR;
+
+        BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,Publication);
+            XMLOBJECTVALIDATOR_REQUIRE(Publication,Publisher);
+        END_XMLOBJECTVALIDATOR;
+
+        XMLOBJECTVALIDATOR_SIMPLE(SAML_DLLLOCAL,RegistrationPolicy);
+        XMLOBJECTVALIDATOR_SIMPLE(SAML_DLLLOCAL,UsagePolicy);
     };
 };
 
@@ -350,6 +366,24 @@ namespace opensaml {
 
 #define REGISTER_TYPE_UI_NOVAL(cname) \
     q=xmltooling::QName(SAML20MD_UI_NS,cname::TYPE_NAME); \
+    XMLObjectBuilder::registerBuilder(q,new cname##Builder());
+
+#define REGISTER_ELEMENT_RPI(cname) \
+    q=xmltooling::QName(SAML20MD_RPI_NS,cname::LOCAL_NAME); \
+    XMLObjectBuilder::registerBuilder(q,new cname##Builder()); \
+    SchemaValidators.registerValidator(q,new cname##SchemaValidator())
+
+#define REGISTER_TYPE_RPI(cname) \
+    q=xmltooling::QName(SAML20MD_RPI_NS,cname::TYPE_NAME); \
+    XMLObjectBuilder::registerBuilder(q,new cname##Builder()); \
+    SchemaValidators.registerValidator(q,new cname##SchemaValidator())
+
+#define REGISTER_ELEMENT_RPI_NOVAL(cname) \
+    q=xmltooling::QName(SAML20MD_RPI_NS,cname::LOCAL_NAME); \
+    XMLObjectBuilder::registerBuilder(q,new cname##Builder());
+
+#define REGISTER_TYPE_RPI_NOVAL(cname) \
+    q=xmltooling::QName(SAML20MD_RPI_NS,cname::TYPE_NAME); \
     XMLObjectBuilder::registerBuilder(q,new cname##Builder());
 
 void opensaml::saml2md::registerMetadataClasses() {
@@ -483,4 +517,15 @@ void opensaml::saml2md::registerMetadataClasses() {
     REGISTER_ELEMENT_UI_NOVAL(DiscoHints);
     REGISTER_TYPE_UI_NOVAL(UIInfo);
     REGISTER_TYPE_UI_NOVAL(DiscoHints);
+
+    REGISTER_ELEMENT_RPI(RegistrationInfo);
+    REGISTER_ELEMENT_RPI(RegistrationPolicy);
+    REGISTER_ELEMENT_RPI(PublicationInfo);
+    REGISTER_ELEMENT_RPI(UsagePolicy);
+    REGISTER_ELEMENT_RPI(Publication);
+    REGISTER_TYPE_RPI(RegistrationInfo);
+    REGISTER_TYPE_RPI(PublicationInfo);
+    REGISTER_TYPE_RPI(Publication);
+    REGISTER_ELEMENT_RPI_NOVAL(PublicationPath);
+    REGISTER_TYPE_RPI_NOVAL(PublicationPath);
 }

@@ -543,8 +543,31 @@ namespace opensaml {
             static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
 
+        BEGIN_XMLOBJECT(SAML_API,Publication,xmltooling::XMLObject,SAML Metadata Extension for RPI Publication element);
+            DECL_STRING_ATTRIB(Publisher,PUBLISHER);
+            DECL_DATETIME_ATTRIB(CreationInstant,CREATIONINSTANT);
+            DECL_STRING_ATTRIB(PublicationID,PUBLICATIONID);
+            /** PublicationType local name */
+            static const XMLCh TYPE_NAME[];
+        END_XMLOBJECT;
+
+        BEGIN_XMLOBJECT(SAML_API,PublicationPath,xmltooling::XMLObject,SAML Metadata Extension for RPI PublicationPath element);
+            DECL_TYPED_CHILDREN(Publication);
+            /** PublicationPathType local name */
+            static const XMLCh TYPE_NAME[];
+        END_XMLOBJECT;
+
         BEGIN_XMLOBJECT(SAML_API, UsagePolicy, localizedURIType, SAML Metadata Extension for RPI UsagePolicy element);
             DECL_SIMPLE_CONTENT(URL);
+        END_XMLOBJECT;
+
+        BEGIN_XMLOBJECT(SAML_API,PublicationInfo,xmltooling::ElementProxy,SAML Metadata Extension for RPI PublicationInfo element);
+			DECL_STRING_ATTRIB(Publisher,PUBLISHER);
+			DECL_DATETIME_ATTRIB(CreationInstant,CREATIONINSTANT);
+			DECL_STRING_ATTRIB(PublicationID,PUBLICATIONID);
+			DECL_TYPED_CHILDREN(UsagePolicy);
+			/** PublicationInfoType local name */
+			static const XMLCh TYPE_NAME[];
         END_XMLOBJECT;
 
         /**
@@ -664,6 +687,9 @@ namespace opensaml {
 
         DECL_XMLOBJECTBUILDER(SAML_API, RegistrationInfo, samlconstants::SAML20MD_RPI_NS, samlconstants::SAML20MD_RPI_PREFIX);
         DECL_XMLOBJECTBUILDER(SAML_API, RegistrationPolicy, samlconstants::SAML20MD_RPI_NS, samlconstants::SAML20MD_RPI_PREFIX);
+        DECL_XMLOBJECTBUILDER(SAML_API, Publication, samlconstants::SAML20MD_RPI_NS, samlconstants::SAML20MD_RPI_PREFIX);
+        DECL_XMLOBJECTBUILDER(SAML_API, PublicationPath, samlconstants::SAML20MD_RPI_NS, samlconstants::SAML20MD_RPI_PREFIX);
+        DECL_XMLOBJECTBUILDER(SAML_API, PublicationInfo, samlconstants::SAML20MD_RPI_NS, samlconstants::SAML20MD_RPI_PREFIX);
         DECL_XMLOBJECTBUILDER(SAML_API, UsagePolicy, samlconstants::SAML20MD_RPI_NS, samlconstants::SAML20MD_RPI_PREFIX);
 
         /**

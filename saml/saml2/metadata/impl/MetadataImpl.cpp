@@ -2628,16 +2628,13 @@ namespace opensaml {
                 AbstractComplexElement(src),
                 AbstractDOMCachingXMLObject(src) {
                 init();
-            }
-
-            void _clone(const RegistrationInfoImpl& src) {
                 IMPL_CLONE_ATTRIB(RegistrationAuthority);
                 IMPL_CLONE_ATTRIB(RegistrationInstant);
                 IMPL_CLONE_TYPED_CHILDREN(RegistrationPolicy);
                 IMPL_CLONE_XMLOBJECT_CHILDREN(UnknownXMLObject);
             }
 
-            IMPL_XMLOBJECT_CLONE_EX(RegistrationInfo);
+            IMPL_XMLOBJECT_CLONE(RegistrationInfo);
             IMPL_STRING_ATTRIB(RegistrationAuthority);
             IMPL_DATETIME_ATTRIB(RegistrationInstant,0);
             IMPL_TYPED_CHILDREN(RegistrationPolicy,m_pos_UnknownChildren);
@@ -2690,6 +2687,195 @@ namespace opensaml {
             RegistrationPolicyImpl(const RegistrationPolicyImpl& src) : AbstractXMLObject(src), localizedURITypeImpl(src) {}
 
             IMPL_XMLOBJECT_CLONE_EX(RegistrationPolicy);
+        };
+
+        class SAML_DLLLOCAL PublicationPathImpl : public virtual PublicationPath,
+            public AbstractComplexElement,
+            public AbstractDOMCachingXMLObject,
+            public AbstractXMLObjectMarshaller,
+            public AbstractXMLObjectUnmarshaller
+        {
+
+        public:
+            virtual ~PublicationPathImpl() {}
+
+            PublicationPathImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
+            }
+
+            PublicationPathImpl(const PublicationPathImpl& src)
+                : AbstractXMLObject(src),
+                AbstractComplexElement(src),
+                AbstractDOMCachingXMLObject(src) {
+
+                IMPL_CLONE_TYPED_CHILDREN(Publication);
+            }
+
+            IMPL_XMLOBJECT_CLONE(PublicationPath);
+            IMPL_TYPED_CHILDREN(Publication,m_children.end());
+
+        protected:
+            void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
+                PROC_TYPED_CHILDREN(Publication,SAML20MD_RPI_NS,false);
+                AbstractXMLObjectUnmarshaller::processChildElement(childXMLObject,root);
+            }
+        };
+
+        class SAML_DLLLOCAL PublicationImpl : public virtual Publication,
+            public AbstractSimpleElement,
+            public AbstractDOMCachingXMLObject,
+            public AbstractXMLObjectMarshaller,
+            public AbstractXMLObjectUnmarshaller
+        {
+            void init() {
+                m_Publisher=m_PublicationID=nullptr;
+                m_CreationInstant=nullptr;
+            }
+
+        protected:
+            PublicationImpl() {
+                init();
+            }
+
+        public:
+            virtual ~PublicationImpl() {
+                XMLString::release(&m_Publisher);
+                XMLString::release(&m_PublicationID);
+                delete m_CreationInstant;
+            }
+
+            PublicationImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
+                    : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
+                init();
+            }
+
+            PublicationImpl(const PublicationImpl& src)
+                    : AbstractXMLObject(src),
+                        AbstractSimpleElement(src),
+                        AbstractDOMCachingXMLObject(src) {
+                init();
+                IMPL_CLONE_ATTRIB(Publisher);
+                IMPL_CLONE_ATTRIB(CreationInstant);
+                IMPL_CLONE_ATTRIB(PublicationID);
+            }
+
+            IMPL_XMLOBJECT_CLONE(Publication);
+            IMPL_STRING_ATTRIB(Publisher);
+            IMPL_DATETIME_ATTRIB(CreationInstant,0);
+            IMPL_STRING_ATTRIB(PublicationID);
+
+        protected:
+            void marshallAttributes(DOMElement* domElement) const {
+                MARSHALL_STRING_ATTRIB(Publisher,PUBLISHER,nullptr);
+                MARSHALL_DATETIME_ATTRIB(CreationInstant,CREATIONINSTANT,nullptr);
+                MARSHALL_STRING_ATTRIB(PublicationID,PUBLICATIONID,nullptr);
+            }
+
+            void processAttribute(const DOMAttr* attribute) {
+                PROC_STRING_ATTRIB(Publisher,PUBLISHER,nullptr);
+                PROC_DATETIME_ATTRIB(CreationInstant,CREATIONINSTANT,nullptr);
+                PROC_STRING_ATTRIB(PublicationID,PUBLICATIONID,nullptr);
+                AbstractXMLObjectUnmarshaller::processAttribute(attribute);
+            }
+        };
+
+        class SAML_DLLLOCAL PublicationInfoImpl : public virtual PublicationInfo,
+            public AbstractAttributeExtensibleXMLObject,
+            public AbstractComplexElement,
+            public AbstractDOMCachingXMLObject,
+            public AbstractXMLObjectMarshaller,
+            public AbstractXMLObjectUnmarshaller
+        {
+            list<XMLObject*>::iterator m_pos_UnknownChildren;
+
+            void init() {
+                m_Publisher=m_PublicationID=nullptr;
+                m_CreationInstant=nullptr;
+
+                m_children.push_back(nullptr);
+                m_pos_UnknownChildren = m_children.begin();
+                ++m_pos_UnknownChildren;
+            }
+
+        protected:
+            PublicationInfoImpl() {
+                init();
+            }
+
+        public:
+            virtual ~PublicationInfoImpl() {
+                XMLString::release(&m_Publisher);
+                XMLString::release(&m_PublicationID);
+                delete m_CreationInstant;
+            }
+
+            PublicationInfoImpl(const XMLCh* nsURI, const XMLCh* localName, const XMLCh* prefix, const xmltooling::QName* schemaType)
+                : AbstractXMLObject(nsURI, localName, prefix, schemaType) {
+                init();
+            }
+
+            PublicationInfoImpl(const PublicationInfoImpl& src)
+                : AbstractXMLObject(src),
+                AbstractAttributeExtensibleXMLObject(src),
+                AbstractComplexElement(src),
+                AbstractDOMCachingXMLObject(src) {
+                init();
+                IMPL_CLONE_ATTRIB(Publisher);
+                IMPL_CLONE_ATTRIB(CreationInstant);
+                IMPL_CLONE_ATTRIB(PublicationID);
+                IMPL_CLONE_TYPED_CHILDREN(UsagePolicy);
+                IMPL_CLONE_XMLOBJECT_CHILDREN(UnknownXMLObject);
+            }
+
+            IMPL_XMLOBJECT_CLONE(PublicationInfo);
+            IMPL_STRING_ATTRIB(Publisher);
+            IMPL_DATETIME_ATTRIB(CreationInstant,0);
+            IMPL_STRING_ATTRIB(PublicationID);
+            IMPL_TYPED_CHILDREN(UsagePolicy,m_pos_UnknownChildren);
+            IMPL_XMLOBJECT_CHILDREN(UnknownXMLObject,m_children.end());
+
+            void setAttribute(const xmltooling::QName& qualifiedName, const XMLCh* value, bool ID=false) {
+                if (!qualifiedName.hasNamespaceURI()) {
+                    if (XMLString::equals(qualifiedName.getLocalPart(),PUBLISHER_ATTRIB_NAME)) {
+                        setPublisher(value);
+                        return;
+                    }
+                    else if (XMLString::equals(qualifiedName.getLocalPart(),CREATIONINSTANT_ATTRIB_NAME)) {
+                        setCreationInstant(value);
+                        return;
+                    }
+                    else if (XMLString::equals(qualifiedName.getLocalPart(),PUBLICATIONID_ATTRIB_NAME)) {
+                        setPublicationID(value);
+                        return;
+                    }
+                }
+                AbstractAttributeExtensibleXMLObject::setAttribute(qualifiedName, value, ID);
+            }
+        protected:
+            void marshallAttributes(DOMElement* domElement) const {
+                MARSHALL_STRING_ATTRIB(Publisher,PUBLISHER,nullptr);
+                MARSHALL_DATETIME_ATTRIB(CreationInstant,CREATIONINSTANT,nullptr);
+                MARSHALL_STRING_ATTRIB(PublicationID,PUBLICATIONID,nullptr);
+                marshallExtensionAttributes(domElement);
+            }
+
+            void processChildElement(XMLObject* childXMLObject, const DOMElement* root) {
+                PROC_TYPED_CHILDREN(UsagePolicy,SAML20MD_RPI_NS,false);
+                // Unknown child.
+                const XMLCh* nsURI=root->getNamespaceURI();
+                if (!XMLString::equals(nsURI,SAML20MD_RPI_NS) && nsURI && *nsURI) {
+                    getUnknownXMLObjects().push_back(childXMLObject);
+                    return;
+                }
+                AbstractXMLObjectUnmarshaller::processChildElement(childXMLObject,root);
+            }
+
+            void processAttribute(const DOMAttr* attribute) {
+                PROC_STRING_ATTRIB(Publisher,PUBLISHER,nullptr);
+                PROC_DATETIME_ATTRIB(CreationInstant,CREATIONINSTANT,nullptr);
+                PROC_STRING_ATTRIB(PublicationID,PUBLICATIONID,nullptr);
+                unmarshallExtensionAttribute(attribute);
+            }
         };
 
         class SAML_DLLLOCAL UsagePolicyImpl : public virtual UsagePolicy, public localizedURITypeImpl
@@ -2789,6 +2975,9 @@ IMPL_XMLOBJECTBUILDER(GeolocationHint);
 IMPL_XMLOBJECTBUILDER(DiscoHints);
 IMPL_XMLOBJECTBUILDER(RegistrationInfo);
 IMPL_XMLOBJECTBUILDER(RegistrationPolicy);
+IMPL_XMLOBJECTBUILDER(Publication);
+IMPL_XMLOBJECTBUILDER(PublicationPath);
+IMPL_XMLOBJECTBUILDER(PublicationInfo);
 IMPL_XMLOBJECTBUILDER(UsagePolicy);
 
 #ifdef HAVE_COVARIANT_RETURNS
@@ -3005,7 +3194,6 @@ const XMLCh OrganizationURL::LOCAL_NAME[] =             UNICODE_LITERAL_15(O,r,g
 const XMLCh PDPDescriptor::LOCAL_NAME[] =               UNICODE_LITERAL_13(P,D,P,D,e,s,c,r,i,p,t,o,r);
 const XMLCh PDPDescriptor::TYPE_NAME[] =                UNICODE_LITERAL_17(P,D,P,D,e,s,c,r,i,p,t,o,r,T,y,p,e);
 const XMLCh PrivacyStatementURL::LOCAL_NAME[] =         UNICODE_LITERAL_19(P,r,i,v,a,c,y,S,t,a,t,e,m,e,n,t,U,R,L);
-/*
 const XMLCh Publication::LOCAL_NAME[] =                 UNICODE_LITERAL_11(P,u,b,l,i,c,a,t,i,o,n);
 const XMLCh Publication::TYPE_NAME[] =                  UNICODE_LITERAL_15(P,u,b,l,i,c,a,t,i,o,n,T,y,p,e);
 const XMLCh Publication::PUBLISHER_ATTRIB_NAME[] =      UNICODE_LITERAL_9(p,u,b,l,i,s,h,e,r);
@@ -3018,7 +3206,6 @@ const XMLCh PublicationInfo::CREATIONINSTANT_ATTRIB_NAME[] = UNICODE_LITERAL_15(
 const XMLCh PublicationInfo::PUBLICATIONID_ATTRIB_NAME[] = UNICODE_LITERAL_13(p,u,b,l,i,c,a,t,i,o,n,I,d);
 const XMLCh PublicationPath::LOCAL_NAME[] =             UNICODE_LITERAL_15(P,u,b,l,i,c,a,t,i,o,n,P,a,t,h);
 const XMLCh PublicationPath::TYPE_NAME[] =              UNICODE_LITERAL_19(P,u,b,l,i,c,a,t,i,o,n,P,a,t,h,T,y,p,e);
-*/
 const XMLCh QueryDescriptorType::LOCAL_NAME[] =         {chNull};
 const XMLCh QueryDescriptorType::TYPE_NAME[] =          UNICODE_LITERAL_19(Q,u,e,r,y,D,e,s,c,r,i,p,t,o,r,T,y,p,e);
 const XMLCh QueryDescriptorType::WANTASSERTIONSSIGNED_ATTRIB_NAME[] = UNICODE_LITERAL_20(W,a,n,t,A,s,s,e,r,t,i,o,n,s,S,i,g,n,e,d);
