@@ -62,8 +62,11 @@ namespace opensaml {
         /** EntityMatcher that matches based on name. */
         #define NAME_ENTITY_MATCHER "Name"
 
-        /** EntityMatcher that applies a set of input attributes. */
+        /** EntityMatcher that matches based on entity attributes. */
         #define ENTITYATTR_ENTITY_MATCHER "EntityAttributes"
+
+        /** EntityMatcher that matches based on RPI registrationAuthority. */
+        #define REGAUTH_ENTITY_MATCHER "RegistrationAuthority"
     };
 };
 

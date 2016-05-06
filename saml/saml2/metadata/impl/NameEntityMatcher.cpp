@@ -57,6 +57,7 @@ namespace opensaml {
         }
 
         SAML_DLLLOCAL PluginManager<EntityMatcher,string,const DOMElement*>::Factory EntityAttributesEntityMatcherFactory;
+        SAML_DLLLOCAL PluginManager<EntityMatcher,string,const DOMElement*>::Factory RegistrationAuthorityEntityMatcherFactory;
     };
 };
 
@@ -64,6 +65,7 @@ void SAML_API opensaml::saml2md::registerEntityMatchers()
 {
     SAMLConfig::getConfig().EntityMatcherManager.registerFactory(NAME_ENTITY_MATCHER, NameEntityMatcherFactory);
     SAMLConfig::getConfig().EntityMatcherManager.registerFactory(ENTITYATTR_ENTITY_MATCHER, EntityAttributesEntityMatcherFactory);
+    SAMLConfig::getConfig().EntityMatcherManager.registerFactory(REGAUTH_ENTITY_MATCHER, RegistrationAuthorityEntityMatcherFactory);
 }
 
 EntityMatcher::EntityMatcher()
