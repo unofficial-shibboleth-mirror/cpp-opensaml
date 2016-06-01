@@ -30,7 +30,9 @@
 #include <saml/saml2/metadata/AbstractMetadataProvider.h>
 
 namespace xmltooling {
+    class XMLTOOL_API CondWait;
     class XMLTOOL_API RWLock;
+    class XMLTOOL_API Thread;
 };
 
 namespace opensaml {
@@ -77,6 +79,14 @@ namespace opensaml {
             time_t m_minCacheDuration, m_maxCacheDuration;
             typedef std::map<xmltooling::xstring,time_t> cachemap_t;
             mutable cachemap_t m_cacheMap;
+
+            // Used to manage background maintenance of cache.
+            bool m_shutdown;
+            time_t m_cleanupInterval;
+            time_t m_cleanupTimeout;
+            xmltooling::CondWait* m_cleanup_wait;
+            xmltooling::Thread* m_cleanup_thread;
+            static void* cleanup_fn(void*);
         };
 
     };

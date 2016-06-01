@@ -123,31 +123,10 @@ void AbstractMetadataProvider::indexEntity(EntityDescriptor* site, time_t& valid
     auto_ptr_char id(site->getEntityID());
     if (id.get()) {
         if (replace) {
-            // The data structure here needs work.
-            // We have to find all the sites stored against the replaced ID. Then we have to
-            // search for those sites in the entire set of sites tracked by the sources map and
-            // remove them from both places.
-            set<const EntityDescriptor*> existingSites;
-            pair<sitemap_t::iterator,sitemap_t::iterator> existingRange = m_sites.equal_range(id.get());
-            static pair<set<const EntityDescriptor*>::iterator,bool> (set<const EntityDescriptor*>::* ins)(const EntityDescriptor* const &) =
-                &set<const EntityDescriptor*>::insert;
-            for_each(
-                existingRange.first, existingRange.second,
-                lambda::bind(ins, boost::ref(existingSites), lambda::bind(&sitemap_t::value_type::second, _1))
-                );
-            m_sites.erase(existingRange.first, existingRange.second);
-            for (sitemap_t::iterator s = m_sources.begin(); s != m_sources.end();) {
-                if (existingSites.count(s->second) > 0) {
-                    sitemap_t::iterator temp = s;
-                    ++s;
-                    m_sources.erase(temp);
-                }
-                else {
-                    ++s;
-                }
-            }
+            // This won't free the old entries but will remove them from the cache.
+            unindex(site->getEntityID());
         }
-        m_sites.insert(sitemap_t::value_type(id.get(),site));
+        m_sites.insert(sitemap_t::value_type(id.get(), site));
     }
     
     // Process each IdP role.
@@ -238,6 +217,38 @@ void AbstractMetadataProvider::index(EntityDescriptor* site, time_t validUntil, 
 void AbstractMetadataProvider::index(EntitiesDescriptor* group, time_t validUntil) const
 {
     indexGroup(group, validUntil);
+}
+
+void AbstractMetadataProvider::unindex(const XMLCh* entityID, bool freeSites) const
+{
+    auto_ptr_char id(entityID);
+
+    // The data structure here needs work.
+    // We have to find all the sites stored against the replaced ID. Then we have to
+    // search for those sites in the entire set of sites tracked by the sources map and
+    // remove them from both places.
+    set<const EntityDescriptor*> existingSites;
+    pair<sitemap_t::iterator,sitemap_t::iterator> existingRange = m_sites.equal_range(id.get());
+    static pair<set<const EntityDescriptor*>::iterator,bool> (set<const EntityDescriptor*>::* ins)(const EntityDescriptor* const &) =
+        &set<const EntityDescriptor*>::insert;
+    for_each(
+        existingRange.first, existingRange.second,
+        lambda::bind(ins, boost::ref(existingSites), lambda::bind(&sitemap_t::value_type::second, _1))
+    );
+    m_sites.erase(existingRange.first, existingRange.second);
+    for (sitemap_t::iterator s = m_sources.begin(); s != m_sources.end();) {
+        if (existingSites.count(s->second) > 0) {
+            sitemap_t::iterator temp = s;
+            ++s;
+            m_sources.erase(temp);
+        }
+        else {
+            ++s;
+        }
+    }
+
+    if (freeSites)
+        for_each(existingSites.begin(), existingSites.end(), cleanup<EntityDescriptor>());
 }
 
 void AbstractMetadataProvider::clearDescriptorIndex(bool freeSites)

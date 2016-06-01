@@ -102,6 +102,7 @@ namespace opensaml {
              * Loads an entity into the cache for faster lookup.
              * <p>This includes processing known reverse lookup strategies for artifacts.
              * The validUntil parameter will contain the smallest value found on output.
+             * This method will *not* free any objects removed from the cache.</p>
              * 
              * @param site          entity definition
              * @param validUntil    maximum expiration time of the entity definition
@@ -122,6 +123,7 @@ namespace opensaml {
              * @deprecated
              * Loads an entity into the cache for faster lookup.
              * <p>This includes processing known reverse lookup strategies for artifacts.
+             * This method will *not* free any objects removed from the cache.</p>
              * 
              * @param site          entity definition
              * @param validUntil    maximum expiration time of the entity definition
@@ -137,6 +139,14 @@ namespace opensaml {
              * @param validUntil    maximum expiration time of the group definition
              */
             virtual void index(EntitiesDescriptor* group, time_t validUntil) const;
+
+            /**
+            * Clear a specific entity from the cache.
+            *
+            * @param entityID the ID of the entity to remove
+            * @param freeSites true iff the objects cached in the site map should be freed.
+            */
+            virtual void unindex(const XMLCh* entityID, bool freeSites=false) const;
 
             /**
              * Clear the cache of known entities and groups.
