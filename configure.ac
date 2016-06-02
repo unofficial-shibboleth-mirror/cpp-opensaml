@@ -115,12 +115,16 @@ AC_ARG_WITH(openssl,
     AS_HELP_STRING([--with-openssl=PATH],[where openssl is installed]),
     [if test x_$with_openssl != x_/usr; then
         SSLFLAGS="-I${with_openssl}/include"
+        SSLLIBS="-L${with_openssl}/lib -lcrypto -lssl"
+    else
+        SSLLIBS="-lcrypto -lssl"
     fi])
 
 if test "x$with_openssl" = "x" ; then
     AC_PATH_PROG(PKG_CONFIG, pkg-config)
     if test "x$PKG_CONFIG" != x && test "x$PKG_CONFIG" != "xno" ; then
         if pkg-config openssl ; then
+            SSLLIBS="`$PKG_CONFIG --libs openssl`"
             SSLFLAGS="`$PKG_CONFIG --cflags openssl`"
         else
             AC_MSG_WARN([OpenSSL not supported by pkg-config, try --with-openssl instead])
@@ -128,9 +132,16 @@ if test "x$with_openssl" = "x" ; then
     fi
 fi
 
+if test "x$SSLLIBS" = "x" ; then
+    SSLLIBS="-lcrypto -lssl"
+fi
+
 AC_MSG_CHECKING(for OpenSSL cflags)
 AC_MSG_RESULT($SSLFLAGS)
 CPPFLAGS="$SSLFLAGS $CPPFLAGS"
+AC_MSG_CHECKING(for OpenSSL libraries)
+AC_MSG_RESULT($SSLLIBS)
+LIBS="$LIBS $SSLLIBS"
 
 AC_CHECK_HEADER([openssl/x509.h],,AC_MSG_ERROR([unable to find openssl header files]))
 
@@ -253,10 +264,10 @@ int i = 0;
 #endif])],
     [AC_MSG_RESULT(OK)],
     [AC_MSG_FAILURE([XML-Security version 1.4.0 or greater is required.])])
-    AC_LINK_IFELSE(
-        [AC_LANG_PROGRAM([[#include <xsec/utils/XSECPlatformUtils.hpp>]],
-            [[XSECPlatformUtils::Initialise()]])],,
-        [AC_MSG_ERROR([unable to link with XML-Security])])
+AC_LINK_IFELSE(
+    [AC_LANG_PROGRAM([[#include <xsec/utils/XSECPlatformUtils.hpp>]],
+        [[XSECPlatformUtils::Initialise()]])],,
+    [AC_MSG_ERROR([unable to link with XML-Security])])
 
 # XML-Tooling settings
 AC_ARG_WITH(xmltooling,
