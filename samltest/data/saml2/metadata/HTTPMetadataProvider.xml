@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MetadataProvider type="XML" url="http://URL.TO.EXAMPLE/ORG/InCommon-metadata.xml" backingFilePath="../../../samltest/data/saml2/metadata/InCommon-metadata.xml.bck" validate="0">
+    <SignatureMetadataFilter>
+        <CredentialResolver type="File">
+            <Certificate>
+                <Path>../../../samltest/data/incommon.pem</Path>
+            </Certificate>
+        </CredentialResolver>
+    </SignatureMetadataFilter>
+</MetadataProvider>

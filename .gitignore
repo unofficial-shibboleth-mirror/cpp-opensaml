@@ -73,3 +73,4 @@ x64
 /samltest/*.cpp
 /samltest/*/*.cpp
 /samltest/**/*.cpp
+/samltest/**/*.xml.bck*
