@@ -196,8 +196,15 @@ pair<bool,DOMElement*> XMLMetadataProvider::load(bool backup)
         m_reloadInterval = m_minRefreshDelay;
     }
 
+    string backupKey = "";
+    if (!backup && !m_backing.empty()) {
+        // We compute a random filename extension to the "real" location.
+        SAMLConfig::getConfig().generateRandomBytes(backupKey, 2);
+        backupKey = m_backing + '.' + SAMLArtifact::toHex(backupKey);
+        m_log.debug("backing up remote metadata resource to (%s)", backupKey.c_str());
+    }
     // Call the base class to load/parse the appropriate XML resource.
-    pair<bool,DOMElement*> raw = ReloadableXMLFile::load(backup);
+    pair<bool,DOMElement*> raw = ReloadableXMLFile::load(backup, backupKey);
 
     // If we own it, wrap it for now.
     XercesJanitor<DOMDocument> docjanitor(raw.first ? raw.second->getOwnerDocument() : nullptr);
@@ -207,6 +214,8 @@ pair<bool,DOMElement*> XMLMetadataProvider::load(bool backup)
     docjanitor.release();
 
     if (!dynamic_cast<const EntitiesDescriptor*>(xmlObject.get()) && !dynamic_cast<const EntityDescriptor*>(xmlObject.get()))
+        if (!backupKey.empty())
+            remove(backupKey.c_str());
         throw MetadataException(
             "Root of metadata instance not recognized: $1", params(1,xmlObject->getElementQName().toString().c_str())
             );
@@ -217,30 +226,17 @@ pair<bool,DOMElement*> XMLMetadataProvider::load(bool backup)
     }
     catch (std::exception& ex) {
         m_log.error("metadata instance failed manual validation checking: %s", ex.what());
+        if (!backupKey.empty())
+            remove(backupKey.c_str());
         throw MetadataException("Metadata instance failed manual validation checking.");
     }
 
     const TimeBoundSAMLObject* validityCheck = dynamic_cast<TimeBoundSAMLObject*>(xmlObject.get());
     if (!validityCheck || !validityCheck->isValid()) {
         m_log.error("metadata instance was invalid at time of acquisition");
+        if (!backupKey.empty())
+            remove(backupKey.c_str());
         throw MetadataException("Metadata instance was invalid at time of acquisition.");
-    }
-
-    // This is the best place to take a backup, since it's superficially "correct" metadata.
-    string backupKey;
-    if (!backup && !m_backing.empty()) {
-        // We compute a random filename extension to the "real" location.
-        SAMLConfig::getConfig().generateRandomBytes(backupKey, 2);
-        backupKey = m_backing + '.' + SAMLArtifact::toHex(backupKey);
-        m_log.debug("backing up remote metadata resource to (%s)", backupKey.c_str());
-        try {
-            ofstream backer(backupKey.c_str());
-            backer << *(raw.second->getOwnerDocument());
-        }
-        catch (std::exception& ex) {
-            m_log.crit("exception while backing up metadata: %s", ex.what());
-            backupKey.erase();
-        }
     }
 
     try {
