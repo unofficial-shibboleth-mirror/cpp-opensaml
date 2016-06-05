@@ -30,7 +30,7 @@ using namespace opensaml;
 
 //#define SAML_LEAKCHECK
 
-std::string data_path = "../samltest/data/";
+std::string data_path = "../../../samltest/data/";
 
 class SAMLFixture : public CxxTest::GlobalFixture
 {
