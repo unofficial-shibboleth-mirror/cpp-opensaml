@@ -1121,7 +1121,7 @@ const XMLCh NameIdentifier::UNSPECIFIED[] = // urn:oasis:names:tc:SAML:1.1:namei
   chLatin_S, chLatin_A, chLatin_M, chLatin_L, chColon, chDigit_1, chPeriod, chDigit_1, chColon,
   chLatin_n, chLatin_a, chLatin_m, chLatin_e, chLatin_i, chLatin_d, chDash,
   chLatin_f, chLatin_o, chLatin_r, chLatin_m, chLatin_a, chLatin_t, chColon,
-  chLatin_u, chLatin_n, chLatin_s, chLatin_p, chLatin_e, chLatin_c, chLatin_i, chLatin_f, chLatin_i, chLatin_e, chLatin_d, chLatin_d, chNull
+  chLatin_u, chLatin_n, chLatin_s, chLatin_p, chLatin_e, chLatin_c, chLatin_i, chLatin_f, chLatin_i, chLatin_e, chLatin_d, chNull
 };
 
 const XMLCh NameIdentifier::EMAIL[] = // urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress
