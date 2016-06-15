@@ -213,13 +213,13 @@ pair<bool,DOMElement*> XMLMetadataProvider::load(bool backup)
     scoped_ptr<XMLObject> xmlObject(XMLObjectBuilder::buildOneFromElement(raw.second, true));
     docjanitor.release();
 
-    if (!dynamic_cast<const EntitiesDescriptor*>(xmlObject.get()) && !dynamic_cast<const EntityDescriptor*>(xmlObject.get()))
+    if (!dynamic_cast<const EntitiesDescriptor*>(xmlObject.get()) && !dynamic_cast<const EntityDescriptor*>(xmlObject.get())) {
         if (!backupKey.empty())
             remove(backupKey.c_str());
         throw MetadataException(
             "Root of metadata instance not recognized: $1", params(1,xmlObject->getElementQName().toString().c_str())
             );
-
+    }
     // Preprocess the metadata (even if we schema-validated).
     try {
         SchemaValidators.validate(xmlObject.get());
