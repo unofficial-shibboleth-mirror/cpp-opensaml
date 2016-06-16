@@ -240,7 +240,8 @@ pair<bool,DOMElement*> XMLMetadataProvider::load(bool backup)
     }
 
     try {
-        doFilters(*xmlObject);
+        BatchLoadMetadataFilterContext ctx(backup);
+        doFilters(&ctx , *xmlObject);
     }
     catch (std::exception&) {
         if (!backupKey.empty())

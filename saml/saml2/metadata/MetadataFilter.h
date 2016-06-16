@@ -44,6 +44,17 @@ namespace opensaml {
             virtual ~MetadataFilterContext();
         };
 
+        class SAML_API BatchLoadMetadataFilterContext : public virtual MetadataFilterContext
+        {
+            MAKE_NONCOPYABLE( BatchLoadMetadataFilterContext);
+        public:
+            BatchLoadMetadataFilterContext(bool isBackingFile);
+            bool isBackingFile() const;
+            ~ BatchLoadMetadataFilterContext();
+        private:
+            bool m_isBackingFile;
+        };
+
         /**
          * A metadata filter is used to process metadata after resolution and unmarshalling.
          *
@@ -67,7 +78,7 @@ namespace opensaml {
             virtual const char* getId() const=0;
 
             /**
-             * @deprecated
+             * @Deprecated
              * Filters the given metadata. Exceptions should generally not be thrown to
              * signal the removal of information, only for systemic processing failure.
              *
