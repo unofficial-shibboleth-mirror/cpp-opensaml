@@ -5,12 +5,6 @@ include doxygen.am
 
 MOSTLYCLEANFILES = $(DX_CLEANFILES)
 
-DISTCLEANFILES = \
-	@PACKAGE_NAME@.pc \
-	@PACKAGE_NAME@.pc.in \
-	@PACKAGE_NAME@-uninstalled.pc \
-	@PACKAGE_NAME@-uninstalled.sh
-
 SUBDIRS = doc schemas saml samltest samlsign
 
 if DX_COND_doc
