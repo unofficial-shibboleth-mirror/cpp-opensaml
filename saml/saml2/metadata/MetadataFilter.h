@@ -44,13 +44,35 @@ namespace opensaml {
             virtual ~MetadataFilterContext();
         };
 
+        /**
+         * Environmental context for filtering of batch-loaded metadata.
+         */
         class SAML_API BatchLoadMetadataFilterContext : public virtual MetadataFilterContext
         {
             MAKE_NONCOPYABLE( BatchLoadMetadataFilterContext);
         public:
+            /**
+             * Constructor.
+             *
+             * @param isBackingFile initial setting for backing file flag
+             */
             BatchLoadMetadataFilterContext(bool isBackingFile);
+            virtual ~BatchLoadMetadataFilterContext();
+
+            /**
+             * Get whether the filtering is over a backing copy of the metadata.
+             *
+             * @return true iff the filtering operation is over a backing copy
+             */
             bool isBackingFile() const;
-            ~ BatchLoadMetadataFilterContext();
+
+            /**
+            * Set whether the filtering is over a backing copy of the metadata.
+            *
+            * @param flag flag to set
+            */
+            void setBackingFile(bool flag);
+
         private:
             bool m_isBackingFile;
         };

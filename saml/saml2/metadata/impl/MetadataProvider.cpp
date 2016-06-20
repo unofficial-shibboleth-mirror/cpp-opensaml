@@ -269,7 +269,12 @@ MetadataFilterContext::~MetadataFilterContext()
 {
 }
 
-BatchLoadMetadataFilterContext::BatchLoadMetadataFilterContext(bool isBackingFile) : MetadataFilterContext(), m_isBackingFile(isBackingFile)
+BatchLoadMetadataFilterContext::BatchLoadMetadataFilterContext(bool isBackingFile)
+    : MetadataFilterContext(), m_isBackingFile(isBackingFile)
+{
+}
+
+BatchLoadMetadataFilterContext::~BatchLoadMetadataFilterContext()
 {
 }
 
@@ -278,6 +283,7 @@ bool BatchLoadMetadataFilterContext::isBackingFile() const
     return m_isBackingFile;
 }
 
-BatchLoadMetadataFilterContext::~BatchLoadMetadataFilterContext()
+void BatchLoadMetadataFilterContext::setBackingFile(bool flag)
 {
+    m_isBackingFile = flag;
 }
