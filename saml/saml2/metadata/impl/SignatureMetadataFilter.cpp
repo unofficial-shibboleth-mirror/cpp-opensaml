@@ -64,7 +64,7 @@ namespace opensaml {
             void doFilter(EntityDescriptor& entity, bool rootObject=false) const;
             void verifySignature(Signature* sig, const XMLCh* peerName) const;
 
-            bool m_verifyRoles,m_verifyName,m_skipOnBackupLoad;
+            bool m_verifyRoles,m_verifyName,m_verifyBackup;
             auto_ptr<CredentialResolver> m_credResolver,m_dummyResolver;
             auto_ptr<SignatureTrustEngine> m_trust;
             SignatureProfileValidator m_profileValidator;
@@ -85,14 +85,14 @@ static const XMLCh type[] =                 UNICODE_LITERAL_4(t,y,p,e);
 static const XMLCh certificate[] =          UNICODE_LITERAL_11(c,e,r,t,i,f,i,c,a,t,e);
 static const XMLCh Certificate[] =          UNICODE_LITERAL_11(C,e,r,t,i,f,i,c,a,t,e);
 static const XMLCh Path[] =                 UNICODE_LITERAL_4(P,a,t,h);
-static const XMLCh skipFromBackup[] =       UNICODE_LITERAL_14(s,k,i,p,F,r,o,m,B,a,c,k,u,p);
+static const XMLCh verifyBackup[] =         UNICODE_LITERAL_12(v,e,r,i,f,y,B,a,c,k,u,p);
 static const XMLCh verifyRoles[] =          UNICODE_LITERAL_11(v,e,r,i,f,y,R,o,l,e,s);
 static const XMLCh verifyName[] =           UNICODE_LITERAL_10(v,e,r,i,f,y,N,a,m,e);
 
 SignatureMetadataFilter::SignatureMetadataFilter(const DOMElement* e)
     : m_verifyRoles(XMLHelper::getAttrBool(e, false, verifyRoles)),
         m_verifyName(XMLHelper::getAttrBool(e, true, verifyName)),
-        m_skipOnBackupLoad(XMLHelper::getAttrBool(e, true, skipFromBackup)),
+        m_verifyBackup(XMLHelper::getAttrBool(e, true, verifyBackup)),
         m_log(Category::getInstance(SAML_LOGCAT ".MetadataFilter.Signature"))
 {
     if (e && e->hasAttributeNS(nullptr,certificate)) {
@@ -134,7 +134,7 @@ SignatureMetadataFilter::SignatureMetadataFilter(const DOMElement* e)
 void SignatureMetadataFilter::doFilter(const MetadataFilterContext* ctx, XMLObject& xmlObject) const
 {
     const BatchLoadMetadataFilterContext* bCtx = dynamic_cast<const BatchLoadMetadataFilterContext*>(ctx);
-    if (m_skipOnBackupLoad && bCtx && bCtx->isBackingFile()) {
+    if (!m_verifyBackup && bCtx && bCtx->isBackingFile()) {
         m_log.debug("Skipping SignatureMetadataFilter on load from backup");
     }
     else {
