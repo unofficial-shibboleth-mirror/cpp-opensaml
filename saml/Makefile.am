@@ -197,7 +197,7 @@ libsaml_la_LDFLAGS = -version-info 9:0:0
 install-exec-hook:
 	for la in $(lib_LTLIBRARIES) ; do rm -f $(DESTDIR)$(libdir)/$$la ; done
 
-EXTRA_DIST = saml.vcxproj saml.vcxproj.filters resource.h saml.rc
+EXTRA_DIST = resource.h saml.rc
 
 dist-hook:
 	rm -rf `find $(distdir)/zlib -name .svn`

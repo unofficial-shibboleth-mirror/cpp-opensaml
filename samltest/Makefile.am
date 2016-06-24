@@ -123,4 +123,4 @@ $(nodist_samltest_SOURCES): %.cpp: %.h
 
 samltest_LDADD = $(top_builddir)/saml/libsaml.la
 
-EXTRA_DIST = samltest.vcxproj samltest.vcxproj.filters data
+EXTRA_DIST = data
