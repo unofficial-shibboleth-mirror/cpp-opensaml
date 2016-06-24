@@ -45,6 +45,39 @@ namespace opensaml {
         };
 
         /**
+         * Environmental context for filtering of batch-loaded metadata.
+         */
+        class SAML_API BatchLoadMetadataFilterContext : public virtual MetadataFilterContext
+        {
+            MAKE_NONCOPYABLE( BatchLoadMetadataFilterContext);
+        public:
+            /**
+             * Constructor.
+             *
+             * @param isBackingFile initial setting for backing file flag
+             */
+            BatchLoadMetadataFilterContext(bool isBackingFile);
+            virtual ~BatchLoadMetadataFilterContext();
+
+            /**
+             * Get whether the filtering is over a backing copy of the metadata.
+             *
+             * @return true iff the filtering operation is over a backing copy
+             */
+            bool isBackingFile() const;
+
+            /**
+            * Set whether the filtering is over a backing copy of the metadata.
+            *
+            * @param flag flag to set
+            */
+            void setBackingFile(bool flag);
+
+        private:
+            bool m_isBackingFile;
+        };
+
+        /**
          * A metadata filter is used to process metadata after resolution and unmarshalling.
          *
          * Some filters might remove everything but identity provider roles, decreasing the data a service provider
@@ -67,7 +100,7 @@ namespace opensaml {
             virtual const char* getId() const=0;
 
             /**
-             * @deprecated
+             * @Deprecated
              * Filters the given metadata. Exceptions should generally not be thrown to
              * signal the removal of information, only for systemic processing failure.
              *

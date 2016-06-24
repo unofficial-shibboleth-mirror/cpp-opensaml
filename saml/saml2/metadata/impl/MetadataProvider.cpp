@@ -172,14 +172,30 @@ void MetadataProvider::setContext(const MetadataFilterContext* ctx)
     m_filterContext = ctx;
 }
 
-void MetadataProvider::doFilters(XMLObject& xmlObject) const
+void MetadataProvider::doFiltersInternal(const MetadataFilterContext* ctx, XMLObject& xmlObject) const
 {
     Category& log = Category::getInstance(SAML_LOGCAT ".Metadata");
     for (ptr_vector<MetadataFilter>::const_iterator i = m_filters.begin(); i != m_filters.end(); i++) {
         log.info("applying metadata filter (%s)", i->getId());
-        i->doFilter(m_filterContext, xmlObject);
+        i->doFilter(ctx, xmlObject);
     }
 }
+
+void MetadataProvider::doFilters(const MetadataFilterContext* ctx, XMLObject& xmlObject) const
+{
+    if (m_filterContext) {
+        Category& log = Category::getInstance(SAML_LOGCAT ".Metadata");
+        log.crit("Internal error: calling MetadataProvider::doFilters with a static and dynamic context");
+        throw;
+    }
+    doFiltersInternal(ctx, xmlObject);
+}
+
+void MetadataProvider::doFilters(XMLObject& xmlObject) const
+{
+    doFiltersInternal(m_filterContext, xmlObject);
+}
+
 
 void MetadataProvider::outputStatus(ostream& os) const
 {
@@ -251,4 +267,23 @@ MetadataFilterContext::MetadataFilterContext()
 
 MetadataFilterContext::~MetadataFilterContext()
 {
+}
+
+BatchLoadMetadataFilterContext::BatchLoadMetadataFilterContext(bool isBackingFile)
+    : MetadataFilterContext(), m_isBackingFile(isBackingFile)
+{
+}
+
+BatchLoadMetadataFilterContext::~BatchLoadMetadataFilterContext()
+{
+}
+
+bool BatchLoadMetadataFilterContext::isBackingFile() const
+{
+    return m_isBackingFile;
+}
+
+void BatchLoadMetadataFilterContext::setBackingFile(bool flag)
+{
+    m_isBackingFile = flag;
 }

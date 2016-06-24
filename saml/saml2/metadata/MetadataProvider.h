@@ -254,13 +254,26 @@ namespace opensaml {
 
         protected:
             /**
+             * @Deprecated
              * Applies any installed filters to a metadata instance.
+             * This passes the statically provided context to the filter
+             * and so is equivalent to doFilters(m_filterContext, xmlObject)
              *
              * @param xmlObject the metadata to be filtered
              */
             void doFilters(xmltooling::XMLObject& xmlObject) const;
 
+            /**
+             * Applies any installed filters to a metadata instance.
+             * This must not be called if the static context has been set (via setContext).
+             *
+             * @param ctx The Context for this filtering operation.
+             * @param xmlObject the metadata to be filtered
+             */
+            void doFilters(const MetadataFilterContext* ctx, xmltooling::XMLObject& xmlObject) const;
+
         private:
+            void doFiltersInternal(const MetadataFilterContext* ctx, xmltooling::XMLObject& xmlObject) const;
             const MetadataFilterContext* m_filterContext;
             boost::ptr_vector<MetadataFilter> m_filters;
         };
