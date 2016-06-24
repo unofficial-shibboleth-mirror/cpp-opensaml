@@ -28,6 +28,7 @@
 #include "saml2/metadata/EntityMatcher.h"
 #include "saml2/metadata/Metadata.h"
 
+#include <boost/lambda/bind.hpp>
 #include <boost/lambda/casts.hpp>
 #include <boost/lambda/lambda.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
