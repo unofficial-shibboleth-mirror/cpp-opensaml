@@ -71,15 +71,9 @@ AC_HEADER_DIRENT
 AC_CHECK_FUNCS([strchr strdup strstr])
 
 # checks for pthreads
-ACX_PTHREAD([enable_threads="pthread"],[enable_threads="no"])
-if test $enable_threads != "pthread"; then
-    AC_MSG_ERROR([unable to find pthreads, currently this is required])
-else
-    AC_DEFINE(HAVE_PTHREAD,1,[Define if you have POSIX threads libraries and header files.])
-    LIBS="$PTHREAD_LIBS $LIBS"
-    CFLAGS="$PTHREAD_CFLAGS $CFLAGS"
-    CXXFLAGS="$PTHREAD_CFLAGS $CXXFLAGS"
-fi
+ACX_PTHREAD(
+    [AC_DEFINE(HAVE_PTHREAD,1,[Define if you have POSIX threads libraries and header files.])],
+    [AC_MSG_ERROR([unable to find pthreads, currently this is required])])
 
 
 # OpenSSL settings
@@ -130,7 +124,6 @@ BOOST_LAMBDA
 BOOST_POINTER_CONTAINER
 BOOST_SMART_PTR
 BOOST_STRING_ALGO
-CPPFLAGS="$BOOST_CPPFLAGS $CPPFLAGS"
 
 AX_PKG_CHECK_MODULES([log4shib],,[log4shib],
     [AC_DEFINE([OPENSAML_LOG4SHIB],[1],[Define to 1 if log4shib library is used.])],
