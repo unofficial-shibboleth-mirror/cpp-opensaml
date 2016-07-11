@@ -123,9 +123,11 @@ $(nodist_samltest_SOURCES): %.cpp: %.h
 
 samltest_CXXFLAGS = \
     $(xerces_CFLAGS) \
+    $(xmlsec_CFLAGS) \
     $(xmltooling_CFLAGS)
 samltest_LDADD = $(top_builddir)/saml/libsaml.la \
     $(xerces_LIBS) \
+    $(xmlsec_LIBS) \
     $(xmltooling_LIBS)
 
 EXTRA_DIST = data

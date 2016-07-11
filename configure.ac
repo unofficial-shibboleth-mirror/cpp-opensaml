@@ -94,31 +94,7 @@ AX_PKG_CHECK_MODULES([log4shib],,[log4shib],
 # Xerces-C v2.6.0 has bugs that inhibit use with signed XML
 AX_PKG_CHECK_MODULES([xerces],,[xerces-c != 3.0])
 
-# XML-Security settings
-AC_ARG_WITH(xmlsec,
-    AS_HELP_STRING([--with-xmlsec=PATH],[where xmlsec is installed]),,
-    [with_xmlsec=/usr])
-if test x_$with_xmlsec != x_/usr; then
-    CPPFLAGS="-I${with_xmlsec}/include $CPPFLAGS"
-    LIBS="-L${with_xmlsec}/lib -lxml-security-c $LIBS"
-else
-    LIBS="-lxml-security-c $LIBS"
-fi
-AC_CHECK_HEADER([xsec/utils/XSECPlatformUtils.hpp],,AC_MSG_ERROR([unable to find xmlsec header files]))
-AC_MSG_CHECKING([XML-Security version])
-AC_PREPROC_IFELSE(
-    [AC_LANG_PROGRAM([#include <xsec/utils/XSECPlatformUtils.hpp>],
-    [#if XSEC_VERSION_MAJOR >= 2
-int i = 0;
-#else
-#error need version 2.0.0 or later
-#endif])],
-    [AC_MSG_RESULT(OK)],
-    [AC_MSG_FAILURE([XML-Security version 2.0.0 or greater is required.])])
-AC_LINK_IFELSE(
-    [AC_LANG_PROGRAM([[#include <xsec/utils/XSECPlatformUtils.hpp>]],
-        [[XSECPlatformUtils::Initialise()]])],,
-    [AC_MSG_ERROR([unable to link with XML-Security])])
+AX_PKG_CHECK_MODULES([xmlsec],,[xml-security-c >= 2])
 
 AX_PKG_CHECK_MODULES([xmltooling],,[xmltooling >= 3])
 PKG_CHECK_VAR([DX_INCLUDE], [xmltooling], [includedir])
