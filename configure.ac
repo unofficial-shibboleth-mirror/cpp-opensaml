@@ -72,41 +72,6 @@ AC_CHECK_FUNCS([strchr strdup strstr])
 
 AX_PTHREAD(,[AC_MSG_ERROR([unable to find pthreads, currently this is required])])
 
-# OpenSSL settings
-AC_ARG_WITH(openssl,
-    AS_HELP_STRING([--with-openssl=PATH],[where openssl is installed]),
-    [if test x_$with_openssl != x_/usr; then
-        SSLFLAGS="-I${with_openssl}/include"
-        SSLLIBS="-L${with_openssl}/lib -lcrypto -lssl"
-    else
-        SSLLIBS="-lcrypto -lssl"
-    fi])
-
-if test "x$with_openssl" = "x" ; then
-    AC_PATH_PROG(PKG_CONFIG, pkg-config)
-    if test "x$PKG_CONFIG" != x && test "x$PKG_CONFIG" != "xno" ; then
-        if pkg-config openssl ; then
-            SSLLIBS="`$PKG_CONFIG --libs openssl`"
-            SSLFLAGS="`$PKG_CONFIG --cflags openssl`"
-        else
-            AC_MSG_WARN([OpenSSL not supported by pkg-config, try --with-openssl instead])
-        fi
-    fi
-fi
-
-if test "x$SSLLIBS" = "x" ; then
-    SSLLIBS="-lcrypto -lssl"
-fi
-
-AC_MSG_CHECKING(for OpenSSL cflags)
-AC_MSG_RESULT($SSLFLAGS)
-CPPFLAGS="$SSLFLAGS $CPPFLAGS"
-AC_MSG_CHECKING(for OpenSSL libraries)
-AC_MSG_RESULT($SSLLIBS)
-LIBS="$LIBS $SSLLIBS"
-
-AC_CHECK_HEADER([openssl/x509.h],,AC_MSG_ERROR([unable to find openssl header files]))
-
 AC_LANG([C++])
 
 # C++ requirements
