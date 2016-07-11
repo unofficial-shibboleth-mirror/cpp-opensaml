@@ -6,9 +6,11 @@ samlsign_SOURCES = samlsign.cpp
 
 samlsign_LDADD = $(top_builddir)/saml/libsaml.la
 samlsign_CXXFLAGS = \
+    $(xerces_CFLAGS) \
     $(xmltooling_CFLAGS) \
     $(log4shib_CFLAGS) $(log4cpp_CFLAGS)
 samlsign_LDADD += \
+    $(xerces_LIBS) \
     $(xmltooling_LIBS) \
     $(log4shib_LIBS) $(log4cpp_LIBS)
 

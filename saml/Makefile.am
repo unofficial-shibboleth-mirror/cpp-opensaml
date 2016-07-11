@@ -184,10 +184,12 @@ libsaml_la_CPPFLAGS = \
     $(BOOST_CPPFLAGS)
 libsaml_la_CXXFLAGS = \
     $(PTHREAD_CFLAGS) \
+    $(xerces_CFLAGS) \
     $(xmltooling_CFLAGS) \
     $(log4shib_CFLAGS) $(log4cpp_CFLAGS)
 libsaml_la_LIBADD = \
     $(PTHREAD_LIBS) \
+    $(xerces_LIBS) \
     $(xmltooling_LIBS) \
     $(log4shib_LIBS) $(log4cpp_LIBS)
 
