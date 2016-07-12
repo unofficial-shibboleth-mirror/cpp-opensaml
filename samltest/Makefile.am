@@ -7,7 +7,6 @@ check_PROGRAMS = samltest
 samltest_CXXFLAGS = $(CXXTESTFLAGS)
 
 samltest_h = \
-    samltest.h \
     SAMLArtifactCreationTest.h \
     SAMLArtifactType0001Test.h \
     SAMLArtifactType0002Test.h \
@@ -101,21 +100,18 @@ noinst_HEADERS = \
     binding.h \
     internal.h \
     signature/SAMLSignatureTestBase.h \
+    samltest.h \
     $(samltest_h)
 
-nodist_samltest_SOURCES = $(samltest_h:.h=.cpp)
+nodist_samltest_SOURCES = $(samltest_h:.h=.cpp) samltest.cpp
 
 CLEANFILES = $(nodist_samltest_SOURCES)
 
-do-cxxtestgen:
-	if test "$(CPPFILE)" = "samltest.cpp"; then \
-		$(CXXTEST) --error-printer --have-eh --have-std --abort-on-fail -o $(CPPFILE) $(HFILE); \
-	else \
-		$(CXXTEST) --part --have-eh --have-std --abort-on-fail -o $(CPPFILE) $(HFILE); \
-	fi;
+samltest.cpp: samltest.h
+	$(CXXTEST) --have-eh --have-std --abort-on-fail --error-printer -o $@ $<
 
-$(nodist_samltest_SOURCES): %.cpp: %.h
-	$(MAKE) do-cxxtestgen HFILE=$< CPPFILE=$@
+$(samltest_h:.h=.cpp): %.cpp: %.h
+	$(CXXTEST) --have-eh --have-std --abort-on-fail --part -o $@ $<
 
 samltest_CXXFLAGS = \
     $(xerces_CFLAGS) \
