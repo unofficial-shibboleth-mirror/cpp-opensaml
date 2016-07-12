@@ -117,5 +117,11 @@ AC_SUBST(CXXTEST)
 AC_SUBST(CXXTESTFLAGS)
 AM_CONDITIONAL(BUILD_UNITTEST,test -f ${CXXTEST})
 
+AC_ARG_WITH([pkgxmldir],
+    AS_HELP_STRING([--with-pkgxmldir],
+        [where to install the schema files @<:@default=${datadir}/xml/AC_PACKAGE_TARNAME@:>@])],
+    [],[with_pkgxmldir=${datadir}/xml/AC_PACKAGE_TARNAME])
+AC_SUBST([pkgxmldir],[${with_pkgxmldir}])
+
 # output packaging and makefiles
 AC_OUTPUT
