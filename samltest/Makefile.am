@@ -1,11 +1,7 @@
 AUTOMAKE_OPTIONS = foreign subdir-objects
 
-if BUILD_UNITTEST
 bin_PROGRAMS = samltest
 samltest_CXXFLAGS = $(CXXFLAGS) $(CXXTESTFLAGS)
-else
-bin_PROGRAMS = 
-endif
 
 samltest_h = \
     samltest.h \
@@ -106,10 +102,8 @@ noinst_HEADERS = \
 
 nodist_samltest_SOURCES = $(samltest_h:.h=.cpp)
 
-if BUILD_UNITTEST
 BUILT_SOURCES = $(nodist_samltest_SOURCES)
 CLEANFILES = $(nodist_samltest_SOURCES)
-endif
 
 do-cxxtestgen:
 	if test "$(CPPFILE)" = "samltest.cpp"; then \

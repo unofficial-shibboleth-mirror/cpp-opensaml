@@ -5,7 +5,11 @@ include doxygen.am
 
 MOSTLYCLEANFILES = $(DX_CLEANFILES)
 
-SUBDIRS = doc schemas saml samltest samlsign
+SUBDIRS = doc schemas saml samlsign
+
+if BUILD_UNITTEST
+SUBDIRS += samltest
+endif
 
 if DX_COND_doc
 all-local: doxygen-doc
