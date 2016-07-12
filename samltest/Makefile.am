@@ -2,6 +2,8 @@ AUTOMAKE_OPTIONS = foreign subdir-objects
 
 TESTS = samltest
 
+AM_TESTS_ENVIRONMENT = export SAMLTEST_DATA=$(srcdir)/data;
+
 check_PROGRAMS = samltest
 
 samltest_h = \
