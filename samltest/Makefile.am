@@ -1,6 +1,9 @@
 AUTOMAKE_OPTIONS = foreign subdir-objects
 
-bin_PROGRAMS = samltest
+TESTS = samltest
+
+check_PROGRAMS = samltest
+
 samltest_CXXFLAGS = $(CXXTESTFLAGS)
 
 samltest_h = \
