@@ -94,6 +94,7 @@ public:
     }
 
     void testXMLProvider() {
+        skipNetworked();
         string config = data_path + "saml2/metadata/XMLMetadataProvider.xml";
         ifstream in(config.c_str());
         DOMDocument* doc=XMLToolingConfig::getConfig().getParser().parse(in);
@@ -137,6 +138,7 @@ public:
 
     void testHTTPProvider()
     {
+        skipNetworked();
         string config = data_path + "saml2/metadata/HTTPMetadataProvider.xml";
         ifstream in(config.c_str());
         DOMDocument* doc=XMLToolingConfig::getConfig().getParser().parse(in);
@@ -180,6 +182,7 @@ public:
 
 
     void testXMLWithBlacklists() {
+        skipNetworked();
         string config = data_path + "saml2/metadata/XMLWithBlacklists.xml";
         ifstream in(config.c_str());
         DOMDocument* doc=XMLToolingConfig::getConfig().getParser().parse(in);
@@ -210,6 +213,7 @@ public:
     }
 
     void testXMLWithWhitelists() {
+        skipNetworked();
         string config = data_path + "saml2/metadata/XMLWithWhitelists.xml";
         ifstream in(config.c_str());
         DOMDocument* doc=XMLToolingConfig::getConfig().getParser().parse(in);

@@ -125,6 +125,12 @@ protected:
         }
     }
 
+    void skipNetworked() {
+        if (getenv("SAMLTEST_SKIP_NETWORKED")) {
+            TS_SKIP("requires network access");
+        }
+    }
+
 public:
     void setUp() {
         ParserPool& p=XMLToolingConfig::getConfig().getParser();
