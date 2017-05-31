@@ -34,6 +34,7 @@ x64
 /Projects/vc10/ipch/
 /Projects/vc??/*.opendb
 /Projects/vc??/*.db
+/Projects/vc??/.vs
 /opensaml-uninstalled.sh
 /aclocal.m4
 /autom4te.cache
