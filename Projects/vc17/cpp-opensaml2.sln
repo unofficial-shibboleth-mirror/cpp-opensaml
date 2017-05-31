@@ -1,0 +1,127 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2017
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Schemas", "Schemas", "{5548F5D2-5FDE-4D58-92E0-7C0BE7526A59}"
+	ProjectSection(SolutionItems) = preProject
+		schemas\cs-sstc-schema-assertion-01.xsd = schemas\cs-sstc-schema-assertion-01.xsd
+		schemas\cs-sstc-schema-assertion-1.1.xsd = schemas\cs-sstc-schema-assertion-1.1.xsd
+		schemas\cs-sstc-schema-protocol-01.xsd = schemas\cs-sstc-schema-protocol-01.xsd
+		schemas\cs-sstc-schema-protocol-1.1.xsd = schemas\cs-sstc-schema-protocol-1.1.xsd
+		schemas\Makefile.am = schemas\Makefile.am
+		schemas\saml-async-slo-v1.0.xsd = schemas\saml-async-slo-v1.0.xsd
+		schemas\saml-metadata-rpi-v1.0.xsd = schemas\saml-metadata-rpi-v1.0.xsd
+		schemas\saml-schema-assertion-2.0.xsd = schemas\saml-schema-assertion-2.0.xsd
+		schemas\saml-schema-authn-context-2.0.xsd = schemas\saml-schema-authn-context-2.0.xsd
+		schemas\saml-schema-authn-context-auth-telephony-2.0.xsd = schemas\saml-schema-authn-context-auth-telephony-2.0.xsd
+		schemas\saml-schema-authn-context-ip-2.0.xsd = schemas\saml-schema-authn-context-ip-2.0.xsd
+		schemas\saml-schema-authn-context-ippword-2.0.xsd = schemas\saml-schema-authn-context-ippword-2.0.xsd
+		schemas\saml-schema-authn-context-kerberos-2.0.xsd = schemas\saml-schema-authn-context-kerberos-2.0.xsd
+		schemas\saml-schema-authn-context-mobileonefactor-reg-2.0.xsd = schemas\saml-schema-authn-context-mobileonefactor-reg-2.0.xsd
+		schemas\saml-schema-authn-context-mobileonefactor-unreg-2.0.xsd = schemas\saml-schema-authn-context-mobileonefactor-unreg-2.0.xsd
+		schemas\saml-schema-authn-context-mobiletwofactor-reg-2.0.xsd = schemas\saml-schema-authn-context-mobiletwofactor-reg-2.0.xsd
+		schemas\saml-schema-authn-context-mobiletwofactor-unreg-2.0.xsd = schemas\saml-schema-authn-context-mobiletwofactor-unreg-2.0.xsd
+		schemas\saml-schema-authn-context-nomad-telephony-2.0.xsd = schemas\saml-schema-authn-context-nomad-telephony-2.0.xsd
+		schemas\saml-schema-authn-context-personal-telephony-2.0.xsd = schemas\saml-schema-authn-context-personal-telephony-2.0.xsd
+		schemas\saml-schema-authn-context-pgp-2.0.xsd = schemas\saml-schema-authn-context-pgp-2.0.xsd
+		schemas\saml-schema-authn-context-ppt-2.0.xsd = schemas\saml-schema-authn-context-ppt-2.0.xsd
+		schemas\saml-schema-authn-context-pword-2.0.xsd = schemas\saml-schema-authn-context-pword-2.0.xsd
+		schemas\saml-schema-authn-context-session-2.0.xsd = schemas\saml-schema-authn-context-session-2.0.xsd
+		schemas\saml-schema-authn-context-smartcard-2.0.xsd = schemas\saml-schema-authn-context-smartcard-2.0.xsd
+		schemas\saml-schema-authn-context-smartcardpki-2.0.xsd = schemas\saml-schema-authn-context-smartcardpki-2.0.xsd
+		schemas\saml-schema-authn-context-softwarepki-2.0.xsd = schemas\saml-schema-authn-context-softwarepki-2.0.xsd
+		schemas\saml-schema-authn-context-spki-2.0.xsd = schemas\saml-schema-authn-context-spki-2.0.xsd
+		schemas\saml-schema-authn-context-srp-2.0.xsd = schemas\saml-schema-authn-context-srp-2.0.xsd
+		schemas\saml-schema-authn-context-sslcert-2.0.xsd = schemas\saml-schema-authn-context-sslcert-2.0.xsd
+		schemas\saml-schema-authn-context-telephony-2.0.xsd = schemas\saml-schema-authn-context-telephony-2.0.xsd
+		schemas\saml-schema-authn-context-timesync-2.0.xsd = schemas\saml-schema-authn-context-timesync-2.0.xsd
+		schemas\saml-schema-authn-context-types-2.0.xsd = schemas\saml-schema-authn-context-types-2.0.xsd
+		schemas\saml-schema-authn-context-x509-2.0.xsd = schemas\saml-schema-authn-context-x509-2.0.xsd
+		schemas\saml-schema-authn-context-xmldsig-2.0.xsd = schemas\saml-schema-authn-context-xmldsig-2.0.xsd
+		schemas\saml-schema-dce-2.0.xsd = schemas\saml-schema-dce-2.0.xsd
+		schemas\saml-schema-ecp-2.0.xsd = schemas\saml-schema-ecp-2.0.xsd
+		schemas\saml-schema-metadata-2.0.xsd = schemas\saml-schema-metadata-2.0.xsd
+		schemas\saml-schema-protocol-2.0.xsd = schemas\saml-schema-protocol-2.0.xsd
+		schemas\saml-schema-x500-2.0.xsd = schemas\saml-schema-x500-2.0.xsd
+		schemas\saml-schema-xacml-2.0.xsd = schemas\saml-schema-xacml-2.0.xsd
+		schemas\saml10-catalog.xml.in = schemas\saml10-catalog.xml.in
+		schemas\saml11-catalog.xml.in = schemas\saml11-catalog.xml.in
+		schemas\saml20-catalog.xml.in = schemas\saml20-catalog.xml.in
+		schemas\sstc-metadata-attr.xsd = schemas\sstc-metadata-attr.xsd
+		schemas\sstc-request-initiation.xsd = schemas\sstc-request-initiation.xsd
+		schemas\sstc-saml-attribute-ext.xsd = schemas\sstc-saml-attribute-ext.xsd
+		schemas\sstc-saml-delegation.xsd = schemas\sstc-saml-delegation.xsd
+		schemas\sstc-saml-idp-discovery.xsd = schemas\sstc-saml-idp-discovery.xsd
+		schemas\sstc-saml-metadata-algsupport-v1.0.xsd = schemas\sstc-saml-metadata-algsupport-v1.0.xsd
+		schemas\sstc-saml-metadata-ext-query.xsd = schemas\sstc-saml-metadata-ext-query.xsd
+		schemas\sstc-saml-metadata-ui-v1.0.xsd = schemas\sstc-saml-metadata-ui-v1.0.xsd
+		schemas\sstc-saml-protocol-ext-thirdparty.xsd = schemas\sstc-saml-protocol-ext-thirdparty.xsd
+		schemas\sstc-saml1x-metadata.xsd = schemas\sstc-saml1x-metadata.xsd
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{08D28DE8-08BB-4C55-98B4-6EAEE1FC9334}"
+	ProjectSection(SolutionItems) = preProject
+		m4\acinclude.m4 = m4\acinclude.m4
+		m4\acx_pthread.m4 = m4\acx_pthread.m4
+		m4\ax_create_pkgconfig_info.m4 = m4\ax_create_pkgconfig_info.m4
+		m4\boost.m4 = m4\boost.m4
+		config_win32.h = config_win32.h
+		configure.ac = configure.ac
+		doxygen.am = doxygen.am
+		doxygen.cfg = doxygen.cfg
+		m4\doxygen.m4 = m4\doxygen.m4
+		Makefile.am = Makefile.am
+		opensaml.spec.in = opensaml.spec.in
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Doc", "Doc", "{91D9712D-5D39-42BE-A320-4B55A90D9610}"
+	ProjectSection(SolutionItems) = preProject
+		doc\LICENSE.txt = doc\LICENSE.txt
+		doc\LOG4CPP.LICENSE = doc\LOG4CPP.LICENSE
+		doc\Makefile.am = doc\Makefile.am
+		doc\NOTICE.txt = doc\NOTICE.txt
+		doc\README.txt = doc\README.txt
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "saml", "saml\saml.vcxproj", "{34DE3EA5-EA05-4261-8B63-A850FFB91768}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "samltest", "samltest\samltest.vcxproj", "{8BBB3B12-DBA1-4533-9C36-2CA95F1F1659}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "samlsign", "samlsign\samlsign.vcxproj", "{C4E58F5A-AF7E-4060-89E7-5F690682E662}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Debug|x64 = Debug|x64
+		Release|Win32 = Release|Win32
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{34DE3EA5-EA05-4261-8B63-A850FFB91768}.Debug|Win32.ActiveCfg = Debug|Win32
+		{34DE3EA5-EA05-4261-8B63-A850FFB91768}.Debug|Win32.Build.0 = Debug|Win32
+		{34DE3EA5-EA05-4261-8B63-A850FFB91768}.Debug|x64.ActiveCfg = Debug|x64
+		{34DE3EA5-EA05-4261-8B63-A850FFB91768}.Debug|x64.Build.0 = Debug|x64
+		{34DE3EA5-EA05-4261-8B63-A850FFB91768}.Release|Win32.ActiveCfg = Release|Win32
+		{34DE3EA5-EA05-4261-8B63-A850FFB91768}.Release|Win32.Build.0 = Release|Win32
+		{34DE3EA5-EA05-4261-8B63-A850FFB91768}.Release|x64.ActiveCfg = Release|x64
+		{34DE3EA5-EA05-4261-8B63-A850FFB91768}.Release|x64.Build.0 = Release|x64
+		{8BBB3B12-DBA1-4533-9C36-2CA95F1F1659}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8BBB3B12-DBA1-4533-9C36-2CA95F1F1659}.Debug|Win32.Build.0 = Debug|Win32
+		{8BBB3B12-DBA1-4533-9C36-2CA95F1F1659}.Debug|x64.ActiveCfg = Debug|x64
+		{8BBB3B12-DBA1-4533-9C36-2CA95F1F1659}.Debug|x64.Build.0 = Debug|x64
+		{8BBB3B12-DBA1-4533-9C36-2CA95F1F1659}.Release|Win32.ActiveCfg = Release|Win32
+		{8BBB3B12-DBA1-4533-9C36-2CA95F1F1659}.Release|Win32.Build.0 = Release|Win32
+		{8BBB3B12-DBA1-4533-9C36-2CA95F1F1659}.Release|x64.ActiveCfg = Release|x64
+		{8BBB3B12-DBA1-4533-9C36-2CA95F1F1659}.Release|x64.Build.0 = Release|x64
+		{C4E58F5A-AF7E-4060-89E7-5F690682E662}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C4E58F5A-AF7E-4060-89E7-5F690682E662}.Debug|Win32.Build.0 = Debug|Win32
+		{C4E58F5A-AF7E-4060-89E7-5F690682E662}.Debug|x64.ActiveCfg = Debug|x64
+		{C4E58F5A-AF7E-4060-89E7-5F690682E662}.Debug|x64.Build.0 = Debug|x64
+		{C4E58F5A-AF7E-4060-89E7-5F690682E662}.Release|Win32.ActiveCfg = Release|Win32
+		{C4E58F5A-AF7E-4060-89E7-5F690682E662}.Release|Win32.Build.0 = Release|Win32
+		{C4E58F5A-AF7E-4060-89E7-5F690682E662}.Release|x64.ActiveCfg = Release|x64
+		{C4E58F5A-AF7E-4060-89E7-5F690682E662}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
