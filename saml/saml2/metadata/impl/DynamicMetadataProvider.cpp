@@ -50,8 +50,13 @@ using namespace xmltooling::logging;
 using namespace xmltooling;
 using namespace std;
 
+#include <limits>
+
 # ifndef min
 #  define min(a,b)            (((a) < (b)) ? (a) : (b))
+# endif
+# ifdef max
+# undef max
 # endif
 
 static const XMLCh id[] =                   UNICODE_LITERAL_2(i,d);
@@ -301,7 +306,10 @@ pair<const EntityDescriptor*,const RoleDescriptor*> DynamicMetadataProvider::get
         doFilters(*entity2);
 
         time_t now = time(nullptr);
-        if (entity2->getValidUntil() && entity2->getValidUntilEpoch() < now + 60)
+	time_t cmp = now;
+	if (cmp < (std::numeric_limits<int>::max() - 60))
+	    cmp += 60;
+        if (entity2->getValidUntil() && entity2->getValidUntilEpoch() < cmp)
             throw MetadataException("Metadata was already invalid at the time of retrieval.");
 
         log.info("caching resolved metadata for (%s)", name.c_str());
