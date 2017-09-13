@@ -151,7 +151,7 @@ bool SimpleSigningRule::evaluate(const XMLObject& message, const GenericRequest*
         // Serializing the XMLObject doesn't guarantee the signature will verify (this is
         // why XMLSignature exists, and why this isn't really "simpler").
 
-        xsecsize_t x;
+        XMLSize_t x;
         pch = httpRequest->getParameter("SAMLRequest");
         if (pch) {
             XMLByte* decoded=Base64::decode(reinterpret_cast<const XMLByte*>(pch),&x);
@@ -191,7 +191,7 @@ bool SimpleSigningRule::evaluate(const XMLObject& message, const GenericRequest*
     KeyInfo* keyInfo=nullptr;
     pch = request->getParameter("KeyInfo");
     if (pch) {
-        xsecsize_t x;
+        XMLSize_t x;
         XMLByte* decoded=Base64::decode(reinterpret_cast<const XMLByte*>(pch),&x);
         if (decoded) {
             try {

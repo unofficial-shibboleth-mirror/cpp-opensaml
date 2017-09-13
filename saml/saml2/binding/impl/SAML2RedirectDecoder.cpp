@@ -104,7 +104,7 @@ XMLObject* SAML2RedirectDecoder::decode(
     }
 
     // Decode the compressed message into SAML. First we base64-decode it.
-    xsecsize_t x;
+    XMLSize_t x;
     XMLByte* decoded=Base64::decode(reinterpret_cast<const XMLByte*>(msg),&x);
     if (!decoded)
         throw BindingException("Unable to decode base64 in Redirect binding message.");

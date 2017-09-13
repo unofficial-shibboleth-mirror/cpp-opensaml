@@ -135,7 +135,7 @@ long SAML2RedirectEncoder::encode(
     if (!deflated)
         throw BindingException("Failed to deflate message.");
     
-    xsecsize_t xlen;
+    XMLSize_t xlen;
     XMLByte* encoded=Base64::encode(reinterpret_cast<XMLByte*>(deflated), len, &xlen);
     delete[] deflated;
     if (!encoded)

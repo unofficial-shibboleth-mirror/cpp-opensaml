@@ -79,7 +79,7 @@ SAMLArtifact::SAMLArtifact(const SAMLArtifact& src) : m_raw(src.m_raw)
 
 SAMLArtifact::SAMLArtifact(const char* s)
 {
-    xsecsize_t len=0;
+    XMLSize_t len=0;
     XMLByte* decoded=Base64::decode(reinterpret_cast<const XMLByte*>(s),&len);
     if (!decoded)
         throw ArtifactException("Unable to decode base64 artifact.");
@@ -110,7 +110,7 @@ string SAMLArtifact::getRemainingArtifact() const
 
 string SAMLArtifact::encode() const
 {
-    xsecsize_t len=0;
+    XMLSize_t len=0;
     XMLByte* out=Base64::encode(reinterpret_cast<const XMLByte*>(m_raw.data()),m_raw.size(),&len);
     if (out) {
         string ret(reinterpret_cast<char*>(out),len);
@@ -127,7 +127,7 @@ string SAMLArtifact::encode() const
 SAMLArtifact* SAMLArtifact::parse(const char* s)
 {
     // Decode and extract the type code first.
-    xsecsize_t len=0;
+    XMLSize_t len=0;
     XMLByte* decoded=Base64::decode(reinterpret_cast<const XMLByte*>(s),&len);
     if (!decoded)
         throw ArtifactException("Artifact parser unable to decode base64-encoded artifact.");

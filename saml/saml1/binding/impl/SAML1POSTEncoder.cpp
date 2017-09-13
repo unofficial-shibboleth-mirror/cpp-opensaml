@@ -163,7 +163,7 @@ long SAML1POSTEncoder::encode(
     log.debug("marshalled response:\n%s", xmlbuf.c_str());
     
     // Replace with base-64 encoded version.
-    xsecsize_t len=0;
+    XMLSize_t len=0;
     XMLByte* out=Base64::encode(reinterpret_cast<const XMLByte*>(xmlbuf.data()),xmlbuf.size(),&len);
     if (out) {
         xmlbuf.erase();

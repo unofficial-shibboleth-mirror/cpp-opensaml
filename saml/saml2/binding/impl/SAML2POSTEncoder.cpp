@@ -193,7 +193,7 @@ long SAML2POSTEncoder::encode(
         if (keyInfo.get()) {
             string& kstring = pmap.m_map["KeyInfo"];
             XMLHelper::serialize(keyInfo->marshall((DOMDocument*)nullptr), kstring);
-            xsecsize_t len=0;
+            XMLSize_t len=0;
             XMLByte* out=Base64::encode(reinterpret_cast<const XMLByte*>(kstring.data()),kstring.size(),&len);
             if (!out)
                 throw BindingException("Base64 encoding of XML failed.");
@@ -208,7 +208,7 @@ long SAML2POSTEncoder::encode(
     }
     
     // Base64 the message.
-    xsecsize_t len=0;
+    XMLSize_t len=0;
     XMLByte* out=Base64::encode(reinterpret_cast<const XMLByte*>(msg.data()),msg.size(),&len);
     if (!out)
         throw BindingException("Base64 encoding of XML failed.");

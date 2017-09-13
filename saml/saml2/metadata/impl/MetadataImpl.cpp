@@ -938,8 +938,8 @@ namespace opensaml {
                     return true;
                 if (m_ProtocolSupportEnumeration) {
                     // Look for first character.
-                    xsecsize_t len=XMLString::stringLen(protocol);
-                    xsecsize_t pos=0;
+                    XMLSize_t len=XMLString::stringLen(protocol);
+                    XMLSize_t pos=0;
                     int index=XMLString::indexOf(m_ProtocolSupportEnumeration,protocol[0],pos);
                     while (index>=0) {
                         // Only possible match is if it's the first character or a space comes before it.

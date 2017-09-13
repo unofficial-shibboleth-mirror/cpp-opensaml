@@ -97,7 +97,7 @@ XMLObject* SAML1POSTDecoder::decode(
     relayState = TARGET;
 
     // Decode the base64 into XML.
-    xsecsize_t x;
+    XMLSize_t x;
     XMLByte* decoded=Base64::decode(reinterpret_cast<const XMLByte*>(samlResponse),&x);
     if (!decoded)
         throw BindingException("Unable to decode base64 in POST profile response.");
