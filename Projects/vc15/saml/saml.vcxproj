@@ -112,7 +112,7 @@
       <PreprocessorDefinitions>_UNICODE;UNICODE;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>..\..\..\..\cpp-xmltooling\Build\vc15\$(Configuration)\xmltooling1D.lib;xerces-c_3D.lib;xsec_1D.lib;log4shib1D.lib;zlib1d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\..\..\..\cpp-xmltooling\Build\vc15\$(Configuration)\xmltooling1D.lib;xerces-c_3D.lib;xsec_2D.lib;log4shib1D.lib;zlib1d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <DataExecutionPrevention>
@@ -138,7 +138,7 @@
       <PreprocessorDefinitions>_UNICODE;UNICODE;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>..\..\..\..\cpp-xmltooling\Build\vc15\$(Platform)\$(Configuration)\xmltooling1D.lib;xerces-c_3D.lib;xsec_1D.lib;log4shib1D.lib;zlib1d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\..\..\..\cpp-xmltooling\Build\vc15\$(Platform)\$(Configuration)\xmltooling1D.lib;xerces-c_3D.lib;xsec_2D.lib;log4shib1D.lib;zlib1d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <DataExecutionPrevention>
@@ -155,7 +155,7 @@
       <DisableSpecificWarnings>4275</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>..\..\..\..\cpp-xmltooling\Build\vc15\$(Configuration)\xmltooling1.lib;xerces-c_3.lib;xsec_1.lib;log4shib1.lib;zlib1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\..\..\..\cpp-xmltooling\Build\vc15\$(Configuration)\xmltooling1.lib;xerces-c_3.lib;xsec_2.lib;log4shib1.lib;zlib1.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
@@ -177,7 +177,7 @@
       <DisableSpecificWarnings>4275</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>..\..\..\..\cpp-xmltooling\Build\vc15\$(Platform)\$(Configuration)\xmltooling1.lib;xerces-c_3.lib;xsec_1.lib;log4shib1.lib;zlib1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\..\..\..\cpp-xmltooling\Build\vc15\$(Platform)\$(Configuration)\xmltooling1.lib;xerces-c_3.lib;xsec_2.lib;log4shib1.lib;zlib1.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>

@@ -107,7 +107,7 @@
       <DisableSpecificWarnings>4275</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>..\..\..\..\cpp-xmltooling\Build\vc15\$(Configuration)\xmltooling1D.lib;xerces-c_3D.lib;xsec_1D.lib;log4shib1D.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\..\..\..\cpp-xmltooling\Build\vc15\$(Configuration)\xmltooling1D.lib;xerces-c_3D.lib;xsec_2D.lib;log4shib1D.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <DataExecutionPrevention>
@@ -131,7 +131,7 @@
       <DisableSpecificWarnings>4275</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>..\..\..\..\cpp-xmltooling\Build\vc15\$(Platform)\$(Configuration)\xmltooling1D.lib;xerces-c_3D.lib;xsec_1D.lib;log4shib1D.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\..\..\..\cpp-xmltooling\Build\vc15\$(Platform)\$(Configuration)\xmltooling1D.lib;xerces-c_3D.lib;xsec_2D.lib;log4shib1D.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <DataExecutionPrevention>
@@ -148,7 +148,7 @@
       <DisableSpecificWarnings>4275</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>..\..\..\..\cpp-xmltooling\Build\vc15\$(Configuration)\xmltooling1.lib;xerces-c_3.lib;xsec_1.lib;log4shib1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\..\..\..\cpp-xmltooling\Build\vc15\$(Configuration)\xmltooling1.lib;xerces-c_3.lib;xsec_2.lib;log4shib1.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
@@ -170,7 +170,7 @@
       <DisableSpecificWarnings>4275</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>..\..\..\..\cpp-xmltooling\Build\vc15\$(Platform)\$(Configuration)\xmltooling1.lib;xerces-c_3.lib;xsec_1.lib;log4shib1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\..\..\..\cpp-xmltooling\Build\vc15\$(Platform)\$(Configuration)\xmltooling1.lib;xerces-c_3.lib;xsec_2.lib;log4shib1.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
