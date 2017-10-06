@@ -306,9 +306,9 @@ pair<const EntityDescriptor*,const RoleDescriptor*> DynamicMetadataProvider::get
         doFilters(*entity2);
 
         time_t now = time(nullptr);
-	time_t cmp = now;
-	if (cmp < (std::numeric_limits<int>::max() - 60))
-	    cmp += 60;
+        time_t cmp = now;
+        if (cmp < (std::numeric_limits<int>::max() - 60))
+            cmp += 60;
         if (entity2->getValidUntil() && entity2->getValidUntilEpoch() < cmp)
             throw MetadataException("Metadata was already invalid at the time of retrieval.");
 
