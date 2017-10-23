@@ -38,6 +38,8 @@
 #include <xmltooling/util/Threads.h>
 #include <xmltooling/util/XMLHelper.h>
 #include <xmltooling/validation/ValidatorSuite.h>
+#include <xmltooling/security/SecurityHelper.h>
+
 
 #if defined(XMLTOOLING_LOG4SHIB)
 # include <log4shib/NDC.hh>
@@ -284,6 +286,14 @@ pair<const EntityDescriptor*,const RoleDescriptor*> DynamicMetadataProvider::get
         if (criteria.entityID_unicode && !XMLString::equals(criteria.entityID_unicode, entity2->getEntityID())) {
             log.error("metadata instance did not match expected entityID");
             return entity;
+        }
+        else if (criteria.artifact) {
+            auto_ptr_char temp2(entity2->getEntityID());
+            const string hashed(SecurityHelper::doHash("SHA1", temp2.get(), strlen(temp2.get()), true));
+            if (hashed != name) {
+                log.error("metadata instance did not match expected entityID");
+                return entity;
+            }
         }
         else {
             auto_ptr_XMLCh temp2(name.c_str());
