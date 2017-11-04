@@ -79,7 +79,7 @@ namespace opensaml {
 };
 
 DynamicMetadataProvider::DynamicMetadataProvider(const DOMElement* e)
-    : AbstractDynamicMetadataProvider(e)
+    : AbstractDynamicMetadataProvider(true, e)
 {
 }
 

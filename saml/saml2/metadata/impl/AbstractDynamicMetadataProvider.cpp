@@ -61,12 +61,14 @@ using namespace std;
 static const XMLCh id[] =                   UNICODE_LITERAL_2(i,d);
 static const XMLCh cleanupInterval[] =      UNICODE_LITERAL_15(c,l,e,a,n,u,p,I,n,t,e,r,v,a,l);
 static const XMLCh cleanupTimeout[] =       UNICODE_LITERAL_14(c,l,e,a,n,u,p,T,i,m,e,o,u,t);
+static const XMLCh negativeCache[] =        UNICODE_LITERAL_13(n,e,g,a,t,i,v,e,C,a,c,h,e);
 static const XMLCh maxCacheDuration[] =     UNICODE_LITERAL_16(m,a,x,C,a,c,h,e,D,u,r,a,t,i,o,n);
 static const XMLCh minCacheDuration[] =     UNICODE_LITERAL_16(m,i,n,C,a,c,h,e,D,u,r,a,t,i,o,n);
 static const XMLCh refreshDelayFactor[] =   UNICODE_LITERAL_18(r,e,f,r,e,s,h,D,e,l,a,y,F,a,c,t,o,r);
 static const XMLCh validate[] =             UNICODE_LITERAL_8(v,a,l,i,d,a,t,e);
 
-AbstractDynamicMetadataProvider::AbstractDynamicMetadataProvider(const DOMElement* e)
+
+AbstractDynamicMetadataProvider::AbstractDynamicMetadataProvider(bool defaultNegativeCache, const DOMElement* e)
     : AbstractMetadataProvider(e),
       m_validate(XMLHelper::getAttrBool(e, false, validate)),
         m_id(XMLHelper::getAttrString(e, "Dynamic", id)),
@@ -75,6 +77,7 @@ AbstractDynamicMetadataProvider::AbstractDynamicMetadataProvider(const DOMElemen
         m_minCacheDuration(XMLHelper::getAttrInt(e, 600, minCacheDuration)),
         m_maxCacheDuration(XMLHelper::getAttrInt(e, 28800, maxCacheDuration)),
         m_shutdown(false),
+        m_negativeCache(XMLHelper::getAttrBool(e, defaultNegativeCache, negativeCache)),
         m_cleanupInterval(XMLHelper::getAttrInt(e, 1800, cleanupInterval)),
         m_cleanupTimeout(XMLHelper::getAttrInt(e, 1800, cleanupTimeout)),
         m_cleanup_wait(nullptr), m_cleanup_thread(nullptr)
@@ -349,23 +352,25 @@ pair<const EntityDescriptor*,const RoleDescriptor*> AbstractDynamicMetadataProvi
     }
     catch (exception& e) {
         log.error("error while resolving entityID (%s): %s", name.c_str(), e.what());
-        // This will return entries that are beyond their cache period,
-        // but not beyond their validity unless that criteria option was set.
-        // Bump the cache period to prevent retries, making sure we have a write lock
-        if (!writeLocked) {
-            m_lock->unlock();
-            m_lock->wrlock();
-            writeLocked = true;
+        if (m_negativeCache) {
+            // This will return entries that are beyond their cache period,
+            // but not beyond their validity unless that criteria option was set.
+            // Bump the cache period to prevent retries, making sure we have a write lock
+            if (!writeLocked) {
+                m_lock->unlock();
+                m_lock->wrlock();
+                writeLocked = true;
+            }
+            if (entity.first)
+                m_cacheMap[entity.first->getEntityID()] = time(nullptr) + m_minCacheDuration;
+            else if (criteria.entityID_unicode)
+                m_cacheMap[criteria.entityID_unicode] = time(nullptr) + m_minCacheDuration;
+            else {
+                auto_ptr_XMLCh widetemp(name.c_str());
+                m_cacheMap[widetemp.get()] = time(nullptr) + m_minCacheDuration;
+            }
+            log.warn("next refresh of metadata for (%s) no sooner than %u seconds", name.c_str(), m_minCacheDuration);
         }
-        if (entity.first)
-            m_cacheMap[entity.first->getEntityID()] = time(nullptr) + m_minCacheDuration;
-        else if (criteria.entityID_unicode)
-            m_cacheMap[criteria.entityID_unicode] = time(nullptr) + m_minCacheDuration;
-        else {
-            auto_ptr_XMLCh widetemp(name.c_str());
-            m_cacheMap[widetemp.get()] = time(nullptr) + m_minCacheDuration;
-        }
-        log.warn("next refresh of metadata for (%s) no sooner than %u seconds", name.c_str(), m_minCacheDuration);
         return entity;
     }
 

@@ -41,16 +41,16 @@ namespace opensaml {
         /**
          * Simple implementation of a dynamic, caching MetadataProvider.
          */
-        class SAML_DLLPUBLIC AbstractDynamicMetadataProvider : public AbstractMetadataProvider
+        class SAML_API AbstractDynamicMetadataProvider : public AbstractMetadataProvider
         {
         public:
             /**
              * Constructor.
              *
-             * @param defaultNegativeCaching - if not specified in the element, do we we cache lookup failures?
+             * @param defaultNegativeCache - if not specified in the element, do we we cache lookup failures?
              * @param e DOM to supply configuration for provider
              */
-            AbstractDynamicMetadataProvider(const xercesc::DOMElement* e=nullptr);
+            AbstractDynamicMetadataProvider(bool defaultNegativeCache, const xercesc::DOMElement* e=nullptr);
 
             virtual ~AbstractDynamicMetadataProvider();
 
@@ -80,6 +80,7 @@ namespace opensaml {
             time_t m_minCacheDuration, m_maxCacheDuration;
             typedef std::map<xmltooling::xstring,time_t> cachemap_t;
             mutable cachemap_t m_cacheMap;
+            const bool m_negativeCache;
 
             // Used to manage background maintenance of cache.
             bool m_shutdown;
