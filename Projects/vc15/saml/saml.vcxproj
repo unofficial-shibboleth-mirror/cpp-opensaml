@@ -188,6 +188,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\saml\saml2\metadata\impl\AbstractDynamicMetadataProvider.cpp" />
     <ClCompile Include="..\..\..\saml\saml2\metadata\impl\DiscoverableMetadataProvider.cpp" />
     <ClCompile Include="..\..\..\saml\saml2\metadata\impl\EntityAttributesEntityMatcher.cpp" />
     <ClCompile Include="..\..\..\saml\saml2\metadata\impl\EntityAttributesMetadataFilter.cpp" />
@@ -298,6 +299,7 @@
     <ClInclude Include="..\..\..\saml\exceptions.h" />
     <ClInclude Include="..\..\..\saml\internal.h" />
     <ClInclude Include="..\..\..\saml\RootObject.h" />
+    <ClInclude Include="..\..\..\saml\saml2\metadata\AbstractDynamicMetadataProvider.h" />
     <ClInclude Include="..\..\..\saml\saml2\metadata\DiscoverableMetadataProvider.h" />
     <ClInclude Include="..\..\..\saml\saml2\metadata\EntityMatcher.h" />
     <ClInclude Include="..\..\..\saml\SAMLConfig.h" />

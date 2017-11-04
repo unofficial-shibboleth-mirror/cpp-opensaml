@@ -24,16 +24,10 @@
  * Simple implementation of a dynamic caching MetadataProvider.
  */
 
-#ifndef __saml2_dynmetadataprov_h__
-#define __saml2_dynmetadataprov_h__
+#ifndef __saml2_absdynmetadataprov_h__
+#define __saml2_absdynmetadataprov_h__
 
-#include <saml/saml2/metadata/AbstractMetadataProvider.h>
-
-namespace xmltooling {
-    class XMLTOOL_API CondWait;
-    class XMLTOOL_API RWLock;
-    class XMLTOOL_API Thread;
-};
+#include <saml/saml2/metadata/AbstractDynamicMetadataProvider.h>
 
 namespace opensaml {
     namespace saml2md {
@@ -41,7 +35,7 @@ namespace opensaml {
         /**
          * Simple implementation of a dynamic, caching MetadataProvider.
          */
-        class SAML_API DynamicMetadataProvider : public AbstractMetadataProvider
+        class SAML_API DynamicMetadataProvider : public AbstractDynamicMetadataProvider
         {
         public:
             /**
@@ -51,42 +45,9 @@ namespace opensaml {
              */
             DynamicMetadataProvider(const xercesc::DOMElement* e=nullptr);
 
-            virtual ~DynamicMetadataProvider();
-
-            void init();
-            xmltooling::Lockable* lock();
-            void unlock();
-            const char* getId() const;
-            const xmltooling::XMLObject* getMetadata() const;
-            std::pair<const EntityDescriptor*,const RoleDescriptor*> getEntityDescriptor(const Criteria& criteria) const;
-
         protected:
-            /** Controls XML schema validation. */
-            bool m_validate;
-
-            /**
-             * Resolves a metadata instance using the supplied criteria.
-             *
-             * @param criteria  lookup criteria
-             * @return  a valid metadata instance
-             */
             virtual EntityDescriptor* resolve(const Criteria& criteria) const;
 
-        private:
-            std::string m_id;
-            std::auto_ptr<xmltooling::RWLock> m_lock;
-            double m_refreshDelayFactor;
-            time_t m_minCacheDuration, m_maxCacheDuration;
-            typedef std::map<xmltooling::xstring,time_t> cachemap_t;
-            mutable cachemap_t m_cacheMap;
-
-            // Used to manage background maintenance of cache.
-            bool m_shutdown;
-            time_t m_cleanupInterval;
-            time_t m_cleanupTimeout;
-            xmltooling::CondWait* m_cleanup_wait;
-            xmltooling::Thread* m_cleanup_thread;
-            static void* cleanup_fn(void*);
         };
 
     };
