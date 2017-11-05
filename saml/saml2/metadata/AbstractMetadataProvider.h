@@ -120,27 +120,6 @@ namespace opensaml {
             virtual void indexGroup(EntitiesDescriptor* group, time_t& validUntil) const;
 
             /**
-             * @deprecated
-             * Loads an entity into the cache for faster lookup.
-             * <p>This includes processing known reverse lookup strategies for artifacts.
-             * This method will *not* free any objects removed from the cache.</p>
-             * 
-             * @param site          entity definition
-             * @param validUntil    maximum expiration time of the entity definition
-             * @param replace       true iff existing entries for the same entity should be cleared/replaced
-             */
-            virtual void index(EntityDescriptor* site, time_t validUntil, bool replace=false) const;
-
-            /**
-             * @deprecated
-             * Loads a group of entities into the cache for faster lookup.
-             * 
-             * @param group         group definition
-             * @param validUntil    maximum expiration time of the group definition
-             */
-            virtual void index(EntitiesDescriptor* group, time_t validUntil) const;
-
-            /**
             * Clear a specific entity from the cache.
             *
             * @param entityID the ID of the entity to remove

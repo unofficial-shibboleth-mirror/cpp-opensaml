@@ -88,7 +88,6 @@ namespace opensaml {
             pair<bool,DOMElement*> background_load();
 
         private:
-            using AbstractMetadataProvider::index;
             void index(time_t& validUntil);
             time_t computeNextRefresh();
 

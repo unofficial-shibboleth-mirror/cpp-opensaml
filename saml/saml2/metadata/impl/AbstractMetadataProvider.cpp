@@ -209,16 +209,6 @@ void AbstractMetadataProvider::indexGroup(EntitiesDescriptor* group, time_t& val
         validUntil = minValidUntil;
 }
 
-void AbstractMetadataProvider::index(EntityDescriptor* site, time_t validUntil, bool replace) const
-{
-    indexEntity(site, validUntil, replace);
-}
-
-void AbstractMetadataProvider::index(EntitiesDescriptor* group, time_t validUntil) const
-{
-    indexGroup(group, validUntil);
-}
-
 void AbstractMetadataProvider::unindex(const XMLCh* entityID, bool freeSites) const
 {
     auto_ptr_char id(entityID);
