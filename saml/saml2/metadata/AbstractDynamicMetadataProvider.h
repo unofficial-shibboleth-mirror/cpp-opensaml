@@ -28,6 +28,7 @@
 #define __saml2_dynmetadataprov_h__
 
 #include <saml/saml2/metadata/AbstractMetadataProvider.h>
+#include <xmltooling/Lockable.h>
 
 namespace xmltooling {
     class XMLTOOL_API CondWait;
@@ -72,6 +73,15 @@ namespace opensaml {
              * @return  a valid metadata instance
              */
             virtual EntityDescriptor* resolve(const Criteria& criteria) const = 0;
+
+            /**
+             * Index an entity and cache the fact of it being indexed.
+             *
+             * @param entity what to cache
+             * @param locked have we locked ourself exclusive first?
+             * @return the cache ttl (for logging purposes)
+             */
+            virtual time_t cacheEntity(EntityDescriptor* entity, bool locked = false) const;
 
         private:
             std::string m_id;

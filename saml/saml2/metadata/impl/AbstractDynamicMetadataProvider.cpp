@@ -315,22 +315,6 @@ pair<const EntityDescriptor*,const RoleDescriptor*> AbstractDynamicMetadataProvi
 
         log.info("caching resolved metadata for (%s)", name.c_str());
 
-        // Compute the smaller of the validUntil / cacheDuration constraints.
-        time_t cacheExp = (entity2->getValidUntil() ? entity2->getValidUntilEpoch() : SAMLTIME_MAX) - now;
-        if (entity2->getCacheDuration())
-            cacheExp = min(cacheExp, entity2->getCacheDurationEpoch());
-            
-        // Adjust for the delay factor.
-        cacheExp *= m_refreshDelayFactor;
-
-        // Bound by max and min.
-        if (cacheExp > m_maxCacheDuration)
-            cacheExp = m_maxCacheDuration;
-        else if (cacheExp < m_minCacheDuration)
-            cacheExp = m_minCacheDuration;
-
-        log.info("next refresh of metadata for (%s) no sooner than %u seconds", name.c_str(), cacheExp);
-
         // Upgrade our lock so we can cache the new metadata.
         m_lock->unlock();
         m_lock->wrlock();
@@ -339,13 +323,10 @@ pair<const EntityDescriptor*,const RoleDescriptor*> AbstractDynamicMetadataProvi
         // Notify observers.
         emitChangeEvent(*entity2);
 
-        // Record the proper refresh time.
-        m_cacheMap[entity2->getEntityID()] = now + cacheExp;
+        time_t cacheExp = cacheEntity(entity2.get(), true);
 
-        // Make sure we clear out any existing copies, including stale metadata or if somebody snuck in.
-        cacheExp = SAMLTIME_MAX;
-        unindex(entity2->getEntityID(), true);  // actually frees the old instance with this ID
-        indexEntity(entity2.get(), cacheExp);
+        log.info("next refresh of metadata for (%s) no sooner than %u seconds", name.c_str(), cacheExp);
+
         entity2.release();
 
         m_lastUpdate = now;
@@ -384,3 +365,35 @@ pair<const EntityDescriptor*,const RoleDescriptor*> AbstractDynamicMetadataProvi
     return getEntityDescriptor(criteria);
 }
 
+time_t  AbstractDynamicMetadataProvider::cacheEntity(EntityDescriptor* entity, bool writeLocked) const
+{
+    time_t now = time(nullptr);
+    if (!writeLocked) {
+        m_lock->wrlock();
+    }
+    Locker locker(writeLocked ? nullptr : const_cast<AbstractDynamicMetadataProvider*>(this));
+
+    // Compute the smaller of the validUntil / cacheDuration constraints.
+    time_t cacheExp = (entity->getValidUntil() ? entity->getValidUntilEpoch() : SAMLTIME_MAX) - now;
+    if (entity->getCacheDuration())
+        cacheExp = min(cacheExp, entity->getCacheDurationEpoch());
+
+    // Adjust for the delay factor.
+    cacheExp *= m_refreshDelayFactor;
+
+    // Bound by max and min.
+    if (cacheExp > m_maxCacheDuration)
+        cacheExp = m_maxCacheDuration;
+    else if (cacheExp < m_minCacheDuration)
+        cacheExp = m_minCacheDuration;
+
+    // Record the proper refresh time.
+    m_cacheMap[entity->getEntityID()] = now + cacheExp;
+
+    // Make sure we clear out any existing copies, including stale metadata or if somebody snuck in.
+    unindex(entity->getEntityID(), true);  // actually frees the old instance with this ID
+    time_t exp(SAMLTIME_MAX);
+    indexEntity(entity, exp);
+
+    return cacheExp;
+}
