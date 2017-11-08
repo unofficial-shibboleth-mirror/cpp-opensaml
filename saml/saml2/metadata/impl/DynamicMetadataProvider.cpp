@@ -83,6 +83,10 @@ DynamicMetadataProvider::DynamicMetadataProvider(const DOMElement* e)
 {
 }
 
+void DynamicMetadataProvider::init()
+{
+}
+
 EntityDescriptor* DynamicMetadataProvider::resolve(const Criteria& criteria) const
 {
     string name;

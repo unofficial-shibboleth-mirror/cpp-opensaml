@@ -205,10 +205,6 @@ void AbstractDynamicMetadataProvider::unlock()
     m_lock->unlock();
 }
 
-void AbstractDynamicMetadataProvider::init()
-{
-}
-
 const char* AbstractDynamicMetadataProvider::getId() const
 {
     return m_id.c_str();

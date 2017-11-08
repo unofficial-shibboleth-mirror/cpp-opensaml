@@ -45,6 +45,8 @@ namespace opensaml {
              */
             DynamicMetadataProvider(const xercesc::DOMElement* e=nullptr);
 
+            void init();
+
         protected:
             virtual EntityDescriptor* resolve(const Criteria& criteria) const;
 

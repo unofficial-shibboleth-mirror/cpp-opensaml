@@ -55,7 +55,6 @@ namespace opensaml {
 
             virtual ~AbstractDynamicMetadataProvider();
 
-            void init();
             xmltooling::Lockable* lock();
             void unlock();
             const char* getId() const;
