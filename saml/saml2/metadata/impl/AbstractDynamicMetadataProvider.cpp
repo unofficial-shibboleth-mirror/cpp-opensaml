@@ -367,7 +367,7 @@ time_t  AbstractDynamicMetadataProvider::cacheEntity(EntityDescriptor* entity, b
     if (!writeLocked) {
         m_lock->wrlock();
     }
-    Locker locker(writeLocked ? nullptr : const_cast<AbstractDynamicMetadataProvider*>(this));
+    Locker locker(writeLocked ? nullptr : const_cast<AbstractDynamicMetadataProvider*>(this), false);
 
     // Compute the smaller of the validUntil / cacheDuration constraints.
     time_t cacheExp = (entity->getValidUntil() ? entity->getValidUntilEpoch() : SAMLTIME_MAX) - now;
