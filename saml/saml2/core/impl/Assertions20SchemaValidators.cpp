@@ -166,7 +166,8 @@ namespace opensaml {
         END_XMLOBJECTVALIDATOR;
 
         BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,AttributeStatement);
-            XMLOBJECTVALIDATOR_NONEMPTY(AttributeStatement,Attribute);
+            if (!ptr->hasChildren())
+                throw ValidationException("AttributeStatement must have at least one child element.");
         END_XMLOBJECTVALIDATOR;
 
         BEGIN_XMLOBJECTVALIDATOR(SAML_DLLLOCAL,Assertion);
