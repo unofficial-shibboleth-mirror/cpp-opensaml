@@ -140,7 +140,7 @@ namespace opensaml {
 
 XMLMetadataProvider::XMLMetadataProvider(const DOMElement* e)
     : MetadataProvider(e), AbstractMetadataProvider(e), DiscoverableMetadataProvider(e),
-        ReloadableXMLFile(e, Category::getInstance(SAML_LOGCAT ".MetadataProvider.XML"), false),
+        ReloadableXMLFile(e, Category::getInstance(SAML_LOGCAT ".Metadata.XML"), false),
         m_discoveryFeed(XMLHelper::getAttrBool(e, true, discoveryFeed)),
         m_dropDOM(XMLHelper::getAttrBool(e, true, dropDOM)),
         m_refreshDelayFactor(0.75), m_backoffFactor(1),
