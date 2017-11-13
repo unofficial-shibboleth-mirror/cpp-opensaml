@@ -79,7 +79,7 @@ namespace opensaml {
 };
 
 DynamicMetadataProvider::DynamicMetadataProvider(const DOMElement* e)
-    : AbstractMetadataProvider(e),
+    : AbstractMetadataProvider(e), MetadataProvider(e),
       m_validate(XMLHelper::getAttrBool(e, false, validate)),
         m_id(XMLHelper::getAttrString(e, "Dynamic", id)),
         m_lock(RWLock::create()),
@@ -92,7 +92,7 @@ DynamicMetadataProvider::DynamicMetadataProvider(const DOMElement* e)
         m_cleanup_wait(nullptr), m_cleanup_thread(nullptr)
 {
     if (m_minCacheDuration > m_maxCacheDuration) {
-        Category::getInstance(SAML_LOGCAT ".MetadataProvider.Dynamic").error(
+        Category::getInstance(SAML_LOGCAT ".Metadata.Dynamic").error(
             "minCacheDuration setting exceeds maxCacheDuration setting, lowering to match it"
             );
         m_minCacheDuration = m_maxCacheDuration;
