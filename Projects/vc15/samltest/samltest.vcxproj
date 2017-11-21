@@ -23,7 +23,6 @@
     <RootNamespace>samltest</RootNamespace>
     <Keyword>Win32Proj</Keyword>
     <CxxTestRoot>$(BuildRoot)\cxxtest</CxxTestRoot>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -106,7 +105,7 @@
       <DisableSpecificWarnings>4275</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>..\..\..\..\cpp-xmltooling\Build\vc15\$(Configuration)\xmltooling1D.lib;xerces-c_3D.lib;xsec_2D.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\..\..\..\cpp-xmltooling\Build\vc15\$(Configuration)\xmltooling8D.lib;xerces-c_3D.lib;xsec_2D.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <DataExecutionPrevention>
@@ -128,7 +127,7 @@
       <DisableSpecificWarnings>4275</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>..\..\..\..\cpp-xmltooling\Build\vc15\$(Platform)\$(Configuration)\xmltooling1D.lib;xerces-c_3D.lib;xsec_2D.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\..\..\..\cpp-xmltooling\Build\vc15\$(Platform)\$(Configuration)\xmltooling8D.lib;xerces-c_3D.lib;xsec_2D.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <DataExecutionPrevention>
@@ -143,7 +142,7 @@
       <DisableSpecificWarnings>4275</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>..\..\..\..\cpp-xmltooling\Build\vc15\$(Configuration)\xmltooling1.lib;xerces-c_3.lib;xsec_2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\..\..\..\cpp-xmltooling\Build\vc15\$(Configuration)\xmltooling8.lib;xerces-c_3.lib;xsec_2.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
@@ -163,7 +162,7 @@
       <DisableSpecificWarnings>4275</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>..\..\..\..\cpp-xmltooling\Build\vc15\$(Platform)\$(Configuration)\xmltooling1.lib;xerces-c_3.lib;xsec_2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\..\..\..\cpp-xmltooling\Build\vc15\$(Platform)\$(Configuration)\xmltooling8.lib;xerces-c_3.lib;xsec_2.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
