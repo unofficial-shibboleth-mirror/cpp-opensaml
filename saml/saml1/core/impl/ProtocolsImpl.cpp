@@ -413,11 +413,7 @@ namespace opensaml {
                     const_cast<RequestAbstractTypeImpl*>(this)->m_RequestID=SAMLConfig::getConfig().generateIdentifier();
                 domElement->setAttributeNS(nullptr, REQUESTID_ATTRIB_NAME, m_RequestID);
                 if (*m_MinorVersion!=chDigit_0) {
-#ifdef XMLTOOLING_XERCESC_BOOLSETIDATTRIBUTE
                     domElement->setIdAttributeNS(nullptr, REQUESTID_ATTRIB_NAME, true);
-#else
-                    domElement->setIdAttributeNS(nullptr, REQUESTID_ATTRIB_NAME);
-#endif
                 }
                 if (!m_IssueInstant) {
                     const_cast<RequestAbstractTypeImpl*>(this)->m_IssueInstantEpoch=time(nullptr);
@@ -436,11 +432,7 @@ namespace opensaml {
                 // Standard processing, but then we check IDness.
                 AbstractXMLObjectUnmarshaller::unmarshallAttributes(domElement);
                 if (m_RequestID && (!m_MinorVersion || *m_MinorVersion!=chDigit_0)) {
-#ifdef XMLTOOLING_XERCESC_BOOLSETIDATTRIBUTE
                     const_cast<DOMElement*>(domElement)->setIdAttributeNS(nullptr, REQUESTID_ATTRIB_NAME, true);
-#else
-                    const_cast<DOMElement*>(domElement)->setIdAttributeNS(nullptr, REQUESTID_ATTRIB_NAME);
-#endif
                 }
             }
 
@@ -774,11 +766,7 @@ namespace opensaml {
                     const_cast<ResponseAbstractTypeImpl*>(this)->m_ResponseID=SAMLConfig::getConfig().generateIdentifier();
                 domElement->setAttributeNS(nullptr, RESPONSEID_ATTRIB_NAME, m_ResponseID);
                 if (*m_MinorVersion!=chDigit_0) {
-#ifdef XMLTOOLING_XERCESC_BOOLSETIDATTRIBUTE
                     domElement->setIdAttributeNS(nullptr, RESPONSEID_ATTRIB_NAME, true);
-#else
-                    domElement->setIdAttributeNS(nullptr, RESPONSEID_ATTRIB_NAME);
-#endif
                 }
                 MARSHALL_STRING_ATTRIB(InResponseTo,INRESPONSETO,nullptr);
                 if (!m_IssueInstant) {
@@ -798,11 +786,7 @@ namespace opensaml {
                 // Standard processing, but then we check IDness.
                 AbstractXMLObjectUnmarshaller::unmarshallAttributes(domElement);
                 if (m_ResponseID && (!m_MinorVersion || *m_MinorVersion!=chDigit_0)) {
-#ifdef XMLTOOLING_XERCESC_BOOLSETIDATTRIBUTE
                     const_cast<DOMElement*>(domElement)->setIdAttributeNS(nullptr, RESPONSEID_ATTRIB_NAME, true);
-#else
-                    const_cast<DOMElement*>(domElement)->setIdAttributeNS(nullptr, RESPONSEID_ATTRIB_NAME);
-#endif
                 }
             }
 

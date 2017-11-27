@@ -963,11 +963,7 @@ namespace opensaml {
                     const_cast<AssertionImpl*>(this)->m_AssertionID=SAMLConfig::getConfig().generateIdentifier();
                 domElement->setAttributeNS(nullptr, ASSERTIONID_ATTRIB_NAME, m_AssertionID);
                 if (*m_MinorVersion!=chDigit_0) {
-#ifdef XMLTOOLING_XERCESC_BOOLSETIDATTRIBUTE
                     domElement->setIdAttributeNS(nullptr, ASSERTIONID_ATTRIB_NAME, true);
-#else
-                    domElement->setIdAttributeNS(nullptr, ASSERTIONID_ATTRIB_NAME);
-#endif
                 }
                 MARSHALL_STRING_ATTRIB(Issuer,ISSUER,nullptr);
                 if (!m_IssueInstant) {
@@ -993,11 +989,7 @@ namespace opensaml {
                 // Standard processing, but then we check IDness.
                 AbstractXMLObjectUnmarshaller::unmarshallAttributes(domElement);
                 if (m_AssertionID && (!m_MinorVersion || *m_MinorVersion!=chDigit_0)) {
-#ifdef XMLTOOLING_XERCESC_BOOLSETIDATTRIBUTE
                     const_cast<DOMElement*>(domElement)->setIdAttributeNS(nullptr, ASSERTIONID_ATTRIB_NAME, true);
-#else
-                    const_cast<DOMElement*>(domElement)->setIdAttributeNS(nullptr, ASSERTIONID_ATTRIB_NAME);
-#endif
                 }
             }
 
