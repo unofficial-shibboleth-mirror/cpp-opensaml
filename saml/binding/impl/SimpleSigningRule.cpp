@@ -160,11 +160,7 @@ bool SimpleSigningRule::evaluate(const XMLObject& message, const GenericRequest*
                 return false;
             }
             input = string("SAMLRequest=") + reinterpret_cast<const char*>(decoded);
-#ifdef OPENSAML_XERCESC_HAS_XMLBYTE_RELEASE
-            XMLString::release(&decoded);
-#else
             XMLString::release((char**)&decoded);
-#endif
         }
         else {
             pch = httpRequest->getParameter("SAMLResponse");
@@ -174,11 +170,7 @@ bool SimpleSigningRule::evaluate(const XMLObject& message, const GenericRequest*
                 return false;
             }
             input = string("SAMLResponse=") + reinterpret_cast<const char*>(decoded);
-#ifdef OPENSAML_XERCESC_HAS_XMLBYTE_RELEASE
-            XMLString::release(&decoded);
-#else
             XMLString::release((char**)&decoded);
-#endif
         }
 
         pch = httpRequest->getParameter("RelayState");
@@ -206,11 +198,7 @@ bool SimpleSigningRule::evaluate(const XMLObject& message, const GenericRequest*
             catch (XMLToolingException& ex) {
                 log.warn("Failed to load KeyInfo from message: %s", ex.what());
             }
-#ifdef OPENSAML_XERCESC_HAS_XMLBYTE_RELEASE
-            XMLString::release(&decoded);
-#else
             XMLString::release((char**)&decoded);
-#endif
         }
         else {
             log.warn("Failed to load KeyInfo from message: Unable to decode base64-encoded KeyInfo.");

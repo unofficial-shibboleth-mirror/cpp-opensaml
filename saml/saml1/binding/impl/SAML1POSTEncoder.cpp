@@ -168,11 +168,7 @@ long SAML1POSTEncoder::encode(
     if (out) {
         xmlbuf.erase();
         xmlbuf.append(reinterpret_cast<char*>(out),len);
-#ifdef OPENSAML_XERCESC_HAS_XMLBYTE_RELEASE
-        XMLString::release(&out);
-#else
         XMLString::release((char**)&out);
-#endif
     }
     else {
         throw BindingException("Base64 encoding of XML failed.");

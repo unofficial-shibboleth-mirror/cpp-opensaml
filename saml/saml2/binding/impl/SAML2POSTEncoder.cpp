@@ -199,11 +199,7 @@ long SAML2POSTEncoder::encode(
                 throw BindingException("Base64 encoding of XML failed.");
             kstring.erase();
             kstring.append(reinterpret_cast<char*>(out),len);
-#ifdef OPENSAML_XERCESC_HAS_XMLBYTE_RELEASE
-            XMLString::release(&out);
-#else
             XMLString::release((char**)&out);
-#endif
         }
     }
     
@@ -214,11 +210,7 @@ long SAML2POSTEncoder::encode(
         throw BindingException("Base64 encoding of XML failed.");
     msg.erase();
     msg.append(reinterpret_cast<char*>(out),len);
-#ifdef OPENSAML_XERCESC_HAS_XMLBYTE_RELEASE
-    XMLString::release(&out);
-#else
     XMLString::release((char**)&out);
-#endif
     
     // Push the rest of it into template and send result to client.
     log.debug("message encoded, sending HTML form template to client");

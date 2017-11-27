@@ -86,11 +86,7 @@ SAMLArtifact::SAMLArtifact(const char* s)
     XMLByte* ptr=decoded;
     while (len--)
         m_raw+= *ptr++;
-#ifdef OPENSAML_XERCESC_HAS_XMLBYTE_RELEASE
-    XMLString::release(&decoded);
-#else
     XMLString::release((char**)&decoded);
-#endif
 }
 
 string SAMLArtifact::getBytes() const
@@ -114,11 +110,7 @@ string SAMLArtifact::encode() const
     XMLByte* out=Base64::encode(reinterpret_cast<const XMLByte*>(m_raw.data()),m_raw.size(),&len);
     if (out) {
         string ret(reinterpret_cast<char*>(out),len);
-#ifdef OPENSAML_XERCESC_HAS_XMLBYTE_RELEASE
-        XMLString::release(&out);
-#else
         XMLString::release((char**)&out);
-#endif
         return ret;
     }
     return string();
@@ -135,11 +127,7 @@ SAMLArtifact* SAMLArtifact::parse(const char* s)
     string type;
     type+= decoded[0];
     type+= decoded[1];
-#ifdef OPENSAML_XERCESC_HAS_XMLBYTE_RELEASE
-    XMLString::release(&decoded);
-#else
     XMLString::release((char**)&decoded);
-#endif
     
     return SAMLConfig::getConfig().SAMLArtifactManager.newPlugin(type,s);
 }

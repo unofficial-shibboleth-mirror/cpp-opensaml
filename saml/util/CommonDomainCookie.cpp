@@ -63,11 +63,7 @@ CommonDomainCookie::CommonDomainCookie(const char* cookie)
         XMLByte* decoded=Base64::decode(reinterpret_cast<const XMLByte*>(i->c_str()),&len);
         if (decoded && *decoded) {
             i->assign(reinterpret_cast<char*>(decoded));
-#ifdef OPENSAML_XERCESC_HAS_XMLBYTE_RELEASE
-            XMLString::release(&decoded);
-#else
             XMLString::release((char**)&decoded);
-#endif
         }
     }
 }
@@ -105,11 +101,7 @@ const char* CommonDomainCookie::set(const char* entityID)
             if (!delimited.empty())
                 delimited += ' ';
             delimited += reinterpret_cast<char*>(b64);
-#ifdef OPENSAML_XERCESC_HAS_XMLBYTE_RELEASE
-            XMLString::release(&b64);
-#else
             XMLString::release((char**)&b64);
-#endif
         }
     }
     

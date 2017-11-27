@@ -225,23 +225,17 @@ AC_CHECK_HEADER([xercesc/dom/DOM.hpp],,AC_MSG_ERROR([unable to find xerces heade
 AC_MSG_CHECKING([Xerces version])
 AC_PREPROC_IFELSE(
     [AC_LANG_PROGRAM([#include <xercesc/util/XercesVersion.hpp>],
-[#if  _XERCES_VERSION != 20600
+[#if  _XERCES_VERSION >= 30000
 int i = 0;
 #else
-#error cannot use version 2.6.0
+#error cannot use version 1.x or 2.x
 #endif])],
     [AC_MSG_RESULT(OK)],
-    [AC_MSG_FAILURE([Xerces-C v2.6.0 has bugs that inhibit use with signed XML, please use a newer version])])
+    [AC_MSG_FAILURE([Xerces-C 3.x is required])])
+
 AC_LINK_IFELSE(
     [AC_LANG_PROGRAM([[#include <xercesc/util/PlatformUtils.hpp>]],[[xercesc::XMLPlatformUtils::Initialize()]])],
     ,[AC_MSG_ERROR([unable to link with Xerces])])
-
-AC_MSG_CHECKING([whether Xerces XMLString::release(XMLByte**) exists])
-AC_COMPILE_IFELSE(
-    [AC_LANG_PROGRAM([[#include <xercesc/util/XMLString.hpp>]],
-    [[using namespace XERCES_CPP_NAMESPACE; XMLByte* buf=NULL; XMLString::release(&buf);]])],
-    [AC_MSG_RESULT([yes])AC_DEFINE([OPENSAML_XERCESC_HAS_XMLBYTE_RELEASE],[1],[Define to 1 if Xerces XMLString includes XMLByte release.])],
-    [AC_MSG_RESULT([no])])
 
 # XML-Security settings
 AC_ARG_WITH(xmlsec,

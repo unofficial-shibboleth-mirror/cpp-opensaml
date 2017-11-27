@@ -112,20 +112,13 @@ XMLObject* SAML2RedirectDecoder::decode(
     // Now we have to inflate it.
     stringstream s;
     if (inflate(reinterpret_cast<char*>(decoded), x, s)==0) {
-#ifdef OPENSAML_XERCESC_HAS_XMLBYTE_RELEASE
-        XMLString::release(&decoded);
-#else
         XMLString::release((char**)&decoded);
-#endif
         throw BindingException("Unable to inflate Redirect binding message.");
     }
-    if (log.isDebugEnabled())
+    if (log.isDebugEnabled()) {
         log.debug("decoded SAML message:\n%s", s.str().c_str());
-#ifdef OPENSAML_XERCESC_HAS_XMLBYTE_RELEASE
-    XMLString::release(&decoded);
-#else
+    }
     XMLString::release((char**)&decoded);
-#endif
 
     // Parse and bind the document into an XMLObject.
     DOMDocument* doc = (policy.getValidating() ? XMLToolingConfig::getConfig().getValidatingParser()

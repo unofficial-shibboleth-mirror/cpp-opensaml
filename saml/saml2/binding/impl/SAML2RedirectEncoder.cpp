@@ -147,11 +147,7 @@ long SAML2RedirectEncoder::encode(
         if (!isspace(*xb))
             xmlbuf += *xb;
     }
-#ifdef OPENSAML_XERCESC_HAS_XMLBYTE_RELEASE
-    XMLString::release(&encoded);
-#else
     XMLString::release((char**)&encoded);
-#endif
     
     const URLEncoder* escaper = XMLToolingConfig::getConfig().getURLEncoder();
     xmlbuf = (request ? "SAMLRequest=" : "SAMLResponse=") + escaper->encode(xmlbuf.c_str()); 
