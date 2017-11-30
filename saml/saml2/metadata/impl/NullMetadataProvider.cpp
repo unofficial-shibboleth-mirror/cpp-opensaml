@@ -26,7 +26,7 @@
 
 #include "internal.h"
 #include "saml2/metadata/Metadata.h"
-#include "saml2/metadata/DynamicMetadataProvider.h"
+#include "saml2/metadata/AbstractDynamicMetadataProvider.h"
 
 #include <xmltooling/util/XMLHelper.h>
 
@@ -36,10 +36,10 @@ using namespace std;
 
 namespace opensaml {
     namespace saml2md {
-        class SAML_DLLLOCAL NullMetadataProvider : public DynamicMetadataProvider
+        class SAML_DLLLOCAL NullMetadataProvider : public AbstractDynamicMetadataProvider
         {
         public:
-            NullMetadataProvider(const DOMElement* e) : DynamicMetadataProvider(e) {
+            NullMetadataProvider(const DOMElement* e) : AbstractDynamicMetadataProvider(true, e), MetadataProvider(e) {
                 e = XMLHelper::getFirstChildElement(e, samlconstants::SAML20MD_NS, EntityDescriptor::LOCAL_NAME);
                 if (e)
                     m_template.reset(dynamic_cast<EntityDescriptor*>(XMLObjectBuilder::buildOneFromElement(const_cast<DOMElement*>(e))));
@@ -47,8 +47,10 @@ namespace opensaml {
 
             virtual ~NullMetadataProvider() {}
 
+            void init() {}
+
         protected:
-            EntityDescriptor* resolve(const char* entityID) const;
+            EntityDescriptor* resolve(const MetadataProvider::Criteria& criteria) const;
 
         private:
             auto_ptr<EntityDescriptor> m_template;
@@ -61,11 +63,18 @@ namespace opensaml {
     };
 };
 
-EntityDescriptor* NullMetadataProvider::resolve(const char* entityID) const
+EntityDescriptor* NullMetadataProvider::resolve(const MetadataProvider::Criteria& criteria) const
 {
     // Resolving for us just means fabricating a new dummy element.
     EntityDescriptor* entity = m_template.get() ? m_template->cloneEntityDescriptor() : EntityDescriptorBuilder::buildEntityDescriptor();
-    auto_ptr_XMLCh temp(entityID);
-    entity->setEntityID(temp.get());
+
+    if (criteria.entityID_ascii) {
+        auto_ptr_XMLCh temp(criteria.entityID_ascii);
+        entity->setEntityID(temp.get());
+    }
+    else if (criteria.entityID_unicode)
+        entity->setEntityID(criteria.entityID_unicode);
+    else if (criteria.artifact)
+            throw MetadataException("Unable to resolve Null metadata from an artifact.");
     return entity;
 }
