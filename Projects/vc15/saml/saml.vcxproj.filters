@@ -213,9 +213,6 @@
     <ClCompile Include="..\..\..\saml\saml2\metadata\impl\ChainingMetadataProvider.cpp">
       <Filter>Source Files\saml2\metadata\impl</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\saml\saml2\metadata\impl\DynamicMetadataProvider.cpp">
-      <Filter>Source Files\saml2\metadata\impl</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\saml\saml2\metadata\impl\EntityRoleMetadataFilter.cpp">
       <Filter>Source Files\saml2\metadata\impl</Filter>
     </ClCompile>
@@ -381,6 +378,9 @@
     <ClCompile Include="..\..\..\saml\saml2\metadata\impl\AbstractDynamicMetadataProvider.cpp">
       <Filter>Source Files\saml2\metadata\impl</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\saml\saml2\metadata\impl\LocalDynamicMetadataProvider.cpp">
+      <Filter>Source Files\saml2\metadata\impl</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\saml\Assertion.h">
@@ -450,9 +450,6 @@
       <Filter>Header Files\saml2\core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\saml\saml2\metadata\AbstractMetadataProvider.h">
-      <Filter>Header Files\saml2\metadata</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\saml\saml2\metadata\DynamicMetadataProvider.h">
       <Filter>Header Files\saml2\metadata</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\saml\saml2\metadata\EndpointManager.h">

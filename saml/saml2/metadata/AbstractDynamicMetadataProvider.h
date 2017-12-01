@@ -24,8 +24,8 @@
  * Simple base implementation of a dynamic caching MetadataProvider.
  */
 
-#ifndef __saml2_dynmetadataprov_h__
-#define __saml2_dynmetadataprov_h__
+#ifndef __saml2_absdynmetadataprov_h__
+#define __saml2_absdynmetadataprov_h__
 
 #include <saml/saml2/metadata/AbstractMetadataProvider.h>
 #include <xmltooling/Lockable.h>
@@ -69,7 +69,8 @@ namespace opensaml {
              * Resolves a metadata instance using the supplied criteria.
              *
              * @param criteria  lookup criteria
-             * @return  a valid metadata instance
+             * @return  a valid metadata instance (never nullptr)
+             * @throws an exception if resolution failed
              */
             virtual EntityDescriptor* resolve(const Criteria& criteria) const = 0;
 
@@ -81,6 +82,15 @@ namespace opensaml {
              * @return the cache ttl (for logging purposes)
              */
             virtual time_t cacheEntity(EntityDescriptor* entity, bool locked = false) const;
+
+            /**
+             * Parse and unmarshal the provided stream, returning the EntityDescriptor if there is one.
+             *
+             * @param stream the stream to parse
+             * @return the entity, or nullptr if there isn't one
+             */
+            EntityDescriptor* entityFromStream(std::istream& stream) const;
+
 
         private:
             std::string m_id;

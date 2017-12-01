@@ -36,6 +36,7 @@
 #include <xmltooling/util/NDC.h>
 #include <xmltooling/util/XMLHelper.h>
 
+#include <errno.h>
 using namespace opensaml::saml2md;
 using namespace opensaml;
 using namespace xmltooling::logging;
@@ -47,7 +48,7 @@ using namespace std;
 namespace opensaml {
     namespace saml2md {
         SAML_DLLLOCAL PluginManager<MetadataProvider,string,const DOMElement*>::Factory XMLMetadataProviderFactory;
-        SAML_DLLLOCAL PluginManager<MetadataProvider,string,const DOMElement*>::Factory DynamicMetadataProviderFactory;
+        SAML_DLLLOCAL PluginManager<MetadataProvider,string,const DOMElement*>::Factory LocalDynamicMetadataProviderFactory;
         SAML_DLLLOCAL PluginManager<MetadataProvider,string,const DOMElement*>::Factory ChainingMetadataProviderFactory;
         SAML_DLLLOCAL PluginManager<MetadataProvider,string,const DOMElement*>::Factory FolderMetadataProviderFactory;
         SAML_DLLLOCAL PluginManager<MetadataProvider,string,const DOMElement*>::Factory NullMetadataProviderFactory;
@@ -64,7 +65,7 @@ void SAML_API opensaml::saml2md::registerMetadataProviders()
 {
     SAMLConfig& conf=SAMLConfig::getConfig();
     conf.MetadataProviderManager.registerFactory(XML_METADATA_PROVIDER, XMLMetadataProviderFactory);
-    conf.MetadataProviderManager.registerFactory(DYNAMIC_METADATA_PROVIDER, DynamicMetadataProviderFactory);
+    conf.MetadataProviderManager.registerFactory(LOCAL_DYNAMIC_METADATA_PROVIDER, LocalDynamicMetadataProviderFactory);
     conf.MetadataProviderManager.registerFactory(CHAINING_METADATA_PROVIDER, ChainingMetadataProviderFactory);
     conf.MetadataProviderManager.registerFactory(FOLDER_METADATA_PROVIDER, FolderMetadataProviderFactory);
     conf.MetadataProviderManager.registerFactory(NULL_METADATA_PROVIDER, NullMetadataProviderFactory);

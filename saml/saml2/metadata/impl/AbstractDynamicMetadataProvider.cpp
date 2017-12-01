@@ -25,18 +25,20 @@
  */
 
 #include "internal.h"
-#include "binding/SAMLArtifact.h"
-#include "saml2/metadata/Metadata.h"
-#include "saml2/metadata/AbstractDynamicMetadataProvider.h"
+#include <binding/SAMLArtifact.h>
+#include <saml2/metadata/Metadata.h>
+#include <saml2/metadata/AbstractDynamicMetadataProvider.h>
+
+#include <xercesc/framework/Wrapper4InputSource.hpp>
 
 #include <xmltooling/logging.h>
 #include <xmltooling/XMLToolingConfig.h>
 #include <xmltooling/util/NDC.h>
 #include <xmltooling/util/Threads.h>
 #include <xmltooling/util/XMLHelper.h>
+#include <xmltooling/util/ParserPool.h>
 #include <xmltooling/validation/ValidatorSuite.h>
 #include <xmltooling/security/SecurityHelper.h>
-
 
 #if defined(XMLTOOLING_LOG4SHIB)
 # include <log4shib/NDC.hh>
@@ -392,4 +394,42 @@ time_t  AbstractDynamicMetadataProvider::cacheEntity(EntityDescriptor* entity, b
     indexEntity(entity, exp);
 
     return cacheExp;
+}
+
+EntityDescriptor* AbstractDynamicMetadataProvider::entityFromStream(istream &stream) const
+{
+
+    DOMDocument* doc=nullptr;
+    StreamInputSource src(stream, "DynamicMetadataProvider");
+
+    Wrapper4InputSource dsrc(&src, false);
+
+    if (m_validate)
+        doc=XMLToolingConfig::getConfig().getValidatingParser().parse(dsrc);
+    else
+        doc=XMLToolingConfig::getConfig().getParser().parse(dsrc);
+
+    // Wrap the document for now.
+    XercesJanitor<DOMDocument> docjanitor(doc);
+
+    // Check root element.
+    if (!doc->getDocumentElement() || !XMLHelper::isNodeNamed(doc->getDocumentElement(),
+                                                              samlconstants::SAML20MD_NS, EntityDescriptor::LOCAL_NAME)) {
+        throw MetadataException("Root of metadata instance was not an EntityDescriptor");
+    }
+
+    // Unmarshall objects, binding the document.
+    auto_ptr<XMLObject> xmlObject(XMLObjectBuilder::buildOneFromElement(doc->getDocumentElement(), true));
+    docjanitor.release();
+
+    // Make sure it's metadata.
+    EntityDescriptor* entity = dynamic_cast<EntityDescriptor*>(xmlObject.get());
+    if (!entity) {
+        throw MetadataException(
+            "Root of metadata instance not recognized: $1", params(1, xmlObject->getElementQName().toString().c_str())
+        );
+    }
+
+    xmlObject.release();
+    return entity;
 }

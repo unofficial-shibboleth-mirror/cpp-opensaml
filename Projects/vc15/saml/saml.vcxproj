@@ -224,7 +224,7 @@
     <ClCompile Include="..\..\..\saml\saml2\metadata\impl\AbstractMetadataProvider.cpp" />
     <ClCompile Include="..\..\..\saml\saml2\metadata\impl\BlacklistMetadataFilter.cpp" />
     <ClCompile Include="..\..\..\saml\saml2\metadata\impl\ChainingMetadataProvider.cpp" />
-    <ClCompile Include="..\..\..\saml\saml2\metadata\impl\DynamicMetadataProvider.cpp" />
+    <ClCompile Include="..\..\..\saml\saml2\metadata\impl\LocalDynamicMetadataProvider.cpp" />
     <ClCompile Include="..\..\..\saml\saml2\metadata\impl\EntityRoleMetadataFilter.cpp" />
     <ClCompile Include="..\..\..\saml\saml2\metadata\impl\MetadataCredentialContext.cpp" />
     <ClCompile Include="..\..\..\saml\saml2\metadata\impl\MetadataCredentialCriteria.cpp" />
@@ -319,7 +319,6 @@
     <ClInclude Include="..\..\..\saml\saml2\core\Assertions.h" />
     <ClInclude Include="..\..\..\saml\saml2\core\Protocols.h" />
     <ClInclude Include="..\..\..\saml\saml2\metadata\AbstractMetadataProvider.h" />
-    <ClInclude Include="..\..\..\saml\saml2\metadata\DynamicMetadataProvider.h" />
     <ClInclude Include="..\..\..\saml\saml2\metadata\EndpointManager.h" />
     <ClInclude Include="..\..\..\saml\saml2\metadata\Metadata.h" />
     <ClInclude Include="..\..\..\saml\saml2\metadata\MetadataCredentialContext.h" />

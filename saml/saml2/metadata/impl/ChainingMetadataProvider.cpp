@@ -177,7 +177,7 @@ void ChainingMetadataProvider::tracker_cleanup(void* ptr)
 }
 
 ChainingMetadataProvider::ChainingMetadataProvider(const DOMElement* e)
-    : ObservableMetadataProvider(e), m_firstMatch(true), m_trackerLock(Mutex::create()), m_tlsKey(ThreadKey::create(tracker_cleanup)),
+    : MetadataProvider(nullptr), ObservableMetadataProvider(e), m_firstMatch(true), m_trackerLock(Mutex::create()), m_tlsKey(ThreadKey::create(tracker_cleanup)),
         m_log(Category::getInstance(SAML_LOGCAT ".Metadata.Chaining"))
 {
     if (XMLString::equals(e ? e->getAttributeNS(nullptr, precedence) : nullptr, last))
