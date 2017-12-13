@@ -93,13 +93,10 @@ void SignatureProfileValidator::validateSignature(const Signature& sigObj) const
                         if (dynamic_cast<const DSIGTransformEnvelope*>(t)) {
                             valid=true;
                         }
-                        else {
-                            const DSIGTransformC14n* ct = dynamic_cast<const DSIGTransformC14n*>(t);
-                            if (!ct || ct->getCanonicalizationMethod() == CANON_NONE) {
-                                valid = false;
-                                Category::getInstance(SAML_LOGCAT ".SignatureProfileValidator").error("signature contained an invalid transform");
-                                break;
-                            }
+                        else if (!dynamic_cast<const DSIGTransformC14n*>(t)) {
+                            Category::getInstance(SAML_LOGCAT ".SignatureProfileValidator").error("signature contained an invalid transform");
+                            valid = false;
+                            break;
                         }
                     }
                 }
