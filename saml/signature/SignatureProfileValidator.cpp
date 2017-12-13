@@ -36,6 +36,8 @@
 #include <xsec/dsig/DSIGReference.hpp>
 #include <xsec/dsig/DSIGSignature.hpp>
 #include <xsec/dsig/DSIGTransformList.hpp>
+#include <xsec/dsig/DSIGTransformEnvelope.hpp>
+#include <xsec/dsig/DSIGTransformC14n.hpp>
 
 using namespace opensaml;
 using namespace xmlsignature;
@@ -77,23 +79,27 @@ void SignatureProfileValidator::validateSignature(const Signature& sigObj) const
     sig->setIdByAttributeName(false);
 
     bool valid=false;
-    DSIGReferenceList* refs=sig->getReferenceList();
+    const DSIGReferenceList* refs=sig->getReferenceList();
     if (refs && refs->getSize()==1) {
-        DSIGReference* ref=refs->item(0);
+        const DSIGReference* ref=refs->item(0);
         if (ref) {
             const XMLCh* URI=ref->getURI();
             const XMLCh* ID=signableObj->getXMLID();
             if (URI==nullptr || *URI==0 || (*URI==chPound && ID && !XMLString::compareString(URI+1,ID))) {
-                DSIGTransformList* tlist=ref->getTransforms();
+                const DSIGTransformList* tlist=ref->getTransforms();
                 if (tlist->getSize() <= 2) { 
                     for (unsigned int i=0; tlist && i<tlist->getSize(); i++) {
-                        if (tlist->item(i)->getTransformType()==TRANSFORM_ENVELOPED_SIGNATURE)
+                        const DSIGTransform* t = tlist->item(i);
+                        if (dynamic_cast<const DSIGTransformEnvelope*>(t)) {
                             valid=true;
-                        else if (tlist->item(i)->getTransformType()!=TRANSFORM_EXC_C14N &&
-                                 tlist->item(i)->getTransformType()!=TRANSFORM_C14N) {
-                            valid=false;
-                            Category::getInstance(SAML_LOGCAT ".SignatureProfileValidator").error("signature contained an invalid transform");
-                            break;
+                        }
+                        else {
+                            const DSIGTransformC14n* ct = dynamic_cast<const DSIGTransformC14n*>(t);
+                            if (!ct || ct->getCanonicalizationMethod() == CANON_NONE) {
+                                valid = false;
+                                Category::getInstance(SAML_LOGCAT ".SignatureProfileValidator").error("signature contained an invalid transform");
+                                break;
+                            }
                         }
                     }
                 }
