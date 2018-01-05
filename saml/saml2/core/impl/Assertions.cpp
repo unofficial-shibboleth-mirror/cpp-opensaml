@@ -80,7 +80,7 @@ void EncryptedElementType::encrypt(
         // The problem is that if we don't support them, the only case we can detect
         // is if neither algorithm type is set *and* there's an EncryptionMethod present.
         dataalg = keyalg = nullptr;
-        const MetadataCredentialContext* metaCtx = dynamic_cast<const MetadataCredentialContext*>((*c)->getCredentalContext());
+        const MetadataCredentialContext* metaCtx = dynamic_cast<const MetadataCredentialContext*>((*c)->getCredentialContext());
         if (metaCtx) {
             const vector<EncryptionMethod*>& encMethods = metaCtx->getKeyDescriptor().getEncryptionMethods();
             for (vector<EncryptionMethod*>::const_iterator meth = encMethods.begin(); meth != encMethods.end(); ++meth) {
@@ -183,7 +183,7 @@ void EncryptedElementType::encrypt(
             // The problem is that if we don't support them, the only case we can detect
             // is if neither algorithm type is set *and* there's an EncryptionMethod present.
             keyalg = nullptr;
-            const MetadataCredentialContext* metaCtx = dynamic_cast<const MetadataCredentialContext*>((*c)->getCredentalContext());
+            const MetadataCredentialContext* metaCtx = dynamic_cast<const MetadataCredentialContext*>((*c)->getCredentialContext());
             if (metaCtx) {
                 const vector<EncryptionMethod*>& encMethods = metaCtx->getKeyDescriptor().getEncryptionMethods();
                 for (vector<EncryptionMethod*>::const_iterator meth = encMethods.begin(); meth != encMethods.end(); ++meth) {

@@ -45,7 +45,7 @@ MetadataCredentialCriteria::MetadataCredentialCriteria(const RoleDescriptor& rol
 
 bool MetadataCredentialCriteria::matches(const Credential& credential) const
 {
-    const MetadataCredentialContext* context = dynamic_cast<const MetadataCredentialContext*>(credential.getCredentalContext());
+    const MetadataCredentialContext* context = dynamic_cast<const MetadataCredentialContext*>(credential.getCredentialContext());
     if (context) {
         // Check for a usage mismatch.
         if ((getUsage() & (xmltooling::Credential::SIGNING_CREDENTIAL | xmltooling::Credential::TLS_CREDENTIAL)) &&
