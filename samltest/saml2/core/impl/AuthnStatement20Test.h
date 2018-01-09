@@ -25,16 +25,16 @@
 using namespace opensaml::saml2;
 
 class AuthnStatement20Test : public CxxTest::TestSuite, public SAMLObjectBaseTestCase {
-    DateTime* expectedAuthnInstant;
+    XMLDateTime* expectedAuthnInstant;
     XMLCh* expectedSessionIndex;
-    DateTime* expectedSessionNotOnOrAfter;
+    XMLDateTime* expectedSessionNotOnOrAfter;
 
 public:
     void setUp() {
-        expectedAuthnInstant = new DateTime(XMLString::transcode("1984-08-26T10:01:30.043Z"));
+        expectedAuthnInstant = new XMLDateTime(XMLString::transcode("1984-08-26T10:01:30.043Z"));
         expectedAuthnInstant->parseDateTime();
         expectedSessionIndex = (XMLString::transcode("abc123"));
-        expectedSessionNotOnOrAfter = new DateTime(XMLString::transcode("1984-08-26T10:11:30.043Z"));
+        expectedSessionNotOnOrAfter = new XMLDateTime(XMLString::transcode("1984-08-26T10:11:30.043Z"));
         expectedSessionNotOnOrAfter->parseDateTime();
 
         singleElementFile = data_path + "saml2/core/impl/AuthnStatement.xml";

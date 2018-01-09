@@ -28,7 +28,7 @@ using namespace opensaml::saml2;
 class AuthnRequest20Test : public CxxTest::TestSuite, public SAMLObjectBaseTestCase {
     XMLCh* expectedID; 
     XMLCh* expectedVersion; 
-    DateTime* expectedIssueInstant; 
+    XMLDateTime* expectedIssueInstant; 
     XMLCh* expectedConsent; 
     XMLCh* expectedDestination; 
     bool expectedForceAuthn; 
@@ -43,7 +43,7 @@ public:
     void setUp() {
         expectedID = XMLString::transcode("abc123");; 
         expectedVersion = XMLString::transcode("2.0"); 
-        expectedIssueInstant = new DateTime(XMLString::transcode("2006-02-21T16:40:00.000Z"));
+        expectedIssueInstant = new XMLDateTime(XMLString::transcode("2006-02-21T16:40:00.000Z"));
         expectedIssueInstant->parseDateTime();
         expectedConsent = XMLString::transcode("urn:string:consent"); 
         expectedDestination = XMLString::transcode("http://idp.example.org/endpoint"); 

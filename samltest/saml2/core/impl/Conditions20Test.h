@@ -25,14 +25,14 @@
 using namespace opensaml::saml2;
 
 class Conditions20Test : public CxxTest::TestSuite, public SAMLObjectBaseTestCase {
-    DateTime* expectedNotBefore;
-    DateTime* expectedNotOnOrAfter;
+    XMLDateTime* expectedNotBefore;
+    XMLDateTime* expectedNotOnOrAfter;
 
 public:
     void setUp() {
-        expectedNotBefore = new DateTime(XMLString::transcode("1984-08-26T10:01:30.043Z"));
+        expectedNotBefore = new XMLDateTime(XMLString::transcode("1984-08-26T10:01:30.043Z"));
         expectedNotBefore->parseDateTime();
-        expectedNotOnOrAfter = new DateTime(XMLString::transcode("1984-08-26T10:11:30.043Z"));
+        expectedNotOnOrAfter = new XMLDateTime(XMLString::transcode("1984-08-26T10:11:30.043Z"));
         expectedNotOnOrAfter->parseDateTime();
 
         singleElementFile = data_path + "saml2/core/impl/Conditions.xml";

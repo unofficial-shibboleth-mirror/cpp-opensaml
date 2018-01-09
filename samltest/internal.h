@@ -32,7 +32,6 @@
 #include <xmltooling/XMLObject.h>
 #include <xmltooling/XMLObjectBuilder.h>
 #include <xmltooling/XMLToolingConfig.h>
-#include <xmltooling/util/DateTime.h>
 #include <xmltooling/util/ParserPool.h>
 #include <xmltooling/validation/Validator.h>
 

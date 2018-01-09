@@ -30,7 +30,7 @@ class AuthzDecisionQuery20Test : public CxxTest::TestSuite, public SAMLObjectBas
     XMLCh* expectedVersion; 
     XMLCh* expectedConsent; 
     XMLCh* expectedDestination; 
-    DateTime* expectedIssueInstant; 
+    XMLDateTime* expectedIssueInstant; 
     XMLCh* expectedResource; 
 
 public:
@@ -39,7 +39,7 @@ public:
         expectedVersion = XMLString::transcode("2.0"); 
         expectedConsent = XMLString::transcode("urn:string:consent"); 
         expectedDestination = XMLString::transcode("http://idp.example.org/endpoint"); 
-        expectedIssueInstant = new DateTime(XMLString::transcode("2006-02-21T16:40:00.000Z"));
+        expectedIssueInstant = new XMLDateTime(XMLString::transcode("2006-02-21T16:40:00.000Z"));
         expectedIssueInstant->parseDateTime();
         expectedResource = XMLString::transcode("urn:string:resource");
 

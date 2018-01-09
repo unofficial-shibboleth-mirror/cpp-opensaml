@@ -31,7 +31,7 @@ class LogoutResponse20Test : public CxxTest::TestSuite, public SAMLObjectBaseTes
     XMLCh* expectedVersion; 
     XMLCh* expectedConsent; 
     XMLCh* expectedDestination; 
-    DateTime* expectedIssueInstant; 
+    XMLDateTime* expectedIssueInstant; 
 
 public:
     void setUp() {
@@ -40,7 +40,7 @@ public:
         expectedVersion = XMLString::transcode("2.0"); 
         expectedConsent = XMLString::transcode("urn:string:consent"); 
         expectedDestination = XMLString::transcode("http://sp.example.org/endpoint"); 
-        expectedIssueInstant = new DateTime(XMLString::transcode("2006-02-21T16:40:00.000Z"));
+        expectedIssueInstant = new XMLDateTime(XMLString::transcode("2006-02-21T16:40:00.000Z"));
         expectedIssueInstant->parseDateTime();
 
         singleElementFile = data_path + "saml2/core/impl/LogoutResponse.xml";

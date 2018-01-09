@@ -29,17 +29,17 @@ using xmlsignature::KeyInfoBuilder;
 //TODO need testing for ElementProxy and wildcard attributes/elements
 
 class KeyInfoConfirmationDataType20Test : public CxxTest::TestSuite, public SAMLObjectBaseTestCase {
-    DateTime* expectedNotBefore;
-    DateTime* expectedNotOnOrAfter;
+    XMLDateTime* expectedNotBefore;
+    XMLDateTime* expectedNotOnOrAfter;
     XMLCh* expectedRecipient;
     XMLCh* expectedInResponseTo;
     XMLCh* expectedAddress;
 
 public:
     void setUp() {
-        expectedNotBefore = new DateTime(XMLString::transcode("1984-08-26T10:01:30.043Z"));
+        expectedNotBefore = new XMLDateTime(XMLString::transcode("1984-08-26T10:01:30.043Z"));
         expectedNotBefore->parseDateTime();
-        expectedNotOnOrAfter = new DateTime(XMLString::transcode("1984-08-26T10:11:30.043Z"));
+        expectedNotOnOrAfter = new XMLDateTime(XMLString::transcode("1984-08-26T10:11:30.043Z"));
         expectedNotOnOrAfter->parseDateTime();
         expectedRecipient = (XMLString::transcode("recipient"));
         expectedInResponseTo = (XMLString::transcode("inresponse"));

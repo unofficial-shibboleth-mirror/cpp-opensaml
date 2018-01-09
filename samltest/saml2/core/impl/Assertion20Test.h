@@ -27,13 +27,13 @@ using namespace opensaml::saml2;
 class Assertion20Test : public CxxTest::TestSuite, public SAMLObjectBaseTestCase {
     const XMLCh* expectedVersion;
     XMLCh* expectedID;
-    DateTime* expectedIssueInstant;
+    XMLDateTime* expectedIssueInstant;
 
 public:
     void setUp() {
         expectedVersion = samlconstants::SAML20_VERSION;
         expectedID = XMLString::transcode("abc123");
-        expectedIssueInstant = new DateTime(XMLString::transcode("1984-08-26T10:01:30.043Z"));
+        expectedIssueInstant = new XMLDateTime(XMLString::transcode("1984-08-26T10:01:30.043Z"));
         expectedIssueInstant->parseDateTime();
 
 

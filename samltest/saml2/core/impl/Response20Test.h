@@ -33,7 +33,7 @@ class Response20Test : public CxxTest::TestSuite, public SAMLObjectBaseTestCase 
     XMLCh* expectedVersion; 
     XMLCh* expectedConsent; 
     XMLCh* expectedDestination; 
-    DateTime* expectedIssueInstant; 
+    XMLDateTime* expectedIssueInstant; 
 
     // Assertion marshaller autogenerates ID, Version and IssueInstant if they are nullptr,
     // so have to agree on something to put in the control XML
@@ -46,7 +46,7 @@ public:
         expectedVersion = XMLString::transcode("2.0"); 
         expectedConsent = XMLString::transcode("urn:string:consent"); 
         expectedDestination = XMLString::transcode("http://sp.example.org/endpoint"); 
-        expectedIssueInstant = new DateTime(XMLString::transcode("2006-02-21T16:40:00.000Z"));
+        expectedIssueInstant = new XMLDateTime(XMLString::transcode("2006-02-21T16:40:00.000Z"));
         expectedIssueInstant->parseDateTime();
 
         assertionID1 = XMLString::transcode("test1"); 

@@ -73,11 +73,11 @@ public:
 
         Assertion* assertion1 = AssertionBuilder::buildAssertion();
         assertion1->setID(XMLString::transcode("abc123"));
-        assertion1->setIssueInstant(new DateTime(XMLString::transcode("2006-07-21T22:27:19Z")));
+        assertion1->setIssueInstant(new XMLDateTime(XMLString::transcode("2006-07-21T22:27:19Z")));
 
         Assertion* assertion2 = AssertionBuilder::buildAssertion();
         assertion2->setID(XMLString::transcode("def456"));
-        assertion2->setIssueInstant(new DateTime(XMLString::transcode("2006-07-21T22:27:19Z")));
+        assertion2->setIssueInstant(new XMLDateTime(XMLString::transcode("2006-07-21T22:27:19Z")));
 
         advice->getAssertionIDRefs().push_back(AssertionIDRefBuilder::buildAssertionIDRef());
         advice->getAssertionIDRefs().push_back(AssertionIDRefBuilder::buildAssertionIDRef());

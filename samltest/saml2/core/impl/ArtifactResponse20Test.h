@@ -31,7 +31,7 @@ class ArtifactResponse20Test : public CxxTest::TestSuite, public SAMLObjectBaseT
     XMLCh* expectedVersion; 
     XMLCh* expectedConsent; 
     XMLCh* expectedDestination; 
-    DateTime* expectedIssueInstant; 
+    XMLDateTime* expectedIssueInstant;
 
     // The payload will be an AuthnRequest in this test.
     // AuthnRequest marshaller autogenerates ID, Version and IssueInstant if they are nullptr,
@@ -45,7 +45,7 @@ public:
         expectedVersion = XMLString::transcode("2.0"); 
         expectedConsent = XMLString::transcode("urn:string:consent"); 
         expectedDestination = XMLString::transcode("http://sp.example.org/endpoint"); 
-        expectedIssueInstant = new DateTime(XMLString::transcode("2006-02-21T16:40:00.000Z"));
+        expectedIssueInstant = new XMLDateTime(XMLString::transcode("2006-02-21T16:40:00.000Z"));
         expectedIssueInstant->parseDateTime();
 
         authnRequestID = XMLString::transcode("test1"); 

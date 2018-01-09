@@ -28,22 +28,22 @@ using namespace opensaml::saml2;
 class LogoutRequest20Test : public CxxTest::TestSuite, public SAMLObjectBaseTestCase {
     XMLCh* expectedID; 
     XMLCh* expectedVersion; 
-    DateTime* expectedIssueInstant; 
+    XMLDateTime* expectedIssueInstant; 
     XMLCh* expectedConsent; 
     XMLCh* expectedDestination; 
     XMLCh* expectedReason; 
-    DateTime* expectedNotOnOrAfter; 
+    XMLDateTime* expectedNotOnOrAfter; 
 
 public:
     void setUp() {
         expectedID = XMLString::transcode("abc123");; 
         expectedVersion = XMLString::transcode("2.0"); 
-        expectedIssueInstant = new DateTime(XMLString::transcode("2006-02-21T16:40:00.000Z"));
+        expectedIssueInstant = new XMLDateTime(XMLString::transcode("2006-02-21T16:40:00.000Z"));
         expectedIssueInstant->parseDateTime();
         expectedConsent = XMLString::transcode("urn:string:consent"); 
         expectedDestination = XMLString::transcode("http://idp.example.org/endpoint"); 
         expectedReason = XMLString::transcode("urn:string:reason"); 
-        expectedNotOnOrAfter = new DateTime(XMLString::transcode("2006-02-21T20:45:00.000Z"));
+        expectedNotOnOrAfter = new XMLDateTime(XMLString::transcode("2006-02-21T20:45:00.000Z"));
         expectedNotOnOrAfter->parseDateTime();
 
         singleElementFile = data_path + "saml2/core/impl/LogoutRequest.xml";

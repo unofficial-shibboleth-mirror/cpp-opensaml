@@ -26,14 +26,14 @@ using namespace opensaml::saml1;
 class AssertionTest : public CxxTest::TestSuite, public SAMLObjectBaseTestCase {
     int expectedMinorVersion;
     XMLCh* expectedIssuer;
-    DateTime* expectedIssueInstant;
+    XMLDateTime* expectedIssueInstant;
     XMLCh* expectedID;
 
 public:
     void setUp() {
         expectedID=XMLString::transcode("ident");
         expectedMinorVersion=1;
-        expectedIssueInstant=new DateTime(XMLString::transcode("1970-01-02T01:01:02.100Z"));
+        expectedIssueInstant=new XMLDateTime(XMLString::transcode("1970-01-02T01:01:02.100Z"));
         expectedIssueInstant->parseDateTime();
         expectedIssuer=XMLString::transcode("issuer");
         singleElementFile = data_path + "saml1/core/impl/singleAssertion.xml";
