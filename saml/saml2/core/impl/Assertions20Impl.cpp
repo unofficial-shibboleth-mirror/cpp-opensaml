@@ -37,7 +37,6 @@
 #include <xmltooling/io/AbstractXMLObjectUnmarshaller.h>
 #include <xmltooling/signature/KeyInfo.h>
 #include <xmltooling/signature/Signature.h>
-#include <xmltooling/util/DateTime.h>
 #include <xmltooling/util/XMLHelper.h>
 
 #include <ctime>
@@ -1426,7 +1425,7 @@ namespace opensaml {
                 MARSHALL_ID_ATTRIB(ID,ID,nullptr);
                 if (!m_IssueInstant) {
                     const_cast<AssertionImpl*>(this)->m_IssueInstantEpoch=time(nullptr);
-                    const_cast<AssertionImpl*>(this)->m_IssueInstant=new DateTime(m_IssueInstantEpoch);
+                    const_cast<AssertionImpl*>(this)->m_IssueInstant=new XMLDateTime(m_IssueInstantEpoch, false);
                 }
                 MARSHALL_DATETIME_ATTRIB(IssueInstant,ISSUEINSTANT,nullptr);
             }

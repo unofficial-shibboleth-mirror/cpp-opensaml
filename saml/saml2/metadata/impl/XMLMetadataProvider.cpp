@@ -34,7 +34,6 @@
 #include <fstream>
 #include <xmltooling/XMLToolingConfig.h>
 #include <xmltooling/io/HTTPResponse.h>
-#include <xmltooling/util/DateTime.h>
 #include <xmltooling/util/NDC.h>
 #include <xmltooling/util/PathResolver.h>
 #include <xmltooling/util/ReloadableXMLFile.h>
@@ -379,7 +378,7 @@ void XMLMetadataProvider::outputStatus(ostream& os) const
     }
 
     if (m_lastUpdate > 0) {
-        DateTime ts(m_lastUpdate);
+        XMLDateTime ts(m_lastUpdate, false);
         ts.parseDateTime();
         auto_ptr_char timestamp(ts.getFormattedString());
         os << " lastUpdate='" << timestamp.get() << "'";

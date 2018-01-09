@@ -29,9 +29,7 @@
 
 #include <saml/signature/SignableObject.h>
 
-namespace xmltooling {
-    class XMLTOOL_API DateTime;
-};
+#include <xercesc/util/XMLDateTime.hpp>
 
 namespace opensaml {
 
@@ -56,7 +54,7 @@ namespace opensaml {
          *
          * @return the timestamp
          */
-        virtual const xmltooling::DateTime* getIssueInstant() const=0;
+        virtual const xercesc::XMLDateTime* getIssueInstant() const=0;
 
         /**
          * Returns the timestamp of the object as an epoch

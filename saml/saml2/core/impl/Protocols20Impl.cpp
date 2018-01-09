@@ -36,7 +36,6 @@
 #include <xmltooling/io/AbstractXMLObjectMarshaller.h>
 #include <xmltooling/io/AbstractXMLObjectUnmarshaller.h>
 #include <xmltooling/signature/Signature.h>
-#include <xmltooling/util/DateTime.h>
 #include <xmltooling/util/XMLHelper.h>
 
 #include <ctime>
@@ -372,7 +371,7 @@ namespace opensaml {
                 MARSHALL_ID_ATTRIB(ID,ID,nullptr);
                 if (!m_IssueInstant) {
                     const_cast<RequestAbstractTypeImpl*>(this)->m_IssueInstantEpoch=time(nullptr);
-                    const_cast<RequestAbstractTypeImpl*>(this)->m_IssueInstant=new DateTime(m_IssueInstantEpoch);
+                    const_cast<RequestAbstractTypeImpl*>(this)->m_IssueInstant=new XMLDateTime(m_IssueInstantEpoch, false);
                 }
                 MARSHALL_DATETIME_ATTRIB(IssueInstant,ISSUEINSTANT,nullptr);
                 MARSHALL_STRING_ATTRIB(Destination,DESTINATION,nullptr);
@@ -1072,7 +1071,7 @@ namespace opensaml {
                 MARSHALL_ID_ATTRIB(ID,ID,nullptr);
                 if (!m_IssueInstant) {
                     const_cast<StatusResponseTypeImpl*>(this)->m_IssueInstantEpoch=time(nullptr);
-                    const_cast<StatusResponseTypeImpl*>(this)->m_IssueInstant=new DateTime(m_IssueInstantEpoch);
+                    const_cast<StatusResponseTypeImpl*>(this)->m_IssueInstant=new XMLDateTime(m_IssueInstantEpoch, false);
                 }
                 MARSHALL_DATETIME_ATTRIB(IssueInstant,ISSUEINSTANT,nullptr);
                 MARSHALL_STRING_ATTRIB(Destination,DESTINATION,nullptr);

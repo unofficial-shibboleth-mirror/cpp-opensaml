@@ -41,7 +41,6 @@
 #include <xmltooling/security/Credential.h>
 #include <xmltooling/security/KeyInfoResolver.h>
 #include <xmltooling/security/SecurityHelper.h>
-#include <xmltooling/util/DateTime.h>
 #include <xmltooling/util/Threads.h>
 #include <xmltooling/util/XMLHelper.h>
 
@@ -87,7 +86,7 @@ void AbstractMetadataProvider::outputStatus(ostream& os) const
     }
 
     if (m_lastUpdate > 0) {
-        DateTime ts(m_lastUpdate);
+        XMLDateTime ts(m_lastUpdate, false);
         ts.parseDateTime();
         auto_ptr_char timestamp(ts.getFormattedString());
         os << " lastUpdate='" << timestamp.get() << "'";

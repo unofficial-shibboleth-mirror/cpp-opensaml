@@ -33,12 +33,10 @@
 #include <xmltooling/ConcreteXMLObjectBuilder.h>
 #include <xmltooling/ElementExtensibleXMLObject.h>
 
+#include <xercesc/util/XMLDateTime.hpp>
+
 #define DECL_SAML1POBJECTBUILDER(cname) \
     DECL_XMLOBJECTBUILDER(SAML_API,cname,samlconstants::SAML1P_NS,samlconstants::SAML1P_PREFIX)
-
-namespace xmltooling {
-    class XMLTOOL_API DateTime;
-};
 
 namespace xmlsignature {
     class XMLTOOL_API KeyInfo;

@@ -33,13 +33,14 @@
 #include <xmltooling/ConcreteXMLObjectBuilder.h>
 #include <xmltooling/ElementProxy.h>
 
+#include <xercesc/util/XMLDateTime.hpp>
+
 #define DECL_SAML2OBJECTBUILDER(cname) \
     DECL_XMLOBJECTBUILDER(SAML_API,cname,samlconstants::SAML20_NS,samlconstants::SAML20_PREFIX)
 
 namespace xmltooling {
     class XMLTOOL_API CredentialCriteria;
     class XMLTOOL_API CredentialResolver;
-    class XMLTOOL_API DateTime;
 };
 
 namespace xmlencryption {
