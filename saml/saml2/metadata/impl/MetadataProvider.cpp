@@ -92,6 +92,8 @@ static const XMLCh Exclude[] =          UNICODE_LITERAL_7(E,x,c,l,u,d,e);
 static const XMLCh Include[] =          UNICODE_LITERAL_7(I,n,c,l,u,d,e);
 static const XMLCh _type[] =            UNICODE_LITERAL_4(t,y,p,e);
 
+MetadataProvider::MetadataProvider() { throw MetadataException("Illegal constructor call");}
+
 MetadataProvider::MetadataProvider(const DOMElement* e) : m_filterContext(nullptr)
 {
 #ifdef _DEBUG

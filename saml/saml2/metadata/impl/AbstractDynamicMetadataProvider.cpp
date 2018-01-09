@@ -71,7 +71,7 @@ static const XMLCh validate[] =             UNICODE_LITERAL_8(v,a,l,i,d,a,t,e);
 
 
 AbstractDynamicMetadataProvider::AbstractDynamicMetadataProvider(bool defaultNegativeCache, const DOMElement* e)
-    : AbstractMetadataProvider(e),
+  : AbstractMetadataProvider(e), MetadataProvider(e),
       m_validate(XMLHelper::getAttrBool(e, false, validate)),
         m_id(XMLHelper::getAttrString(e, "Dynamic", id)),
         m_lock(RWLock::create()),

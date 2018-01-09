@@ -56,7 +56,7 @@ static const XMLCh _KeyInfoResolver[] = UNICODE_LITERAL_15(K,e,y,I,n,f,o,R,e,s,o
 static const XMLCh _type[] =            UNICODE_LITERAL_4(t,y,p,e);
 
 AbstractMetadataProvider::AbstractMetadataProvider(const DOMElement* e)
-    : ObservableMetadataProvider(e), m_lastUpdate(0),  m_resolver(nullptr), m_credentialLock(Mutex::create())
+  : ObservableMetadataProvider(e), MetadataProvider(e), m_lastUpdate(0),  m_resolver(nullptr), m_credentialLock(Mutex::create())
 {
     e = XMLHelper::getFirstChildElement(e, _KeyInfoResolver);
     if (e) {

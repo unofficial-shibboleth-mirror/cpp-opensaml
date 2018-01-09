@@ -68,6 +68,13 @@ namespace opensaml {
         class SAML_API MetadataProvider : public virtual xmltooling::CredentialResolver
         {
             MAKE_NONCOPYABLE(MetadataProvider);
+	    /**
+	     * Default constructor.
+	     * DO NOT CALL.  This is needed purely as syntactic sugar to keep
+	     * MAKE_NONCOPYABLE work on Linux builds.
+	     */
+	private:
+	    MetadataProvider();
         protected:
             /**
              * Constructor.
