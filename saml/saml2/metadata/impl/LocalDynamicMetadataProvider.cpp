@@ -109,7 +109,7 @@ EntityDescriptor* LocalDynamicMetadataProvider::resolve(const Criteria& criteria
     name = m_sourceDirectory + name + ".xml";
     m_log.debug("transformed named from (%s) to (%s)", from.c_str(), name.c_str());
 
-    ifstream source(name);
+    ifstream source(name.c_str());
     if (!source) {
         m_log.debug("file not found");
         throw IOException("File Not Found");
