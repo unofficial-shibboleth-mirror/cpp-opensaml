@@ -199,7 +199,7 @@ pair<bool,DOMElement*> XMLMetadataProvider::load(bool backup)
         // We compute a random filename extension to the "real" location.
         SAMLConfig::getConfig().generateRandomBytes(backupKey, 2);
         backupKey = m_backing + '.' + SAMLArtifact::toHex(backupKey);
-        m_log.debug("backing up remote metadata resource to (%s)", backupKey.c_str());
+        m_log.debug("remote metadata resource will be backed up to (%s)", backupKey.c_str());
     }
     // Call the base class to load/parse the appropriate XML resource.
     pair<bool,DOMElement*> raw = ReloadableXMLFile::load(backup, backupKey);
