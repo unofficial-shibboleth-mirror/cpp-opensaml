@@ -23,6 +23,7 @@
 #include <saml/saml2/binding/SAML2ArtifactType0004.h>
 #include <saml/saml2/metadata/Metadata.h>
 #include <saml/saml2/metadata/MetadataProvider.h>
+#include <saml/saml2/metadata/MetadataFilter.h>
 #include <xmltooling/security/SecurityHelper.h>
 
 using namespace opensaml::saml2md;
@@ -50,6 +51,28 @@ public:
         XMLString::release(&supportedProtocol);
         XMLString::release(&supportedProtocol2);
         SAMLObjectBaseTestCase::tearDown();
+    }
+
+    void testBadSig()
+    {
+        string config = data_path + "saml2/metadata/XMLMetadataProviderBadSig.xml";
+        ifstream in(config.c_str());
+        DOMDocument* doc=XMLToolingConfig::getConfig().getParser().parse(in);
+        XercesJanitor<DOMDocument> janitor(doc);
+
+        auto_ptr<MetadataProvider> metadataProvider(SAMLConfig::getConfig().MetadataProviderManager.newPlugin(XML_METADATA_PROVIDER,
+                                                                                                              doc->getDocumentElement())
+        );
+        try {
+            metadataProvider->init();
+        } catch (MetadataFilterException& ex) {
+            TS_TRACE(ex.what());
+            return;
+        }
+        catch (XMLToolingException& ex) {
+            TS_TRACE(ex.what());
+            throw;
+        }
     }
 
     void testXMLProvider() {
@@ -92,6 +115,7 @@ public:
         TSM_ASSERT("Retrieved entity descriptor was null", descriptor!=nullptr);
         assertEquals("Entity's ID does not match requested ID", entityID, descriptor->getEntityID());
     }
+
 
     void testHTTPProvider()
     {
