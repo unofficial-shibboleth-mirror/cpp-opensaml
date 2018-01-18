@@ -105,6 +105,14 @@ namespace opensaml {
                 emitChangeEvent();
             }
 
+            void onEvent(const ObservableMetadataProvider& provider, const EntityDescriptor& entity) const {
+                // Reset the cache tag for the feed.
+                Lock lock(m_trackerLock);
+                SAMLConfig::getConfig().generateRandomBytes(m_feedTag, 4);
+                m_feedTag = SAMLArtifact::toHex(m_feedTag);
+                emitChangeEvent(entity);
+            }
+
         protected:
             void generateFeed() {
                 // No-op.
