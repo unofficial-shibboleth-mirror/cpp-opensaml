@@ -107,28 +107,6 @@ namespace opensaml {
         static const XMLCh minRefreshDelay[] =      UNICODE_LITERAL_15(m,i,n,R,e,f,r,e,s,h,D,e,l,a,y);
         static const XMLCh refreshDelayFactor[] =   UNICODE_LITERAL_18(r,e,f,r,e,s,h,D,e,l,a,y,F,a,c,t,o,r);
 
-        // TODO: need to move this into xmltooling as a utility function
-        static void xml_encode(ostream& os, const char* start)
-        {
-            size_t pos;
-            while (start && *start) {
-                pos = strcspn(start, "\"<>&");
-                if (pos > 0) {
-                    os.write(start,pos);
-                    start += pos;
-                }
-                else {
-                    switch (*start) {
-                        case '"':   os << "&quot;";     break;
-                        case '<':   os << "&lt;";       break;
-                        case '>':   os << "&gt;";       break;
-                        case '&':   os << "&amp;";      break;
-                        default:    os << *start;
-                    }
-                    start++;
-                }
-            }
-        }
     };
 };
 
@@ -370,11 +348,11 @@ void XMLMetadataProvider::outputStatus(ostream& os) const
     os << "<MetadataProvider";
 
     if (getId() && *getId()) {
-        os << " id='"; xml_encode(os, getId()); os << "'";
+        os << " id='"; XMLHelper::encode(os, getId()); os << "'";
     }
 
     if (!m_source.empty()) {
-        os << " source='"; xml_encode(os, m_source.c_str()); os << "'";
+        os << " source='";  XMLHelper::encode(os, m_source.c_str()); os << "'";
     }
 
     if (m_lastUpdate > 0) {
