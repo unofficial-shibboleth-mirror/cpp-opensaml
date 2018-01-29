@@ -75,6 +75,24 @@ public:
         }
     }
 
+    void testBadChain()
+    {
+        string config = data_path + "saml2/metadata/BadChain.xml";
+        ifstream in(config.c_str());
+        DOMDocument* doc=XMLToolingConfig::getConfig().getParser().parse(in);
+        XercesJanitor<DOMDocument> janitor(doc);
+
+        auto_ptr<MetadataProvider> metadataProvider(
+            SAMLConfig::getConfig().MetadataProviderManager.newPlugin(CHAINING_METADATA_PROVIDER, doc->getDocumentElement())
+        );
+        try {
+            metadataProvider->init();
+        } catch (XMLToolingException& ex) {
+            TS_TRACE(ex.what());
+            throw;
+        }
+    }
+
     void testXMLProvider() {
         string config = data_path + "saml2/metadata/XMLMetadataProvider.xml";
         ifstream in(config.c_str());

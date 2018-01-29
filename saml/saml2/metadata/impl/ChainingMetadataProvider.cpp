@@ -191,27 +191,32 @@ ChainingMetadataProvider::ChainingMetadataProvider(const DOMElement* e)
     if (XMLString::equals(e ? e->getAttributeNS(nullptr, precedence) : nullptr, last))
         m_firstMatch = false;
 
-    e = XMLHelper::getFirstChildElement(e, _MetadataProvider);
+    e = XMLHelper::getFirstChildElement(e);
     while (e) {
-        string t = XMLHelper::getAttrString(e, nullptr, _type);
-        if (!t.empty()) {
-            try {
-                m_log.info("building MetadataProvider of type %s", t.c_str());
-                auto_ptr<MetadataProvider> provider(SAMLConfig::getConfig().MetadataProviderManager.newPlugin(t.c_str(), e));
-                ObservableMetadataProvider* obs = dynamic_cast<ObservableMetadataProvider*>(provider.get());
-                if (obs)
-                    obs->addObserver(this);
-                m_providers.push_back(provider.get());
-                provider.release();
-            }
-            catch (std::exception& ex) {
-                m_log.error("error building MetadataProvider: %s", ex.what());
-            }
+        if (!XMLString::equals(_MetadataProvider, e->getLocalName())) {
+            auto_ptr_char name(e->getLocalName());
+            m_log.error("MetadataProvider child element of type %s ignored", name.get());
         }
         else {
-            m_log.error("MetadataProvider element missing type attribute");
+            string t = XMLHelper::getAttrString(e, nullptr, _type);
+            if (!t.empty()) {
+                try {
+                    m_log.info("building MetadataProvider of type %s", t.c_str());
+                    auto_ptr<MetadataProvider> provider(SAMLConfig::getConfig().MetadataProviderManager.newPlugin(t.c_str(), e));
+                    ObservableMetadataProvider* obs = dynamic_cast<ObservableMetadataProvider*>(provider.get());
+                    if (obs)
+                        obs->addObserver(this);
+                    m_providers.push_back(provider.get());
+                    provider.release();
+                } catch (std::exception& ex) {
+                    m_log.error("error building MetadataProvider: %s", ex.what());
+                }
+            }
+            else {
+                m_log.error("MetadataProvider element missing type attribute");
+            }
         }
-        e = XMLHelper::getNextSiblingElement(e, _MetadataProvider);
+        e = XMLHelper::getNextSiblingElement(e);
     }
 }
 
