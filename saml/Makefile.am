@@ -79,7 +79,6 @@ saml2bindinclude_HEADERS = \
 	saml2/binding/SAML2Artifact.h \
 	saml2/binding/SAML2ArtifactType0004.h \
 	saml2/binding/SAML2MessageDecoder.h \
-	saml2/binding/SAML2Redirect.h \
 	saml2/binding/SAML2SOAPClient.h
 	
 saml2mdinclude_HEADERS = \
@@ -174,7 +173,6 @@ libsaml_la_SOURCES = \
 	saml2/binding/impl/SAML2MessageDecoder.cpp \
 	saml2/binding/impl/SAML2POSTDecoder.cpp \
 	saml2/binding/impl/SAML2POSTEncoder.cpp \
-	saml2/binding/impl/SAML2Redirect.cpp \
 	saml2/binding/impl/SAML2RedirectDecoder.cpp \
 	saml2/binding/impl/SAML2RedirectEncoder.cpp \
 	saml2/binding/impl/SAML2SOAPDecoder.cpp \

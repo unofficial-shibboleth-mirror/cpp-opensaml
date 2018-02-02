@@ -82,23 +82,6 @@ else
     CXXFLAGS="$PTHREAD_CFLAGS $CXXFLAGS"
 fi
 
-# zlib settings
-AC_ARG_WITH(zlib,
-    AS_HELP_STRING([--with-zlib=PATH],[where zlib is installed]),
-    [
-        if test -d "$withval" ; then
-            CPPFLAGS="${CPPFLAGS} -I$withval/include"
-            LDFLAGS="${LDFLAGS} -L$withval/lib"
-        fi
-    ]
-)
-
-AC_CHECK_HEADER([zlib.h],,AC_MSG_ERROR([unable to find zlib header files]))
-AC_LINK_IFELSE(
-    [AC_LANG_PROGRAM([[#include <zlib.h>]],
-        [[zlibVersion()]])],,
-    [AC_MSG_ERROR([unable to link with zlib])])
-
 
 # OpenSSL settings
 AC_ARG_WITH(openssl,

@@ -27,7 +27,6 @@
 #include "internal.h"
 #include "exceptions.h"
 #include "binding/MessageEncoder.h"
-#include "saml2/binding/SAML2Redirect.h"
 #include "saml2/core/Protocols.h"
 
 #include <fstream>
@@ -41,6 +40,7 @@
 #include <xmltooling/signature/Signature.h>
 #include <xmltooling/util/NDC.h>
 #include <xmltooling/util/URLEncoder.h>
+#include <xmltooling/util/XMLHelper.h>
 
 using namespace opensaml::saml2p;
 using namespace opensaml::saml2md;
@@ -131,7 +131,7 @@ long SAML2RedirectEncoder::encode(
     log.debug("marshalled message:\n%s", xmlbuf.c_str());
     
     unsigned int len;
-    char* deflated = deflate(const_cast<char*>(xmlbuf.c_str()), xmlbuf.length(), &len);
+    char* deflated = XMLHelper::deflate(const_cast<char*>(xmlbuf.c_str()), xmlbuf.length(), &len);
     if (!deflated)
         throw BindingException("Failed to deflate message.");
     

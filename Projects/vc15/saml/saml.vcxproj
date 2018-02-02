@@ -111,7 +111,7 @@
       <PreprocessorDefinitions>_UNICODE;UNICODE;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>..\..\..\..\cpp-xmltooling\Build\vc15\$(Configuration)\xmltooling3D.lib;xerces-c_3D.lib;xsec_2D.lib;log4shib1D.lib;zlib1d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\..\..\..\cpp-xmltooling\Build\vc15\$(Configuration)\xmltooling3D.lib;xerces-c_3D.lib;xsec_2D.lib;log4shib1D.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <DataExecutionPrevention>
@@ -137,7 +137,7 @@
       <PreprocessorDefinitions>_UNICODE;UNICODE;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>..\..\..\..\cpp-xmltooling\Build\vc15\$(Platform)\$(Configuration)\xmltooling3D.lib;xerces-c_3D.lib;xsec_2D.lib;log4shib1D.lib;zlib1d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\..\..\..\cpp-xmltooling\Build\vc15\$(Platform)\$(Configuration)\xmltooling3D.lib;xerces-c_3D.lib;xsec_2D.lib;log4shib1D.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <DataExecutionPrevention>
@@ -154,7 +154,7 @@
       <DisableSpecificWarnings>4275</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>..\..\..\..\cpp-xmltooling\Build\vc15\$(Configuration)\xmltooling3.lib;xerces-c_3.lib;xsec_2.lib;log4shib1.lib;zlib1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\..\..\..\cpp-xmltooling\Build\vc15\$(Configuration)\xmltooling3.lib;xerces-c_3.lib;xsec_2.lib;log4shib1.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
@@ -176,7 +176,7 @@
       <DisableSpecificWarnings>4275</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>..\..\..\..\cpp-xmltooling\Build\vc15\$(Platform)\$(Configuration)\xmltooling3.lib;xerces-c_3.lib;xsec_2.lib;log4shib1.lib;zlib1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\..\..\..\cpp-xmltooling\Build\vc15\$(Platform)\$(Configuration)\xmltooling3.lib;xerces-c_3.lib;xsec_2.lib;log4shib1.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
@@ -264,7 +264,6 @@
     <ClCompile Include="..\..\..\saml\saml2\binding\impl\SAML2MessageDecoder.cpp" />
     <ClCompile Include="..\..\..\saml\saml2\binding\impl\SAML2POSTDecoder.cpp" />
     <ClCompile Include="..\..\..\saml\saml2\binding\impl\SAML2POSTEncoder.cpp" />
-    <ClCompile Include="..\..\..\saml\saml2\binding\impl\SAML2Redirect.cpp" />
     <ClCompile Include="..\..\..\saml\saml2\binding\impl\SAML2RedirectDecoder.cpp" />
     <ClCompile Include="..\..\..\saml\saml2\binding\impl\SAML2RedirectEncoder.cpp" />
     <ClCompile Include="..\..\..\saml\saml2\binding\impl\SAML2SOAPClient.cpp" />
@@ -329,7 +328,6 @@
     <ClInclude Include="..\..\..\saml\saml2\binding\SAML2Artifact.h" />
     <ClInclude Include="..\..\..\saml\saml2\binding\SAML2ArtifactType0004.h" />
     <ClInclude Include="..\..\..\saml\saml2\binding\SAML2MessageDecoder.h" />
-    <ClInclude Include="..\..\..\saml\saml2\binding\SAML2Redirect.h" />
     <ClInclude Include="..\..\..\saml\saml2\binding\SAML2SOAPClient.h" />
     <ClInclude Include="..\..\..\saml\saml2\profile\AssertionValidator.h" />
     <ClInclude Include="..\..\..\saml\saml2\profile\BrowserSSOProfileValidator.h" />

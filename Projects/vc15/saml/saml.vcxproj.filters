@@ -276,9 +276,6 @@
     <ClCompile Include="..\..\..\saml\saml2\binding\impl\SAML2POSTEncoder.cpp">
       <Filter>Source Files\saml2\binding\impl</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\saml\saml2\binding\impl\SAML2Redirect.cpp">
-      <Filter>Source Files\saml2\binding\impl</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\saml\saml2\binding\impl\SAML2RedirectDecoder.cpp">
       <Filter>Source Files\saml2\binding\impl</Filter>
     </ClCompile>
@@ -480,9 +477,6 @@
       <Filter>Header Files\saml2\binding</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\saml\saml2\binding\SAML2MessageDecoder.h">
-      <Filter>Header Files\saml2\binding</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\saml\saml2\binding\SAML2Redirect.h">
       <Filter>Header Files\saml2\binding</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\saml\saml2\binding\SAML2SOAPClient.h">

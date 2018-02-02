@@ -28,7 +28,6 @@
 #include "exceptions.h"
 #include "binding/SecurityPolicy.h"
 #include "saml2/binding/SAML2MessageDecoder.h"
-#include "saml2/binding/SAML2Redirect.h"
 #include "saml2/core/Protocols.h"
 #include "saml2/metadata/Metadata.h"
 #include "saml2/metadata/MetadataProvider.h"
@@ -39,6 +38,7 @@
 #include <xmltooling/io/HTTPRequest.h>
 #include <xmltooling/util/NDC.h>
 #include <xmltooling/util/ParserPool.h>
+#include <xmltooling/util/XMLHelper.h>
 #include <xmltooling/validation/ValidatorSuite.h>
 
 using namespace opensaml::saml2md;
@@ -111,7 +111,7 @@ XMLObject* SAML2RedirectDecoder::decode(
 
     // Now we have to inflate it.
     stringstream s;
-    if (inflate(reinterpret_cast<char*>(decoded), x, s)==0) {
+    if (XMLHelper::inflate(reinterpret_cast<char*>(decoded), x, s)==0) {
         XMLString::release((char**)&decoded);
         throw BindingException("Unable to inflate Redirect binding message.");
     }
