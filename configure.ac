@@ -93,16 +93,6 @@ AC_ARG_WITH(zlib,
     ]
 )
 
-AC_ARG_WITH(zlib,
-    AS_HELP_STRING([--with-zlib=PATH],[where zlib is installed]),,
-    [with_zlib=/usr])
-if test x_$with_zlib != x_/usr; then
-    CPPFLAGS="-I${with_zlib}/include $CPPFLAGS"
-    LIBS="-L${with_zlib}/lib -lz $LIBS"
-else
-    LIBS="-lz $LIBS"
-fi
-
 AC_CHECK_HEADER([zlib.h],,AC_MSG_ERROR([unable to find zlib header files]))
 AC_LINK_IFELSE(
     [AC_LANG_PROGRAM([[#include <zlib.h>]],
