@@ -53,19 +53,13 @@ using namespace std;
 namespace opensaml {
     namespace saml2p {              
         
-        static const XMLCh ProviderName[] = UNICODE_LITERAL_12(P,r,o,v,i,d,e,r,N,a,m,e);
+        static const XMLCh ProviderName[] = UNICODE_LITERAL_12(P, r, o, v, i, d, e, r, N, a, m, e);
 
         class SAML_DLLLOCAL SAML2ECPEncoder : public MessageEncoder
         {
         public:
-            SAML2ECPEncoder(const DOMElement* e, const XMLCh* ns) : m_actor("http://schemas.xmlsoap.org/soap/actor/next"),
-                    m_providerName(e ? e->getAttributeNS(ns, ProviderName) : nullptr) {
-                DOMElement* child = e ? XMLHelper::getFirstChildElement(e, SAML20P_NS, IDPList::LOCAL_NAME) : nullptr;
-                if (child)
-                    m_idpList.reset(dynamic_cast<IDPList*>(XMLObjectBuilder::buildOneFromElement(child)));
-            }
-            virtual ~SAML2ECPEncoder() {
-            }
+            SAML2ECPEncoder(const DOMElement* e);
+            virtual ~SAML2ECPEncoder() {}
 
             const XMLCh* getProtocolFamily() const {
                 return samlconstants::SAML20P_NS;
@@ -90,12 +84,32 @@ namespace opensaml {
             AnyElementBuilder m_anyBuilder;
         };
 
-        MessageEncoder* SAML_DLLLOCAL SAML2ECPEncoderFactory(const pair<const DOMElement*,const XMLCh*>& p)
+        MessageEncoder* SAML_DLLLOCAL SAML2ECPEncoderFactory(const DOMElement* const & e)
         {
-            return new SAML2ECPEncoder(p.first, p.second);
+            return new SAML2ECPEncoder(e);
         }
     };
 };
+
+SAML2ECPEncoder::SAML2ECPEncoder(const DOMElement* e)
+        : m_actor("http://schemas.xmlsoap.org/soap/actor/next"), m_providerName(nullptr) {
+
+    // Fishy alert: we ignore the namespace and look for a matching DOM Attr node by name only.
+    // Can't use DOM 1 calls, so we have to walk the attribute list by hand.
+
+    const DOMNamedNodeMap* attributes = e->getAttributes();
+    XMLSize_t size = attributes ? attributes->getLength() : 0;
+    for (XMLSize_t i = 0; i < size; ++i) {
+        const DOMNode* attr = attributes->item(i);
+        if (XMLString::equals(attr->getLocalName(), ProviderName)) {
+            m_providerName = attr->getNodeValue();
+        }
+    }
+
+    DOMElement* child = e ? XMLHelper::getFirstChildElement(e, SAML20P_NS, IDPList::LOCAL_NAME) : nullptr;
+    if (child)
+        m_idpList.reset(dynamic_cast<IDPList*>(XMLObjectBuilder::buildOneFromElement(child)));
+}
 
 long SAML2ECPEncoder::encode(
     GenericResponse& genericResponse,

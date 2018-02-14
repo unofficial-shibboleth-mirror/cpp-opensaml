@@ -57,7 +57,7 @@ namespace opensaml {
         class SAML_DLLLOCAL SAML2POSTEncoder : public MessageEncoder
         {
         public:
-            SAML2POSTEncoder(const DOMElement* e, const XMLCh* ns, bool simple=false);
+            SAML2POSTEncoder(const DOMElement* e, bool simple=false);
             virtual ~SAML2POSTEncoder() {}
 
             const XMLCh* getProtocolFamily() const {
@@ -81,25 +81,39 @@ namespace opensaml {
             bool m_simple;
         };
 
-        MessageEncoder* SAML_DLLLOCAL SAML2POSTEncoderFactory(const pair<const DOMElement*,const XMLCh*>& p)
+        MessageEncoder* SAML_DLLLOCAL SAML2POSTEncoderFactory(const DOMElement* const & e)
         {
-            return new SAML2POSTEncoder(p.first, p.second, false);
+            return new SAML2POSTEncoder(e, false);
         }
 
-        MessageEncoder* SAML_DLLLOCAL SAML2POSTSimpleSignEncoderFactory(const pair<const DOMElement*,const XMLCh*>& p)
+        MessageEncoder* SAML_DLLLOCAL SAML2POSTSimpleSignEncoderFactory(const DOMElement* const & e)
         {
-            return new SAML2POSTEncoder(p.first, p.second, true);
+            return new SAML2POSTEncoder(e, true);
         }
     };
 };
 
-static const XMLCh _template[] = UNICODE_LITERAL_8(t,e,m,p,l,a,t,e);
-
-SAML2POSTEncoder::SAML2POSTEncoder(const DOMElement* e, const XMLCh* ns, bool simple)
-    : m_template(XMLHelper::getAttrString(e, "bindingTemplate.html", _template, ns)), m_simple(simple)
+SAML2POSTEncoder::SAML2POSTEncoder(const DOMElement* e, bool simple) : m_simple(simple)
 {
+    // Fishy alert: we ignore the namespace and look for a matching DOM Attr node by name only.
+    // Can't use DOM 1 calls, so we have to walk the attribute list by hand.
+
+    static const XMLCh _template[] = UNICODE_LITERAL_8(t, e, m, p, l, a, t, e);
+
+    const DOMNamedNodeMap* attributes = e->getAttributes();
+    XMLSize_t size = attributes ? attributes->getLength() : 0;
+    for (XMLSize_t i = 0; i < size; ++i) {
+        const DOMNode* attr = attributes->item(i);
+        if (XMLString::equals(attr->getLocalName(), _template)) {
+            auto_ptr_char val(attr->getNodeValue());
+            if (val.get())
+                m_template = val.get();
+        }
+    }
+
     if (m_template.empty())
-        throw XMLToolingException("SAML2POSTEncoder requires template XML attribute.");
+        m_template = "bindingTemplate.html";
+
     XMLToolingConfig::getConfig().getPathResolver()->resolve(m_template, PathResolver::XMLTOOLING_CFG_FILE);
 }
 

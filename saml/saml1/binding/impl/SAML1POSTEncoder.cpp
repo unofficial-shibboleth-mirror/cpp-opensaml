@@ -55,7 +55,7 @@ namespace opensaml {
         class SAML_DLLLOCAL SAML1POSTEncoder : public MessageEncoder
         {
         public:
-            SAML1POSTEncoder(const DOMElement* e, const XMLCh* ns);
+            SAML1POSTEncoder(const DOMElement* e);
             virtual ~SAML1POSTEncoder() {}
 
             const XMLCh* getProtocolFamily() const {
@@ -79,20 +79,33 @@ namespace opensaml {
             string m_template;
         };
 
-        MessageEncoder* SAML_DLLLOCAL SAML1POSTEncoderFactory(const pair<const DOMElement*,const XMLCh*>& p)
+        MessageEncoder* SAML_DLLLOCAL SAML1POSTEncoderFactory(const DOMElement* const & e)
         {
-            return new SAML1POSTEncoder(p.first, p.second);
+            return new SAML1POSTEncoder(e);
         }
     };
 };
 
-static const XMLCh _template[] = UNICODE_LITERAL_8(t,e,m,p,l,a,t,e);
-
-SAML1POSTEncoder::SAML1POSTEncoder(const DOMElement* e, const XMLCh* ns)
-    : m_template(XMLHelper::getAttrString(e, "bindingTemplate.html", _template, ns))
+SAML1POSTEncoder::SAML1POSTEncoder(const DOMElement* e)
 {
+    // Fishy alert: we ignore the namespace and look for a matching DOM Attr node by name only.
+    // Can't use DOM 1 calls, so we have to walk the attribute list by hand.
+
+    static const XMLCh _template[] = UNICODE_LITERAL_8(t, e, m, p, l, a, t, e);
+
+    const DOMNamedNodeMap* attributes = e->getAttributes();
+    XMLSize_t size = attributes ? attributes->getLength() : 0;
+    for (XMLSize_t i = 0; i < size; ++i) {
+        const DOMNode* attr = attributes->item(i);
+        if (XMLString::equals(attr->getLocalName(), _template)) {
+            auto_ptr_char val(attr->getNodeValue());
+            if (val.get())
+                m_template = val.get();
+        }
+    }
+
     if (m_template.empty())
-        throw XMLToolingException("SAML1POSTEncoder requires template XML attribute.");
+        m_template = "bindingTemplate.html";
     XMLToolingConfig::getConfig().getPathResolver()->resolve(m_template, PathResolver::XMLTOOLING_CFG_FILE);
 }
 

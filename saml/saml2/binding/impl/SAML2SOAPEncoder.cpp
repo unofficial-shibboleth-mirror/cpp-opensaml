@@ -75,7 +75,7 @@ namespace opensaml {
                 ) const;
         };
 
-        MessageEncoder* SAML_DLLLOCAL SAML2SOAPEncoderFactory(const pair<const DOMElement*,const XMLCh*>& p)
+        MessageEncoder* SAML_DLLLOCAL SAML2SOAPEncoderFactory(const DOMElement* const &)
         {
             return new SAML2SOAPEncoder();
         }

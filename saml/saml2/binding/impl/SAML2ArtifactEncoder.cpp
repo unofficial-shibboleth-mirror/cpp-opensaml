@@ -57,7 +57,7 @@ namespace opensaml {
         class SAML_DLLLOCAL SAML2ArtifactEncoder : public MessageEncoder
         {
         public:
-            SAML2ArtifactEncoder(const DOMElement* e, const XMLCh* ns);
+            SAML2ArtifactEncoder(const DOMElement* e);
             virtual ~SAML2ArtifactEncoder() {}
 
             const XMLCh* getProtocolFamily() const {
@@ -80,22 +80,51 @@ namespace opensaml {
             string m_template;
         };
 
-        MessageEncoder* SAML_DLLLOCAL SAML2ArtifactEncoderFactory(const pair<const DOMElement*,const XMLCh*>& p)
+        MessageEncoder* SAML_DLLLOCAL SAML2ArtifactEncoderFactory(const DOMElement* const & e)
         {
-            return new SAML2ArtifactEncoder(p.first, p.second);
+            return new SAML2ArtifactEncoder(e);
         }
     };
 
-    static const XMLCh _template[] =    UNICODE_LITERAL_8(t,e,m,p,l,a,t,e);
-    static const XMLCh postArtifact[] = UNICODE_LITERAL_12(p,o,s,t,A,r,t,i,f,a,c,t);
 };
 
-SAML2ArtifactEncoder::SAML2ArtifactEncoder(const DOMElement* e, const XMLCh* ns)
+SAML2ArtifactEncoder::SAML2ArtifactEncoder(const DOMElement* e)
 {
-    if (XMLHelper::getAttrBool(e, false, postArtifact, ns)) {
-        m_template = XMLHelper::getAttrString(e, "bindingTemplate.html", _template, ns);
-        if (!m_template.empty())
-            XMLToolingConfig::getConfig().getPathResolver()->resolve(m_template, PathResolver::XMLTOOLING_CFG_FILE);
+    // Fishy alert: we ignore the namespace and look for a matching DOM Attr node by name only.
+    // Can't use DOM 1 calls, so we have to walk the attribute list by hand.
+
+    static const XMLCh postArtifact[] = UNICODE_LITERAL_12(p, o, s, t, A, r, t, i, f, a, c, t);
+    static const XMLCh _template[] = UNICODE_LITERAL_8(t, e, m, p, l, a, t, e);
+
+    const DOMNamedNodeMap* attributes = e->getAttributes();
+    XMLSize_t size = attributes ? attributes->getLength() : 0;
+
+    bool post = false;
+    for (XMLSize_t i = 0; i < size; ++i) {
+        const DOMNode* attr = attributes->item(i);
+        if (XMLString::equals(attr->getLocalName(), postArtifact)) {
+            const XMLCh* val = attr->getNodeValue();
+            if (val) {
+                if (*val == chLatin_t || *val == chDigit_1)
+                    post = true;
+            }
+        }
+    }
+
+    if (post) {
+        for (XMLSize_t i = 0; i < size; ++i) {
+            const DOMNode* attr = attributes->item(i);
+            if (XMLString::equals(attr->getLocalName(), _template)) {
+                auto_ptr_char val(attr->getNodeValue());
+                if (val.get())
+                    m_template = val.get();
+            }
+        }
+
+        if (m_template.empty())
+            m_template = "bindingTemplate.html";
+
+        XMLToolingConfig::getConfig().getPathResolver()->resolve(m_template, PathResolver::XMLTOOLING_CFG_FILE);
     }
 }
 

@@ -64,7 +64,7 @@ namespace opensaml {
                 ) const;
         };                
 
-        MessageDecoder* SAML_DLLLOCAL SAML2SOAPDecoderFactory(const pair<const DOMElement*,const XMLCh*>& p)
+        MessageDecoder* SAML_DLLLOCAL SAML2SOAPDecoderFactory(const DOMElement* const &)
         {
             return new SAML2SOAPDecoder();
         }

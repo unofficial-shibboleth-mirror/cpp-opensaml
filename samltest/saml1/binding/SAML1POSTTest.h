@@ -72,7 +72,7 @@ public:
             encoder_config->getDocumentElement()->setAttributeNS(nullptr,lit2.get(),lit3.get());
             boost::scoped_ptr<MessageEncoder> encoder(
                 SAMLConfig::getConfig().MessageEncoderManager.newPlugin(
-                    samlconstants::SAML1_PROFILE_BROWSER_POST, pair<const DOMElement*,const XMLCh*>(encoder_config->getDocumentElement(),nullptr)
+                    samlconstants::SAML1_PROFILE_BROWSER_POST, encoder_config->getDocumentElement()
                     )
                 );
 
@@ -91,9 +91,7 @@ public:
             // Decode message.
             string relayState;
             boost::scoped_ptr<MessageDecoder> decoder(
-                SAMLConfig::getConfig().MessageDecoderManager.newPlugin(
-                    samlconstants::SAML1_PROFILE_BROWSER_POST, pair<const DOMElement*,const XMLCh*>(nullptr,nullptr)
-                    )
+                SAMLConfig::getConfig().MessageDecoderManager.newPlugin(samlconstants::SAML1_PROFILE_BROWSER_POST, nullptr)
                 );
             boost::scoped_ptr<Response> response(dynamic_cast<Response*>(decoder->decode(relayState,*this,policy)));
             

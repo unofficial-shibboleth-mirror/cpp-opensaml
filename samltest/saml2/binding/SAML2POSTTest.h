@@ -72,7 +72,7 @@ public:
             encoder_config->getDocumentElement()->setAttributeNS(nullptr,lit2.get(),lit3.get());
             boost::scoped_ptr<MessageEncoder> encoder(
                 SAMLConfig::getConfig().MessageEncoderManager.newPlugin(
-                    samlconstants::SAML20_BINDING_HTTP_POST, pair<const DOMElement*,const XMLCh*>(encoder_config->getDocumentElement(), nullptr)
+                    samlconstants::SAML20_BINDING_HTTP_POST, encoder_config->getDocumentElement()
                     )
                 );
             Locker locker(m_metadata.get());
@@ -90,9 +90,7 @@ public:
             // Decode message.
             string relayState;
             boost::scoped_ptr<MessageDecoder> decoder(
-                SAMLConfig::getConfig().MessageDecoderManager.newPlugin(
-                    samlconstants::SAML20_BINDING_HTTP_POST, pair<const DOMElement*,const XMLCh*>(nullptr,nullptr)
-                    )
+                SAMLConfig::getConfig().MessageDecoderManager.newPlugin(samlconstants::SAML20_BINDING_HTTP_POST, nullptr)
                 );
             boost::scoped_ptr<Response> response(dynamic_cast<Response*>(decoder->decode(relayState,*this,policy)));
             
@@ -151,7 +149,7 @@ public:
             encoder_config->getDocumentElement()->setAttributeNS(nullptr,lit2.get(),lit3.get());
             boost::scoped_ptr<MessageEncoder> encoder(
                 SAMLConfig::getConfig().MessageEncoderManager.newPlugin(
-                    samlconstants::SAML20_BINDING_HTTP_POST_SIMPLESIGN, pair<const DOMElement*,const XMLCh*>(encoder_config->getDocumentElement(),nullptr)
+                    samlconstants::SAML20_BINDING_HTTP_POST_SIMPLESIGN, encoder_config->getDocumentElement()
                     )
                 );
             Locker locker(m_metadata.get());
@@ -169,9 +167,7 @@ public:
             // Decode message.
             string relayState;
             boost::scoped_ptr<MessageDecoder> decoder(
-                SAMLConfig::getConfig().MessageDecoderManager.newPlugin(
-                    samlconstants::SAML20_BINDING_HTTP_POST_SIMPLESIGN, pair<const DOMElement*,const XMLCh*>(nullptr,nullptr)
-                    )
+                SAMLConfig::getConfig().MessageDecoderManager.newPlugin(samlconstants::SAML20_BINDING_HTTP_POST_SIMPLESIGN, nullptr)
                 );
             boost::scoped_ptr<Response> response(dynamic_cast<Response*>(decoder->decode(relayState,*this,policy)));
             

@@ -67,9 +67,7 @@ public:
 
             // Encode message.
             boost::scoped_ptr<MessageEncoder> encoder(
-                SAMLConfig::getConfig().MessageEncoderManager.newPlugin(
-                    samlconstants::SAML20_BINDING_HTTP_ARTIFACT, pair<const DOMElement*,const XMLCh*>(nullptr,nullptr)
-                    )
+                SAMLConfig::getConfig().MessageEncoderManager.newPlugin(samlconstants::SAML20_BINDING_HTTP_ARTIFACT, nullptr)
                 );
             Locker locker(m_metadata.get());
             encoder->encode(
@@ -86,9 +84,7 @@ public:
             // Decode message.
             string relayState;
             boost::scoped_ptr<MessageDecoder> decoder(
-                SAMLConfig::getConfig().MessageDecoderManager.newPlugin(
-                    samlconstants::SAML20_BINDING_HTTP_ARTIFACT, pair<const DOMElement*,const XMLCh*>(nullptr,nullptr)
-                    )
+                SAMLConfig::getConfig().MessageDecoderManager.newPlugin(samlconstants::SAML20_BINDING_HTTP_ARTIFACT, nullptr)
                 );
             decoder->setArtifactResolver(this);
             boost::scoped_ptr<Response> response(dynamic_cast<Response*>(decoder->decode(relayState,*this,policy)));

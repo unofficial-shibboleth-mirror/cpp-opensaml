@@ -175,10 +175,10 @@ namespace opensaml {
         virtual const saml2md::ContactPerson* getContactPerson(const saml2md::RoleDescriptor& role) const=0;
 
         /** Manages factories for MessageDecoder plugins. */
-        xmltooling::PluginManager< MessageDecoder,std::string,std::pair<const xercesc::DOMElement*,const XMLCh*> > MessageDecoderManager;
+        xmltooling::PluginManager<MessageDecoder,std::string,const xercesc::DOMElement*> MessageDecoderManager;
 
         /** Manages factories for MessageEncoder plugins. */
-        xmltooling::PluginManager< MessageEncoder,std::string,std::pair<const xercesc::DOMElement*,const XMLCh*> > MessageEncoderManager;
+        xmltooling::PluginManager<MessageEncoder,std::string,const xercesc::DOMElement*> MessageEncoderManager;
 
         /** Manages factories for SAMLArtifact plugins. */
         xmltooling::PluginManager<SAMLArtifact,std::string,const char*> SAMLArtifactManager;

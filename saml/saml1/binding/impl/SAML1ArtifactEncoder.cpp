@@ -73,7 +73,7 @@ namespace opensaml {
                 ) const;
         };                
 
-        MessageEncoder* SAML_DLLLOCAL SAML1ArtifactEncoderFactory(const pair<const DOMElement*,const XMLCh*>& p)
+        MessageEncoder* SAML_DLLLOCAL SAML1ArtifactEncoderFactory(const DOMElement* const &)
         {
             return new SAML1ArtifactEncoder();
         }
