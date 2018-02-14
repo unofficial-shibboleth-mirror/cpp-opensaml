@@ -97,7 +97,7 @@ SAML2ECPEncoder::SAML2ECPEncoder(const DOMElement* e)
     // Fishy alert: we ignore the namespace and look for a matching DOM Attr node by name only.
     // Can't use DOM 1 calls, so we have to walk the attribute list by hand.
 
-    const DOMNamedNodeMap* attributes = e->getAttributes();
+    const DOMNamedNodeMap* attributes = e ? e->getAttributes() : nullptr;
     XMLSize_t size = attributes ? attributes->getLength() : 0;
     for (XMLSize_t i = 0; i < size; ++i) {
         const DOMNode* attr = attributes->item(i);

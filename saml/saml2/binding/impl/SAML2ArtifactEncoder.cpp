@@ -96,7 +96,7 @@ SAML2ArtifactEncoder::SAML2ArtifactEncoder(const DOMElement* e)
     static const XMLCh postArtifact[] = UNICODE_LITERAL_12(p, o, s, t, A, r, t, i, f, a, c, t);
     static const XMLCh _template[] = UNICODE_LITERAL_8(t, e, m, p, l, a, t, e);
 
-    const DOMNamedNodeMap* attributes = e->getAttributes();
+    const DOMNamedNodeMap* attributes = e ? e->getAttributes() : nullptr;
     XMLSize_t size = attributes ? attributes->getLength() : 0;
 
     bool post = false;

@@ -100,7 +100,7 @@ SAML2POSTEncoder::SAML2POSTEncoder(const DOMElement* e, bool simple) : m_simple(
 
     static const XMLCh _template[] = UNICODE_LITERAL_8(t, e, m, p, l, a, t, e);
 
-    const DOMNamedNodeMap* attributes = e->getAttributes();
+    const DOMNamedNodeMap* attributes = e ? e->getAttributes() : nullptr;
     XMLSize_t size = attributes ? attributes->getLength() : 0;
     for (XMLSize_t i = 0; i < size; ++i) {
         const DOMNode* attr = attributes->item(i);
