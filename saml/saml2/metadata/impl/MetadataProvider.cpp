@@ -99,7 +99,7 @@ MetadataProvider::MetadataProvider(const DOMElement* e) : m_filterContext(nullpt
 #ifdef _DEBUG
     NDC ndc("MetadataProvider");
 #endif
-    Category& log = Category::getInstance(SAML_LOGCAT ".Metadata");
+    Category& log = Category::getInstance(SAML_LOGCAT ".MetadataProvider");
     SAMLConfig& conf = SAMLConfig::getConfig();
 
     // Locate any default recognized filters and plugins.
