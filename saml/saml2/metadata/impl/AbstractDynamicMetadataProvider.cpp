@@ -71,15 +71,15 @@ static const XMLCh validate[] =             UNICODE_LITERAL_8(v,a,l,i,d,a,t,e);
 
 
 AbstractDynamicMetadataProvider::AbstractDynamicMetadataProvider(bool defaultNegativeCache, const DOMElement* e)
-  : AbstractMetadataProvider(e), MetadataProvider(e),
+  : MetadataProvider(e), AbstractMetadataProvider(e),
       m_validate(XMLHelper::getAttrBool(e, false, validate)),
         m_id(XMLHelper::getAttrString(e, "Dynamic", id)),
         m_lock(RWLock::create()),
         m_refreshDelayFactor(0.75),
         m_minCacheDuration(XMLHelper::getAttrInt(e, 600, minCacheDuration)),
         m_maxCacheDuration(XMLHelper::getAttrInt(e, 28800, maxCacheDuration)),
-        m_shutdown(false),
         m_negativeCache(XMLHelper::getAttrBool(e, defaultNegativeCache, negativeCache)),
+        m_shutdown(false),
         m_cleanupInterval(XMLHelper::getAttrInt(e, 1800, cleanupInterval)),
         m_cleanupTimeout(XMLHelper::getAttrInt(e, 1800, cleanupTimeout)),
         m_cleanup_wait(nullptr), m_cleanup_thread(nullptr)

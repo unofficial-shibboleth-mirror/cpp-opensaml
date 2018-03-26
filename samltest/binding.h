@@ -185,7 +185,7 @@ public:
     
     // HTTPResponse methods
     
-    void setResponseHeader(const char* name, const char* value) {
+    void setResponseHeader(const char* name, const char* value, bool replace=false) {
         m_headers[name] = value ? value : "";
     }
 
