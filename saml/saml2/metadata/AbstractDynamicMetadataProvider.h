@@ -103,8 +103,8 @@ namespace opensaml {
 
             // Used to manage background maintenance of cache.
             bool m_shutdown;
-            time_t m_cleanupInterval;
-            time_t m_cleanupTimeout;
+            long m_cleanupInterval;
+            long m_cleanupTimeout;
             xmltooling::CondWait* m_cleanup_wait;
             xmltooling::Thread* m_cleanup_thread;
             static void* cleanup_fn(void*);
