@@ -119,22 +119,27 @@ MetadataProvider::MetadataProvider(const DOMElement* e) : m_filterContext(nullpt
                 }
             }
             else if (XMLString::equals(child->getLocalName(), SigFilter)) {
+                log.warn("<SignatureMetadataFilter> and will be deprecated in future versions: use type=\"%s\"", SIGNATURE_METADATA_FILTER);
                 log.info("building MetadataFilter of type %s", SIGNATURE_METADATA_FILTER);
                 m_filters.push_back(conf.MetadataFilterManager.newPlugin(SIGNATURE_METADATA_FILTER, child));
             }
             else if (XMLString::equals(child->getLocalName(), Whitelist)) {
+                log.warn("<WhitelistMetadataFilter> and will be deprecated in future versions use: type=\"%s\"", WHITELIST_METADATA_FILTER);
                 log.info("building MetadataFilter of type %s", WHITELIST_METADATA_FILTER);
                 m_filters.push_back(conf.MetadataFilterManager.newPlugin(WHITELIST_METADATA_FILTER, child));
             }
             else if (XMLString::equals(child->getLocalName(), Blacklist)) {
+                log.warn("<BlacklistMetadataFilter> and will be deprecated in future versions use: type=\"%s\"", BLACKLIST_METADATA_FILTER);
                 log.info("building MetadataFilter of type %s", BLACKLIST_METADATA_FILTER);
                 m_filters.push_back(conf.MetadataFilterManager.newPlugin(BLACKLIST_METADATA_FILTER, child));
             }
             else if (XMLString::equals(child->getLocalName(), Include)) {
+                log.warn("<Include> and will be deprecated in future versions: use type=\"%s\"", WHITELIST_METADATA_FILTER);
                 log.info("building MetadataFilter of type %s", WHITELIST_METADATA_FILTER);
                 m_filters.push_back(conf.MetadataFilterManager.newPlugin(WHITELIST_METADATA_FILTER, e));
             }
             else if (XMLString::equals(child->getLocalName(), Exclude)) {
+                log.warn("<Exclude> and will be deprecated in future versions: use type=\"%s\"", BLACKLIST_METADATA_FILTER);
                 log.info("building MetadataFilter of type %s", BLACKLIST_METADATA_FILTER);
                 m_filters.push_back(conf.MetadataFilterManager.newPlugin(BLACKLIST_METADATA_FILTER, e));
             }
