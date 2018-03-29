@@ -55,6 +55,11 @@ DiscoverableMetadataProvider::DiscoverableMetadataProvider(const DOMElement* e) 
     static const XMLCh _type[] =            UNICODE_LITERAL_4(t,y,p,e);
     static const XMLCh DiscoveryFilter[] =  UNICODE_LITERAL_15(D,i,s,c,o,v,e,r,y,F,i,l,t,e,r);
 
+    const XMLCh* attrib = e? e->getAttributeNS(nullptr, legacyOrgNames) : nullptr;
+    if (attrib && *attrib) {
+        Category::getInstance(SAML_LOGCAT ".MetadataProvider.Discoverable").warn("legacyOrgNames is a deprecated attribute for MetadataProviders");
+    }
+
     m_legacyOrgNames = XMLHelper::getAttrBool(e, false, legacyOrgNames);
     m_entityAttributes = XMLHelper::getAttrBool(e, false, tagsInFeed);
 
