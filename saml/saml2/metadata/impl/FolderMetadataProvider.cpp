@@ -33,18 +33,9 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xmltooling/logging.h>
 #include <xmltooling/XMLToolingConfig.h>
+#include <xmltooling/util/DirectoryWalker.h>
 #include <xmltooling/util/PathResolver.h>
 #include <xmltooling/util/XMLHelper.h>
-
-#ifndef WIN32
-# if defined(HAVE_SYS_TYPES_H) && defined(HAVE_DIRENT_H)
-#  include <dirent.h>
-#  include <sys/types.h>
-#  include <sys/stat.h>
-# else
-#  error Unsupported directory library headers.
-# endif
-#endif
 
 using namespace opensaml::saml2md;
 using namespace opensaml;
@@ -61,6 +52,7 @@ namespace opensaml {
         static const XMLCh discoveryFeed[] =        UNICODE_LITERAL_13(d,i,s,c,o,v,e,r,y,F,e,e,d);
         static const XMLCh dropDOM[] =              UNICODE_LITERAL_7(d,r,o,p,D,O,M);
         static const XMLCh legacyOrgNames[] =       UNICODE_LITERAL_14(l,e,g,a,c,y,O,r,g,N,a,m,e,s);
+        static const XMLCh nested[] =               UNICODE_LITERAL_6(n,e,s,t,e,d);
         static const XMLCh path[] =                 UNICODE_LITERAL_4(p,a,t,h);
         static const XMLCh precedence[] =           UNICODE_LITERAL_10(p,r,e,c,e,d,e,n,c,e);
         static const XMLCh reloadChanges[] =        UNICODE_LITERAL_13(r,e,l,o,a,d,C,h,a,n,g,e,s);
@@ -68,6 +60,33 @@ namespace opensaml {
         static const XMLCh _type[] =                UNICODE_LITERAL_4(t,y,p,e);
         static const XMLCh _XML[] =                 UNICODE_LITERAL_3(X,M,L);
     
+        static void FolderCallback(const char* pathname, struct stat& stat_buf, void* data) {
+            // data is a pair of DOM elements, the config root and the mocked up Chaining child
+            pair<const DOMElement*,DOMElement*>* p = reinterpret_cast<pair<const DOMElement*,DOMElement*>*>(data);
+            auto_ptr_XMLCh entry(pathname);
+
+            DOMElement* child = p->first->getOwnerDocument()->createElementNS(nullptr, _MetadataProvider);
+            child->setAttributeNS(nullptr, _type, _XML);
+            child->setAttributeNS(nullptr, path, entry.get());
+            if (p->first->hasAttributeNS(nullptr, validate))
+                child->setAttributeNS(nullptr, validate, p->first->getAttributeNS(nullptr, validate));
+            if (p->first->hasAttributeNS(nullptr, reloadChanges))
+                child->setAttributeNS(nullptr, reloadChanges, p->first->getAttributeNS(nullptr, reloadChanges));
+            if (p->first->hasAttributeNS(nullptr, discoveryFeed))
+                child->setAttributeNS(nullptr, discoveryFeed, p->first->getAttributeNS(nullptr, discoveryFeed));
+            if (p->first->hasAttributeNS(nullptr, legacyOrgNames))
+                child->setAttributeNS(nullptr, legacyOrgNames, p->first->getAttributeNS(nullptr, legacyOrgNames));
+            if (p->first->hasAttributeNS(nullptr, dropDOM))
+                child->setAttributeNS(nullptr, dropDOM, p->first->getAttributeNS(nullptr, dropDOM));
+
+            DOMElement* filter = XMLHelper::getFirstChildElement(p->first);
+            while (filter) {
+                child->appendChild(filter->cloneNode(true));
+                filter = XMLHelper::getNextSiblingElement(filter);
+            }
+            p->second->appendChild(child);
+        }
+
         MetadataProvider* SAML_DLLLOCAL FolderMetadataProviderFactory(const DOMElement* const & e)
         {
             // The goal here is to construct a configuration for a chain of file-based providers
@@ -90,77 +109,10 @@ namespace opensaml {
             Category& log = Category::getInstance(SAML_LOGCAT ".MetadataProvider.Folder");
             log.info("loading metadata files from folder (%s)", loc.c_str());
 
-#ifdef WIN32
-            WIN32_FIND_DATA f;
-            fullname = loc + "/*";
-            HANDLE h = FindFirstFile(fullname.c_str(), &f);
-            if (h == INVALID_HANDLE_VALUE) {
-                if (GetLastError() != ERROR_FILE_NOT_FOUND)
-                    throw MetadataException("Folder MetadataProvider unable to open directory ($1)", params(1, loc.c_str()));
-                log.warn("no files found in folder (%s)", loc.c_str());
-                return SAMLConfig::getConfig().MetadataProviderManager.newPlugin(CHAINING_METADATA_PROVIDER, root);
-            }
-            do {
-                if (f.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
-                    if (strcmp(f.cFileName, ".") && strcmp(f.cFileName, ".."))
-                        log.warn("nested folders not supported, skipping (%s)", f.cFileName);
-                    continue;
-                }
-                fullname = loc + '/' + f.cFileName;
-                log.info("will create metadata source from (%s)", fullname.c_str());
-                auto_ptr_XMLCh entry(fullname.c_str());
-#else
-            DIR* d = opendir(loc.c_str());
-            if (!d) {
-                throw MetadataException("Folder MetadataProvider unable to open directory ($1)", params(1, loc.c_str()));
-            }
-            char dir_buf[sizeof(struct dirent) + PATH_MAX];
-            struct dirent* ent = (struct dirent*)dir_buf;
-            struct dirent* entptr = nullptr;
-            while(readdir_r(d, ent, &entptr) == 0 && entptr) {
-                if (!strcmp(entptr->d_name, ".") || !strcmp(entptr->d_name, ".."))
-                    continue;
-                fullname = loc + '/' + entptr->d_name;
-                struct stat stat_buf;
-                if (stat(fullname.c_str(), &stat_buf) != 0) {
-                    log.warn("unable to access (%s)", entptr->d_name);
-                    continue;
-                }
-                else if (S_ISDIR(stat_buf.st_mode)) {
-                    log.warn("nested folders not supported, skipping (%s)", entptr->d_name);
-                    continue;
-                }
-                log.info("will create metadata source from (%s)", fullname.c_str());
-                auto_ptr_XMLCh entry(fullname.c_str());
-#endif
-                DOMElement* child = e->getOwnerDocument()->createElementNS(nullptr, _MetadataProvider);
-                child->setAttributeNS(nullptr, _type, _XML);
-                child->setAttributeNS(nullptr, path, entry.get());
-                if (e->hasAttributeNS(nullptr, validate))
-                    child->setAttributeNS(nullptr, validate, e->getAttributeNS(nullptr, validate));
-                if (e->hasAttributeNS(nullptr, reloadChanges))
-                    child->setAttributeNS(nullptr, reloadChanges, e->getAttributeNS(nullptr, reloadChanges));
-                if (e->hasAttributeNS(nullptr, discoveryFeed))
-                    child->setAttributeNS(nullptr, discoveryFeed, e->getAttributeNS(nullptr, discoveryFeed));
-                if (e->hasAttributeNS(nullptr, legacyOrgNames))
-                    child->setAttributeNS(nullptr, legacyOrgNames, e->getAttributeNS(nullptr, legacyOrgNames));
-                if (e->hasAttributeNS(nullptr, dropDOM))
-                    child->setAttributeNS(nullptr, dropDOM, e->getAttributeNS(nullptr, dropDOM));
+            DirectoryWalker walker(log, loc.c_str(), XMLHelper::getAttrBool(e, false, nested));
+            pair<const DOMElement*,DOMElement*> data = make_pair(e, root);
+            walker.walk(FolderCallback, &data);
 
-                DOMElement* filter = XMLHelper::getFirstChildElement(e);
-                while (filter) {
-                    child->appendChild(filter->cloneNode(true));
-                    filter = XMLHelper::getNextSiblingElement(filter);
-                }
-                root->appendChild(child);
-
-#ifdef WIN32
-            } while (FindNextFile(h, &f));
-            FindClose(h);
-#else
-            }
-            closedir(d);
-#endif
             return SAMLConfig::getConfig().MetadataProviderManager.newPlugin(CHAINING_METADATA_PROVIDER, root);
         }
 
