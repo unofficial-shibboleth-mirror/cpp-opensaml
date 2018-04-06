@@ -124,7 +124,7 @@ namespace opensaml {
 
         private:
             bool m_firstMatch;
-            mutable auto_ptr<Mutex> m_trackerLock;
+            scoped_ptr<Mutex> m_trackerLock;
             auto_ptr<ThreadKey> m_tlsKey;
             mutable ptr_vector<MetadataProvider> m_providers;
             mutable set<tracker_t*> m_trackers;

@@ -75,7 +75,7 @@ namespace opensaml {
 
         void removeMapping(const map<string,Mapping>::iterator& i);
         
-        auto_ptr<Mutex> m_lock;
+        scoped_ptr<Mutex> m_lock;
         map<string,Mapping> m_artMap;
         multimap<time_t,string> m_expMap;
     };

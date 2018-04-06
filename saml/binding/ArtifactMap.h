@@ -30,7 +30,7 @@
 #include <saml/base.h>
 
 #include <string>
-#include <memory>
+#include <boost/scoped_ptr.hpp>
 #include <xercesc/dom/DOM.hpp>
 
 namespace xmltooling {
@@ -111,7 +111,7 @@ namespace opensaml {
     private:
         xmltooling::StorageService* m_storage;
         std::string m_context;
-        std::auto_ptr<ArtifactMappings> m_mappings;
+        boost::scoped_ptr<ArtifactMappings> m_mappings;
         unsigned int m_artifactTTL;
     };
 
