@@ -39,7 +39,7 @@ public:
     }
 
     void testSingleElementUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         Audience* audience = dynamic_cast<Audience*>(xo.get());
         TS_ASSERT(audience!=nullptr);
         assertEquals("Audience text content", expectedContent, audience->getAudienceURI());

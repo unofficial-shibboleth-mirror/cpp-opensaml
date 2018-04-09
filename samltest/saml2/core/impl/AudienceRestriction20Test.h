@@ -38,7 +38,7 @@ public:
     }
 
     void testSingleElementUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         AudienceRestriction* ar = dynamic_cast<AudienceRestriction*>(xo.get());
         TS_ASSERT(ar!=nullptr);
 
@@ -46,7 +46,7 @@ public:
     }
 
     void testChildElementsUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         AudienceRestriction* ar= dynamic_cast<AudienceRestriction*>(xo.get());
         TS_ASSERT(ar!=nullptr);
 

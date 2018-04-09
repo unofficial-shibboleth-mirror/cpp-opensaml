@@ -39,6 +39,8 @@ using namespace xmltooling;
 using namespace xercesc;
 using namespace std;
 
+using boost::scoped_ptr;
+
 extern string data_path;
 
 class SAMLObjectBaseTestCase
@@ -152,15 +154,13 @@ public:
 class SAMLObjectValidatorBaseTestCase : virtual public SAMLObjectBaseTestCase {
 
     public:
-        SAMLObjectValidatorBaseTestCase() : target(nullptr), targetQName(nullptr), builder(nullptr), validator(nullptr) {}
+        SAMLObjectValidatorBaseTestCase() : builder(nullptr) {}
 
-        virtual ~SAMLObjectValidatorBaseTestCase() {
-            delete validator;
-        }
+        virtual ~SAMLObjectValidatorBaseTestCase() {}
 
     protected: 
         /** The primary XMLObject which will be the target of a given test run */
-        XMLObject* target;
+        scoped_ptr<XMLObject> target;
 
         /** QName of the object to be tested */
         xmltooling::QName targetQName;
@@ -169,7 +169,7 @@ class SAMLObjectValidatorBaseTestCase : virtual public SAMLObjectBaseTestCase {
         const XMLObjectBuilder* builder;
 
         /** Validator for the type corresponding to the test target */
-        Validator* validator;
+        scoped_ptr<Validator> validator;
 
         /** Subclasses should override to populate required elements and attributes */
         virtual void populateRequiredData() { }
@@ -191,10 +191,10 @@ class SAMLObjectValidatorBaseTestCase : virtual public SAMLObjectBaseTestCase {
          * @param message
          * @param validateTarget
          */
-        void assertValidationPass(const char* message, XMLObject* validateTarget) {
+        void assertValidationPass(const char* message, scoped_ptr<XMLObject>& validateTarget) {
             try {
-                validator->validate(validateTarget);
-            } catch (ValidationException &e) {
+                validator->validate(validateTarget.get());
+            } catch (const ValidationException &e) {
                 TS_TRACE(message);
                 TS_TRACE("Expected success, but validation failure raised following ValidationException: ");
                 TS_FAIL(e.getMessage());
@@ -218,12 +218,12 @@ class SAMLObjectValidatorBaseTestCase : virtual public SAMLObjectBaseTestCase {
          * @param message
          * @param validateTarget
          */
-        void assertValidationFail(const char* message, XMLObject* validateTarget) {
+        void assertValidationFail(const char* message, scoped_ptr<XMLObject>& validateTarget) {
             try {
-                validator->validate(validateTarget);
+                validator->validate(validateTarget.get());
                 TS_TRACE(message);
                 TS_FAIL("Validation success, expected failure to raise ValidationException");
-            } catch (ValidationException&) {
+            } catch (const ValidationException&) {
             }
         }
 
@@ -233,7 +233,7 @@ class SAMLObjectValidatorBaseTestCase : virtual public SAMLObjectBaseTestCase {
          * @param targetQName QName of the type of object to build
          * @returns new XMLObject of type targetQName
          */
-        XMLObject* buildXMLObject(xmltooling::QName &targetQName) {
+        XMLObject* buildXMLObject(const xmltooling::QName &targetQName) {
             // Create the builder on the first request only, for efficiency
             if (builder == nullptr) {
                 builder = XMLObjectBuilder::getBuilder(targetQName);
@@ -250,18 +250,17 @@ class SAMLObjectValidatorBaseTestCase : virtual public SAMLObjectBaseTestCase {
 
             TSM_ASSERT("targetQName was empty", targetQName.hasLocalPart());
 
-            TSM_ASSERT("validator was null", validator!=nullptr);
+            TSM_ASSERT("validator was null", validator.get() != nullptr);
 
-            target = buildXMLObject(targetQName);
-            TSM_ASSERT("XMLObject target was NULL", target!=nullptr);
+            target.reset(buildXMLObject(targetQName));
+            TSM_ASSERT("XMLObject target was NULL", target.get() != nullptr);
             populateRequiredData();
         }
 
         void tearDown() {
-            delete target;
-            target=nullptr;
+            target.reset(nullptr);
+            validator.reset(nullptr);
             SAMLObjectBaseTestCase::tearDown();
         }
 
 };
-

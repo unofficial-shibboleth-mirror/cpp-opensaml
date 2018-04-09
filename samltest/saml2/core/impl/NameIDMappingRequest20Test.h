@@ -28,7 +28,7 @@ using namespace opensaml::saml2;
 class NameIDMappingRequest20Test : public CxxTest::TestSuite, public SAMLObjectBaseTestCase {
     XMLCh* expectedID; 
     XMLCh* expectedVersion; 
-    XMLDateTime* expectedIssueInstant; 
+    scoped_ptr<XMLDateTime> expectedIssueInstant;
     XMLCh* expectedConsent; 
     XMLCh* expectedDestination; 
 
@@ -36,7 +36,7 @@ public:
     void setUp() {
         expectedID = XMLString::transcode("abc123");; 
         expectedVersion = XMLString::transcode("2.0"); 
-        expectedIssueInstant = new XMLDateTime(XMLString::transcode("2006-02-21T16:40:00.000Z"));
+        expectedIssueInstant.reset(new XMLDateTime(XMLString::transcode("2006-02-21T16:40:00.000Z")));
         expectedIssueInstant->parseDateTime();
         expectedConsent = XMLString::transcode("urn:string:consent"); 
         expectedDestination = XMLString::transcode("http://idp.example.org/endpoint"); 
@@ -52,12 +52,12 @@ public:
         XMLString::release(&expectedVersion);
         XMLString::release(&expectedConsent);
         XMLString::release(&expectedDestination);
-        delete expectedIssueInstant;
+        expectedIssueInstant.reset();
         SAMLObjectBaseTestCase::tearDown();
     }
 
     void testSingleElementUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         NameIDMappingRequest* request = dynamic_cast<NameIDMappingRequest*>(xo.get());
         TS_ASSERT(request!=nullptr);
         assertEquals("ID attribute", expectedID, request->getID());
@@ -74,7 +74,7 @@ public:
     }
 
     void testSingleElementOptionalAttributesUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
         NameIDMappingRequest* request = dynamic_cast<NameIDMappingRequest*>(xo.get());
         TS_ASSERT(request!=nullptr);
 
@@ -91,7 +91,7 @@ public:
     }
 
     void testChildElementsUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         NameIDMappingRequest* request= dynamic_cast<NameIDMappingRequest*>(xo.get());
         TS_ASSERT(request!=nullptr);
         TS_ASSERT(request->getIssuer()!=nullptr);
@@ -106,7 +106,7 @@ public:
     void testSingleElementMarshall() {
         NameIDMappingRequest* request=NameIDMappingRequestBuilder::buildNameIDMappingRequest();
         request->setID(expectedID);
-        request->setIssueInstant(expectedIssueInstant);
+        request->setIssueInstant(expectedIssueInstant.get());
         //request->setVersion(expectedVersion);
         assertEquals(expectedDOM, request);
     }
@@ -114,7 +114,7 @@ public:
     void testSingleElementOptionalAttributesMarshall() {
         NameIDMappingRequest* request=NameIDMappingRequestBuilder::buildNameIDMappingRequest();
         request->setID(expectedID);
-        request->setIssueInstant(expectedIssueInstant);
+        request->setIssueInstant(expectedIssueInstant.get());
         //request->setVersion(expectedVersion);
         request->setConsent(expectedConsent);
         request->setDestination(expectedDestination);
@@ -124,15 +124,14 @@ public:
     void testChildElementsMarshall() {
         NameIDMappingRequest* request=NameIDMappingRequestBuilder::buildNameIDMappingRequest();
         request->setID(expectedID);
-        request->setIssueInstant(expectedIssueInstant);
+        request->setIssueInstant(expectedIssueInstant.get());
         // Do this just so don't have to redeclare the saml namespace prefix on every child element in the control XML file
-        Namespace* ns = new Namespace(samlconstants::SAML20_NS, samlconstants::SAML20_PREFIX);
-        request->addNamespace(*ns);
+        Namespace ns(samlconstants::SAML20_NS, samlconstants::SAML20_PREFIX);
+        request->addNamespace(ns);
         request->setIssuer(IssuerBuilder::buildIssuer());
         request->setNameID(NameIDBuilder::buildNameID());
         request->setNameIDPolicy(NameIDPolicyBuilder::buildNameIDPolicy());
         assertEquals(expectedChildElementsDOM, request);
-        delete ns;
     }
 
 };

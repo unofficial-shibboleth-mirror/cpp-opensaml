@@ -35,7 +35,7 @@ using namespace opensaml::saml2md;
 using namespace opensaml::saml2;
 
 class EncryptedAssertionTest : public CxxTest::TestSuite, public SAMLSignatureTestBase {
-    MetadataProvider* m_metadata;
+    scoped_ptr<MetadataProvider> m_metadata;
 public:
     void setUp() {
         childElementsFile  = data_path + "signature/SAML2Assertion.xml";
@@ -51,15 +51,16 @@ public:
         auto_ptr_XMLCh file(s.c_str());
         doc->getDocumentElement()->setAttributeNS(nullptr,path.get(),file.get());
 
-        m_metadata = opensaml::SAMLConfig::getConfig().MetadataProviderManager.newPlugin(
-            XML_METADATA_PROVIDER,doc->getDocumentElement()
+        m_metadata.reset(
+            opensaml::SAMLConfig::getConfig().MetadataProviderManager.newPlugin(
+                XML_METADATA_PROVIDER, doc->getDocumentElement()
+                )
             );
         m_metadata->init();
     }
 
     void tearDown() {
-        delete m_metadata;
-        m_metadata=nullptr;
+        m_metadata.reset(nullptr);
         SAMLSignatureTestBase::tearDown();
     }
 
@@ -87,7 +88,7 @@ public:
         ac->setAuthnContextClassRef(acc);
         statement->setAuthnContext(ac);
         
-        auto_ptr<Assertion> assertion(AssertionBuilder::buildAssertion());
+        scoped_ptr<Assertion> assertion(AssertionBuilder::buildAssertion());
         assertion->setID(id.get());
         assertion->setIssueInstant(issueInstant.get());
         assertion->setIssuer(is);
@@ -102,7 +103,7 @@ public:
         vector<Signature*> sigs(1,sig);
         CredentialCriteria cc;
         cc.setUsage(Credential::SIGNING_CREDENTIAL);
-        Locker locker(m_resolver);
+        Locker locker(m_resolver.get());
         const Credential* cred = m_resolver->resolve(&cc);
         TSM_ASSERT("Retrieved credential was null", cred!=nullptr);
 
@@ -110,21 +111,21 @@ public:
         try {
             rootElement=assertion->marshall((DOMDocument*)nullptr,&sigs,cred);
         }
-        catch (XMLToolingException& e) {
+        catch (const XMLToolingException& e) {
             TS_TRACE(e.what());
             throw;
         }
         
         // Now encrypt this puppy to the SP role in the example metadata.
-        auto_ptr<EncryptedAssertion> encrypted(EncryptedAssertionBuilder::buildEncryptedAssertion());
-        Locker mlocker(m_metadata);
+        scoped_ptr<EncryptedAssertion> encrypted(EncryptedAssertionBuilder::buildEncryptedAssertion());
+        Locker mlocker(m_metadata.get());
         MetadataProvider::Criteria mc("https://sp.example.org/", &SPSSODescriptor::ELEMENT_QNAME, samlconstants::SAML20P_NS);
         pair<const EntityDescriptor*,const RoleDescriptor*> sp = m_metadata->getEntityDescriptor(mc);
         TSM_ASSERT("No metadata for recipient.", sp.first!=nullptr); 
         TSM_ASSERT("No SP role for recipient.", sp.second!=nullptr);
         MetadataCredentialCriteria mcc(*sp.second);
         vector< pair<const MetadataProvider*,MetadataCredentialCriteria*> > recipients(
-            1, pair<const MetadataProvider*,MetadataCredentialCriteria*>(m_metadata, &mcc)
+            1, pair<const MetadataProvider*,MetadataCredentialCriteria*>(m_metadata.get(), &mcc)
             );
 #ifdef XSEC_OPENSSL_HAVE_GCM
         encrypted->encrypt(*assertion.get(), recipients, false, DSIGConstants::s_unicodeStrURIAES256_GCM);
@@ -141,8 +142,8 @@ public:
         const XMLObjectBuilder* b = XMLObjectBuilder::getBuilder(doc->getDocumentElement());
         
         // Unpack, then decypt with our key.
-        auto_ptr<EncryptedAssertion> encrypted2(dynamic_cast<EncryptedAssertion*>(b->buildFromDocument(doc)));
-        auto_ptr<Assertion> assertion2(dynamic_cast<Assertion*>(encrypted2->decrypt(*m_resolver, sp.first->getEntityID())));
+        scoped_ptr<EncryptedAssertion> encrypted2(dynamic_cast<EncryptedAssertion*>(b->buildFromDocument(doc)));
+        scoped_ptr<Assertion> assertion2(dynamic_cast<Assertion*>(encrypted2->decrypt(*m_resolver, sp.first->getEntityID())));
         assertEquals("Unmarshalled assertion does not match", expectedChildElementsDOM, assertion2.get(), false);
         
         // And check the signature.
@@ -152,7 +153,7 @@ public:
             spv.validate(dynamic_cast<Assertion*>(assertion2.get())->getSignature());
             sv.validate(dynamic_cast<Assertion*>(assertion2.get())->getSignature());
         }
-        catch (XMLToolingException& e) {
+        catch (const XMLToolingException& e) {
             TS_TRACE(e.what());
             throw;
         }

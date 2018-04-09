@@ -39,7 +39,7 @@ public:
     }
 
     void testSingleElementUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         Artifact* artifact = dynamic_cast<Artifact*>(xo.get());
         TS_ASSERT(artifact!=nullptr);
         assertEquals("Artifact text content", expectedContent, artifact->getArtifact());

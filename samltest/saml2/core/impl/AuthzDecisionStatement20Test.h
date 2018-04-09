@@ -44,7 +44,7 @@ public:
     }
 
     void testSingleElementUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         AuthzDecisionStatement* statement = dynamic_cast<AuthzDecisionStatement*>(xo.get());
         TS_ASSERT(statement!=nullptr);
 
@@ -56,7 +56,7 @@ public:
     }
 
     void testChildElementsUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         AuthzDecisionStatement* statement= dynamic_cast<AuthzDecisionStatement*>(xo.get());
         TS_ASSERT(statement!=nullptr);
 

@@ -36,7 +36,7 @@ public:
     }
 
     void testSingleElementUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         OneTimeUse* otu = dynamic_cast<OneTimeUse*>(xo.get());
         TS_ASSERT(otu!=nullptr);
     }
@@ -45,6 +45,5 @@ public:
         OneTimeUse * otu = OneTimeUseBuilder::buildOneTimeUse();
         assertEquals(expectedDOM, otu);
     }
-
 
 };

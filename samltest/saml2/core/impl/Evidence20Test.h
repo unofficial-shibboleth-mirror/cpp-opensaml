@@ -38,7 +38,7 @@ public:
     }
 
     void testSingleElementUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         Evidence* evidence = dynamic_cast<Evidence*>(xo.get());
         TS_ASSERT(evidence!=nullptr);
 
@@ -49,7 +49,7 @@ public:
     }
 
     void testChildElementsUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         Evidence* evidence= dynamic_cast<Evidence*>(xo.get());
         TS_ASSERT(evidence!=nullptr);
 

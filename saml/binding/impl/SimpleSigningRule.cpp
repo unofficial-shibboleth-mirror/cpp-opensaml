@@ -50,6 +50,7 @@ using namespace std;
 
 using xmlsignature::KeyInfo;
 using xmlsignature::SignatureException;
+using boost::scoped_ptr;
 
 namespace opensaml {
     class SAML_DLLLOCAL SimpleSigningRule : public SecurityPolicyRule
@@ -205,7 +206,7 @@ bool SimpleSigningRule::evaluate(const XMLObject& message, const GenericRequest*
         }
     }
     
-    auto_ptr<KeyInfo> kjanitor(keyInfo);
+    scoped_ptr<KeyInfo> kjanitor(keyInfo);
     auto_ptr_XMLCh alg(sigAlgorithm);
 
     // Set up criteria object.

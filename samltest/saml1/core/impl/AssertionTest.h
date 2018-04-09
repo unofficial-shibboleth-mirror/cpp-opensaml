@@ -26,14 +26,14 @@ using namespace opensaml::saml1;
 class AssertionTest : public CxxTest::TestSuite, public SAMLObjectBaseTestCase {
     int expectedMinorVersion;
     XMLCh* expectedIssuer;
-    XMLDateTime* expectedIssueInstant;
+    scoped_ptr<XMLDateTime> expectedIssueInstant;
     XMLCh* expectedID;
 
 public:
     void setUp() {
         expectedID=XMLString::transcode("ident");
         expectedMinorVersion=1;
-        expectedIssueInstant=new XMLDateTime(XMLString::transcode("1970-01-02T01:01:02.100Z"));
+        expectedIssueInstant.reset(new XMLDateTime(XMLString::transcode("1970-01-02T01:01:02.100Z")));
         expectedIssueInstant->parseDateTime();
         expectedIssuer=XMLString::transcode("issuer");
         singleElementFile = data_path + "saml1/core/impl/singleAssertion.xml";
@@ -45,12 +45,12 @@ public:
     void tearDown() {
         XMLString::release(&expectedID);
         XMLString::release(&expectedIssuer);
-        delete expectedIssueInstant;
+        expectedIssueInstant.reset();
         SAMLObjectBaseTestCase::tearDown();
     }
 
     void testSingleElementUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         Assertion& assertion = dynamic_cast<Assertion&>(*xo.get());
         TSM_ASSERT("Issuer attribute", assertion.getIssuer()==nullptr);
         TSM_ASSERT_EQUALS("IssueInstant attribute", expectedIssueInstant->getEpoch(), assertion.getIssueInstant()->getEpoch());
@@ -67,7 +67,7 @@ public:
     }
 
     void testSingleElementOptionalAttributesUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
         Assertion& assertion = dynamic_cast<Assertion&>(*xo.get());
 
         assertEquals("Issuer attribute", expectedIssuer, assertion.getIssuer());
@@ -86,7 +86,7 @@ public:
     }
 
     void testChildElementsUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         Assertion& assertion = dynamic_cast<Assertion&>(*xo.get());
 
         TSM_ASSERT("Issuer attribute", assertion.getIssuer()==nullptr);
@@ -104,13 +104,13 @@ public:
     void testSingleElementMarshall() {
         Assertion* assertion=AssertionBuilder::buildAssertion();
         assertion->setAssertionID(expectedID);
-        assertion->setIssueInstant(expectedIssueInstant);
+        assertion->setIssueInstant(expectedIssueInstant.get());
         assertEquals(expectedDOM, assertion);
     }
 
     void testSingleElementOptionalAttributesMarshall() {
         Assertion* assertion=AssertionBuilder::buildAssertion();
-        assertion->setIssueInstant(expectedIssueInstant);
+        assertion->setIssueInstant(expectedIssueInstant.get());
         assertion->setAssertionID(expectedID);
         assertion->setIssuer(expectedIssuer);
         assertEquals(expectedOptionalAttributesDOM, assertion);
@@ -118,7 +118,7 @@ public:
 
     void testChildElementsMarshall() {
         Assertion* assertion=AssertionBuilder::buildAssertion();
-        assertion->setIssueInstant(expectedIssueInstant);
+        assertion->setIssueInstant(expectedIssueInstant.get());
         assertion->setAssertionID(expectedID);
         assertion->setConditions(ConditionsBuilder::buildConditions());
         assertion->setAdvice(AdviceBuilder::buildAdvice());

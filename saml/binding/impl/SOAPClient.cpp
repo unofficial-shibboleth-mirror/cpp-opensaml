@@ -110,7 +110,7 @@ soap11::Envelope* SOAPClient::receive()
         }
 
         // Run policy against SOAP layer.
-        m_policy.evaluate(*(env.get()));
+        m_policy.evaluate(*env);
     }
     return env.release();
 }

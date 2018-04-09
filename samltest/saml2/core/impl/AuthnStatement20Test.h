@@ -25,13 +25,13 @@
 using namespace opensaml::saml2;
 
 class AuthnStatement20Test : public CxxTest::TestSuite, public SAMLObjectBaseTestCase {
-    XMLDateTime* expectedAuthnInstant;
+    scoped_ptr<XMLDateTime> expectedAuthnInstant;
     XMLCh* expectedSessionIndex;
     XMLDateTime* expectedSessionNotOnOrAfter;
 
 public:
     void setUp() {
-        expectedAuthnInstant = new XMLDateTime(XMLString::transcode("1984-08-26T10:01:30.043Z"));
+        expectedAuthnInstant.reset(new XMLDateTime(XMLString::transcode("1984-08-26T10:01:30.043Z")));
         expectedAuthnInstant->parseDateTime();
         expectedSessionIndex = (XMLString::transcode("abc123"));
         expectedSessionNotOnOrAfter = new XMLDateTime(XMLString::transcode("1984-08-26T10:11:30.043Z"));
@@ -44,14 +44,14 @@ public:
     }
     
     void tearDown() {
-        delete expectedAuthnInstant;
+        expectedAuthnInstant.reset();
         XMLString::release(&expectedSessionIndex);
         delete expectedSessionNotOnOrAfter;
         SAMLObjectBaseTestCase::tearDown();
     }
 
     void testSingleElementUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         AuthnStatement* statement = dynamic_cast<AuthnStatement*>(xo.get());
         TS_ASSERT(statement!=nullptr);
 
@@ -64,7 +64,7 @@ public:
     }
 
     void testSingleElementOptionalAttributesUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
         AuthnStatement* statement = dynamic_cast<AuthnStatement*>(xo.get());
         TS_ASSERT(statement!=nullptr);
 
@@ -78,7 +78,7 @@ public:
     }
 
     void testChildElementsUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         AuthnStatement* statement= dynamic_cast<AuthnStatement*>(xo.get());
         TS_ASSERT(statement!=nullptr);
 
@@ -93,13 +93,13 @@ public:
 
     void testSingleElementMarshall() {
         AuthnStatement* statement=AuthnStatementBuilder::buildAuthnStatement();
-        statement->setAuthnInstant(expectedAuthnInstant);
+        statement->setAuthnInstant(expectedAuthnInstant.get());
         assertEquals(expectedDOM, statement);
     }
 
     void testSingleElementOptionalAttributesMarshall() {
         AuthnStatement* statement=AuthnStatementBuilder::buildAuthnStatement();
-        statement->setAuthnInstant(expectedAuthnInstant);
+        statement->setAuthnInstant(expectedAuthnInstant.get());
         statement->setSessionIndex(expectedSessionIndex);
         statement->setSessionNotOnOrAfter(expectedSessionNotOnOrAfter);
         assertEquals(expectedOptionalAttributesDOM, statement);

@@ -35,6 +35,8 @@ using namespace xmltooling::logging;
 using namespace xmltooling;
 using namespace std;
 
+using boost::scoped_ptr;
+
 namespace opensaml {
     namespace saml2md {
 
@@ -75,8 +77,8 @@ EntityRoleMetadataFilter::EntityRoleMetadataFilter(const DOMElement* e)
 {
     e = XMLHelper::getFirstChildElement(e, RetainedRole);
     while (e) {
-        auto_ptr<xmltooling::QName> q(XMLHelper::getNodeValueAsQName(e));
-        if (q.get()) {
+        scoped_ptr<xmltooling::QName> q(XMLHelper::getNodeValueAsQName(e));
+        if (q) {
             if (*q == IDPSSODescriptor::ELEMENT_QNAME)
                 m_idp = true;
             else if (*q == SPSSODescriptor::ELEMENT_QNAME)

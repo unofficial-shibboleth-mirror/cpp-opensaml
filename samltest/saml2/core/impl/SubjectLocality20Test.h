@@ -45,13 +45,13 @@ public:
     }
 
     void testSingleElementUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         SubjectLocality* sl = dynamic_cast<SubjectLocality*>(xo.get());
         TS_ASSERT(sl!=nullptr);
     }
 
     void testSingleElementOptionalAttributesUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
         SubjectLocality* sl = dynamic_cast<SubjectLocality*>(xo.get());
         TS_ASSERT(sl!=nullptr);
         assertEquals("Address attribute", expectedAddress, sl->getAddress());

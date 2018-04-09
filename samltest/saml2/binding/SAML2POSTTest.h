@@ -70,7 +70,7 @@ public:
             XercesJanitor<DOMDocument> janitor2(encoder_config);
             encoder_config->appendChild(encoder_config->createElementNS(nullptr,lit1.get()));
             encoder_config->getDocumentElement()->setAttributeNS(nullptr,lit2.get(),lit3.get());
-            boost::scoped_ptr<MessageEncoder> encoder(
+            scoped_ptr<MessageEncoder> encoder(
                 SAMLConfig::getConfig().MessageEncoderManager.newPlugin(
                     samlconstants::SAML20_BINDING_HTTP_POST, encoder_config->getDocumentElement()
                     )
@@ -89,10 +89,10 @@ public:
             
             // Decode message.
             string relayState;
-            boost::scoped_ptr<MessageDecoder> decoder(
+            scoped_ptr<MessageDecoder> decoder(
                 SAMLConfig::getConfig().MessageDecoderManager.newPlugin(samlconstants::SAML20_BINDING_HTTP_POST, nullptr)
                 );
-            boost::scoped_ptr<Response> response(dynamic_cast<Response*>(decoder->decode(relayState,*this,policy)));
+            scoped_ptr<Response> response(dynamic_cast<Response*>(decoder->decode(relayState,*this,policy)));
             
             // Test the results.
             TSM_ASSERT_EQUALS("RelayState was not the expected result.", relayState, "state");
@@ -106,7 +106,7 @@ public:
             policy.reset();
             TSM_ASSERT_THROWS("Did not catch the replay.", decoder->decode(relayState,*this,policy), SecurityPolicyException);
         }
-        catch (XMLToolingException& ex) {
+        catch (const XMLToolingException& ex) {
             TS_TRACE(ex.what());
             throw;
         }
@@ -147,7 +147,7 @@ public:
             XercesJanitor<DOMDocument> janitor2(encoder_config);
             encoder_config->appendChild(encoder_config->createElementNS(nullptr,lit1.get()));
             encoder_config->getDocumentElement()->setAttributeNS(nullptr,lit2.get(),lit3.get());
-            boost::scoped_ptr<MessageEncoder> encoder(
+            scoped_ptr<MessageEncoder> encoder(
                 SAMLConfig::getConfig().MessageEncoderManager.newPlugin(
                     samlconstants::SAML20_BINDING_HTTP_POST_SIMPLESIGN, encoder_config->getDocumentElement()
                     )
@@ -166,10 +166,10 @@ public:
             
             // Decode message.
             string relayState;
-            boost::scoped_ptr<MessageDecoder> decoder(
+            scoped_ptr<MessageDecoder> decoder(
                 SAMLConfig::getConfig().MessageDecoderManager.newPlugin(samlconstants::SAML20_BINDING_HTTP_POST_SIMPLESIGN, nullptr)
                 );
-            boost::scoped_ptr<Response> response(dynamic_cast<Response*>(decoder->decode(relayState,*this,policy)));
+            scoped_ptr<Response> response(dynamic_cast<Response*>(decoder->decode(relayState,*this,policy)));
             
             // Test the results.
             TSM_ASSERT_EQUALS("RelayState was not the expected result.", relayState, "state");
@@ -183,7 +183,7 @@ public:
             policy.reset();
             TSM_ASSERT_THROWS("Did not catch the replay.", decoder->decode(relayState,*this,policy), SecurityPolicyException);
         }
-        catch (XMLToolingException& ex) {
+        catch (const XMLToolingException& ex) {
             TS_TRACE(ex.what());
             throw;
         }

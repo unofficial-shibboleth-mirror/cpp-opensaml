@@ -52,19 +52,19 @@ public:
         doc->getDocumentElement()->setAttributeNS(nullptr,path.get(),file.get());
 
         // Build metadata provider.
-        auto_ptr<MetadataProvider> metadataProvider(
+        scoped_ptr<MetadataProvider> metadataProvider(
             opensaml::SAMLConfig::getConfig().MetadataProviderManager.newPlugin(XML_METADATA_PROVIDER,doc->getDocumentElement())
             );
         try {
             metadataProvider->init();
         }
-        catch (XMLToolingException& ex) {
+        catch (const XMLToolingException& ex) {
             TS_TRACE(ex.what());
             throw;
         }
         
         // Build trust engine.
-        auto_ptr<TrustEngine> trustEngine(
+        scoped_ptr<TrustEngine> trustEngine(
             XMLToolingConfig::getConfig().TrustEngineManager.newPlugin(EXPLICIT_KEY_TRUSTENGINE, nullptr)
             );
         
@@ -73,7 +73,7 @@ public:
         ifstream in2(config.c_str());
         DOMDocument* doc2=XMLToolingConfig::getConfig().getParser().parse(in2);
         XercesJanitor<DOMDocument> janitor2(doc2);
-        auto_ptr<Assertion> assertion(dynamic_cast<Assertion*>(XMLObjectBuilder::getBuilder(doc2->getDocumentElement())->buildFromDocument(doc2)));
+        scoped_ptr<Assertion> assertion(dynamic_cast<Assertion*>(XMLObjectBuilder::getBuilder(doc2->getDocumentElement())->buildFromDocument(doc2)));
         janitor2.release();
 
         Locker locker(metadataProvider.get());

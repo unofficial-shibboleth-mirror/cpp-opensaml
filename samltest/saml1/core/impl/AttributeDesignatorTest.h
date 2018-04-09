@@ -43,14 +43,14 @@ public:
     }
 
     void testSingleElementUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         AttributeDesignator& ad = dynamic_cast<AttributeDesignator&>(*xo.get());
         TSM_ASSERT("AttributeName", ad.getAttributeName()==nullptr);
         TSM_ASSERT("AttributeNamespace", ad.getAttributeNamespace()==nullptr);
     }
 
     void testSingleElementOptionalAttributesUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
         AttributeDesignator& ad = dynamic_cast<AttributeDesignator&>(*xo.get());
         assertEquals("AttributeName", expectedAttributeName, ad.getAttributeName());
         assertEquals("AttributeNamespace", expectedAttributeNamespace, ad.getAttributeNamespace());

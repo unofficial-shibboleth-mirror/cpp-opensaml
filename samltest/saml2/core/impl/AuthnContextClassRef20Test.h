@@ -39,7 +39,7 @@ public:
     }
 
     void testSingleElementUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         AuthnContextClassRef* classref = dynamic_cast<AuthnContextClassRef*>(xo.get());
         TS_ASSERT(classref!=nullptr);
         assertEquals("AuthnContextClassRef text content", expectedContent, classref->getReference());

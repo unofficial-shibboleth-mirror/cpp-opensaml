@@ -39,7 +39,7 @@ public:
     }
 
     void testSingleElementUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         StatusMessage* sm = dynamic_cast<StatusMessage*>(xo.get());
         TS_ASSERT(sm!=nullptr);
         assertEquals("StatusMessage text content", expectedContent, sm->getMessage());

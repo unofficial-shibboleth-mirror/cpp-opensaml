@@ -44,7 +44,7 @@ public:
     }
 
     void testSingleElementUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         Attribute& a = dynamic_cast<Attribute&>(*xo.get());
         TSM_ASSERT("AttributeName", a.getAttributeName()==nullptr);
         TSM_ASSERT("AttributeNamespace", a.getAttributeNamespace()==nullptr);
@@ -52,14 +52,14 @@ public:
     }
 
     void testSingleElementOptionalAttributesUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
         Attribute& a = dynamic_cast<Attribute&>(*xo.get());
         assertEquals("AttributeName", expectedAttributeName, a.getAttributeName());
         assertEquals("AttributeNamespace", expectedAttributeNamespace, a.getAttributeNamespace());
     }
 
     void testChildElementsUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         Attribute& a = dynamic_cast<Attribute&>(*xo.get());
         TSM_ASSERT_EQUALS("Number of <AttributeValue> subelements", 4, a.getAttributeValues().size());
     }

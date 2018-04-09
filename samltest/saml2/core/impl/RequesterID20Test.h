@@ -39,7 +39,7 @@ public:
     }
 
     void testSingleElementUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         RequesterID* reqid = dynamic_cast<RequesterID*>(xo.get());
         TS_ASSERT(reqid!=nullptr);
         assertEquals("RequesterID text content", expectedContent, reqid->getRequesterID());

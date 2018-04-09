@@ -42,7 +42,7 @@ public:
     }
 
     void testSingleElementUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         SubjectConfirmation* sc = dynamic_cast<SubjectConfirmation*>(xo.get());
         TS_ASSERT(sc!=nullptr);
 
@@ -55,7 +55,7 @@ public:
     }
 
     void testChildElementsUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         SubjectConfirmation* sc= dynamic_cast<SubjectConfirmation*>(xo.get());
         TS_ASSERT(sc!=nullptr);
 

@@ -43,7 +43,7 @@ public:
     }
 
     void testSingleElementUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         Advice* advice = dynamic_cast<Advice*>(xo.get());
         TS_ASSERT(advice!=nullptr);
         TSM_ASSERT_EQUALS("Number of child AssertIDReference elements", 0, advice->getAssertionIDReferences().size());
@@ -51,7 +51,7 @@ public:
     }
 
     void testChildElementsUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         Advice* advice = dynamic_cast<Advice*>(xo.get());
         TSM_ASSERT_EQUALS("Number of child AssertIDReference elements", 2, advice->getAssertionIDReferences().size());
         TSM_ASSERT_EQUALS("Number of child Assertion elements", 1, advice->getAssertions().size());

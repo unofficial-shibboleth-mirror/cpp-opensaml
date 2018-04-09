@@ -39,7 +39,7 @@ public:
     }
 
     void testSingleElementUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         AssertionURIRef* uriref = dynamic_cast<AssertionURIRef*>(xo.get());
         TS_ASSERT(uriref!=nullptr);
         assertEquals("AssertionURIRef text content", expectedContent, uriref->getAssertionURI());
@@ -50,6 +50,5 @@ public:
         uriref->setAssertionURI(expectedContent);
         assertEquals(expectedDOM, uriref);
     }
-
 
 };

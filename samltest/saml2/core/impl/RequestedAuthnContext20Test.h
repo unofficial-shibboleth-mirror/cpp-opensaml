@@ -44,7 +44,7 @@ public:
     }
 
     void testSingleElementUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         RequestedAuthnContext* rac = dynamic_cast<RequestedAuthnContext*>(xo.get());
         TS_ASSERT(rac !=nullptr);
         TS_ASSERT(rac->getComparison()==nullptr);
@@ -54,7 +54,7 @@ public:
     }
 
     void testSingleElementOptionalAttributesUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
         RequestedAuthnContext* rac = dynamic_cast<RequestedAuthnContext*>(xo.get());
         TS_ASSERT(rac!=nullptr);
         assertEquals("Comparison attribute", expectedComparison, rac->getComparison());
@@ -64,7 +64,7 @@ public:
     }
 
     void testChildElementsUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         RequestedAuthnContext* rac = dynamic_cast<RequestedAuthnContext*>(xo.get());
         TS_ASSERT(rac !=nullptr);
         TS_ASSERT(rac->getComparison()==nullptr);
@@ -87,13 +87,12 @@ public:
     void testChildElementsMarshall() {
         RequestedAuthnContext* rac=RequestedAuthnContextBuilder::buildRequestedAuthnContext();
         // Do this just so don't have to redeclare the saml namespace prefix on every child element in the control XML file
-        Namespace* ns = new Namespace(samlconstants::SAML20_NS, samlconstants::SAML20_PREFIX);
+        scoped_ptr<Namespace> ns(new Namespace(samlconstants::SAML20_NS, samlconstants::SAML20_PREFIX));
         rac->addNamespace(*ns);
         rac->getAuthnContextClassRefs().push_back(AuthnContextClassRefBuilder::buildAuthnContextClassRef());
         rac->getAuthnContextClassRefs().push_back(AuthnContextClassRefBuilder::buildAuthnContextClassRef());
         rac->getAuthnContextClassRefs().push_back(AuthnContextClassRefBuilder::buildAuthnContextClassRef());
         assertEquals(expectedChildElementsDOM, rac);
-        delete ns;
     }
 
 };

@@ -44,7 +44,7 @@ public:
     }
 
     void testSingleElementUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         AuthenticationStatement& as = dynamic_cast<AuthenticationStatement&>(*xo.get());
         TSM_ASSERT("AuthenticationMethod attribute present", as.getAuthenticationMethod()==nullptr);
         TSM_ASSERT("AuthenticationInstant attribute present", as.getAuthenticationInstant()==nullptr);
@@ -55,7 +55,7 @@ public:
     }
 
     void testSingleElementOptionalAttributesUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
         AuthenticationStatement& as = dynamic_cast<AuthenticationStatement&>(*xo.get());
 
         assertEquals("AuthenticationMethod attribute", expectedAuthenticationMethod, as.getAuthenticationMethod());
@@ -63,11 +63,11 @@ public:
     }
 
     void testChildElementsUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         AuthenticationStatement& as1 = dynamic_cast<AuthenticationStatement&>(*xo.get());
         as1.releaseThisAndChildrenDOM();
-        auto_ptr<AuthenticationStatement> as2(as1.cloneAuthenticationStatement());
-        AuthenticationStatement& as=*as2.get();
+        scoped_ptr<AuthenticationStatement> as2(as1.cloneAuthenticationStatement());
+        AuthenticationStatement& as=*as2;
 
         TSM_ASSERT("Subject element", as.getSubject()!=nullptr);
         TSM_ASSERT("SubjectLocality element", as.getSubjectLocality()!=nullptr);

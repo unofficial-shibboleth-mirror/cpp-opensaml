@@ -60,16 +60,16 @@ public:
         DOMDocument* doc=XMLToolingConfig::getConfig().getParser().parse(in);
         XercesJanitor<DOMDocument> janitor(doc);
 
-        auto_ptr<MetadataProvider> metadataProvider(SAMLConfig::getConfig().MetadataProviderManager.newPlugin(XML_METADATA_PROVIDER,
-                                                                                                              doc->getDocumentElement())
-        );
+        scoped_ptr<MetadataProvider> metadataProvider(
+            SAMLConfig::getConfig().MetadataProviderManager.newPlugin(XML_METADATA_PROVIDER, doc->getDocumentElement())
+            );
         try {
             metadataProvider->init();
-        } catch (MetadataFilterException& ex) {
+        } catch (const MetadataFilterException& ex) {
             TS_TRACE(ex.what());
             return;
         }
-        catch (XMLToolingException& ex) {
+        catch (const XMLToolingException& ex) {
             TS_TRACE(ex.what());
             throw;
         }
@@ -82,12 +82,12 @@ public:
         DOMDocument* doc=XMLToolingConfig::getConfig().getParser().parse(in);
         XercesJanitor<DOMDocument> janitor(doc);
 
-        auto_ptr<MetadataProvider> metadataProvider(
+        scoped_ptr<MetadataProvider> metadataProvider(
             SAMLConfig::getConfig().MetadataProviderManager.newPlugin(CHAINING_METADATA_PROVIDER, doc->getDocumentElement())
-        );
+            );
         try {
             metadataProvider->init();
-        } catch (XMLToolingException& ex) {
+        } catch (const XMLToolingException& ex) {
             TS_TRACE(ex.what());
             throw;
         }
@@ -104,13 +104,13 @@ public:
         auto_ptr_XMLCh file(s.c_str());
         doc->getDocumentElement()->setAttributeNS(nullptr,path.get(),file.get());
 
-        auto_ptr<MetadataProvider> metadataProvider(
+        scoped_ptr<MetadataProvider> metadataProvider(
             SAMLConfig::getConfig().MetadataProviderManager.newPlugin(XML_METADATA_PROVIDER,doc->getDocumentElement())
             );
         try {
             metadataProvider->init();
         }
-        catch (XMLToolingException& ex) {
+        catch (const XMLToolingException& ex) {
             TS_TRACE(ex.what());
             throw;
         }
@@ -124,7 +124,7 @@ public:
         TSM_ASSERT("Role lookup failed", find_if(descriptor->getIDPSSODescriptors(), isValidForProtocol(supportedProtocol2))!=nullptr);
 
         static const char* providerIdStr = "urn:mace:incommon:washington.edu";
-        auto_ptr<SAML2ArtifactType0004> artifact(
+        scoped_ptr<SAML2ArtifactType0004> artifact(
             new SAML2ArtifactType0004(
                 SecurityHelper::doHash("SHA1", providerIdStr, strlen(providerIdStr), false), 1
                 )
@@ -148,12 +148,12 @@ public:
         auto_ptr_XMLCh file(s.c_str());
         doc->getDocumentElement()->setAttributeNS(nullptr, path.get(), file.get());
 #endif
-        auto_ptr<MetadataProvider> metadataProvider(\
+        scoped_ptr<MetadataProvider> metadataProvider(\
             SAMLConfig::getConfig().MetadataProviderManager.newPlugin(XML_METADATA_PROVIDER, doc->getDocumentElement())
             );
         try {
             metadataProvider->init();
-        } catch (XMLToolingException& ex) {
+        } catch (const XMLToolingException& ex) {
             TS_TRACE(ex.what());
             throw;
         }
@@ -167,7 +167,7 @@ public:
         TSM_ASSERT("Role lookup failed", find_if(descriptor->getIDPSSODescriptors(), isValidForProtocol(supportedProtocol2)) != nullptr);
 
         static const char* providerIdStr = "urn:mace:incommon:washington.edu";
-        auto_ptr<SAML2ArtifactType0004> artifact(
+        scoped_ptr<SAML2ArtifactType0004> artifact(
             new SAML2ArtifactType0004(
                 SecurityHelper::doHash("SHA1", providerIdStr, strlen(providerIdStr), false), 1
                 )
@@ -190,13 +190,13 @@ public:
         auto_ptr_XMLCh file(s.c_str());
         doc->getDocumentElement()->setAttributeNS(nullptr,path.get(),file.get());
 
-        auto_ptr<MetadataProvider> metadataProvider(
+        scoped_ptr<MetadataProvider> metadataProvider(
             SAMLConfig::getConfig().MetadataProviderManager.newPlugin(XML_METADATA_PROVIDER,doc->getDocumentElement())
             );
         try {
             metadataProvider->init();
         }
-        catch (XMLToolingException& ex) {
+        catch (const XMLToolingException& ex) {
             TS_TRACE(ex.what());
             throw;
         }
@@ -220,13 +220,13 @@ public:
         auto_ptr_XMLCh file(s.c_str());
         doc->getDocumentElement()->setAttributeNS(nullptr,path.get(),file.get());
 
-        auto_ptr<MetadataProvider> metadataProvider(
+        scoped_ptr<MetadataProvider> metadataProvider(
             SAMLConfig::getConfig().MetadataProviderManager.newPlugin(XML_METADATA_PROVIDER,doc->getDocumentElement())
             );
         try {
             metadataProvider->init();
         }
-        catch (XMLToolingException& ex) {
+        catch (const XMLToolingException& ex) {
             TS_TRACE(ex.what());
             throw;
         }

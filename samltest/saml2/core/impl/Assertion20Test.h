@@ -27,15 +27,14 @@ using namespace opensaml::saml2;
 class Assertion20Test : public CxxTest::TestSuite, public SAMLObjectBaseTestCase {
     const XMLCh* expectedVersion;
     XMLCh* expectedID;
-    XMLDateTime* expectedIssueInstant;
+    scoped_ptr<XMLDateTime> expectedIssueInstant;
 
 public:
     void setUp() {
         expectedVersion = samlconstants::SAML20_VERSION;
         expectedID = XMLString::transcode("abc123");
-        expectedIssueInstant = new XMLDateTime(XMLString::transcode("1984-08-26T10:01:30.043Z"));
+        expectedIssueInstant.reset(new XMLDateTime(XMLString::transcode("1984-08-26T10:01:30.043Z")));
         expectedIssueInstant->parseDateTime();
-
 
         singleElementFile = data_path + "saml2/core/impl/Assertion.xml";
         singleElementOptionalAttributesFile = data_path + "saml2/core/impl/AssertionOptionalAttributes.xml";
@@ -44,13 +43,13 @@ public:
     }
 
     void tearDown() {
-        delete expectedIssueInstant;
+        expectedIssueInstant.reset();
         XMLString::release(&expectedID);
         SAMLObjectBaseTestCase::tearDown();
     }
 
     void testSingleElementUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         Assertion* assertion = dynamic_cast<Assertion*>(xo.get());
         TS_ASSERT(assertion!=nullptr);
 
@@ -71,7 +70,7 @@ public:
     }
 
     void testChildElementsUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         Assertion* assertion= dynamic_cast<Assertion*>(xo.get());
         TS_ASSERT(assertion!=nullptr);
 
@@ -94,7 +93,7 @@ public:
     void testSingleElementMarshall() {
         Assertion* assertion=AssertionBuilder::buildAssertion();
         assertion->setID(expectedID);
-        assertion->setIssueInstant(expectedIssueInstant);
+        assertion->setIssueInstant(expectedIssueInstant.get());
         assertEquals(expectedDOM, assertion);
     }
 
@@ -103,7 +102,7 @@ public:
 
         Assertion* assertion=AssertionBuilder::buildAssertion();
         assertion->setID(expectedID);
-        assertion->setIssueInstant(expectedIssueInstant);
+        assertion->setIssueInstant(expectedIssueInstant.get());
         assertion->setIssuer(IssuerBuilder::buildIssuer());
         assertion->setSubject(SubjectBuilder::buildSubject());
         assertion->setConditions(ConditionsBuilder::buildConditions());
@@ -123,7 +122,7 @@ public:
         assertion=nullptr;
         assertion=AssertionBuilder::buildAssertion();
         assertion->setID(expectedID);
-        assertion->setIssueInstant(expectedIssueInstant);
+        assertion->setIssueInstant(expectedIssueInstant.get());
         assertion->setIssuer(IssuerBuilder::buildIssuer());
         assertion->setSubject(SubjectBuilder::buildSubject());
         assertion->setConditions(ConditionsBuilder::buildConditions());

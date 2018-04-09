@@ -51,6 +51,8 @@ using namespace xmltooling::logging;
 using namespace xmltooling;
 using namespace std;
 
+using boost::scoped_ptr;
+
 #include <limits>
 
 # ifndef min
@@ -147,7 +149,7 @@ void* AbstractDynamicMetadataProvider::cleanup_fn(void* pv)
     xmltooling::NDC ndc("cleanup");
 #endif
 
-    auto_ptr<Mutex> mutex(Mutex::create());
+    scoped_ptr<Mutex> mutex(Mutex::create());
     mutex->lock();
 
     Category& log = Category::getInstance(SAML_LOGCAT ".MetadataProvider.Dynamic");

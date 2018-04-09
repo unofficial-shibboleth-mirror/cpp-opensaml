@@ -40,7 +40,7 @@ public:
     }
 
     void testSingleElementUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         StatusCode* sc = dynamic_cast<StatusCode*>(xo.get());
         TS_ASSERT(sc!=nullptr);
         assertEquals("Value attribute", Value, sc->getValue());
@@ -48,7 +48,7 @@ public:
     }
 
     void testChildElementsUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         StatusCode* sc = dynamic_cast<StatusCode*>(xo.get());
         TS_ASSERT(sc!=nullptr);
         TSM_ASSERT("StatusCode child element", sc->getStatusCode()!=nullptr);

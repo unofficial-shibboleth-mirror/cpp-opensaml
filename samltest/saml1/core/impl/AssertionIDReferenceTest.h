@@ -40,14 +40,14 @@ public:
     }
 
     void testSingleElementUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         AssertionIDReference* assertionIDReference = dynamic_cast<AssertionIDReference*>(xo.get());
         TS_ASSERT(assertionIDReference!=nullptr);
         TSM_ASSERT("NCName present", assertionIDReference->getAssertionID()==nullptr);
     }
 
     void testSingleElementOptionalAttributesUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
         AssertionIDReference* assertionIDReference = dynamic_cast<AssertionIDReference*>(xo.get());
         assertEquals("NCName ", expectedNCName, assertionIDReference->getAssertionID());
     }

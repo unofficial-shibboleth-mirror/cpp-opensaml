@@ -36,7 +36,7 @@ public:
     }
 
     void testSingleElementUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         Terminate* terminate = dynamic_cast<Terminate*>(xo.get());
         TS_ASSERT(terminate!=nullptr);
     }

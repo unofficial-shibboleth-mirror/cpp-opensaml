@@ -39,7 +39,7 @@ public:
     }
 
     void testSingleElementUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         SessionIndex* si = dynamic_cast<SessionIndex*>(xo.get());
         TS_ASSERT(si!=nullptr);
         assertEquals("SessionIndex text content", expectedContent, si->getSessionIndex());

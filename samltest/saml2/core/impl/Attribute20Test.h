@@ -49,7 +49,7 @@ public:
     }
 
     void testSingleElementUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         Attribute* attribute = dynamic_cast<Attribute*>(xo.get());
         TS_ASSERT(attribute!=nullptr);
 
@@ -62,7 +62,7 @@ public:
     }
 
     void testSingleElementOptionalAttributesUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
         Attribute* attribute = dynamic_cast<Attribute*>(xo.get());
         TS_ASSERT(attribute!=nullptr);
 
@@ -74,7 +74,7 @@ public:
     }
 
     void testChildElementsUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         Attribute* attribute= dynamic_cast<Attribute*>(xo.get());
         TS_ASSERT(attribute!=nullptr);
 

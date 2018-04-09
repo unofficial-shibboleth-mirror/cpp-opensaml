@@ -36,13 +36,13 @@ public:
     }
 
     void testSingleElementUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         AudienceRestrictionCondition& a = dynamic_cast<AudienceRestrictionCondition&>(*xo.get());
         TSM_ASSERT_EQUALS("Count of child Audience elements !=0", 0, a.getAudiences().size());
     }
 
     void testChildElementsUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         AudienceRestrictionCondition& a = dynamic_cast<AudienceRestrictionCondition&>(*xo.get());
         TSM_ASSERT_EQUALS("Count of child Audience elements", 2, a.getAudiences().size());
     }

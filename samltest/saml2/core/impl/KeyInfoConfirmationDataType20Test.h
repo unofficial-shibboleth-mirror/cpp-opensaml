@@ -29,17 +29,17 @@ using xmlsignature::KeyInfoBuilder;
 //TODO need testing for ElementProxy and wildcard attributes/elements
 
 class KeyInfoConfirmationDataType20Test : public CxxTest::TestSuite, public SAMLObjectBaseTestCase {
-    XMLDateTime* expectedNotBefore;
-    XMLDateTime* expectedNotOnOrAfter;
+    scoped_ptr<XMLDateTime> expectedNotBefore;
+    scoped_ptr<XMLDateTime> expectedNotOnOrAfter;
     XMLCh* expectedRecipient;
     XMLCh* expectedInResponseTo;
     XMLCh* expectedAddress;
 
 public:
     void setUp() {
-        expectedNotBefore = new XMLDateTime(XMLString::transcode("1984-08-26T10:01:30.043Z"));
+        expectedNotBefore.reset(new XMLDateTime(XMLString::transcode("1984-08-26T10:01:30.043Z")));
         expectedNotBefore->parseDateTime();
-        expectedNotOnOrAfter = new XMLDateTime(XMLString::transcode("1984-08-26T10:11:30.043Z"));
+        expectedNotOnOrAfter.reset(new XMLDateTime(XMLString::transcode("1984-08-26T10:11:30.043Z")));
         expectedNotOnOrAfter->parseDateTime();
         expectedRecipient = (XMLString::transcode("recipient"));
         expectedInResponseTo = (XMLString::transcode("inresponse"));
@@ -52,8 +52,8 @@ public:
     }
     
     void tearDown() {
-        delete expectedNotBefore;
-        delete expectedNotOnOrAfter;
+        expectedNotBefore.reset();
+        expectedNotOnOrAfter.reset();
         XMLString::release(&expectedRecipient);
         XMLString::release(&expectedInResponseTo);
         XMLString::release(&expectedAddress);
@@ -61,7 +61,7 @@ public:
     }
 
     void testSingleElementUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         KeyInfoConfirmationDataType* scd = dynamic_cast<KeyInfoConfirmationDataType*>(xo.get());
         TS_ASSERT(scd!=nullptr);
 
@@ -74,7 +74,7 @@ public:
     }
 
     void testSingleElementOptionalAttributesUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
         KeyInfoConfirmationDataType* scd = dynamic_cast<KeyInfoConfirmationDataType*>(xo.get());
         TS_ASSERT(scd!=nullptr);
 
@@ -89,7 +89,7 @@ public:
     }
 
     void testChildElementsUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         KeyInfoConfirmationDataType* scd= dynamic_cast<KeyInfoConfirmationDataType*>(xo.get());
         TS_ASSERT(scd!=nullptr);
 
@@ -110,8 +110,8 @@ public:
 
     void testSingleElementOptionalAttributesMarshall() {
         KeyInfoConfirmationDataType* scd=KeyInfoConfirmationDataTypeBuilder::buildKeyInfoConfirmationDataType();
-        scd->setNotBefore(expectedNotBefore);
-        scd->setNotOnOrAfter(expectedNotOnOrAfter);
+        scd->setNotBefore(expectedNotBefore.get());
+        scd->setNotOnOrAfter(expectedNotOnOrAfter.get());
         scd->setRecipient(expectedRecipient);
         scd->setInResponseTo(expectedInResponseTo);
         scd->setAddress(expectedAddress);

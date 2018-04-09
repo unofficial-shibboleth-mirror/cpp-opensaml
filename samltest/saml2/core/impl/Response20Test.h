@@ -33,7 +33,7 @@ class Response20Test : public CxxTest::TestSuite, public SAMLObjectBaseTestCase 
     XMLCh* expectedVersion; 
     XMLCh* expectedConsent; 
     XMLCh* expectedDestination; 
-    XMLDateTime* expectedIssueInstant; 
+    scoped_ptr<XMLDateTime> expectedIssueInstant;
 
     // Assertion marshaller autogenerates ID, Version and IssueInstant if they are nullptr,
     // so have to agree on something to put in the control XML
@@ -46,7 +46,7 @@ public:
         expectedVersion = XMLString::transcode("2.0"); 
         expectedConsent = XMLString::transcode("urn:string:consent"); 
         expectedDestination = XMLString::transcode("http://sp.example.org/endpoint"); 
-        expectedIssueInstant = new XMLDateTime(XMLString::transcode("2006-02-21T16:40:00.000Z"));
+        expectedIssueInstant.reset(new XMLDateTime(XMLString::transcode("2006-02-21T16:40:00.000Z")));
         expectedIssueInstant->parseDateTime();
 
         assertionID1 = XMLString::transcode("test1"); 
@@ -68,12 +68,12 @@ public:
         XMLString::release(&assertionID1);
         XMLString::release(&assertionID2);
         XMLString::release(&assertionID3);
-        delete expectedIssueInstant;
+        expectedIssueInstant.reset();
         SAMLObjectBaseTestCase::tearDown();
     }
 
     void testSingleElementUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         Response* response = dynamic_cast<Response*>(xo.get());
         TS_ASSERT(response!=nullptr);
 
@@ -90,7 +90,7 @@ public:
     }
 
     void testSingleElementOptionalAttributesUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
         Response* response = dynamic_cast<Response*>(xo.get());
         TS_ASSERT(response!=nullptr);
 
@@ -107,7 +107,7 @@ public:
     }
 
     void testChildElementsUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         Response* response= dynamic_cast<Response*>(xo.get());
         TS_ASSERT(response!=nullptr);
 
@@ -124,7 +124,7 @@ public:
         TS_ASSERT(response!=nullptr);
 
         response->setID(expectedID);
-        response->setIssueInstant(expectedIssueInstant);
+        response->setIssueInstant(expectedIssueInstant.get());
         //response->setVersion(expectedVersion);
         assertEquals(expectedDOM, response);
     }
@@ -135,7 +135,7 @@ public:
 
         response->setID(expectedID);
         response->setInResponseTo(expectedInResponseTo);
-        response->setIssueInstant(expectedIssueInstant);
+        response->setIssueInstant(expectedIssueInstant.get());
         //response->setVersion(expectedVersion);
         response->setConsent(expectedConsent);
         response->setDestination(expectedDestination);
@@ -148,10 +148,10 @@ public:
         TS_ASSERT(response!=nullptr);
 
         response->setID(expectedID);
-        response->setIssueInstant(expectedIssueInstant);
+        response->setIssueInstant(expectedIssueInstant.get());
         // Do this just so don't have to redeclare the saml namespace prefix on every child element in the control XML file
-        Namespace* ns = new Namespace(samlconstants::SAML20_NS, samlconstants::SAML20_PREFIX);
-        response->addNamespace(*ns);
+        Namespace ns(samlconstants::SAML20_NS, samlconstants::SAML20_PREFIX);
+        response->addNamespace(ns);
         response->setIssuer(IssuerBuilder::buildIssuer());
         // If the form of the default, basic, empty signature that is emittted changes wrt whitespace, etc,
         // this will probably break the test.  In that case need to fix the control XML.
@@ -162,25 +162,24 @@ public:
         Assertion* assertion=nullptr;
 
         assertion = AssertionBuilder::buildAssertion();
-        assertion->setIssueInstant(expectedIssueInstant);
+        assertion->setIssueInstant(expectedIssueInstant.get());
         assertion->setID(assertionID1);
         response->getAssertions().push_back(assertion);
 
         assertion = AssertionBuilder::buildAssertion();
-        assertion->setIssueInstant(expectedIssueInstant);
+        assertion->setIssueInstant(expectedIssueInstant.get());
         assertion->setID(assertionID2);
         response->getAssertions().push_back(assertion);
 
         response->getEncryptedAssertions().push_back((EncryptedAssertionBuilder::buildEncryptedAssertion()));
 
         assertion = AssertionBuilder::buildAssertion();
-        assertion->setIssueInstant(expectedIssueInstant);
+        assertion->setIssueInstant(expectedIssueInstant.get());
         assertion->setID(assertionID3);
         response->getAssertions().push_back(assertion);
 
 
         assertEquals(expectedChildElementsDOM, response);
-        delete ns;
     }
 
 };

@@ -45,6 +45,8 @@ using namespace xmltooling::logging;
 using namespace xmltooling;
 using namespace std;
 
+using boost::scoped_ptr;
+
 SAML2SOAPClient::SAML2SOAPClient(opensaml::SOAPClient& soaper, bool fatalSAMLErrors)
     : m_soaper(soaper), m_fatal(fatalSAMLErrors), m_correlate(nullptr)
 {
@@ -57,11 +59,11 @@ SAML2SOAPClient::~SAML2SOAPClient()
 
 void SAML2SOAPClient::sendSAML(RequestAbstractType* request, const char* from, MetadataCredentialCriteria& to, const char* endpoint)
 {
-    auto_ptr<Envelope> env(EnvelopeBuilder::buildEnvelope());
+    scoped_ptr<Envelope> env(EnvelopeBuilder::buildEnvelope());
     Body* body = BodyBuilder::buildBody();
     env->setBody(body);
     body->getUnknownXMLObjects().push_back(request);
-    m_soaper.send(*env.get(), from, to, endpoint);
+    m_soaper.send(*env, from, to, endpoint);
     m_correlate = XMLString::replicate(request->getID());
 }
 

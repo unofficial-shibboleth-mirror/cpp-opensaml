@@ -37,7 +37,7 @@ public:
     }
 
     void testSingleElementUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         StatusDetail* sd= dynamic_cast<StatusDetail*>(xo.get());
         TS_ASSERT(sd!=nullptr);
         TSM_ASSERT_EQUALS("StatusDetail child elements", sd->getUnknownXMLObjects().size(), 0);
@@ -45,7 +45,7 @@ public:
 
     //TODO test with some XMLObject child elements from another namespace
     void IGNOREtestChildElementsUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         StatusDetail* sd= dynamic_cast<StatusDetail*>(xo.get());
         TS_ASSERT(sd!=nullptr);
         TSM_ASSERT_EQUALS("StatusDetail child elements", sd->getUnknownXMLObjects().size(), 3);

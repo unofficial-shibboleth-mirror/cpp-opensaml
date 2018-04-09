@@ -31,7 +31,7 @@ class LogoutResponse20Test : public CxxTest::TestSuite, public SAMLObjectBaseTes
     XMLCh* expectedVersion; 
     XMLCh* expectedConsent; 
     XMLCh* expectedDestination; 
-    XMLDateTime* expectedIssueInstant; 
+    scoped_ptr<XMLDateTime> expectedIssueInstant;
 
 public:
     void setUp() {
@@ -40,7 +40,7 @@ public:
         expectedVersion = XMLString::transcode("2.0"); 
         expectedConsent = XMLString::transcode("urn:string:consent"); 
         expectedDestination = XMLString::transcode("http://sp.example.org/endpoint"); 
-        expectedIssueInstant = new XMLDateTime(XMLString::transcode("2006-02-21T16:40:00.000Z"));
+        expectedIssueInstant.reset(new XMLDateTime(XMLString::transcode("2006-02-21T16:40:00.000Z")));
         expectedIssueInstant->parseDateTime();
 
         singleElementFile = data_path + "saml2/core/impl/LogoutResponse.xml";
@@ -55,12 +55,12 @@ public:
         XMLString::release(&expectedVersion);
         XMLString::release(&expectedConsent);
         XMLString::release(&expectedDestination);
-        delete expectedIssueInstant;
+        expectedIssueInstant.reset();
         SAMLObjectBaseTestCase::tearDown();
     }
 
     void testSingleElementUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         LogoutResponse* response = dynamic_cast<LogoutResponse*>(xo.get());
         TS_ASSERT(response!=nullptr);
 
@@ -75,7 +75,7 @@ public:
     }
 
     void testSingleElementOptionalAttributesUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
         LogoutResponse* response = dynamic_cast<LogoutResponse*>(xo.get());
         TS_ASSERT(response!=nullptr);
 
@@ -90,7 +90,7 @@ public:
     }
 
     void testChildElementsUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         LogoutResponse* response= dynamic_cast<LogoutResponse*>(xo.get());
         TS_ASSERT(response!=nullptr);
 
@@ -105,7 +105,7 @@ public:
         TS_ASSERT(response!=nullptr);
 
         response->setID(expectedID);
-        response->setIssueInstant(expectedIssueInstant);
+        response->setIssueInstant(expectedIssueInstant.get());
         //response->setVersion(expectedVersion);
         assertEquals(expectedDOM, response);
     }
@@ -116,7 +116,7 @@ public:
 
         response->setID(expectedID);
         response->setInResponseTo(expectedInResponseTo);
-        response->setIssueInstant(expectedIssueInstant);
+        response->setIssueInstant(expectedIssueInstant.get());
         //response->setVersion(expectedVersion);
         response->setConsent(expectedConsent);
         response->setDestination(expectedDestination);
@@ -129,15 +129,14 @@ public:
         TS_ASSERT(response!=nullptr);
 
         response->setID(expectedID);
-        response->setIssueInstant(expectedIssueInstant);
+        response->setIssueInstant(expectedIssueInstant.get());
         // Do this just so don't have to redeclare the saml namespace prefix on every child element in the control XML file
-        Namespace* ns = new Namespace(samlconstants::SAML20_NS, samlconstants::SAML20_PREFIX);
-        response->addNamespace(*ns);
+        Namespace ns(samlconstants::SAML20_NS, samlconstants::SAML20_PREFIX);
+        response->addNamespace(ns);
         response->setIssuer(IssuerBuilder::buildIssuer());
         response->setStatus(StatusBuilder::buildStatus());
 
         assertEquals(expectedChildElementsDOM, response);
-        delete ns;
     }
 
 };

@@ -39,7 +39,7 @@ public:
     }
 
     void testSingleElementUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         AuthenticatingAuthority* aa = dynamic_cast<AuthenticatingAuthority*>(xo.get());
         TS_ASSERT(aa!=nullptr);
         assertEquals("AuthenticatingAuthority text content", expectedContent, aa->getID());

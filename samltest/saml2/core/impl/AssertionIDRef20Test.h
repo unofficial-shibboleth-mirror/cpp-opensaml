@@ -39,7 +39,7 @@ public:
     }
 
     void testSingleElementUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         AssertionIDRef* idref = dynamic_cast<AssertionIDRef*>(xo.get());
         TS_ASSERT(idref!=nullptr);
         assertEquals("AssertionIDRef text content", expectedContent, idref->getAssertionID());

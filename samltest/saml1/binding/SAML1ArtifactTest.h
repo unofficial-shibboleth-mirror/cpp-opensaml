@@ -65,7 +65,7 @@ public:
             TSM_ASSERT("Retrieved credential was null", cred!=nullptr);
 
             // Encode message.
-            boost::scoped_ptr<MessageEncoder> encoder(
+            scoped_ptr<MessageEncoder> encoder(
                 SAMLConfig::getConfig().MessageEncoderManager.newPlugin(samlconstants::SAML1_PROFILE_BROWSER_ARTIFACT, nullptr)
                 );
             Locker locker(m_metadata.get());
@@ -82,11 +82,11 @@ public:
             
             // Decode message.
             string relayState;
-            boost::scoped_ptr<MessageDecoder> decoder(
+            scoped_ptr<MessageDecoder> decoder(
                 SAMLConfig::getConfig().MessageDecoderManager.newPlugin(samlconstants::SAML1_PROFILE_BROWSER_ARTIFACT, nullptr)
                 );
             decoder->setArtifactResolver(this);
-            boost::scoped_ptr<Response> response(dynamic_cast<Response*>(decoder->decode(relayState,*this,policy)));
+            scoped_ptr<Response> response(dynamic_cast<Response*>(decoder->decode(relayState,*this,policy)));
             
             // Test the results.
             TSM_ASSERT_EQUALS("TARGET was not the expected result.", relayState, "state");

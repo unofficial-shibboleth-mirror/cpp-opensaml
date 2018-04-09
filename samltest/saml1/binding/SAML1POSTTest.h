@@ -70,7 +70,7 @@ public:
             XercesJanitor<DOMDocument> janitor2(encoder_config);
             encoder_config->appendChild(encoder_config->createElementNS(nullptr,lit1.get()));
             encoder_config->getDocumentElement()->setAttributeNS(nullptr,lit2.get(),lit3.get());
-            boost::scoped_ptr<MessageEncoder> encoder(
+            scoped_ptr<MessageEncoder> encoder(
                 SAMLConfig::getConfig().MessageEncoderManager.newPlugin(
                     samlconstants::SAML1_PROFILE_BROWSER_POST, encoder_config->getDocumentElement()
                     )
@@ -90,10 +90,10 @@ public:
             
             // Decode message.
             string relayState;
-            boost::scoped_ptr<MessageDecoder> decoder(
+            scoped_ptr<MessageDecoder> decoder(
                 SAMLConfig::getConfig().MessageDecoderManager.newPlugin(samlconstants::SAML1_PROFILE_BROWSER_POST, nullptr)
                 );
-            boost::scoped_ptr<Response> response(dynamic_cast<Response*>(decoder->decode(relayState,*this,policy)));
+            scoped_ptr<Response> response(dynamic_cast<Response*>(decoder->decode(relayState,*this,policy)));
             
             // Test the results.
             TSM_ASSERT_EQUALS("TARGET was not the expected result.", relayState, "state");

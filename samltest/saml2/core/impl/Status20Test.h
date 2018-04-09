@@ -37,7 +37,7 @@ public:
     }
 
     void testSingleElementUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         Status* status = dynamic_cast<Status*>(xo.get());
         TS_ASSERT(status!=nullptr);
         TSM_ASSERT("StatusCode child element", status->getStatusCode()==nullptr);
@@ -46,7 +46,7 @@ public:
     }
 
     void testChildElementsUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         Status* status = dynamic_cast<Status*>(xo.get());
         TS_ASSERT(status!=nullptr);
         TSM_ASSERT("StatusCode child element", status->getStatusCode()!=nullptr);

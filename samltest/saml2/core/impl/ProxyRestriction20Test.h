@@ -41,7 +41,7 @@ public:
     }
 
     void testSingleElementUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         ProxyRestriction* pr = dynamic_cast<ProxyRestriction*>(xo.get());
         TS_ASSERT(pr!=nullptr);
 
@@ -50,7 +50,7 @@ public:
     }
 
     void testSingleElementOptionalAttributesUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
         ProxyRestriction* pr = dynamic_cast<ProxyRestriction*>(xo.get());
         TS_ASSERT(pr!=nullptr);
 
@@ -60,7 +60,7 @@ public:
     }
 
     void testChildElementsUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         ProxyRestriction* pr= dynamic_cast<ProxyRestriction*>(xo.get());
         TS_ASSERT(pr!=nullptr);
 

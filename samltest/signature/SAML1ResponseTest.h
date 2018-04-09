@@ -70,7 +70,7 @@ public:
         vector<Signature*> sigs(1,assertion->getSignature());
         CredentialCriteria cc;
         cc.setUsage(Credential::SIGNING_CREDENTIAL);
-        Locker locker(m_resolver);
+        Locker locker(m_resolver.get());
         const Credential* cred = m_resolver->resolve(&cc);
         TSM_ASSERT("Retrieved credential was null", cred!=nullptr);
 
@@ -93,7 +93,7 @@ public:
         sc->setValue(&subcode);
         status->getStatusCode()->setStatusCode(sc);
 
-        auto_ptr<Response> response(ResponseBuilder::buildResponse());
+        scoped_ptr<Response> response(ResponseBuilder::buildResponse());
         response->setResponseID(rid.get());
         response->setIssueInstant(issueInstant.get());
         response->setStatus(status);
@@ -118,10 +118,10 @@ public:
         DOMDocument* doc=XMLToolingConfig::getConfig().getParser().parse(in);
         const XMLObjectBuilder* b = XMLObjectBuilder::getBuilder(doc->getDocumentElement());
         
-        auto_ptr<XMLObject> response2(b->buildFromDocument(doc));
+        scoped_ptr<XMLObject> response2(b->buildFromDocument(doc));
         assertEquals("Unmarshalled response does not match", expectedChildElementsDOM, response2.get(), false);
 
-        auto_ptr<Response> response3(dynamic_cast<Response*>(response2.get())->cloneResponse());
+        scoped_ptr<Response> response3(dynamic_cast<Response*>(response2.get())->cloneResponse());
         
         try {
             opensaml::SignatureProfileValidator spv;
@@ -132,7 +132,7 @@ public:
             sv.validate(dynamic_cast<Response*>(response3.get())->getAssertions().front()->getSignature());
             sv.validate(dynamic_cast<Response*>(response3.get())->getSignature());
         }
-        catch (XMLToolingException& e) {
+        catch (const XMLToolingException& e) {
             TS_TRACE(e.what());
             throw;
         }

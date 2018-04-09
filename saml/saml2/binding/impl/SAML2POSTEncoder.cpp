@@ -52,6 +52,8 @@ using namespace xmltooling::logging;
 using namespace xmltooling;
 using namespace std;
 
+using boost::scoped_ptr;
+
 namespace opensaml {
     namespace saml2p {              
         class SAML_DLLLOCAL SAML2POSTEncoder : public MessageEncoder
@@ -203,7 +205,7 @@ long SAML2POSTEncoder::encode(
         Signature::createRawSignature(credential->getPrivateKey(), signatureAlg, input.c_str(), input.length(), sigbuf, sizeof(sigbuf)-1);
         pmap.m_map["Signature"] = sigbuf;
 
-        auto_ptr<KeyInfo> keyInfo(credential->getKeyInfo());
+        scoped_ptr<KeyInfo> keyInfo(credential->getKeyInfo());
         if (keyInfo.get()) {
             string& kstring = pmap.m_map["KeyInfo"];
             XMLHelper::serialize(keyInfo->marshall((DOMDocument*)nullptr), kstring);

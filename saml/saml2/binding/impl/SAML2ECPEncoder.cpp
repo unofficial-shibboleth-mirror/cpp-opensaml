@@ -50,6 +50,8 @@ using namespace xmltooling::logging;
 using namespace xmltooling;
 using namespace std;
 
+using boost::scoped_ptr;
+
 namespace opensaml {
     namespace saml2p {              
         
@@ -80,7 +82,7 @@ namespace opensaml {
         private:
             auto_ptr_XMLCh m_actor;
             const XMLCh* m_providerName;
-            auto_ptr<IDPList> m_idpList;
+            scoped_ptr<IDPList> m_idpList;
             AnyElementBuilder m_anyBuilder;
         };
 

@@ -25,14 +25,14 @@
 using namespace opensaml::saml2;
 
 class Conditions20Test : public CxxTest::TestSuite, public SAMLObjectBaseTestCase {
-    XMLDateTime* expectedNotBefore;
-    XMLDateTime* expectedNotOnOrAfter;
+    scoped_ptr<XMLDateTime> expectedNotBefore;
+    scoped_ptr<XMLDateTime> expectedNotOnOrAfter;
 
 public:
     void setUp() {
-        expectedNotBefore = new XMLDateTime(XMLString::transcode("1984-08-26T10:01:30.043Z"));
+        expectedNotBefore.reset(new XMLDateTime(XMLString::transcode("1984-08-26T10:01:30.043Z")));
         expectedNotBefore->parseDateTime();
-        expectedNotOnOrAfter = new XMLDateTime(XMLString::transcode("1984-08-26T10:11:30.043Z"));
+        expectedNotOnOrAfter.reset(new XMLDateTime(XMLString::transcode("1984-08-26T10:11:30.043Z")));
         expectedNotOnOrAfter->parseDateTime();
 
         singleElementFile = data_path + "saml2/core/impl/Conditions.xml";
@@ -42,13 +42,13 @@ public:
     }
 
     void tearDown() {
-        delete expectedNotBefore;
-        delete expectedNotOnOrAfter;
+        expectedNotBefore.reset();
+        expectedNotOnOrAfter.reset();
         SAMLObjectBaseTestCase::tearDown();
     }
 
     void testSingleElementUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         Conditions* conditions = dynamic_cast<Conditions*>(xo.get());
         TS_ASSERT(conditions!=nullptr);
 
@@ -63,7 +63,7 @@ public:
     }
 
     void testSingleElementOptionalAttributesUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
         Conditions* conditions = dynamic_cast<Conditions*>(xo.get());
         TS_ASSERT(conditions!=nullptr);
 
@@ -77,7 +77,7 @@ public:
     }
 
     void testChildElementsUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         Conditions* conditions= dynamic_cast<Conditions*>(xo.get());
         TS_ASSERT(conditions!=nullptr);
 
@@ -97,8 +97,8 @@ public:
 
     void testSingleElementOptionalAttributesMarshall() {
         Conditions* conditions=ConditionsBuilder::buildConditions();
-        conditions->setNotBefore(expectedNotBefore);
-        conditions->setNotOnOrAfter(expectedNotOnOrAfter);
+        conditions->setNotBefore(expectedNotBefore.get());
+        conditions->setNotOnOrAfter(expectedNotOnOrAfter.get());
         assertEquals(expectedOptionalAttributesDOM, conditions);
     }
 
@@ -117,7 +117,6 @@ public:
         assertEquals(expectedChildElementsDOM, conditions);
 
         // Note: assertEquals() above has already 'delete'-ed the XMLObject* it was passed
-        conditions=nullptr;
         conditions=ConditionsBuilder::buildConditions();
 
         //Test storing children as a Condition (each is a derived type of ConditionAbstractType)

@@ -31,7 +31,7 @@
 
 #include <ctime>
 #include <vector>
-#include <memory>
+#include <boost/scoped_ptr.hpp>
 #include <xmltooling/unicode.h>
 
 #if defined (_MSC_VER)
@@ -403,15 +403,15 @@ namespace opensaml {
         // information extracted from message
         xmltooling::xstring m_messageID;
         time_t m_issueInstant;
-        std::auto_ptr<saml2::Issuer> m_issuer;
+        boost::scoped_ptr<saml2::Issuer> m_issuer;
         const saml2md::RoleDescriptor* m_issuerRole;
         bool m_authenticated;
 
         // components governing policy rules
-        std::auto_ptr<IssuerMatchingPolicy> m_matchingPolicy;
+        boost::scoped_ptr<IssuerMatchingPolicy> m_matchingPolicy;
         std::vector<const SecurityPolicyRule*> m_rules;
         const saml2md::MetadataProvider* m_metadata;
-        std::auto_ptr<xmltooling::QName> m_role;
+        boost::scoped_ptr<xmltooling::QName> m_role;
         const xmltooling::TrustEngine* m_trust;
         bool m_validate;
         bool m_entityOnly;

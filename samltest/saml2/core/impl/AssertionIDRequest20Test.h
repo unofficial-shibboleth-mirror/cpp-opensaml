@@ -30,7 +30,7 @@ class AssertionIDRequest20Test : public CxxTest::TestSuite, public SAMLObjectBas
     XMLCh* expectedVersion; 
     XMLCh* expectedConsent; 
     XMLCh* expectedDestination; 
-    XMLDateTime* expectedIssueInstant; 
+    scoped_ptr<XMLDateTime> expectedIssueInstant; 
 
 public:
     void setUp() {
@@ -38,7 +38,7 @@ public:
         expectedVersion = XMLString::transcode("2.0"); 
         expectedConsent = XMLString::transcode("urn:string:consent"); 
         expectedDestination = XMLString::transcode("http://idp.example.org/endpoint"); 
-        expectedIssueInstant = new XMLDateTime(XMLString::transcode("2006-02-21T16:40:00.000Z"));
+        expectedIssueInstant.reset(new XMLDateTime(XMLString::transcode("2006-02-21T16:40:00.000Z")));
         expectedIssueInstant->parseDateTime();
 
         singleElementFile = data_path + "saml2/core/impl/AssertionIDRequest.xml";
@@ -52,12 +52,12 @@ public:
         XMLString::release(&expectedVersion);
         XMLString::release(&expectedConsent);
         XMLString::release(&expectedDestination);
-        delete expectedIssueInstant;
+        expectedIssueInstant.reset();
         SAMLObjectBaseTestCase::tearDown();
     }
 
     void testSingleElementUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         AssertionIDRequest* request = dynamic_cast<AssertionIDRequest*>(xo.get());
         TS_ASSERT(request!=nullptr);
         assertEquals("ID attribute", expectedID, request->getID());
@@ -71,7 +71,7 @@ public:
     }
 
     void testSingleElementOptionalAttributesUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
         AssertionIDRequest* request = dynamic_cast<AssertionIDRequest*>(xo.get());
         TS_ASSERT(request!=nullptr);
         assertEquals("Consent attribute", expectedConsent, request->getConsent());
@@ -84,7 +84,7 @@ public:
     }
 
     void testChildElementsUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         AssertionIDRequest* request= dynamic_cast<AssertionIDRequest*>(xo.get());
         TS_ASSERT(request!=nullptr);
         TS_ASSERT(request->getIssuer()!=nullptr);
@@ -96,7 +96,7 @@ public:
     void testSingleElementMarshall() {
         AssertionIDRequest* request=AssertionIDRequestBuilder::buildAssertionIDRequest();
         request->setID(expectedID);
-        request->setIssueInstant(expectedIssueInstant);
+        request->setIssueInstant(expectedIssueInstant.get());
         //request->setVersion(expectedVersion);
         assertEquals(expectedDOM, request);
     }
@@ -104,7 +104,7 @@ public:
     void testSingleElementOptionalAttributesMarshall() {
         AssertionIDRequest* request=AssertionIDRequestBuilder::buildAssertionIDRequest();
         request->setID(expectedID);
-        request->setIssueInstant(expectedIssueInstant);
+        request->setIssueInstant(expectedIssueInstant.get());
         //request->setVersion(expectedVersion);
         request->setConsent(expectedConsent);
         request->setDestination(expectedDestination);
@@ -114,16 +114,15 @@ public:
     void testChildElementsMarshall() {
         AssertionIDRequest* request=AssertionIDRequestBuilder::buildAssertionIDRequest();
         request->setID(expectedID);
-        request->setIssueInstant(expectedIssueInstant);
+        request->setIssueInstant(expectedIssueInstant.get());
         // Do this just so don't have to redeclare the saml namespace prefix on every child element in the control XML file
-        Namespace* ns = new Namespace(samlconstants::SAML20_NS, samlconstants::SAML20_PREFIX);
-        request->addNamespace(*ns);
+        Namespace ns(samlconstants::SAML20_NS, samlconstants::SAML20_PREFIX);
+        request->addNamespace(ns);
         request->setIssuer(IssuerBuilder::buildIssuer());
         request->getAssertionIDRefs().push_back(AssertionIDRefBuilder::buildAssertionIDRef());
         request->getAssertionIDRefs().push_back(AssertionIDRefBuilder::buildAssertionIDRef());
         request->getAssertionIDRefs().push_back(AssertionIDRefBuilder::buildAssertionIDRef());
         assertEquals(expectedChildElementsDOM, request);
-        delete ns;
     }
 
 };

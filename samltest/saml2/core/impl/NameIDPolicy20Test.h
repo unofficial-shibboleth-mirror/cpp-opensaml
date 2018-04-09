@@ -48,14 +48,14 @@ public:
     }
 
     void testSingleElementUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         NameIDPolicy* policy = dynamic_cast<NameIDPolicy*>(xo.get());
         TS_ASSERT(policy!=nullptr);
         TSM_ASSERT_EQUALS("AllowCreate attribute presence", xmlconstants::XML_BOOL_NULL, policy->getAllowCreate());
     }
 
     void testSingleElementOptionalAttributesUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
         NameIDPolicy* policy = dynamic_cast<NameIDPolicy*>(xo.get());
         TS_ASSERT(policy!=nullptr);
         assertEquals("Format attribute", expectedFormat, policy->getFormat());

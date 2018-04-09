@@ -54,7 +54,7 @@ public:
         query->setAuthenticationMethod(method.get());
         query->setSubject(subject);
         
-        auto_ptr<Request> request(RequestBuilder::buildRequest());
+        scoped_ptr<Request> request(RequestBuilder::buildRequest());
         request->setRequestID(id.get());
         request->setIssueInstant(issueInstant.get());
         request->setAuthenticationQuery(query);
@@ -67,7 +67,7 @@ public:
         vector<Signature*> sigs(1,sig);
         CredentialCriteria cc;
         cc.setUsage(Credential::SIGNING_CREDENTIAL);
-        Locker locker(m_resolver);
+        Locker locker(m_resolver.get());
         const Credential* cred = m_resolver->resolve(&cc);
         TSM_ASSERT("Retrieved credential was null", cred!=nullptr);
 
@@ -75,7 +75,7 @@ public:
         try {
             rootElement=request->marshall((DOMDocument*)nullptr,&sigs,cred);
         }
-        catch (XMLToolingException& e) {
+        catch (const XMLToolingException& e) {
             TS_TRACE(e.what());
             throw;
         }
@@ -86,7 +86,7 @@ public:
         DOMDocument* doc=XMLToolingConfig::getConfig().getParser().parse(in);
         const XMLObjectBuilder* b = XMLObjectBuilder::getBuilder(doc->getDocumentElement());
 
-        auto_ptr<XMLObject> request2(b->buildFromDocument(doc));
+        scoped_ptr<XMLObject> request2(b->buildFromDocument(doc));
         assertEquals("Unmarshalled request does not match", expectedChildElementsDOM, request2.get(), false);
         
         try {
@@ -95,7 +95,7 @@ public:
             spv.validate(dynamic_cast<Request*>(request2.get())->getSignature());
             sv.validate(dynamic_cast<Request*>(request2.get())->getSignature());
         }
-        catch (XMLToolingException& e) {
+        catch (const XMLToolingException& e) {
             TS_TRACE(e.what());
             throw;
         }

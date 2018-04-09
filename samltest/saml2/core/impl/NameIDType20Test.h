@@ -94,7 +94,7 @@ public:
     }
 
     void testSingleElementUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         NameIDType* nameid = dynamic_cast<NameIDType*>(xo.get());
         TS_ASSERT(nameid!=nullptr);
 
@@ -104,7 +104,7 @@ public:
     }
 
     void testSingleElementOptionalAttributesUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
         NameIDType* nameid = dynamic_cast<NameIDType*>(xo.get());
         TS_ASSERT(nameid!=nullptr);
 

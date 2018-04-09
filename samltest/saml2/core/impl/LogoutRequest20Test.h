@@ -28,22 +28,22 @@ using namespace opensaml::saml2;
 class LogoutRequest20Test : public CxxTest::TestSuite, public SAMLObjectBaseTestCase {
     XMLCh* expectedID; 
     XMLCh* expectedVersion; 
-    XMLDateTime* expectedIssueInstant; 
+    scoped_ptr<XMLDateTime> expectedIssueInstant;
     XMLCh* expectedConsent; 
     XMLCh* expectedDestination; 
     XMLCh* expectedReason; 
-    XMLDateTime* expectedNotOnOrAfter; 
+    scoped_ptr<XMLDateTime> expectedNotOnOrAfter;
 
 public:
     void setUp() {
         expectedID = XMLString::transcode("abc123");; 
         expectedVersion = XMLString::transcode("2.0"); 
-        expectedIssueInstant = new XMLDateTime(XMLString::transcode("2006-02-21T16:40:00.000Z"));
+        expectedIssueInstant.reset(new XMLDateTime(XMLString::transcode("2006-02-21T16:40:00.000Z")));
         expectedIssueInstant->parseDateTime();
         expectedConsent = XMLString::transcode("urn:string:consent"); 
         expectedDestination = XMLString::transcode("http://idp.example.org/endpoint"); 
         expectedReason = XMLString::transcode("urn:string:reason"); 
-        expectedNotOnOrAfter = new XMLDateTime(XMLString::transcode("2006-02-21T20:45:00.000Z"));
+        expectedNotOnOrAfter.reset(new XMLDateTime(XMLString::transcode("2006-02-21T20:45:00.000Z")));
         expectedNotOnOrAfter->parseDateTime();
 
         singleElementFile = data_path + "saml2/core/impl/LogoutRequest.xml";
@@ -58,13 +58,13 @@ public:
         XMLString::release(&expectedConsent);
         XMLString::release(&expectedDestination);
         XMLString::release(&expectedReason);
-        delete expectedIssueInstant;
-        delete expectedNotOnOrAfter;
+        expectedIssueInstant.reset();
+        expectedNotOnOrAfter.reset();
         SAMLObjectBaseTestCase::tearDown();
     }
 
     void testSingleElementUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         LogoutRequest* request = dynamic_cast<LogoutRequest*>(xo.get());
         TS_ASSERT(request!=nullptr);
         assertEquals("ID attribute", expectedID, request->getID());
@@ -81,7 +81,7 @@ public:
     }
 
     void testSingleElementOptionalAttributesUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
         LogoutRequest* request = dynamic_cast<LogoutRequest*>(xo.get());
         TS_ASSERT(request!=nullptr);
 
@@ -100,7 +100,7 @@ public:
     }
 
     void testChildElementsUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         LogoutRequest* request= dynamic_cast<LogoutRequest*>(xo.get());
         TS_ASSERT(request!=nullptr);
         TS_ASSERT(request->getIssuer()!=nullptr);
@@ -115,7 +115,7 @@ public:
     void testSingleElementMarshall() {
         LogoutRequest* request=LogoutRequestBuilder::buildLogoutRequest();
         request->setID(expectedID);
-        request->setIssueInstant(expectedIssueInstant);
+        request->setIssueInstant(expectedIssueInstant.get());
         //request->setVersion(expectedVersion);
         assertEquals(expectedDOM, request);
     }
@@ -123,28 +123,27 @@ public:
     void testSingleElementOptionalAttributesMarshall() {
         LogoutRequest* request=LogoutRequestBuilder::buildLogoutRequest();
         request->setID(expectedID);
-        request->setIssueInstant(expectedIssueInstant);
+        request->setIssueInstant(expectedIssueInstant.get());
         //request->setVersion(expectedVersion);
         request->setConsent(expectedConsent);
         request->setDestination(expectedDestination);
         request->setReason(expectedReason);
-        request->setNotOnOrAfter(expectedNotOnOrAfter);
+        request->setNotOnOrAfter(expectedNotOnOrAfter.get());
         assertEquals(expectedOptionalAttributesDOM, request);
     }
 
     void testChildElementsMarshall() {
         LogoutRequest* request=LogoutRequestBuilder::buildLogoutRequest();
         request->setID(expectedID);
-        request->setIssueInstant(expectedIssueInstant);
+        request->setIssueInstant(expectedIssueInstant.get());
         // Do this just so don't have to redeclare the saml namespace prefix on every child element in the control XML file
-        Namespace* ns = new Namespace(samlconstants::SAML20_NS, samlconstants::SAML20_PREFIX);
-        request->addNamespace(*ns);
+        Namespace ns(samlconstants::SAML20_NS, samlconstants::SAML20_PREFIX);
+        request->addNamespace(ns);
         request->setIssuer(IssuerBuilder::buildIssuer());
         request->setNameID(NameIDBuilder::buildNameID());
         request->getSessionIndexs().push_back(SessionIndexBuilder::buildSessionIndex());
         request->getSessionIndexs().push_back(SessionIndexBuilder::buildSessionIndex());
         assertEquals(expectedChildElementsDOM, request);
-        delete ns;
     }
 
 };

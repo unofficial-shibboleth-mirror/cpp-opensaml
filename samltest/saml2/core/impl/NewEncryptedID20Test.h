@@ -41,7 +41,7 @@ public:
     }
 
     void testSingleElementUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         NewEncryptedID* encID = dynamic_cast<NewEncryptedID*>(xo.get());
         TS_ASSERT(encID!=nullptr);
         TSM_ASSERT("EncryptedData child element", encID->getEncryptedData()==nullptr);
@@ -49,7 +49,7 @@ public:
     }
 
     void testChildElementsUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         NewEncryptedID* encID = dynamic_cast<NewEncryptedID*>(xo.get());
         TS_ASSERT(encID!=nullptr);
         TSM_ASSERT("EncryptedData child element", encID->getEncryptedData()!=nullptr);
@@ -64,7 +64,7 @@ public:
     void testChildElementsMarshall() {
         NewEncryptedID* encID=NewEncryptedIDBuilder::buildNewEncryptedID();
         // Do this just so don't have to redeclare the xenc namespace prefix on every child element in the control XML file
-        Namespace* ns = new Namespace(xmlconstants::XMLENC_NS, xmlconstants::XMLENC_PREFIX);
+        scoped_ptr<Namespace> ns(new Namespace(xmlconstants::XMLENC_NS, xmlconstants::XMLENC_PREFIX));
         encID->addNamespace(*ns);
         encID->setEncryptedData(EncryptedDataBuilder::buildEncryptedData());
         encID->getEncryptedKeys().push_back(EncryptedKeyBuilder::buildEncryptedKey());

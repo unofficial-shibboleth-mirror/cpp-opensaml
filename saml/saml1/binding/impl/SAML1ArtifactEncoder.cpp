@@ -48,6 +48,8 @@ using namespace xmltooling::logging;
 using namespace xmltooling;
 using namespace std;
 
+using boost::scoped_ptr;
+
 namespace opensaml {
     namespace saml1p {              
         class SAML_DLLLOCAL SAML1ArtifactEncoder : public MessageEncoder
@@ -124,7 +126,7 @@ long SAML1ArtifactEncoder::encode(
     
     auto_ptr_char recipientID(recipient ? recipient->getEntityID() : nullptr);
     log.debug("obtaining new artifact for relying party (%s)", recipientID.get() ? recipientID.get() : "unknown");
-    auto_ptr<SAMLArtifact> artifact(artifactGenerator->generateSAML1Artifact(recipient));
+    scoped_ptr<SAMLArtifact> artifact(artifactGenerator->generateSAML1Artifact(recipient));
     
     // Store the assertion. Last step in storage will be to delete the XML.
     log.debug("storing artifact and content in map");

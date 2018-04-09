@@ -46,6 +46,8 @@ using namespace xmltooling::logging;
 using namespace xmltooling;
 using namespace std;
 
+using boost::scoped_ptr;
+
 namespace opensaml {
     namespace saml2md {
 
@@ -65,8 +67,8 @@ namespace opensaml {
             void verifySignature(Signature* sig, const XMLCh* peerName) const;
 
             bool m_verifyRoles,m_verifyName,m_verifyBackup;
-            auto_ptr<CredentialResolver> m_credResolver,m_dummyResolver;
-            auto_ptr<SignatureTrustEngine> m_trust;
+            scoped_ptr<CredentialResolver> m_credResolver,m_dummyResolver;
+            scoped_ptr<SignatureTrustEngine> m_trust;
             SignatureProfileValidator m_profileValidator;
             Category& m_log;
         };

@@ -28,20 +28,20 @@
 using namespace opensaml;
 
 class SAML2PolicyTest : public CxxTest::TestSuite {
-    SecurityPolicy* m_policy;
+    scoped_ptr<SecurityPolicy> m_policy;
     vector<SecurityPolicyRule*> m_rules;
+
 public:
     void setUp() {
-        m_policy = nullptr;
         m_rules.push_back(SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(CONDITIONS_POLICY_RULE, nullptr));
         m_rules.push_back(SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(BEARER_POLICY_RULE, nullptr));
-        m_policy = new SecurityPolicy();
+        m_policy.reset(new SecurityPolicy());
         m_policy->getRules().assign(m_rules.begin(), m_rules.end());
     }
 
     void tearDown() {
         for_each(m_rules.begin(), m_rules.end(), xmltooling::cleanup<SecurityPolicyRule>());
-        delete m_policy;
+        m_policy.reset();
     }
 
     void testSAML2Policy() {
@@ -51,7 +51,7 @@ public:
             ifstream in(path.c_str());
             DOMDocument* doc=XMLToolingConfig::getConfig().getParser().parse(in);
             XercesJanitor<DOMDocument> janitor(doc);
-            auto_ptr<saml2::Assertion> assertion(
+            scoped_ptr<saml2::Assertion> assertion(
                 dynamic_cast<saml2::Assertion*>(XMLObjectBuilder::buildOneFromElement(doc->getDocumentElement(),true))
                 );
             janitor.release();
@@ -68,9 +68,9 @@ public:
             dynamic_cast<saml2::SubjectConfirmationData*>(
                 assertion->getSubject()->getSubjectConfirmations().front()->getSubjectConfirmationData()
                 )->setInResponseTo(requestID.get());
-            m_policy->evaluate(*assertion.get());
+            m_policy->evaluate(*assertion);
         }
-        catch (exception& ex) {
+        catch (const exception& ex) {
             TS_TRACE(ex.what());
             throw;
         }

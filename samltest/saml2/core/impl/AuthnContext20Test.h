@@ -38,7 +38,7 @@ public:
     }
 
     void testSingleElementUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         AuthnContext* ac = dynamic_cast<AuthnContext*>(xo.get());
         TS_ASSERT(ac!=nullptr);
 
@@ -49,7 +49,7 @@ public:
     }
 
     void testChildElementsUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         AuthnContext* ac= dynamic_cast<AuthnContext*>(xo.get());
         TS_ASSERT(ac!=nullptr);
 

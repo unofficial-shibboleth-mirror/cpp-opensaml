@@ -34,6 +34,8 @@ using namespace opensaml::saml2md;
 using namespace xmltooling;
 using namespace std;
 
+using boost::scoped_ptr;
+
 namespace opensaml {
     namespace saml2md {
         class SAML_DLLLOCAL NullMetadataProvider : public AbstractDynamicMetadataProvider
@@ -53,7 +55,7 @@ namespace opensaml {
             EntityDescriptor* resolve(const MetadataProvider::Criteria& criteria) const;
 
         private:
-            auto_ptr<EntityDescriptor> m_template;
+            scoped_ptr<EntityDescriptor> m_template;
         }; 
 
         MetadataProvider* SAML_DLLLOCAL NullMetadataProviderFactory(const DOMElement* const & e)

@@ -36,14 +36,14 @@ public:
     }
 
     void testSingleElementUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         AttributeStatement& as = dynamic_cast<AttributeStatement&>(*xo.get());
         TSM_ASSERT("<Subject> element present", as.getSubject()==nullptr);
         TSM_ASSERT_EQUALS("Non zero count of <Attribute> elements", 0, as.getAttributes().size());
     }
 
     void testChildElementsUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         AttributeStatement& as = dynamic_cast<AttributeStatement&>(*xo.get());
         TSM_ASSERT("<Subject> element not present", as.getSubject()!=nullptr);
         TSM_ASSERT_EQUALS("count of <Attribute> elements", 5, as.getAttributes().size());

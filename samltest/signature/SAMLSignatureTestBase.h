@@ -33,22 +33,23 @@ using namespace xmlsignature;
 
 class SAMLSignatureTestBase : public SAMLObjectBaseTestCase {
 protected:
-    CredentialResolver* m_resolver;
+    scoped_ptr<CredentialResolver> m_resolver;
 public:
     void setUp() {
-        m_resolver=nullptr;
         SAMLObjectBaseTestCase::setUp();
         string config = data_path + "FilesystemCredentialResolver.xml";
         ifstream in(config.c_str());
         DOMDocument* doc=XMLToolingConfig::getConfig().getParser().parse(in);
         XercesJanitor<DOMDocument> janitor(doc);
-        m_resolver = XMLToolingConfig::getConfig().CredentialResolverManager.newPlugin(
-            FILESYSTEM_CREDENTIAL_RESOLVER,doc->getDocumentElement()
+        m_resolver.reset(
+            XMLToolingConfig::getConfig().CredentialResolverManager.newPlugin(
+                FILESYSTEM_CREDENTIAL_RESOLVER, doc->getDocumentElement()
+                )
             );
     }
 
     void tearDown() {
-        delete m_resolver;
+        m_resolver.reset(nullptr);
         SAMLObjectBaseTestCase::tearDown();
     }
 };

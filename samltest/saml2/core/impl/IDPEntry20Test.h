@@ -49,14 +49,14 @@ public:
     }
 
     void testSingleElementUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         IDPEntry* entry = dynamic_cast<IDPEntry*>(xo.get());
         TS_ASSERT(entry!=nullptr);
         assertEquals("ProviderID attribute", expectedProviderID, entry->getProviderID());
     }
 
     void testSingleElementOptionalAttributesUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
         IDPEntry* entry = dynamic_cast<IDPEntry*>(xo.get());
         TS_ASSERT(entry!=nullptr);
         assertEquals("ProviderID attribute", expectedProviderID, entry->getProviderID());

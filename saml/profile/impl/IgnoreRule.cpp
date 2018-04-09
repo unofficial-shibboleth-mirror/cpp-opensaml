@@ -39,6 +39,7 @@ using namespace xmltooling::logging;
 using namespace xmltooling;
 using namespace std;
 
+using boost::scoped_ptr;
 
 namespace opensaml {
     class SAML_DLLLOCAL IgnoreRule : public SecurityPolicyRule
@@ -46,7 +47,7 @@ namespace opensaml {
     public:
         IgnoreRule(const DOMElement* e)
             : m_log(Category::getInstance(SAML_LOGCAT ".SecurityPolicyRule.Ignore")), m_qname(XMLHelper::getNodeValueAsQName(e)) {
-            if (!m_qname.get())
+            if (!m_qname)
                 throw SecurityPolicyException("No schema type or element name supplied to Ignore rule.");
         }
         virtual ~IgnoreRule() {}
@@ -56,12 +57,12 @@ namespace opensaml {
         }
         bool evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const {
             if (message.getSchemaType()) {
-                if (*m_qname.get() != *(message.getSchemaType()))
+                if (*m_qname != *(message.getSchemaType()))
                     return false;
                 m_log.info("ignoring condition with type (%s)", message.getSchemaType()->toString().c_str());
             }
             else {
-                if (*m_qname.get() != message.getElementQName())
+                if (*m_qname != message.getElementQName())
                     return false;
                 m_log.info("ignoring condition (%s)", message.getElementQName().toString().c_str());
             }
@@ -70,7 +71,7 @@ namespace opensaml {
 
     private:
         Category& m_log;
-        auto_ptr<xmltooling::QName> m_qname;
+        scoped_ptr<xmltooling::QName> m_qname;
     };
 
     SecurityPolicyRule* SAML_DLLLOCAL IgnoreRuleFactory(const DOMElement* const & e)

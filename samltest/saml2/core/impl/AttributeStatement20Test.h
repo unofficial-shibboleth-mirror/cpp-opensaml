@@ -38,7 +38,7 @@ public:
     }
 
     void testSingleElementUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         AttributeStatement* statement = dynamic_cast<AttributeStatement*>(xo.get());
         TS_ASSERT(statement!=nullptr);
 
@@ -47,7 +47,7 @@ public:
     }
 
     void testChildElementsUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         AttributeStatement* statement= dynamic_cast<AttributeStatement*>(xo.get());
         TS_ASSERT(statement!=nullptr);
 

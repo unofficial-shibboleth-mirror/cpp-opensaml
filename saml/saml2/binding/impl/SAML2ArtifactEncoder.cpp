@@ -52,6 +52,8 @@ using namespace xmltooling::logging;
 using namespace xmltooling;
 using namespace std;
 
+using boost::scoped_ptr;
+
 namespace opensaml {
     namespace saml2p {              
         class SAML_DLLLOCAL SAML2ArtifactEncoder : public MessageEncoder
@@ -172,7 +174,7 @@ long SAML2ArtifactEncoder::encode(
         throw BindingException("SAML 2.0 HTTP-Artifact Encoder requires an ArtifactGenerator instance.");
     auto_ptr_char recipientID(recipient ? recipient->getEntityID() : nullptr);
     log.debug("obtaining new artifact for relying party (%s)", recipientID.get() ? recipientID.get() : "unknown");
-    auto_ptr<SAMLArtifact> artifact(artifactGenerator->generateSAML2Artifact(recipient));
+    scoped_ptr<SAMLArtifact> artifact(artifactGenerator->generateSAML2Artifact(recipient));
 
     if (credential) {
         // Signature based on native XML signing.

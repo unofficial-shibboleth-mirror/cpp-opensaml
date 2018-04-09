@@ -39,7 +39,7 @@ public:
     }
 
     void testSingleElementUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         GetComplete* gc = dynamic_cast<GetComplete*>(xo.get());
         TS_ASSERT(gc!=nullptr);
         assertEquals("GetComplete text content", expectedContent, gc->getGetComplete());

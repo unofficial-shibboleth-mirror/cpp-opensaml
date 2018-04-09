@@ -66,6 +66,8 @@ using namespace opensaml;
 using namespace xercesc;
 using namespace std;
 
+using boost::scoped_ptr;
+
 template<class T> T* buildPlugin(const char* path, PluginManager<T,string,const DOMElement*>& mgr)
 {
     ifstream in(path);
@@ -237,7 +239,7 @@ int main(int argc,char* argv[])
 
         // Unmarshall it.
         XercesJanitor<DOMDocument> jan(doc);
-        auto_ptr<XMLObject> sourcewrapper(XMLObjectBuilder::buildOneFromElement(doc->getDocumentElement(), true));
+        scoped_ptr<XMLObject> sourcewrapper(XMLObjectBuilder::buildOneFromElement(doc->getDocumentElement(), true));
         jan.release();
 
         // Navigate to the selected node, or use the root if no ID specified.
@@ -313,7 +315,7 @@ int main(int argc,char* argv[])
                         cerr << "use of metadata option requires a protocol option" << endl;
                         return -1;
                     }
-                    auto_ptr<MetadataProvider> metadata(buildPlugin(m_param, conf.MetadataProviderManager));
+                    scoped_ptr<MetadataProvider> metadata(buildPlugin(m_param, conf.MetadataProviderManager));
                     metadata->init();
 
                     const XMLCh* ns = rns ? XMLString::transcode(rns) : samlconstants::SAML20MD_NS;
@@ -351,7 +353,7 @@ int main(int argc,char* argv[])
         }
         else {
             // Build a resolver to supply a credential.
-            auto_ptr<CredentialResolver> cr(
+            scoped_ptr<CredentialResolver> cr(
                 cr_param ? buildPlugin(cr_param, xmlconf.CredentialResolverManager) : buildSimpleResolver(key_param, cert_param)
                 );
             Locker locker(cr.get());

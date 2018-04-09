@@ -40,13 +40,13 @@ public:
     }
 
     void testSingleElementUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         Audience& a = dynamic_cast<Audience&>(*xo.get());
         TSM_ASSERT("Uri is non-null", a.getAudienceURI()==nullptr);
     }
 
     void testSingleElementOptionalAttributesUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
         Audience& a = dynamic_cast<Audience&>(*xo.get());
         assertEquals("Uri", expectedUri, a.getAudienceURI());
     }

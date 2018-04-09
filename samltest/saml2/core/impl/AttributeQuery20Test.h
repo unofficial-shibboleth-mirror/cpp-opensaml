@@ -30,7 +30,7 @@ class AttributeQuery20Test : public CxxTest::TestSuite, public SAMLObjectBaseTes
     XMLCh* expectedVersion; 
     XMLCh* expectedConsent; 
     XMLCh* expectedDestination; 
-    XMLDateTime* expectedIssueInstant; 
+    scoped_ptr<XMLDateTime> expectedIssueInstant;
 
 public:
     void setUp() {
@@ -38,7 +38,7 @@ public:
         expectedVersion = XMLString::transcode("2.0"); 
         expectedConsent = XMLString::transcode("urn:string:consent"); 
         expectedDestination = XMLString::transcode("http://idp.example.org/endpoint"); 
-        expectedIssueInstant = new XMLDateTime(XMLString::transcode("2006-02-21T16:40:00.000Z"));
+        expectedIssueInstant.reset(new XMLDateTime(XMLString::transcode("2006-02-21T16:40:00.000Z")));
         expectedIssueInstant->parseDateTime();
 
         singleElementFile = data_path + "saml2/core/impl/AttributeQuery.xml";
@@ -52,12 +52,12 @@ public:
         XMLString::release(&expectedVersion);
         XMLString::release(&expectedConsent);
         XMLString::release(&expectedDestination);
-        delete expectedIssueInstant;
+        expectedIssueInstant.reset();
         SAMLObjectBaseTestCase::tearDown();
     }
 
     void testSingleElementUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         AttributeQuery* query = dynamic_cast<AttributeQuery*>(xo.get());
         TS_ASSERT(query!=nullptr);
         assertEquals("ID attribute", expectedID, query->getID());
@@ -71,7 +71,7 @@ public:
     }
 
     void testSingleElementOptionalAttributesUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
         AttributeQuery* query = dynamic_cast<AttributeQuery*>(xo.get());
         TS_ASSERT(query!=nullptr);
         assertEquals("Consent attribute", expectedConsent, query->getConsent());
@@ -84,7 +84,7 @@ public:
     }
 
     void testChildElementsUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         AttributeQuery* query= dynamic_cast<AttributeQuery*>(xo.get());
         TS_ASSERT(query!=nullptr);
         TS_ASSERT(query->getIssuer()!=nullptr);
@@ -97,7 +97,7 @@ public:
     void testSingleElementMarshall() {
         AttributeQuery* query=AttributeQueryBuilder::buildAttributeQuery();
         query->setID(expectedID);
-        query->setIssueInstant(expectedIssueInstant);
+        query->setIssueInstant(expectedIssueInstant.get());
         //query->setVersion(expectedVersion);
         assertEquals(expectedDOM, query);
     }
@@ -105,7 +105,7 @@ public:
     void testSingleElementOptionalAttributesMarshall() {
         AttributeQuery* query=AttributeQueryBuilder::buildAttributeQuery();
         query->setID(expectedID);
-        query->setIssueInstant(expectedIssueInstant);
+        query->setIssueInstant(expectedIssueInstant.get());
         //query->setVersion(expectedVersion);
         query->setConsent(expectedConsent);
         query->setDestination(expectedDestination);
@@ -115,10 +115,10 @@ public:
     void testChildElementsMarshall() {
         AttributeQuery* query=AttributeQueryBuilder::buildAttributeQuery();
         query->setID(expectedID);
-        query->setIssueInstant(expectedIssueInstant);
+        query->setIssueInstant(expectedIssueInstant.get());
         // Do this just so don't have to redeclare the saml namespace prefix on every child element in the control XML file
-        Namespace* ns = new Namespace(samlconstants::SAML20_NS, samlconstants::SAML20_PREFIX);
-        query->addNamespace(*ns);
+        Namespace ns(samlconstants::SAML20_NS, samlconstants::SAML20_PREFIX);
+        query->addNamespace(ns);
         query->setIssuer(IssuerBuilder::buildIssuer());
         query->setSubject(SubjectBuilder::buildSubject());
         query->getAttributes().push_back(AttributeBuilder::buildAttribute());
@@ -126,7 +126,6 @@ public:
         query->getAttributes().push_back(AttributeBuilder::buildAttribute());
         query->getAttributes().push_back(AttributeBuilder::buildAttribute());
         assertEquals(expectedChildElementsDOM, query);
-        delete ns;
     }
 
 };

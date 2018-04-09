@@ -31,7 +31,7 @@ class ArtifactResponse20Test : public CxxTest::TestSuite, public SAMLObjectBaseT
     XMLCh* expectedVersion; 
     XMLCh* expectedConsent; 
     XMLCh* expectedDestination; 
-    XMLDateTime* expectedIssueInstant;
+    scoped_ptr<XMLDateTime> expectedIssueInstant;
 
     // The payload will be an AuthnRequest in this test.
     // AuthnRequest marshaller autogenerates ID, Version and IssueInstant if they are nullptr,
@@ -45,7 +45,7 @@ public:
         expectedVersion = XMLString::transcode("2.0"); 
         expectedConsent = XMLString::transcode("urn:string:consent"); 
         expectedDestination = XMLString::transcode("http://sp.example.org/endpoint"); 
-        expectedIssueInstant = new XMLDateTime(XMLString::transcode("2006-02-21T16:40:00.000Z"));
+        expectedIssueInstant.reset(new XMLDateTime(XMLString::transcode("2006-02-21T16:40:00.000Z")));
         expectedIssueInstant->parseDateTime();
 
         authnRequestID = XMLString::transcode("test1"); 
@@ -63,12 +63,12 @@ public:
         XMLString::release(&expectedConsent);
         XMLString::release(&expectedDestination);
         XMLString::release(&authnRequestID);
-        delete expectedIssueInstant;
+        expectedIssueInstant.reset();
         SAMLObjectBaseTestCase::tearDown();
     }
 
     void testSingleElementUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementFile));
         ArtifactResponse* response = dynamic_cast<ArtifactResponse*>(xo.get());
         TS_ASSERT(response!=nullptr);
 
@@ -84,7 +84,7 @@ public:
     }
 
     void testSingleElementOptionalAttributesUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(singleElementOptionalAttributesFile));
         ArtifactResponse* response = dynamic_cast<ArtifactResponse*>(xo.get());
         TS_ASSERT(response!=nullptr);
 
@@ -100,7 +100,7 @@ public:
     }
 
     void testChildElementsUnmarshall() {
-        auto_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
+        scoped_ptr<XMLObject> xo(unmarshallElement(childElementsFile));
         ArtifactResponse* response= dynamic_cast<ArtifactResponse*>(xo.get());
         TS_ASSERT(response!=nullptr);
 
@@ -116,7 +116,7 @@ public:
         TS_ASSERT(response!=nullptr);
 
         response->setID(expectedID);
-        response->setIssueInstant(expectedIssueInstant);
+        response->setIssueInstant(expectedIssueInstant.get());
         //response->setVersion(expectedVersion);
         assertEquals(expectedDOM, response);
     }
@@ -127,7 +127,7 @@ public:
 
         response->setID(expectedID);
         response->setInResponseTo(expectedInResponseTo);
-        response->setIssueInstant(expectedIssueInstant);
+        response->setIssueInstant(expectedIssueInstant.get());
         //response->setVersion(expectedVersion);
         response->setConsent(expectedConsent);
         response->setDestination(expectedDestination);
@@ -140,20 +140,19 @@ public:
         TS_ASSERT(response!=nullptr);
 
         response->setID(expectedID);
-        response->setIssueInstant(expectedIssueInstant);
+        response->setIssueInstant(expectedIssueInstant.get());
         // Do this just so don't have to redeclare the saml namespace prefix on every child element in the control XML file
-        Namespace* ns = new Namespace(samlconstants::SAML20_NS, samlconstants::SAML20_PREFIX);
-        response->addNamespace(*ns);
+        Namespace ns(samlconstants::SAML20_NS, samlconstants::SAML20_PREFIX);
+        response->addNamespace(ns);
         response->setIssuer(IssuerBuilder::buildIssuer());
         response->setStatus(StatusBuilder::buildStatus());
 
         AuthnRequest* authnRequest = AuthnRequestBuilder::buildAuthnRequest();
-        authnRequest->setIssueInstant(expectedIssueInstant);
+        authnRequest->setIssueInstant(expectedIssueInstant.get());
         authnRequest->setID(authnRequestID);
         response->setPayload(authnRequest);
 
         assertEquals(expectedChildElementsDOM, response);
-        delete ns;
     }
 
 };
