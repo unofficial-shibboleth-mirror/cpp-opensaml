@@ -83,7 +83,7 @@ namespace opensaml {
             }
 
         protected:
-            pair<bool,DOMElement*> load(bool backup);
+            pair<bool,DOMElement*> load(bool backup, string backingFile);
             pair<bool,DOMElement*> background_load();
 
         private:
@@ -165,7 +165,7 @@ void XMLMetadataProvider::init()
     }
 }
 
-pair<bool,DOMElement*> XMLMetadataProvider::load(bool backup)
+pair<bool,DOMElement*> XMLMetadataProvider::load(bool backup, string backingFile)
 {
     if (!backup) {
         // Lower the refresh rate in case of an error.
@@ -173,12 +173,13 @@ pair<bool,DOMElement*> XMLMetadataProvider::load(bool backup)
     }
 
     string backupKey = "";
-    if (!backup && !m_backing.empty()) {
+    if (!backup && !backingFile.empty()) {
         // We compute a random filename extension to the "real" location.
         SAMLConfig::getConfig().generateRandomBytes(backupKey, 2);
-        backupKey = m_backing + '.' + SAMLArtifact::toHex(backupKey);
+        backupKey = backingFile + '.' + SAMLArtifact::toHex(backupKey);
         m_log.debug("remote metadata resource will be backed up to (%s)", backupKey.c_str());
     }
+
     // Call the base class to load/parse the appropriate XML resource.
     pair<bool,DOMElement*> raw = ReloadableXMLFile::load(backup, backupKey);
 
@@ -200,7 +201,7 @@ pair<bool,DOMElement*> XMLMetadataProvider::load(bool backup)
     try {
         SchemaValidators.validate(xmlObject.get());
     }
-    catch (std::exception& ex) {
+    catch (const std::exception& ex) {
         m_log.error("metadata instance failed manual validation checking: %s", ex.what());
         if (!backupKey.empty())
             remove(backupKey.c_str());
@@ -219,17 +220,17 @@ pair<bool,DOMElement*> XMLMetadataProvider::load(bool backup)
         BatchLoadMetadataFilterContext ctx(backup);
         doFilters(&ctx , *xmlObject);
     }
-    catch (std::exception&) {
+    catch (const std::exception&) {
         if (!backupKey.empty())
             remove(backupKey.c_str());
         throw;
     }
 
     if (!backupKey.empty()) {
-        m_log.debug("committing backup file to permanent location (%s)", m_backing.c_str());
+        m_log.debug("committing backup file to permanent location (%s)", backingFile.c_str());
         Locker locker(getBackupLock());
-        remove(m_backing.c_str());
-        if (rename(backupKey.c_str(), m_backing.c_str()) != 0)
+        remove(backingFile.c_str());
+        if (rename(backupKey.c_str(), backingFile.c_str()) != 0)
             m_log.crit("unable to rename metadata backup file");
         preserveCacheTag();
     }
@@ -270,9 +271,9 @@ pair<bool,DOMElement*> XMLMetadataProvider::load(bool backup)
 pair<bool,DOMElement*> XMLMetadataProvider::background_load()
 {
     try {
-        return load(false);
+        return load(false, m_backing);
     }
-    catch (long& ex) {
+    catch (long ex) {
         if (ex == HTTPResponse::XMLTOOLING_HTTP_STATUS_NOTMODIFIED) {
             // Unchanged document, so re-establish previous refresh interval.
             m_reloadInterval = computeNextRefresh();
@@ -286,10 +287,10 @@ pair<bool,DOMElement*> XMLMetadataProvider::background_load()
             m_log.warn("adjusted reload interval to %u seconds", m_reloadInterval);
         }
         if (!m_loaded && !m_backing.empty())
-            return load(true);
+            return load(true, "");
         throw;
     }
-    catch (std::exception& ex) {
+    catch (const std::exception& ex) {
         if (!m_local) {
             m_reloadInterval = m_minRefreshDelay * m_backoffFactor++;
             if (m_reloadInterval > m_maxRefreshDelay)
@@ -297,7 +298,7 @@ pair<bool,DOMElement*> XMLMetadataProvider::background_load()
             m_log.warn("adjusted reload interval to %u seconds", m_reloadInterval);
             if (!m_loaded && !m_backing.empty()) {
                 m_log.warn("trying backup file, exception loading remote resource: %s", ex.what());
-                return load(true);
+                return load(true, "");
             }
         }
         throw;

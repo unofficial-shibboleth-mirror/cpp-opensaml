@@ -198,11 +198,13 @@ int main(int argc,char* argv[])
 
     XMLToolingConfig& xmlconf = XMLToolingConfig::getConfig();
     xmlconf.log_config(getenv("OPENSAML_LOG_CONFIG"));
-    if (getenv("OPENSAML_SCHEMAS"))
-        xmlconf.catalog_path = getenv("OPENSAML_SCHEMAS");
     SAMLConfig& conf=SAMLConfig::getConfig();
     if (!conf.init())
         return -2;
+
+    if (getenv("OPENSAML_SCHEMAS"))
+        xmlconf.getValidatingParser().loadCatalogs(getenv("OPENSAML_SCHEMAS"));
+
     Category& log = Category::getInstance("OpenSAML.Utility.SAMLSign");
 
     int ret = 0;
