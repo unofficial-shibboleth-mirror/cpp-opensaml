@@ -57,6 +57,11 @@ namespace opensaml {
                 return m_role;
             }
 
+            /**
+             * Get whether the candidate credential matches the criteria.
+             *
+             * @param credential candidate
+             */
             bool matches(const xmltooling::Credential& credential) const;
 
         private:

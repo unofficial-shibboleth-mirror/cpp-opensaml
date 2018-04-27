@@ -141,6 +141,11 @@ namespace opensaml {
          */        
         SAMLArtifact(const char* s);
 
+        /**
+         * Copy constructor.
+         *
+         * @param src copy source
+         */
         SAMLArtifact(const SAMLArtifact& src);
         
         /** Raw binary data that makes up an artifact. */

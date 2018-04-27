@@ -158,7 +158,7 @@ namespace opensaml {
         /**
          * Returns the appropriate contact to use for the role.
          *
-         * @param entity    the role to search
+         * @param role    the role to search
          * @return  a contact to use, or nullptr
          */
         virtual const saml2md::ContactPerson* getContactPerson(const saml2md::RoleDescriptor& role) const=0;
