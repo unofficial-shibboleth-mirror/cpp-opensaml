@@ -100,22 +100,13 @@ namespace opensaml {
             virtual const char* getId() const=0;
 
             /**
-             * @Deprecated
-             * Filters the given metadata. Exceptions should generally not be thrown to
-             * signal the removal of information, only for systemic processing failure.
-             *
-             * @param xmlObject the metadata to be filtered
-             */
-            virtual void doFilter(xmltooling::XMLObject& xmlObject) const;
-
-            /**
              * Filters the given metadata. Exceptions should generally not be thrown to
              * signal the removal of information, only for systemic processing failure.
              *
              * @param ctx       context interface, or nullptr
              * @param xmlObject the metadata to be filtered
              */
-            virtual void doFilter(const MetadataFilterContext* ctx, xmltooling::XMLObject& xmlObject) const;
+            virtual void doFilter(const MetadataFilterContext* ctx, xmltooling::XMLObject& xmlObject) const=0;
         };
 
         /**

@@ -49,7 +49,7 @@ namespace opensaml {
             ~WhitelistMetadataFilter() {}
 
             const char* getId() const { return WHITELIST_METADATA_FILTER; }
-            void doFilter(XMLObject& xmlObject) const;
+            void doFilter(const MetadataFilterContext* ctx, XMLObject& xmlObject) const;
 
         private:
             void filterGroup(EntitiesDescriptor*) const;
@@ -87,7 +87,7 @@ WhitelistMetadataFilter::WhitelistMetadataFilter(const DOMElement* e)
     }
 }
 
-void WhitelistMetadataFilter::doFilter(XMLObject& xmlObject) const
+void WhitelistMetadataFilter::doFilter(const MetadataFilterContext* ctx, XMLObject& xmlObject) const
 {
     EntitiesDescriptor* group = dynamic_cast<EntitiesDescriptor*>(&xmlObject);
     if (group) {

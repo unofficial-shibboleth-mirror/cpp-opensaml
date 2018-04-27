@@ -46,7 +46,7 @@ namespace opensaml {
             ~RequireValidUntilMetadataFilter() {}
             
             const char* getId() const { return REQUIREVALIDUNTIL_METADATA_FILTER; }
-            void doFilter(XMLObject& xmlObject) const;
+            void doFilter(const MetadataFilterContext* ctx, XMLObject& xmlObject) const;
 
         private:
             time_t m_maxValidityInterval;
@@ -67,7 +67,7 @@ RequireValidUntilMetadataFilter::RequireValidUntilMetadataFilter(const DOMElemen
 {
 }
 
-void RequireValidUntilMetadataFilter::doFilter(XMLObject& xmlObject) const
+void RequireValidUntilMetadataFilter::doFilter(const MetadataFilterContext* ctx, XMLObject& xmlObject) const
 {
     const TimeBoundSAMLObject* tbo = dynamic_cast<const TimeBoundSAMLObject*>(&xmlObject);
     if (!tbo)

@@ -48,7 +48,7 @@ namespace opensaml {
             ~BlacklistMetadataFilter() {}
             
             const char* getId() const { return BLACKLIST_METADATA_FILTER; }
-            void doFilter(XMLObject& xmlObject) const;
+            void doFilter(const MetadataFilterContext* ctx, XMLObject& xmlObject) const;
 
         private:
             void filterGroup(EntitiesDescriptor*) const;
@@ -86,7 +86,7 @@ BlacklistMetadataFilter::BlacklistMetadataFilter(const DOMElement* e)
     }
 }
 
-void BlacklistMetadataFilter::doFilter(XMLObject& xmlObject) const
+void BlacklistMetadataFilter::doFilter(const MetadataFilterContext* ctx, XMLObject& xmlObject) const
 {
     EntitiesDescriptor* group = dynamic_cast<EntitiesDescriptor*>(&xmlObject);
     if (group) {

@@ -58,7 +58,6 @@ namespace opensaml {
             ~SignatureMetadataFilter() {}
 
             const char* getId() const { return SIGNATURE_METADATA_FILTER; }
-            void doFilter(XMLObject& xmlObject) const;
             void doFilter(const MetadataFilterContext* ctx, XMLObject& xmlObject) const;
 
         private:
@@ -135,20 +134,15 @@ SignatureMetadataFilter::SignatureMetadataFilter(const DOMElement* e)
 
 void SignatureMetadataFilter::doFilter(const MetadataFilterContext* ctx, XMLObject& xmlObject) const
 {
-    const BatchLoadMetadataFilterContext* bCtx = dynamic_cast<const BatchLoadMetadataFilterContext*>(ctx);
-    if (!m_verifyBackup && bCtx && bCtx->isBackingFile()) {
-        m_log.debug("Skipping SignatureMetadataFilter on load from backup");
-    }
-    else {
-        doFilter(xmlObject);
-    }
-}
-
-void SignatureMetadataFilter::doFilter(XMLObject& xmlObject) const
-{
 #ifdef _DEBUG
     NDC ndc("doFilter");
 #endif
+
+    const BatchLoadMetadataFilterContext* bCtx = dynamic_cast<const BatchLoadMetadataFilterContext*>(ctx);
+    if (!m_verifyBackup && bCtx && bCtx->isBackingFile()) {
+        m_log.debug("Skipping SignatureMetadataFilter on load from backup");
+        return;
+    }
 
     try {
         EntitiesDescriptor& entities = dynamic_cast<EntitiesDescriptor&>(xmlObject);

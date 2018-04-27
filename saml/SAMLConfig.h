@@ -141,17 +141,6 @@ namespace opensaml {
         virtual XMLCh* generateIdentifier()=0;
         
         /**
-         * @deprecated
-         * Generate the SHA-1 hash of a string
-         * 
-         * @param s     NULL-terminated string to hash
-         * @param toHex true iff the result should be encoded in hexadecimal form or left as raw bytes
-         *  
-         * @return  SHA-1 hash of the data
-         */
-        virtual std::string hashSHA1(const char* s, bool toHex=false)=0;
-
-        /**
          * Sets the order of contact types to use in annotating exceptions with contact information.
          *
          * @param contactTypes  whitespace-delimited list of contact types

@@ -92,7 +92,7 @@ static const XMLCh Exclude[] =          UNICODE_LITERAL_7(E,x,c,l,u,d,e);
 static const XMLCh Include[] =          UNICODE_LITERAL_7(I,n,c,l,u,d,e);
 static const XMLCh _type[] =            UNICODE_LITERAL_4(t,y,p,e);
 
-MetadataProvider::MetadataProvider() { throw MetadataException("Illegal constructor call");}
+MetadataProvider::MetadataProvider() { throw MetadataException("Illegal constructor call"); }
 
 MetadataProvider::MetadataProvider(const DOMElement* e) : m_filterContext(nullptr)
 {
@@ -100,7 +100,7 @@ MetadataProvider::MetadataProvider(const DOMElement* e) : m_filterContext(nullpt
     NDC ndc("MetadataProvider");
 #endif
     Category& log = Category::getInstance(SAML_LOGCAT ".MetadataProvider");
-    SAMLConfig& conf = SAMLConfig::getConfig();
+    const SAMLConfig& conf = SAMLConfig::getConfig();
 
     // Locate any default recognized filters and plugins.
     try {
@@ -119,34 +119,34 @@ MetadataProvider::MetadataProvider(const DOMElement* e) : m_filterContext(nullpt
                 }
             }
             else if (XMLString::equals(child->getLocalName(), SigFilter)) {
-                log.warn("<SignatureMetadataFilter> and will be deprecated in future versions: use type=\"%s\"", SIGNATURE_METADATA_FILTER);
+                log.warn("<SignatureMetadataFilter> will be deprecated in future versions: use type=\"%s\"", SIGNATURE_METADATA_FILTER);
                 log.info("building MetadataFilter of type %s", SIGNATURE_METADATA_FILTER);
                 m_filters.push_back(conf.MetadataFilterManager.newPlugin(SIGNATURE_METADATA_FILTER, child));
             }
             else if (XMLString::equals(child->getLocalName(), Whitelist)) {
-                log.warn("<WhitelistMetadataFilter> and will be deprecated in future versions use: type=\"%s\"", WHITELIST_METADATA_FILTER);
+                log.warn("<WhitelistMetadataFilter> will be deprecated in future versions use: type=\"%s\"", WHITELIST_METADATA_FILTER);
                 log.info("building MetadataFilter of type %s", WHITELIST_METADATA_FILTER);
                 m_filters.push_back(conf.MetadataFilterManager.newPlugin(WHITELIST_METADATA_FILTER, child));
             }
             else if (XMLString::equals(child->getLocalName(), Blacklist)) {
-                log.warn("<BlacklistMetadataFilter> and will be deprecated in future versions use: type=\"%s\"", BLACKLIST_METADATA_FILTER);
+                log.warn("<BlacklistMetadataFilter> will be deprecated in future versions use: type=\"%s\"", BLACKLIST_METADATA_FILTER);
                 log.info("building MetadataFilter of type %s", BLACKLIST_METADATA_FILTER);
                 m_filters.push_back(conf.MetadataFilterManager.newPlugin(BLACKLIST_METADATA_FILTER, child));
             }
             else if (XMLString::equals(child->getLocalName(), Include)) {
-                log.warn("<Include> and will be deprecated in future versions: use type=\"%s\"", WHITELIST_METADATA_FILTER);
+                log.warn("<Include> will be deprecated in future versions: use type=\"%s\"", WHITELIST_METADATA_FILTER);
                 log.info("building MetadataFilter of type %s", WHITELIST_METADATA_FILTER);
                 m_filters.push_back(conf.MetadataFilterManager.newPlugin(WHITELIST_METADATA_FILTER, e));
             }
             else if (XMLString::equals(child->getLocalName(), Exclude)) {
-                log.warn("<Exclude> and will be deprecated in future versions: use type=\"%s\"", BLACKLIST_METADATA_FILTER);
+                log.warn("<Exclude> will be deprecated in future versions: use type=\"%s\"", BLACKLIST_METADATA_FILTER);
                 log.info("building MetadataFilter of type %s", BLACKLIST_METADATA_FILTER);
                 m_filters.push_back(conf.MetadataFilterManager.newPlugin(BLACKLIST_METADATA_FILTER, e));
             }
             child = XMLHelper::getNextSiblingElement(child);
         }
     }
-    catch (XMLToolingException& ex) {
+    catch (const XMLToolingException& ex) {
         log.error("caught exception while installing filters: %s", ex.what());
         throw;
     }
@@ -180,30 +180,14 @@ void MetadataProvider::setContext(const MetadataFilterContext* ctx)
     m_filterContext = ctx;
 }
 
-void MetadataProvider::doFiltersInternal(const MetadataFilterContext* ctx, XMLObject& xmlObject) const
-{
-    Category& log = Category::getInstance(SAML_LOGCAT ".Metadata");
-    for (ptr_vector<MetadataFilter>::const_iterator i = m_filters.begin(); i != m_filters.end(); i++) {
-        log.info("applying metadata filter (%s)", i->getId());
-        i->doFilter(ctx, xmlObject);
-    }
-}
-
 void MetadataProvider::doFilters(const MetadataFilterContext* ctx, XMLObject& xmlObject) const
 {
-    if (m_filterContext) {
-        Category& log = Category::getInstance(SAML_LOGCAT ".Metadata");
-        log.crit("Internal error: calling MetadataProvider::doFilters with a static and dynamic context");
-        throw;
+    Category& log = Category::getInstance(SAML_LOGCAT ".MetadataProvider");
+    for (ptr_vector<MetadataFilter>::const_iterator i = m_filters.begin(); i != m_filters.end(); i++) {
+        log.info("applying metadata filter (%s)", i->getId());
+        i->doFilter(ctx ? ctx : m_filterContext, xmlObject);
     }
-    doFiltersInternal(ctx, xmlObject);
 }
-
-void MetadataProvider::doFilters(XMLObject& xmlObject) const
-{
-    doFiltersInternal(m_filterContext, xmlObject);
-}
-
 
 void MetadataProvider::outputStatus(ostream& os) const
 {
@@ -256,17 +240,6 @@ MetadataFilter::MetadataFilter()
 
 MetadataFilter::~MetadataFilter()
 {
-}
-
-void MetadataFilter::doFilter(const MetadataFilterContext* ctx, xmltooling::XMLObject& xmlObject) const
-{
-    // Default call into deprecated method.
-    doFilter(xmlObject);
-}
-
-void MetadataFilter::doFilter(xmltooling::XMLObject& xmlObject) const
-{
-    // Empty default for deprecated method.
 }
 
 MetadataFilterContext::MetadataFilterContext()

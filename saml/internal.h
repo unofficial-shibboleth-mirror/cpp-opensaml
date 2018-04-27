@@ -106,7 +106,6 @@ namespace opensaml {
         void generateRandomBytes(void* buf, unsigned int len);
         void generateRandomBytes(std::string& buf, unsigned int len);
         XMLCh* generateIdentifier();
-        std::string hashSHA1(const char* data, bool toHex=false);
         void setContactPriority(const XMLCh*);
         const saml2md::ContactPerson* getContactPerson(const saml2md::EntityDescriptor&) const;
         const saml2md::ContactPerson* getContactPerson(const saml2md::RoleDescriptor&) const;

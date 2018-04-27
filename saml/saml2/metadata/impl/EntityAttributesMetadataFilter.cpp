@@ -53,7 +53,7 @@ namespace opensaml {
             ~EntityAttributesMetadataFilter() {}
 
             const char* getId() const { return ENTITYATTR_METADATA_FILTER; }
-            void doFilter(XMLObject& xmlObject) const;
+            void doFilter(const MetadataFilterContext* ctx, XMLObject& xmlObject) const;
 
         private:
             void filterEntity(EntityDescriptor* entity) const;
@@ -97,7 +97,7 @@ EntityAttributesMetadataFilter::EntityAttributesMetadataFilter(const DOMElement*
     }
 }
 
-void EntityAttributesMetadataFilter::doFilter(XMLObject& xmlObject) const
+void EntityAttributesMetadataFilter::doFilter(const MetadataFilterContext* ctx, XMLObject& xmlObject) const
 {
     EntitiesDescriptor* group = dynamic_cast<EntitiesDescriptor*>(&xmlObject);
     if (group) {

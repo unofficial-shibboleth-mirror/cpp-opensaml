@@ -304,7 +304,7 @@ pair<const EntityDescriptor*,const RoleDescriptor*> AbstractDynamicMetadataProvi
         }
 
         // Filter it, which may throw.
-        doFilters(*entity2);
+        doFilters(nullptr, *entity2);
 
         time_t now = time(nullptr);
         time_t cmp = now;

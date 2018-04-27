@@ -57,7 +57,7 @@ DiscoverableMetadataProvider::DiscoverableMetadataProvider(const DOMElement* e) 
 
     const XMLCh* attrib = e? e->getAttributeNS(nullptr, legacyOrgNames) : nullptr;
     if (attrib && *attrib) {
-        Category::getInstance(SAML_LOGCAT ".MetadataProvider.Discoverable").warn("legacyOrgNames is a deprecated attribute for MetadataProviders");
+        Category::getInstance(SAML_LOGCAT ".MetadataProvider.Discoverable").warn("DEPRECATED: legacyOrgNames is a deprecated attribute for MetadataProviders");
     }
 
     m_legacyOrgNames = XMLHelper::getAttrBool(e, false, legacyOrgNames);

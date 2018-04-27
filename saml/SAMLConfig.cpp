@@ -266,11 +266,6 @@ XMLCh* SAMLInternalConfig::generateIdentifier()
     return XMLString::transcode(hexform);
 }
 
-string SAMLInternalConfig::hashSHA1(const char* s, bool toHex)
-{
-    return SecurityHelper::doHash("SHA1", s, strlen(s), toHex);
-}
-
 void SAMLInternalConfig::setContactPriority(const XMLCh* contactTypes)
 {
     const XMLCh* ctype;
