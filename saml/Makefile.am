@@ -18,8 +18,6 @@ saml1bindincludedir = $(includedir)/saml/saml1/binding
 
 saml1coreincludedir = $(includedir)/saml/saml1/core
 
-saml1profincludedir = $(includedir)/saml/saml1/profile
-
 saml2bindincludedir = $(includedir)/saml/saml2/binding
 
 saml2coreincludedir = $(includedir)/saml/saml2/core
@@ -67,10 +65,6 @@ saml1bindinclude_HEADERS = \
 	saml1/binding/SAML1MessageDecoder.h \
 	saml1/binding/SAML1SOAPClient.h
 
-saml1profinclude_HEADERS = \
-	saml1/profile/AssertionValidator.h \
-	saml1/profile/BrowserSSOProfileValidator.h
-
 saml2coreinclude_HEADERS = \
 	saml2/core/Assertions.h \
 	saml2/core/Protocols.h
@@ -86,7 +80,7 @@ saml2mdinclude_HEADERS = \
 	saml2/metadata/DiscoverableMetadataProvider.h \
 	saml2/metadata/AbstractDynamicMetadataProvider.h \
 	saml2/metadata/EndpointManager.h \
-    saml2/metadata/EntityMatcher.h \
+	saml2/metadata/EntityMatcher.h \
 	saml2/metadata/Metadata.h \
 	saml2/metadata/MetadataCredentialContext.h \
 	saml2/metadata/MetadataCredentialCriteria.h \
@@ -95,8 +89,6 @@ saml2mdinclude_HEADERS = \
 	saml2/metadata/ObservableMetadataProvider.h
 
 saml2profinclude_HEADERS = \
-	saml2/profile/AssertionValidator.h \
-	saml2/profile/BrowserSSOProfileValidator.h \
 	saml2/profile/SAML2AssertionPolicy.h
 
 noinst_HEADERS = \
@@ -104,7 +96,7 @@ noinst_HEADERS = \
 
 libsaml_la_SOURCES = \
 	SAMLConfig.cpp \
-    version.cpp \
+	version.cpp \
 	binding/impl/ArtifactMap.cpp \
 	binding/impl/ClientCertAuthRule.cpp \
 	binding/impl/MessageDecoder.cpp \
@@ -133,8 +125,6 @@ libsaml_la_SOURCES = \
 	saml1/binding/impl/SAML1SOAPDecoder.cpp \
 	saml1/binding/impl/SAML1SOAPEncoder.cpp \
 	saml1/binding/impl/SAML1SOAPClient.cpp \
-	saml1/profile/impl/AssertionValidator.cpp \
-	saml1/profile/impl/BrowserSSOProfileValidator.cpp \
 	saml1/profile/impl/SAML1BrowserSSORule.cpp \
 	saml2/core/impl/Assertions.cpp \
 	saml2/core/impl/Assertions20Impl.cpp \
@@ -147,8 +137,8 @@ libsaml_la_SOURCES = \
 	saml2/metadata/impl/DiscoverableMetadataProvider.cpp \
 	saml2/metadata/impl/AbstractDynamicMetadataProvider.cpp \
 	saml2/metadata/impl/LocalDynamicMetadataProvider.cpp \
-    saml2/metadata/impl/EntityAttributesEntityMatcher.cpp \
-    saml2/metadata/impl/EntityAttributesMetadataFilter.cpp \
+	saml2/metadata/impl/EntityAttributesEntityMatcher.cpp \
+	saml2/metadata/impl/EntityAttributesMetadataFilter.cpp \
 	saml2/metadata/impl/EntityRoleMetadataFilter.cpp \
 	saml2/metadata/impl/FolderMetadataProvider.cpp \
 	saml2/metadata/impl/MetadataCredentialContext.cpp \
@@ -156,12 +146,12 @@ libsaml_la_SOURCES = \
 	saml2/metadata/impl/MetadataImpl.cpp \
 	saml2/metadata/impl/MetadataProvider.cpp \
 	saml2/metadata/impl/MetadataSchemaValidators.cpp \
-    saml2/metadata/impl/NameEntityMatcher.cpp \
+	saml2/metadata/impl/NameEntityMatcher.cpp \
 	saml2/metadata/impl/NullMetadataProvider.cpp \
 	saml2/metadata/impl/ObservableMetadataProvider.cpp \
 	saml2/metadata/impl/RequireValidUntilMetadataFilter.cpp \
 	saml2/metadata/impl/SignatureMetadataFilter.cpp \
-    saml2/metadata/impl/RegistrationAuthorityEntityMatcher.cpp \
+	saml2/metadata/impl/RegistrationAuthorityEntityMatcher.cpp \
 	saml2/metadata/impl/WhitelistMetadataFilter.cpp \
 	saml2/metadata/impl/XMLMetadataProvider.cpp \
 	saml2/binding/impl/SAML2Artifact.cpp \
@@ -178,8 +168,6 @@ libsaml_la_SOURCES = \
 	saml2/binding/impl/SAML2SOAPDecoder.cpp \
 	saml2/binding/impl/SAML2SOAPEncoder.cpp \
 	saml2/binding/impl/SAML2SOAPClient.cpp \
-	saml2/profile/impl/Assertion20Validator.cpp \
-	saml2/profile/impl/BrowserSSOProfile20Validator.cpp \
 	saml2/profile/impl/BearerConfirmationRule.cpp \
 	saml2/profile/impl/DelegationRestrictionRule.cpp \
 	saml2/profile/impl/SAML2AssertionPolicy.cpp \

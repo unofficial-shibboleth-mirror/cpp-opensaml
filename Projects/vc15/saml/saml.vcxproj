@@ -211,8 +211,6 @@
     <ClCompile Include="..\..\..\saml\saml1\binding\impl\SAML1SOAPEncoder.cpp" />
     <ClCompile Include="..\..\..\saml\saml1\binding\impl\SAMLArtifactType0001.cpp" />
     <ClCompile Include="..\..\..\saml\saml1\binding\impl\SAMLArtifactType0002.cpp" />
-    <ClCompile Include="..\..\..\saml\saml1\profile\impl\AssertionValidator.cpp" />
-    <ClCompile Include="..\..\..\saml\saml1\profile\impl\BrowserSSOProfileValidator.cpp" />
     <ClCompile Include="..\..\..\saml\saml1\profile\impl\SAML1BrowserSSORule.cpp" />
     <ClCompile Include="..\..\..\saml\signature\ContentReference.cpp" />
     <ClCompile Include="..\..\..\saml\signature\SignatureProfileValidator.cpp" />
@@ -269,9 +267,7 @@
     <ClCompile Include="..\..\..\saml\saml2\binding\impl\SAML2SOAPClient.cpp" />
     <ClCompile Include="..\..\..\saml\saml2\binding\impl\SAML2SOAPDecoder.cpp" />
     <ClCompile Include="..\..\..\saml\saml2\binding\impl\SAML2SOAPEncoder.cpp" />
-    <ClCompile Include="..\..\..\saml\saml2\profile\impl\Assertion20Validator.cpp" />
     <ClCompile Include="..\..\..\saml\saml2\profile\impl\BearerConfirmationRule.cpp" />
-    <ClCompile Include="..\..\..\saml\saml2\profile\impl\BrowserSSOProfile20Validator.cpp" />
     <ClCompile Include="..\..\..\saml\saml2\profile\impl\DelegationRestrictionRule.cpp" />
     <ClCompile Include="..\..\..\saml\saml2\profile\impl\SAML2AssertionPolicy.cpp" />
     <ClCompile Include="..\..\..\saml\encryption\EncryptedKeyResolver.cpp" />
@@ -310,8 +306,6 @@
     <ClInclude Include="..\..\..\saml\saml1\binding\SAML1SOAPClient.h" />
     <ClInclude Include="..\..\..\saml\saml1\binding\SAMLArtifactType0001.h" />
     <ClInclude Include="..\..\..\saml\saml1\binding\SAMLArtifactType0002.h" />
-    <ClInclude Include="..\..\..\saml\saml1\profile\AssertionValidator.h" />
-    <ClInclude Include="..\..\..\saml\saml1\profile\BrowserSSOProfileValidator.h" />
     <ClInclude Include="..\..\..\saml\signature\ContentReference.h" />
     <ClInclude Include="..\..\..\saml\signature\SignableObject.h" />
     <ClInclude Include="..\..\..\saml\signature\SignatureProfileValidator.h" />
@@ -329,8 +323,6 @@
     <ClInclude Include="..\..\..\saml\saml2\binding\SAML2ArtifactType0004.h" />
     <ClInclude Include="..\..\..\saml\saml2\binding\SAML2MessageDecoder.h" />
     <ClInclude Include="..\..\..\saml\saml2\binding\SAML2SOAPClient.h" />
-    <ClInclude Include="..\..\..\saml\saml2\profile\AssertionValidator.h" />
-    <ClInclude Include="..\..\..\saml\saml2\profile\BrowserSSOProfileValidator.h" />
     <ClInclude Include="..\..\..\saml\saml2\profile\SAML2AssertionPolicy.h" />
     <ClInclude Include="..\..\..\saml\encryption\EncryptedKeyResolver.h" />
     <ClInclude Include="..\..\..\saml\binding\ArtifactMap.h" />

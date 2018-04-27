@@ -90,9 +90,6 @@
     <Filter Include="Header Files\saml1\binding">
       <UniqueIdentifier>{4f044deb-351b-449b-9885-c14dca4aaeaf}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\saml1\profile">
-      <UniqueIdentifier>{b8c7e006-06dc-4cc1-acb6-7801f11baa92}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\signature">
       <UniqueIdentifier>{ad3727af-1c55-4895-ad7f-5e91f6c0d3e6}</UniqueIdentifier>
     </Filter>
@@ -173,12 +170,6 @@
     </ClCompile>
     <ClCompile Include="..\..\..\saml\saml1\binding\impl\SAMLArtifactType0002.cpp">
       <Filter>Source Files\saml1\binding\impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\saml\saml1\profile\impl\AssertionValidator.cpp">
-      <Filter>Source Files\saml1\profile\impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\saml\saml1\profile\impl\BrowserSSOProfileValidator.cpp">
-      <Filter>Source Files\saml1\profile\impl</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\saml\saml1\profile\impl\SAML1BrowserSSORule.cpp">
       <Filter>Source Files\saml1\profile\impl</Filter>
@@ -291,13 +282,7 @@
     <ClCompile Include="..\..\..\saml\saml2\binding\impl\SAML2SOAPEncoder.cpp">
       <Filter>Source Files\saml2\binding\impl</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\saml\saml2\profile\impl\Assertion20Validator.cpp">
-      <Filter>Source Files\saml2\profile\impl</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\saml\saml2\profile\impl\BearerConfirmationRule.cpp">
-      <Filter>Source Files\saml2\profile\impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\saml\saml2\profile\impl\BrowserSSOProfile20Validator.cpp">
       <Filter>Source Files\saml2\profile\impl</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\saml\saml2\profile\impl\DelegationRestrictionRule.cpp">
@@ -425,12 +410,6 @@
     <ClInclude Include="..\..\..\saml\saml1\binding\SAMLArtifactType0002.h">
       <Filter>Header Files\saml1\binding</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\saml\saml1\profile\AssertionValidator.h">
-      <Filter>Header Files\saml1\profile</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\saml\saml1\profile\BrowserSSOProfileValidator.h">
-      <Filter>Header Files\saml1\profile</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\saml\signature\ContentReference.h">
       <Filter>Header Files\signature</Filter>
     </ClInclude>
@@ -481,12 +460,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\saml\saml2\binding\SAML2SOAPClient.h">
       <Filter>Header Files\saml2\binding</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\saml\saml2\profile\AssertionValidator.h">
-      <Filter>Header Files\saml2\profile</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\saml\saml2\profile\BrowserSSOProfileValidator.h">
-      <Filter>Header Files\saml2\profile</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\saml\saml2\profile\SAML2AssertionPolicy.h">
       <Filter>Header Files\saml2\profile</Filter>
