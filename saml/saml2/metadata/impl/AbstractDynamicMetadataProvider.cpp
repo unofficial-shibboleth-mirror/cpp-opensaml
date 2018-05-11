@@ -83,8 +83,7 @@ AbstractDynamicMetadataProvider::AbstractDynamicMetadataProvider(bool defaultNeg
         m_negativeCache(XMLHelper::getAttrBool(e, defaultNegativeCache, negativeCache)),
         m_shutdown(false),
         m_cleanupInterval(XMLHelper::getAttrInt(e, 1800, cleanupInterval)),
-        m_cleanupTimeout(XMLHelper::getAttrInt(e, 1800, cleanupTimeout)),
-        m_cleanup_wait(nullptr), m_cleanup_thread(nullptr)
+        m_cleanupTimeout(XMLHelper::getAttrInt(e, 1800, cleanupTimeout))
 {
     if (m_minCacheDuration > m_maxCacheDuration) {
         Category::getInstance(SAML_LOGCAT ".MetadataProvider.Dynamic").error(
@@ -108,8 +107,8 @@ AbstractDynamicMetadataProvider::AbstractDynamicMetadataProvider(bool defaultNeg
     if (m_cleanupInterval > 0) {
         if (m_cleanupTimeout < 0)
             m_cleanupTimeout = 0;
-        m_cleanup_wait = CondWait::create();
-        m_cleanup_thread = Thread::create(&cleanup_fn, this);
+        m_cleanup_wait.reset(CondWait::create());
+        m_cleanup_thread.reset(Thread::create(&cleanup_fn, this));
     }
 }
 
@@ -123,10 +122,6 @@ AbstractDynamicMetadataProvider::~AbstractDynamicMetadataProvider()
         m_shutdown = true;
         m_cleanup_wait->signal();
         m_cleanup_thread->join(nullptr);
-        delete m_cleanup_thread;
-        delete m_cleanup_wait;
-        m_cleanup_thread = nullptr;
-        m_cleanup_wait = nullptr;
     }
 }
 
@@ -298,7 +293,7 @@ pair<const EntityDescriptor*,const RoleDescriptor*> AbstractDynamicMetadataProvi
         try {
             SchemaValidators.validate(entity2.get());
         }
-        catch (exception& ex) {
+        catch (const exception& ex) {
             log.error("metadata instance failed manual validation checking: %s", ex.what());
             throw MetadataException("Metadata instance failed manual validation checking.");
         }
@@ -324,15 +319,14 @@ pair<const EntityDescriptor*,const RoleDescriptor*> AbstractDynamicMetadataProvi
         emitChangeEvent(*entity2);
 
         time_t cacheExp = cacheEntity(entity2.get(), true);
-
-        log.info("next refresh of metadata for (%s) no sooner than %u seconds", name.c_str(), cacheExp);
-
         entity2.release();
+
+        log.info("next refresh of metadata for (%s) no sooner than %lu seconds", name.c_str(), cacheExp);
 
         m_lastUpdate = now;
     }
-    catch (exception& e) {
-        log.error("error while resolving entityID (%s): %s", name.c_str(), e.what());
+    catch (const exception& e) {
+        log.error("error while resolving (%s): %s", name.c_str(), e.what());
         if (m_negativeCache) {
             // This will return entries that are beyond their cache period,
             // but not beyond their validity unless that criteria option was set.
@@ -365,7 +359,7 @@ pair<const EntityDescriptor*,const RoleDescriptor*> AbstractDynamicMetadataProvi
     return getEntityDescriptor(criteria);
 }
 
-time_t  AbstractDynamicMetadataProvider::cacheEntity(EntityDescriptor* entity, bool writeLocked) const
+time_t AbstractDynamicMetadataProvider::cacheEntity(EntityDescriptor* entity, bool writeLocked) const
 {
     time_t now = time(nullptr);
     if (!writeLocked) {

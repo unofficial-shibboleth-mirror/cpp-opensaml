@@ -81,8 +81,9 @@ namespace opensaml {
 };
 
 LocalDynamicMetadataProvider::LocalDynamicMetadataProvider(const DOMElement* e)
-    : MetadataProvider(e), AbstractDynamicMetadataProvider(false, e), m_sourceDirectory(XMLHelper::getAttrString(e, nullptr, sourceDirectory)), 
-      m_log(Category::getInstance(SAML_LOGCAT ".MetadataProvider.LocalDynamic"))
+    : MetadataProvider(e), AbstractDynamicMetadataProvider(false, e),
+        m_sourceDirectory(XMLHelper::getAttrString(e, nullptr, sourceDirectory)),
+        m_log(Category::getInstance(SAML_LOGCAT ".MetadataProvider.LocalDynamic"))
 {
     if (m_sourceDirectory.empty())
         throw  MetadataException("LocalDynamicMetadataProvider: sourceDirectory=\"whatever\" must be present");
@@ -107,16 +108,16 @@ EntityDescriptor* LocalDynamicMetadataProvider::resolve(const Criteria& criteria
         from = name = criteria.artifact->getSource();
     }
     name = m_sourceDirectory + name + ".xml";
-    m_log.debug("transformed named from (%s) to (%s)", from.c_str(), name.c_str());
+    m_log.debug("transformed name from (%s) to (%s)", from.c_str(), name.c_str());
 
     ifstream source(name.c_str());
     if (!source) {
-        m_log.debug("file not found");
-        throw IOException("File Not Found");
+        m_log.debug("local metadata file (%s) not found for input (%s)", name.c_str(), from.c_str());
+        throw IOException("Local metadata file not found.");
     }
 
     EntityDescriptor* result = entityFromStream(source);
     if (!result)
-        throw MetadataException("No entity resolved from file");
+        throw MetadataException("No entity resolved from file."); // shouldn't happen
     return result;
 }

@@ -48,7 +48,7 @@ namespace opensaml {
             /**
              * Constructor.
              *
-             * @param defaultNegativeCache - if not specified in the element, do we we cache lookup failures?
+             * @param defaultNegativeCache - if not specified in the element, do we cache lookup failures?
              * @param e DOM to supply configuration for provider
              */
             AbstractDynamicMetadataProvider(bool defaultNegativeCache, const xercesc::DOMElement* e=nullptr);
@@ -99,14 +99,14 @@ namespace opensaml {
             time_t m_minCacheDuration, m_maxCacheDuration;
             typedef std::map<xmltooling::xstring,time_t> cachemap_t;
             mutable cachemap_t m_cacheMap;
-            const bool m_negativeCache;
+            bool m_negativeCache;
 
             // Used to manage background maintenance of cache.
             bool m_shutdown;
             long m_cleanupInterval;
             long m_cleanupTimeout;
-            xmltooling::CondWait* m_cleanup_wait;
-            xmltooling::Thread* m_cleanup_thread;
+            boost::scoped_ptr<xmltooling::CondWait> m_cleanup_wait;
+            boost::scoped_ptr<xmltooling::Thread> m_cleanup_thread;
             static void* cleanup_fn(void*);
         };
 
