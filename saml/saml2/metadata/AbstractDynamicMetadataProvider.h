@@ -68,25 +68,45 @@ namespace opensaml {
             /**
              * Resolves a metadata instance using the supplied criteria.
              *
+             * <p>A null return value indicates the instance hasn't changed since the prevous request
+             * for the same instance.</p>
+             *
+             * <p>The cache tag may be modified on output to update it for future calls.</p>
+             *
              * @param criteria  lookup criteria
-             * @return  a valid metadata instance (never nullptr)
+             * @param cacheTag implementation specific cache tag
+             *
+             * @return  a valid metadata instance or null
              * @throws an exception if resolution failed
              */
-            virtual EntityDescriptor* resolve(const Criteria& criteria) const = 0;
+            virtual EntityDescriptor* resolve(const Criteria& criteria, std::string& cacheTag) const=0;
 
             /**
              * Index an entity and cache the fact of it being indexed.
              *
              * @param entity what to cache
-             * @param locked have we locked ourself exclusive first?
+             * @param cacheTag cache tag
+             * @param locked have we locked ourselves exclusively first?
+             *
              * @return the cache ttl (for logging purposes)
              */
-            virtual time_t cacheEntity(EntityDescriptor* entity, bool locked = false) const;
+            virtual time_t cacheEntity(EntityDescriptor* entity, const std::string& cacheTag, bool locked=false) const;
+
+            /**
+             * Compute the number of seconds until the next refresh attempt.
+             *
+             * @param entity entity to evaluate
+             * @param currentTime baseline for calculation
+             *
+             * @return the cache ttl
+             */
+            time_t computeNextRefresh(const EntityDescriptor& entity, time_t currentTime) const;
 
             /**
              * Parse and unmarshal the provided stream, returning the EntityDescriptor if there is one.
              *
              * @param stream the stream to parse
+             *
              * @return the entity, or nullptr if there isn't one
              */
             EntityDescriptor* entityFromStream(std::istream& stream) const;
@@ -97,7 +117,7 @@ namespace opensaml {
             boost::scoped_ptr<xmltooling::RWLock> m_lock;
             double m_refreshDelayFactor;
             time_t m_minCacheDuration, m_maxCacheDuration;
-            typedef std::map<xmltooling::xstring,time_t> cachemap_t;
+            typedef std::map< xmltooling::xstring, std::pair<time_t,std::string> > cachemap_t;
             mutable cachemap_t m_cacheMap;
             bool m_negativeCache;
 

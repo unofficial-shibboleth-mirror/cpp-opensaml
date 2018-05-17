@@ -85,11 +85,18 @@ AbstractDynamicMetadataProvider::AbstractDynamicMetadataProvider(bool defaultNeg
         m_cleanupInterval(XMLHelper::getAttrInt(e, 1800, cleanupInterval)),
         m_cleanupTimeout(XMLHelper::getAttrInt(e, 1800, cleanupTimeout))
 {
-    if (m_minCacheDuration > m_maxCacheDuration) {
-        Category::getInstance(SAML_LOGCAT ".MetadataProvider.Dynamic").error(
-            "minCacheDuration setting exceeds maxCacheDuration setting, lowering to match it"
+    if (m_minCacheDuration < 30) {
+        Category::getInstance(SAML_LOGCAT ".MetadataProvider.Dynamic").warn(
+            "minCacheDuration setting must be at least 30 seconds, raising to 30"
+        );
+        m_minCacheDuration = 30;
+    }
+
+    if (m_maxCacheDuration < m_minCacheDuration) {
+        Category::getInstance(SAML_LOGCAT ".MetadataProvider.Dynamic").warn(
+            "maxCacheDuration setting is less than minCacheDuration setting, raising to match it"
             );
-        m_minCacheDuration = m_maxCacheDuration;
+        m_maxCacheDuration = m_minCacheDuration;
     }
 
     const XMLCh* delay = e ? e->getAttributeNS(nullptr, refreshDelayFactor) : nullptr;
@@ -97,7 +104,7 @@ AbstractDynamicMetadataProvider::AbstractDynamicMetadataProvider(bool defaultNeg
         auto_ptr_char temp(delay);
         m_refreshDelayFactor = atof(temp.get());
         if (m_refreshDelayFactor <= 0.0 || m_refreshDelayFactor >= 1.0) {
-            Category::getInstance(SAML_LOGCAT ".MetadataProvider.Dynamic").error(
+            Category::getInstance(SAML_LOGCAT ".MetadataProvider.Dynamic").warn(
                 "invalid refreshDelayFactor setting, using default"
                 );
             m_refreshDelayFactor = 0.75;
@@ -164,9 +171,9 @@ void* AbstractDynamicMetadataProvider::cleanup_fn(void* pv)
 
         time_t now = time(nullptr);
         // Dual iterator loop so we can remove entries while walking the map.
-        for (map<xstring, time_t>::iterator i = provider->m_cacheMap.begin(), i2 = i; i != provider->m_cacheMap.end(); i = i2) {
+        for (cachemap_t::iterator i = provider->m_cacheMap.begin(), i2 = i; i != provider->m_cacheMap.end(); i = i2) {
             ++i2;
-            if (now > i->second + provider->m_cleanupTimeout) {
+            if (now > i->second.first + provider->m_cleanupTimeout) {
                 if (log.isDebugEnabled()) {
                     auto_ptr_char id(i->first.c_str());
                     log.debug("removing cache entry for (%s)", id.get());
@@ -240,7 +247,7 @@ pair<const EntityDescriptor*,const RoleDescriptor*> AbstractDynamicMetadataProvi
         cit = m_cacheMap.end();
     }
     if (cit != m_cacheMap.end()) {
-        if (time(nullptr) <= cit->second)
+        if (time(nullptr) <= cit->second.first)
             return entity;
     }
 
@@ -264,29 +271,61 @@ pair<const EntityDescriptor*,const RoleDescriptor*> AbstractDynamicMetadataProvi
     else
         log.info("resolving metadata for (%s)", name.c_str());
 
+    string cacheTag(cit != m_cacheMap.end() ? cit->second.second : "");
+
     try {
         // Try resolving it.
-        auto_ptr<EntityDescriptor> entity2(resolve(criteria));
+        auto_ptr<EntityDescriptor> entity2(resolve(criteria, cacheTag));
+
+        // A null here means we probably already have metadata in place and should reuse it.
+        // If we don't, then that means we did at one time, but it's now invalid (but nothing
+        // newer is apparently available).
+        if (!entity2.get()) {
+            if (entity.first) {
+                log.info("metadata for (%s) is unchanged, resetting next refresh time", name.c_str());
+                
+                time_t now = time(nullptr);
+                time_t cacheExp = computeNextRefresh(*entity.first, now);
+                xstring key(entity.first->getEntityID());
+
+                pair<time_t,string> oldValues = cit != m_cacheMap.end() ? cit->second : pair<time_t,string>(0, string());
+
+                // Elevate to write lock.
+                m_lock->unlock();
+                m_lock->wrlock();
+                writeLocked = true;
+
+                // Update cache map if nothing got in behind us.
+                cit = m_cacheMap.find(key);
+                if (cit != m_cacheMap.end() && cit->second == oldValues) {
+                    cit->second.first = now + cacheExp;
+                }
+
+                // Downgrade back to a read lock.
+                m_lock->unlock();
+                m_lock->rdlock();
+
+                // Rinse and repeat.
+                return getEntityDescriptor(criteria);
+            }
+            throw MetadataException("No updated metadata available to refresh invalid instance.");
+        }
 
         // Verify the entityID.
         if (criteria.entityID_unicode && !XMLString::equals(criteria.entityID_unicode, entity2->getEntityID())) {
-            log.error("metadata instance did not match expected entityID");
-            return entity;
+            throw MetadataException("Metadata instance did not match expected entityID.");
         }
         else if (criteria.artifact) {
             auto_ptr_char temp2(entity2->getEntityID());
             const string hashed(SecurityHelper::doHash("SHA1", temp2.get(), strlen(temp2.get()), true));
-            if (hashed != name) {
-                log.error("metadata instance did not match expected entityID");
-                return entity;
-            }
+            if (hashed != name)
+                throw MetadataException("Metadata instance did not match expected entityID.");
+
         }
         else {
             auto_ptr_XMLCh temp2(name.c_str());
-            if (!XMLString::equals(temp2.get(), entity2->getEntityID())) {
-                log.error("metadata instance did not match expected entityID");
-                return entity;
-            }
+            if (!XMLString::equals(temp2.get(), entity2->getEntityID()))
+                throw MetadataException("Metadata instance did not match expected entityID.");
         }
 
         // Preprocess the metadata (even if we schema-validated).
@@ -318,7 +357,7 @@ pair<const EntityDescriptor*,const RoleDescriptor*> AbstractDynamicMetadataProvi
         // Notify observers.
         emitChangeEvent(*entity2);
 
-        time_t cacheExp = cacheEntity(entity2.get(), true);
+        time_t cacheExp = cacheEntity(entity2.get(), cacheTag, true);
         entity2.release();
 
         log.info("next refresh of metadata for (%s) no sooner than %lu seconds", name.c_str(), cacheExp);
@@ -330,23 +369,27 @@ pair<const EntityDescriptor*,const RoleDescriptor*> AbstractDynamicMetadataProvi
         if (m_negativeCache) {
             // This will return entries that are beyond their cache period,
             // but not beyond their validity unless that criteria option was set.
-            // Bump the cache period to prevent retries, making sure we have a write lock
+            // Bump the cache period to prevent retries, making sure we have a write lock.
             if (!writeLocked) {
                 m_lock->unlock();
                 m_lock->wrlock();
                 writeLocked = true;
             }
-            if (entity.first)
-                m_cacheMap[entity.first->getEntityID()] = time(nullptr) + m_minCacheDuration;
-            else if (criteria.entityID_unicode)
-                m_cacheMap[criteria.entityID_unicode] = time(nullptr) + m_minCacheDuration;
+
+            if (criteria.entityID_unicode) {
+                m_cacheMap[criteria.entityID_unicode] = make_pair(time(nullptr) + m_minCacheDuration, cacheTag);
+            }
             else {
                 auto_ptr_XMLCh widetemp(name.c_str());
-                m_cacheMap[widetemp.get()] = time(nullptr) + m_minCacheDuration;
+                m_cacheMap[widetemp.get()] = make_pair(time(nullptr) + m_minCacheDuration, cacheTag);
             }
-            log.warn("next refresh of metadata for (%s) no sooner than %u seconds", name.c_str(), m_minCacheDuration);
+            log.warn("next refresh of metadata for (%s) no sooner than %lu seconds", name.c_str(), m_minCacheDuration);
         }
-        return entity;
+        else {
+            // With no negative caching, we can viably return the search result directly
+            // because we don't open a lock window that could invalidate the objects.
+            return entity;
+        }
     }
 
     // Downgrade back to a read lock.
@@ -359,18 +402,33 @@ pair<const EntityDescriptor*,const RoleDescriptor*> AbstractDynamicMetadataProvi
     return getEntityDescriptor(criteria);
 }
 
-time_t AbstractDynamicMetadataProvider::cacheEntity(EntityDescriptor* entity, bool writeLocked) const
+time_t AbstractDynamicMetadataProvider::cacheEntity(EntityDescriptor* entity, const string& cacheTag, bool writeLocked) const
 {
-    time_t now = time(nullptr);
     if (!writeLocked) {
         m_lock->wrlock();
     }
     Locker locker(writeLocked ? nullptr : const_cast<AbstractDynamicMetadataProvider*>(this), false);
 
+    time_t now = time(nullptr);
+    time_t cacheExp = computeNextRefresh(*entity, now);
+
+    // Record the proper refresh time and cache tag.
+    m_cacheMap[entity->getEntityID()] = make_pair(now + cacheExp, cacheTag);
+
+    // Make sure we clear out any existing copies, including stale metadata or if somebody snuck in.
+    unindex(entity->getEntityID(), true);  // actually frees the old instance with this ID
+    time_t exp(SAMLTIME_MAX);
+    indexEntity(entity, exp);
+
+    return cacheExp;
+}
+
+time_t AbstractDynamicMetadataProvider::computeNextRefresh(const EntityDescriptor& entity, time_t currentTime) const
+{
     // Compute the smaller of the validUntil / cacheDuration constraints.
-    time_t cacheExp = (entity->getValidUntil() ? entity->getValidUntilEpoch() : SAMLTIME_MAX) - now;
-    if (entity->getCacheDuration())
-        cacheExp = min(cacheExp, entity->getCacheDurationEpoch());
+    time_t cacheExp = (entity.getValidUntil() ? entity.getValidUntilEpoch() : SAMLTIME_MAX) - currentTime;
+    if (entity.getCacheDuration())
+        cacheExp = min(cacheExp, entity.getCacheDurationEpoch());
 
     // Adjust for the delay factor.
     cacheExp *= m_refreshDelayFactor;
@@ -380,14 +438,6 @@ time_t AbstractDynamicMetadataProvider::cacheEntity(EntityDescriptor* entity, bo
         cacheExp = m_maxCacheDuration;
     else if (cacheExp < m_minCacheDuration)
         cacheExp = m_minCacheDuration;
-
-    // Record the proper refresh time.
-    m_cacheMap[entity->getEntityID()] = now + cacheExp;
-
-    // Make sure we clear out any existing copies, including stale metadata or if somebody snuck in.
-    unindex(entity->getEntityID(), true);  // actually frees the old instance with this ID
-    time_t exp(SAMLTIME_MAX);
-    indexEntity(entity, exp);
 
     return cacheExp;
 }

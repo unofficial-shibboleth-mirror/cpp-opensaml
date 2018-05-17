@@ -25,16 +25,18 @@
  */
 #include <fstream>
 
+#include <boost/lexical_cast.hpp>
 #include <boost/algorithm/string.hpp>
-
 
 #include "internal.h"
 
 #include <xmltooling/logging.h>
+#include <xmltooling/XMLToolingConfig.h>
 #include <xmltooling/security/SecurityHelper.h>
+#include <xmltooling/util/PathResolver.h>
+#include <xmltooling/util/XMLHelper.h>
 
 #include <binding/SAMLArtifact.h>
-#include <saml2/metadata/Metadata.h>
 #include <saml2/metadata/AbstractDynamicMetadataProvider.h>
 
 
@@ -66,11 +68,11 @@ namespace opensaml {
             void init() {};
 
         protected:
-            virtual EntityDescriptor* resolve(const Criteria& criteria) const;
+            virtual EntityDescriptor* resolve(const Criteria& criteria, string& cacheTag) const;
 
         private:
-            string m_sourceDirectory;
             Category& m_log;
+            string m_sourceDirectory;
         };
 
         MetadataProvider* SAML_DLLLOCAL LocalDynamicMetadataProviderFactory(const DOMElement* const & e)
@@ -82,17 +84,19 @@ namespace opensaml {
 
 LocalDynamicMetadataProvider::LocalDynamicMetadataProvider(const DOMElement* e)
     : MetadataProvider(e), AbstractDynamicMetadataProvider(false, e),
-        m_sourceDirectory(XMLHelper::getAttrString(e, nullptr, sourceDirectory)),
-        m_log(Category::getInstance(SAML_LOGCAT ".MetadataProvider.LocalDynamic"))
+        m_log(Category::getInstance(SAML_LOGCAT ".MetadataProvider.LocalDynamic")),
+        m_sourceDirectory(XMLHelper::getAttrString(e, nullptr, sourceDirectory))
 {
     if (m_sourceDirectory.empty())
         throw  MetadataException("LocalDynamicMetadataProvider: sourceDirectory=\"whatever\" must be present");
+
+    XMLToolingConfig::getConfig().getPathResolver()->resolve(m_sourceDirectory, PathResolver::XMLTOOLING_CFG_FILE);
 
     if (!boost::algorithm::ends_with(m_sourceDirectory, "/"))
         m_sourceDirectory += '/';
 }
 
-EntityDescriptor* LocalDynamicMetadataProvider::resolve(const Criteria& criteria) const
+EntityDescriptor* LocalDynamicMetadataProvider::resolve(const Criteria& criteria, string& cacheTag) const
 {
     string name, from;
     if (criteria.entityID_ascii) {
@@ -101,8 +105,8 @@ EntityDescriptor* LocalDynamicMetadataProvider::resolve(const Criteria& criteria
     }
     else if (criteria.entityID_unicode) {
         auto_ptr_char temp(criteria.entityID_unicode);
-        from = criteria.entityID_ascii;
-        SecurityHelper::doHash("SHA1", from.c_str(), from.length());
+        from = temp.get();
+        name = SecurityHelper::doHash("SHA1", from.c_str(), from.length());
     }
     else if (criteria.artifact) {
         from = name = criteria.artifact->getSource();
@@ -110,14 +114,43 @@ EntityDescriptor* LocalDynamicMetadataProvider::resolve(const Criteria& criteria
     name = m_sourceDirectory + name + ".xml";
     m_log.debug("transformed name from (%s) to (%s)", from.c_str(), name.c_str());
 
+    time_t lastaccess;
+#ifdef WIN32
+    struct _stat stat_buf;
+    if (_stat(name.c_str(), &stat_buf) == 0)
+#else
+    struct stat stat_buf;
+    if (stat(name.c_str(), &stat_buf) == 0)
+#endif
+        lastaccess = stat_buf.st_mtime;
+    else
+        throw IOException("Unable to access local file ($1)", params(1, name.c_str()));
+
+    // Note that we're at minimum under a read lock here overall, which precludes the cleanup
+    // thread in the base class from running a cleanup pass, and potentially invalidating
+    // state during this evaluation. That should prevent a race condition where we determine
+    // no update is needed but the original copy is purged before the query finishes.
+
+    try {
+        string newCacheTag = boost::lexical_cast<string>(lastaccess);
+        if (cacheTag == newCacheTag)
+            return nullptr;
+        cacheTag = newCacheTag;
+    }
+    catch (const boost::bad_lexical_cast& e) {
+        m_log.error("exception converting between cache tag and access time: %s", e.what());
+        cacheTag = "";
+    }
+
     ifstream source(name.c_str());
     if (!source) {
-        m_log.debug("local metadata file (%s) not found for input (%s)", name.c_str(), from.c_str());
-        throw IOException("Local metadata file not found.");
+        m_log.debug("local metadata file (%s) not accessible for input (%s)", name.c_str(), from.c_str());
+        throw IOException("Unable to access local file ($1)", params(1, name.c_str()));
     }
 
     EntityDescriptor* result = entityFromStream(source);
     if (!result)
         throw MetadataException("No entity resolved from file."); // shouldn't happen
+
     return result;
 }

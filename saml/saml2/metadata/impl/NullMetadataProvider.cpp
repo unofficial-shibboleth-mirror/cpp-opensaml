@@ -52,7 +52,7 @@ namespace opensaml {
             void init() {}
 
         protected:
-            EntityDescriptor* resolve(const MetadataProvider::Criteria& criteria) const;
+            EntityDescriptor* resolve(const MetadataProvider::Criteria& criteria, string& cacheTag) const;
 
         private:
             scoped_ptr<EntityDescriptor> m_template;
@@ -65,7 +65,7 @@ namespace opensaml {
     };
 };
 
-EntityDescriptor* NullMetadataProvider::resolve(const MetadataProvider::Criteria& criteria) const
+EntityDescriptor* NullMetadataProvider::resolve(const MetadataProvider::Criteria& criteria, string& cacheTag) const
 {
     // Resolving for us just means fabricating a new dummy element.
     EntityDescriptor* entity = m_template.get() ? m_template->cloneEntityDescriptor() : EntityDescriptorBuilder::buildEntityDescriptor();
