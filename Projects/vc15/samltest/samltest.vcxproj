@@ -336,16 +336,16 @@
     <CustomBuild Include="..\..\..\samltest\samltest.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --error-printer --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(Filename).cpp;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --error-printer --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(Filename).cpp;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --error-printer --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(Filename).cpp;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --error-printer --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
 </Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(Filename).cpp;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
     <CustomBuild Include="..\..\..\samltest\saml1\core\impl\ActionTest.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">perl.exe -w $(CxxTestRoot)\cxxtestgen.pl --part --have-eh --have-std --abort-on-fail -o "%(RootDir)%(Directory)%(Filename)".cpp "%(FullPath)"
