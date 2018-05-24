@@ -158,8 +158,13 @@ long SAML2RedirectEncoder::encode(
         log.debug("signing the message");
         
         // Sign the query string after adding the algorithm.
-        if (!signatureAlg)
+        if (!signatureAlg) {
+#ifdef XSEC_OPENSSL_HAVE_SHA2
+            signatureAlg = DSIGConstants::s_unicodeStrURIRSA_SHA256;
+#else
             signatureAlg = DSIGConstants::s_unicodeStrURIRSA_SHA1;
+#endif
+        }
         auto_ptr_char alg(signatureAlg);
         xmlbuf = xmlbuf + "&SigAlg=" + escaper->encode(alg.get());
 

@@ -71,15 +71,28 @@ void ContentReference::createReferences(DSIGSignature* sig)
     DSIGReference* ref = nullptr;
     sig->setIdByAttributeName(false);
     const XMLCh* id=m_signableObject.getXMLID();
-    if (!id || !*id)
-        ref=sig->createReference(&chNull, m_digest ? m_digest : DSIGConstants::s_unicodeStrURISHA1);  // whole doc reference
+    if (!id || !*id) {
+        ref = sig->createReference(&chNull, 
+#ifdef XSEC_OPENSSL_HAVE_SHA2
+            m_digest ? m_digest : DSIGConstants::s_unicodeStrURISHA256
+#else
+            m_digest ? m_digest : DSIGConstants::s_unicodeStrURISHA1
+#endif
+            );  // whole doc reference
+    }
     else {
         XMLCh* buf=new XMLCh[XMLString::stringLen(id) + 2];
         auto_arrayptr<XMLCh> bufjanitor(buf);
         buf[0]=chPound;
         buf[1]=chNull;
         XMLString::catString(buf,id);
-        ref=sig->createReference(buf, m_digest ? m_digest : DSIGConstants::s_unicodeStrURISHA1);
+        ref=sig->createReference(buf,
+#ifdef XSEC_OPENSSL_HAVE_SHA2
+            m_digest ? m_digest : DSIGConstants::s_unicodeStrURISHA256
+#else
+            m_digest ? m_digest : DSIGConstants::s_unicodeStrURISHA1
+#endif
+            );
     }
     
     ref->appendEnvelopedSignatureTransform();

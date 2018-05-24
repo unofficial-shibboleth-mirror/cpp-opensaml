@@ -29,6 +29,7 @@
 # define _CRT_SECURE_NO_DEPRECATE 1
 # define _CRT_NONSTDC_NO_DEPRECATE 1
 # define _SCL_SECURE_NO_WARNINGS 1
+# define XSEC_HAVE_OPENSSL 1
 #endif
 
 // Export public APIs

@@ -194,8 +194,13 @@ long SAML2POSTEncoder::encode(
         string input = (request ? "SAMLRequest=" : "SAMLResponse=") + msg;
         if (relayState && *relayState)
             input = input + "&RelayState=" + relayState;
-        if (!signatureAlg)
+        if (!signatureAlg) {
+#ifdef XSEC_OPENSSL_HAVE_SHA2
+            signatureAlg = DSIGConstants::s_unicodeStrURIRSA_SHA256;
+#else
             signatureAlg = DSIGConstants::s_unicodeStrURIRSA_SHA1;
+#endif
+        }
         auto_ptr_char alg(signatureAlg);
         pmap.m_map["SigAlg"] = alg.get();
         input = input + "&SigAlg=" + alg.get();
