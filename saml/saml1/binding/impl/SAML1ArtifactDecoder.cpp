@@ -63,7 +63,7 @@ namespace opensaml {
                 ) const;
         };
 
-        MessageDecoder* SAML_DLLLOCAL SAML1ArtifactDecoderFactory(const DOMElement* const&)
+        MessageDecoder* SAML_DLLLOCAL SAML1ArtifactDecoderFactory(const DOMElement* const&, bool)
         {
             return new SAML1ArtifactDecoder();
         }

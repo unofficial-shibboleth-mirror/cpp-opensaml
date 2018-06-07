@@ -71,7 +71,7 @@ namespace opensaml {
         bool m_errorFatal;
     };
 
-    SecurityPolicyRule* SAML_DLLLOCAL SimpleSigningRuleFactory(const DOMElement* const & e)
+    SecurityPolicyRule* SAML_DLLLOCAL SimpleSigningRuleFactory(const DOMElement* const & e, bool)
     {
         return new SimpleSigningRule(e);
     }

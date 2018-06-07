@@ -87,17 +87,15 @@ namespace opensaml {
              * <ul>
              *  <li>&lt;MetadataFilter&gt; elements with a type attribute and type-specific content
              *  <li>&lt;Exclude&gt; elements representing a BlacklistMetadataFilter
-             *  <li>&lt;BlacklistMetadataFilter&gt; element containing &lt;Exclude&gt; elements
              *  <li>&lt;Include&gt; elements representing a WhitelistMetadataFilter
-             *  <li>&lt;SignatureMetadataFilter&gt; element containing a &lt;KeyResolver&gt; element
-             *  <li>&lt;WhitelistMetadataFilter&gt; element containing &lt;Include&gt; elements
              * </ul>
              *
              * XML namespaces are ignored in the processing of these elements.
              *
              * @param e DOM to supply configuration for provider
+             * @param deprecationSupport true iff deprecated features and settings should be supported
              */
-            MetadataProvider(const xercesc::DOMElement* e);
+            MetadataProvider(const xercesc::DOMElement* e, bool deprecationSupport=true);
 
         public:
             /**

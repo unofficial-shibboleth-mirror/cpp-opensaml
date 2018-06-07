@@ -82,7 +82,7 @@ namespace opensaml {
             string m_template;
         };
 
-        MessageEncoder* SAML_DLLLOCAL SAML2ArtifactEncoderFactory(const DOMElement* const & e)
+        MessageEncoder* SAML_DLLLOCAL SAML2ArtifactEncoderFactory(const DOMElement* const & e, bool)
         {
             return new SAML2ArtifactEncoder(e);
         }

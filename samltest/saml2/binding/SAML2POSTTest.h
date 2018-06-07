@@ -72,7 +72,7 @@ public:
             encoder_config->getDocumentElement()->setAttributeNS(nullptr,lit2.get(),lit3.get());
             scoped_ptr<MessageEncoder> encoder(
                 SAMLConfig::getConfig().MessageEncoderManager.newPlugin(
-                    samlconstants::SAML20_BINDING_HTTP_POST, encoder_config->getDocumentElement()
+                    samlconstants::SAML20_BINDING_HTTP_POST, encoder_config->getDocumentElement(), false
                     )
                 );
             Locker locker(m_metadata.get());
@@ -90,7 +90,7 @@ public:
             // Decode message.
             string relayState;
             scoped_ptr<MessageDecoder> decoder(
-                SAMLConfig::getConfig().MessageDecoderManager.newPlugin(samlconstants::SAML20_BINDING_HTTP_POST, nullptr)
+                SAMLConfig::getConfig().MessageDecoderManager.newPlugin(samlconstants::SAML20_BINDING_HTTP_POST, nullptr, false)
                 );
             scoped_ptr<Response> response(dynamic_cast<Response*>(decoder->decode(relayState,*this,policy)));
             
@@ -149,7 +149,7 @@ public:
             encoder_config->getDocumentElement()->setAttributeNS(nullptr,lit2.get(),lit3.get());
             scoped_ptr<MessageEncoder> encoder(
                 SAMLConfig::getConfig().MessageEncoderManager.newPlugin(
-                    samlconstants::SAML20_BINDING_HTTP_POST_SIMPLESIGN, encoder_config->getDocumentElement()
+                    samlconstants::SAML20_BINDING_HTTP_POST_SIMPLESIGN, encoder_config->getDocumentElement(), false
                     )
                 );
             Locker locker(m_metadata.get());
@@ -167,7 +167,7 @@ public:
             // Decode message.
             string relayState;
             scoped_ptr<MessageDecoder> decoder(
-                SAMLConfig::getConfig().MessageDecoderManager.newPlugin(samlconstants::SAML20_BINDING_HTTP_POST_SIMPLESIGN, nullptr)
+                SAMLConfig::getConfig().MessageDecoderManager.newPlugin(samlconstants::SAML20_BINDING_HTTP_POST_SIMPLESIGN, nullptr, false)
                 );
             scoped_ptr<Response> response(dynamic_cast<Response*>(decoder->decode(relayState,*this,policy)));
             

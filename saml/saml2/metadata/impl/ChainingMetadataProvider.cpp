@@ -59,7 +59,7 @@ namespace opensaml {
         class SAML_DLLLOCAL ChainingMetadataProvider
             : public DiscoverableMetadataProvider, public ObservableMetadataProvider, public ObservableMetadataProvider::Observer {
         public:
-            ChainingMetadataProvider(const xercesc::DOMElement* e=nullptr);
+            ChainingMetadataProvider(const xercesc::DOMElement* e=nullptr, bool deprecationSupport=true);
             virtual ~ChainingMetadataProvider();
     
             using MetadataProvider::getEntityDescriptor;
@@ -165,9 +165,9 @@ namespace opensaml {
             map<const XMLObject*,const MetadataProvider*> m_objectMap;
         };
 
-        MetadataProvider* SAML_DLLLOCAL ChainingMetadataProviderFactory(const DOMElement* const & e)
+        MetadataProvider* SAML_DLLLOCAL ChainingMetadataProviderFactory(const DOMElement* const & e, bool deprecationSupport)
         {
-            return new ChainingMetadataProvider(e);
+            return new ChainingMetadataProvider(e, deprecationSupport);
         }
 
         static const XMLCh _MetadataProvider[] =    UNICODE_LITERAL_16(M,e,t,a,d,a,t,a,P,r,o,v,i,d,e,r);
@@ -188,8 +188,9 @@ void ChainingMetadataProvider::tracker_cleanup(void* ptr)
     }
 }
 
-ChainingMetadataProvider::ChainingMetadataProvider(const DOMElement* e)
-    : MetadataProvider(nullptr), ObservableMetadataProvider(e), m_firstMatch(true), m_trackerLock(Mutex::create()), m_tlsKey(ThreadKey::create(tracker_cleanup)),
+ChainingMetadataProvider::ChainingMetadataProvider(const DOMElement* e, bool deprecationSupport)
+    : MetadataProvider(nullptr), ObservableMetadataProvider(e),
+        m_firstMatch(true), m_trackerLock(Mutex::create()), m_tlsKey(ThreadKey::create(tracker_cleanup)),
         m_log(Category::getInstance(SAML_LOGCAT ".MetadataProvider.Chaining"))
 {
     if (XMLString::equals(e ? e->getAttributeNS(nullptr, precedence) : nullptr, last))
@@ -206,7 +207,7 @@ ChainingMetadataProvider::ChainingMetadataProvider(const DOMElement* e)
             if (!t.empty()) {
                 try {
                     m_log.info("building MetadataProvider of type %s", t.c_str());
-                    auto_ptr<MetadataProvider> provider(SAMLConfig::getConfig().MetadataProviderManager.newPlugin(t.c_str(), e));
+                    auto_ptr<MetadataProvider> provider(SAMLConfig::getConfig().MetadataProviderManager.newPlugin(t.c_str(), e, deprecationSupport));
                     ObservableMetadataProvider* obs = dynamic_cast<ObservableMetadataProvider*>(provider.get());
                     if (obs)
                         obs->addObserver(this);

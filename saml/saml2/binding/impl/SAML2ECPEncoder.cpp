@@ -86,7 +86,7 @@ namespace opensaml {
             AnyElementBuilder m_anyBuilder;
         };
 
-        MessageEncoder* SAML_DLLLOCAL SAML2ECPEncoderFactory(const DOMElement* const & e)
+        MessageEncoder* SAML_DLLLOCAL SAML2ECPEncoderFactory(const DOMElement* const & e, bool)
         {
             return new SAML2ECPEncoder(e);
         }

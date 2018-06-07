@@ -52,7 +52,7 @@ namespace opensaml {
             bool evaluate(const XMLObject& message, const GenericRequest* request, opensaml::SecurityPolicy& policy) const;
         };
 
-        opensaml::SecurityPolicyRule* SAML_DLLLOCAL BrowserSSORuleFactory(const DOMElement* const &)
+        opensaml::SecurityPolicyRule* SAML_DLLLOCAL BrowserSSORuleFactory(const DOMElement* const &, bool)
         {
             return new BrowserSSORule();
         }

@@ -64,7 +64,7 @@ namespace opensaml {
             applymap_t m_applyMap;
         };
 
-        MetadataFilter* SAML_DLLLOCAL EntityAttributesMetadataFilterFactory(const DOMElement* const & e)
+        MetadataFilter* SAML_DLLLOCAL EntityAttributesMetadataFilterFactory(const DOMElement* const & e, bool deprecationSupport)
         {
             return new EntityAttributesMetadataFilter(e);
         }

@@ -55,14 +55,15 @@ using opensaml::SAMLArtifact;
 static const XMLCh _KeyInfoResolver[] = UNICODE_LITERAL_15(K,e,y,I,n,f,o,R,e,s,o,l,v,e,r);
 static const XMLCh _type[] =            UNICODE_LITERAL_4(t,y,p,e);
 
-AbstractMetadataProvider::AbstractMetadataProvider(const DOMElement* e)
-  : MetadataProvider(e), ObservableMetadataProvider(e), m_lastUpdate(0),  m_resolver(nullptr), m_credentialLock(Mutex::create())
+AbstractMetadataProvider::AbstractMetadataProvider(const DOMElement* e, bool deprecationSupport)
+  : MetadataProvider(e, deprecationSupport), ObservableMetadataProvider(e),
+    m_lastUpdate(0), m_resolver(nullptr), m_credentialLock(Mutex::create())
 {
     e = XMLHelper::getFirstChildElement(e, _KeyInfoResolver);
     if (e) {
         string t = XMLHelper::getAttrString(e, nullptr, _type);
         if (!t.empty()) {
-            m_resolverWrapper.reset(XMLToolingConfig::getConfig().KeyInfoResolverManager.newPlugin(t.c_str(), e));
+            m_resolverWrapper.reset(XMLToolingConfig::getConfig().KeyInfoResolverManager.newPlugin(t.c_str(), e, deprecationSupport));
             m_resolver = m_resolverWrapper.get();
         }
         else {

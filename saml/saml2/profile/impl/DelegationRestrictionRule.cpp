@@ -67,7 +67,7 @@ namespace opensaml {
             time_t m_maxTime;
         };
 
-        SecurityPolicyRule* SAML_DLLLOCAL DelegationRestrictionRuleFactory(const DOMElement* const & e)
+        SecurityPolicyRule* SAML_DLLLOCAL DelegationRestrictionRuleFactory(const DOMElement* const & e, bool)
         {
             return new DelegationRestrictionRule(e);
         }

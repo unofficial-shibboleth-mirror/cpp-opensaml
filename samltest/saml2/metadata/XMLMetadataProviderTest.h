@@ -61,7 +61,7 @@ public:
         XercesJanitor<DOMDocument> janitor(doc);
 
         scoped_ptr<MetadataProvider> metadataProvider(
-            SAMLConfig::getConfig().MetadataProviderManager.newPlugin(XML_METADATA_PROVIDER, doc->getDocumentElement())
+            SAMLConfig::getConfig().MetadataProviderManager.newPlugin(XML_METADATA_PROVIDER, doc->getDocumentElement(), false)
             );
         try {
             metadataProvider->init();
@@ -83,7 +83,7 @@ public:
         XercesJanitor<DOMDocument> janitor(doc);
 
         scoped_ptr<MetadataProvider> metadataProvider(
-            SAMLConfig::getConfig().MetadataProviderManager.newPlugin(CHAINING_METADATA_PROVIDER, doc->getDocumentElement())
+            SAMLConfig::getConfig().MetadataProviderManager.newPlugin(CHAINING_METADATA_PROVIDER, doc->getDocumentElement(), false)
             );
         try {
             metadataProvider->init();
@@ -105,7 +105,7 @@ public:
         doc->getDocumentElement()->setAttributeNS(nullptr,path.get(),file.get());
 
         scoped_ptr<MetadataProvider> metadataProvider(
-            SAMLConfig::getConfig().MetadataProviderManager.newPlugin(XML_METADATA_PROVIDER,doc->getDocumentElement())
+            SAMLConfig::getConfig().MetadataProviderManager.newPlugin(XML_METADATA_PROVIDER,doc->getDocumentElement(), false)
             );
         try {
             metadataProvider->init();
@@ -149,7 +149,7 @@ public:
         doc->getDocumentElement()->setAttributeNS(nullptr, path.get(), file.get());
 #endif
         scoped_ptr<MetadataProvider> metadataProvider(\
-            SAMLConfig::getConfig().MetadataProviderManager.newPlugin(XML_METADATA_PROVIDER, doc->getDocumentElement())
+            SAMLConfig::getConfig().MetadataProviderManager.newPlugin(XML_METADATA_PROVIDER, doc->getDocumentElement(), false)
             );
         try {
             metadataProvider->init();
@@ -191,7 +191,7 @@ public:
         doc->getDocumentElement()->setAttributeNS(nullptr,path.get(),file.get());
 
         scoped_ptr<MetadataProvider> metadataProvider(
-            SAMLConfig::getConfig().MetadataProviderManager.newPlugin(XML_METADATA_PROVIDER,doc->getDocumentElement())
+            SAMLConfig::getConfig().MetadataProviderManager.newPlugin(XML_METADATA_PROVIDER,doc->getDocumentElement(), false)
             );
         try {
             metadataProvider->init();
@@ -221,7 +221,7 @@ public:
         doc->getDocumentElement()->setAttributeNS(nullptr,path.get(),file.get());
 
         scoped_ptr<MetadataProvider> metadataProvider(
-            SAMLConfig::getConfig().MetadataProviderManager.newPlugin(XML_METADATA_PROVIDER,doc->getDocumentElement())
+            SAMLConfig::getConfig().MetadataProviderManager.newPlugin(XML_METADATA_PROVIDER,doc->getDocumentElement(), false)
             );
         try {
             metadataProvider->init();

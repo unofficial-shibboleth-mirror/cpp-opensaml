@@ -33,8 +33,8 @@ class SAML1PolicyTest : public CxxTest::TestSuite {
 public:
     void setUp() {
         m_policy = nullptr;
-        m_rules.push_back(SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(CONDITIONS_POLICY_RULE, nullptr));
-        m_rules.push_back(SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(SAML1BROWSERSSO_POLICY_RULE, nullptr));
+        m_rules.push_back(SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(CONDITIONS_POLICY_RULE, nullptr, false));
+        m_rules.push_back(SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(SAML1BROWSERSSO_POLICY_RULE, nullptr, false));
         m_policy = new SecurityPolicy();
         m_policy->getRules().assign(m_rules.begin(), m_rules.end());
     }

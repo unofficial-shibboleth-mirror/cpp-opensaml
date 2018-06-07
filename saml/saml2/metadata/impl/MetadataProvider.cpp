@@ -94,7 +94,7 @@ static const XMLCh _type[] =            UNICODE_LITERAL_4(t,y,p,e);
 
 MetadataProvider::MetadataProvider() { throw MetadataException("Illegal constructor call"); }
 
-MetadataProvider::MetadataProvider(const DOMElement* e) : m_filterContext(nullptr)
+MetadataProvider::MetadataProvider(const DOMElement* e, bool deprecationSupport) : m_filterContext(nullptr)
 {
 #ifdef _DEBUG
     NDC ndc("MetadataProvider");
@@ -103,52 +103,49 @@ MetadataProvider::MetadataProvider(const DOMElement* e) : m_filterContext(nullpt
     const SAMLConfig& conf = SAMLConfig::getConfig();
 
     // Locate any default recognized filters and plugins.
-    try {
-        DOMElement* child = XMLHelper::getFirstChildElement(e);
-        while (child) {
-            if (XMLString::equals(child->getLocalName(), _MetadataFilter)) {
-                string t = XMLHelper::getAttrString(child, nullptr, _type);
-                if (!t.empty()) {
-                    log.info("building MetadataFilter of type %s", t.c_str());
-                    auto_ptr<MetadataFilter> np(conf.MetadataFilterManager.newPlugin(t.c_str(), child));
-                    m_filters.push_back(np.get());
-                    np.release();
-                }
-                else {
-                    log.error("MetadataFilter element missing type attribute");
-                }
+    DOMElement* child = XMLHelper::getFirstChildElement(e);
+    while (child) {
+        if (XMLString::equals(child->getLocalName(), _MetadataFilter)) {
+            string t = XMLHelper::getAttrString(child, nullptr, _type);
+            if (!t.empty()) {
+                log.info("building MetadataFilter of type %s", t.c_str());
+                auto_ptr<MetadataFilter> np(conf.MetadataFilterManager.newPlugin(t.c_str(), child, deprecationSupport));
+                m_filters.push_back(np.get());
+                np.release();
             }
-            else if (XMLString::equals(child->getLocalName(), SigFilter)) {
-                log.warn("<SignatureMetadataFilter> will be deprecated in future versions: use type=\"%s\"", SIGNATURE_METADATA_FILTER);
-                log.info("building MetadataFilter of type %s", SIGNATURE_METADATA_FILTER);
-                m_filters.push_back(conf.MetadataFilterManager.newPlugin(SIGNATURE_METADATA_FILTER, child));
+            else {
+                log.error("MetadataFilter element missing type attribute");
             }
-            else if (XMLString::equals(child->getLocalName(), Whitelist)) {
-                log.warn("<WhitelistMetadataFilter> will be deprecated in future versions use: type=\"%s\"", WHITELIST_METADATA_FILTER);
-                log.info("building MetadataFilter of type %s", WHITELIST_METADATA_FILTER);
-                m_filters.push_back(conf.MetadataFilterManager.newPlugin(WHITELIST_METADATA_FILTER, child));
-            }
-            else if (XMLString::equals(child->getLocalName(), Blacklist)) {
-                log.warn("<BlacklistMetadataFilter> will be deprecated in future versions use: type=\"%s\"", BLACKLIST_METADATA_FILTER);
-                log.info("building MetadataFilter of type %s", BLACKLIST_METADATA_FILTER);
-                m_filters.push_back(conf.MetadataFilterManager.newPlugin(BLACKLIST_METADATA_FILTER, child));
-            }
-            else if (XMLString::equals(child->getLocalName(), Include)) {
-                log.warn("<Include> will be deprecated in future versions: use type=\"%s\"", WHITELIST_METADATA_FILTER);
-                log.info("building MetadataFilter of type %s", WHITELIST_METADATA_FILTER);
-                m_filters.push_back(conf.MetadataFilterManager.newPlugin(WHITELIST_METADATA_FILTER, e));
-            }
-            else if (XMLString::equals(child->getLocalName(), Exclude)) {
-                log.warn("<Exclude> will be deprecated in future versions: use type=\"%s\"", BLACKLIST_METADATA_FILTER);
-                log.info("building MetadataFilter of type %s", BLACKLIST_METADATA_FILTER);
-                m_filters.push_back(conf.MetadataFilterManager.newPlugin(BLACKLIST_METADATA_FILTER, e));
-            }
-            child = XMLHelper::getNextSiblingElement(child);
         }
-    }
-    catch (const XMLToolingException& ex) {
-        log.error("caught exception while installing filters: %s", ex.what());
-        throw;
+        else if (deprecationSupport && XMLString::equals(child->getLocalName(), SigFilter)) {
+            log.warn("DEPRECATED: <SignatureMetadataFilter> replaced by type=\"%s\"", SIGNATURE_METADATA_FILTER);
+            log.info("building MetadataFilter of type %s", SIGNATURE_METADATA_FILTER);
+            m_filters.push_back(conf.MetadataFilterManager.newPlugin(SIGNATURE_METADATA_FILTER, child, deprecationSupport));
+        }
+        else if (deprecationSupport && XMLString::equals(child->getLocalName(), Whitelist)) {
+            log.warn("DEPRECATED: <WhitelistMetadataFilter> replaced by type=\"%s\"", WHITELIST_METADATA_FILTER);
+            log.info("building MetadataFilter of type %s", WHITELIST_METADATA_FILTER);
+            m_filters.push_back(conf.MetadataFilterManager.newPlugin(WHITELIST_METADATA_FILTER, child, deprecationSupport));
+        }
+        else if (deprecationSupport && XMLString::equals(child->getLocalName(), Blacklist)) {
+            log.warn("DEPRECATED: <BlacklistMetadataFilter> replaced by type=\"%s\"", BLACKLIST_METADATA_FILTER);
+            log.info("building MetadataFilter of type %s", BLACKLIST_METADATA_FILTER);
+            m_filters.push_back(conf.MetadataFilterManager.newPlugin(BLACKLIST_METADATA_FILTER, child, deprecationSupport));
+        }
+        else if (deprecationSupport && XMLString::equals(child->getLocalName(), Include)) {
+            log.warn("DEPRECATED: <Include> replaced by type=\"%s\"", WHITELIST_METADATA_FILTER);
+            log.info("building MetadataFilter of type %s", WHITELIST_METADATA_FILTER);
+            m_filters.push_back(conf.MetadataFilterManager.newPlugin(WHITELIST_METADATA_FILTER, e, deprecationSupport));
+        }
+        else if (deprecationSupport && XMLString::equals(child->getLocalName(), Exclude)) {
+            log.warn("DEPRECATED: replaced by type=\"%s\"", BLACKLIST_METADATA_FILTER);
+            log.info("building MetadataFilter of type %s", BLACKLIST_METADATA_FILTER);
+            m_filters.push_back(conf.MetadataFilterManager.newPlugin(BLACKLIST_METADATA_FILTER, e, deprecationSupport));
+        }
+        else if (!deprecationSupport && XMLString::endsWith(child->getLocalName(), _MetadataFilter)) {
+            throw UnknownExtensionException("Unsupported metadata filter syntax detected.");
+        }
+        child = XMLHelper::getNextSiblingElement(child);
     }
 }
 

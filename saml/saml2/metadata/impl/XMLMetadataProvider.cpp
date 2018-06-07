@@ -64,7 +64,7 @@ namespace opensaml {
             : public AbstractMetadataProvider, public DiscoverableMetadataProvider, public ReloadableXMLFile
         {
         public:
-            XMLMetadataProvider(const DOMElement* e);
+            XMLMetadataProvider(const DOMElement* e, bool deprecationSupport=true);
 
             virtual ~XMLMetadataProvider() {
                 shutdown();
@@ -97,9 +97,9 @@ namespace opensaml {
             time_t m_minRefreshDelay,m_maxRefreshDelay,m_lastValidUntil;
         };
 
-        MetadataProvider* SAML_DLLLOCAL XMLMetadataProviderFactory(const DOMElement* const & e)
+        MetadataProvider* SAML_DLLLOCAL XMLMetadataProviderFactory(const DOMElement* const & e, bool deprecationSupport)
         {
-            return new XMLMetadataProvider(e);
+            return new XMLMetadataProvider(e, deprecationSupport);
         }
 
         static const XMLCh discoveryFeed[] =        UNICODE_LITERAL_13(d,i,s,c,o,v,e,r,y,F,e,e,d);
@@ -114,9 +114,9 @@ namespace opensaml {
     #pragma warning( pop )
 #endif
 
-XMLMetadataProvider::XMLMetadataProvider(const DOMElement* e)
-    : MetadataProvider(e), AbstractMetadataProvider(e), DiscoverableMetadataProvider(e),
-        ReloadableXMLFile(e, Category::getInstance(SAML_LOGCAT ".MetadataProvider.XML"), false),
+XMLMetadataProvider::XMLMetadataProvider(const DOMElement* e, bool deprecationSupport)
+    : MetadataProvider(e, deprecationSupport), AbstractMetadataProvider(e, deprecationSupport), DiscoverableMetadataProvider(e, deprecationSupport),
+        ReloadableXMLFile(e, Category::getInstance(SAML_LOGCAT ".MetadataProvider.XML"), false, deprecationSupport),
         m_discoveryFeed(XMLHelper::getAttrBool(e, true, discoveryFeed)),
         m_dropDOM(XMLHelper::getAttrBool(e, true, dropDOM)),
         m_refreshDelayFactor(0.75), m_backoffFactor(1),
@@ -187,7 +187,7 @@ pair<bool,DOMElement*> XMLMetadataProvider::load(bool backup, string backingFile
     XercesJanitor<DOMDocument> docjanitor(raw.first ? raw.second->getOwnerDocument() : nullptr);
 
     // Unmarshall objects, binding the document.
-    scoped_ptr<XMLObject> xmlObject(XMLObjectBuilder::buildOneFromElement(raw.second, true));
+    scoped_ptr<XMLObject> xmlObject(XMLObjectBuilder::buildOneFromElement(raw.second, raw.first));
     docjanitor.release();
 
     if (!dynamic_cast<const EntitiesDescriptor*>(xmlObject.get()) && !dynamic_cast<const EntityDescriptor*>(xmlObject.get())) {

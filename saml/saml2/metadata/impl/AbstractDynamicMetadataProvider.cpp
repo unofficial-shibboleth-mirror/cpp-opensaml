@@ -72,8 +72,8 @@ static const XMLCh refreshDelayFactor[] =   UNICODE_LITERAL_18(r,e,f,r,e,s,h,D,e
 static const XMLCh validate[] =             UNICODE_LITERAL_8(v,a,l,i,d,a,t,e);
 
 
-AbstractDynamicMetadataProvider::AbstractDynamicMetadataProvider(bool defaultNegativeCache, const DOMElement* e)
-  : MetadataProvider(e), AbstractMetadataProvider(e),
+AbstractDynamicMetadataProvider::AbstractDynamicMetadataProvider(bool defaultNegativeCache, const DOMElement* e, bool deprecationSupport) 
+  : MetadataProvider(e, deprecationSupport), AbstractMetadataProvider(e, deprecationSupport),
       m_validate(XMLHelper::getAttrBool(e, false, validate)),
         m_id(XMLHelper::getAttrString(e, "Dynamic", id)),
         m_lock(RWLock::create()),

@@ -58,7 +58,7 @@ namespace opensaml {
             bool m_idp, m_sp, m_authn, m_attr, m_pdp, m_authnq, m_attrq, m_authzq;
         };
 
-        MetadataFilter* SAML_DLLLOCAL EntityRoleMetadataFilterFactory(const DOMElement* const & e)
+        MetadataFilter* SAML_DLLLOCAL EntityRoleMetadataFilterFactory(const DOMElement* const & e, bool deprecationSupport)
         {
             return new EntityRoleMetadataFilter(e);
         }

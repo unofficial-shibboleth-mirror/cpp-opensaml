@@ -58,7 +58,7 @@ namespace opensaml {
             bool m_validity, m_recipient, m_correlation, m_fatal;
         };
 
-        opensaml::SecurityPolicyRule* SAML_DLLLOCAL BearerConfirmationRuleFactory(const DOMElement* const & e)
+        opensaml::SecurityPolicyRule* SAML_DLLLOCAL BearerConfirmationRuleFactory(const DOMElement* const & e, bool)
         {
             return new BearerConfirmationRule(e);
         }

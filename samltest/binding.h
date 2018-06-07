@@ -72,7 +72,7 @@ public:
             doc->getDocumentElement()->setAttributeNS(nullptr,path.get(),file.get());
     
             m_metadata.reset(
-                SAMLConfig::getConfig().MetadataProviderManager.newPlugin(XML_METADATA_PROVIDER, doc->getDocumentElement())
+                SAMLConfig::getConfig().MetadataProviderManager.newPlugin(XML_METADATA_PROVIDER, doc->getDocumentElement(), false)
                 );
             m_metadata->init();
 
@@ -81,14 +81,14 @@ public:
             DOMDocument* doc2=XMLToolingConfig::getConfig().getParser().parse(in2);
             XercesJanitor<DOMDocument> janitor2(doc2);
             m_creds.reset(
-                XMLToolingConfig::getConfig().CredentialResolverManager.newPlugin(FILESYSTEM_CREDENTIAL_RESOLVER, doc2->getDocumentElement())
+                XMLToolingConfig::getConfig().CredentialResolverManager.newPlugin(FILESYSTEM_CREDENTIAL_RESOLVER, doc2->getDocumentElement(), false)
                 );
                 
-            m_trust.reset(XMLToolingConfig::getConfig().TrustEngineManager.newPlugin(EXPLICIT_KEY_TRUSTENGINE, nullptr));
+            m_trust.reset(XMLToolingConfig::getConfig().TrustEngineManager.newPlugin(EXPLICIT_KEY_TRUSTENGINE, nullptr, false));
 
-            m_rules.push_back(SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(MESSAGEFLOW_POLICY_RULE,nullptr));
-            m_rules.push_back(SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(SIMPLESIGNING_POLICY_RULE,nullptr));
-            m_rules.push_back(SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(XMLSIGNING_POLICY_RULE,nullptr));
+            m_rules.push_back(SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(MESSAGEFLOW_POLICY_RULE,nullptr, false));
+            m_rules.push_back(SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(SIMPLESIGNING_POLICY_RULE,nullptr, false));
+            m_rules.push_back(SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(XMLSIGNING_POLICY_RULE,nullptr, false));
         }
         catch (XMLToolingException& ex) {
             TS_TRACE(ex.what());

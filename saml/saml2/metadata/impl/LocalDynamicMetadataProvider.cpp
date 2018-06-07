@@ -75,7 +75,7 @@ namespace opensaml {
             string m_sourceDirectory;
         };
 
-        MetadataProvider* SAML_DLLLOCAL LocalDynamicMetadataProviderFactory(const DOMElement* const & e)
+        MetadataProvider* SAML_DLLLOCAL LocalDynamicMetadataProviderFactory(const DOMElement* const & e, bool deprecationSupport)
         {
             return new LocalDynamicMetadataProvider(e);
         }

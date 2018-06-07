@@ -58,7 +58,7 @@ namespace opensaml {
             scoped_ptr<EntityDescriptor> m_template;
         }; 
 
-        MetadataProvider* SAML_DLLLOCAL NullMetadataProviderFactory(const DOMElement* const & e)
+        MetadataProvider* SAML_DLLLOCAL NullMetadataProviderFactory(const DOMElement* const & e, bool deprecationSupport)
         {
             return new NullMetadataProvider(e);
         }

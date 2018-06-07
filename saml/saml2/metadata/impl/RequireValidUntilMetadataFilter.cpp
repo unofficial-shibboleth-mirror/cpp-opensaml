@@ -52,7 +52,7 @@ namespace opensaml {
             time_t m_maxValidityInterval;
         }; 
 
-        MetadataFilter* SAML_DLLLOCAL RequireValidUntilMetadataFilterFactory(const DOMElement* const & e)
+        MetadataFilter* SAML_DLLLOCAL RequireValidUntilMetadataFilterFactory(const DOMElement* const & e, bool deprecationSupport)
         {
             return new RequireValidUntilMetadataFilter(e);
         }

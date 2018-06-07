@@ -47,18 +47,14 @@ using namespace boost::lambda;
 using namespace boost;
 using namespace std;
 
-DiscoverableMetadataProvider::DiscoverableMetadataProvider(const DOMElement* e) : MetadataProvider(e), m_legacyOrgNames(false)
+DiscoverableMetadataProvider::DiscoverableMetadataProvider(const DOMElement* e, bool deprecationSupport)
+    : MetadataProvider(e, deprecationSupport), m_legacyOrgNames(false)
 {
     static const XMLCh legacyOrgNames[] =   UNICODE_LITERAL_14(l,e,g,a,c,y,O,r,g,N,a,m,e,s);
     static const XMLCh matcher[] =          UNICODE_LITERAL_7(m,a,t,c,h,e,r);
     static const XMLCh tagsInFeed[] =       UNICODE_LITERAL_10(t,a,g,s,I,n,F,e,e,d);
     static const XMLCh _type[] =            UNICODE_LITERAL_4(t,y,p,e);
     static const XMLCh DiscoveryFilter[] =  UNICODE_LITERAL_15(D,i,s,c,o,v,e,r,y,F,i,l,t,e,r);
-
-    const XMLCh* attrib = e? e->getAttributeNS(nullptr, legacyOrgNames) : nullptr;
-    if (attrib && *attrib) {
-        Category::getInstance(SAML_LOGCAT ".MetadataProvider.Discoverable").warn("DEPRECATED: legacyOrgNames is a deprecated attribute for MetadataProviders");
-    }
 
     m_legacyOrgNames = XMLHelper::getAttrBool(e, false, legacyOrgNames);
     m_entityAttributes = XMLHelper::getAttrBool(e, false, tagsInFeed);
@@ -70,7 +66,7 @@ DiscoverableMetadataProvider::DiscoverableMetadataProvider(const DOMElement* e) 
             string m(XMLHelper::getAttrString(e, nullptr, matcher));
             if (!m.empty()) {
                 try {
-                    boost::shared_ptr<EntityMatcher> temp(SAMLConfig::getConfig().EntityMatcherManager.newPlugin(m, e));
+                    boost::shared_ptr<EntityMatcher> temp(SAMLConfig::getConfig().EntityMatcherManager.newPlugin(m, e, deprecationSupport));
                     m_discoFilters.push_back(make_pair(t == "Whitelist", temp));
                 }
                 catch (std::exception& ex) {

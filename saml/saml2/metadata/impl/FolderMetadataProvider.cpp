@@ -87,7 +87,7 @@ namespace opensaml {
             p->second->appendChild(child);
         }
 
-        MetadataProvider* SAML_DLLLOCAL FolderMetadataProviderFactory(const DOMElement* const & e)
+        MetadataProvider* SAML_DLLLOCAL FolderMetadataProviderFactory(const DOMElement* const & e, bool deprecationSupport)
         {
             // The goal here is to construct a configuration for a chain of file-based providers
             // based on the content of the directory we're given.
@@ -113,7 +113,7 @@ namespace opensaml {
             pair<const DOMElement*,DOMElement*> data = make_pair(e, root);
             walker.walk(FolderCallback, &data);
 
-            return SAMLConfig::getConfig().MetadataProviderManager.newPlugin(CHAINING_METADATA_PROVIDER, root);
+            return SAMLConfig::getConfig().MetadataProviderManager.newPlugin(CHAINING_METADATA_PROVIDER, root, deprecationSupport);
         }
 
     };

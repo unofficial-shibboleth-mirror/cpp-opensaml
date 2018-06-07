@@ -43,7 +43,7 @@ public:
         XercesJanitor<DOMDocument> janitor(doc);
         m_resolver.reset(
             XMLToolingConfig::getConfig().CredentialResolverManager.newPlugin(
-                FILESYSTEM_CREDENTIAL_RESOLVER, doc->getDocumentElement()
+                FILESYSTEM_CREDENTIAL_RESOLVER, doc->getDocumentElement(), false
                 )
             );
     }

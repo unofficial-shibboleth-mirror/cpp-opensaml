@@ -59,7 +59,7 @@ namespace opensaml {
             Category& m_log;
         };
 
-        EntityMatcher* SAML_DLLLOCAL RegistrationAuthorityEntityMatcherFactory(const DOMElement* const & e)
+        EntityMatcher* SAML_DLLLOCAL RegistrationAuthorityEntityMatcherFactory(const DOMElement* const & e, bool deprecationSupport)
         {
             return new RegistrationAuthorityEntityMatcher(e);
         }

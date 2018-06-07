@@ -50,8 +50,9 @@ namespace opensaml {
              *
              * @param defaultNegativeCache - if not specified in the element, do we cache lookup failures?
              * @param e DOM to supply configuration for provider
+             * @param deprecationSupport true iff deprecated features and settings should be supported
              */
-            AbstractDynamicMetadataProvider(bool defaultNegativeCache, const xercesc::DOMElement* e=nullptr);
+            AbstractDynamicMetadataProvider(bool defaultNegativeCache, const xercesc::DOMElement* e=nullptr, bool deprecationSupport=true);
 
             virtual ~AbstractDynamicMetadataProvider();
 

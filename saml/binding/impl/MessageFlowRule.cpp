@@ -57,7 +57,7 @@ namespace opensaml {
         time_t m_expires;
     };
 
-    SecurityPolicyRule* SAML_DLLLOCAL MessageFlowRuleFactory(const DOMElement* const & e)
+    SecurityPolicyRule* SAML_DLLLOCAL MessageFlowRuleFactory(const DOMElement* const & e, bool)
     {
         return new MessageFlowRule(e);
     }

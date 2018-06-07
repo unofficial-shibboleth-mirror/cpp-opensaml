@@ -60,7 +60,7 @@ namespace opensaml {
         bool m_errorFatal;
     };
 
-    SecurityPolicyRule* SAML_DLLLOCAL ClientCertAuthRuleFactory(const DOMElement* const & e)
+    SecurityPolicyRule* SAML_DLLLOCAL ClientCertAuthRuleFactory(const DOMElement* const & e, bool)
     {
         return new ClientCertAuthRule(e);
     }

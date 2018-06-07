@@ -34,7 +34,7 @@ using namespace std;
 
 namespace opensaml {
     namespace saml1p {
-        SAMLArtifact* SAML_DLLLOCAL SAMLArtifactType0001Factory(const char* const & s)
+        SAMLArtifact* SAML_DLLLOCAL SAMLArtifactType0001Factory(const char* const & s, bool)
         {
             return new SAMLArtifactType0001(s);
         }

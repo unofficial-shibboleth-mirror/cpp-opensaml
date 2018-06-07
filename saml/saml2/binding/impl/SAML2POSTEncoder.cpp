@@ -83,12 +83,12 @@ namespace opensaml {
             bool m_simple;
         };
 
-        MessageEncoder* SAML_DLLLOCAL SAML2POSTEncoderFactory(const DOMElement* const & e)
+        MessageEncoder* SAML_DLLLOCAL SAML2POSTEncoderFactory(const DOMElement* const & e, bool)
         {
             return new SAML2POSTEncoder(e, false);
         }
 
-        MessageEncoder* SAML_DLLLOCAL SAML2POSTSimpleSignEncoderFactory(const DOMElement* const & e)
+        MessageEncoder* SAML_DLLLOCAL SAML2POSTSimpleSignEncoderFactory(const DOMElement* const & e, bool)
         {
             return new SAML2POSTEncoder(e, true);
         }

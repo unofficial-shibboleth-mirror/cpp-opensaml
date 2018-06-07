@@ -51,8 +51,9 @@ namespace opensaml {
              * Constructor.
              * 
              * @param e DOM to supply configuration for provider
+             * @param deprecationSupport true iff deprecated features and settings should be supported
              */
-            ObservableMetadataProvider(const xercesc::DOMElement* e=nullptr);
+            ObservableMetadataProvider(const xercesc::DOMElement* e=nullptr, bool deprecationSupport=true);
             
             /**
              * Convenience method for notifying every registered Observer of an event.

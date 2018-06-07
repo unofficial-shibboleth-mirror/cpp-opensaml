@@ -129,7 +129,7 @@ SAMLArtifact* SAMLArtifact::parse(const char* s)
     type+= decoded[1];
     XMLString::release((char**)&decoded);
     
-    return SAMLConfig::getConfig().SAMLArtifactManager.newPlugin(type,s);
+    return SAMLConfig::getConfig().SAMLArtifactManager.newPlugin(type,s,false);
 }
 
 SAMLArtifact* SAMLArtifact::parse(const XMLCh* s)

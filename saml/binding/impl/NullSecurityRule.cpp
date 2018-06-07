@@ -55,7 +55,7 @@ namespace opensaml {
         Category& m_log;
     };
 
-    SecurityPolicyRule* SAML_DLLLOCAL NullSecurityRuleFactory(const DOMElement* const & e)
+    SecurityPolicyRule* SAML_DLLLOCAL NullSecurityRuleFactory(const DOMElement* const & e, bool)
     {
         return new NullSecurityRule(e);
     }

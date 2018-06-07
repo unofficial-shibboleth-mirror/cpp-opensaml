@@ -73,8 +73,9 @@ namespace opensaml {
              * </dl>
              *
              * @param e DOM to supply configuration for provider
+             * @param deprecationSupport true iff deprecated features and settings should be supported
              */
-            DiscoverableMetadataProvider(const xercesc::DOMElement* e=nullptr);
+            DiscoverableMetadataProvider(const xercesc::DOMElement* e=nullptr, bool deprecationSupport=true);
             
             /**
              * Generates a JSON feed of IdP discovery information for the current metadata.

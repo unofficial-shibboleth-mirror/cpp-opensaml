@@ -35,8 +35,8 @@ using namespace xmltooling;
 using namespace boost;
 using namespace std;
 
-ObservableMetadataProvider::ObservableMetadataProvider(const xercesc::DOMElement* e)
-    : MetadataProvider(e), m_observerLock(Mutex::create())
+ObservableMetadataProvider::ObservableMetadataProvider(const xercesc::DOMElement* e, bool deprecationSupport)
+    : MetadataProvider(e, deprecationSupport), m_observerLock(Mutex::create())
 {
 }
 

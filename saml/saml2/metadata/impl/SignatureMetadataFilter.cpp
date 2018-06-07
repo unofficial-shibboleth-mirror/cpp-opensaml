@@ -54,7 +54,7 @@ namespace opensaml {
         class SAML_DLLLOCAL SignatureMetadataFilter : public MetadataFilter
         {
         public:
-            SignatureMetadataFilter(const DOMElement* e);
+            SignatureMetadataFilter(const DOMElement* e, bool deprecationSupport=true);
             ~SignatureMetadataFilter() {}
 
             const char* getId() const { return SIGNATURE_METADATA_FILTER; }
@@ -72,9 +72,9 @@ namespace opensaml {
             Category& m_log;
         };
 
-        MetadataFilter* SAML_DLLLOCAL SignatureMetadataFilterFactory(const DOMElement* const & e)
+        MetadataFilter* SAML_DLLLOCAL SignatureMetadataFilterFactory(const DOMElement* const & e, bool deprecationSupport)
         {
-            return new SignatureMetadataFilter(e);
+            return new SignatureMetadataFilter(e, deprecationSupport);
         }
 
     };
@@ -90,7 +90,7 @@ static const XMLCh verifyBackup[] =         UNICODE_LITERAL_12(v,e,r,i,f,y,B,a,c
 static const XMLCh verifyRoles[] =          UNICODE_LITERAL_11(v,e,r,i,f,y,R,o,l,e,s);
 static const XMLCh verifyName[] =           UNICODE_LITERAL_10(v,e,r,i,f,y,N,a,m,e);
 
-SignatureMetadataFilter::SignatureMetadataFilter(const DOMElement* e)
+SignatureMetadataFilter::SignatureMetadataFilter(const DOMElement* e, bool deprecationSupport)
     : m_verifyRoles(XMLHelper::getAttrBool(e, false, verifyRoles)),
         m_verifyName(XMLHelper::getAttrBool(e, true, verifyName)),
         m_verifyBackup(XMLHelper::getAttrBool(e, true, verifyBackup)),
@@ -98,7 +98,7 @@ SignatureMetadataFilter::SignatureMetadataFilter(const DOMElement* e)
 {
     if (e && e->hasAttributeNS(nullptr,certificate)) {
         // Use a file-based credential resolver rooted here.
-        m_credResolver.reset(XMLToolingConfig::getConfig().CredentialResolverManager.newPlugin(FILESYSTEM_CREDENTIAL_RESOLVER, e));
+        m_credResolver.reset(XMLToolingConfig::getConfig().CredentialResolverManager.newPlugin(FILESYSTEM_CREDENTIAL_RESOLVER, e, deprecationSupport));
         return;
     }
 
@@ -106,7 +106,7 @@ SignatureMetadataFilter::SignatureMetadataFilter(const DOMElement* e)
     if (sub) {
         string t = XMLHelper::getAttrString(sub, nullptr, type);
         if (!t.empty()) {
-            m_credResolver.reset(XMLToolingConfig::getConfig().CredentialResolverManager.newPlugin(t.c_str(), sub));
+            m_credResolver.reset(XMLToolingConfig::getConfig().CredentialResolverManager.newPlugin(t.c_str(), sub, deprecationSupport));
             return;
         }
     }
@@ -115,14 +115,14 @@ SignatureMetadataFilter::SignatureMetadataFilter(const DOMElement* e)
     if (sub) {
         string t = XMLHelper::getAttrString(sub, nullptr, type);
         if (!t.empty()) {
-            TrustEngine* trust = XMLToolingConfig::getConfig().TrustEngineManager.newPlugin(t.c_str(), sub);
+            TrustEngine* trust = XMLToolingConfig::getConfig().TrustEngineManager.newPlugin(t.c_str(), sub, deprecationSupport);
             SignatureTrustEngine* sigTrust = dynamic_cast<SignatureTrustEngine*>(trust);
             if (!sigTrust) {
                 delete trust;
                 throw MetadataFilterException("TrustEngine-based SignatureMetadataFilter requires a SignatureTrustEngine plugin.");
             }
             m_trust.reset(sigTrust);
-            m_dummyResolver.reset(XMLToolingConfig::getConfig().CredentialResolverManager.newPlugin(DUMMY_CREDENTIAL_RESOLVER, nullptr));
+            m_dummyResolver.reset(XMLToolingConfig::getConfig().CredentialResolverManager.newPlugin(DUMMY_CREDENTIAL_RESOLVER, nullptr, deprecationSupport));
             if (!m_dummyResolver.get())
                 throw MetadataFilterException("Error creating dummy CredentialResolver.");
             return;

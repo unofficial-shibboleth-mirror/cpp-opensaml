@@ -77,7 +77,7 @@ template<class T> T* buildPlugin(const char* path, PluginManager<T,string,const 
     static const XMLCh _type[] = UNICODE_LITERAL_4(t,y,p,e);
     auto_ptr_char type(doc->getDocumentElement()->getAttributeNS(nullptr,_type));
     if (type.get() && *type.get())
-        return mgr.newPlugin(type.get(), doc->getDocumentElement());
+        return mgr.newPlugin(type.get(), doc->getDocumentElement(), false);
     throw XMLToolingException("Missing type in plugin configuration.");
 }
 
@@ -99,7 +99,7 @@ CredentialResolver* buildSimpleResolver(const char* key, const char* cert)
         root->setAttributeNS(nullptr, _certificate, widenit.get());
     }
 
-    return XMLToolingConfig::getConfig().CredentialResolverManager.newPlugin(FILESYSTEM_CREDENTIAL_RESOLVER, root);
+    return XMLToolingConfig::getConfig().CredentialResolverManager.newPlugin(FILESYSTEM_CREDENTIAL_RESOLVER, root, false);
 }
 
 class DummyCredentialResolver : public CredentialResolver

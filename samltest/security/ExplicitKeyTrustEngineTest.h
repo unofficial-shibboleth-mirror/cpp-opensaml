@@ -53,7 +53,7 @@ public:
 
         // Build metadata provider.
         scoped_ptr<MetadataProvider> metadataProvider(
-            opensaml::SAMLConfig::getConfig().MetadataProviderManager.newPlugin(XML_METADATA_PROVIDER,doc->getDocumentElement())
+            opensaml::SAMLConfig::getConfig().MetadataProviderManager.newPlugin(XML_METADATA_PROVIDER,doc->getDocumentElement(), false)
             );
         try {
             metadataProvider->init();
@@ -65,7 +65,7 @@ public:
         
         // Build trust engine.
         scoped_ptr<TrustEngine> trustEngine(
-            XMLToolingConfig::getConfig().TrustEngineManager.newPlugin(EXPLICIT_KEY_TRUSTENGINE, nullptr)
+            XMLToolingConfig::getConfig().TrustEngineManager.newPlugin(EXPLICIT_KEY_TRUSTENGINE, nullptr, false)
             );
         
         // Get signed assertion.

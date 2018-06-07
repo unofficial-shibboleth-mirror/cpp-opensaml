@@ -53,7 +53,7 @@ public:
 
         m_metadata.reset(
             opensaml::SAMLConfig::getConfig().MetadataProviderManager.newPlugin(
-                XML_METADATA_PROVIDER, doc->getDocumentElement()
+                XML_METADATA_PROVIDER, doc->getDocumentElement(), false
                 )
             );
         m_metadata->init();

@@ -57,7 +57,7 @@ namespace opensaml {
         vector<const XMLCh*> m_audiences;
     };
 
-    SecurityPolicyRule* SAML_DLLLOCAL AudienceRestrictionRuleFactory(const DOMElement* const & e)
+    SecurityPolicyRule* SAML_DLLLOCAL AudienceRestrictionRuleFactory(const DOMElement* const & e, bool)
     {
         return new AudienceRestrictionRule(e);
     }

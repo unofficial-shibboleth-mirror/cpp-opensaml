@@ -61,7 +61,7 @@ namespace opensaml {
                 ) const;
         };                
 
-        MessageDecoder* SAML_DLLLOCAL SAML2ECPDecoderFactory(const DOMElement* const &)
+        MessageDecoder* SAML_DLLLOCAL SAML2ECPDecoderFactory(const DOMElement* const &, bool)
         {
             return new SAML2ECPDecoder();
         }

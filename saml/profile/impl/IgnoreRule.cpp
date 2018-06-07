@@ -74,7 +74,7 @@ namespace opensaml {
         scoped_ptr<xmltooling::QName> m_qname;
     };
 
-    SecurityPolicyRule* SAML_DLLLOCAL IgnoreRuleFactory(const DOMElement* const & e)
+    SecurityPolicyRule* SAML_DLLLOCAL IgnoreRuleFactory(const DOMElement* const & e, bool)
     {
         return new IgnoreRule(e);
     }

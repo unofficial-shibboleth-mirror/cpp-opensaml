@@ -47,7 +47,7 @@ namespace opensaml {
     class SAML_DLLLOCAL ConditionsRule : public SecurityPolicyRule
     {
     public:
-        ConditionsRule(const DOMElement* e);
+        ConditionsRule(const DOMElement* e, bool deprecationSupport=true);
 
         virtual ~ConditionsRule() {
             if (m_doc)
@@ -63,9 +63,9 @@ namespace opensaml {
         ptr_vector<SecurityPolicyRule> m_rules;
     };
 
-    SecurityPolicyRule* SAML_DLLLOCAL ConditionsRuleFactory(const DOMElement* const & e)
+    SecurityPolicyRule* SAML_DLLLOCAL ConditionsRuleFactory(const DOMElement* const & e, bool deprecationSupport)
     {
-        return new ConditionsRule(e);
+        return new ConditionsRule(e, deprecationSupport);
     }
 
     static const XMLCh Rule[] =     UNICODE_LITERAL_10(P,o,l,i,c,y,R,u,l,e);
@@ -80,7 +80,7 @@ namespace opensaml {
         "</PolicyRule>";
 };
 
-ConditionsRule::ConditionsRule(const DOMElement* e) : m_doc(nullptr)
+ConditionsRule::ConditionsRule(const DOMElement* e, bool deprecationSupport) : m_doc(nullptr)
 {
     Category& log=Category::getInstance(SAML_LOGCAT ".SecurityPolicyRule.Conditions");
 
@@ -97,7 +97,7 @@ ConditionsRule::ConditionsRule(const DOMElement* e) : m_doc(nullptr)
         if (!t.empty()) {
             try {
                 log.info("building SecurityPolicyRule of type %s", t.c_str());
-                m_rules.push_back(SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(t.c_str(), e));
+                m_rules.push_back(SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(t.c_str(), e, deprecationSupport));
             }
             catch (std::exception& ex) {
                 log.crit("error building SecurityPolicyRule: %s", ex.what());

@@ -72,8 +72,9 @@ namespace opensaml {
              * XML namespaces are ignored in the processing of these elements.
              * 
              * @param e DOM to supply configuration for provider
+             * @param deprecationSupport true iff deprecated features and settings should be supported
              */
-            AbstractMetadataProvider(const xercesc::DOMElement* e=nullptr);
+            AbstractMetadataProvider(const xercesc::DOMElement* e=nullptr, bool deprecationSupport=true);
             
         public:
             virtual ~AbstractMetadataProvider();

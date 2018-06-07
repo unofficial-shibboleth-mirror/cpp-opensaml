@@ -52,7 +52,7 @@ public:
 
         // Build metadata provider.
         scoped_ptr<MetadataProvider> metadataProvider(
-            opensaml::SAMLConfig::getConfig().MetadataProviderManager.newPlugin(XML_METADATA_PROVIDER,doc->getDocumentElement())
+            opensaml::SAMLConfig::getConfig().MetadataProviderManager.newPlugin(XML_METADATA_PROVIDER,doc->getDocumentElement(), false)
             );
         try {
             metadataProvider->init();
@@ -68,7 +68,7 @@ public:
         DOMDocument* doc2=XMLToolingConfig::getConfig().getParser().parse(in2);
         XercesJanitor<DOMDocument> janitor2(doc2);
         scoped_ptr<TrustEngine> trustEngine(
-            XMLToolingConfig::getConfig().TrustEngineManager.newPlugin(STATIC_PKIX_TRUSTENGINE,doc2->getDocumentElement())
+            XMLToolingConfig::getConfig().TrustEngineManager.newPlugin(STATIC_PKIX_TRUSTENGINE,doc2->getDocumentElement(), false)
             );
         
         // Get signed assertion.

@@ -45,7 +45,7 @@ namespace opensaml {
         class SAML_DLLLOCAL WhitelistMetadataFilter : public MetadataFilter
         {
         public:
-            WhitelistMetadataFilter(const DOMElement* e);
+            WhitelistMetadataFilter(const DOMElement* e, bool deprecationSupport=true);
             ~WhitelistMetadataFilter() {}
 
             const char* getId() const { return WHITELIST_METADATA_FILTER; }
@@ -59,7 +59,7 @@ namespace opensaml {
             scoped_ptr<EntityMatcher> m_matcher;
         };
 
-        MetadataFilter* SAML_DLLLOCAL WhitelistMetadataFilterFactory(const DOMElement* const & e)
+        MetadataFilter* SAML_DLLLOCAL WhitelistMetadataFilterFactory(const DOMElement* const & e, bool deprecationSupport)
         {
             return new WhitelistMetadataFilter(e);
         }
@@ -70,11 +70,11 @@ namespace opensaml {
 };
 
 
-WhitelistMetadataFilter::WhitelistMetadataFilter(const DOMElement* e)
+WhitelistMetadataFilter::WhitelistMetadataFilter(const DOMElement* e, bool deprecationSupport)
 {
     string matcher(XMLHelper::getAttrString(e, nullptr, _matcher));
     if (!matcher.empty())
-        m_matcher.reset(SAMLConfig::getConfig().EntityMatcherManager.newPlugin(matcher.c_str(), e));
+        m_matcher.reset(SAMLConfig::getConfig().EntityMatcherManager.newPlugin(matcher.c_str(), e, deprecationSupport));
 
     e = XMLHelper::getFirstChildElement(e, Include);
     while (e) {

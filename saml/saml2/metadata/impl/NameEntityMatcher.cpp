@@ -51,7 +51,7 @@ namespace opensaml {
             const XMLCh* m_name;
         };
 
-        EntityMatcher* SAML_DLLLOCAL NameEntityMatcherFactory(const DOMElement* const & e)
+        EntityMatcher* SAML_DLLLOCAL NameEntityMatcherFactory(const DOMElement* const & e, bool deprecationSupport)
         {
             return new NameEntityMatcher(e);
         }

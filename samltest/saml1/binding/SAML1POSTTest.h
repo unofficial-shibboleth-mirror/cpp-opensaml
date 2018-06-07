@@ -72,7 +72,7 @@ public:
             encoder_config->getDocumentElement()->setAttributeNS(nullptr,lit2.get(),lit3.get());
             scoped_ptr<MessageEncoder> encoder(
                 SAMLConfig::getConfig().MessageEncoderManager.newPlugin(
-                    samlconstants::SAML1_PROFILE_BROWSER_POST, encoder_config->getDocumentElement()
+                    samlconstants::SAML1_PROFILE_BROWSER_POST, encoder_config->getDocumentElement(), false
                     )
                 );
 
@@ -91,7 +91,7 @@ public:
             // Decode message.
             string relayState;
             scoped_ptr<MessageDecoder> decoder(
-                SAMLConfig::getConfig().MessageDecoderManager.newPlugin(samlconstants::SAML1_PROFILE_BROWSER_POST, nullptr)
+                SAMLConfig::getConfig().MessageDecoderManager.newPlugin(samlconstants::SAML1_PROFILE_BROWSER_POST, nullptr, false)
                 );
             scoped_ptr<Response> response(dynamic_cast<Response*>(decoder->decode(relayState,*this,policy)));
             

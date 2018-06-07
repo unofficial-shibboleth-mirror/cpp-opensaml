@@ -79,7 +79,7 @@ namespace opensaml {
                 ) const;
         };
 
-        MessageEncoder* SAML_DLLLOCAL SAML2RedirectEncoderFactory(const DOMElement* const &)
+        MessageEncoder* SAML_DLLLOCAL SAML2RedirectEncoderFactory(const DOMElement* const &, bool)
         {
             return new SAML2RedirectEncoder();
         }

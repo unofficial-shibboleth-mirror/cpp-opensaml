@@ -66,7 +66,7 @@ namespace opensaml {
             Category& m_log;
         };
 
-        EntityMatcher* SAML_DLLLOCAL EntityAttributesEntityMatcherFactory(const DOMElement* const & e)
+        EntityMatcher* SAML_DLLLOCAL EntityAttributesEntityMatcherFactory(const DOMElement* const & e, bool deprecationSupport)
         {
             return new EntityAttributesEntityMatcher(e);
         }
