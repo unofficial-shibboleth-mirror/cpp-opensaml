@@ -186,5 +186,3 @@ install-exec-hook:
 
 EXTRA_DIST = resource.h saml.rc
 
-dist-hook:
-	rm -rf `find $(distdir)/zlib -name .svn`
