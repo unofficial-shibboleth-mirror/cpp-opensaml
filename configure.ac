@@ -250,15 +250,14 @@ fi
 
 AC_CHECK_HEADER([xmltooling/XMLToolingConfig.h],,AC_MSG_ERROR([unable to find xmltooling header files]))
 
-AC_LINK_IFELSE(
-    [AC_LANG_PROGRAM([[#include <xmltooling/XMLToolingConfig.h>
-#include <xmltooling/version.h>]],
-        [[#if _XMLTOOLING_VERSION >= 10400
-xmltooling::XMLToolingConfig::getConfig();
+AC_PREPROC_IFELSE(
+    [AC_LANG_PROGRAM([[#include <xmltooling/version.h>]],
+        [[#if _XMLTOOLING_VERSION >= 30000
+int i = 0;
 #else
-#error Need XMLTooling version 1.4 or higher
+#error Need XMLTooling version 3.0 or higher
 #endif]])],
-    ,[AC_MSG_ERROR([unable to link with XMLTooling, or version was too old])])
+    ,[AC_MSG_ERROR([XMLTooling version 3.0.0 or greater is required.])])
 
 # Check for unit test support
 CXXTEST="/usr/bin/cxxtestgen.pl"
