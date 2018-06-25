@@ -121,6 +121,9 @@ do-cxxtestgen:
 $(nodist_samltest_SOURCES): %.cpp: %.h
 	$(MAKE) do-cxxtestgen HFILE=$< CPPFILE=$@
 
-samltest_LDADD = $(top_builddir)/saml/libsaml.la
+samltest_CXXFLAGS = \
+    $(xmltooling_CFLAGS)
+samltest_LDADD = $(top_builddir)/saml/libsaml.la \
+    $(xmltooling_LIBS)
 
 EXTRA_DIST = data

@@ -17,7 +17,6 @@ DX_XML_FEATURE(OFF)
 DX_PDF_FEATURE(OFF)
 DX_PS_FEATURE(OFF)
 DX_INIT_DOXYGEN(opensaml, doxygen.cfg, doc/api)
-DX_INCLUDE=
 
 AC_ARG_ENABLE(debug,
     AS_HELP_STRING([--enable-debug],[Have GCC compile with symbols (Default = no)]),
@@ -191,28 +190,8 @@ AC_LINK_IFELSE(
         [[XSECPlatformUtils::Initialise()]])],,
     [AC_MSG_ERROR([unable to link with XML-Security])])
 
-# XML-Tooling settings
-AC_ARG_WITH(xmltooling,
-    AS_HELP_STRING([--with-xmltooling=PATH],[where xmltooling is installed]),,
-    [with_xmltooling=/usr])
-if test x_$with_xmltooling != x_/usr; then
-    CPPFLAGS="-I${with_xmltooling}/include $CPPFLAGS"
-    DX_INCLUDE="${with_xmltooling}/include"
-    LIBS="-L${with_xmltooling}/lib -lxmltooling $LIBS"
-else
-    LIBS="-lxmltooling $LIBS"
-fi
-
-AC_CHECK_HEADER([xmltooling/XMLToolingConfig.h],,AC_MSG_ERROR([unable to find xmltooling header files]))
-
-AC_PREPROC_IFELSE(
-    [AC_LANG_PROGRAM([[#include <xmltooling/version.h>]],
-        [[#if _XMLTOOLING_VERSION >= 30000
-int i = 0;
-#else
-#error Need XMLTooling version 3.0 or higher
-#endif]])],
-    ,[AC_MSG_ERROR([XMLTooling version 3.0.0 or greater is required.])])
+AX_PKG_CHECK_MODULES([xmltooling],,[xmltooling >= 3])
+PKG_CHECK_VAR([DX_INCLUDE], [xmltooling], [includedir])
 
 # Check for unit test support
 CXXTEST="/usr/bin/cxxtestgen.pl"
@@ -230,8 +209,6 @@ fi
 AC_SUBST(CXXTEST)
 AC_SUBST(CXXTESTFLAGS)
 AM_CONDITIONAL(BUILD_UNITTEST,test -f ${CXXTEST})
-
-AC_SUBST(DX_INCLUDE)
 
 # output packaging and makefiles
 AC_OUTPUT
