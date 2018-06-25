@@ -70,11 +70,7 @@ AC_HEADER_DIRENT
 # Checks for library functions.
 AC_CHECK_FUNCS([strchr strdup strstr])
 
-# checks for pthreads
-ACX_PTHREAD(
-    [AC_DEFINE(HAVE_PTHREAD,1,[Define if you have POSIX threads libraries and header files.])],
-    [AC_MSG_ERROR([unable to find pthreads, currently this is required])])
-
+AX_PTHREAD(,[AC_MSG_ERROR([unable to find pthreads, currently this is required])])
 
 # OpenSSL settings
 AC_ARG_WITH(openssl,
