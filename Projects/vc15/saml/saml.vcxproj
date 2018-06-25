@@ -112,7 +112,7 @@
       <PreprocessorDefinitions>_UNICODE;UNICODE;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>..\..\..\..\cpp-xmltooling\Build\vc15\$(Configuration)\xmltooling3D.lib;xerces-c_3D.lib;xsec_2D.lib;log4shib1D.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\..\..\..\cpp-xmltooling\Build\vc15\$(Configuration)\xmltooling3D.lib;xerces-c_3D.lib;xsec_2D.lib;log4shib2D.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <DataExecutionPrevention>
@@ -139,7 +139,7 @@
       <PreprocessorDefinitions>_UNICODE;UNICODE;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>..\..\..\..\cpp-xmltooling\Build\vc15\$(Platform)\$(Configuration)\xmltooling3D.lib;xerces-c_3D.lib;xsec_2D.lib;log4shib1D.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\..\..\..\cpp-xmltooling\Build\vc15\$(Platform)\$(Configuration)\xmltooling3D.lib;xerces-c_3D.lib;xsec_2D.lib;log4shib2D.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <DataExecutionPrevention>
@@ -157,7 +157,7 @@
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>..\..\..\..\cpp-xmltooling\Build\vc15\$(Configuration)\xmltooling3.lib;xerces-c_3.lib;xsec_2.lib;log4shib1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\..\..\..\cpp-xmltooling\Build\vc15\$(Configuration)\xmltooling3.lib;xerces-c_3.lib;xsec_2.lib;log4shib2.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
@@ -180,7 +180,7 @@
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>..\..\..\..\cpp-xmltooling\Build\vc15\$(Platform)\$(Configuration)\xmltooling3.lib;xerces-c_3.lib;xsec_2.lib;log4shib1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\..\..\..\cpp-xmltooling\Build\vc15\$(Platform)\$(Configuration)\xmltooling3.lib;xerces-c_3.lib;xsec_2.lib;log4shib2.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
