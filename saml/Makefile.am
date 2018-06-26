@@ -195,8 +195,5 @@ libsaml_la_LIBADD = \
     $(xmltooling_LIBS) \
     $(log4shib_LIBS) $(log4cpp_LIBS)
 
-install-exec-hook:
-	for la in $(lib_LTLIBRARIES) ; do rm -f $(DESTDIR)$(libdir)/$$la ; done
-
 EXTRA_DIST = resource.h saml.rc
 
