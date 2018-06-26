@@ -55,6 +55,7 @@
 #include <xercesc/framework/LocalFileInputSource.hpp>
 #include <xercesc/framework/StdInInputSource.hpp>
 #include <xercesc/framework/Wrapper4InputSource.hpp>
+#include <boost/scoped_ptr.hpp>
 
 using namespace xmlsignature;
 using namespace xmlconstants;

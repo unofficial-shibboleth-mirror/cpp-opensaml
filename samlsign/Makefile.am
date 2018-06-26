@@ -5,6 +5,7 @@ bin_PROGRAMS = samlsign
 samlsign_SOURCES = samlsign.cpp
 
 samlsign_LDADD = $(top_builddir)/saml/libsaml.la
+samlsign_CPPFLAGS = $(BOOST_CPPFLAGS)
 samlsign_CXXFLAGS = \
     $(xerces_CFLAGS) \
     $(xmltooling_CFLAGS) \
