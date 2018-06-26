@@ -75,3 +75,7 @@ x64
 /samltest/*/*.cpp
 /samltest/**/*.cpp
 /samltest/**/*.xml.bck*
+/samltest/samltest.log
+/samltest/samltest.trs
+/samltest/test-suite.log
+

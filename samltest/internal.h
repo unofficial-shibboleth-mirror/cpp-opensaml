@@ -127,7 +127,9 @@ protected:
 
     void skipNetworked() {
         if (getenv("SAMLTEST_SKIP_NETWORKED")) {
+#ifdef TS_SKIP
             TS_SKIP("requires network access");
+#endif
         }
     }
 

@@ -93,8 +93,7 @@ AX_PKG_CHECK_MODULES([log4shib],,[log4shib],
     [AX_PKG_CHECK_MODULES([log4cpp],,[log4cpp],
         [AC_DEFINE([OPENSAML_LOG4CPP],[1],[Define to 1 if log4cpp library is used.])])])
 
-# Xerces-C v2.6.0 has bugs that inhibit use with signed XML
-AX_PKG_CHECK_MODULES([xerces],,[xerces-c != 3.0])
+AX_PKG_CHECK_MODULES([xerces],,[xerces-c >= 3.2])
 
 AX_PKG_CHECK_MODULES([xmlsec],,[xml-security-c >= 2])
 

@@ -60,7 +60,7 @@ Group:		Development/Libraries/C and C++
 Requires:	libsaml10 = %{version}-%{release}
 Provides:	@PACKAGE_NAME@-devel = %{version}-%{release}
 Obsoletes:	@PACKAGE_NAME@-devel < %{version}-%{release}
-Requires:  libxerces-c-devel >= 3.2
+Requires: libxerces-c-devel >= 3.2
 Requires: libxml-security-c-devel >= 2.0.0
 Requires: libxmltooling-devel >= 3.0.0
 %{?_with_log4cpp:Requires: liblog4cpp-devel >= 1.0}
@@ -117,6 +117,7 @@ This package includes XML schemas and related files.
 %files -n libsaml10
 %defattr(-,root,root,-)
 %{_libdir}/libsaml.so.*
+%exclude %{_libdir}/libsaml.la
 
 %files -n @PACKAGE_NAME@-schemas
 %defattr(-,root,root,-)
