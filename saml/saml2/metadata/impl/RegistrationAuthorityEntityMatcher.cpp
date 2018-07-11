@@ -77,7 +77,7 @@ RegistrationAuthorityEntityMatcher::RegistrationAuthorityEntityMatcher(const DOM
 
     const DOMElement* child = XMLHelper::getFirstChildElement(e, RegistrationInfo::REGAUTHORITY_ATTRIB_NAME);
     while (child) {
-        const XMLCh* text = child->getTextContent();
+        const XMLCh* text = XMLHelper::getTextContent(child);
         if (text && *text) {
             m_authorities.insert(text);
         }

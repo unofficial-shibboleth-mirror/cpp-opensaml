@@ -78,7 +78,7 @@ BlacklistMetadataFilter::BlacklistMetadataFilter(const DOMElement* e, bool depre
     e = XMLHelper::getFirstChildElement(e, Exclude);
     while (e) {
         if (e->hasChildNodes()) {
-            const XMLCh* excl = e->getTextContent();
+            const XMLCh* excl = XMLHelper::getTextContent(e);
             if (excl && *excl)
                 m_entities.insert(excl);
         }

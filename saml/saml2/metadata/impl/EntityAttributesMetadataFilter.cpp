@@ -87,7 +87,7 @@ EntityAttributesMetadataFilter::EntityAttributesMetadataFilter(const DOMElement*
             m_attributes.push_back(boost::dynamic_pointer_cast<Attribute>(obj));
         }
         else if (XMLString::equals(child->getLocalName(), Entity)) {
-            const XMLCh* eid = child->getTextContent();
+            const XMLCh* eid = XMLHelper::getTextContent(child);
             if (eid && *eid) {
                 for (vector< boost::shared_ptr<Attribute> >::const_iterator a = m_attributes.begin(); a != m_attributes.end(); ++a)
                     m_applyMap.insert(applymap_t::value_type(eid, a->get()));

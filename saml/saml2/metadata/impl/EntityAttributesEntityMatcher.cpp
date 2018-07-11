@@ -185,7 +185,7 @@ bool EntityAttributesEntityMatcher::_matches(const EntityAttributes* ea, const A
                 // Check each tag value's simple content for a match.
                 for (vector<XMLObject*>::size_type tagindex = 0; tagindex < tagvals.size(); ++tagindex) {
                     const XMLObject* tagval = tagvals[tagindex];
-                    const XMLCh* tagvalstr = (tagval->getDOM()) ? tagval->getDOM()->getTextContent() : tagval->getTextContent();
+                    const XMLCh* tagvalstr = tagval->getTextContent();
                     re.reset();
 
                     // Check for a regex flag.
@@ -205,7 +205,7 @@ bool EntityAttributesEntityMatcher::_matches(const EntityAttributes* ea, const A
                     const vector<XMLObject*>& cvals = const_cast<const Attribute&>(*a).getAttributeValues();
                     for (indirect_iterator<vector<XMLObject*>::const_iterator> cval = make_indirect_iterator(cvals.begin());
                             cval != make_indirect_iterator(cvals.end()); ++cval) {
-                        const XMLCh* cvalstr = cval->getDOM() ? cval->getDOM()->getTextContent() : cval->getTextContent();
+                        const XMLCh* cvalstr = cval->getTextContent();
                         if (tagvalstr && cvalstr) {
                             if (re) {
                                 try {

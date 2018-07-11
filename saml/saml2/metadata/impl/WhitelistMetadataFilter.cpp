@@ -79,7 +79,7 @@ WhitelistMetadataFilter::WhitelistMetadataFilter(const DOMElement* e, bool depre
     e = XMLHelper::getFirstChildElement(e, Include);
     while (e) {
         if (e->hasChildNodes()) {
-            const XMLCh* incl = e->getTextContent();
+            const XMLCh* incl = XMLHelper::getTextContent(e);
             if (incl && *incl)
                 m_entities.insert(incl);
         }
