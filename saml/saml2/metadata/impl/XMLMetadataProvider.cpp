@@ -186,6 +186,9 @@ pair<bool,DOMElement*> XMLMetadataProvider::load(bool backup, string backingFile
     // If we own it, wrap it for now.
     XercesJanitor<DOMDocument> docjanitor(raw.first ? raw.second->getOwnerDocument() : nullptr);
 
+    if (!raw.second)
+        throw MetadataException("XML document was empty");
+
     // Unmarshall objects, binding the document.
     scoped_ptr<XMLObject> xmlObject(XMLObjectBuilder::buildOneFromElement(raw.second, raw.first));
     docjanitor.release();
