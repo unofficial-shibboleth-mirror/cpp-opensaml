@@ -4,8 +4,6 @@ AC_CONFIG_SRCDIR(saml)
 AC_CONFIG_AUX_DIR(build-aux)
 AC_CONFIG_MACRO_DIR(m4)
 AM_INIT_AUTOMAKE
-AC_DISABLE_STATIC
-AC_PROG_LIBTOOL
 PKG_INSTALLDIR
 
 # Docygen features
@@ -60,6 +58,8 @@ case "${host_cpu}-${host_os}" in
 	fi
     ;;
 esac
+
+LT_INIT([disable-static])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
