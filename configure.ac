@@ -81,21 +81,10 @@ AX_PKG_CHECK_MODULES([xmltooling],,[xmltooling >= 3])
 PKG_CHECK_VAR([DX_INCLUDE], [xmltooling], [includedir])
 
 # Check for unit test support
-CXXTEST="/usr/bin/cxxtestgen.pl"
-CXXTESTFLAGS=""
-AC_ARG_WITH(cxxtest,
-    AS_HELP_STRING([--with-cxxtest=PATH], [where cxxtest is installed]),
-    [if test x_$with_cxxtest != x_/usr; then
-        CXXTEST="${with_cxxtest}/cxxtestgen.pl"
-        CXXTESTFLAGS="-I${with_cxxtest}"
-    fi])
-if ! test -f "${CXXTEST}"; then
-    AC_MSG_WARN([cxxtestgen not found, won't build unit tests])
-fi
-
-AC_SUBST(CXXTEST)
-AC_SUBST(CXXTESTFLAGS)
-AM_CONDITIONAL(BUILD_UNITTEST,test -f ${CXXTEST})
+AC_ARG_VAR([CXXTEST], [override the cxxtestgen executable and options])
+AC_CHECK_PROGS([CXXTEST], [cxxtestgen cxxtestgen.pl], [false])
+AC_ARG_VAR([CXXTESTFLAGS], [override the cxxtest compiler flags needed to build tests])
+AM_CONDITIONAL([BUILD_UNITTEST], [test "x${CXXTEST}" != xfalse])
 
 AC_ARG_WITH([pkgxmldir],
     AS_HELP_STRING([--with-pkgxmldir],
