@@ -55,6 +55,7 @@ public:
 
     void testBadSig()
     {
+        skipNetworked();
         string config = data_path + "saml2/metadata/XMLMetadataProviderBadSig.xml";
         ifstream in(config.c_str());
         DOMDocument* doc=XMLToolingConfig::getConfig().getParser().parse(in);
