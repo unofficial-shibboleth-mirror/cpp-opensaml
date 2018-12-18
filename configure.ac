@@ -33,21 +33,12 @@ AC_CONFIG_FILES([Makefile saml/Makefile samltest/Makefile samlsign/Makefile sche
 
 AC_PROG_CC([gcc gcc3 cc])
 AC_PROG_CXX([g++ g++3 c++ CC])
-AC_CANONICAL_HOST
 
 if test "$GCC" = "yes" ; then
     AM_CFLAGS="$AM_CFLAGS -Wall -W"
     AM_CXXFLAGS="$AM_CXXFLAGS -Wall -W"
 fi
 
-# Fix for Sun Workshop compiler in debug mode, may be Sun case #6360993
-case "${host_cpu}-${host_os}" in
-    *solaris*)
-	if test "$CXX" = "CC" ; then
-		AM_CXXFLAGS="$AM_CXXFLAGS -Qoption ccfe -stabs=no%dfltlit+no%dflthlp"
-	fi
-    ;;
-esac
 AC_SUBST([AM_CFLAGS])
 AC_SUBST([AM_CXXFLAGS])
 
