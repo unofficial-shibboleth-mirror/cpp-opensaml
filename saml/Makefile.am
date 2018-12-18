@@ -74,7 +74,7 @@ saml2bindinclude_HEADERS = \
 	saml2/binding/SAML2ArtifactType0004.h \
 	saml2/binding/SAML2MessageDecoder.h \
 	saml2/binding/SAML2SOAPClient.h
-	
+
 saml2mdinclude_HEADERS = \
 	saml2/metadata/AbstractMetadataProvider.h \
 	saml2/metadata/DiscoverableMetadataProvider.h \
@@ -183,6 +183,7 @@ libsaml_la_LDFLAGS = -version-info 10:1:0
 libsaml_la_CPPFLAGS = \
     $(BOOST_CPPFLAGS)
 libsaml_la_CXXFLAGS = \
+    $(AM_CXXFLAGS) \
     $(PTHREAD_CFLAGS) \
     $(xerces_CFLAGS) \
     $(xmlsec_CFLAGS) \

@@ -19,15 +19,12 @@ DX_PS_FEATURE(OFF)
 DX_INIT_DOXYGEN(opensaml, doxygen.cfg, doc/api)
 
 AC_ARG_ENABLE(debug,
-    AS_HELP_STRING([--enable-debug],[Have GCC compile with symbols (Default = no)]),
+    AS_HELP_STRING([--enable-debug],[Produce debug variant (Default = no)]),
     enable_debug=$enableval, enable_debug=no)
 
 if test "$enable_debug" = "yes" ; then
-    GCC_CFLAGS="$CFLAGS -Wall -g -D_DEBUG"
-    GCC_CXXFLAGS="$CXXFLAGS -Wall -g -D_DEBUG"
-else
-    GCC_CFLAGS="$CFLAGS -Wall -O2 -DNDEBUG"
-    GCC_CXXFLAGS="$CXXFLAGS -Wall -O2 -DNDEBUG"
+    AM_CFLAGS="-D_DEBUG"
+    AM_CXXFLAGS="-D_DEBUG"
 fi
 
 AC_CONFIG_HEADERS([config.h])
@@ -39,25 +36,20 @@ AC_PROG_CXX([g++ g++3 c++ CC])
 AC_CANONICAL_HOST
 
 if test "$GCC" = "yes" ; then
-#    AC_HAVE_GCC_VERSION(4,0,0,0,
-#        [
-#        AC_DEFINE(GCC_HASCLASSVISIBILITY,1,
-#            [Define to enable class visibility control in gcc.])
-#        GCC_CFLAGS="$GCC_CFLAGS -fvisibility=hidden -fvisibility-inlines-hidden"
-#        GCC_CXXFLAGS="$GCC_CXXFLAGS -fvisibility=hidden -fvisibility-inlines-hidden"
-#        ])
-    CFLAGS="$GCC_CFLAGS"
-    CXXFLAGS="$GCC_CXXFLAGS"
+    AM_CFLAGS="$AM_CFLAGS -Wall -W"
+    AM_CXXFLAGS="$AM_CXXFLAGS -Wall -W"
 fi
 
 # Fix for Sun Workshop compiler in debug mode, may be Sun case #6360993
 case "${host_cpu}-${host_os}" in
     *solaris*)
 	if test "$CXX" = "CC" ; then
-		CXXFLAGS="$CXXFLAGS -Qoption ccfe -stabs=no%dfltlit+no%dflthlp"
+		AM_CXXFLAGS="$AM_CXXFLAGS -Qoption ccfe -stabs=no%dfltlit+no%dflthlp"
 	fi
     ;;
 esac
+AC_SUBST([AM_CFLAGS])
+AC_SUBST([AM_CXXFLAGS])
 
 LT_INIT([disable-static])
 

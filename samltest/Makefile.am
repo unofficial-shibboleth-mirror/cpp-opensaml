@@ -112,6 +112,7 @@ $(samltest_h:.h=.cpp): %.cpp: %.h
 	$(CXXTEST) --have-eh --have-std --abort-on-fail --part -o $@ $<
 
 samltest_CXXFLAGS = \
+    $(AM_CXXFLAGS) \
     $(CXXTESTFLAGS) \
     $(xerces_CFLAGS) \
     $(xmlsec_CFLAGS) \
