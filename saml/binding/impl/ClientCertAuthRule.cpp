@@ -103,7 +103,7 @@ bool ClientCertAuthRule::evaluate(const XMLObject& message, const GenericRequest
     if (!x509trust->validate(chain.front(), chain, *(policy.getMetadataProvider()), &cc)) {
         if (m_errorFatal)
             throw SecurityPolicyException("Client certificate supplied, but could not be verified.");
-        log.error("unable to verify certificate chain with supplied trust engine");
+        log.warn("unable to verify certificate chain with supplied trust engine");
         return false;
     }
     

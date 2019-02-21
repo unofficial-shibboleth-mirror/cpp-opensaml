@@ -139,7 +139,7 @@ bool BearerConfirmationRule::evaluate(const XMLObject& message, const GenericReq
         }
     }
 
-    log.error(msg ? msg : "no error message");
+    log.warn(msg ? msg : "no error message");
     if (m_fatal)
         throw SecurityPolicyException("Unable to locate satisfiable bearer SubjectConfirmation in assertion.");
     return false;

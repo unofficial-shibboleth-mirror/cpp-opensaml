@@ -99,7 +99,7 @@ bool XMLSigningRule::evaluate(const XMLObject& message, const GenericRequest* re
         sigval.validateSignature(*(signable->getSignature()));
     }
     catch (ValidationException& ve) {
-        log.error("signature profile failed to validate: %s", ve.what());
+        log.warn("signature profile failed to validate: %s", ve.what());
         if (m_errorFatal)
             throw;
         return false;
@@ -109,7 +109,7 @@ bool XMLSigningRule::evaluate(const XMLObject& message, const GenericRequest* re
     MetadataCredentialCriteria cc(*(policy.getIssuerMetadata()));
 
     if (!sigtrust->validate(*(signable->getSignature()), *(policy.getMetadataProvider()), &cc)) {
-        log.error("unable to verify message signature with supplied trust engine");
+        log.warn("unable to verify message signature with supplied trust engine");
         if (m_errorFatal)
             throw SecurityPolicyException("Message was signed, but signature could not be verified.");
         return false;

@@ -123,7 +123,7 @@ bool SimpleSigningRule::evaluate(const XMLObject& message, const GenericRequest*
     
     const char* sigAlgorithm = request->getParameter("SigAlg");
     if (!sigAlgorithm) {
-        log.error("SigAlg parameter not found, no way to verify the signature");
+        log.warn("SigAlg parameter not found, no way to verify the signature");
         return false;
     }
 
@@ -214,7 +214,7 @@ bool SimpleSigningRule::evaluate(const XMLObject& message, const GenericRequest*
     cc.setXMLAlgorithm(alg.get());
 
     if (!sigtrust->validate(alg.get(), signature, keyInfo, input.c_str(), input.length(), *(policy.getMetadataProvider()), &cc)) {
-        log.error("unable to verify message signature with supplied trust engine");
+        log.warn("unable to verify message signature with supplied trust engine");
         if (m_errorFatal)
             throw SecurityPolicyException("Message was signed, but signature could not be verified.");
         return false;

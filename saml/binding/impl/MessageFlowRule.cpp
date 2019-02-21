@@ -85,12 +85,12 @@ bool MessageFlowRule::evaluate(const XMLObject& message, const GenericRequest* r
     }
     else {
         if (issueInstant > now + skew) {
-            log.errorStream() << "rejected not-yet-valid message, timestamp (" << issueInstant <<
+            log.warnStream() << "rejected not-yet-valid message, timestamp (" << issueInstant <<
                 "), newest allowed (" << now + skew << ")" << logging::eol;
             throw SecurityPolicyException("Message rejected, was issued in the future.");
         }
         else if (issueInstant < now - skew - m_expires) {
-            log.errorStream() << "rejected expired message, timestamp (" << issueInstant <<
+            log.warnStream() << "rejected expired message, timestamp (" << issueInstant <<
                 "), oldest allowed (" << (now - skew - m_expires) << ")" << logging::eol;
             throw SecurityPolicyException("Message expired, was issued too long ago.");
         }
