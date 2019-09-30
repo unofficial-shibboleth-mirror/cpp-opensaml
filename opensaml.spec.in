@@ -19,6 +19,10 @@ BuildRequires: gcc-c++, pkgconfig, boost-devel >= 1.32.0
 BuildRequires: redhat-rpm-config
 %endif
 
+%if 0%{?rhel} == 8
+BuildRequires: gdb
+%endif
+
 %if "%{_vendor}" == "suse"
 %define pkgdocdir %{_docdir}/%{name}
 %else
@@ -88,7 +92,7 @@ This package includes XML schemas and related files.
 %setup -q
 
 %build
-%if 0%{?rhel} >= 6 || 0%{?centos_version} >= 600 || 0%{?amzn} >= 1
+i%if 0%{?rhel} == 6 || 0%{?rhel} == 7 || 0%{?amzn} >= 1
 %configure %{?saml_options} PKG_CONFIG_PATH=/opt/shibboleth/%{_lib}/pkgconfig
 %else
 %configure %{?saml_options}
@@ -136,6 +140,9 @@ This package includes XML schemas and related files.
 %doc %{pkgdocdir}
 
 %changelog
+* Mon Sep 30 2019 Scott Cantor <cantor.2@osu.edu> - 3.0.1-1
+- CentOS 8 cleanup
+
 * Tue Nov 21 2017 Scott Cantor <cantor.2@osu.edu> - 3.0.0-1
 - Update soname
 - Update dependency reqs
