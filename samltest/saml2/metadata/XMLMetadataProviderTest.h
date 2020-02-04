@@ -101,11 +101,6 @@ public:
         DOMDocument* doc=XMLToolingConfig::getConfig().getParser().parse(in);
         XercesJanitor<DOMDocument> janitor(doc);
 
-        auto_ptr_XMLCh path("path");
-        string s = data_path + "saml2/metadata/InCommon-metadata.xml";
-        auto_ptr_XMLCh file(s.c_str());
-        doc->getDocumentElement()->setAttributeNS(nullptr,path.get(),file.get());
-
         scoped_ptr<MetadataProvider> metadataProvider(
             SAMLConfig::getConfig().MetadataProviderManager.newPlugin(XML_METADATA_PROVIDER,doc->getDocumentElement(), false)
             );
@@ -145,12 +140,6 @@ public:
         DOMDocument* doc=XMLToolingConfig::getConfig().getParser().parse(in);
         XercesJanitor<DOMDocument> janitor(doc);
 
-#if 0
-        auto_ptr_XMLCh path("path");
-        string s = data_path + "saml2/metadata/InCommon-metadata.xml";
-        auto_ptr_XMLCh file(s.c_str());
-        doc->getDocumentElement()->setAttributeNS(nullptr, path.get(), file.get());
-#endif
         scoped_ptr<MetadataProvider> metadataProvider(\
             SAMLConfig::getConfig().MetadataProviderManager.newPlugin(XML_METADATA_PROVIDER, doc->getDocumentElement(), false)
             );
@@ -189,11 +178,6 @@ public:
         DOMDocument* doc=XMLToolingConfig::getConfig().getParser().parse(in);
         XercesJanitor<DOMDocument> janitor(doc);
 
-        auto_ptr_XMLCh path("path");
-        string s = data_path + "saml2/metadata/InCommon-metadata.xml";
-        auto_ptr_XMLCh file(s.c_str());
-        doc->getDocumentElement()->setAttributeNS(nullptr,path.get(),file.get());
-
         scoped_ptr<MetadataProvider> metadataProvider(
             SAMLConfig::getConfig().MetadataProviderManager.newPlugin(XML_METADATA_PROVIDER,doc->getDocumentElement(), false)
             );
@@ -219,11 +203,6 @@ public:
         ifstream in(config.c_str());
         DOMDocument* doc=XMLToolingConfig::getConfig().getParser().parse(in);
         XercesJanitor<DOMDocument> janitor(doc);
-
-        auto_ptr_XMLCh path("path");
-        string s = data_path + "saml2/metadata/InCommon-metadata.xml";
-        auto_ptr_XMLCh file(s.c_str());
-        doc->getDocumentElement()->setAttributeNS(nullptr,path.get(),file.get());
 
         scoped_ptr<MetadataProvider> metadataProvider(
             SAMLConfig::getConfig().MetadataProviderManager.newPlugin(XML_METADATA_PROVIDER,doc->getDocumentElement(), false)
