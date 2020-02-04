@@ -124,4 +124,13 @@ samltest_LDADD = $(top_builddir)/saml/libsaml.la \
     $(xmlsec_LIBS) \
     $(xmltooling_LIBS)
 
-EXTRA_DIST = data
+EXTRA_DIST = data/FilesystemCredentialResolver.xml \
+	data/*.pem \
+	data/binding \
+	data/saml1 \
+	data/saml2/binding \
+	data/saml2/core \
+	data/saml2/profile \
+	data/saml2/metadata/*.xml \
+	data/security \
+	data/signature
