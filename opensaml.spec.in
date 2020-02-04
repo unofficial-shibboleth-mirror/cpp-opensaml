@@ -10,7 +10,7 @@ Source0:	%{name}-%{version}.tar.bz2
 BuildRoot:	%{_tmppath}/%{name}-%{version}-root
 BuildRequires:  libxerces-c-devel >= 3.2
 BuildRequires:  libxml-security-c-devel >= 2.0.0
-BuildRequires:  libxmltooling-devel >= 3.0.0
+BuildRequires:  libxmltooling-devel >= 3.1.0
 %{?_with_log4cpp:BuildRequires: liblog4cpp-devel >= 1.0}
 %{!?_with_log4cpp:BuildRequires: liblog4shib-devel >= 1.0.4}
 BuildRequires: gcc-c++, pkgconfig, boost-devel >= 1.32.0
@@ -51,7 +51,7 @@ Group:      Development/Libraries/C and C++
 Provides:   @PACKAGE_NAME@ = %{version}-%{release}
 Obsoletes:  @PACKAGE_NAME@ < %{version}-%{release}
 
-%description -n libsaml10
+%description -n libsaml11
 OpenSAML is an open source implementation of the OASIS Security Assertion
 Markup Language Specification. It contains a set of open source C++ classes
 that support the SAML 1.0, 1.1, and 2.0 specifications.
@@ -61,12 +61,12 @@ This package contains just the shared library.
 %package -n libsaml-devel
 Summary:	OpenSAML development Headers
 Group:		Development/Libraries/C and C++
-Requires:	libsaml10 = %{version}-%{release}
+Requires:	libsaml11 = %{version}-%{release}
 Provides:	@PACKAGE_NAME@-devel = %{version}-%{release}
 Obsoletes:	@PACKAGE_NAME@-devel < %{version}-%{release}
 Requires: libxerces-c-devel >= 3.2
 Requires: libxml-security-c-devel >= 2.0.0
-Requires: libxmltooling-devel >= 3.0.0
+Requires: libxmltooling-devel >= 3.1.0
 %{?_with_log4cpp:Requires: liblog4cpp-devel >= 1.0}
 %{!?_with_log4cpp:Requires: liblog4shib-devel >= 1.0.4}
 
@@ -110,19 +110,15 @@ i%if 0%{?rhel} == 6 || 0%{?rhel} == 7 || 0%{?amzn} >= 1
 %clean
 [ "$RPM_BUILD_ROOT" != "/" ] && %{__rm} -rf $RPM_BUILD_ROOT
 
-%ifnos solaris2.8 solaris2.9 solaris2.10
-%post -n libsaml10 -p /sbin/ldconfig
-%endif
+%post -n libsaml11 -p /sbin/ldconfig
 
-%ifnos solaris2.8 solaris2.9 solaris2.10
-%postun -n libsaml10 -p /sbin/ldconfig
-%endif
+%postun -n libsaml11 -p /sbin/ldconfig
 
 %files -n @PACKAGE_NAME@-bin
 %defattr(-,root,root,-)
 %{_bindir}/samlsign
 
-%files -n libsaml10
+%files -n libsaml11
 %defattr(-,root,root,-)
 %{_libdir}/libsaml.so.*
 %exclude %{_libdir}/libsaml.la
@@ -140,6 +136,10 @@ i%if 0%{?rhel} == 6 || 0%{?rhel} == 7 || 0%{?amzn} >= 1
 %doc %{pkgdocdir}
 
 %changelog
+* Mon Feb 3 2020 Scott Cantor <cantor.2@osu.edu> - 3.1.0-1
+- Version and lib bump
+- Remove Solaris conditionals
+
 * Mon Sep 30 2019 Scott Cantor <cantor.2@osu.edu> - 3.0.1-1
 - CentOS 8 cleanup
 

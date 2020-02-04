@@ -179,7 +179,7 @@ libsaml_la_SOURCES = \
 
 # this is different from the project version
 # http://sources.redhat.com/autobook/autobook/autobook_91.html
-libsaml_la_LDFLAGS = -version-info 10:1:0
+libsaml_la_LDFLAGS = -version-info 11:0:0
 libsaml_la_CPPFLAGS = \
     $(BOOST_CPPFLAGS)
 libsaml_la_CXXFLAGS = \
