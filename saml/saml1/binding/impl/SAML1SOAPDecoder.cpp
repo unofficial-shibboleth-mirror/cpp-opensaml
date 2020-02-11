@@ -60,6 +60,7 @@ namespace opensaml {
             xmltooling::XMLObject* decode(
                 std::string& relayState,
                 const GenericRequest& genericRequest,
+                GenericResponse* genericResponse,
                 SecurityPolicy& policy
                 ) const;
         };                
@@ -74,6 +75,7 @@ namespace opensaml {
 XMLObject* SAML1SOAPDecoder::decode(
     string& relayState,
     const GenericRequest& genericRequest,
+    GenericResponse* genericResponse,
     SecurityPolicy& policy
     ) const
 {

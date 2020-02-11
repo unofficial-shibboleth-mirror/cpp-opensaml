@@ -26,8 +26,8 @@
 
 #include "internal.h"
 #include "exceptions.h"
-#include "binding/MessageEncoder.h"
 #include "signature/ContentReference.h"
+#include "saml2/binding/SAML2MessageEncoder.h"
 #include "saml2/core/Protocols.h"
 
 #include <sstream>
@@ -48,7 +48,7 @@ using namespace std;
 
 namespace opensaml {
     namespace saml2p {              
-        class SAML_DLLLOCAL SAML2SOAPEncoder : public MessageEncoder
+        class SAML_DLLLOCAL SAML2SOAPEncoder : public SAML2MessageEncoder
         {
         public:
             SAML2SOAPEncoder() {}
@@ -56,10 +56,6 @@ namespace opensaml {
 
             bool isUserAgentPresent() const {
                 return false;
-            }
-
-            const XMLCh* getProtocolFamily() const {
-                return samlconstants::SAML20P_NS;
             }
 
             long encode(

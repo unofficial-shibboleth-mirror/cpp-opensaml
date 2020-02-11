@@ -159,6 +159,14 @@ namespace opensaml {
         const XMLCh* getCorrelationID() const;
 
         /**
+        * Returns the message identifier to which the message being evaluated
+        * claims to be a response.
+        *
+        * @return correlatable message identifier
+        */
+        const XMLCh* getInResponseTo() const;
+
+        /**
          * Gets a mutable array of installed policy rules.
          *
          * <p>If adding rules, their lifetime must be at least as long as the policy object.
@@ -232,6 +240,14 @@ namespace opensaml {
          * @param correlationID correlated message identifier
          */
         void setCorrelationID(const XMLCh* correlationID);
+
+        /**
+        * Sets the message identifier to which the message being evaluated
+        * was responding (i.e., the value to be compared to the correlation ID).
+        *
+        * @param id correlatable message identifier
+        */
+        void setInResponseTo(const XMLCh* id);
 
         /**
          * Evaluates the policy against the given request and message,
@@ -418,7 +434,7 @@ namespace opensaml {
 
         // contextual information
         mutable time_t m_ts;
-        xmltooling::xstring m_correlationID;
+        xmltooling::xstring m_correlationID, m_inResponseTo;
         std::vector<xmltooling::xstring> m_audiences;
     };
 

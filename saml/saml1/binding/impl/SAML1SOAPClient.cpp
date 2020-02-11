@@ -74,10 +74,6 @@ Response* SAML1SOAPClient::receiveSAML()
             Response* response = dynamic_cast<Response*>(body->getUnknownXMLObjects().front());
             if (response) {
 
-                // Check InResponseTo.
-                if (m_correlate && response->getInResponseTo() && !XMLString::equals(m_correlate, response->getInResponseTo()))
-                    throw SecurityPolicyException("InResponseTo attribute did not correlate with the Request ID.");
-                
                 m_soaper.getPolicy().reset(true);
 
                 // Extract Response details and run policy against it.
@@ -85,8 +81,11 @@ Response* SAML1SOAPClient::receiveSAML()
                 // alternate issuers at that layer.
                 m_soaper.getPolicy().setMessageID(response->getResponseID());
                 m_soaper.getPolicy().setIssueInstant(response->getIssueInstantEpoch());
+                m_soaper.getPolicy().setInResponseTo(response->getInResponseTo());
+                m_soaper.getPolicy().setCorrelationID(m_correlate);
+
                 m_soaper.getPolicy().evaluate(*response);
-                
+
                 // Check Status.
                 Status* status = response->getStatus();
                 if (status) {

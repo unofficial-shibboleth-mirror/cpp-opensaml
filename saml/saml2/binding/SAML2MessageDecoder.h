@@ -29,6 +29,11 @@
 
 #include <saml/binding/MessageDecoder.h>
 
+namespace xmltooling {
+    class HTTPRequest;
+    class HTTPResponse;
+}
+
 namespace opensaml {
     namespace saml2p {
         
@@ -40,6 +45,22 @@ namespace opensaml {
         protected:
             SAML2MessageDecoder();
             virtual ~SAML2MessageDecoder();
+
+            /**
+            * If relay state is provided, the previous request ID is extracted from a correlation cookie
+            * and supplied to the policy.
+            *
+            * @param request HTTP request
+            * @param response optional HTTP response
+            * @param relayState the RelayState token
+            * @param policy the SecurityPolicy to attach the ID to
+            */
+            void extractCorrelationID(
+                const xmltooling::HTTPRequest& request,
+                xmltooling::HTTPResponse* response,
+                const std::string& relayState,
+                SecurityPolicy& policy
+                ) const;
 
         public:
             const XMLCh* getProtocolFamily() const;

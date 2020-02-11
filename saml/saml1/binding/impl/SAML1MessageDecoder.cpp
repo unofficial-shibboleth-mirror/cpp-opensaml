@@ -89,6 +89,8 @@ void SAML1MessageDecoder::extractMessageDetails(
         return;
     }
 
+    policy.setInResponseTo(response->getInResponseTo());
+
     log.debug("extracting issuer from SAML 1.x Response");
     const vector<saml1::Assertion*>& assertions = response->getAssertions();
     if (assertions.empty()) {

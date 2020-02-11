@@ -38,6 +38,7 @@
 #include <xmltooling/logging.h>
 #include <xmltooling/XMLToolingConfig.h>
 #include <xmltooling/io/HTTPRequest.h>
+#include <xmltooling/io/HTTPResponse.h>
 #include <xmltooling/util/NDC.h>
 #include <xmltooling/util/ParserPool.h>
 #include <xmltooling/validation/ValidatorSuite.h>
@@ -61,6 +62,7 @@ namespace opensaml {
             xmltooling::XMLObject* decode(
                 std::string& relayState,
                 const GenericRequest& genericRequest,
+                GenericResponse* genericResponse,
                 SecurityPolicy& policy
                 ) const;
         };                
@@ -75,6 +77,7 @@ namespace opensaml {
 XMLObject* SAML2POSTDecoder::decode(
     std::string& relayState,
     const GenericRequest& genericRequest,
+    GenericResponse* genericResponse,
     SecurityPolicy& policy
     ) const
 {
@@ -133,6 +136,7 @@ XMLObject* SAML2POSTDecoder::decode(
 
     // Run through the policy.
     extractMessageDetails(*root, genericRequest, samlconstants::SAML20P_NS, policy);
+    extractCorrelationID(*httpRequest, dynamic_cast<HTTPResponse*>(genericResponse), relayState, policy);
     policy.evaluate(*root, &genericRequest);
     
     // Check destination URL.

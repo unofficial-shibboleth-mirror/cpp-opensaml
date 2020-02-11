@@ -163,6 +163,11 @@ const XMLCh* SecurityPolicy::getCorrelationID() const
     return m_correlationID.c_str();
 }
 
+const XMLCh* SecurityPolicy::getInResponseTo() const
+{
+    return m_inResponseTo.c_str();
+}
+
 vector<const SecurityPolicyRule*>& SecurityPolicy::getRules()
 {
     return m_rules;
@@ -210,6 +215,13 @@ void SecurityPolicy::setCorrelationID(const XMLCh* correlationID)
     m_correlationID.erase();
     if (correlationID)
         m_correlationID = correlationID;
+}
+
+void SecurityPolicy::setInResponseTo(const XMLCh* id)
+{
+    m_inResponseTo.erase();
+    if (id)
+        m_inResponseTo = id;
 }
 
 void SecurityPolicy::evaluate(const XMLObject& message, const GenericRequest* request)

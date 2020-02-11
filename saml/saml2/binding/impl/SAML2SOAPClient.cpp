@@ -76,16 +76,14 @@ StatusResponseType* SAML2SOAPClient::receiveSAML()
             // Check for SAML Response.
             StatusResponseType* response = dynamic_cast<StatusResponseType*>(body->getUnknownXMLObjects().front());
             if (response) {
-                // Check InResponseTo.
-                if (m_correlate && response->getInResponseTo() && !XMLString::equals(m_correlate, response->getInResponseTo()))
-                    throw SecurityPolicyException("InResponseTo attribute did not correlate with the Request ID.");
-
                 SecurityPolicy& policy = m_soaper.getPolicy();
                 policy.reset(true);
 
                 // Extract Response details.
                 policy.setMessageID(response->getID());
                 policy.setIssueInstant(response->getIssueInstantEpoch());
+                policy.setInResponseTo(response->getInResponseTo());
+                policy.setCorrelationID(m_correlate);
 
                 // Extract and re-verify Issuer if present.
                 const Issuer* issuer = response->getIssuer();

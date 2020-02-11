@@ -34,6 +34,7 @@
 
 namespace xmltooling {
     class XMLTOOL_API GenericRequest;
+    class XMLTOOL_API GenericResponse;
     class XMLTOOL_API XMLObject;
 };
 
@@ -150,13 +151,9 @@ namespace opensaml {
         void setArtifactResolver(const ArtifactResolver* artifactResolver);
 
         /**
-         * Decodes a transport request into a SAML protocol message, and evaluates it
-         * against a supplied SecurityPolicy. If the transport request does not contain
-         * the information necessary to decode the request, nullptr will be returned.
-         * Errors during the decoding process will be raised as exceptions.
+         * @Deprecated
          *
-         * <p>Artifact-based bindings require an ArtifactResolver be set to
-         * turn an artifact into the corresponding message.
+         * The future version is the variant below that also takes a response object.
          *
          * @param relayState        will be set to RelayState/TARGET value accompanying message
          * @param genericRequest    reference to interface for accessing transport request to decode
@@ -167,7 +164,29 @@ namespace opensaml {
             std::string& relayState,
             const xmltooling::GenericRequest& genericRequest,
             SecurityPolicy& policy
-            ) const=0;
+            ) const;
+
+        /**
+        * Decodes a transport request into a SAML protocol message, and evaluates it
+        * against a supplied SecurityPolicy. If the transport request does not contain
+        * the information necessary to decode the request, nullptr will be returned.
+        * Errors during the decoding process will be raised as exceptions.
+        *
+        * <p>Artifact-based bindings require an ArtifactResolver be set to
+        * turn an artifact into the corresponding message.</p>
+        *
+        * @param relayState        will be set to RelayState/TARGET value accompanying message
+        * @param genericRequest    reference to interface for accessing transport request to decode
+        * @param genericResponse   optional interface for accessing transport response
+        * @param policy            reference to policy containing rules, MetadataProvider, TrustEngine, etc.
+        * @return  the decoded message, or nullptr if the decoder did not recognize the request content
+        */
+        virtual xmltooling::XMLObject* decode(
+            std::string& relayState,
+            const xmltooling::GenericRequest& genericRequest,
+            xmltooling::GenericResponse* genericResponse,
+            SecurityPolicy& policy
+        ) const;
 
     protected:
         MessageDecoder();

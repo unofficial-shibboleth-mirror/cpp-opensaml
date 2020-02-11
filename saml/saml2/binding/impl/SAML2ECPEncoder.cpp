@@ -26,9 +26,9 @@
 
 #include "internal.h"
 #include "exceptions.h"
-#include "binding/MessageEncoder.h"
 #include "signature/ContentReference.h"
 #include "saml1/core/Protocols.h"
+#include "saml2/binding/SAML2MessageEncoder.h"
 #include "saml2/core/Protocols.h"
 
 #include <sstream>
@@ -57,15 +57,11 @@ namespace opensaml {
         
         static const XMLCh ProviderName[] = UNICODE_LITERAL_12(P, r, o, v, i, d, e, r, N, a, m, e);
 
-        class SAML_DLLLOCAL SAML2ECPEncoder : public MessageEncoder
+        class SAML_DLLLOCAL SAML2ECPEncoder : public SAML2MessageEncoder
         {
         public:
             SAML2ECPEncoder(const DOMElement* e);
             virtual ~SAML2ECPEncoder() {}
-
-            const XMLCh* getProtocolFamily() const {
-                return samlconstants::SAML20P_NS;
-            }
 
             long encode(
                 GenericResponse& genericResponse,
@@ -154,6 +150,9 @@ long SAML2ECPEncoder::encode(
         httpResponse->setResponseHeader("Expires", "01-Jan-1997 12:00:00 GMT");
         httpResponse->setResponseHeader("Cache-Control", "no-cache, no-store, must-revalidate, private");
         httpResponse->setResponseHeader("Pragma", "no-cache");
+        if (request) {
+            preserveCorrelationID(*httpResponse, *request, relayState);
+        }
     }
 
     // Wrap it in a SOAP envelope.

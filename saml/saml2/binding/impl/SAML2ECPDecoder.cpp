@@ -33,6 +33,7 @@
 #include <xmltooling/logging.h>
 #include <xmltooling/XMLToolingConfig.h>
 #include <xmltooling/io/HTTPRequest.h>
+#include <xmltooling/io/HTTPResponse.h>
 #include <xmltooling/soap/SOAP.h>
 #include <xmltooling/util/NDC.h>
 #include <xmltooling/util/ParserPool.h>
@@ -57,6 +58,7 @@ namespace opensaml {
             xmltooling::XMLObject* decode(
                 std::string& relayState,
                 const GenericRequest& genericRequest,
+                GenericResponse* genericResponse,
                 SecurityPolicy& policy
                 ) const;
         };                
@@ -71,6 +73,7 @@ namespace opensaml {
 XMLObject* SAML2ECPDecoder::decode(
     string& relayState,
     const GenericRequest& genericRequest,
+    GenericResponse* genericResponse,
     SecurityPolicy& policy
     ) const
 {
@@ -112,11 +115,29 @@ XMLObject* SAML2ECPDecoder::decode(
     if (body && body->hasChildren()) {
         Response* response = dynamic_cast<Response*>(body->getUnknownXMLObjects().front());
         if (response) {
+
+            // Check for RelayState header.
+            if (env->getHeader()) {
+                static const XMLCh RelayState[] = UNICODE_LITERAL_10(R,e,l,a,y,S,t,a,t,e);
+                const vector<XMLObject*>& blocks = const_cast<const Header*>(env->getHeader())->getUnknownXMLObjects();
+                vector<XMLObject*>::const_iterator h =
+                    find_if(blocks.begin(), blocks.end(), hasQName(xmltooling::QName(samlconstants::SAML20ECP_NS, RelayState)));
+                const ElementProxy* ep = dynamic_cast<const ElementProxy*>(h != blocks.end() ? *h : nullptr);
+                if (ep) {
+                    auto_ptr_char rs(ep->getTextContent());
+                    if (rs.get())
+                        relayState = rs.get();
+                }
+            }
+
             // Run through the policy at two layers.
             extractMessageDetails(*env, genericRequest, samlconstants::SAML20P_NS, policy);
             policy.evaluate(*env, &genericRequest);
             policy.reset(true);
             extractMessageDetails(*response, genericRequest, samlconstants::SAML20P_NS, policy);
+            if (httpRequest) {
+                extractCorrelationID(*httpRequest, dynamic_cast<HTTPResponse*>(genericResponse), relayState, policy);
+            }
             policy.evaluate(*response, &genericRequest);
 
             // Check destination URL if this is HTTP.
@@ -131,20 +152,6 @@ XMLObject* SAML2ECPDecoder::decode(
                 else if (dest.get() && *dest.get() && ((delim && strncmp(dest.get(), dest2, delim - dest2)) || (!delim && strcmp(dest.get(), dest2)))) {
                     log.error("PAOS response targeted at (%s), but delivered to (%s)", dest.get(), dest2);
                     throw BindingException("SAML message delivered with PAOS to incorrect server URL.");
-                }
-            }
-
-            // Check for RelayState header.
-            if (env->getHeader()) {
-                static const XMLCh RelayState[] = UNICODE_LITERAL_10(R,e,l,a,y,S,t,a,t,e);
-                const vector<XMLObject*>& blocks = const_cast<const Header*>(env->getHeader())->getUnknownXMLObjects();
-                vector<XMLObject*>::const_iterator h =
-                    find_if(blocks.begin(), blocks.end(), hasQName(xmltooling::QName(samlconstants::SAML20ECP_NS, RelayState)));
-                const ElementProxy* ep = dynamic_cast<const ElementProxy*>(h != blocks.end() ? *h : nullptr);
-                if (ep) {
-                    auto_ptr_char rs(ep->getTextContent());
-                    if (rs.get())
-                        relayState = rs.get();
                 }
             }
             

@@ -54,6 +54,7 @@ namespace opensaml {
 
     private:
         bool m_checkReplay;
+        bool m_correlation;
         time_t m_expires;
     };
 
@@ -64,10 +65,12 @@ namespace opensaml {
 };
 
 static const XMLCh checkReplay[] = UNICODE_LITERAL_11(c,h,e,c,k,R,e,p,l,a,y);
+static const XMLCh checkCorrelation[] = UNICODE_LITERAL_16(c,h,e,c,k,C,o,r,r,e,l,a,t,i,o,n);
 static const XMLCh expires[] = UNICODE_LITERAL_7(e,x,p,i,r,e,s);
 
 MessageFlowRule::MessageFlowRule(const DOMElement* e)
     : m_checkReplay(XMLHelper::getAttrBool(e, true, checkReplay)),
+        m_correlation(XMLHelper::getAttrBool(e, false, checkCorrelation)),
         m_expires(XMLHelper::getAttrInt(e, XMLToolingConfig::getConfig().clock_skew_secs, expires))
 {
 }
@@ -94,6 +97,24 @@ bool MessageFlowRule::evaluate(const XMLObject& message, const GenericRequest* r
                 "), oldest allowed (" << (now - skew - m_expires) << ")" << logging::eol;
             throw SecurityPolicyException("Message expired, was issued too long ago.");
         }
+    }
+
+    if (m_correlation) {
+        if (policy.getCorrelationID() && *(policy.getCorrelationID())) {
+            if (!XMLString::equals(policy.getCorrelationID(), policy.getInResponseTo())) {
+                log.warn("Response correlation ID did not match request ID");
+                auto_ptr_char requestID(policy.getCorrelationID());
+                throw SecurityPolicyException("Rejecting non-correlated response to request ID ($1).",
+                    params(1, requestID.get()));
+            }
+        }
+        else if (policy.getInResponseTo() && *(policy.getInResponseTo())) {
+            log.warn("Response correlation failed due to lack of request ID to compare against");
+            throw SecurityPolicyException("Response correlation failed with lack of correlation ID");
+        }
+    }
+    else {
+        log.debug("ignoring InResponseTo, correlation checking is disabled");
     }
 
     // Check replay.

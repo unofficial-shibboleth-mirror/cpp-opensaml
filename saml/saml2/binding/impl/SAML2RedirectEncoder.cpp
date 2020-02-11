@@ -26,8 +26,7 @@
 
 #include "internal.h"
 #include "exceptions.h"
-#include "binding/MessageEncoder.h"
-#include "saml2/core/Protocols.h"
+#include "saml2/binding/SAML2MessageEncoder.h"
 
 #include <fstream>
 #include <sstream>
@@ -52,7 +51,7 @@ using namespace std;
 
 namespace opensaml {
     namespace saml2p {              
-        class SAML_DLLLOCAL SAML2RedirectEncoder : public MessageEncoder
+        class SAML_DLLLOCAL SAML2RedirectEncoder : public SAML2MessageEncoder
         {
         public:
             SAML2RedirectEncoder() {}
@@ -60,10 +59,6 @@ namespace opensaml {
 
             bool isCompact() const {
                 return true;
-            }
-
-            const XMLCh* getProtocolFamily() const {
-                return samlconstants::SAML20P_NS;
             }
 
             long encode(
@@ -112,7 +107,10 @@ long SAML2RedirectEncoder::encode(
     
     StatusResponseType* response = nullptr;
     RequestAbstractType* request = dynamic_cast<RequestAbstractType*>(xmlObject);
-    if (!request) {
+    if (request) {
+        preserveCorrelationID(*httpResponse, *request, relayState);
+    }
+    else {
         response = dynamic_cast<StatusResponseType*>(xmlObject);
         if (!response)
             throw BindingException("XML content for SAML 2.0 HTTP-Redirect Encoder must be a SAML 2.0 protocol message.");

@@ -25,6 +25,7 @@
  */
 
 #include "internal.h"
+#include "exceptions.h"
 #include "binding/MessageDecoder.h"
 #include "saml2/metadata/EndpointManager.h"
 #include "saml2/metadata/Metadata.h"
@@ -114,4 +115,24 @@ bool MessageDecoder::ArtifactResolver::isSupported(const SSODescriptorType& ssoD
     }
 
     return false;
+}
+
+XMLObject* MessageDecoder::decode(
+    std::string& relayState,
+    const xmltooling::GenericRequest& genericRequest,
+    SecurityPolicy& policy
+    ) const
+{
+    // Default just calls new version.
+    return decode(relayState, genericRequest, nullptr, policy);
+}
+
+XMLObject* MessageDecoder::decode(
+    std::string& relayState,
+    const xmltooling::GenericRequest& genericRequest,
+    xmltooling::GenericResponse* genericResponse,
+    SecurityPolicy& policy
+    ) const
+{
+    throw BindingException("Unimplemented decode method");
 }

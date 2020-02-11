@@ -33,6 +33,10 @@
 #include "util/SAMLConstants.h"
 
 #include <xmltooling/logging.h>
+#include <xmltooling/XMLToolingConfig.h>
+#include <xmltooling/io/HTTPRequest.h>
+#include <xmltooling/io/HTTPResponse.h>
+#include <xmltooling/util/URLEncoder.h>
 
 using namespace opensaml::saml2md;
 using namespace opensaml::saml2p;
@@ -55,6 +59,36 @@ const XMLCh* SAML2MessageDecoder::getProtocolFamily() const
     return samlconstants::SAML20P_NS;
 }
 
+void SAML2MessageDecoder::extractCorrelationID(
+    const HTTPRequest& request, HTTPResponse* response, const string& relayState, SecurityPolicy& policy
+    ) const
+{
+    Category& log = Category::getInstance(SAML_LOGCAT ".MessageDecoder.SAML2");
+
+    if (!relayState.empty()) {
+        string cookie_name = string("_opensaml_req_").append(
+            XMLToolingConfig::getConfig().getURLEncoder()->encode(relayState.c_str()));
+        const char* cookie = request.getCookie(cookie_name.c_str());
+        if (cookie && *cookie) {
+            log.debug("recovered request/response correlation value (%s)", cookie);
+            char* dup = strdup(cookie);
+            XMLToolingConfig::getConfig().getURLEncoder()->decode(dup);
+            auto_ptr_XMLCh corrID(dup);
+            free(dup);
+            policy.setCorrelationID(corrID.get());
+            if (response) {
+                response->setCookie(cookie_name.c_str(), nullptr, 0, HTTPResponse::SAMESITE_NONE);
+            }
+        }
+        else {
+            log.debug("no request/response correlation cookie found");
+        }
+    }
+    else {
+        log.debug("no RelayState, unable to search for request/response correlation cookie");
+    }
+}
+
 void SAML2MessageDecoder::extractMessageDetails(
     const XMLObject& message, const GenericRequest& request, const XMLCh* protocol, SecurityPolicy& policy
     ) const
@@ -70,6 +104,11 @@ void SAML2MessageDecoder::extractMessageDetails(
         const saml2::RootObject& samlRoot = dynamic_cast<const saml2::RootObject&>(message);
         policy.setMessageID(samlRoot.getID());
         policy.setIssueInstant(samlRoot.getIssueInstantEpoch());
+
+        const saml2p::StatusResponseType* statusResponse = dynamic_cast<const saml2p::StatusResponseType*>(&message);
+        if (statusResponse) {
+            policy.setInResponseTo(statusResponse->getInResponseTo());
+        }
 
         log.debug("extracting issuer from SAML 2.0 protocol message");
         const Issuer* issuer = samlRoot.getIssuer();

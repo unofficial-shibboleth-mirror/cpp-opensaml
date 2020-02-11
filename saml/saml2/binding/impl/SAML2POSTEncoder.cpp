@@ -26,8 +26,8 @@
 
 #include "internal.h"
 #include "exceptions.h"
-#include "binding/MessageEncoder.h"
 #include "signature/ContentReference.h"
+#include "saml2/binding/SAML2MessageEncoder.h"
 #include "saml2/core/Protocols.h"
 
 #include <fstream>
@@ -56,15 +56,11 @@ using boost::scoped_ptr;
 
 namespace opensaml {
     namespace saml2p {              
-        class SAML_DLLLOCAL SAML2POSTEncoder : public MessageEncoder
+        class SAML_DLLLOCAL SAML2POSTEncoder : public SAML2MessageEncoder
         {
         public:
             SAML2POSTEncoder(const DOMElement* e, bool simple=false);
             virtual ~SAML2POSTEncoder() {}
-
-            const XMLCh* getProtocolFamily() const {
-                return samlconstants::SAML20P_NS;
-            }
 
             long encode(
                 GenericResponse& genericResponse,
@@ -249,6 +245,9 @@ long SAML2POSTEncoder::encode(
         httpResponse->setResponseHeader("Expires", "01-Jan-1997 12:00:00 GMT");
         httpResponse->setResponseHeader("Cache-Control", "no-cache, no-store, must-revalidate, private");
         httpResponse->setResponseHeader("Pragma", "no-cache");
+        if (request) {
+            preserveCorrelationID(*httpResponse, *request, relayState);
+        }
     }
     long ret = genericResponse.sendResponse(s);
 

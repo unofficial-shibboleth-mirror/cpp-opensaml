@@ -27,8 +27,8 @@
 #include "internal.h"
 #include "exceptions.h"
 #include "binding/ArtifactMap.h"
-#include "binding/MessageEncoder.h"
 #include "saml2/binding/SAML2Artifact.h"
+#include "saml2/binding/SAML2MessageEncoder.h"
 #include "saml2/core/Protocols.h"
 #include "saml2/metadata/Metadata.h"
 #include "signature/ContentReference.h"
@@ -56,15 +56,11 @@ using boost::scoped_ptr;
 
 namespace opensaml {
     namespace saml2p {              
-        class SAML_DLLLOCAL SAML2ArtifactEncoder : public MessageEncoder
+        class SAML_DLLLOCAL SAML2ArtifactEncoder : public SAML2MessageEncoder
         {
         public:
             SAML2ArtifactEncoder(const DOMElement* e);
             virtual ~SAML2ArtifactEncoder() {}
-
-            const XMLCh* getProtocolFamily() const {
-                return samlconstants::SAML20P_NS;
-            }
 
             long encode(
                 GenericResponse& genericResponse,
@@ -159,7 +155,10 @@ long SAML2ArtifactEncoder::encode(
 
     StatusResponseType* response = nullptr;
     RequestAbstractType* request = dynamic_cast<RequestAbstractType*>(xmlObject);
-    if (!request) {
+    if (request) {
+        preserveCorrelationID(*httpResponse, *request, relayState);
+    }
+    else {
         response = dynamic_cast<StatusResponseType*>(xmlObject);
         if (!response)
             throw BindingException("XML content for SAML 2.0 HTTP-Artifact Encoder must be a SAML 2.0 protocol message.");

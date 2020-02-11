@@ -92,7 +92,7 @@ public:
             scoped_ptr<MessageDecoder> decoder(
                 SAMLConfig::getConfig().MessageDecoderManager.newPlugin(samlconstants::SAML20_BINDING_HTTP_POST, nullptr, false)
                 );
-            scoped_ptr<Response> response(dynamic_cast<Response*>(decoder->decode(relayState,*this,policy)));
+            scoped_ptr<Response> response(dynamic_cast<Response*>(decoder->decode(relayState, *this, this, policy)));
             
             // Test the results.
             TSM_ASSERT_EQUALS("RelayState was not the expected result.", relayState, "state");

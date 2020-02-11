@@ -93,7 +93,7 @@ public:
             scoped_ptr<MessageDecoder> decoder(
                 SAMLConfig::getConfig().MessageDecoderManager.newPlugin(samlconstants::SAML1_PROFILE_BROWSER_POST, nullptr, false)
                 );
-            scoped_ptr<Response> response(dynamic_cast<Response*>(decoder->decode(relayState,*this,policy)));
+            scoped_ptr<Response> response(dynamic_cast<Response*>(decoder->decode(relayState, *this, this, policy)));
             
             // Test the results.
             TSM_ASSERT_EQUALS("TARGET was not the expected result.", relayState, "state");
