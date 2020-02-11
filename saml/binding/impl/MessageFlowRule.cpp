@@ -78,7 +78,8 @@ MessageFlowRule::MessageFlowRule(const DOMElement* e)
 bool MessageFlowRule::evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const
 {
     Category& log=Category::getInstance(SAML_LOGCAT ".SecurityPolicyRule.MessageFlow");
-    log.debug("evaluating message flow policy (replay checking %s, expiration %lu)", m_checkReplay ? "on" : "off", m_expires);
+    log.debug("evaluating message flow policy (correlation %s, replay checking %s, expiration %lu)",
+        m_correlation ? "on" : "off", m_checkReplay ? "on" : "off", m_expires);
 
     time_t now = policy.getTime();
     time_t skew = XMLToolingConfig::getConfig().clock_skew_secs;
@@ -101,15 +102,17 @@ bool MessageFlowRule::evaluate(const XMLObject& message, const GenericRequest* r
 
     if (m_correlation) {
         if (policy.getCorrelationID() && *(policy.getCorrelationID())) {
-            if (!XMLString::equals(policy.getCorrelationID(), policy.getInResponseTo())) {
-                log.warn("Response correlation ID did not match request ID");
+            if (XMLString::equals(policy.getCorrelationID(), policy.getInResponseTo())) {
+                log.debug("request/response correlation validated");
+            }
+            else {
                 auto_ptr_char requestID(policy.getCorrelationID());
-                throw SecurityPolicyException("Rejecting non-correlated response to request ID ($1).",
-                    params(1, requestID.get()));
+                log.warn("response correlation ID did not match request ID (%s)", requestID.get());
+                throw SecurityPolicyException("Rejecting non-correlated response to request ID.");
             }
         }
         else if (policy.getInResponseTo() && *(policy.getInResponseTo())) {
-            log.warn("Response correlation failed due to lack of request ID to compare against");
+            log.warn("request/response correlation failed due to lack of request ID to compare against");
             throw SecurityPolicyException("Response correlation failed with lack of correlation ID");
         }
     }

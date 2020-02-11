@@ -109,13 +109,16 @@ bool BearerConfirmationRule::evaluate(const XMLObject& message, const GenericReq
 
                 if (m_correlation) {
                     if (policy.getCorrelationID() && *(policy.getCorrelationID())) {
-                        if (!XMLString::equals(policy.getCorrelationID(), data ? data->getInResponseTo() : nullptr)) {
-                            msg = "bearer confirmation failed with request correlation mismatch";
+                        if (XMLString::equals(policy.getCorrelationID(), data ? data->getInResponseTo() : nullptr)) {
+                            log.debug("request/response correlation validated");
+                        }
+                        else {
+                            msg = "bearer confirmation failed on lack of request/response correlation";
                             continue;
                         }
                     }
                     else if (data && data->getInResponseTo() && *(data->getInResponseTo())) {
-                        msg = "bearer confirmation issued in response to request failed with lack of correlation ID";
+                        msg = "bearer confirmation issued in response to request failed on lack of correlation ID";
                         continue;
                     }
                 }
