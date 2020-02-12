@@ -80,7 +80,7 @@ namespace opensaml {
         "</PolicyRule>";
 };
 
-ConditionsRule::ConditionsRule(const DOMElement* e, bool deprecationSupport) : m_doc(nullptr)
+ConditionsRule::ConditionsRule(const DOMElement* e, bool deprecationSupport) : SecurityPolicyRule(e), m_doc(nullptr)
 {
     Category& log=Category::getInstance(SAML_LOGCAT ".SecurityPolicyRule.Conditions");
 
@@ -109,6 +109,10 @@ ConditionsRule::ConditionsRule(const DOMElement* e, bool deprecationSupport) : m
 
 bool ConditionsRule::evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const
 {
+    if (!SecurityPolicyRule::evaluate(message, request, policy)) {
+        return false;
+    }
+
     const saml2::Assertion* a2=dynamic_cast<const saml2::Assertion*>(&message);
     if (a2) {
         const saml2::Conditions* conds = a2->getConditions();

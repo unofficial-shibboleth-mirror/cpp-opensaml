@@ -42,7 +42,12 @@ namespace opensaml {
         class SAML_DLLLOCAL BrowserSSORule : public opensaml::SecurityPolicyRule
         {
         public:
-            BrowserSSORule() {}
+            BrowserSSORule(const DOMElement* e) : SecurityPolicyRule(e) {
+                if (m_profiles.empty()) {
+                    m_profiles.insert(samlconstants::SAML1_PROFILE_BROWSER_POST);
+                    m_profiles.insert(samlconstants::SAML1_PROFILE_BROWSER_ARTIFACT);
+                }
+            }
             virtual ~BrowserSSORule() {}
 
             const char* getType() const {
@@ -52,9 +57,9 @@ namespace opensaml {
             bool evaluate(const XMLObject& message, const GenericRequest* request, opensaml::SecurityPolicy& policy) const;
         };
 
-        opensaml::SecurityPolicyRule* SAML_DLLLOCAL BrowserSSORuleFactory(const DOMElement* const &, bool)
+        opensaml::SecurityPolicyRule* SAML_DLLLOCAL BrowserSSORuleFactory(const DOMElement* const & e, bool)
         {
-            return new BrowserSSORule();
+            return new BrowserSSORule(e);
         }
 
         class SAML_DLLLOCAL _checkMethod : public unary_function<const SubjectStatement*,void>,
@@ -86,6 +91,10 @@ namespace opensaml {
 
 bool BrowserSSORule::evaluate(const XMLObject& message, const GenericRequest* request, opensaml::SecurityPolicy& policy) const
 {
+    if (!SecurityPolicyRule::evaluate(message, request, policy)) {
+        return false;
+    }
+
     const Assertion* a=dynamic_cast<const Assertion*>(&message);
     if (!a)
         return false;

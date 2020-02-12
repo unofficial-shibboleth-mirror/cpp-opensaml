@@ -122,7 +122,7 @@ namespace opensaml {
 };
 
 DelegationRestrictionRule::DelegationRestrictionRule(const DOMElement* e)
-    : m_match(MATCH_ANY), m_maxTime(XMLHelper::getAttrInt(e, 0, maxTimeSinceDelegation))
+    : SecurityPolicyRule(e), m_match(MATCH_ANY), m_maxTime(XMLHelper::getAttrInt(e, 0, maxTimeSinceDelegation))
 {
     if (e) {
         const XMLCh* m = e ? e->getAttributeNS(nullptr, match) : nullptr;
@@ -148,6 +148,10 @@ DelegationRestrictionRule::DelegationRestrictionRule(const DOMElement* e)
 
 bool DelegationRestrictionRule::evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const
 {
+    if (!SecurityPolicyRule::evaluate(message, request, policy)) {
+        return false;
+    }
+
     const DelegationRestrictionType* drt=dynamic_cast<const DelegationRestrictionType*>(&message);
     if (!drt)
         return false;

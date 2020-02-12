@@ -94,12 +94,17 @@ bool SimpleSigningRule::appendParameter(string& s, const char* data, const char*
     return true;
 }
 
-SimpleSigningRule::SimpleSigningRule(const DOMElement* e) : m_errorFatal(XMLHelper::getAttrBool(e, false, errorFatal))
+SimpleSigningRule::SimpleSigningRule(const DOMElement* e)
+    : SecurityPolicyRule(e), m_errorFatal(XMLHelper::getAttrBool(e, false, errorFatal))
 {
 }
 
 bool SimpleSigningRule::evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const
 {
+    if (!SecurityPolicyRule::evaluate(message, request, policy)) {
+        return false;
+    }
+
     Category& log=Category::getInstance(SAML_LOGCAT ".SecurityPolicyRule.SimpleSigning");
     
     if (!policy.getIssuerMetadata()) {

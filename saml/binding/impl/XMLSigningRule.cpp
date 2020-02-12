@@ -70,12 +70,17 @@ namespace opensaml {
     static const XMLCh errorFatal[] = UNICODE_LITERAL_10(e,r,r,o,r,F,a,t,a,l);
 };
 
-XMLSigningRule::XMLSigningRule(const DOMElement* e) : m_errorFatal(XMLHelper::getAttrBool(e, false, errorFatal))
+XMLSigningRule::XMLSigningRule(const DOMElement* e)
+    : SecurityPolicyRule(e), m_errorFatal(XMLHelper::getAttrBool(e, false, errorFatal))
 {
 }
 
 bool XMLSigningRule::evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const
 {
+    if (!SecurityPolicyRule::evaluate(message, request, policy)) {
+        return false;
+    }
+
     Category& log=Category::getInstance(SAML_LOGCAT ".SecurityPolicyRule.XMLSigning");
     
     if (!policy.getIssuerMetadata()) {

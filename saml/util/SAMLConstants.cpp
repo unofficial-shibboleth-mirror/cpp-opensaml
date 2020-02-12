@@ -289,6 +289,18 @@ const char samlconstants::SAML1_PROFILE_BROWSER_ARTIFACT[] = "urn:oasis:names:tc
 
 const char samlconstants::SAML1_PROFILE_BROWSER_POST[] = "urn:oasis:names:tc:SAML:1.0:profiles:browser-post";
 
+const char samlconstants::SAML20_PROFILE_SSO_BROWSER[] = "urn:oasis:names:tc:SAML:2.0:profiles:SSO:browser";
+
+const char samlconstants::SAML20_PROFILE_SSO_ECP[] = "urn:oasis:names:tc:SAML:2.0:profiles:SSO:ecp";
+
+const char samlconstants::SAML20_PROFILE_SSO_LOGOUT[] = "urn:oasis:names:tc:SAML:2.0:profiles:SSO:logout";
+
+const char samlconstants::SAML20_PROFILE_SSO_NAMEID_MGMT[] = "urn:oasis:names:tc:SAML:2.0:profiles:SSO:nameid-mgmt";
+
+const char samlconstants::SAML20_PROFILE_ARTIFACT[] = "urn:oasis:names:tc:SAML:2.0:profiles:artifact";
+
+const char samlconstants::SAML20_PROFILE_QUERY[] = "urn:oasis:names:tc:SAML:2.0:profiles:query";
+
 const char samlconstants::SAML20_BINDING_SOAP[] = "urn:oasis:names:tc:SAML:2.0:bindings:SOAP";
 
 const char samlconstants::SAML20_BINDING_PAOS[] = "urn:oasis:names:tc:SAML:2.0:bindings:PAOS";

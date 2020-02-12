@@ -73,15 +73,24 @@ namespace opensaml {
          * @param role              identifies the role (generally IdP or SP) of the policy peer
          * @param trustEngine       TrustEngine to authenticate policy peer
          * @param validate          true iff XML parsing should be done with validation
+         * @param profile           profile identifier
          */
         SecurityPolicy(
             const saml2md::MetadataProvider* metadataProvider=nullptr,
             const xmltooling::QName* role=nullptr,
             const xmltooling::TrustEngine* trustEngine=nullptr,
-            bool validate=true
+            bool validate=true,
+            const char* profile=nullptr
             );
 
         virtual ~SecurityPolicy();
+
+        /**
+         * Returns the profile identifier associated with the transaction.
+         *
+         * @return the profile identifier
+         */
+        const char* getProfile() const;
 
         /**
          * Returns the locked MetadataProvider supplied to the policy.
@@ -174,6 +183,13 @@ namespace opensaml {
          * @return  mutable array of rules
          */
         std::vector<const SecurityPolicyRule*>& getRules();
+
+        /**
+        * Sets the profile identifier associated with the transaction.
+        *
+        * @param id the profile identifier
+        */
+        void setProfile(const char* id);
 
         /**
          * Sets a locked MetadataProvider for the policy.
@@ -417,7 +433,7 @@ namespace opensaml {
 
     private:
         // information extracted from message
-        xmltooling::xstring m_messageID;
+        xmltooling::xstring m_messageID, m_correlationID, m_inResponseTo;
         time_t m_issueInstant;
         boost::scoped_ptr<saml2::Issuer> m_issuer;
         const saml2md::RoleDescriptor* m_issuerRole;
@@ -433,8 +449,8 @@ namespace opensaml {
         bool m_entityOnly;
 
         // contextual information
+        std::string m_profile;
         mutable time_t m_ts;
-        xmltooling::xstring m_correlationID, m_inResponseTo;
         std::vector<xmltooling::xstring> m_audiences;
     };
 

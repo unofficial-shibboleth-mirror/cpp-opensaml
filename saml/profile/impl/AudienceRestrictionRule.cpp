@@ -63,7 +63,7 @@ namespace opensaml {
     }
 };
 
-AudienceRestrictionRule::AudienceRestrictionRule(const DOMElement* e)
+AudienceRestrictionRule::AudienceRestrictionRule(const DOMElement* e) : SecurityPolicyRule(e)
 {
     e = e ? XMLHelper::getFirstChildElement(e, saml2::Audience::LOCAL_NAME) : nullptr;
     while (e) {
@@ -75,6 +75,10 @@ AudienceRestrictionRule::AudienceRestrictionRule(const DOMElement* e)
 
 bool AudienceRestrictionRule::evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const
 {
+    if (!SecurityPolicyRule::evaluate(message, request, policy)) {
+        return false;
+    }
+
     static bool (*equals_fn)(const XMLCh*, const XMLCh*) = &XMLString::equals;
 
     const saml2::AudienceRestriction* ac2=dynamic_cast<const saml2::AudienceRestriction*>(&message);

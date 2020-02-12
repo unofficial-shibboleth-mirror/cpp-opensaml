@@ -68,8 +68,8 @@ static const XMLCh checkReplay[] = UNICODE_LITERAL_11(c,h,e,c,k,R,e,p,l,a,y);
 static const XMLCh checkCorrelation[] = UNICODE_LITERAL_16(c,h,e,c,k,C,o,r,r,e,l,a,t,i,o,n);
 static const XMLCh expires[] = UNICODE_LITERAL_7(e,x,p,i,r,e,s);
 
-MessageFlowRule::MessageFlowRule(const DOMElement* e)
-    : m_checkReplay(XMLHelper::getAttrBool(e, true, checkReplay)),
+MessageFlowRule::MessageFlowRule(const DOMElement* e) : SecurityPolicyRule(e),
+    m_checkReplay(XMLHelper::getAttrBool(e, true, checkReplay)),
         m_correlation(XMLHelper::getAttrBool(e, false, checkCorrelation)),
         m_expires(XMLHelper::getAttrInt(e, XMLToolingConfig::getConfig().clock_skew_secs, expires))
 {
@@ -77,6 +77,10 @@ MessageFlowRule::MessageFlowRule(const DOMElement* e)
 
 bool MessageFlowRule::evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const
 {
+    if (!SecurityPolicyRule::evaluate(message, request, policy)) {
+        return false;
+    }
+
     Category& log=Category::getInstance(SAML_LOGCAT ".SecurityPolicyRule.MessageFlow");
     log.debug("evaluating message flow policy (correlation %s, replay checking %s, expiration %lu)",
         m_correlation ? "on" : "off", m_checkReplay ? "on" : "off", m_expires);

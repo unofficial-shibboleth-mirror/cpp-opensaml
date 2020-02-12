@@ -39,13 +39,18 @@ namespace opensaml {
     class SAML_DLLLOCAL NullSecurityRule : public SecurityPolicyRule
     {
     public:
-        NullSecurityRule(const DOMElement* e) : m_log(Category::getInstance(SAML_LOGCAT ".SecurityPolicyRule.NullSecurity")) {}
+        NullSecurityRule(const DOMElement* e)
+            : SecurityPolicyRule(e), m_log(Category::getInstance(SAML_LOGCAT ".SecurityPolicyRule.NullSecurity")) {}
         virtual ~NullSecurityRule() {}
         
         const char* getType() const {
             return NULLSECURITY_POLICY_RULE;
         }
         bool evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const {
+            if (!SecurityPolicyRule::evaluate(message, request, policy)) {
+                return false;
+            }
+
             m_log.warn("security enforced using NULL policy rule, be sure you know what you're doing");
             policy.setAuthenticated(true);
             return true;

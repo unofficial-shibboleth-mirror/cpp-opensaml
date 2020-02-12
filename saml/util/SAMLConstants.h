@@ -191,6 +191,24 @@ namespace samlconstants {
     /** SAML 1.x Browser POST profile ("urn:oasis:names:tc:SAML:1.0:profiles:browser-post") */
     extern SAML_API const char SAML1_PROFILE_BROWSER_POST[];
 
+    /** SAML 2.0 Browser SSO Profile ("urn:oasis:names:tc:SAML:2.0:profiles:SSO:browser") */
+    extern SAML_API const char SAML20_PROFILE_SSO_BROWSER[];
+
+    /** SAML 2.0 Enhanced Client/Proxy SSO Profile ("urn:oasis:names:tc:SAML:2.0:profiles:SSO:ecp") */
+    extern SAML_API const char SAML20_PROFILE_SSO_ECP[];
+
+    /** SAML 2.0 Logout Profile ("urn:oasis:names:tc:SAML:2.0:profiles:SSO:logout") */
+    extern SAML_API const char SAML20_PROFILE_SSO_LOGOUT[];
+
+    /** SAML 2.0 NameID Management Profile ("urn:oasis:names:tc:SAML:2.0:profiles:SSO:nameid-mgmt") */
+    extern SAML_API const char SAML20_PROFILE_SSO_NAMEID_MGMT[];
+
+    /** SAML 2.0 Artifact Resolution Profile ("urn:oasis:names:tc:SAML:2.0:profiles:artifact") */
+    extern SAML_API const char SAML20_PROFILE_ARTIFACT[];
+
+    /** SAML 2.0 Query Profile ("urn:oasis:names:tc:SAML:2.0:profiles:query") */
+    extern SAML_API const char SAML20_PROFILE_QUERY[];
+
     /** SAML 2.0 SOAP binding ("urn:oasis:names:tc:SAML:2.0:bindings:SOAP") */
     extern SAML_API const char SAML20_BINDING_SOAP[];
 

@@ -29,6 +29,14 @@
 
 #include <saml/base.h>
 
+#include <set>
+#include <string>
+
+#if defined (_MSC_VER)
+#pragma warning( push )
+#pragma warning( disable : 4251 )
+#endif
+
 namespace xmltooling {
     class XMLTOOL_API GenericRequest;
     class XMLTOOL_API XMLObject;
@@ -48,7 +56,12 @@ namespace opensaml {
     {
         MAKE_NONCOPYABLE(SecurityPolicyRule);
     protected:
-        SecurityPolicyRule();
+        /**
+         * Constructor.
+         *
+         * @param e root of configuration
+         */
+        SecurityPolicyRule(const xercesc::DOMElement* e=nullptr);
     public:
         virtual ~SecurityPolicyRule();
 
@@ -63,12 +76,15 @@ namespace opensaml {
          * Evaluates the rule against the given request and message.
          *
          * <p>An exception will be raised if the message is fatally invalid according to
-         * a policy rule.
+         * a policy rule.</p>
          *
          * <p>The return value is used to indicate whether a message was ignored or
          * successfully processed. A false value signals that the rule wasn't successful
          * because the rule was inapplicable to the message, but allows other rules to
-         * return an alternate result.
+         * return an alternate result.</p>
+         *
+         * <p>The base class version of this method will check for a non-empty profile set
+         * and return false iff the active profile from the policy is not in the set.</p>
          *
          * @param message   the incoming message
          * @param request   the protocol request
@@ -79,7 +95,10 @@ namespace opensaml {
             const xmltooling::XMLObject& message,
             const xmltooling::GenericRequest* request,
             SecurityPolicy& policy
-            ) const=0;
+            ) const;
+
+    protected:
+        std::set<std::string> m_profiles;
     };
 
     /**
@@ -170,5 +189,9 @@ namespace opensaml {
      */
     #define BEARER_POLICY_RULE "Bearer"
 };
+
+#if defined (_MSC_VER)
+#pragma warning( pop )
+#endif
 
 #endif /* __saml_secrule_h__ */

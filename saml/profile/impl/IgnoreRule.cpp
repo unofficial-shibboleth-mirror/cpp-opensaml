@@ -46,7 +46,8 @@ namespace opensaml {
     {
     public:
         IgnoreRule(const DOMElement* e)
-            : m_log(Category::getInstance(SAML_LOGCAT ".SecurityPolicyRule.Ignore")), m_qname(XMLHelper::getNodeValueAsQName(e)) {
+                : SecurityPolicyRule(e), m_log(Category::getInstance(SAML_LOGCAT ".SecurityPolicyRule.Ignore")),
+                    m_qname(XMLHelper::getNodeValueAsQName(e)) {
             if (!m_qname)
                 throw SecurityPolicyException("No schema type or element name supplied to Ignore rule.");
         }
@@ -56,6 +57,10 @@ namespace opensaml {
             return IGNORE_POLICY_RULE;
         }
         bool evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const {
+            if (!SecurityPolicyRule::evaluate(message, request, policy)) {
+                return false;
+            }
+            
             if (message.getSchemaType()) {
                 if (*m_qname != *(message.getSchemaType()))
                     return false;

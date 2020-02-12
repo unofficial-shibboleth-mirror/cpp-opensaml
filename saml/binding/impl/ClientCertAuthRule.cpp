@@ -68,16 +68,18 @@ namespace opensaml {
     static const XMLCh errorFatal[] = UNICODE_LITERAL_10(e,r,r,o,r,F,a,t,a,l);
 };
 
-ClientCertAuthRule::ClientCertAuthRule(const DOMElement* e) : m_errorFatal(XMLHelper::getAttrBool(e, false, errorFatal))
+ClientCertAuthRule::ClientCertAuthRule(const DOMElement* e)
+    : SecurityPolicyRule(e), m_errorFatal(XMLHelper::getAttrBool(e, false, errorFatal))
 {
 }
 
 bool ClientCertAuthRule::evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const
 {
-    Category& log=Category::getInstance(SAML_LOGCAT ".SecurityPolicyRule.ClientCertAuth");
-    
-    if (!request)
+    if (!request || !SecurityPolicyRule::evaluate(message, request, policy)) {
         return false;
+    }
+
+    Category& log=Category::getInstance(SAML_LOGCAT ".SecurityPolicyRule.ClientCertAuth");
     
     if (!policy.getIssuerMetadata()) {
         log.debug("ignoring message, no issuer metadata supplied");

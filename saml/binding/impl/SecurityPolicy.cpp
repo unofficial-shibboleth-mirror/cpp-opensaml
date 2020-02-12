@@ -31,6 +31,7 @@
 #include "saml2/core/Assertions.h"
 
 #include <boost/bind.hpp>
+#include <boost/algorithm/string.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 
 using namespace opensaml::saml2md;
@@ -58,6 +59,8 @@ namespace opensaml {
         SAML_DLLLOCAL PluginManager<SecurityPolicyRule,string,const DOMElement*>::Factory BearerConfirmationRuleFactory;
         SAML_DLLLOCAL PluginManager<SecurityPolicyRule,string,const DOMElement*>::Factory DelegationRestrictionRuleFactory;
     }
+
+    static const XMLCh profiles[] =    UNICODE_LITERAL_8(p,r,o,f,i,l,e,s);
 };
 
 void SAML_API opensaml::registerSecurityPolicyRules()
@@ -76,19 +79,30 @@ void SAML_API opensaml::registerSecurityPolicyRules()
     conf.SecurityPolicyRuleManager.registerFactory(DELEGATION_POLICY_RULE, saml2::DelegationRestrictionRuleFactory);
 }
 
-SecurityPolicyRule::SecurityPolicyRule()
+SecurityPolicyRule::SecurityPolicyRule(const DOMElement* e)
 {
+    string profiles(XMLHelper::getAttrString(e, nullptr, profiles));
+    trim(profiles);
+    split(m_profiles, profiles, is_space(), algorithm::token_compress_on);
 }
 
 SecurityPolicyRule::~SecurityPolicyRule()
 {
 }
 
+bool SecurityPolicyRule::evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const
+{
+    const char* profile = policy.getProfile();
+    return !profile || m_profiles.empty() || m_profiles.find(profile) != m_profiles.end();
+}
+
+
 SecurityPolicy::SecurityPolicy(
     const saml2md::MetadataProvider* metadataProvider,
     const xmltooling::QName* role,
     const xmltooling::TrustEngine* trustEngine,
-    bool validate
+    bool validate,
+    const char* profile
     ) : m_metadataCriteria(nullptr),
         m_issueInstant(0),
         m_issuerRole(nullptr),
@@ -98,6 +112,7 @@ SecurityPolicy::SecurityPolicy(
         m_trust(trustEngine),
         m_validate(validate),
         m_entityOnly(true),
+        m_profile(profile ? profile : ""),
         m_ts(0)
 {
 }
@@ -105,6 +120,11 @@ SecurityPolicy::SecurityPolicy(
 SecurityPolicy::~SecurityPolicy()
 {
     delete m_metadataCriteria;
+}
+
+const char* SecurityPolicy::getProfile() const
+{
+    return m_profile.c_str();
 }
 
 const MetadataProvider* SecurityPolicy::getMetadataProvider() const
@@ -171,6 +191,11 @@ const XMLCh* SecurityPolicy::getInResponseTo() const
 vector<const SecurityPolicyRule*>& SecurityPolicy::getRules()
 {
     return m_rules;
+}
+
+void SecurityPolicy::setProfile(const char* id)
+{
+    m_profile = id ? id : "";
 }
 
 void SecurityPolicy::setMetadataProvider(const MetadataProvider* metadata)

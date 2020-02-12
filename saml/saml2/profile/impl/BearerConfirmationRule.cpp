@@ -70,16 +70,24 @@ namespace opensaml {
     };
 };
 
-BearerConfirmationRule::BearerConfirmationRule(const DOMElement* e)
-    : m_validity(XMLHelper::getAttrBool(e, true, checkValidity)),
-        m_recipient(XMLHelper::getAttrBool(e, true, checkRecipient)),
-        m_correlation(XMLHelper::getAttrBool(e, true, checkCorrelation)),
-        m_fatal(XMLHelper::getAttrBool(e, true, missingFatal))
+BearerConfirmationRule::BearerConfirmationRule(const DOMElement* e) : SecurityPolicyRule(e),
+    m_validity(XMLHelper::getAttrBool(e, true, checkValidity)),
+    m_recipient(XMLHelper::getAttrBool(e, true, checkRecipient)),
+    m_correlation(XMLHelper::getAttrBool(e, true, checkCorrelation)),
+    m_fatal(XMLHelper::getAttrBool(e, true, missingFatal))
 {
+    if (m_profiles.empty()) {
+        m_profiles.insert(samlconstants::SAML20_PROFILE_SSO_BROWSER);
+        m_profiles.insert(samlconstants::SAML20_PROFILE_SSO_ECP);
+    }
 }
 
 bool BearerConfirmationRule::evaluate(const XMLObject& message, const GenericRequest* request, opensaml::SecurityPolicy& policy) const
 {
+    if (!SecurityPolicyRule::evaluate(message, request, policy)) {
+        return false;
+    }
+
     const Assertion* a=dynamic_cast<const Assertion*>(&message);
     if (!a)
         return false;
