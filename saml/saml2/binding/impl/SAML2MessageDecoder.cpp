@@ -38,6 +38,9 @@
 #include <xmltooling/io/HTTPResponse.h>
 #include <xmltooling/util/URLEncoder.h>
 
+#include <boost/lexical_cast.hpp>
+#include <boost/algorithm/string.hpp>
+
 using namespace opensaml::saml2md;
 using namespace opensaml::saml2p;
 using namespace opensaml::saml2;
@@ -66,6 +69,31 @@ void SAML2MessageDecoder::extractCorrelationID(
     Category& log = Category::getInstance(SAML_LOGCAT ".MessageDecoder.SAML2");
 
     if (!relayState.empty()) {
+
+        if (response) {
+            // CLean existing cookies.
+            int maxCookies = 20, purgedCookies = 0;
+
+            // Walk the list of cookies backwards by name.
+            const map<string,string>& cookies = request.getCookies();
+            for (map<string,string>::const_reverse_iterator i = cookies.rbegin(); i != cookies.rend(); ++i) {
+                if (boost::starts_with(i->first, "_opensaml_req_")) {
+                    if (maxCookies > 0) {
+                        // Keep it, but count it against the limit.
+                        --maxCookies;
+                    }
+                    else {
+                        // We're over the limit, so everything here and older gets cleaned up.
+                        response->setCookie(i->first.c_str(), nullptr, 0, HTTPResponse::SAMESITE_NONE);
+                        ++purgedCookies;
+                    }
+                }
+            }
+
+            if (purgedCookies > 0)
+                log.debug(string("purged ") + boost::lexical_cast<string>(purgedCookies) + " stale request correlation cookie(s) from client");
+        }
+
         string cookie_name = string("_opensaml_req_").append(
             XMLToolingConfig::getConfig().getURLEncoder()->encode(relayState.c_str()));
         const char* cookie = request.getCookie(cookie_name.c_str());
