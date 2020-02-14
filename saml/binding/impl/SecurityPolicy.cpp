@@ -83,7 +83,9 @@ SecurityPolicyRule::SecurityPolicyRule(const DOMElement* e)
 {
     string profiles(XMLHelper::getAttrString(e, nullptr, profiles));
     trim(profiles);
-    split(m_profiles, profiles, is_space(), algorithm::token_compress_on);
+    if (!profiles.empty()) {
+        split(m_profiles, profiles, is_space(), algorithm::token_compress_on);
+    }
 }
 
 SecurityPolicyRule::~SecurityPolicyRule()
