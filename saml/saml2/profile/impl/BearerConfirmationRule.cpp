@@ -55,7 +55,8 @@ namespace opensaml {
             bool evaluate(const XMLObject& message, const GenericRequest* request, opensaml::SecurityPolicy& policy) const;
         
         private:
-            bool m_validity, m_recipient, m_correlation, m_fatal;
+            logging::Category& m_log;
+            bool m_validity, m_recipient, m_correlation, m_blockUnsolicited, m_fatal;
         };
 
         opensaml::SecurityPolicyRule* SAML_DLLLOCAL BearerConfirmationRuleFactory(const DOMElement* const & e, bool)
@@ -63,6 +64,7 @@ namespace opensaml {
             return new BearerConfirmationRule(e);
         }
         
+        static const XMLCh blockUnsolicited[] = UNICODE_LITERAL_16(b,l,o,c,k,U,n,s,o,l,i,c,i,t,e,d);
         static const XMLCh checkValidity[] =    UNICODE_LITERAL_13(c,h,e,c,k,V,a,l,i,d,i,t,y);
         static const XMLCh checkRecipient[] =   UNICODE_LITERAL_14(c,h,e,c,k,R,e,c,i,p,i,e,n,t);
         static const XMLCh checkCorrelation[] = UNICODE_LITERAL_16(c,h,e,c,k,C,o,r,r,e,l,a,t,i,o,n);
@@ -71,14 +73,21 @@ namespace opensaml {
 };
 
 BearerConfirmationRule::BearerConfirmationRule(const DOMElement* e) : SecurityPolicyRule(e),
+    m_log(logging::Category::getInstance(SAML_LOGCAT ".SecurityPolicyRule.BearerConfirmation")),
     m_validity(XMLHelper::getAttrBool(e, true, checkValidity)),
     m_recipient(XMLHelper::getAttrBool(e, true, checkRecipient)),
-    m_correlation(XMLHelper::getAttrBool(e, true, checkCorrelation)),
+    m_correlation(XMLHelper::getAttrBool(e, false, checkCorrelation)),
+    m_blockUnsolicited(XMLHelper::getAttrBool(e, false, blockUnsolicited)),
     m_fatal(XMLHelper::getAttrBool(e, true, missingFatal))
 {
     if (m_profiles.empty()) {
         m_profiles.insert(samlconstants::SAML20_PROFILE_SSO_BROWSER);
         m_profiles.insert(samlconstants::SAML20_PROFILE_SSO_ECP);
+    }
+
+    if (m_blockUnsolicited && !m_correlation) {
+        m_correlation = true;
+        m_log.info("enabling request/response correlation checking to block unsolicited responses");
     }
 }
 
@@ -91,8 +100,6 @@ bool BearerConfirmationRule::evaluate(const XMLObject& message, const GenericReq
     const Assertion* a=dynamic_cast<const Assertion*>(&message);
     if (!a)
         return false;
-
-    logging::Category& log = logging::Category::getInstance(SAML_LOGCAT ".SecurityPolicyRule.BearerConfirmation");
 
     const char* msg="assertion is missing bearer SubjectConfirmation";
     const Subject* subject = a->getSubject();
@@ -118,7 +125,7 @@ bool BearerConfirmationRule::evaluate(const XMLObject& message, const GenericReq
                 if (m_correlation) {
                     if (policy.getCorrelationID() && *(policy.getCorrelationID())) {
                         if (XMLString::equals(policy.getCorrelationID(), data ? data->getInResponseTo() : nullptr)) {
-                            log.debug("request/response correlation validated");
+                            m_log.debug("request/response correlation validated");
                         }
                         else {
                             msg = "bearer confirmation failed on lack of request/response correlation";
@@ -129,9 +136,13 @@ bool BearerConfirmationRule::evaluate(const XMLObject& message, const GenericReq
                         msg = "bearer confirmation issued in response to request failed on lack of correlation ID";
                         continue;
                     }
+                    else {
+                        msg = "unsolicited bearer confirmation rejected by policy";
+                        continue;
+                    }
                 }
                 else {
-                    log.debug("ignoring InResponseTo, correlation checking is disabled");
+                    m_log.debug("ignoring InResponseTo, correlation checking is disabled");
                 }
 
                 if (m_validity) {
@@ -153,13 +164,13 @@ bool BearerConfirmationRule::evaluate(const XMLObject& message, const GenericReq
                 SAML2AssertionPolicy* saml2policy = dynamic_cast<SAML2AssertionPolicy*>(&policy);
                 if (saml2policy)
                     saml2policy->setSubjectConfirmation(*sc);
-                log.debug("assertion satisfied bearer confirmation requirements");
+                m_log.debug("assertion satisfied bearer confirmation requirements");
                 return true;
             }
         }
     }
 
-    log.warn(msg ? msg : "no error message");
+    m_log.warn(msg ? msg : "no error message");
     if (m_fatal)
         throw SecurityPolicyException("Unable to locate satisfiable bearer SubjectConfirmation in assertion.");
     return false;
