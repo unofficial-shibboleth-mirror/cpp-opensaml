@@ -53,8 +53,8 @@ namespace opensaml {
         bool evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const;
 
     private:
-        bool m_checkReplay;
-        bool m_correlation;
+        logging::Category& m_log;
+        bool m_checkReplay, m_correlation, m_blockUnsolicited;
         time_t m_expires;
     };
 
@@ -62,17 +62,24 @@ namespace opensaml {
     {
         return new MessageFlowRule(e);
     }
+
+    static const XMLCh blockUnsolicited[] = UNICODE_LITERAL_16(b,l,o,c,k,U,n,s,o,l,i,c,i,t,e,d);
+    static const XMLCh checkReplay[] =      UNICODE_LITERAL_11(c,h,e,c,k,R,e,p,l,a,y);
+    static const XMLCh checkCorrelation[] = UNICODE_LITERAL_16(c,h,e,c,k,C,o,r,r,e,l,a,t,i,o,n);
+    static const XMLCh expires[] =          UNICODE_LITERAL_7(e,x,p,i,r,e,s);
 };
 
-static const XMLCh checkReplay[] = UNICODE_LITERAL_11(c,h,e,c,k,R,e,p,l,a,y);
-static const XMLCh checkCorrelation[] = UNICODE_LITERAL_16(c,h,e,c,k,C,o,r,r,e,l,a,t,i,o,n);
-static const XMLCh expires[] = UNICODE_LITERAL_7(e,x,p,i,r,e,s);
-
 MessageFlowRule::MessageFlowRule(const DOMElement* e) : SecurityPolicyRule(e),
-    m_checkReplay(XMLHelper::getAttrBool(e, true, checkReplay)),
+    m_log(logging::Category::getInstance(SAML_LOGCAT ".SecurityPolicyRule.MessageFlow")),
+        m_checkReplay(XMLHelper::getAttrBool(e, true, checkReplay)),
         m_correlation(XMLHelper::getAttrBool(e, false, checkCorrelation)),
+        m_blockUnsolicited(XMLHelper::getAttrBool(e, false, blockUnsolicited)),
         m_expires(XMLHelper::getAttrInt(e, XMLToolingConfig::getConfig().clock_skew_secs, expires))
 {
+    if (m_blockUnsolicited && !m_correlation) {
+        m_correlation = true;
+        m_log.info("enabling request/response correlation checking to block unsolicited responses");
+    }
 }
 
 bool MessageFlowRule::evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const
@@ -116,8 +123,12 @@ bool MessageFlowRule::evaluate(const XMLObject& message, const GenericRequest* r
             }
         }
         else if (policy.getInResponseTo() && *(policy.getInResponseTo())) {
-            log.warn("request/response correlation failed due to lack of request ID to compare against");
+            log.warn("request/response correlation failed due to lack of request ID to compare");
             throw SecurityPolicyException("Response correlation failed with lack of correlation ID");
+        }
+        else if (blockUnsolicited) {
+            log.warn("unsolicited response rejected by policy");
+            throw SecurityPolicyException("Unsolicited response rejected by policy");
         }
     }
     else {

@@ -136,7 +136,7 @@ bool BearerConfirmationRule::evaluate(const XMLObject& message, const GenericReq
                         msg = "bearer confirmation issued in response to request failed on lack of correlation ID";
                         continue;
                     }
-                    else {
+                    else if (blockUnsolicited) {
                         msg = "unsolicited bearer confirmation rejected by policy";
                         continue;
                     }
