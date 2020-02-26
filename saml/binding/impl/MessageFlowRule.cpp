@@ -124,11 +124,14 @@ bool MessageFlowRule::evaluate(const XMLObject& message, const GenericRequest* r
         }
         else if (policy.getInResponseTo() && *(policy.getInResponseTo())) {
             log.warn("request/response correlation failed due to lack of request ID to compare");
-            throw SecurityPolicyException("Response correlation failed with lack of correlation ID");
+            throw SecurityPolicyException("Response correlation failed with lack of correlation ID.");
         }
         else if (m_blockUnsolicited) {
             log.warn("unsolicited response rejected by policy");
-            throw SecurityPolicyException("Unsolicited response rejected by policy");
+            throw SecurityPolicyException("Unsolicited response rejected by policy.");
+        }
+        else {
+            log.debug("unsolicited response accepted");
         }
     }
     else {

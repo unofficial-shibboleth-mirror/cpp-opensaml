@@ -140,6 +140,9 @@ bool BearerConfirmationRule::evaluate(const XMLObject& message, const GenericReq
                         msg = "unsolicited bearer confirmation rejected by policy";
                         continue;
                     }
+                    else {
+                        m_log.debug("unsolicited response accepted");
+                    }
                 }
                 else {
                     m_log.debug("ignoring InResponseTo, correlation checking is disabled");
