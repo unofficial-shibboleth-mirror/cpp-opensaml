@@ -108,9 +108,6 @@ soap11::Envelope* SOAPClient::receive()
             // Set flag based on peer identity.
             m_policy.setAuthenticated(true);
         }
-
-        // Run policy against SOAP layer.
-        m_policy.evaluate(*env);
     }
     return env.release();
 }
