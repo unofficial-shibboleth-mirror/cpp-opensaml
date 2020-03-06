@@ -60,7 +60,7 @@ namespace opensaml {
         SAML_DLLLOCAL PluginManager<SecurityPolicyRule,string,const DOMElement*>::Factory DelegationRestrictionRuleFactory;
     }
 
-    static const XMLCh profiles[] =    UNICODE_LITERAL_8(p,r,o,f,i,l,e,s);
+    static const XMLCh _profiles[] =    UNICODE_LITERAL_8(p,r,o,f,i,l,e,s);
 };
 
 void SAML_API opensaml::registerSecurityPolicyRules()
@@ -81,7 +81,7 @@ void SAML_API opensaml::registerSecurityPolicyRules()
 
 SecurityPolicyRule::SecurityPolicyRule(const DOMElement* e)
 {
-    string profiles(XMLHelper::getAttrString(e, nullptr, profiles));
+    string profiles(XMLHelper::getAttrString(e, nullptr, _profiles));
     trim(profiles);
     if (!profiles.empty()) {
         split(m_profiles, profiles, is_space(), algorithm::token_compress_on);
@@ -92,7 +92,7 @@ SecurityPolicyRule::~SecurityPolicyRule()
 {
 }
 
-bool SecurityPolicyRule::evaluate(const XMLObject& message, const GenericRequest* request, SecurityPolicy& policy) const
+bool SecurityPolicyRule::evaluate(const XMLObject&, const GenericRequest*, SecurityPolicy& policy) const
 {
     const char* profile = policy.getProfile();
     return !profile || m_profiles.empty() || m_profiles.find(profile) != m_profiles.end();
