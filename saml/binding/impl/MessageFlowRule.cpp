@@ -131,7 +131,7 @@ bool MessageFlowRule::evaluate(const XMLObject& message, const GenericRequest* r
             throw SecurityPolicyException("Unsolicited response rejected by policy.");
         }
         else {
-            log.debug("unsolicited response accepted");
+            log.debug("unsolicited message accepted");
         }
     }
     else {
