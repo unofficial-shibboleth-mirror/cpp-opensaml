@@ -35,6 +35,8 @@
 #include <boost/iterator/indirect_iterator.hpp>
 #include <xmltooling/logging.h>
 
+#include <xercesc/util/regx/RegularExpression.hpp>
+
 using namespace opensaml::saml2;
 using namespace opensaml::saml2md;
 using namespace xmltooling::logging;
@@ -58,10 +60,14 @@ namespace opensaml {
         private:
             void filterEntity(EntityDescriptor* entity) const;
             void filterGroup(EntitiesDescriptor* entities) const;
+            EntityAttributes* getEntityAttributes(EntityDescriptor* entity) const;
 
+            Category& m_log;
             vector< boost::shared_ptr<Attribute> > m_attributes;
             typedef multimap<xstring,const Attribute*> applymap_t;
+            typedef map<boost::shared_ptr<RegularExpression>,vector<const Attribute*>> regexmap_t;
             applymap_t m_applyMap;
+            regexmap_t m_regexMap;
         };
 
         MetadataFilter* SAML_DLLLOCAL EntityAttributesMetadataFilterFactory(const DOMElement* const & e, bool deprecationSupport)
@@ -69,13 +75,15 @@ namespace opensaml {
             return new EntityAttributesMetadataFilter(e);
         }
 
-        static const XMLCh Entity[] =   UNICODE_LITERAL_6(E,n,t,i,t,y);
+        static const XMLCh Entity[] =       UNICODE_LITERAL_6(E,n,t,i,t,y);
+        static const XMLCh EntityRegex[] =  UNICODE_LITERAL_11(E,n,t,i,t,y,R,e,g,e,x);
 
     };
 };
 
 
 EntityAttributesMetadataFilter::EntityAttributesMetadataFilter(const DOMElement* e)
+    : m_log(Category::getInstance(SAML_LOGCAT".MetadataFilter.EntityAttributes"))
 {
     // Contains ordered set of Attribute and Entity elements.
     // We track each Attribute we find, and then consume an Entity by adding.
@@ -91,6 +99,22 @@ EntityAttributesMetadataFilter::EntityAttributesMetadataFilter(const DOMElement*
             if (eid && *eid) {
                 for (vector< boost::shared_ptr<Attribute> >::const_iterator a = m_attributes.begin(); a != m_attributes.end(); ++a)
                     m_applyMap.insert(applymap_t::value_type(eid, a->get()));
+            }
+        }
+        else if (XMLString::equals(child->getLocalName(), EntityRegex)) {
+            const XMLCh* exp = XMLHelper::getTextContent(child);
+            if (exp && *exp) {
+                boost::shared_ptr<RegularExpression> regexp;
+                try {
+                    regexp.reset(new RegularExpression(exp));
+                    vector<const Attribute*>& tags = m_regexMap[regexp];
+                    for (vector< boost::shared_ptr<Attribute> >::const_iterator a = m_attributes.begin(); a != m_attributes.end(); ++a)
+                        tags.push_back(a->get());
+                }
+                catch (XMLException& ex) {
+                    auto_ptr_char msg(ex.getMessage());
+                    m_log.error(msg.get());
+                }
             }
         }
         child = XMLHelper::getNextSiblingElement(child);
@@ -125,30 +149,56 @@ void EntityAttributesMetadataFilter::filterGroup(EntitiesDescriptor* entities) c
 
 void EntityAttributesMetadataFilter::filterEntity(EntityDescriptor* entity) const
 {
-    if (entity->getEntityID()) {
-        pair<applymap_t::const_iterator,applymap_t::const_iterator> tags = m_applyMap.equal_range(entity->getEntityID());
-        if (tags.first != tags.second) {
-            Extensions* exts = entity->getExtensions();
-            if (!exts) {
-                entity->setExtensions(ExtensionsBuilder::buildExtensions());
-                exts = entity->getExtensions();
-            }
-            EntityAttributes* wrapper = nullptr;
-            const vector<XMLObject*>& children = const_cast<const Extensions*>(exts)->getUnknownXMLObjects();
-            XMLObject* xo = find_if(children, ll_dynamic_cast<EntityAttributes*>(_1) != ((EntityAttributes*)nullptr));
-            if (xo) {
-                wrapper = dynamic_cast<EntityAttributes*>(xo);
-            }
-            else {
-                wrapper = EntityAttributesBuilder::buildEntityAttributes();
-                exts->getUnknownXMLObjects().push_back(wrapper);
-            }
-            VectorOf(Attribute) attrs = wrapper->getAttributes();
-            for (; tags.first != tags.second; ++tags.first) {
-                auto_ptr<Attribute> np(tags.first->second->cloneAttribute());
-                attrs.push_back(np.get());
-                np.release();
-            }
+    if (!entity->getEntityID())
+        return;
+
+    pair<applymap_t::const_iterator,applymap_t::const_iterator> tags = m_applyMap.equal_range(entity->getEntityID());
+    if (tags.first != tags.second) {
+        EntityAttributes* wrapper = getEntityAttributes(entity);
+        VectorOf(Attribute) attrs = wrapper->getAttributes();
+        for (; tags.first != tags.second; ++tags.first) {
+            auto_ptr<Attribute> np(tags.first->second->cloneAttribute());
+            attrs.push_back(np.get());
+            np.release();
         }
     }
+
+    for (regexmap_t::const_iterator i = m_regexMap.begin(); i != m_regexMap.end(); ++i) {
+        try {
+            if (i->first->matches(entity->getEntityID())) {
+                EntityAttributes* wrapper = getEntityAttributes(entity);
+                VectorOf(Attribute) attrs = wrapper->getAttributes();
+                for (vector<const Attribute*>::const_iterator a = i->second.begin(); a != i->second.end(); ++a) {
+                    auto_ptr<Attribute> np((*a)->cloneAttribute());
+                    attrs.push_back(np.get());
+                    np.release();
+                }
+            }
+        }
+        catch (const XMLException& ex) {
+            auto_ptr_char msg(ex.getMessage());
+            m_log.error(msg.get());
+        }
+    }
+}
+
+EntityAttributes* EntityAttributesMetadataFilter::getEntityAttributes(EntityDescriptor* entity) const
+{
+    Extensions* exts = entity->getExtensions();
+    if (!exts) {
+        entity->setExtensions(ExtensionsBuilder::buildExtensions());
+        exts = entity->getExtensions();
+    }
+    EntityAttributes* wrapper = nullptr;
+    const vector<XMLObject*>& children = const_cast<const Extensions*>(exts)->getUnknownXMLObjects();
+    XMLObject* xo = find_if(children, ll_dynamic_cast<EntityAttributes*>(_1) != ((EntityAttributes*)nullptr));
+    if (xo) {
+        wrapper = dynamic_cast<EntityAttributes*>(xo);
+    }
+    else {
+        wrapper = EntityAttributesBuilder::buildEntityAttributes();
+        exts->getUnknownXMLObjects().push_back(wrapper);
+    }
+
+    return wrapper;
 }
