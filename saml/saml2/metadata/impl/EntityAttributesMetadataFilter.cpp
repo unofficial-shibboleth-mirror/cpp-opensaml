@@ -65,12 +65,12 @@ namespace opensaml {
             Category& m_log;
             vector< boost::shared_ptr<Attribute> > m_attributes;
             typedef multimap<xstring,const Attribute*> applymap_t;
-            typedef map<boost::shared_ptr<RegularExpression>,vector<const Attribute*>> regexmap_t;
+            typedef map< boost::shared_ptr<RegularExpression>,vector<const Attribute*> > regexmap_t;
             applymap_t m_applyMap;
             regexmap_t m_regexMap;
         };
 
-        MetadataFilter* SAML_DLLLOCAL EntityAttributesMetadataFilterFactory(const DOMElement* const & e, bool deprecationSupport)
+        MetadataFilter* SAML_DLLLOCAL EntityAttributesMetadataFilterFactory(const DOMElement* const & e, bool)
         {
             return new EntityAttributesMetadataFilter(e);
         }
@@ -121,7 +121,7 @@ EntityAttributesMetadataFilter::EntityAttributesMetadataFilter(const DOMElement*
     }
 }
 
-void EntityAttributesMetadataFilter::doFilter(const MetadataFilterContext* ctx, XMLObject& xmlObject) const
+void EntityAttributesMetadataFilter::doFilter(const MetadataFilterContext*, XMLObject& xmlObject) const
 {
     EntitiesDescriptor* group = dynamic_cast<EntitiesDescriptor*>(&xmlObject);
     if (group) {
