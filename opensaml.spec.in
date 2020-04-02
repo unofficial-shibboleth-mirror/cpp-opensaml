@@ -92,7 +92,7 @@ This package includes XML schemas and related files.
 %setup -q
 
 %build
-i%if 0%{?rhel} == 6 || 0%{?rhel} == 7 || 0%{?amzn} >= 1
+%if 0%{?rhel} == 6 || 0%{?rhel} == 7 || 0%{?amzn} >= 1
 %configure %{?saml_options} PKG_CONFIG_PATH=/opt/shibboleth/%{_lib}/pkgconfig
 %else
 %configure %{?saml_options}
