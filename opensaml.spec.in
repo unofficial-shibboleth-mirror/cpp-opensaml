@@ -45,7 +45,7 @@ that support the SAML 1.0, 1.1, and 2.0 specifications.
 
 This package contains the utility programs.
 
-%package -n libsaml10
+%package -n libsaml11
 Summary:    OpenSAML SAML library
 Group:      Development/Libraries/C and C++
 Provides:   @PACKAGE_NAME@ = %{version}-%{release}
