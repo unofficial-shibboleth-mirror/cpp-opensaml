@@ -77,7 +77,7 @@ AX_PKG_CHECK_MODULES([xerces],,[xerces-c >= 3.2])
 
 AX_PKG_CHECK_MODULES([xmlsec],,[xml-security-c >= 2])
 
-AX_PKG_CHECK_MODULES([xmltooling],,[xmltooling >= 3])
+AX_PKG_CHECK_MODULES([xmltooling],,[xmltooling >= 3.1])
 PKG_CHECK_VAR([DX_INCLUDE], [xmltooling], [includedir])
 
 # Check for unit test support
