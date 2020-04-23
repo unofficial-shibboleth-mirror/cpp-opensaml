@@ -33,9 +33,18 @@ class SAML2PolicyTest : public CxxTest::TestSuite {
 
 public:
     void setUp() {
+
+        auto_ptr_XMLCh lit1("PolicyRule");
+        auto_ptr_XMLCh lit2("blockUnsolicited");
+        DOMDocument* rule_config = XMLToolingConfig::getConfig().getParser().newDocument();
+        XercesJanitor<DOMDocument> janitor2(rule_config);
+        rule_config->appendChild(rule_config->createElementNS(nullptr,lit1.get()));
+        rule_config->getDocumentElement()->setAttributeNS(nullptr,lit2.get(),xmlconstants::XML_TRUE);
+
         m_rules.push_back(SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(CONDITIONS_POLICY_RULE, nullptr, false));
-        m_rules.push_back(SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(BEARER_POLICY_RULE, nullptr, false));
+        m_rules.push_back(SAMLConfig::getConfig().SecurityPolicyRuleManager.newPlugin(BEARER_POLICY_RULE, rule_config->getDocumentElement(), false));
         m_policy.reset(new SecurityPolicy());
+        m_policy->setProfile(samlconstants::SAML20_PROFILE_SSO_BROWSER);
         m_policy->getRules().assign(m_rules.begin(), m_rules.end());
     }
 
