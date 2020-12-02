@@ -10,7 +10,7 @@ Source0:	%{name}-%{version}.tar.bz2
 BuildRoot:	%{_tmppath}/%{name}-%{version}-root
 BuildRequires:  libxerces-c-devel >= 3.2
 BuildRequires:  libxml-security-c-devel >= 2.0.0
-BuildRequires:  libxmltooling-devel >= 3.1.0
+BuildRequires:  libxmltooling-devel >= 3.2.0
 %{?_with_log4cpp:BuildRequires: liblog4cpp-devel >= 1.0}
 %{!?_with_log4cpp:BuildRequires: liblog4shib-devel >= 1.0.4}
 BuildRequires: gcc-c++, pkgconfig, boost-devel >= 1.32.0
@@ -45,13 +45,13 @@ that support the SAML 1.0, 1.1, and 2.0 specifications.
 
 This package contains the utility programs.
 
-%package -n libsaml11
+%package -n libsaml12
 Summary:    OpenSAML SAML library
 Group:      Development/Libraries/C and C++
 Provides:   @PACKAGE_NAME@ = %{version}-%{release}
 Obsoletes:  @PACKAGE_NAME@ < %{version}-%{release}
 
-%description -n libsaml11
+%description -n libsaml12
 OpenSAML is an open source implementation of the OASIS Security Assertion
 Markup Language Specification. It contains a set of open source C++ classes
 that support the SAML 1.0, 1.1, and 2.0 specifications.
@@ -61,12 +61,12 @@ This package contains just the shared library.
 %package -n libsaml-devel
 Summary:	OpenSAML development Headers
 Group:		Development/Libraries/C and C++
-Requires:	libsaml11 = %{version}-%{release}
+Requires:	libsaml12 = %{version}-%{release}
 Provides:	@PACKAGE_NAME@-devel = %{version}-%{release}
 Obsoletes:	@PACKAGE_NAME@-devel < %{version}-%{release}
 Requires: libxerces-c-devel >= 3.2
 Requires: libxml-security-c-devel >= 2.0.0
-Requires: libxmltooling-devel >= 3.1.0
+Requires: libxmltooling-devel >= 3.2.0
 %{?_with_log4cpp:Requires: liblog4cpp-devel >= 1.0}
 %{!?_with_log4cpp:Requires: liblog4shib-devel >= 1.0.4}
 
@@ -110,15 +110,15 @@ This package includes XML schemas and related files.
 %clean
 [ "$RPM_BUILD_ROOT" != "/" ] && %{__rm} -rf $RPM_BUILD_ROOT
 
-%post -n libsaml11 -p /sbin/ldconfig
+%post -n libsaml12 -p /sbin/ldconfig
 
-%postun -n libsaml11 -p /sbin/ldconfig
+%postun -n libsaml12 -p /sbin/ldconfig
 
 %files -n @PACKAGE_NAME@-bin
 %defattr(-,root,root,-)
 %{_bindir}/samlsign
 
-%files -n libsaml11
+%files -n libsaml12
 %defattr(-,root,root,-)
 %{_libdir}/libsaml.so.*
 %exclude %{_libdir}/libsaml.la
@@ -136,6 +136,9 @@ This package includes XML schemas and related files.
 %doc %{pkgdocdir}
 
 %changelog
+* Wed Dec 2 2020 Scott Cantor <cantor.2@osu.edu> - 3.2.0-1
+- Version and lib bump
+
 * Mon Feb 3 2020 Scott Cantor <cantor.2@osu.edu> - 3.1.0-1
 - Version and lib bump
 - Remove Solaris conditionals
