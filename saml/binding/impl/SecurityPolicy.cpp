@@ -30,6 +30,7 @@
 #include "binding/SecurityPolicyRule.h"
 #include "saml2/core/Assertions.h"
 
+#define BOOST_BIND_GLOBAL_PLACEHOLDERS
 #include <boost/bind.hpp>
 #include <boost/algorithm/string.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>

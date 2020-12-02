@@ -27,6 +27,7 @@
 #include "internal.h"
 #include "saml2/metadata/ObservableMetadataProvider.h"
 
+#define BOOST_BIND_GLOBAL_PLACEHOLDERS
 #include <boost/bind.hpp>
 #include <xmltooling/util/Threads.h>
 

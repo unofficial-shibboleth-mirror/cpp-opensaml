@@ -31,6 +31,7 @@
 #include "saml1/core/Assertions.h"
 #include "saml2/core/Assertions.h"
 
+#define BOOST_BIND_GLOBAL_PLACEHOLDERS
 #include <boost/bind.hpp>
 #include <xmltooling/logging.h>
 

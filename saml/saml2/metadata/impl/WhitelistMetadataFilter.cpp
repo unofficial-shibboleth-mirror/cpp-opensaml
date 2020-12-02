@@ -29,6 +29,7 @@
 #include "saml2/metadata/Metadata.h"
 #include "saml2/metadata/MetadataFilter.h"
 
+#define BOOST_BIND_GLOBAL_PLACEHOLDERS
 #include <boost/bind.hpp>
 #include <boost/scoped_ptr.hpp>
 #include <xmltooling/logging.h>
