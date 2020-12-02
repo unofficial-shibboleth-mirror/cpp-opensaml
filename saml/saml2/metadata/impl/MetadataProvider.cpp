@@ -52,8 +52,8 @@ namespace opensaml {
         SAML_DLLLOCAL PluginManager<MetadataProvider,string,const DOMElement*>::Factory ChainingMetadataProviderFactory;
         SAML_DLLLOCAL PluginManager<MetadataProvider,string,const DOMElement*>::Factory FolderMetadataProviderFactory;
         SAML_DLLLOCAL PluginManager<MetadataProvider,string,const DOMElement*>::Factory NullMetadataProviderFactory;
-        SAML_DLLLOCAL PluginManager<MetadataFilter,string,const DOMElement*>::Factory BlacklistMetadataFilterFactory;
-        SAML_DLLLOCAL PluginManager<MetadataFilter,string,const DOMElement*>::Factory WhitelistMetadataFilterFactory;
+        SAML_DLLLOCAL PluginManager<MetadataFilter,string,const DOMElement*>::Factory ExcludeMetadataFilterFactory;
+        SAML_DLLLOCAL PluginManager<MetadataFilter,string,const DOMElement*>::Factory IncludeMetadataFilterFactory;
         SAML_DLLLOCAL PluginManager<MetadataFilter,string,const DOMElement*>::Factory SignatureMetadataFilterFactory;
         SAML_DLLLOCAL PluginManager<MetadataFilter,string,const DOMElement*>::Factory RequireValidUntilMetadataFilterFactory;
         SAML_DLLLOCAL PluginManager<MetadataFilter,string,const DOMElement*>::Factory EntityRoleMetadataFilterFactory;
@@ -73,24 +73,29 @@ void SAML_API opensaml::saml2md::registerMetadataProviders()
 
 void SAML_API opensaml::saml2md::registerMetadataFilters()
 {
-    SAMLConfig::getConfig().MetadataFilterManager.registerFactory(BLACKLIST_METADATA_FILTER, BlacklistMetadataFilterFactory);
-    SAMLConfig::getConfig().MetadataFilterManager.registerFactory(WHITELIST_METADATA_FILTER, WhitelistMetadataFilterFactory);
+    SAMLConfig::getConfig().MetadataFilterManager.registerFactory(EXCLUDE_METADATA_FILTER, ExcludeMetadataFilterFactory);
+    SAMLConfig::getConfig().MetadataFilterManager.registerFactory(INCLUDE_METADATA_FILTER, IncludeMetadataFilterFactory);
     SAMLConfig::getConfig().MetadataFilterManager.registerFactory(SIGNATURE_METADATA_FILTER, SignatureMetadataFilterFactory);
     SAMLConfig::getConfig().MetadataFilterManager.registerFactory(REQUIREVALIDUNTIL_METADATA_FILTER, RequireValidUntilMetadataFilterFactory);
     // additional name matching Java code
     SAMLConfig::getConfig().MetadataFilterManager.registerFactory("RequiredValidUntil", RequireValidUntilMetadataFilterFactory);
     SAMLConfig::getConfig().MetadataFilterManager.registerFactory(ENTITYROLE_METADATA_FILTER, EntityRoleMetadataFilterFactory);
     SAMLConfig::getConfig().MetadataFilterManager.registerFactory(ENTITYATTR_METADATA_FILTER, EntityAttributesMetadataFilterFactory);
-
+    
+    // Deprecated names.
+    SAMLConfig::getConfig().MetadataFilterManager.registerFactory(BLACKLIST_METADATA_FILTER, ExcludeMetadataFilterFactory);
+    SAMLConfig::getConfig().MetadataFilterManager.registerFactory(WHITELIST_METADATA_FILTER, IncludeMetadataFilterFactory);
+    SAMLConfig::getConfig().MetadataFilterManager.registerFactory("EntityRoleWhitelist", EntityRoleMetadataFilterFactory);
 }
 
-static const XMLCh _MetadataFilter[] =  UNICODE_LITERAL_14(M,e,t,a,d,a,t,a,F,i,l,t,e,r);
-static const XMLCh Blacklist[] =        UNICODE_LITERAL_23(B,l,a,c,k,l,i,s,t,M,e,t,a,d,a,t,a,F,i,l,t,e,r);
-static const XMLCh Whitelist[] =        UNICODE_LITERAL_23(W,h,i,t,e,l,i,s,t,M,e,t,a,d,a,t,a,F,i,l,t,e,r);
-static const XMLCh SigFilter[] =        UNICODE_LITERAL_23(S,i,g,n,a,t,u,r,e,M,e,t,a,d,a,t,a,F,i,l,t,e,r);
-static const XMLCh Exclude[] =          UNICODE_LITERAL_7(E,x,c,l,u,d,e);
-static const XMLCh Include[] =          UNICODE_LITERAL_7(I,n,c,l,u,d,e);
-static const XMLCh _type[] =            UNICODE_LITERAL_4(t,y,p,e);
+static const XMLCh _MetadataFilter[] =      UNICODE_LITERAL_14(M,e,t,a,d,a,t,a,F,i,l,t,e,r);
+static const XMLCh BlacklistMF[] =          UNICODE_LITERAL_23(B,l,a,c,k,l,i,s,t,M,e,t,a,d,a,t,a,F,i,l,t,e,r);
+static const XMLCh WhitelistMF[] =          UNICODE_LITERAL_23(W,h,i,t,e,l,i,s,t,M,e,t,a,d,a,t,a,F,i,l,t,e,r);
+static const XMLCh SigFilter[] =            UNICODE_LITERAL_23(S,i,g,n,a,t,u,r,e,M,e,t,a,d,a,t,a,F,i,l,t,e,r);
+static const XMLCh EntityRoleWhitelist[] =  UNICODE_LITERAL_19(E,n,t,i,t,y,R,o,l,e,W,h,i,t,e,L,i,s,t);
+static const XMLCh Exclude[] =              UNICODE_LITERAL_7(E,x,c,l,u,d,e);
+static const XMLCh Include[] =              UNICODE_LITERAL_7(I,n,c,l,u,d,e);
+static const XMLCh _type[] =                UNICODE_LITERAL_4(t,y,p,e);
 
 MetadataProvider::MetadataProvider() { throw MetadataException("Illegal constructor call"); }
 
@@ -117,30 +122,35 @@ MetadataProvider::MetadataProvider(const DOMElement* e, bool deprecationSupport)
                 log.error("MetadataFilter element missing type attribute");
             }
         }
+        else if (deprecationSupport && XMLString::equals(child->getLocalName(), EntityRoleWhitelist)) {
+            log.warn("DEPRECATED: type=\"EntityRoleWhiteList\" replaced by type=\"%s\"", ENTITYROLE_METADATA_FILTER);
+            log.info("building MetadataFilter of type %s", ENTITYROLE_METADATA_FILTER);
+            m_filters.push_back(conf.MetadataFilterManager.newPlugin(ENTITYROLE_METADATA_FILTER, child, deprecationSupport));
+        }
         else if (deprecationSupport && XMLString::equals(child->getLocalName(), SigFilter)) {
             log.warn("DEPRECATED: <SignatureMetadataFilter> replaced by type=\"%s\"", SIGNATURE_METADATA_FILTER);
             log.info("building MetadataFilter of type %s", SIGNATURE_METADATA_FILTER);
             m_filters.push_back(conf.MetadataFilterManager.newPlugin(SIGNATURE_METADATA_FILTER, child, deprecationSupport));
         }
-        else if (deprecationSupport && XMLString::equals(child->getLocalName(), Whitelist)) {
-            log.warn("DEPRECATED: <WhitelistMetadataFilter> replaced by type=\"%s\"", WHITELIST_METADATA_FILTER);
-            log.info("building MetadataFilter of type %s", WHITELIST_METADATA_FILTER);
-            m_filters.push_back(conf.MetadataFilterManager.newPlugin(WHITELIST_METADATA_FILTER, child, deprecationSupport));
+        else if (deprecationSupport && XMLString::equals(child->getLocalName(), WhitelistMF)) {
+            log.warn("DEPRECATED: <WhitelistMetadataFilter> replaced by type=\"%s\"", INCLUDE_METADATA_FILTER);
+            log.info("building MetadataFilter of type %s", INCLUDE_METADATA_FILTER);
+            m_filters.push_back(conf.MetadataFilterManager.newPlugin(INCLUDE_METADATA_FILTER, child, deprecationSupport));
         }
-        else if (deprecationSupport && XMLString::equals(child->getLocalName(), Blacklist)) {
-            log.warn("DEPRECATED: <BlacklistMetadataFilter> replaced by type=\"%s\"", BLACKLIST_METADATA_FILTER);
-            log.info("building MetadataFilter of type %s", BLACKLIST_METADATA_FILTER);
-            m_filters.push_back(conf.MetadataFilterManager.newPlugin(BLACKLIST_METADATA_FILTER, child, deprecationSupport));
+        else if (deprecationSupport && XMLString::equals(child->getLocalName(), BlacklistMF)) {
+            log.warn("DEPRECATED: <BlacklistMetadataFilter> replaced by type=\"%s\"", EXCLUDE_METADATA_FILTER);
+            log.info("building MetadataFilter of type %s", EXCLUDE_METADATA_FILTER);
+            m_filters.push_back(conf.MetadataFilterManager.newPlugin(EXCLUDE_METADATA_FILTER, child, deprecationSupport));
         }
         else if (deprecationSupport && XMLString::equals(child->getLocalName(), Include)) {
-            log.warn("DEPRECATED: <Include> replaced by type=\"%s\"", WHITELIST_METADATA_FILTER);
-            log.info("building MetadataFilter of type %s", WHITELIST_METADATA_FILTER);
-            m_filters.push_back(conf.MetadataFilterManager.newPlugin(WHITELIST_METADATA_FILTER, e, deprecationSupport));
+            log.warn("DEPRECATED: <Include> replaced by type=\"%s\"", INCLUDE_METADATA_FILTER);
+            log.info("building MetadataFilter of type %s", INCLUDE_METADATA_FILTER);
+            m_filters.push_back(conf.MetadataFilterManager.newPlugin(INCLUDE_METADATA_FILTER, e, deprecationSupport));
         }
         else if (deprecationSupport && XMLString::equals(child->getLocalName(), Exclude)) {
-            log.warn("DEPRECATED: replaced by type=\"%s\"", BLACKLIST_METADATA_FILTER);
-            log.info("building MetadataFilter of type %s", BLACKLIST_METADATA_FILTER);
-            m_filters.push_back(conf.MetadataFilterManager.newPlugin(BLACKLIST_METADATA_FILTER, e, deprecationSupport));
+            log.warn("DEPRECATED: <Exclude> replaced by type=\"%s\"", EXCLUDE_METADATA_FILTER);
+            log.info("building MetadataFilter of type %s", EXCLUDE_METADATA_FILTER);
+            m_filters.push_back(conf.MetadataFilterManager.newPlugin(EXCLUDE_METADATA_FILTER, e, deprecationSupport));
         }
         else if (!deprecationSupport && XMLString::endsWith(child->getLocalName(), _MetadataFilter)) {
             throw UnknownExtensionException("Unsupported metadata filter syntax detected.");

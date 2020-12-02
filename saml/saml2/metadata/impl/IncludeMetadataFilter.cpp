@@ -19,9 +19,9 @@
  */
 
 /**
- * WhitelistMetadataFilter.cpp
+ * IncludeMetadataFilter.cpp
  *
- * Removes non-whitelisted entities from a metadata instance
+ * Removes non-included entities from a metadata instance
  */
 
 #include "internal.h"
@@ -43,13 +43,13 @@ using namespace std;
 
 namespace opensaml {
     namespace saml2md {
-        class SAML_DLLLOCAL WhitelistMetadataFilter : public MetadataFilter
+        class SAML_DLLLOCAL IncludeMetadataFilter : public MetadataFilter
         {
         public:
-            WhitelistMetadataFilter(const DOMElement* e, bool deprecationSupport=true);
-            ~WhitelistMetadataFilter() {}
+            IncludeMetadataFilter(const DOMElement* e, bool deprecationSupport=true);
+            ~IncludeMetadataFilter() {}
 
-            const char* getId() const { return WHITELIST_METADATA_FILTER; }
+            const char* getId() const { return INCLUDE_METADATA_FILTER; }
             void doFilter(const MetadataFilterContext* ctx, XMLObject& xmlObject) const;
 
         private:
@@ -60,9 +60,9 @@ namespace opensaml {
             scoped_ptr<EntityMatcher> m_matcher;
         };
 
-        MetadataFilter* SAML_DLLLOCAL WhitelistMetadataFilterFactory(const DOMElement* const & e, bool deprecationSupport)
+        MetadataFilter* SAML_DLLLOCAL IncludeMetadataFilterFactory(const DOMElement* const & e, bool deprecationSupport)
         {
-            return new WhitelistMetadataFilter(e);
+            return new IncludeMetadataFilter(e);
         }
 
         static const XMLCh Include[] = UNICODE_LITERAL_7(I,n,c,l,u,d,e);
@@ -71,7 +71,7 @@ namespace opensaml {
 };
 
 
-WhitelistMetadataFilter::WhitelistMetadataFilter(const DOMElement* e, bool deprecationSupport)
+IncludeMetadataFilter::IncludeMetadataFilter(const DOMElement* e, bool deprecationSupport)
 {
     string matcher(XMLHelper::getAttrString(e, nullptr, _matcher));
     if (!matcher.empty())
@@ -88,7 +88,7 @@ WhitelistMetadataFilter::WhitelistMetadataFilter(const DOMElement* e, bool depre
     }
 }
 
-void WhitelistMetadataFilter::doFilter(const MetadataFilterContext* ctx, XMLObject& xmlObject) const
+void IncludeMetadataFilter::doFilter(const MetadataFilterContext* ctx, XMLObject& xmlObject) const
 {
     EntitiesDescriptor* group = dynamic_cast<EntitiesDescriptor*>(&xmlObject);
     if (group) {
@@ -98,23 +98,23 @@ void WhitelistMetadataFilter::doFilter(const MetadataFilterContext* ctx, XMLObje
         EntityDescriptor* entity = dynamic_cast<EntityDescriptor*>(&xmlObject);
         if (entity) {
             if (!included(*entity))
-                throw MetadataFilterException(WHITELIST_METADATA_FILTER " MetadataFilter instructed to filter the root/only entity in the metadata.");
+                throw MetadataFilterException(INCLUDE_METADATA_FILTER " MetadataFilter instructed to filter the root/only entity in the metadata.");
         }
         else {
-            throw MetadataFilterException(WHITELIST_METADATA_FILTER " MetadataFilter was given an improper metadata instance to filter.");
+            throw MetadataFilterException(INCLUDE_METADATA_FILTER " MetadataFilter was given an improper metadata instance to filter.");
         }
     }
 }
 
-void WhitelistMetadataFilter::filterGroup(EntitiesDescriptor* entities) const
+void IncludeMetadataFilter::filterGroup(EntitiesDescriptor* entities) const
 {
-    Category& log = Category::getInstance(SAML_LOGCAT ".MetadataFilter." WHITELIST_METADATA_FILTER);
+    Category& log = Category::getInstance(SAML_LOGCAT ".MetadataFilter." INCLUDE_METADATA_FILTER);
 
     VectorOf(EntityDescriptor) v = entities->getEntityDescriptors();
     for (VectorOf(EntityDescriptor)::size_type i = 0; i < v.size(); ) {
         if (!included(*v[i])) {
             auto_ptr_char id(v[i]->getEntityID());
-            log.info("filtering out non-whitelisted entity (%s)", id.get());
+            log.info("filtering out non-included entity (%s)", id.get());
             v.erase(v.begin() + i);
         }
         else {
@@ -123,10 +123,10 @@ void WhitelistMetadataFilter::filterGroup(EntitiesDescriptor* entities) const
     }
 
     const vector<EntitiesDescriptor*>& groups = const_cast<const EntitiesDescriptor*>(entities)->getEntitiesDescriptors();
-    for_each(groups.begin(), groups.end(), boost::bind(&WhitelistMetadataFilter::filterGroup, this, _1));
+    for_each(groups.begin(), groups.end(), boost::bind(&IncludeMetadataFilter::filterGroup, this, _1));
 }
 
-bool WhitelistMetadataFilter::included(const EntityDescriptor& entity) const
+bool IncludeMetadataFilter::included(const EntityDescriptor& entity) const
 {
     // Check for entityID.
     if (entity.getEntityID() && !m_entities.empty() && m_entities.count(entity.getEntityID()) > 0)

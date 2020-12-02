@@ -196,7 +196,9 @@
     <ClCompile Include="..\..\..\saml\saml2\metadata\impl\DiscoverableMetadataProvider.cpp" />
     <ClCompile Include="..\..\..\saml\saml2\metadata\impl\EntityAttributesEntityMatcher.cpp" />
     <ClCompile Include="..\..\..\saml\saml2\metadata\impl\EntityAttributesMetadataFilter.cpp" />
+    <ClCompile Include="..\..\..\saml\saml2\metadata\impl\ExcludeMetadataFilter.cpp" />
     <ClCompile Include="..\..\..\saml\saml2\metadata\impl\FolderMetadataProvider.cpp" />
+    <ClCompile Include="..\..\..\saml\saml2\metadata\impl\IncludeMetadataFilter.cpp" />
     <ClCompile Include="..\..\..\saml\saml2\metadata\impl\NameEntityMatcher.cpp" />
     <ClCompile Include="..\..\..\saml\saml2\metadata\impl\RegistrationAuthorityEntityMatcher.cpp" />
     <ClCompile Include="..\..\..\saml\SAMLConfig.cpp" />
@@ -225,7 +227,6 @@
     <ClCompile Include="..\..\..\saml\saml2\core\impl\Protocols20Impl.cpp" />
     <ClCompile Include="..\..\..\saml\saml2\core\impl\Protocols20SchemaValidators.cpp" />
     <ClCompile Include="..\..\..\saml\saml2\metadata\impl\AbstractMetadataProvider.cpp" />
-    <ClCompile Include="..\..\..\saml\saml2\metadata\impl\BlacklistMetadataFilter.cpp" />
     <ClCompile Include="..\..\..\saml\saml2\metadata\impl\ChainingMetadataProvider.cpp" />
     <ClCompile Include="..\..\..\saml\saml2\metadata\impl\LocalDynamicMetadataProvider.cpp" />
     <ClCompile Include="..\..\..\saml\saml2\metadata\impl\EntityRoleMetadataFilter.cpp" />
@@ -238,7 +239,6 @@
     <ClCompile Include="..\..\..\saml\saml2\metadata\impl\ObservableMetadataProvider.cpp" />
     <ClCompile Include="..\..\..\saml\saml2\metadata\impl\RequireValidUntilMetadataFilter.cpp" />
     <ClCompile Include="..\..\..\saml\saml2\metadata\impl\SignatureMetadataFilter.cpp" />
-    <ClCompile Include="..\..\..\saml\saml2\metadata\impl\WhitelistMetadataFilter.cpp" />
     <ClCompile Include="..\..\..\saml\saml2\metadata\impl\XMLMetadataProvider.cpp" />
     <ClCompile Include="..\..\..\saml\saml2\binding\impl\SAML2Artifact.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>

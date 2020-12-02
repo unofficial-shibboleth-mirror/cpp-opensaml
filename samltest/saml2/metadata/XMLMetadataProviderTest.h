@@ -197,9 +197,9 @@ public:
         assertEquals("Entity's ID does not match requested ID", entityID2, descriptor->getEntityID());
     }
 
-    void testXMLWithWhitelists() {
+    void testXMLWithIncludes() {
         skipNetworked();
-        string config = data_path + "saml2/metadata/XMLWithWhitelists.xml";
+        string config = data_path + "saml2/metadata/XMLWithIncludes.xml";
         ifstream in(config.c_str());
         DOMDocument* doc=XMLToolingConfig::getConfig().getParser().parse(in);
         XercesJanitor<DOMDocument> janitor(doc);

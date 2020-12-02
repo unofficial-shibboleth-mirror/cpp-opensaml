@@ -62,21 +62,32 @@ DiscoverableMetadataProvider::DiscoverableMetadataProvider(const DOMElement* e, 
     e = e ? XMLHelper::getFirstChildElement(e, DiscoveryFilter) : nullptr;
     while (e) {
         string t(XMLHelper::getAttrString(e, nullptr, _type));
-        if (t == "Whitelist" || t == "Blacklist") {
+        if (t == "Include" || t == "Exclude" || t == "Whitelist" || t == "Blacklist") {
             string m(XMLHelper::getAttrString(e, nullptr, matcher));
             if (!m.empty()) {
+                
+                if (t == "Whitelist") {
+                    Category::getInstance(SAML_LOGCAT ".MetadataProvider.Discoverable").warn(
+                        "DEPRECATED: DiscoveryFilter type=\"Whitelist\" replaced by type=\"Include\"");
+                }
+                else if (t == "Blacklist") {
+                    Category::getInstance(SAML_LOGCAT ".MetadataProvider.Discoverable").warn(
+                        "DEPRECATED: DiscoveryFilter type=\"Blacklist\" replaced by type=\"Exclude\"");
+                }
+
                 try {
                     boost::shared_ptr<EntityMatcher> temp(SAMLConfig::getConfig().EntityMatcherManager.newPlugin(m, e, deprecationSupport));
-                    m_discoFilters.push_back(make_pair(t == "Whitelist", temp));
+                    m_discoFilters.push_back(make_pair(t == "Include" || t == "Whitelist", temp));
                 }
-                catch (std::exception& ex) {
+                catch (const std::exception& ex) {
                     Category::getInstance(SAML_LOGCAT ".MetadataProvider.Discoverable").error(
                         "exception creating <DiscoveryFilter> EntityMatcher: %s", ex.what()
                         );
                 }
             }
             else {
-                Category::getInstance(SAML_LOGCAT ".MetadataProvider.Discoverable").error("<DiscoveryFilter> requires matcher attribute");
+                Category::getInstance(SAML_LOGCAT ".MetadataProvider.Discoverable").error(
+                    "<DiscoveryFilter> requires matcher attribute");
             }
         }
         else {
@@ -164,7 +175,7 @@ void DiscoverableMetadataProvider::discoEntity(string& s, const EntityDescriptor
 
         // Check filter(s).
         for (vector< pair < bool, boost::shared_ptr<EntityMatcher> > >::const_iterator f = m_discoFilters.begin(); f != m_discoFilters.end(); ++f) {
-            // The flag is true for a whitelist and false for a blacklist,
+            // The flag is true for an include and false for an exclude,
             // so we omit the entity if the match outcome is the inverse.
             if (f->first != f->second->matches(*entity))
                 return;

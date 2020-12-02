@@ -198,9 +198,6 @@
     <ClCompile Include="..\..\..\saml\saml2\metadata\impl\AbstractMetadataProvider.cpp">
       <Filter>Source Files\saml2\metadata\impl</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\saml\saml2\metadata\impl\BlacklistMetadataFilter.cpp">
-      <Filter>Source Files\saml2\metadata\impl</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\saml\saml2\metadata\impl\ChainingMetadataProvider.cpp">
       <Filter>Source Files\saml2\metadata\impl</Filter>
     </ClCompile>
@@ -232,9 +229,6 @@
       <Filter>Source Files\saml2\metadata\impl</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\saml\saml2\metadata\impl\SignatureMetadataFilter.cpp">
-      <Filter>Source Files\saml2\metadata\impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\saml\saml2\metadata\impl\WhitelistMetadataFilter.cpp">
       <Filter>Source Files\saml2\metadata\impl</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\saml\saml2\metadata\impl\XMLMetadataProvider.cpp">
@@ -365,6 +359,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\saml\saml2\binding\impl\SAML2MessageEncoder.cpp">
       <Filter>Source Files\saml2\binding\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\saml\saml2\metadata\impl\ExcludeMetadataFilter.cpp">
+      <Filter>Source Files\saml2\metadata\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\saml\saml2\metadata\impl\IncludeMetadataFilter.cpp">
+      <Filter>Source Files\saml2\metadata\impl</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

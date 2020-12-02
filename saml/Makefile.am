@@ -133,7 +133,6 @@ libsaml_la_SOURCES = \
 	saml2/core/impl/Protocols20Impl.cpp \
 	saml2/core/impl/Protocols20SchemaValidators.cpp \
 	saml2/metadata/impl/AbstractMetadataProvider.cpp \
-	saml2/metadata/impl/BlacklistMetadataFilter.cpp \
 	saml2/metadata/impl/ChainingMetadataProvider.cpp \
 	saml2/metadata/impl/DiscoverableMetadataProvider.cpp \
 	saml2/metadata/impl/AbstractDynamicMetadataProvider.cpp \
@@ -150,10 +149,11 @@ libsaml_la_SOURCES = \
 	saml2/metadata/impl/NameEntityMatcher.cpp \
 	saml2/metadata/impl/NullMetadataProvider.cpp \
 	saml2/metadata/impl/ObservableMetadataProvider.cpp \
+	saml2/metadata/impl/ExcludeMetadataFilter.cpp \
+	saml2/metadata/impl/IncludeMetadataFilter.cpp \
 	saml2/metadata/impl/RequireValidUntilMetadataFilter.cpp \
 	saml2/metadata/impl/SignatureMetadataFilter.cpp \
 	saml2/metadata/impl/RegistrationAuthorityEntityMatcher.cpp \
-	saml2/metadata/impl/WhitelistMetadataFilter.cpp \
 	saml2/metadata/impl/XMLMetadataProvider.cpp \
 	saml2/binding/impl/SAML2Artifact.cpp \
 	saml2/binding/impl/SAML2ArtifactType0004.cpp \

@@ -65,7 +65,7 @@ namespace opensaml {
              *   <dd>true iff tags found in &lt;mdattr:EntityAttributes&gt;
              *      extensions should be included in the feed</dd>
              *   <dt>&lt;DiscoveryFilter type="..." matcher="..." &gt;</dt>
-             *   <dd>Zero or more filters of type "Whitelist" or "Blacklist" that
+             *   <dd>Zero or more filters of type "Include" or "Exclude" that
              *      affect which entities get exposed by the feed. The actual matching
              *      is driven by an EntityMatcher plugin identified by the matcher
              *      attribute. Other element content will be present to configure

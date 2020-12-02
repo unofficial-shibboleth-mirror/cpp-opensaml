@@ -21,7 +21,7 @@
 /**
  * EntityRoleMetadataFilter.cpp
  *
- * Removes non-whitelisted roles from a metadata instance.
+ * Removes non-included roles from a metadata instance.
  */
 
 #include "internal.h"

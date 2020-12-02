@@ -114,11 +114,17 @@ namespace opensaml {
          */
         void SAML_API registerMetadataFilters();
 
-        /** MetadataFilter that deletes blacklisted entities. */
+        /** MetadataFilter that deletes blacklisted entities. @deprecated */
         #define BLACKLIST_METADATA_FILTER           "Blacklist"
 
-        /** MetadataFilter that deletes all but whitelisted entities. */
+        /** MetadataFilter that deletes all but whitelisted entities. @deprecated */
         #define WHITELIST_METADATA_FILTER           "Whitelist"
+
+        /** MetadataFilter that deletes entities. */
+        #define EXCLUDE_METADATA_FILTER             "Exclude"
+
+        /** MetadataFilter that deletes all but included entities. */
+        #define INCLUDE_METADATA_FILTER             "Include"
 
         /** MetadataFilter that verifies signatures and filters out any that don't pass. */
         #define SIGNATURE_METADATA_FILTER           "Signature"
@@ -127,7 +133,7 @@ namespace opensaml {
         #define REQUIREVALIDUNTIL_METADATA_FILTER   "RequireValidUntil"
 
         /** MetadataFilter that removes non-retained roles. */
-        #define ENTITYROLE_METADATA_FILTER          "EntityRoleWhiteList"
+        #define ENTITYROLE_METADATA_FILTER          "EntityRole"
 
         /** MetadataFilter that adds EntityAttributes extension. */
         #define ENTITYATTR_METADATA_FILTER          "EntityAttributes"

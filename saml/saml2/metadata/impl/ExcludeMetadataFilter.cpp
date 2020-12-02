@@ -19,9 +19,9 @@
  */
 
 /**
- * BlacklistMetadataFilter.cpp
+ * ExcludeMetadataFilter.cpp
  * 
- * Removes blacklisted entities from a metadata instance
+ * Removes excluded entities from a metadata instance
  */
 
 #include "internal.h"
@@ -41,13 +41,13 @@ using namespace std;
 
 namespace opensaml {
     namespace saml2md {
-        class SAML_DLLLOCAL BlacklistMetadataFilter : public MetadataFilter
+        class SAML_DLLLOCAL ExcludeMetadataFilter : public MetadataFilter
         {
         public:
-            BlacklistMetadataFilter(const DOMElement* e, bool deprecationSupport=true);
-            ~BlacklistMetadataFilter() {}
+            ExcludeMetadataFilter(const DOMElement* e, bool deprecationSupport=true);
+            ~ExcludeMetadataFilter() {}
             
-            const char* getId() const { return BLACKLIST_METADATA_FILTER; }
+            const char* getId() const { return EXCLUDE_METADATA_FILTER; }
             void doFilter(const MetadataFilterContext* ctx, XMLObject& xmlObject) const;
 
         private:
@@ -58,9 +58,9 @@ namespace opensaml {
             scoped_ptr<EntityMatcher> m_matcher;
         }; 
 
-        MetadataFilter* SAML_DLLLOCAL BlacklistMetadataFilterFactory(const DOMElement* const & e, bool deprecationSupport)
+        MetadataFilter* SAML_DLLLOCAL ExcludeMetadataFilterFactory(const DOMElement* const & e, bool deprecationSupport)
         {
-            return new BlacklistMetadataFilter(e);
+            return new ExcludeMetadataFilter(e);
         }
 
         static const XMLCh Exclude[] = UNICODE_LITERAL_7(E,x,c,l,u,d,e);
@@ -69,7 +69,7 @@ namespace opensaml {
 };
 
 
-BlacklistMetadataFilter::BlacklistMetadataFilter(const DOMElement* e, bool deprecationSupport)
+ExcludeMetadataFilter::ExcludeMetadataFilter(const DOMElement* e, bool deprecationSupport)
 {
     string matcher(XMLHelper::getAttrString(e, nullptr, _matcher));
     if (!matcher.empty())
@@ -86,29 +86,29 @@ BlacklistMetadataFilter::BlacklistMetadataFilter(const DOMElement* e, bool depre
     }
 }
 
-void BlacklistMetadataFilter::doFilter(const MetadataFilterContext* ctx, XMLObject& xmlObject) const
+void ExcludeMetadataFilter::doFilter(const MetadataFilterContext* ctx, XMLObject& xmlObject) const
 {
     EntitiesDescriptor* group = dynamic_cast<EntitiesDescriptor*>(&xmlObject);
     if (group) {
         if (group->getName() && !m_entities.empty() && m_entities.count(group->getName()) > 0)
-            throw MetadataFilterException(BLACKLIST_METADATA_FILTER " MetadataFilter instructed to filter the root group in the metadata.");
+            throw MetadataFilterException(EXCLUDE_METADATA_FILTER " MetadataFilter instructed to filter the root group in the metadata.");
         filterGroup(group);
     }
     else {
         EntityDescriptor* entity = dynamic_cast<EntityDescriptor*>(&xmlObject);
         if (entity) {
             if (included(*entity))
-                throw MetadataFilterException(BLACKLIST_METADATA_FILTER " MetadataFilter instructed to filter the root/only entity in the metadata.");
+                throw MetadataFilterException(EXCLUDE_METADATA_FILTER " MetadataFilter instructed to filter the root/only entity in the metadata.");
         }
         else {
-            throw MetadataFilterException(BLACKLIST_METADATA_FILTER " MetadataFilter was given an improper metadata instance to filter.");
+            throw MetadataFilterException(EXCLUDE_METADATA_FILTER " MetadataFilter was given an improper metadata instance to filter.");
         }
     }
 }
 
-void BlacklistMetadataFilter::filterGroup(EntitiesDescriptor* entities) const
+void ExcludeMetadataFilter::filterGroup(EntitiesDescriptor* entities) const
 {
-    Category& log = Category::getInstance(SAML_LOGCAT ".MetadataFilter." WHITELIST_METADATA_FILTER);
+    Category& log = Category::getInstance(SAML_LOGCAT ".MetadataFilter." EXCLUDE_METADATA_FILTER);
 
     VectorOf(EntityDescriptor) v = entities->getEntityDescriptors();
     for (VectorOf(EntityDescriptor)::size_type i = 0; i < v.size(); ) {
@@ -137,7 +137,7 @@ void BlacklistMetadataFilter::filterGroup(EntitiesDescriptor* entities) const
     }
 }
 
-bool BlacklistMetadataFilter::included(const EntityDescriptor& entity) const
+bool ExcludeMetadataFilter::included(const EntityDescriptor& entity) const
 {
     // Check for entityID.
     if (entity.getEntityID() && !m_entities.empty() && m_entities.count(entity.getEntityID()) > 0)
