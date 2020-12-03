@@ -366,6 +366,9 @@
     <ClCompile Include="..\..\..\saml\saml2\metadata\impl\IncludeMetadataFilter.cpp">
       <Filter>Source Files\saml2\metadata\impl</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\saml\saml2\metadata\impl\InlineLogoMetadataFilter.cpp">
+      <Filter>Source Files\saml2\metadata\impl</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\saml\Assertion.h">

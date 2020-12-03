@@ -151,6 +151,7 @@ libsaml_la_SOURCES = \
 	saml2/metadata/impl/ObservableMetadataProvider.cpp \
 	saml2/metadata/impl/ExcludeMetadataFilter.cpp \
 	saml2/metadata/impl/IncludeMetadataFilter.cpp \
+	saml2/metadata/impl/InlineLogoMetadataFilter.cpp \
 	saml2/metadata/impl/RequireValidUntilMetadataFilter.cpp \
 	saml2/metadata/impl/SignatureMetadataFilter.cpp \
 	saml2/metadata/impl/RegistrationAuthorityEntityMatcher.cpp \

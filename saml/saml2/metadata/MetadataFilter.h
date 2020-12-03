@@ -138,6 +138,9 @@ namespace opensaml {
         /** MetadataFilter that adds EntityAttributes extension. */
         #define ENTITYATTR_METADATA_FILTER          "EntityAttributes"
 
+        /** MetadataFilter that removes inline logos from metadata. */
+        #define INLINELOGO_METADATA_FILTER          "InlineLogo"
+
         DECL_XMLTOOLING_EXCEPTION(MetadataFilterException,SAML_EXCEPTIONAPI(SAML_API),opensaml::saml2md,MetadataException,Exceptions related to metadata filtering);
     };
 };
