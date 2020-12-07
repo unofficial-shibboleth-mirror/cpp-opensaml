@@ -154,6 +154,7 @@ libsaml_la_SOURCES = \
 	saml2/metadata/impl/InlineLogoMetadataFilter.cpp \
 	saml2/metadata/impl/RequireValidUntilMetadataFilter.cpp \
 	saml2/metadata/impl/SignatureMetadataFilter.cpp \
+	saml2/metadata/impl/UIInfoMetadataFilter.cpp \
 	saml2/metadata/impl/RegistrationAuthorityEntityMatcher.cpp \
 	saml2/metadata/impl/XMLMetadataProvider.cpp \
 	saml2/binding/impl/SAML2Artifact.cpp \

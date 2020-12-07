@@ -151,7 +151,7 @@ void EntityAttributesMetadataFilter::filterEntity(EntityDescriptor* entity) cons
 {
     if (!entity->getEntityID())
         return;
-
+    
     pair<applymap_t::const_iterator,applymap_t::const_iterator> tags = m_applyMap.equal_range(entity->getEntityID());
     if (tags.first != tags.second) {
         EntityAttributes* wrapper = getEntityAttributes(entity);

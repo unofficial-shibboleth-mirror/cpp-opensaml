@@ -59,6 +59,7 @@ namespace opensaml {
         SAML_DLLLOCAL PluginManager<MetadataFilter,string,const DOMElement*>::Factory RequireValidUntilMetadataFilterFactory;
         SAML_DLLLOCAL PluginManager<MetadataFilter,string,const DOMElement*>::Factory EntityRoleMetadataFilterFactory;
         SAML_DLLLOCAL PluginManager<MetadataFilter,string,const DOMElement*>::Factory EntityAttributesMetadataFilterFactory;
+        SAML_DLLLOCAL PluginManager<MetadataFilter,string,const DOMElement*>::Factory UIInfoMetadataFilterFactory;
     };
 };
 
@@ -78,11 +79,13 @@ void SAML_API opensaml::saml2md::registerMetadataFilters()
     SAMLConfig::getConfig().MetadataFilterManager.registerFactory(INCLUDE_METADATA_FILTER, IncludeMetadataFilterFactory);
     SAMLConfig::getConfig().MetadataFilterManager.registerFactory(INLINELOGO_METADATA_FILTER, InlineLogoMetadataFilterFactory);
     SAMLConfig::getConfig().MetadataFilterManager.registerFactory(SIGNATURE_METADATA_FILTER, SignatureMetadataFilterFactory);
+    SAMLConfig::getConfig().MetadataFilterManager.registerFactory(ENTITYROLE_METADATA_FILTER, EntityRoleMetadataFilterFactory);
+    SAMLConfig::getConfig().MetadataFilterManager.registerFactory(ENTITYATTR_METADATA_FILTER, EntityAttributesMetadataFilterFactory);
+    SAMLConfig::getConfig().MetadataFilterManager.registerFactory(UIINFO_METADATA_FILTER, UIInfoMetadataFilterFactory);
+
     SAMLConfig::getConfig().MetadataFilterManager.registerFactory(REQUIREVALIDUNTIL_METADATA_FILTER, RequireValidUntilMetadataFilterFactory);
     // additional name matching Java code
     SAMLConfig::getConfig().MetadataFilterManager.registerFactory("RequiredValidUntil", RequireValidUntilMetadataFilterFactory);
-    SAMLConfig::getConfig().MetadataFilterManager.registerFactory(ENTITYROLE_METADATA_FILTER, EntityRoleMetadataFilterFactory);
-    SAMLConfig::getConfig().MetadataFilterManager.registerFactory(ENTITYATTR_METADATA_FILTER, EntityAttributesMetadataFilterFactory);
     
     // Deprecated names.
     SAMLConfig::getConfig().MetadataFilterManager.registerFactory(BLACKLIST_METADATA_FILTER, ExcludeMetadataFilterFactory);

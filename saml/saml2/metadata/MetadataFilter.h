@@ -138,6 +138,9 @@ namespace opensaml {
         /** MetadataFilter that adds EntityAttributes extension. */
         #define ENTITYATTR_METADATA_FILTER          "EntityAttributes"
 
+        /** MetadataFilter that adds UIInfo extension. */
+        #define UIINFO_METADATA_FILTER              "UIInfo"
+
         /** MetadataFilter that removes inline logos from metadata. */
         #define INLINELOGO_METADATA_FILTER          "InlineLogo"
 

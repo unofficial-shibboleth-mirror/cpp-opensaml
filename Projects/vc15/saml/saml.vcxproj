@@ -202,6 +202,7 @@
     <ClCompile Include="..\..\..\saml\saml2\metadata\impl\InlineLogoMetadataFilter.cpp" />
     <ClCompile Include="..\..\..\saml\saml2\metadata\impl\NameEntityMatcher.cpp" />
     <ClCompile Include="..\..\..\saml\saml2\metadata\impl\RegistrationAuthorityEntityMatcher.cpp" />
+    <ClCompile Include="..\..\..\saml\saml2\metadata\impl\UIInfoMetadataFilter.cpp" />
     <ClCompile Include="..\..\..\saml\SAMLConfig.cpp" />
     <ClCompile Include="..\..\..\saml\util\CommonDomainCookie.cpp" />
     <ClCompile Include="..\..\..\saml\util\SAMLConstants.cpp" />
