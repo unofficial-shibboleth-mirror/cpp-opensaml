@@ -53,6 +53,43 @@ public:
         SAMLObjectBaseTestCase::tearDown();
     }
 
+    void testHTTPProvider()
+    {
+        skipNetworked();
+        string config = data_path + "saml2/metadata/HTTPMetadataProvider.xml";
+        ifstream in(config.c_str());
+        DOMDocument* doc=XMLToolingConfig::getConfig().getParser().parse(in);
+        XercesJanitor<DOMDocument> janitor(doc);
+
+        scoped_ptr<MetadataProvider> metadataProvider(\
+            SAMLConfig::getConfig().MetadataProviderManager.newPlugin(XML_METADATA_PROVIDER, doc->getDocumentElement(), false)
+            );
+        try {
+            metadataProvider->init();
+        } catch (const XMLToolingException& ex) {
+            TS_TRACE(ex.what());
+            throw;
+        }
+
+        Locker locker(metadataProvider.get());
+        const EntityDescriptor* descriptor = metadataProvider->getEntityDescriptor(MetadataProvider::Criteria(entityID, nullptr, nullptr, false)).first;
+        TSM_ASSERT("Retrieved entity descriptor was null", descriptor != nullptr);
+        assertEquals("Entity's ID does not match requested ID", entityID, descriptor->getEntityID());
+        TSM_ASSERT_EQUALS("Unexpected number of roles", 1, descriptor->getIDPSSODescriptors().size());
+        TSM_ASSERT("Role lookup failed", find_if(descriptor->getIDPSSODescriptors(), isValidForProtocol(supportedProtocol)) != nullptr);
+        TSM_ASSERT("Role lookup failed", find_if(descriptor->getIDPSSODescriptors(), isValidForProtocol(supportedProtocol2)) != nullptr);
+
+        static const char* providerIdStr = "urn:mace:incommon:washington.edu";
+        scoped_ptr<SAML2ArtifactType0004> artifact(
+            new SAML2ArtifactType0004(
+                SecurityHelper::doHash("SHA1", providerIdStr, strlen(providerIdStr), false), 1
+                )
+            );
+        descriptor = metadataProvider->getEntityDescriptor(MetadataProvider::Criteria(artifact.get(), nullptr, nullptr, false)).first;
+        TSM_ASSERT("Retrieved entity descriptor was null", descriptor != nullptr);
+        assertEquals("Entity's ID does not match requested ID", entityID, descriptor->getEntityID());
+    }
+
     void testBadSig()
     {
         skipNetworked();
@@ -131,49 +168,9 @@ public:
         assertEquals("Entity's ID does not match requested ID", entityID, descriptor->getEntityID());
     }
 
-
-    void testHTTPProvider()
-    {
+    void testXMLWithExcludes() {
         skipNetworked();
-        string config = data_path + "saml2/metadata/HTTPMetadataProvider.xml";
-        ifstream in(config.c_str());
-        DOMDocument* doc=XMLToolingConfig::getConfig().getParser().parse(in);
-        XercesJanitor<DOMDocument> janitor(doc);
-
-        scoped_ptr<MetadataProvider> metadataProvider(\
-            SAMLConfig::getConfig().MetadataProviderManager.newPlugin(XML_METADATA_PROVIDER, doc->getDocumentElement(), false)
-            );
-        try {
-            metadataProvider->init();
-        } catch (const XMLToolingException& ex) {
-            TS_TRACE(ex.what());
-            throw;
-        }
-
-        Locker locker(metadataProvider.get());
-        const EntityDescriptor* descriptor = metadataProvider->getEntityDescriptor(MetadataProvider::Criteria(entityID, nullptr, nullptr, false)).first;
-        TSM_ASSERT("Retrieved entity descriptor was null", descriptor != nullptr);
-        assertEquals("Entity's ID does not match requested ID", entityID, descriptor->getEntityID());
-        TSM_ASSERT_EQUALS("Unexpected number of roles", 1, descriptor->getIDPSSODescriptors().size());
-        TSM_ASSERT("Role lookup failed", find_if(descriptor->getIDPSSODescriptors(), isValidForProtocol(supportedProtocol)) != nullptr);
-        TSM_ASSERT("Role lookup failed", find_if(descriptor->getIDPSSODescriptors(), isValidForProtocol(supportedProtocol2)) != nullptr);
-
-        static const char* providerIdStr = "urn:mace:incommon:washington.edu";
-        scoped_ptr<SAML2ArtifactType0004> artifact(
-            new SAML2ArtifactType0004(
-                SecurityHelper::doHash("SHA1", providerIdStr, strlen(providerIdStr), false), 1
-                )
-            );
-        descriptor = metadataProvider->getEntityDescriptor(MetadataProvider::Criteria(artifact.get(), nullptr, nullptr, false)).first;
-        TSM_ASSERT("Retrieved entity descriptor was null", descriptor != nullptr);
-        assertEquals("Entity's ID does not match requested ID", entityID, descriptor->getEntityID());
-    }
-
-
-
-    void testXMLWithBlacklists() {
-        skipNetworked();
-        string config = data_path + "saml2/metadata/XMLWithBlacklists.xml";
+        string config = data_path + "saml2/metadata/XMLWithExcludes.xml";
         ifstream in(config.c_str());
         DOMDocument* doc=XMLToolingConfig::getConfig().getParser().parse(in);
         XercesJanitor<DOMDocument> janitor(doc);
