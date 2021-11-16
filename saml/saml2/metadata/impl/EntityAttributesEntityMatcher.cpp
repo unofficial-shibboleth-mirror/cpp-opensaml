@@ -127,7 +127,7 @@ bool EntityAttributesEntityMatcher::matches(const EntityDescriptor& entity) cons
         if (xo) {
             extFound = true;
             // If we find a matching tag, we win. Each tag is treated in OR fashion.
-           for (vector<boost::shared_ptr<Attribute>>::const_iterator i = m_tags.begin(); i != m_tags.end(); ++i) {
+           for (vector< boost::shared_ptr<Attribute> >::const_iterator i = m_tags.begin(); i != m_tags.end(); ++i) {
                 if (_matches(dynamic_cast<const EntityAttributes*>(xo), i->get())) {
                    return true;
                }
@@ -144,7 +144,7 @@ bool EntityAttributesEntityMatcher::matches(const EntityDescriptor& entity) cons
             if (xo) {
                 extFound = true;
                 // If we find a matching tag, we win. Each tag is treated in OR fashion.
-               for (vector<boost::shared_ptr<Attribute>>::const_iterator i = m_tags.begin(); i != m_tags.end(); ++i) {
+               for (vector< boost::shared_ptr<Attribute> >::const_iterator i = m_tags.begin(); i != m_tags.end(); ++i) {
                     if (_matches(dynamic_cast<const EntityAttributes*>(xo), i->get())) {
                         return true;
                     }
