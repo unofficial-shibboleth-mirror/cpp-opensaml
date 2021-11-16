@@ -127,11 +127,11 @@ bool EntityAttributesEntityMatcher::matches(const EntityDescriptor& entity) cons
         if (xo) {
             extFound = true;
             // If we find a matching tag, we win. Each tag is treated in OR fashion.
-            if (find_if(m_tags.begin(), m_tags.end(),
-                lambda::bind(&EntityAttributesEntityMatcher::_matches, this, dynamic_cast<const EntityAttributes*>(xo),
-                    lambda::bind(&boost::shared_ptr<Attribute>::get, _1))) != m_tags.end()) {
-                return true;
-            }
+           for (vector<boost::shared_ptr<Attribute>>::const_iterator i = m_tags.begin(); i != m_tags.end(); ++i) {
+                if (_matches(dynamic_cast<const EntityAttributes*>(xo), i->get())) {
+                   return true;
+               }
+           }
         }
     }
 
@@ -144,11 +144,11 @@ bool EntityAttributesEntityMatcher::matches(const EntityDescriptor& entity) cons
             if (xo) {
                 extFound = true;
                 // If we find a matching tag, we win. Each tag is treated in OR fashion.
-                if (find_if(m_tags.begin(), m_tags.end(),
-                    lambda::bind(&EntityAttributesEntityMatcher::_matches, this, dynamic_cast<const EntityAttributes*>(xo),
-                        lambda::bind(&boost::shared_ptr<Attribute>::get, _1))) != m_tags.end()) {
-                    return true;
-                }
+               for (vector<boost::shared_ptr<Attribute>>::const_iterator i = m_tags.begin(); i != m_tags.end(); ++i) {
+                    if (_matches(dynamic_cast<const EntityAttributes*>(xo), i->get())) {
+                        return true;
+                    }
+               }
             }
         }
         group = dynamic_cast<EntitiesDescriptor*>(group->getParent());
