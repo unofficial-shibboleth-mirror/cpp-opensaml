@@ -47,14 +47,14 @@ BEGIN
             VALUE "Comments", "\0"
             VALUE "CompanyName", "Shibboleth Consortium\0"
             VALUE "FileDescription", "OpenSAML Signature Utility\0"
-            VALUE "FileVersion", "3, 2, 0, 1\0"
+            VALUE "FileVersion", "3, 2, 1, 0\0"
             VALUE "InternalName", "samlsign\0"
-            VALUE "LegalCopyright", "Copyright 2020 Various\0"
+            VALUE "LegalCopyright", "Copyright 2021 Various\0"
             VALUE "LegalTrademarks", "\0"
             VALUE "OriginalFilename", "samlsign.exe\0"
             VALUE "PrivateBuild", "\0"
-            VALUE "ProductName", "OpenSAML 3.2.0\0"
-            VALUE "ProductVersion", "3, 2, 0, 1\0"
+            VALUE "ProductName", "OpenSAML 3.2.1\0"
+            VALUE "ProductVersion", "3, 2, 1, 0\0"
             VALUE "SpecialBuild", "\0"
         END
     END
